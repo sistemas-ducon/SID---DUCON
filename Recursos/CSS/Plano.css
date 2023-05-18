@@ -1,0 +1,79 @@
+﻿i {
+    font-size: 1.4rem;
+}
+
+
+/* Panel principal de planos */
+
+.panel-plano {
+    margin: 1rem 0 1rem 0;
+    padding: 0.5rem;
+    width: 100%;
+    padding-top: 0.5rem;
+    display: flex;
+    gap: 2rem;
+}
+
+/* Inputs parte izquier de planos */
+.descripcion-plano {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.item-plano {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+    .item-plano .input {
+        max-width: 10rem;
+    }
+
+/* Div tabla planos */
+.tabla-plano {
+    width: 100%;
+    height: auto;
+    border: solid 1px rgba(0, 0, 0, 0.301);
+    border-radius: 0.5rem;
+}
+
+.tabla2-plano {
+    width: 100%;
+    height: 10rem;
+    border: solid 1px rgba(0, 0, 0, 0.301);
+    border-radius: 0.5rem;
+}
+
+/* Div Footer */
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1.5rem;
+}
+
+.item-footer {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.item-footer1 {
+    display: flex;
+    justify-content: space-around;
+    gap: 1.5rem;
+}
+
+
+@media (max-width: 576px) {
+    .panel-plano {
+        flex-direction: column;
+    }
+
+    .descripcion-plano {
+        justify-content: flex-start;
+    }
+}

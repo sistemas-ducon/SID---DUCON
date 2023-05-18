@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="BD_SIDSQL_PRUEBAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tblEmpleado">
+          <Key>
+            <PropertyRef Name="Cedula" />
+          </Key>
+          <Property Name="Cedula" Type="nvarchar" MaxLength="15" Nullable="false" />
+          <Property Name="Login" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Apellidos" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Cargo" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Dependencia" Type="int" Nullable="false" />
+          <Property Name="FechaNacimiento" Type="datetime" />
+          <Property Name="FechaContratación" Type="datetime" />
+          <Property Name="Dirección" Type="nvarchar" MaxLength="60" />
+          <Property Name="Ciudad" Type="nvarchar" MaxLength="15" />
+          <Property Name="Región" Type="nvarchar" MaxLength="15" />
+          <Property Name="País" Type="nvarchar" MaxLength="15" />
+          <Property Name="TelDomicilio" Type="nvarchar" MaxLength="24" />
+          <Property Name="Extensión" Type="nvarchar" MaxLength="4" />
+          <Property Name="Mail" Type="nvarchar" MaxLength="100" />
+          <Property Name="Activo" Type="bit" Nullable="false" />
+          <Property Name="Zona" Type="nvarchar" MaxLength="3" />
+          <Property Name="Grupo" Type="nvarchar" MaxLength="3" />
+          <Property Name="ReceptorObservaciones" Type="bit" />
+        </EntityType>
+        <EntityContainer Name="BD_SIDSQL_PRUEBAModelStoreContainer">
+          <EntitySet Name="tblEmpleado" EntityType="Self.tblEmpleado" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BD_SIDSQL_PRUEBAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tblEmpleado">
+          <Key>
+            <PropertyRef Name="Cedula" />
+          </Key>
+          <Property Name="Cedula" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Login" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Apellidos" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Cargo" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Dependencia" Type="Int32" Nullable="false" />
+          <Property Name="FechaNacimiento" Type="DateTime" Precision="3" />
+          <Property Name="FechaContratación" Type="DateTime" Precision="3" />
+          <Property Name="Dirección" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="Ciudad" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Región" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="País" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="TelDomicilio" Type="String" MaxLength="24" FixedLength="false" Unicode="true" />
+          <Property Name="Extensión" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="Mail" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Activo" Type="Boolean" Nullable="false" />
+          <Property Name="Zona" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="Grupo" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="ReceptorObservaciones" Type="Boolean" />
+        </EntityType>
+        <EntityContainer Name="BD_SIDSQL_PRUEBAEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tblEmpleado" EntityType="Self.tblEmpleado" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BD_SIDSQL_PRUEBAModelStoreContainer" CdmEntityContainer="BD_SIDSQL_PRUEBAEntities">
+          <EntitySetMapping Name="tblEmpleado">
+            <EntityTypeMapping TypeName="BD_SIDSQL_PRUEBAModel.tblEmpleado">
+              <MappingFragment StoreEntitySet="tblEmpleado">
+                <ScalarProperty Name="Cedula" ColumnName="Cedula" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Apellidos" ColumnName="Apellidos" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Cargo" ColumnName="Cargo" />
+                <ScalarProperty Name="Dependencia" ColumnName="Dependencia" />
+                <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
+                <ScalarProperty Name="FechaContratación" ColumnName="FechaContratación" />
+                <ScalarProperty Name="Dirección" ColumnName="Dirección" />
+                <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
+                <ScalarProperty Name="Región" ColumnName="Región" />
+                <ScalarProperty Name="País" ColumnName="País" />
+                <ScalarProperty Name="TelDomicilio" ColumnName="TelDomicilio" />
+                <ScalarProperty Name="Extensión" ColumnName="Extensión" />
+                <ScalarProperty Name="Mail" ColumnName="Mail" />
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="Zona" ColumnName="Zona" />
+                <ScalarProperty Name="Grupo" ColumnName="Grupo" />
+                <ScalarProperty Name="ReceptorObservaciones" ColumnName="ReceptorObservaciones" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

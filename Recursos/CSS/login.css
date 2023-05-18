@@ -1,0 +1,143 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    
+   
+   
+
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content:center;
+
+    }
+
+.login {
+    width: 360px;
+    height: min-content;
+    padding: 20px;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 7px 13px 37px #000000;
+}
+
+.login h1{
+    font-size: 20px;
+    margin-bottom: 25px;
+}
+
+.login form .input-group{
+    margin-bottom: 12px;
+}
+.todo {
+    background-image: url("https://cdn.pixabay.com/photo/2014/02/13/07/28/security-265130_1280.jpg");
+    position: absolute;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 0px 0px 50px 80px;
+}
+    /*.formcontent {
+    margin: 5% 35% 50% 35%;
+    position: absolute;
+    background: #e5e5e5;
+    box-shadow: 7px 13px 37px #000000;
+    width: 400px;
+    height: 550px;
+    border-radius: 10px;
+}
+
+.bienvenida {
+    background-color: #dee2e6;
+    box-shadow: 7px 13px 37px #000000;
+    width: 800px;
+    text-align: center;
+    margin: 120px;
+    font-size: 25px;
+    border-radius: 5px;
+}
+
+.usuario {
+    font-size: 20px;
+    margin: 10px 150px;
+}
+
+.password {
+    font-size: 20px;
+    margin: 10px 150px;
+}
+
+.i_usuario {
+    background-color: #dee2e6;
+    box-shadow: 7px 13px 37px #000000;
+    width: 200px;
+    text-align: center;
+    margin: 10px 150px 5px 100px;
+    font-size: 20px;
+    border: none;
+    border-radius: 5px;
+}
+
+.i_password {
+    background-color: #dee2e6;
+    box-shadow: 7px 13px 37px #000000;
+    width: 200px;
+    text-align: center;
+    margin: 10px 150px 5px 100px;
+    font-size: 20px;
+    border: none;
+    border-radius: 5px;
+}
+
+.lblError {
+    visibility: hidden;
+    text-align: center;
+    color: #ff0000;
+}
+
+.ingresar {
+    font-size: 25px;
+    margin: 20px 0px 45px 150px;
+    width: 110px;
+    box-shadow: 7px 13px 37px #0d1b2a;
+    border: none;
+    border-radius: 5px;
+    background-color: #3e3f48;
+    display: block;
+    font-family: Arial, Arial, Helvetica, sans-serif;
+}
+
+    .ingresar:hover {
+        background-color: #000000;
+        border: 2px solid #0d1b2a;
+        color: #0d1b2a;
+    }
+
+.lblError{
+    visibility:hidden;
+    text-align:center;
+    color:#ff0000;
+}
+
+.ingresar {
+    font-size: 25px;
+    margin: 20px 0px 45px 150px;
+    width: 110px;
+    box-shadow: 7px 13px 37px #0d1b2a;
+    border: none;
+    border-radius: 5px;
+    background-color: #3e3f48;
+    display: block;
+    font-family: Arial, Arial, Helvetica, sans-serif;
+}
+
+    .ingresar:hover {
+        background-color: #000000;
+        border: 2px solid #0d1b2a;
+        color: #0d1b2a;
+    }
+
+*/
