@@ -558,9 +558,7 @@
 
 
     <div class="informacion_Contable">
-        <h1>Carlos Pineda</h1>
-        <h1>Anderson Betancur</h1>
-        <h1>HARLEY VIDAL</h1>
+  
         <%--<table class="table table-bordered">
   <thead>
     <tr>
