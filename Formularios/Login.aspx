@@ -18,8 +18,9 @@
 
     <div class="wrapper">
    <h1 class="text-center">INICIAR SESIÓN</h1>
-                
-            <form id="formulario_login" runat="server" class="needs-validation">
+           <img src="https://i.ibb.co/n3kbMcW/loginimg-Ok.jpg" />
+               
+          <form id="formulario_login" runat="server" class="needs-validation">
                
              
                    

@@ -13,8 +13,13 @@
     <form id="Form1" runat="server">
 
 
-        <header>
+        <header style="background-color: #CCCCCC" >
             <br />
+       
+                <img src="https://www.ducon.com.co/images/logo_ducon.png" style="margin:50px">
+            
+    
+    
             <br />
         </header>
 
