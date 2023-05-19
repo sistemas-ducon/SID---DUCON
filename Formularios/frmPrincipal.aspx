@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="frmPrincipal.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.OrdenesDeTrabajo" %>
+﻿﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="frmPrincipal.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.OrdenesDeTrabajo" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 
@@ -76,7 +76,7 @@
 
         <%--Comienza Panel de iconos--%>
 
-        <form class="frmPrincipal" runat="server">
+        
             <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
                 <div class="container-fluid">
 
@@ -84,7 +84,7 @@
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="ejemplo2">
-                        <ul class="navbar-nav mx-auto">
+                        <ul class="navbar-nav mx-auto contenedor-icono">
 
 
 
@@ -107,482 +107,14 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-
-
-
-                                                  <div class="container-fluid">
-
-        <div class="row">
-
-
-            <div class="col-1">
-                <div class="input-group input-group-sm mb-2 gap-2">
-                    <asp:Label class="form-label" Text="OT" runat="server" ID="Label2"></asp:Label>
-                    <asp:TextBox ID="TextBox1" runat="server" CssClass="form-control"></asp:TextBox>
-                </div>
-            </div>
-
-
-            <div class="col-1">
-                <div class="input-group input-group-sm mb-2 gap-2">
-                    <asp:Label class="form-label" Text="Pedido" runat="server" ID="Label4"></asp:Label>
-                    <asp:TextBox ID="TextBox2" type="number" CssClass="form-control" runat="server"></asp:TextBox>
-                </div>
-            </div>
-            <div class="col-1">
-                <div class="input-group input-group-sm mb-2 gap-2">
-                    <asp:Label ID="Label5" Text="Zona" CssClass="form-label" runat="server"></asp:Label>
-                    <asp:TextBox ID="TextBox3" type="text" class="form-control" runat="server"></asp:TextBox>
-                </div>
-            </div>
-
-            <div class="col-3">
-                <div class="input-group input-group-sm mb-2 gap-2">
-                    <asp:Label class="form-label" Text="T.Ped" runat="server" ID="Label6"></asp:Label>
-                    <asp:TextBox ID="TextBox4" type="text" class="form-control" runat="server"></asp:TextBox>
-                </div>
-            </div>
-
-            <div class="col-1">
-                <div class="input-group input-group-sm mb-2 gap-2">
-                    <asp:Label class="form-label" Text="Ped.Base" runat="server" ID="Label7"></asp:Label>
-                    <asp:TextBox ID="TextBox5" type="number" class="form-control" runat="server"></asp:TextBox>
-                </div>
-            </div>
-
-            <div class="col-1">
-                <div class="input-group input-group-sm mb-2 gap-2">
-                    <asp:Label class="form-label" Text="Ped.Depen" runat="server" ID="Label8"></asp:Label>
-                    <asp:TextBox ID="TextBox6" type="number" class="form-control" runat="server"></asp:TextBox>
-                </div>
-            </div>
-
-            <div class="col-3">
-                <div class="input-group input-group-sm mb-2 gap-2">
-                    <asp:Label class="form-label" Text="Aprob" runat="server" ID="Label9"></asp:Label>
-                    <asp:TextBox ID="TextBox7" type="text" class="form-control" runat="server"></asp:TextBox>
-                </div>
-            </div>
-
-
-            <div class="col-1">
-                <div class="input-group input-group-sm mb-2 gap-2">
-                    <asp:Button ID="Button1" runat="server" class="bi bi-file-earmark btn btn-secondary"></asp:Button>
-                    <asp:Button ID="Button2" runat="server" class="btn btn-secondary"></asp:Button>
-                    <asp:Button ID="Button3" runat="server" type="button" Text="OK" class="btn btn-secondary"></asp:Button>
-                </div>
-            </div>
-
-            <div class="row">
-
-                <div class="col-3">
-                    <div class="input-group input-group-sm mb-2 gap-2">
-                        <asp:Label class="form-label" Text="Obra" runat="server" ID="Label10"></asp:Label>
-                        <asp:TextBox ID="TextBox8" type="text" class="form-control" runat="server"></asp:TextBox>
-                    </div>
-                </div>
-
-                <div class="col-3">
-                    <div class="input-group input-group-sm mb-2 gap-2">
-                        <asp:Label class="form-label" Text="Dir" runat="server" ID="Label11"></asp:Label>
-                        <asp:TextBox ID="TextBox9" type="text" class="form-control" runat="server"></asp:TextBox>
-                    </div>
-                </div>
-
-                <div class="col-3">
-                    <div class="input-group input-group-sm mb-2 gap-2">
-                        <asp:Label class="form-label" Text="Contac" runat="server" ID="Label12"></asp:Label>
-                        <asp:TextBox ID="TextBox10" type="text" class="form-control" runat="server"></asp:TextBox>
-                    </div>
-                </div>
-
-                <div class="col-3">
-                    <div class="input-group input-group-sm mb-2 gap-2">
-                        <asp:Label class="form-label" Text="Email" runat="server" ID="Label13"></asp:Label>
-                        <asp:TextBox ID="TextBox11" type="email" class="form-control" runat="server"></asp:TextBox>
-                    </div>
-                </div>
-
-                <div class="row">
-
-
-                    <div class="col-3">
-                        <div class="input-group input-group-sm mb-2 gap-2">
-                            <asp:Label class="form-label" Text="Recibe" runat="server" ID="Label14"></asp:Label>
-                            <asp:TextBox ID="TextBox12" type="text" class="form-control" runat="server"></asp:TextBox>
-                        </div>
-                    </div>
-
-                    <div class="col-3">
-                        <div class="input-group input-group-sm mb-2 gap-2">
-                            <asp:Label class="form-label" Text="Ciudad" runat="server" ID="Label15"></asp:Label>
-                            <asp:TextBox ID="TextBox13" type="text" class="form-control" runat="server"></asp:TextBox>
-                        </div>
-                    </div>
-                    <div class="col-2">
-                        <div class="input-group input-group-sm mb-2 gap-2">
-                            <asp:Label class="form-label" Text="Tel" runat="server" ID="Label16"></asp:Label>
-                            <asp:TextBox ID="TextBox14" type="tel" class="form-control" runat="server"></asp:TextBox>
-                        </div>
-                    </div>
-
-                    <div class="col-1">
-                        <div class="input-group input-group-sm mb-2 gap-2">
-                            <asp:Label class="form-label" Text="Cel" runat="server" ID="Label17"></asp:Label>
-                            <asp:TextBox ID="TextBox15" type="tel" class="form-control" runat="server"></asp:TextBox>
-                        </div>
-                    </div>
-
-
-                    <div class="col-2">
-                        <div class="input-group input-group-sm mb-2 gap-2">
-                            <asp:Label class="form-label" Text="Pais" runat="server" ID="Label18"></asp:Label>
-                            <asp:TextBox ID="TextBox16" type="text" class="form-control" runat="server"></asp:TextBox>
-                        </div>
-                    </div>
-
-                    <div class="col-1">
-                        <div class="input-group input-group-sm mb-2 gap-2">
-                            <asp:Label class="form-label" Text="H.Total" runat="server" ID="Label19"></asp:Label>
-                            <asp:TextBox ID="TextBox17" type="number" class="form-control" runat="server"></asp:TextBox>
-                        </div>
-                    </div>
-                </div>
-
-
-
-            </div>
-        </div>
-    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <%--Pantalla intermedia--%>
-
-
-
-
-    <div class="container-fluid">
-        <div class="observaciones">
-
-            <div class="div-1">
-
-
-                <div class="row">
-                    <div class="mb-2 gap-2">
-                        <textarea id="Textarea1" runat="server" class="form-control form-control-ms"></textarea>
-                    </div>
-                </div>
-            </div>
-
-
-
-
-
-            <div class="div-2">
-
-                <div class="row">
-                    <div class="col-6">
-
-                        <div class="input-group input-group-sm mb-2 gap-2">
-                            <asp:Label class="form-label" Text="Venta" runat="server" ID="Label20"></asp:Label>
-                            <asp:TextBox ID="TextBox18" type="text" class="form-control" runat="server"></asp:TextBox>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="input-group input-group-sm mb-2 gap-2">
-                            <label class="form-label" runat="server" id="Label21">Ok.Venta</label>
-                            <input type="date" class="form-control" runat="server" aria-label="Sizing example input" aria-describedby="inputOkVenta" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="input-group input-group-sm mb-2 gap-2">
-                                <label class="form-label" runat="server" id="Label22">Ok.Dibujo</label>
-                                <input type="date" class="form-control" runat="server" aria-label="Sizing example input" aria-describedby="inputDibujo" />
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="input-group input-group-sm mb-2 gap-2">
-                                <label class="form-label" runat="server" id="Label23">Empaque</label>
-                                <input type="date" class="form-control" runat="server" aria-label="Sizing example input" aria-describedby="inputEmpaque" />
-                            </div>
-                        </div>
-
-                        <div class="col-6">
-                            <div class="input-group input-group-sm mb-2 gap-2">
-                                <label class="form-label" runat="server" id="Label24">Real Emp.</label>
-                                <input type="date" class="form-control" runat="server" aria-label="Sizing example input" aria-describedby="inputRealEmp" />
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="table-responsive mb-1 gap-2">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Di</th>
-                                            <th scope="col">Coor</th>
-                                            <th scope="col">Coordinado</th>
-                                            <th scope="col">F.Despacho</th>
-                                            <th scope="col">Despachado</th>
-                                            <th scope="col">Despachado</th>
-                                            <th scope="col">Entregado</th>
-                                            <th scope="col">Entrega</th>
-                                            <th scope="col">Receptor</th>
-                                            <th scope="col">Celular</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row"></th>
-                                            <td>ARGFSD</td>
-                                            <td>SDGFSDFG</td>
-                                            <td>SFSF</td>
-                                            <td>SAFSA</td>
-                                            <td>SFS</td>
-                                            <td>SFS</td>
-                                            <td>SFS</td>
-                                            <td>SAFSA</td>
-                                            <td>SFSAF</td>
-
-                                        </tr>
-
-                                    </tbody>
-                                </table>
-
-
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-
-    <div class="container-fluid">
-        <div class="observaciones">
-
-            <div class="div-1">
-
-
-                <div class="row">
-                    <div class="mb-2 gap-2">
-                        <textarea id="Textarea2" runat="server" class="form-control form-control-lg"></textarea>
-                    </div>
-                </div>
-            </div>
-
-
-
-
-
-            <div class="div-3">
-
-
-
-                <div class="row">
-
-                    <div class="col-4">
-
-                        <div class="input-group input-group-sm mb-2 gap-2">
-                            <label class="form-label" runat="server" id="Label25">Supervisor</label>
-                            <input type="text" class="form-control" runat="server" aria-label="Sizing example input" aria-describedby="inputSupervisor" />
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="row">
-
-
-                    <div class="col-5">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <button class="btn btn-outline-secondary" runat="server" type="button">Plano+</button>
-                            </div>
-                            <input type="text" class="form-control" runat="server" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
-                        </div>
-                    </div>
-
-
-
-                    <div class="col-7">
-                        <div class="input-group input-group-sm mb-2 gap-2">
-                            <label class="form-label" runat="server" id="Label26">Bolsa</label>
-                            <input type="text" class="form-control" runat="server" aria-label="Sizing example input" aria-describedby="inputBolsa" />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-
-                    <div class="col-4">
-
-                        <div class="input-group input-group-sm mb-2 gap-2">
-                            <label class="form-label" runat="server" id="Label27">Fabrica</label>
-                            <select name="" id="inputFabricaM" class="custom-select form-control">
-                                <option selected=""></option>
-                                <option value="01">Medellin</option>
-                                <option value="02">Bogota</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-2">
-                        <div class="input-group input-group-sm mb-2 gap-2">
-                            <label class="form-label" runat="server" id="Label28">V.Pedido</label>
-                        </div>
-                    </div>
-
-
-                    <div class="col-6">
-                        <%--<input type="text" class="form-control" runat="server" aria-label="Sizing example input" aria-describedby="inputSaldo" />--%>
-                    </div>
-
-                    <div class="row">
-
-                        <div class="col-4">
-
-                            <div class="input-group input-group-sm mb-2 gap-3">
-                                <label class="form-label" runat="server" id="Label29">Instala</label>
-                                <select name="" id="inputInstalaM" class="custom-select form-control">
-                                    <option selected=""></option>
-                                    <option value="01">Medellin</option>
-                                    <option value="02">Bogota</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-8">
-
-                            <div class="input-group-sm mb-1 gap-2">
-
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <button class="btn btn-outline-secondary" type="button">TXT</button>
-                                    </div>
-                                    <input type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1" />
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                    </div>
-
-                </div>
-
-
-            </div>
-
-
-        </div>
-    </div>
-
-
-    <div class="informacion_Contable">
-
-
-        <%--<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
-    </tr>
-  
-             
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td colspan="2">Larry the Bird</td>
-      <td>@twitter</td>
-    </tr>
-      <tr>
-      <th scope="row">3</th>
-      <td colspan="2">Larry the Bird</td>
-      <td>@twitter</td>
-    </tr>
-      <tr>
-      <th scope="row">3</th>
-      <td colspan="2">Larry the Bird</td>
-      <td>@twitter</td>
-    </tr>
-  </tbody>
-</table>--%>
-    </div>
-
-
-
-   
-
-
-
-    
-
-
-  
-    
-     </div>   
-
-
-
-                                               
-
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                                <button type="button" class="btn btn-primary">Guardar</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
 
 
-                                </div>
+
 
                                 <%--Termina Nueva OT--%>
 
@@ -630,7 +162,7 @@
     <%--Comienza Formulario Principal--%>
 
 
-
+    <form class="frmPrincipal" runat="server">
 
     <div class="container-fluid">
 
@@ -931,8 +463,8 @@
                     <div class="col-4">
 
                         <div class="input-group input-group-sm mb-2 gap-2">
-                            <label class="form-label" runat="server" id="inputSupervisor">Supervisor</label>
-                            <input type="text" class="form-control" runat="server" aria-label="Sizing example input" aria-describedby="inputSupervisor" />
+                            <asp:label class="form-label" Text="Supervisor" runat="server" id="lblSupervisor"></asp:label>
+                            <asp:TextBox id="tbSupervisor" type="text" class="form-control" runat="server" />
                         </div>
                     </div>
 
@@ -944,9 +476,9 @@
                     <div class="col-5">
                         <div class="input-group input-group-sm mb-2">
                             <div class="input-group-prepend">
-                                <button class="btn btn-outline-secondary" runat="server" type="button">Plano+</button>
+                                <asp:button class="btn btn-outline-secondary" Text="Plano+" runat="server" type="button"></asp:button>
                             </div>
-                            <input type="text" class="form-control" runat="server" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+                            <asp:TextBox type="text" class="form-control" runat="server" ID="tbPlano" />
                         </div>
                     </div>
 
@@ -954,8 +486,8 @@
 
                     <div class="col-7">
                         <div class="input-group input-group-sm mb-2 gap-2">
-                            <label class="form-label" runat="server" id="inputBolsa">Bolsa</label>
-                            <input type="text" class="form-control" runat="server" aria-label="Sizing example input" aria-describedby="inputBolsa" />
+                            <asp:label class="form-label" Text="Bolsa" runat="server" id="lblBolsa"></asp:label>
+                            <asp:TextBox type="text" class="form-control" runat="server" ID="tbBolsa"/>
                         </div>
                     </div>
                 </div>
@@ -965,7 +497,7 @@
                     <div class="col-4">
 
                         <div class="input-group input-group-sm mb-2 gap-2">
-                            <label class="form-label" runat="server" id="inputFabrica1">Fabrica</label>
+                            <asp:label class="form-label" Text="Fabrica" runat="server" id="lblFabrica"></asp:label>
                             <select name="" id="inputFabrica" class="custom-select form-control">
                                 <option selected=""></option>
                                 <option value="01">Medellin</option>
@@ -976,7 +508,7 @@
 
                     <div class="col-2">
                         <div class="input-group input-group-sm mb-2 gap-2">
-                            <label class="form-label" runat="server" id="Label3">V.Pedido</label>
+                            <asp:label class="form-label" Text="V.Pedido" runat="server" id="lblVPedido"></asp:label>
                         </div>
                     </div>
 
@@ -990,7 +522,7 @@
                         <div class="col-4">
 
                             <div class="input-group input-group-sm mb-2 gap-3">
-                                <label class="form-label" runat="server" id="Label1">Instala</label>
+                                <asp:label class="form-label" Text="Instala" runat="server" id="lblInstala"></asp:label>
                                 <select name="" id="inputInstala" class="custom-select form-control">
                                     <option selected=""></option>
                                     <option value="01">Medellin</option>
@@ -1004,7 +536,7 @@
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
-                                        <button class="btn btn-outline-secondary" type="button">TXT</button>
+                                        <asp:button class="btn btn-outline-secondary" runat="server" Text="TXT" type="button"></asp:button>
                                     </div>
                                     <input type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1" />
                                 </div>
@@ -1026,7 +558,7 @@
 
 
     <div class="informacion_Contable">
-
+        <h1>Carlos Pineda</h1>
 
         <%--<table class="table table-bordered">
   <thead>
@@ -1076,7 +608,7 @@
   </tbody>
 </table>--%>
     </div>
-
+       
 
 
     </form>
@@ -1088,7 +620,8 @@
 
   
     
-     </div>   
+     
+   
 
 
 
@@ -1103,6 +636,5 @@
 
 </body>
 </html>
-
 
 
