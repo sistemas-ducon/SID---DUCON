@@ -228,12 +228,12 @@
       
        
            
-            <asp:label ID="lblBienvenida" runat="server" Text=""></asp:label>
+            <asp:label ID="lblBienvenida" runat="server" ForeColor="White"></asp:label>
             
         
 
         
-          <asp:Button class="btn btn-light" type="button" ID="BtnCerrar" runat="server" Text="Cerrar" OnClick="BtnCerrar_Click" />
+          <asp:Button class="btn btn-light" type="button" ID="BtnCerrar" runat="server" Text="Cerrar" OnClick="BtnCerrar_Click" BackColor="#000037" BorderColor="#000066" ForeColor="White" />
         
 
       
