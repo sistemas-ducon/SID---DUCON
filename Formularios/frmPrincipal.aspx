@@ -21,7 +21,6 @@
 
         <%--Comienza Panel principal de nombres--%>
 
-
         <nav class="navbar navbar-expand-sm navbar-light bg-light">
             <div class="container">
 
@@ -75,7 +74,6 @@
 
 
         <%--Comienza Panel de iconos--%>
-
         
             <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
                 <div class="container-fluid">
@@ -147,14 +145,12 @@
 
                 </div>
             </nav>
-    </div>
+
+         <%--Termina Panel de iconos--%>
 
 
 
-
-    <%--Termina Panel de iconos--%>
-
-
+    </div>  <%--Fin div wrapper --%>
 
 
 
@@ -221,7 +217,7 @@
 
             <div class="col-1">
                 <div class="input-group input-group-sm mb-2 gap-2">
-                    <asp:Button ID="btnNuevoPedido" runat="server" class="bi bi-file-earmark btn btn-secondary"></asp:Button>
+                    <asp:Button ID="btnNuevoPedido" runat="server" class="bi bi-file-earmark btn btn-secondary " ></asp:Button>
                     <asp:Button ID="btnAcabados" runat="server" class="btn btn-secondary"></asp:Button>
                     <asp:Button ID="btnOk" runat="server" type="button" Text="OK" class="btn btn-secondary"></asp:Button>
                 </div>
@@ -557,55 +553,199 @@
     </div>
 
 
-    <div class="informacion_Contable">
-  
-        <%--<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
-    </tr>
-  
-             
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td colspan="2">Larry the Bird</td>
-      <td>@twitter</td>
-    </tr>
-      <tr>
-      <th scope="row">3</th>
-      <td colspan="2">Larry the Bird</td>
-      <td>@twitter</td>
-    </tr>
-      <tr>
-      <th scope="row">3</th>
-      <td colspan="2">Larry the Bird</td>
-      <td>@twitter</td>
-    </tr>
-  </tbody>
-</table>--%>
+   <div class=" container-fluid Info-Contable">
+
+        <div class="Datos-Cliente1">
+
+            <div class="Info1 input-group input-group-sm">
+                <asp:label class="form-label" Text="NIT" runat="server" id="lblNit1" ></asp:label>
+                <asp:TextBox type="text" class="form-control" runat="server" id="txtNit"></asp:TextBox>
+                <asp:TextBox type="text" class="form-control" runat="server" ID="txtNombreEmp"></asp:TextBox>
+            </div>
+
+            <div class="Info1">
+                <asp:label class="form-label" Text="Contacto" runat="server" id="lblContacto" ></asp:label>
+                <asp:TextBox type="text" class="form-control" runat="server" ID="txtcontacto"></asp:TextBox>
+            </div>
+
+            <div class="Info1">
+                <asp:label class="form-label" Text="Mail" runat="server" id="lblMail" ></asp:label>
+                 <asp:TextBox type="text" class="form-control" runat="server" ID="txtMail"></asp:TextBox>
+            </div>
+
+            <div class="Info1">
+                <asp:label class="form-label" Text="Dirección" runat="server" id="lblDireccion"  ></asp:label>
+                 <asp:TextBox type="text" class="form-control" runat="server" ID="txtDireccion"></asp:TextBox>
+            </div>
+
+            <div class="Info1">
+                <asp:label class="form-label" Text="Municipio" runat="server" id="lblMunicipio"  ></asp:label>
+                <asp:TextBox type="text" class="form-control" runat="server" ID="txtMunicipio"></asp:TextBox>
+            </div>
+
+            <div class="Info1">
+                 <asp:label class="form-label" Text="Telefono" runat="server" id="lblTelefono"  ></asp:label>
+                <asp:TextBox type="text" class="form-control" runat="server" ID="txtTelefono"></asp:TextBox>
+            </div>
+
+            <div class="Info1">
+                <asp:label class="form-label" Text="Obs. Contable " runat="server" id="lblObs" ></asp:label>
+                <asp:TextBox type="text" class="form-control" runat="server" ID="txtObs"></asp:TextBox>
+            </div>
+
+            <div class="Info_F ">
+                
+                 <asp:TextBox type="" class="form-control" runat="server" ID="txtMensaje"></asp:TextBox>
+            </div>
+
+        </div>
+
+        <div class="Datos-Cliente2"> 
+
+            <div class="superior">
+                <div class="Info2">
+                    <asp:Button ID="btnCotizacion" runat="server" Text="Ver cotización" class="bi bf" />
+                     <asp:TextBox type="text" class="form-control" runat="server" ID="txtCotizacion"></asp:TextBox>
+                </div>
+
+                <div class="Info2">
+                    <asp:Button ID="btnValorSugeroido" runat="server" Text="Valor Sugerido" class="bi bf" />
+                     <asp:TextBox type="text" class="form-control" runat="server" ID="txtValorSugerido"></asp:TextBox>
+                </div>
+
+                <div class="Info2">
+                     <asp:Button ID="btnVscd" runat="server" Text="VCSD"  class="bi bf"/>
+                     <asp:TextBox type="text" class="form-control" runat="server" ID="txtVcsd"></asp:TextBox>
+                </div>
+
+                <div class="Info2">
+                     <asp:Button ID="btnVccd" runat="server" Text="VCCD" class="bi bf" />
+                     <asp:TextBox type="text" class="form-control" runat="server" ID="txtVccd"></asp:TextBox>
+                </div>
+
+            </div>
+
+            <div class="Medio">
+                <div class="Info_M">
+                     <asp:Button ID="btnOrdenCompra" runat="server" Text="Orden Compra" class="bi bf" />
+                     <asp:TextBox type="text" class="form-control" runat="server" ID="txtOrdenCompra"></asp:TextBox>
+                </div>
+
+                <div class="Info_M2">
+                    <asp:label  id="lblComisionCompart" class="form-label" text="Comisión Compartida"  runat="server"></asp:label>
+                    <asp:CheckBox class="" ID="cbxComisionCompart" runat="server" />
+                </div>
+            </div>
+
+            <div class="Medio">
+                <div class="Info_M">
+                    <asp:Button ID="btnAsesor1" runat="server" Text="Asesor" class="bi bf" />
+                     <asp:TextBox type="text" class="form-control" runat="server" ID="txtAsesor"></asp:TextBox>
+                </div>
+
+                <div class="Info_M">
+                    <asp:DropDownList ID="DblNombreAsesor" class="form-control" runat="server"></asp:DropDownList>
+                </div>
+
+                
+            </div>
+
+
+            <div class="Div_Grid">
+
+                <div class="izquierda">
+                    <label >Venta <br /> Neta</label>
+                </div>
+                <div class="grid">
+                <%--    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">First</th>
+                            <th scope="col">Last</th>
+                            <th scope="col">Handle</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th scope="row">1</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">2</th>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
+                            <td>@fat</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">3</th>
+                            <td colspan="2">Larry the Bird</td>
+                            <td>@twitter</td>
+                          </tr>
+                        </tbody>
+                      </table>--%>
+                    
+
+                </div>
+                <div class="derecha">
+                    <div class="derecha1">
+                        <label for="">Tipo de Negociación</label>
+                        <textarea name="" id="" cols="25" rows="7"></textarea>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+
+        <div class="Datos-Cliente3">
+            <div class="Info1">
+                   <asp:Button ID="btnComision1" runat="server" Text="D. Comision" class="bi bf" />
+                <asp:TextBox type="text" class="form-control " runat="server" ID="txtComision"></asp:TextBox>
+            </div>
+
+              <div class="Info1">
+               <asp:Button ID="btnDiseño" runat="server" Text="Diseño" class="bi bf " />
+                <asp:TextBox type="text" class="form-control " runat="server" ID="txtDiseño"></asp:TextBox>
+            </div>
+
+            <div class="Info1">
+                  <asp:Button ID="btnSaldo" runat="server" Text="Saldo" class="bi bf " />
+                <asp:TextBox type="text" class="form-control" runat="server" ID="txtSaldo"></asp:TextBox>
+            </div>
+            <div class="Info1">
+                 <asp:Button ID="btnVenta" runat="server" Text="Venta" class="bi bf " />
+                <asp:TextBox type="text" class="form-control" runat="server" ID="txtVenta"></asp:TextBox>
+            </div>
+
+            <div class="Info1">
+                  <asp:Button ID="btnDcto" runat="server" Text="%Dcto" class="bi bf" />
+                <asp:TextBox type="text" class="form-control" runat="server" ID="txtDcto"></asp:TextBox>
+            </div>
+
+            <div class="Info1">
+                 <asp:Button ID="btnVtte" runat="server" Text="V. VTte" class="bi bf" />
+                <asp:TextBox type="text" class="form-control" runat="server" ID="txtVtte"></asp:TextBox>
+            </div>
+
+            <div class="Info1">
+               <asp:Button ID="btnVvia" runat="server" Text="V. Via" class="bi bf" />
+                <asp:TextBox type="text" class="form-control" runat="server" ID="txtVvia"></asp:TextBox>
+            </div>
+
+            <div class="Info1">
+               <asp:Button ID="btnGTotal" runat="server" Text="G. Total" class="bi bf" />
+                <asp:TextBox type="text" class="form-control" runat="server" ID="txtGtotal"></asp:TextBox>
+            </div>
+
+
+        </div>
+
+
+
+
     </div>
        
 
