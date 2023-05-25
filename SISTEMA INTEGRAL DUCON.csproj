@@ -94,6 +94,8 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Formularios\Insumos.aspx" />
+    <Content Include="Formularios\modulo.aspx" />
+    <Content Include="Formularios\Objetos.aspx" />
     <Content Include="Formularios\Plano.aspx" />
     <Content Include="Formularios\Inicio.aspx" />
     <Content Include="Formularios\frmPrincipal.aspx" />
@@ -108,6 +110,8 @@
       <LastGenOutput>ModeloBDSID.cs</LastGenOutput>
     </Content>
     <Content Include="Recursos\CSS\Insumos.css" />
+    <Content Include="Recursos\CSS\modulo.css" />
+    <Content Include="Recursos\CSS\Objetos.css" />
     <Content Include="Recursos\CSS\Plano.css" />
     <Content Include="Recursos\CSS\frmPrincipal.css" />
     <Content Include="Recursos\CSS\Inicio.css" />
@@ -144,6 +148,20 @@
     </Compile>
     <Compile Include="Formularios\Insumos.aspx.designer.cs">
       <DependentUpon>Insumos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\modulo.aspx.cs">
+      <DependentUpon>modulo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\modulo.aspx.designer.cs">
+      <DependentUpon>modulo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\Objetos.aspx.cs">
+      <DependentUpon>Objetos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\Objetos.aspx.designer.cs">
+      <DependentUpon>Objetos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\Plano.aspx.cs">
       <DependentUpon>Plano.aspx</DependentUpon>

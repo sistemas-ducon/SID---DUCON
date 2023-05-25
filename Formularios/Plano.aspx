@@ -17,6 +17,8 @@
     <title>Plano</title>
 </head>
 <body>
+
+    
     
      <nav class="navbar navbar-expand-sm navbar-light bg-light">
         <div class="container">
@@ -43,13 +45,13 @@
 
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Objetos</a>
+                        <a class="nav-link active" aria-current="page" href="Objetos.aspx">Objetos</a>
                     </li>
                 </ul>
 
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Modulos</a>
+                        <a class="nav-link active" aria-current="page" href="modulo.aspx">modulo</a>
                     </li>
                 </ul>
 

@@ -2,6 +2,11 @@
     font-size: 1.4rem;
 }
 
+.contenedor-icono {
+    display: flex;
+    gap: 1rem;
+}
+
 
 /* Panel principal de planos */
 

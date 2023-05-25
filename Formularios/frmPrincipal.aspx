@@ -46,13 +46,13 @@
 
                     <ul class="navbar-nav mx-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Objetos</a>
+                            <a class="nav-link active" aria-current="page" href="Objetos.aspx">Objetos</a>
                         </li>
                     </ul>
 
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Modulos</a>
+                            <a class="nav-link active" aria-current="page" href="modulo.aspx">Modulos</a>
                         </li>
                     </ul>
 
