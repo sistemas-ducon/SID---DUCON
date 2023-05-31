@@ -15,7 +15,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 	{
 		protected void Page_Load(object sender, EventArgs e)
 		{
-			Cargar_OT();
+            if (Session["usuariologueado"] != null)
+            {
+                string usuariologueado = Session["usuariologueado"].ToString();
+
+            }
+            else
+            {
+                Response.Redirect("Login.aspx");
+            }
+
+
+
+            Cargar_OT();
 
 		}
 
@@ -34,24 +46,41 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 			SqlDataReader dr = cmd.ExecuteReader();
 			if (dr.Read())
 			{
-				tbOT.Text = dr["Id_OT"].ToString();
-				tbPedido.Text = dr["Consecutivo_Pedido"].ToString();
-				tbZona.Text = dr["Zona"].ToString();
-				tbTped.Text = dr["Id_TipoPedido"].ToString();
-				tbPedBase.Text = dr["PedidoBase"].ToString();
-				tbAprob.Text = dr["TipoAprobacion"].ToString();
-				tbObra.Text = dr["Nombre_Obra"].ToString();
-				tbDir.Text = dr["Dirección"].ToString();
-				tbContac.Text = dr["Persona_Receptora"].ToString();
-				tbEmail.Text = dr["mail_Contacto"].ToString();
-				tbRecibe.Text = dr["RecibeElPedido"].ToString();
-				tbCiudad.Text = dr["Ciudad"].ToString();
-				tbTel.Text = dr["TelDomicilio"].ToString();
-				tbCel.Text = dr["CelularContacto"].ToString();
-				tbPais.Text = dr["País"].ToString();
-				tbVenta.Text = dr["Fecha_Confirmacion_Venta"].ToString();
+                tbOT.Text = dr["Id_OT"].ToString();
+                tbPedido.Text = dr["Consecutivo_Pedido"].ToString();
+                tbZona.Text = dr["Zona"].ToString();
+                tbTped.Text = dr["Descripcion_TipoPedido"].ToString();
+                tbPedBase.Text = dr["PedidoBase"].ToString();
+                tbAprob.Text = dr["TipoAprobacion"].ToString();
+                tbObra.Text = dr["Nombre_Obra"].ToString();
+                tbDir.Text = dr["Dirección"].ToString();
+                tbContac.Text = dr["Persona_Receptora"].ToString();
+                tbEmail.Text = dr["mail_Contacto"].ToString();
+                tbRecibe.Text = dr["RecibeElPedido"].ToString();
+                tbCiudad.Text = dr["Ciudad"].ToString();
+                tbTel.Text = dr["TelDomicilio"].ToString();
+                tbCel.Text = dr["CelularContacto"].ToString();
+                tbPais.Text = dr["País"].ToString();
+                tbVenta.Text = dr["Fecha_Confirmacion_Venta"].ToString();
 
-			}
+                Observacion5Id.Value = dr["Observacion_Pedido"].ToString();
+                Observacion1Id.Value = dr["Observacion_Dibujo"].ToString();
+                tbSupervisor.Text = dr["Supervisor"].ToString();
+                TextFabrica.Text = dr["FabricadoPor"].ToString();
+                TextInstala.Text = dr["InstaladaPor"].ToString();
+
+                txtcontacto.Text = dr["Persona_Receptora"].ToString();
+                txtMail.Text = dr["mail_Contacto"].ToString();
+                txtDireccion.Text = dr["Dirección"].ToString();
+                txtMunicipio.Text = dr["Ciudad"].ToString();
+                txtTelefono.Text = dr["TelDomicilio"].ToString();
+                txtObs.Text = dr["Observaciones_Contables"].ToString();
+                txtCotizacion.Text = dr["Cotizacion"].ToString();
+                txtOrdenCompra.Text = dr["OrdendeCompra"].ToString();
+                txtAsesor.Text = dr["Codigo_Asesor"].ToString();
+                TextTNegociacion.Value = dr["Forma_Pago"].ToString();
+
+            }
 			//if (!IsPostBack)
 			//{
 			//	using (SqlConnection conn=new SqlConnection(ConfigurationManager.ConnectionStrings["ListI_Connection"].ConnectionString))
@@ -66,7 +95,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 			//	}
 			//}
 		}
-	}
+
+      
+    }
 }
 
 

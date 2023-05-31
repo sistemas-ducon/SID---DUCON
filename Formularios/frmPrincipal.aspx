@@ -441,7 +441,7 @@
 
                 <div class="row">
                     <div class="mb-2 gap-2">
-                        <textarea id="Observacion1Id" runat="server" class="form-control form-control-lg"></textarea>
+                        <textarea id="Observacion1Id" runat="server" class="form-control form-control-sm"></textarea>
                     </div>
                 </div>
             </div>
@@ -494,12 +494,10 @@
 
                         <div class="input-group input-group-sm mb-2 gap-2">
                             <asp:label class="form-label" Text="Fabrica" runat="server" id="lblFabrica"></asp:label>
-                            <select name="" id="inputFabrica" class="custom-select form-control">
-                                <option selected=""></option>
-                                <option value="01">Medellin</option>
-                                <option value="02">Bogota</option>
-                            </select>
+                            <asp:TextBox type="text" class="form-control" runat="server" ID="TextFabrica"/>
+
                         </div>
+                        
                     </div>
 
                     <div class="col-2">
@@ -519,12 +517,10 @@
 
                             <div class="input-group input-group-sm mb-2 gap-3">
                                 <asp:label class="form-label" Text="Instala" runat="server" id="lblInstala"></asp:label>
-                                <select name="" id="inputInstala" class="custom-select form-control">
-                                    <option selected=""></option>
-                                    <option value="01">Medellin</option>
-                                    <option value="02">Bogota</option>
-                                </select>
+                               <asp:TextBox type="text" class="form-control" runat="server" ID="TextInstala"/>
+
                             </div>
+
                         </div>
                         <div class="col-8">
 
@@ -595,7 +591,7 @@
 
             <div class="Info_F ">
                 
-                 <asp:TextBox type="" class="form-control" runat="server" ID="txtMensaje"></asp:TextBox>
+                <asp:TextBox type="" class="form-control" runat="server" ID="txtMensaje" Visible="False"></asp:TextBox>
             </div>
 
         </div>
@@ -690,9 +686,9 @@
 
                 </div>
                 <div class="derecha">
-                    <div class="derecha1">
+                     <div class="derecha1">
                         <label for="">Tipo de Negociación</label>
-                        <textarea name="" id="" cols="25" rows="7"></textarea>
+                        <textarea name="" id="TextTNegociacion" runat="server" cols="25" rows="7"></textarea>
                     </div>
                 </div>
                 

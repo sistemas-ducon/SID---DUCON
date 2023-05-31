@@ -15,8 +15,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 	{
 		protected void Page_Load(object sender, EventArgs e)
 		{
-		
-		}
+
+            if (Session["usuariologueado"] != null)
+            {
+                string usuariologueado = Session["usuariologueado"].ToString();
+
+            }
+            else
+            {
+                Response.Redirect("Login.aspx");
+            }
+        }
 
 	}
 }
