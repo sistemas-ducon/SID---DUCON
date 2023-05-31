@@ -21,6 +21,7 @@
 
 /* Inputs parte izquier de planos */
 .descripcion-plano {
+    width:20rem;
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
