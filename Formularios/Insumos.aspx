@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Plano.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.Plano" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Plano.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.Insumos" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 
@@ -82,13 +82,43 @@
 
                     <div class="contenedor-icono">
 
-                        <i class="bi bi-file-earmark"></i>
-                        <i class="bi bi-file-earmark-ruled"></i>
-                        <i class="bi bi-wrench"></i>
-                        <i class="bi bi-database-down"></i>
-                        <i class="bi bi-files"></i>
-                        <i class="bi bi-search"></i>
-                        <i class="bi bi-disc"></i>
+                         <a class="text-dark" href="#" title="Nuevo Insumo">
+
+                            <i class="bi bi-file-earmark"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="...">
+
+                            <i class="bi bi-file-earmark-ruled"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Modificar Insumo">
+
+                            <i class="bi bi-wrench"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Eliminar Insumo">
+
+                            
+                            <i class="bi bi-database-x"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Copiar Insumo">
+
+                            <i class="bi bi-files"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Buscar Insumo">
+
+                            <i class="bi bi-search"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Actualizar">
+
+                               <i class="bi bi-disc"></i>
+                        </a>
+
+                        
+                        
+                        
+                     
+                        
+                        
+                     
 
                     </div>
                 </ul>

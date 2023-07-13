@@ -11,7 +11,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
 
 
-    public partial class Plano
+    public partial class Objetos
     {
 
         /// <summary>

@@ -13,7 +13,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
 	public partial class OrdenesDeTrabajo : System.Web.UI.Page
 	{
-		protected void Page_Load(object sender, EventArgs e)
+        private string id;
+        private string pedido;
+
+        protected void Page_Load(object sender, EventArgs e)
 		{
             if (Session["usuariologueado"] != null)
             {
@@ -25,29 +28,120 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Response.Redirect("Login.aspx");
             }
 
+            if(!IsPostBack)
+            {
+                tbOT.Attributes.Add("onkeypress", "return handleEnter(event)");
+                string usuariologueado = Session["usuariologueado"].ToString();
 
+                if (Session["Id_OT"] != null && Session["pedido"] != null)
+                {
+                    id = Session["Id_OT"].ToString();
+                    pedido = Session["pedido"].ToString();
+                    Cargar_OT();
+                }
+
+            }
+           
+
+
+        }
+
+        protected void tbOT_TextChanged(object sender, EventArgs e)
+        {
+            
+            string id = tbOT.Text.Trim();
+            Session["Id_OT"] = id;
+          
+            if (!string.IsNullOrEmpty(id))
+            {
+                
+                    string inputData = tbOT.Text;
+                    List<int> numeros = ObtenerNumerosDesdeLaBaseDeDatos(inputData);
+
+                    ddlNumbers.Items.Clear(); // Limpiar las opciones existentes
+
+                    foreach (int numero in numeros)
+                    {
+                        ddlNumbers.Items.Add(numero.ToString());
+                    }
+                
+            }
+        }
+
+        protected void Page_PreRender(object sender, EventArgs e)
+        {
+            // Volver a llenar el combo en cada postback antes de renderizar la página
+            string inputData = tbOT.Text;
+            List<int> numeros = ObtenerNumerosDesdeLaBaseDeDatos(inputData);
+
+            ddlNumbers.Items.Clear(); // Limpiar las opciones existentes
+
+            foreach (int numero in numeros)
+            {
+                ddlNumbers.Items.Add(numero.ToString());
+            }
+            ddlNumbers.SelectedValue = pedido;
+        }
+
+        protected void ddlNumbers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string pedido = ddlNumbers.SelectedValue;
+             Session["pedido"] = pedido;
 
             Cargar_OT();
+        }
 
-		}
+        private List<int> ObtenerNumerosDesdeLaBaseDeDatos(string dato)
+        {
+            List<int> numeros = new List<int>();
 
-		public void Cargar_OT()
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString; ; 
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT * FROM tblOT WHERE Id_OT = @IdOT";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@IdOT", dato);
+
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // Supongamos que el número que deseas obtener está en la columna "Consecutivo_Pedido" de la tabla
+                            int numero = reader.GetInt16(reader.GetOrdinal("Consecutivo_Pedido"));
+                            numeros.Add(numero);
+                        }
+                    }
+                }
+            }
+
+            return numeros;
+        }
+
+        public void Cargar_OT()
 		{
-			//Conexion a la BD_SIDSQL y traemos el procedimiento almacenado
-			string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            id = Session["Id_OT"].ToString();
+            pedido = Session["pedido"].ToString();
+            //Conexion a la BD_SIDSQL y traemos el procedimiento almacenado
+            string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
 			SqlConnection sqlconectar = new SqlConnection(cn);
 			SqlCommand cmd = new SqlCommand("ctaOT", sqlconectar)
 			{
 				CommandType = CommandType.StoredProcedure
 			};
 			cmd.Connection.Open();
-			cmd.Parameters.Add("@OT", SqlDbType.VarChar, 30).Value = tbOT.Text;
-			cmd.Parameters.Add("@Con", SqlDbType.VarChar, 30).Value = tbPedido.Text;
+			cmd.Parameters.Add("@OT", SqlDbType.VarChar, 30).Value = id;
+			cmd.Parameters.Add("@Con", SqlDbType.VarChar, 30).Value = pedido;
 			SqlDataReader dr = cmd.ExecuteReader();
 			if (dr.Read())
 			{
                 tbOT.Text = dr["Id_OT"].ToString();
-                tbPedido.Text = dr["Consecutivo_Pedido"].ToString();
+                ddlNumbers.Text = dr["Consecutivo_Pedido"].ToString();
                 tbZona.Text = dr["Zona"].ToString();
                 tbTped.Text = dr["Descripcion_TipoPedido"].ToString();
                 tbPedBase.Text = dr["PedidoBase"].ToString();
@@ -61,7 +155,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 tbTel.Text = dr["TelDomicilio"].ToString();
                 tbCel.Text = dr["CelularContacto"].ToString();
                 tbPais.Text = dr["País"].ToString();
-                tbVenta.Text = dr["Fecha_Confirmacion_Venta"].ToString();
+                if (DateTime.TryParse(dr["Fecha_Confirmacion_Venta"].ToString(), out DateTime fecha))
+                {
+                    tbVenta.Text = fecha.ToString("dd/MM/yyyy");
+                }
+                else
+                {
+                    // El valor no se pudo convertir a DateTime correctamente
+                    // Puedes manejar el caso de error de alguna manera adecuada
+                    tbVenta.Text = "Fecha inválida";
+                }
 
                 Observacion5Id.Value = dr["Observacion_Pedido"].ToString();
                 Observacion1Id.Value = dr["Observacion_Dibujo"].ToString();
@@ -81,22 +184,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 TextTNegociacion.Value = dr["Forma_Pago"].ToString();
 
             }
-			//if (!IsPostBack)
-			//{
-			//	using (SqlConnection conn=new SqlConnection(ConfigurationManager.ConnectionStrings["ListI_Connection"].ConnectionString))
-			//	{
-			//		SqlCommand cmd = new SqlCommand();
-			//		cmd.CommandType = CommandType.StoredProcedure;
-			//		cmd.CommandText = "ctaInsumos";
-			//		cmd.Connection= conn;
-			//		conn.Open();
-			//		GridView1.DataSource = cmd.ExecuteReader();
-			//		GridView1.DataBind();
-			//	}
-			//}
+		
 		}
 
-      
+        protected void DataGrid1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 

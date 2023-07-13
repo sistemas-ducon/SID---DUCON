@@ -85,7 +85,7 @@
                                 </li>
 
                                 <li class="nav-item dropend">
-                                    <a class="nav-link dropdown-toggle " href="#" id="Gest_Cali_Adno" role="button" data-bs-toggle="dropdown" aria-expanded="false">Gestio de calidad adnom</a>                                  
+                                    <a class="nav-link dropdown-toggle " href="#" id="Gest_Cali_Adno" role="button" data-bs-toggle="dropdown" aria-expanded="false">Gestion de calidad a</a>                                  
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="#">Acciones de mejora</a></li>
                                         <li><a class="dropdown-item" href="#">Entrega perfecta</a></li>

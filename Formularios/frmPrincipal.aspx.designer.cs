@@ -15,6 +15,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
     {
 
         /// <summary>
+        /// Control lblBienvenida.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblBienvenida;
+
+        /// <summary>
         /// Control lblOT.
         /// </summary>
         /// <remarks>
@@ -42,13 +51,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.Label lblPedido;
 
         /// <summary>
-        /// Control tbPedido.
+        /// Control ddlNumbers.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tbPedido;
+        protected global::System.Web.UI.WebControls.DropDownList ddlNumbers;
 
         /// <summary>
         /// Control LblZona.

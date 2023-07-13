@@ -18,9 +18,9 @@
 </head>
 <body>
 
-    
-    
-     <nav class="navbar navbar-expand-sm navbar-light bg-light">
+
+
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
         <div class="container">
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,11 +68,11 @@
             </div>
         </div>
     </nav>
-     
+
     <%--Termina Panel principal de nombres--%>
-   
-    
-        <%--Comienza Panel de iconos--%>
+
+
+    <%--Comienza Panel de iconos--%>
 
 
     <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
@@ -92,44 +92,96 @@
 
                         <%--Comienza Nueva OT--%>
 
-                        <i data-bs-toggle="modal" data-bs-target="#exampleModal" class="bi bi-file-earmark"></i>
 
 
 
 
-                        
-
-             <%--Termina Nueva OT--%>
 
 
 
-                                <i class="ib bi-pc"></i>
-                                <i class="bi bi-database-check"></i>
-                                <i class="bi bi-fire"></i>
-                                <i class="bi bi-bar-chart-line"></i>
-                                <i class="bi bi-border-inner"></i>
-                                <i class="bi bi-border-inner"></i>
-                                <i class="bi bi-lock"></i>
-                                <i class="bi bi-building"></i>
-                                <i class="bi bi-building-down"></i>
-                                <i class="bi bi-disc-fill"></i>
-                                <i class="bi bi-printer"></i>
-                                <i class="bi bi-save2"></i>
-                                <i class="bi bi-arrow-up-left-circle"></i>
-                                <i class="bi bi-bag-plus-fill"></i>
-                                <i class="bi bi-text-indent-left"></i>
-                                <i class="bi bi-file-earmark-code"></i>
-                                <i class="bi bi-file-arrow-down-fill"></i>
-              
-                  <ul />
-              </ul>
-           </div>
-            
-      </div>
-   </nav>
-    </div>
+                        <%--Termina Nueva OT--%>
 
-      <!-- Termina Panel Iconos-->
+                        <a class="text-dark" href="#" title="Adicionar Objeto al Plano">
+                            <i class="ib bi-pc"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Quitar Objeto del Plano">
+                            <i class="bi bi-database-check"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Eliminar Objetos del Plano">
+                            <i class="bi bi-fire"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Acabados del Plano">
+
+                            <i class="bi bi-bar-chart-line"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Leer Archivo Despiece Acad">
+
+                            <i class="bi bi-border-inner"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Cargar Archivo TXT XY">
+
+                            <i class="bi bi-folder-plus"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Plano Bloqueado">
+
+                            <i class="bi bi-lock"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Crear o Redefinir Bolsa">
+
+                            <i class="bi bi-bag-check"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Adicionar/Remover Elementos de la Bolsa">
+
+                            <i class="bi bi-bag-plus"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Despiece del Plano">
+
+                            <i class="bi bi-disc-fill"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Generar  TXT">
+
+                            <i class="bi bi-filetype-txt"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Guardar TXT">
+
+                            <i class="bi bi-save2"></i>
+                        </a>
+
+                        <a class="text-dark" href="#" title="Exportar Plano u Orden de Trabajo">
+
+                            <i class="bi bi-arrow-up-left-circle"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Visualizar/Generar Cotizacion">
+
+                            <i class="bi bi-bag-plus"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Objetos no Existentes">
+
+                            <i class="bi bi-text-indent-left"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Actualizar Precio Prototipo">
+
+                            <i class="bi bi-cash-coin"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Generar Formato Certificado de Origen ">
+
+                            <i class="bi bi-clipboard-check"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Importar Plano de Actualizacion de Bloques">
+
+                            <i class="bi bi-file-arrow-down-fill"></i>
+                        </a>
+
+
+                        <ul />
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+
+
+    <!-- Termina Panel Iconos-->
 
     <!-- comieza Panel Pricipal de Planos-->
 
@@ -137,43 +189,42 @@
         <div class=" container-fluid Plano">
 
             <div class="container-fluid panel-plano ">
-
                 <div class="  descripcion-plano">
                     <div class="item-plano">
                         <asp:Button ID="btnPlano" type="button" Text="Plano" class="btn btn-outline-secondary"
                             runat="server"></asp:Button>
-                        <asp:TextBox ID="txtPlano" type="text" class="  input" runat="server"></asp:TextBox>
+                        <asp:TextBox ID="txtPlano" type="text" class="form-control  input" runat="server"></asp:TextBox>
                     </div>
 
                     <div class="item-plano">
                         <asp:Label ID="lblCliente" class="form-label" Text="Cliente" runat="server"></asp:Label>
-                        <asp:TextBox ID="txtCliente" type="text" class=" input" runat="server"></asp:TextBox>
+                        <asp:TextBox ID="txtCliente" type="text" class="form-control input" runat="server"></asp:TextBox>
                     </div>
 
                     <div class="item-plano">
                         <asp:Label ID="lblArea" class="form-label" Text="Área" runat="server"></asp:Label>
-                        <asp:TextBox ID="txtArea" type="text" class=" input" runat="server"></asp:TextBox>
+                        <asp:TextBox ID="txtArea" type="text" class="form-control input" runat="server"></asp:TextBox>
                     </div>
 
                     <div class="item-plano">
                         <asp:Label ID="lblContacto" class="form-label" Text="Contacto" runat="server">
                         </asp:Label>
-                        <asp:TextBox ID="txtContacto" type="text" class=" input" runat="server">
+                        <asp:TextBox ID="txtContacto" type="text" class="form-control input" runat="server">
                         </asp:TextBox>
                     </div>
 
                     <div class="item-plano">
                         <asp:Label ID="lblAsesor" class="form-label" Text="Asesor" runat="server"></asp:Label>
-                        <asp:TextBox ID="txtAsesor" type="text" class=" input" runat="server"></asp:TextBox>
+                        <asp:TextBox ID="txtAsesor" type="text" class="form-control input" runat="server"></asp:TextBox>
                     </div>
                     <div class="item-plano">
                         <asp:Label ID="lblDibuja" class="form-label" Text="Dibija" runat="server"></asp:Label>
-                        <asp:TextBox ID="txtDibuja" type="text" class=" input" runat="server"></asp:TextBox>
+                        <asp:TextBox ID="txtDibuja" type="text" class="form-control input" runat="server"></asp:TextBox>
                     </div>
 
                     <div class="item-plano">
                         <asp:Label ID="lblBolsa" class="form-label" Text="Bolsa" runat="server"></asp:Label>
-                        <asp:TextBox ID="txtBolsa" type="text" class=" input " runat="server"></asp:TextBox>
+                        <asp:TextBox ID="txtBolsa" type="text" class="form-control input " runat="server"></asp:TextBox>
                     </div>
 
                     <div class="item-plano2">
@@ -195,91 +246,15 @@
 
                 </div>
 
+                <div class=" tabla-plano overflow-auto">
 
+        
 
-
-
-                <div class=" tabla-plano">
-
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Descrpción</th>
-                                <th scope="col">Alt</th>
-                                <th scope="col">Anc</th>
-                                <th scope="col">Cant</th>
-                                <th scope="col">V.Und</th>
-                                <th scope="col">Sub Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <tr>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                            </tr>
-
-                            <tr>
-
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                            </tr>
-
-                            <tr>
-
-                                <td></td>
-                                <th colspan="2">Superficies</th>
-
-                            </tr>
-
-                            <tr>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                            </tr>
-
-                            <tr>
-
-                                <td></td>
-                                <th colspan="2">Totales</th>
-
-                            </tr>
-
-                            <tr>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                                <td>Ejemplo</td>
-                            </tr>
-
-
-                        </tbody>
-                    </table>
 
                 </div>
-
             </div>
 
             <div class=" container-fluid panel-tabla  ">
-
                 <div class="  tabla2-plano">
 
                     <table class="table">
@@ -372,8 +347,8 @@
     <!-- Termina Panel Pricipal de Planos-->
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
 </body>
 </html>
 

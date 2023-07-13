@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="modulo.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.Plano" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="modulo.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.modulo" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 
@@ -89,14 +89,41 @@
                     <div class="contenedor-icono">
 
                         <!--icons planos-->
+                         <a class="text-dark" href="#" title="">
 
-                        <i class="bi bi-file-earmark"></i>
-                        <i class="bi bi-file-medical"></i>
-                        <i class="bi bi-wrench"></i>
-                        <i class="bi bi-file-earmark-ruled"></i>
-                        <i class="bi bi-database-down"></i>
-                        <i class="bi bi-files"></i>
-                        <i class="bi bi-check-lg"></i>
+                             <i class="bi bi-file-earmark"></i>
+                        </a>
+                          <a class="text-dark" href="#" title="">
+
+                             <i class="bi bi-file-medical"></i>
+                        </a>
+                          <a class="text-dark" href="#" title="">
+
+                              <i class="bi bi-wrench"></i>
+                        </a>
+                          <a class="text-dark" href="#" title="">
+
+                             <i class="bi bi-file-earmark-ruled"></i>
+                        </a>
+                          <a class="text-dark" href="#" title="">
+
+                            <i class="bi bi-database-down"></i>
+                        </a>
+                          <a class="text-dark" href="#" title="">
+
+                             <i class="bi bi-files"></i>
+                        </a>
+                          <a class="text-dark" href="#" title="">
+
+                            <i class="bi bi-check-lg"></i>
+                        </a>
+                       
+                       
+                      
+                       
+                        
+                       
+                        
 
 
                     </div>

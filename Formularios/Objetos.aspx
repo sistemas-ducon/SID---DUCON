@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Objetos.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.Plano" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Objetos.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.Objetos" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 
@@ -18,9 +18,9 @@
 </head>
 
 
-    <body>
+<body>
 
-        
+
     <!--Comienza Panel principal de nombres -->
     <nav class="navbar navbar-expand-sm navbar-light bg-light">
         <div class="container">
@@ -89,18 +89,55 @@
                     <div class="contenedor-icono">
 
                         <!--icons planos-->
+                        <a class="text-dark" href="#" title="Nuevo Objeto">
 
-                        <i class="bi bi-file-earmark"></i>
-                        <i class="bi bi-printer"></i>
-                        <i class="bi bi-wrench"></i>
-                        <i class="bi bi-file-earmark-ruled"></i>
-                        <i class="bi bi-database-down"></i>
-                        <i class="bi bi-key"></i>
-                        <i class="bi bi-files"></i>
-                        <i class="bi bi-currency-dollar"></i>
-                        <i class="bi bi-coin"></i>
-                        <i class="bi bi-disc"></i>
-                        <i class="bi bi-check-lg"></i>
+                            <i class="bi bi-file-earmark"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="...">
+
+                            <i class="bi bi-printer"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Modificar Objeto">
+
+                            <i class="bi bi-wrench"></i>
+                        </a>
+
+                        <a class="text-dark" href="#" title="Consultar Objeto">
+
+                            <i class="bi bi-file-earmark-ruled"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Eliminar Objeto">
+
+                            <i class="bi bi-database-x"></i>
+                        </a>
+
+                        <a class="text-dark" href="#" title="Buscar Objeto">
+
+                            <i class="bi bi-search"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Copiar Objeto">
+
+                            <i class="bi bi-files"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Actualizar Precio">
+
+                            <i class="bi bi-currency-dollar"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Generar Lista de Precios">
+
+                            <i class="bi bi-coin"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Ir al Objeto Anterior">
+
+                            <i class="bi bi-disc"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Chequear">
+
+                            <i class="bi bi-check-lg"></i>
+                        </a>
+
+
+
 
 
                     </div>
@@ -111,177 +148,178 @@
 
     <div class="container-fluid objeto">
 
-            <form class="control" action="#" runat="server">
+        <form class="control" action="#" runat="server">
 
-                <div class="container-fluid superior">
-
-
-                    <div class="item">
-
-                        <asp:RadioButtonList ID="RadioButtonList1" runat="server">
-                            <asp:ListItem Value=" Por Objeto"> Por Objeto</asp:ListItem>
-                            <asp:ListItem>   Por descripcion</asp:ListItem>
-                        </asp:RadioButtonList>
-
-                    </div>
+            <div class="container-fluid superior">
 
 
+                <div class="item">
 
-                    <div class="item">
-                        <asp:Label ID="lblGrupo" Class="form-label " runat="server" Text="Grupo"></asp:Label>
-                        <asp:DropDownList ID="DblGrupo" class="form-control grupo" runat="server"></asp:DropDownList>
-                    </div>
-
-
-                    <div class="item">
-                         <asp:Label ID="lblCriterio" Class="form-label" runat="server" Text="Criterio"></asp:Label>
-                        <asp:TextBox ID="txtCriterio"  class="form-control criterio" runat="server"></asp:TextBox>
-                    </div>
-
-                   
-
-                    <div class="item">
-                        <asp:Label ID="lblAltura" Class="form-label" runat="server" Text="Altura"></asp:Label>
-                        <asp:TextBox ID="txtAltura"  class="form-control altura" runat="server"></asp:TextBox>
-                    </div>
-
-                     <div class="item">
-                        <asp:Label ID="lblAncho" Class="form-label" runat="server" Text="Ancho"></asp:Label>
-                        <asp:TextBox ID="txtAncho"  class="form-control ancho" runat="server"></asp:TextBox>
-                    </div>
-
-
-                    <div class="item">
-
-                        <div class="item1">
-                            <asp:CheckBox ID="chxBloquearActivos" runat="server" />
-                            <asp:Label ID="lblBloquearActivos" Class="form-label" runat="server" Text="Solo Bloquear Activos"></asp:Label>
-                        </div>
-
-                        <asp:Button ID="btnBuscarActivos" Class="btn btn-outline-secondary" runat="server" Text="Buscar Solo Activos" />
-                    </div>
-
-                     
-                    
-                    
-
-
-
-                    <!--Aqui van todos los div del panel superior 6div  -->
+                    <asp:RadioButtonList ID="RadioButtonList1" runat="server">
+                        <asp:ListItem Value=" Por Objeto"> Por Objeto</asp:ListItem>
+                        <asp:ListItem>   Por descripcion</asp:ListItem>
+                    </asp:RadioButtonList>
 
                 </div>
 
-                <div class="container-fluid central">
 
-                    <div class="item">
-                        <asp:GridView ID="GridView1" runat="server"></asp:GridView>
-                           <table class="table table-bordered border-secondary">
+
+                <div class="item">
+                    <asp:Label ID="lblGrupo" Class="form-label " runat="server" Text="Grupo"></asp:Label>
+                    <asp:DropDownList ID="DblGrupo" class="form-control grupo" runat="server"></asp:DropDownList>
+                </div>
+
+
+                <div class="item">
+                    <asp:Label ID="lblCriterio" Class="form-label" runat="server" Text="Criterio"></asp:Label>
+                    <asp:TextBox ID="txtCriterio" class="form-control criterio" runat="server"></asp:TextBox>
+                </div>
+
+
+
+                <div class="item">
+                    <asp:Label ID="lblAltura" Class="form-label" runat="server" Text="Altura"></asp:Label>
+                    <asp:TextBox ID="txtAltura" class="form-control altura" runat="server"></asp:TextBox>
+                </div>
+
+                <div class="item">
+                    <asp:Label ID="lblAncho" Class="form-label" runat="server" Text="Ancho"></asp:Label>
+                    <asp:TextBox ID="txtAncho" class="form-control ancho" runat="server"></asp:TextBox>
+                </div>
+
+
+                <div class="item">
+
+                    <div class="item1">
+                        <asp:CheckBox ID="chxBloquearActivos" runat="server" />
+                        <asp:Label ID="lblBloquearActivos" Class="form-label" runat="server" Text="Solo Bloquear Activos"></asp:Label>
+                    </div>
+
+                    <asp:Button ID="btnBuscarActivos" Class="btn btn-outline-secondary" runat="server" Text="Buscar Solo Activos" />
+                </div>
+
+
+
+
+
+
+
+                <!--Aqui van todos los div del panel superior 6div  -->
+
+            </div>
+
+            <div class="container-fluid central">
+
+                <div class="item">
+                    <asp:GridView ID="GridView1" runat="server"></asp:GridView>
+                    <table class="table table-bordered border-secondary">
                         <thead>
-                          <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">First</th>
-                            <th scope="col">Last</th>
-                            <th scope="col">Handle</th>
-                          </tr>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">First</th>
+                                <th scope="col">Last</th>
+                                <th scope="col">Handle</th>
+                            </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">3</th>
-                            <td colspan="2">Larry the Bird</td>
-                            <td>@twitter</td>
-                          </tr>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Jacob</td>
+                                <td>Thornton</td>
+                                <td>@fat</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td colspan="2">Larry the Bird</td>
+                                <td>@twitter</td>
+                            </tr>
                         </tbody>
-                      </table>
-
-                    </div>
-
-                    <!--Aqui va el gridview central -->
+                    </table>
 
                 </div>
 
-                <div class="container-fluid inferior1">
-                    <!--Aqui va un div con unos datos horizaontales -->
+                <!--Aqui va el gridview central -->
 
-                    <div class=" itemInf1">
-                        <asp:Label ID="Label1" runat="server" Text="Descripción Objeto"></asp:Label>
-                        <asp:Button ID="Button1" CssClass="btn btn-outline-secondary" runat="server" Text="Despiece" />
-                    </div>
+            </div>
 
-                    <div class=" itemInf2">
-                        <asp:Label ID="Label2" runat="server" Text="Disp. LA"></asp:Label>
-                         <asp:Label ID="Label3" runat="server" Text="medida en centimetros "></asp:Label>
-                    </div>
+            <div class="container-fluid inferior1">
+                <!--Aqui va un div con unos datos horizaontales -->
 
-                    <div class=" itemIn2">
-                          <asp:Label ID="Label4" runat="server" Text="Disp. LB"></asp:Label>
-                         <asp:Label ID="Label5" runat="server" Text="Respuesta en centimetros"></asp:Label>
-                    </div>
-
+                <div class=" itemInf1">
+                    <asp:Label ID="Label1" runat="server" Text="Descripción Objeto"></asp:Label>
+                    <asp:Button ID="Button1" CssClass="btn btn-outline-secondary" runat="server" Text="Despiece" />
                 </div>
 
-                <div class="container-fluid inferior2">
-                    <!--Aqui va uno div con el grid inferioi-->
-                    <div class="item">
-                        <asp:GridView ID="GridView2" runat="server"></asp:GridView>
-
-                        <table class="table table-bordered border-secondary ">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">First</th>
-                                    <th scope="col">Last</th>
-                                    <th scope="col">Handle</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td colspan="2">Larry the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class=" itemInf2">
+                    <asp:Label ID="Label2" runat="server" Text="Disp. LA"></asp:Label>
+                    <asp:Label ID="Label3" runat="server" Text="medida en centimetros "></asp:Label>
                 </div>
 
-              
+                <div class=" itemIn2">
+                    <asp:Label ID="Label4" runat="server" Text="Disp. LB"></asp:Label>
+                    <asp:Label ID="Label5" runat="server" Text="Respuesta en centimetros"></asp:Label>
+                </div>
 
-            </form>
+            </div>
+
+            <div class="container-fluid inferior2">
+                <!--Aqui va uno div con el grid inferioi-->
+                <div class="item">
+                    <asp:GridView ID="GridView2" runat="server"></asp:GridView>
+
+                    <table class="table table-bordered border-secondary ">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">First</th>
+                                <th scope="col">Last</th>
+                                <th scope="col">Handle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Jacob</td>
+                                <td>Thornton</td>
+                                <td>@fat</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td colspan="2">Larry the Bird</td>
+                                <td>@twitter</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
 
-        </div> <!--div principal objeto -->
+
+        </form>
+
+
+    </div>
+    <!--div principal objeto -->
 
 
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-       
-        
-    </body>
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+
+</body>
+
 
 </html>
 
