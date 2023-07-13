@@ -27,6 +27,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     id = Session["Id_OT"].ToString();
                     pedido = Session["pedido"].ToString();
                     Cargar_Plano();
+                    Resumen_Plano();
+                    Panel_Bajo();
                 }
 
             }
@@ -63,6 +65,53 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         } //CargarPlano 
+
+        public void Resumen_Plano()
+        {
+
+            //Conexion a la BD_SIDSQL y traemos el procedimiento almacenado
+            string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            SqlConnection sqlconectar = new SqlConnection(cn);
+            SqlCommand cmd = new SqlCommand("CtaOT", sqlconectar)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Connection.Open();
+            cmd.Parameters.Add("@OT", SqlDbType.VarChar, 30).Value = id;
+            cmd.Parameters.Add("@Con", SqlDbType.VarChar, 30).Value = pedido;
+            SqlDataReader dr = cmd.ExecuteReader();
+            if (dr.Read())
+            {
+                txResumen.Value = dr["ResumenObra"].ToString();
+
+
+            }
+        }
+        public void Panel_Bajo()
+        {
+
+            //Conexion a la BD_SIDSQL y traemos el procedimiento almacenado
+            string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            SqlConnection sqlconectar = new SqlConnection(cn);
+            SqlCommand cmd = new SqlCommand("cta_Plano_Paneles", sqlconectar)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Connection.Open();
+            cmd.Parameters.Add("@Plan", SqlDbType.VarChar, 30).Value = txtPlano.Text;
+
+            SqlDataReader dr = cmd.ExecuteReader();
+            if (dr.Read())
+            {
+                txtCantidad.Text = dr["Cantidad"].ToString();
+
+
+            }
+        }
+
+
+
+
 
 
     } //Clase Plano 

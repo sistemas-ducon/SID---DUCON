@@ -25,7 +25,7 @@
         <header>
             <nav class="navbar navbar-expand-lg navbar-light bg-light pt-0">
 
-                <div class="container-fluid" style="background-color: #000037">
+                <div class="container-fluid" style="background-color: #081a2c">
 
                     <div class="collapse navbar-collapse" id="navbarScroll">
 
@@ -358,8 +358,10 @@
         </nav>
 
         <%--Termina Panel de iconos--%>
-    </div>
-    <%--Fin div wrapper --%>
+    
+    </div><%--Fin div wrapper --%>
+
+    
 
 
 
@@ -386,7 +388,7 @@
                     <div class="input-group input-group-sm mb-2 gap-2">
                         <asp:Label class="form-label" Text="Pedido" runat="server" ID="lblPedido"></asp:Label>
                         <asp:DropDownList class="form-control" ID="ddlNumbers" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlNumbers_SelectedIndexChanged"></asp:DropDownList>
-                       
+
                     </div>
                 </div>
                 <div class="col-1">
@@ -410,14 +412,14 @@
                     </div>
                 </div>
 
-                <div class="col-1">
+                <div class="col-2">
                     <div class="input-group input-group-sm mb-2 gap-2">
                         <asp:Label class="form-label" Text="Ped.Depen" runat="server" ID="lblPedDepen"></asp:Label>
                         <asp:TextBox ID="tbPedDepen" type="number" class="form-control" runat="server"></asp:TextBox>
                     </div>
                 </div>
 
-                <div class="col-3">
+                <div class="col-2">
                     <div class="input-group input-group-sm mb-2 gap-2">
                         <asp:Label class="form-label" Text="Aprob" runat="server" ID="lblAprob"></asp:Label>
                         <asp:TextBox ID="tbAprob" type="text" class="form-control" runat="server"></asp:TextBox>
@@ -598,10 +600,11 @@
                             <div class="col-12">
                                 <div class="table-responsive table-secondary overflow-auto m-2 ">
 
-                                    <h6 class="datagrid-header text-center">Titulo1</h6>
+                                    <h6 class="datagrid-header text-center">Grid 1</h6>
 
-                                    
-                                    
+                                    <asp:DataGrid ID="DataGrid1" runat="server"></asp:DataGrid>
+                                    <asp:SqlDataSource runat="server" ID="DataGridDespacho"></asp:SqlDataSource>
+
 
                                 </div>
                             </div>
@@ -839,7 +842,7 @@
                     </div>
 
                     <div class="  overflow-auto centro">
-                        <h6 class="text-center">Titulo 2</h6>
+                        <h6 class="text-center">Grid 2</h6>
 
                     </div>
                     <div class="derecha">

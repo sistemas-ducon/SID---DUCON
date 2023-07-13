@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
+using DataGrid = System.Web.UI.WebControls.DataGrid;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
@@ -26,5 +27,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-	}
+        protected void DataGrid1_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            if (e.CommandName == "RedirectToInsumoConsultar")
+            {
+                int index = e.Item.ItemIndex;
+                DataGrid grid = (DataGrid)source;
+                string idInsumo = grid.DataKeys[index].ToString();
+
+                // Redirigir a Insumo_consultar.aspx y pasar el valor del Id_Insumo en la URL
+                Response.Redirect("Insumo_consultar.aspx?Id_Insumo=" + idInsumo);
+            }
+        }
+
+
+    }
 }
