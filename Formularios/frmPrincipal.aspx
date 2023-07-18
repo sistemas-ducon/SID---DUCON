@@ -258,93 +258,93 @@
 
                             <%--Comienza Nueva OT--%>
 
-                            <a class="icong" href="#" title="Nueva OT">
+                            <a class="icong disabled" href="#" title="Nueva OT">
                                 <i class="bi bi-file-earmark"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Copiar Información en una Nueva OT" disabled="true">
+                            <a class="icong disabled" href="#" title="Copiar Información en una Nueva OT" >
                                 <i class="bi bi-files"></i>
                             </a>
-                            <a class="icong" href="#" title="Grabar Orden de Trabajo">
+                            <a class="icong disabled" href="#" title="Grabar Orden de Trabajo">
                                 <i class="bi bi-save2"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Modificar Orden de Trabajo">
+                            <a class="icong disabled" href="#" title="Modificar Orden de Trabajo">
                                 <i class="bi bi-wrench"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Anular o Eliminar un Pedido">
+                            <a class="icong disabled" href="#" title="Anular o Eliminar un Pedido">
                                 <i class="bi bi-file-earmark-excel"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Documentación OT">
+                            <a class="icong disabled" href="#" title="Documentación OT">
                                 <i class="bi bi-paperclip"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Observaciones OT">
+                            <a class="icong disabled" href="#" title="Observaciones OT">
                                 <i class="bi bi-eye"></i>
                             </a>
-                            <a class="icong" href="#" title="Imprimir Informacion General de la OT">
+                            <a class="icong disabled" href="#" title="Imprimir Informacion General de la OT">
                                 <i class="bi bi-printer"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Reimprimir Información Contable">
+                            <a class="icong disabled" href="#" title="Reimprimir Información Contable">
                                 <i class="bi bi-printer-fill"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Consultar Bolsa">
+                            <a class="icong disabled" href="#" title="Consultar Bolsa">
                                 <i class="bi bi-coin"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Cancelar">
+                            <a class="icong disabled" href="#" title="Cancelar">
                                 <i class="bi bi-x-lg"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Visualizar OT Pendientes">
+                            <a class="icong disabled" href="#" title="Visualizar OT Pendientes">
                                 <i class="bi bi-eyeglasses"></i>
                             </a>
-                            <a class="icong" href="#" title="Actualizar Pedidos Importados">
+                            <a class="icong disabled" href="#" title="Actualizar Pedidos Importados">
                                 <i class="bi bi-check-square"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Importar Pedido Asesor">
+                            <a class="icong disabled" href="#" title="Importar Pedido Asesor">
                                 <i class="bi bi-person-lines-fill"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Importar Pedido Sede ">
+                            <a class="icong disabled" href="#" title="Importar Pedido Sede ">
                                 <i class="bi bi-house-up"></i>
                             </a>
                             <a class="icong" href="#" title="Habilitar Pedido para Ventas">
                                 <i class="bi bi-receipt-cutoff"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Deshabilitar Orden de Trabajo para Producción ">
+                            <a class="icong disabled" href="#" title="Deshabilitar Orden de Trabajo para Producción ">
                                 <i class="bi bi-sign-stop"></i>
                             </a>
-                            <a class="icong" href="#" title="Indicador Obra Reactivada ">
+                            <a class="icong disabled" href="#" title="Indicador Obra Reactivada ">
                                 <i class="bi bi-bar-chart-line"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Registrar Pedido en el Sistema Administrativo ">
+                            <a class="icong disabled" href="#" title="Registrar Pedido en el Sistema Administrativo ">
                                 <i class="bi bi-triangle"></i>
                             </a>
                             <a class="icong" href="#" title="Cierra o Abre una OT ">
                                 <i class="bi bi-key"></i>
                             </a>
-                            <a class="icong" href="#" title="Simular Pasar Pedido ">
+                            <a class="icong disabled" href="#" title="Simular Pasar Pedido ">
                                 <i class="bi bi-code-square"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Exportar Pedido ">
+                            <a class="icong disabled " href="#" title="Exportar Pedido ">
                                 <i class="bi bi-airplane-engines"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Entrega Perfecta ">
+                            <a class="icong disabled" href="#" title="Entrega Perfecta ">
                                 <i class="bi bi-lightning-charge"></i>
                             </a>
 
 
-                            <a class="icong" href="#" title="Anular Obra">
+                            <a class="icong disabled" href="#" title="Anular Obra">
                                 <i class="bi bi-x-square"></i>
                             </a>
 
