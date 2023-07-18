@@ -94,7 +94,6 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Formularios\Insumos.aspx" />
-    <Content Include="Formularios\Insumos_Consultar.aspx" />
     <Content Include="Formularios\modulo.aspx" />
     <Content Include="Formularios\Objetos.aspx" />
     <Content Include="Formularios\Plano.aspx" />
@@ -149,13 +148,6 @@
     </Compile>
     <Compile Include="Formularios\Insumos.aspx.designer.cs">
       <DependentUpon>Insumos.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Formularios\Insumos_Consultar.aspx.cs">
-      <DependentUpon>Insumos_Consultar.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Formularios\Insumos_Consultar.aspx.designer.cs">
-      <DependentUpon>Insumos_Consultar.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\modulo.aspx.cs">
       <DependentUpon>modulo.aspx</DependentUpon>

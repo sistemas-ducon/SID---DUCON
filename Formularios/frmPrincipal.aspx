@@ -560,7 +560,7 @@
 
                             <div class="input-group input-group-sm mb-2 gap-2">
                                 <asp:Label class="form-label" Text="Venta" runat="server" ID="lblVenta"></asp:Label>
-                                <asp:TextBox ID="tbVenta" type="date" class="form-control" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="tbVenta" type="text" class="form-control" runat="server"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-6">

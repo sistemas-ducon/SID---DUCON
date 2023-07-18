@@ -51,9 +51,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             
             string id = tbOT.Text.Trim();
             Session["Id_OT"] = id;
-            Session["pedido"] = 1;
-
-            Cargar_OT();
+          
             if (!string.IsNullOrEmpty(id))
             {
                 
@@ -68,15 +66,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 
             }
-           
         }
-
-
 
         protected void Page_PreRender(object sender, EventArgs e)
         {
-            
-
             // Volver a llenar el combo en cada postback antes de renderizar la página
             string inputData = tbOT.Text;
             List<int> numeros = ObtenerNumerosDesdeLaBaseDeDatos(inputData);
@@ -88,8 +81,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ddlNumbers.Items.Add(numero.ToString());
             }
             ddlNumbers.SelectedValue = pedido;
-
-           
         }
 
         protected void ddlNumbers_SelectedIndexChanged(object sender, EventArgs e)
@@ -126,8 +117,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         }
                     }
                 }
-               
-
             }
 
             return numeros;
@@ -166,12 +155,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 tbTel.Text = dr["TelDomicilio"].ToString();
                 tbCel.Text = dr["CelularContacto"].ToString();
                 tbPais.Text = dr["País"].ToString();
-
-
-                DateTime Dato = (DateTime)dr["Fecha_Confirmacion_Venta"];
-                tbVenta.Text = Dato.ToString("yyyy-MM-dd");
-
-                
+                if (DateTime.TryParse(dr["Fecha_Confirmacion_Venta"].ToString(), out DateTime fecha))
+                {
+                    tbVenta.Text = fecha.ToString("dd/MM/yyyy");
+                }
+                else
+                {
+                    // El valor no se pudo convertir a DateTime correctamente
+                    // Puedes manejar el caso de error de alguna manera adecuada
+                    tbVenta.Text = "Fecha inválida";
+                }
 
                 Observacion5Id.Value = dr["Observacion_Pedido"].ToString();
                 Observacion1Id.Value = dr["Observacion_Dibujo"].ToString();
@@ -194,7 +187,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 		
 		}
 
-      
+        protected void DataGrid1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 
