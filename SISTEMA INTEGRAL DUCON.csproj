@@ -96,12 +96,12 @@
     <Content Include="Formularios\Ventas\Consulta_Cotizacion.aspx" />
     <Content Include="Formularios\Ventas\Diseño_Venta.aspx" />
     <Content Include="Formularios\Ventas\Gestion_Comercial.aspx" />
-    <Content Include="Formularios\Diseño y desarrollo\Insumos.aspx" />
-    <Content Include="Formularios\Diseño y desarrollo\Insumos_Consultar.aspx" />
+    <Content Include="Formularios\DiseñoYDesarrollo\Insumos.aspx" />
+    <Content Include="Formularios\DiseñoYDesarrollo\Insumos_Consultar.aspx" />
     <Content Include="Formularios\Ventas\Licitaciones.aspx" />
-    <Content Include="Formularios\Diseño y desarrollo\Modulo.aspx" />
-    <Content Include="Formularios\Diseño y desarrollo\Objetos.aspx" />
-    <Content Include="Formularios\Diseño y desarrollo\Plano.aspx" />
+    <Content Include="Formularios\DiseñoYDesarrollo\Modulo.aspx" />
+    <Content Include="Formularios\DiseñoYDesarrollo\Objetos.aspx" />
+    <Content Include="Formularios\DiseñoYDesarrollo\Plano.aspx" />
     <Content Include="Formularios\Inicio.aspx" />
     <Content Include="Formularios\frmPrincipal.aspx" />
     <Content Include="Formularios\Ventas\Render_Venta.aspx" />
@@ -117,10 +117,10 @@
       <DependentUpon>ModeloBDSID.edmx</DependentUpon>
       <LastGenOutput>ModeloBDSID.cs</LastGenOutput>
     </Content>
-    <Content Include="Recursos\CSS\Insumos.css" />
-    <Content Include="Recursos\CSS\modulo.css" />
-    <Content Include="Recursos\CSS\Objetos.css" />
-    <Content Include="Recursos\CSS\Plano.css" />
+    <Content Include="Recursos\CSS\DiseñoYDesarrollo\Insumos.css" />
+    <Content Include="Recursos\CSS\DiseñoYDesarrollo\modulo.css" />
+    <Content Include="Recursos\CSS\DiseñoYDesarrollo\Objetos.css" />
+    <Content Include="Recursos\CSS\DiseñoYDesarrollo\Plano.css" />
     <Content Include="Recursos\CSS\frmPrincipal.css" />
     <Content Include="Recursos\CSS\Inicio.css" />
     <Content Include="Recursos\CSS\login.css" />
@@ -171,18 +171,18 @@
     <Compile Include="Formularios\Ventas\Gestion_Comercial.aspx.designer.cs">
       <DependentUpon>Gestion_Comercial.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Formularios\Diseño y desarrollo\Insumos.aspx.cs">
+    <Compile Include="Formularios\DiseñoYDesarrollo\Insumos.aspx.cs">
       <DependentUpon>Insumos.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Formularios\Diseño y desarrollo\Insumos.aspx.designer.cs">
+    <Compile Include="Formularios\DiseñoYDesarrollo\Insumos.aspx.designer.cs">
       <DependentUpon>Insumos.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Formularios\Diseño y desarrollo\Insumos_Consultar.aspx.cs">
+    <Compile Include="Formularios\DiseñoYDesarrollo\Insumos_Consultar.aspx.cs">
       <DependentUpon>Insumos_Consultar.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Formularios\Diseño y desarrollo\Insumos_Consultar.aspx.designer.cs">
+    <Compile Include="Formularios\DiseñoYDesarrollo\Insumos_Consultar.aspx.designer.cs">
       <DependentUpon>Insumos_Consultar.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\Ventas\Licitaciones.aspx.cs">
@@ -192,25 +192,25 @@
     <Compile Include="Formularios\Ventas\Licitaciones.aspx.designer.cs">
       <DependentUpon>Licitaciones.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Formularios\Diseño y desarrollo\Modulo.aspx.cs">
+    <Compile Include="Formularios\DiseñoYDesarrollo\Modulo.aspx.cs">
       <DependentUpon>Modulo.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Formularios\Diseño y desarrollo\Modulo.aspx.designer.cs">
+    <Compile Include="Formularios\DiseñoYDesarrollo\Modulo.aspx.designer.cs">
       <DependentUpon>Modulo.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Formularios\Diseño y desarrollo\Objetos.aspx.cs">
+    <Compile Include="Formularios\DiseñoYDesarrollo\Objetos.aspx.cs">
       <DependentUpon>Objetos.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Formularios\Diseño y desarrollo\Objetos.aspx.designer.cs">
+    <Compile Include="Formularios\DiseñoYDesarrollo\Objetos.aspx.designer.cs">
       <DependentUpon>Objetos.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Formularios\Diseño y desarrollo\Plano.aspx.cs">
+    <Compile Include="Formularios\DiseñoYDesarrollo\Plano.aspx.cs">
       <DependentUpon>Plano.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Formularios\Diseño y desarrollo\Plano.aspx.designer.cs">
+    <Compile Include="Formularios\DiseñoYDesarrollo\Plano.aspx.designer.cs">
       <DependentUpon>Plano.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\Inicio.aspx.cs">
@@ -316,6 +316,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="JavaScript\" />
+    <Folder Include="Recursos\CSS\Ventas\" />
     <Folder Include="Recursos\IMG\" />
   </ItemGroup>
   <ItemGroup>

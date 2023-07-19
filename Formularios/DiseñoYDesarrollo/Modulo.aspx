@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Plano.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.Plano" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Modulo.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.modulo" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 
@@ -13,12 +13,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="../../Recursos/CSS/Plano.css" rel="stylesheet" />
-    <title>Plano</title>
+    <link href="../../Recursos/CSS/DiseñoYDesarrollo/Modulo.css" rel="stylesheet" />
+    <title>Modulo</title>
 </head>
-<body>
 
-     <header>
+
+    <body>
+
+         <header>
             <nav class="navbar navbar-expand-lg navbar-light bg-light pt-0">
 
                 <div class="container-fluid" style="background-color: #081a2c">
@@ -179,12 +181,14 @@
 
             </nav>
         </header>
-
-
+        
+    <!--Comienza Panel principal de nombres -->
     <nav class="navbar navbar-expand-sm navbar-light bg-light">
         <div class="container">
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -193,7 +197,7 @@
 
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="frmPrincipal.aspx">Ordenes de trabajo</a>
+                        <a class="nav-link active" aria-current="page" href="../../Formularios/frmPrincipal.aspx">Ordenes de trabajo</a>
                     </li>
                 </ul>
 
@@ -212,7 +216,7 @@
 
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="modulo.aspx">modulo</a>
+                        <a class="nav-link active" aria-current="page" href="modulo.aspx">Modulos</a>
                     </li>
                 </ul>
 
@@ -229,262 +233,200 @@
             </div>
         </div>
     </nav>
-
-    <%--Termina Panel principal de nombres--%>
-
-
-    <%--Comienza Panel de iconos--%>
+    <!-- Termina Panel principal de nombres-->
 
 
-    <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
+    <!--Comienza Panel de iconos-->
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
         <div class="container-fluid">
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#ejemplo2" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#ejemplo2"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="ejemplo2">
                 <ul class="navbar-nav mx-auto">
 
-
-
                     <div class="contenedor-icono">
 
+                        <!--icons planos-->
+                         <a class="text-dark" href="#" title="">
 
-
-                        <%--Comienza Nueva OT--%>
-
-
-
-
-
-
-
-
-                        <%--Termina Nueva OT--%>
-
-                        <a class="text-dark" href="#" title="Adicionar Objeto al Plano">
-                            <i class="ib bi-pc"></i>
+                             <i class="bi bi-file-earmark"></i>
                         </a>
-                        <a class="text-dark" href="#" title="Quitar Objeto del Plano">
-                            <i class="bi bi-database-check"></i>
+                          <a class="text-dark" href="#" title="">
+
+                             <i class="bi bi-file-medical"></i>
                         </a>
-                        <a class="text-dark" href="#" title="Eliminar Objetos del Plano">
-                            <i class="bi bi-fire"></i>
+                          <a class="text-dark" href="#" title="">
+
+                              <i class="bi bi-wrench"></i>
                         </a>
-                        <a class="text-dark" href="#" title="Acabados del Plano">
+                          <a class="text-dark" href="#" title="">
 
-                            <i class="bi bi-bar-chart-line"></i>
+                             <i class="bi bi-file-earmark-ruled"></i>
                         </a>
-                        <a class="text-dark" href="#" title="Leer Archivo Despiece Acad">
+                          <a class="text-dark" href="#" title="">
 
-                            <i class="bi bi-border-inner"></i>
+                            <i class="bi bi-database-down"></i>
                         </a>
-                        <a class="text-dark" href="#" title="Cargar Archivo TXT XY">
+                          <a class="text-dark" href="#" title="">
 
-                            <i class="bi bi-folder-plus"></i>
+                             <i class="bi bi-files"></i>
                         </a>
-                        <a class="text-dark" href="#" title="Plano Bloqueado">
+                          <a class="text-dark" href="#" title="">
 
-                            <i class="bi bi-lock"></i>
+                            <i class="bi bi-check-lg"></i>
                         </a>
-                        <a class="text-dark" href="#" title="Crear o Redefinir Bolsa">
-
-                            <i class="bi bi-bag-check"></i>
-                        </a>
-                        <a class="text-dark" href="#" title="Adicionar/Remover Elementos de la Bolsa">
-
-                            <i class="bi bi-bag-plus"></i>
-                        </a>
-                        <a class="text-dark" href="#" title="Despiece del Plano">
-
-                            <i class="bi bi-disc-fill"></i>
-                        </a>
-                        <a class="text-dark" href="#" title="Generar  TXT">
-
-                            <i class="bi bi-filetype-txt"></i>
-                        </a>
-                        <a class="text-dark" href="#" title="Guardar TXT">
-
-                            <i class="bi bi-save2"></i>
-                        </a>
-
-                        <a class="text-dark" href="#" title="Exportar Plano u Orden de Trabajo">
-
-                            <i class="bi bi-arrow-up-left-circle"></i>
-                        </a>
-                        <a class="text-dark" href="#" title="Visualizar/Generar Cotizacion">
-
-                            <i class="bi bi-bag-plus"></i>
-                        </a>
-                        <a class="text-dark" href="#" title="Objetos no Existentes">
-
-                            <i class="bi bi-text-indent-left"></i>
-                        </a>
-                        <a class="text-dark" href="#" title="Actualizar Precio Prototipo">
-
-                            <i class="bi bi-cash-coin"></i>
-                        </a>
-                        <a class="text-dark" href="#" title="Generar Formato Certificado de Origen ">
-
-                            <i class="bi bi-clipboard-check"></i>
-                        </a>
-                        <a class="text-dark" href="#" title="Importar Plano de Actualizacion de Bloques">
-
-                            <i class="bi bi-file-arrow-down-fill"></i>
-                        </a>
+                       
+                       
+                      
+                       
+                        
+                       
+                        
 
 
-                        <ul />
-                </ul>
+                    </div>
             </div>
-
-        </div>
     </nav>
+    <!--Termina Panel de iconos-->
 
 
-    <!-- Termina Panel Iconos-->
+         <div class="container-fluid Modulo">
 
-    <!-- comieza Panel Pricipal de Planos-->
+            <form class="control" action="#" runat="server">
 
-    <form class="control" action="#" runat="server">
-        <div class=" container-fluid Plano">
+                <div class="container-fluid superior">
 
-            <div class="container-fluid panel-plano ">
-                <div class="  descripcion-plano">
-                    <div class="item-plano">
-                        <asp:Button ID="btnPlano" type="button" Text="Plano" class="btn btn-outline-secondary"
-                            runat="server"></asp:Button>
-                        <asp:TextBox ID="txtPlano" type="text" class="form-control  input" runat="server"></asp:TextBox>
+                    <div class="item">
+                        <asp:Label ID="lblGrupo" Class="form-label " runat="server" Text="Grupo"></asp:Label>
+                        <asp:DropDownList ID="DblGrupo" class="form-control grupo" runat="server"></asp:DropDownList>
                     </div>
 
-                    <div class="item-plano">
-                        <asp:Label ID="lblCliente" class="form-label" Text="Cliente" runat="server"></asp:Label>
-                        <asp:TextBox ID="txtCliente" type="text" class="form-control input" runat="server"></asp:TextBox>
+                    <div class="item">
+                         <asp:Label ID="lblCriterio" Class="form-label" runat="server" Text="Criterio"></asp:Label>
+                        <asp:TextBox ID="txtCriterio"  class="form-control criterio1" runat="server"></asp:TextBox>
+                        <asp:TextBox ID="txtCriterio2"  class="form-control criterio2" runat="server"></asp:TextBox>
                     </div>
 
-                    <div class="item-plano">
-                        <asp:Label ID="lblArea" class="form-label" Text="Área" runat="server"></asp:Label>
-                        <asp:TextBox ID="txtArea" type="text" class="form-control input" runat="server"></asp:TextBox>
+                    <div class="item">
+                        <asp:Label ID="lblAltura" Class="form-label" runat="server" Text="Altura"></asp:Label>
+                        <asp:TextBox ID="txtAltura"  class="form-control altura" runat="server"></asp:TextBox>
+                        <asp:Label ID="lblMedida" Class="form-label" runat="server" Text="Cms"></asp:Label>
                     </div>
 
-                    <div class="item-plano">
-                        <asp:Label ID="lblContacto" class="form-label" Text="Contacto" runat="server">
-                        </asp:Label>
-                        <asp:TextBox ID="txtContacto" type="text" class="form-control input" runat="server">
-                        </asp:TextBox>
-                    </div>
+                    <div class="item">
 
-                    <div class="item-plano">
-                        <asp:Label ID="lblAsesor" class="form-label" Text="Asesor" runat="server"></asp:Label>
-                        <asp:TextBox ID="txtAsesor" type="text" class="form-control input" runat="server"></asp:TextBox>
-                    </div>
-                    <div class="item-plano">
-                        <asp:Label ID="lblDibuja" class="form-label" Text="Dibija" runat="server"></asp:Label>
-                        <asp:TextBox ID="txtDibuja" type="text" class="form-control input" runat="server"></asp:TextBox>
-                    </div>
-
-                    <div class="item-plano">
-                        <asp:Label ID="lblBolsa" class="form-label" Text="Bolsa" runat="server"></asp:Label>
-                        <asp:TextBox ID="txtBolsa" type="text" class="form-control input " runat="server"></asp:TextBox>
-                    </div>
-
-                    <div class="item-plano2">
-                        <asp:Label fid="lblResumenPlano" class="form-label" Text="Resumen del Plano"
-                            runat="server">
-                                    Resumen del Plano</asp:Label>
-                        <textarea id="txResumen" class="form-control" style="overflow-y: scroll;"
-                            runat="server" rows="3"></textarea>
-
-                    </div>
-
-
-                    <div class="item-plano2">
-                        <asp:TextBox ID="cbxImagen" type="checkbox" class="form-check-input" runat="server">
-                        </asp:TextBox>
-                        <asp:Label ID="lblVerImagen" class="form-check-label" Text="Ver imagen" runat="server">
-                        </asp:Label>
+                        <asp:Button ID="btnBuscarActivos" Class="btn btn-outline-secondary" runat="server" Text="Buscar " />
                     </div>
 
                 </div>
 
-                <div class=" tabla-plano overflow-auto">
+                <div class="container-fluid central">
 
-                    <asp:DataGrid CssClass="table table-responsive custom-grid table-hover" ID="DataGrid1" runat="server" DataSourceID="DataGridPlano" AutoGenerateColumns="false">
-                        <%--OnItemDataBound="DataGrid1_ItemDataBound" OnDataBound="DataGrid1_DataBound" --%>
+                     <div class="Title-table">
+                            <h4>Titulo tabla </h4>
+                        </div>
 
+                    <div class="item">
+                        <asp:GridView ID="GridView1" runat="server"></asp:GridView>
+                           <table class="table table-bordered border-secondary">
+                        <thead>
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">First</th>
+                            <th scope="col">Last</th>
+                            <th scope="col">Handle</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th scope="row">1</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">2</th>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
+                            <td>@fat</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">3</th>
+                            <td colspan="2">Larry the Bird</td>
+                            <td>@twitter</td>
+                          </tr>
+                        </tbody>
+                      </table>
 
-                        <Columns>
+                    </div>
 
-                            <asp:BoundColumn DataField="Id_Numerico" HeaderText="ID" />
+                    <!--Aqui va el gridview central -->
 
-
-
-
-                            <asp:BoundColumn DataField="Descripcion_Panel" HeaderText="Descripcion" />
-                            <asp:BoundColumn DataField="Altura" HeaderText="Alt" />
-                            <asp:BoundColumn DataField="Ancho" HeaderText="Anch" />
-                            <asp:BoundColumn DataField="Cantidad" HeaderText="Cant" />
-                            <asp:BoundColumn DataField="Precio_Venta" HeaderText="V.Und" />
-                            <%-- <asp:BoundColumn DataField="" HeaderText="Sub Total" />
-
-                     <asp:TemplateColumn HeaderText="ID">
-                        <ItemTemplate>
-                            <asp:LinkButton ID="LinkButton1" runat="server" Text="CARLOS"  CssClass="text-dark text-decoration-none"></asp:LinkButton>
-                        </ItemTemplate>
-                    </asp:TemplateColumn>
-                            --%>
-                        </Columns>
-
-
-                    </asp:DataGrid>
-
-                    <asp:SqlDataSource runat="server" ID="DataGridPlano" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
-                        SelectCommand="cta_Plano_Paneles" SelectCommandType="StoredProcedure">
-                        <SelectParameters>
-                            <asp:ControlParameter ControlID="txtPlano" PropertyName="Text" Name="Plan" Type="String"></asp:ControlParameter>
-                        </SelectParameters>
-                    </asp:SqlDataSource>
-                </div>
-            </div>
-
-            <div class=" container-fluid panel-tabla  ">
-                <div class="  tabla2-plano">
-                </div>
-            </div>
-
-            <div class="container-fluid footer">
-
-                <div class="item-footer">
-                    <asp:Label ID="lblCantidad" class="form-label" Text="Cantidad" runat="server"></asp:Label>
-                    <asp:TextBox ID="txtCantidad" type="text" class=" input" runat="server"></asp:TextBox>
-                    <asp:Button ID="btnCambiar" type="button" class="btn btn-outline-secondary disabled"
-                        Text="Cambiar" runat="server"></asp:Button>
                 </div>
 
-                <div class="item-footer1">
-                    <asp:Label ID="lblDisp" class="form-label" Text="Dip. LA" runat="server"></asp:Label>
-                    <asp:Label ID="lblValor" class="form-label" runat="server">0000</asp:Label>
-                    <asp:Label ID="lblTotalObjeto" Text="Total Objetos" runat="server"></asp:Label>
-                    <asp:Label ID="lblValor2" class="form-label" runat="server">000</asp:Label>
+
+                <div class="container-fluid inferior">
+                    <!--Aqui va uno div con el grid inferioi-->
+
+                     <div class="Title-table">
+                            <h4>Titulo tabla </h4>
+                        </div>
+
+                    <div class="item">
+                        <asp:GridView ID="GridView2" runat="server"></asp:GridView>
+
+                       
+
+                        <table class="table table-bordered border-secondary ">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">First</th>
+                                    <th scope="col">Last</th>
+                                    <th scope="col">Handle</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>Mark</td>
+                                    <td>Otto</td>
+                                    <td>@mdo</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td>Jacob</td>
+                                    <td>Thornton</td>
+                                    <td>@fat</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td colspan="2">Larry the Bird</td>
+                                    <td>@twitter</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <div class="item-footer2">
-                    <asp:Label ID="lblValorDespiece" class="form-label" Text="Valor despiece" runat="server">
-                    </asp:Label>
-                    <asp:Label ID="lblValor3" class="form-label" runat="server">222</asp:Label>
-                </div>
+              
 
-            </div>
-
-        </div>
-    </form>
-
-    <!-- Termina Panel Pricipal de Planos-->
+            </form>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        </div> <!--div principal objeto -->
 
-</body>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+       
+        
+    </body>
+    
+
 </html>
 
 

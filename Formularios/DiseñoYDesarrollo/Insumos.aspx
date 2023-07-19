@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Objetos.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.Objetos" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Insumos.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.Insumos" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 
@@ -13,11 +13,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="../../Recursos/CSS/Objetos.css" rel="stylesheet" />
-    <title>Objetos</title>
+    <link href="../../Recursos/CSS/DiseñoYDesarrollo/Insumos.css" rel="stylesheet" />
+    <title>Insumos</title>
 </head>
-
-
 <body>
 
      <header>
@@ -182,13 +180,11 @@
             </nav>
         </header>
 
-    <!--Comienza Panel principal de nombres -->
+    <%--Comienza Panel principal de nombres--%>
     <nav class="navbar navbar-expand-sm navbar-light bg-light">
         <div class="container">
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -197,7 +193,7 @@
 
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="frmPrincipal.aspx">Ordenes de trabajo</a>
+                        <a class="nav-link active" aria-current="page" href="../../Formularios/frmPrincipal.aspx">Ordenes de trabajo</a>
                     </li>
                 </ul>
 
@@ -216,7 +212,7 @@
 
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="modulo.aspx">Módulos</a>
+                        <a class="nav-link active" aria-current="page" href="modulo.aspx">Modulos</a>
                     </li>
                 </ul>
 
@@ -233,255 +229,187 @@
             </div>
         </div>
     </nav>
-    <!-- Termina Panel principal de nombres-->
+    <%--Termina Panel principal de nombres--%>
 
 
-    <!--Comienza Panel de iconos-->
-    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+    <%--Comienza Panel de iconos--%>
+    <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
         <div class="container-fluid">
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#ejemplo2"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#ejemplo2" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="ejemplo2">
-                <ul class="navbar-nav mx-auto">
+                <ul class="navbar-nav mx-auto contenedor-icono">
 
                     <div class="contenedor-icono">
 
-                        <!--icons planos-->
-                        <a class="text-dark" href="#" title="Nuevo Objeto">
+                         <a class="text-dark" href="#" title="Nuevo Insumo">
 
                             <i class="bi bi-file-earmark"></i>
                         </a>
                         <a class="text-dark" href="#" title="...">
 
-                            <i class="bi bi-printer"></i>
+                            <i class="bi bi-file-earmark-ruled"></i>
                         </a>
-                        <a class="text-dark" href="#" title="Modificar Objeto">
+                        <a class="text-dark" href="#" title="Modificar Insumo">
 
                             <i class="bi bi-wrench"></i>
                         </a>
+                        <a class="text-dark" href="#" title="Eliminar Insumo">
 
-                        <a class="text-dark" href="#" title="Consultar Objeto">
-
-                            <i class="bi bi-file-earmark-ruled"></i>
-                        </a>
-                        <a class="text-dark" href="#" title="Eliminar Objeto">
-
+                            
                             <i class="bi bi-database-x"></i>
                         </a>
-
-                        <a class="text-dark" href="#" title="Buscar Objeto">
-
-                            <i class="bi bi-search"></i>
-                        </a>
-                        <a class="text-dark" href="#" title="Copiar Objeto">
+                        <a class="text-dark" href="#" title="Copiar Insumo">
 
                             <i class="bi bi-files"></i>
                         </a>
-                        <a class="text-dark" href="#" title="Actualizar Precio">
+                        <a class="text-dark" href="#" title="Buscar Insumo">
 
-                            <i class="bi bi-currency-dollar"></i>
+                            <i class="bi bi-search"></i>
                         </a>
-                        <a class="text-dark" href="#" title="Generar Lista de Precios">
+                        <a class="text-dark" href="#" title="Actualizar">
 
-                            <i class="bi bi-coin"></i>
-                        </a>
-                        <a class="text-dark" href="#" title="Ir al Objeto Anterior">
-
-                            <i class="bi bi-disc"></i>
-                        </a>
-                        <a class="text-dark" href="#" title="Chequear">
-
-                            <i class="bi bi-check-lg"></i>
+                               <i class="bi bi-disc"></i>
                         </a>
 
-
-
-
+                        
+                        
+                        
+                     
+                        
+                        
+                     
 
                     </div>
+                </ul>
             </div>
+
+        </div>
     </nav>
-    <!--Termina Panel de iconos-->
+    <%--Termina Panel de iconos--%>
 
 
-    <div class="container-fluid objeto">
-
+    <div class="container insumos  overflow-auto mt-5" style="height:300rem">
         <form class="control" action="#" runat="server">
+        <%--FORMA DE HACERLO CON DATAGRIDVIEW--%>
 
-            <div class="container-fluid superior">
+<%--    <asp:GridView class="table table-responsive custom-grid" ID="GridView1" runat="server" DataSourceID="DataGridInsumos" AutoGenerateColumns="false">
+    <Columns>
+        <asp:TemplateField ControlStyle-CssClass="text-decoration-none text-dark" HeaderText="Insumo">
+            <ItemTemplate>
+                <asp:LinkButton ID="lnkInsumo" runat="server" Text='<%# Eval("Id_Insumo") %>' OnClientClick="mostrarModal(); return false;"></asp:LinkButton>
+            </ItemTemplate>
+        </asp:TemplateField>
+        <asp:BoundField DataField="ID_Inventario" HeaderText="Cod.Inv" />
+        <asp:BoundField DataField="Descripcion_Insumo" HeaderText="Descripcion" />
+        <asp:BoundField DataField="Descripcion" HeaderText="Tipo Insumo" />
+        <asp:BoundField DataField="Valor_Unitario" HeaderText="Valor Unitario" />
+        <asp:BoundField DataField="Factor_Ganancia" HeaderText="F.G" />
+        <asp:BoundField DataField="Factor_Desperdicio" HeaderText="F.D" />
+        <asp:BoundField DataField="AplicacionAcabado" HeaderText="A.A" />
+        <asp:BoundField DataField="FechaCreacion" HeaderText="Creacion" />
+        <asp:BoundField DataField="FechaActualizacion" HeaderText="U.Actualizacion" />
+        <asp:BoundField DataField="Responsable" HeaderText="Responsable" />
+    </Columns>
+</asp:GridView>
 
+    <asp:SqlDataSource runat="server" ID="DataGridInsumos" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>
+        "
+        SelectCommand="ctaInsumos" SelectCommandType="StoredProcedure"></asp:SqlDataSource>
 
-                <div class="item">
-
-                    <asp:RadioButtonList ID="RadioButtonList1" runat="server">
-                        <asp:ListItem Value=" Por Objeto"> Por Objeto</asp:ListItem>
-                        <asp:ListItem>   Por descripcion</asp:ListItem>
-                    </asp:RadioButtonList>
-
-                </div>
-
-
-
-                <div class="item">
-                    <asp:Label ID="lblGrupo" Class="form-label " runat="server" Text="Grupo"></asp:Label>
-                    <asp:DropDownList ID="DblGrupo" class="form-control grupo" runat="server"></asp:DropDownList>
-                </div>
-
-
-                <div class="item">
-                    <asp:Label ID="lblCriterio" Class="form-label" runat="server" Text="Criterio"></asp:Label>
-                    <asp:TextBox ID="txtCriterio" class="form-control criterio" runat="server"></asp:TextBox>
-                </div>
-
-
-
-                <div class="item">
-                    <asp:Label ID="lblAltura" Class="form-label" runat="server" Text="Altura"></asp:Label>
-                    <asp:TextBox ID="txtAltura" class="form-control altura" runat="server"></asp:TextBox>
-                </div>
-
-                <div class="item">
-                    <asp:Label ID="lblAncho" Class="form-label" runat="server" Text="Ancho"></asp:Label>
-                    <asp:TextBox ID="txtAncho" class="form-control ancho" runat="server"></asp:TextBox>
-                </div>
-
-
-                <div class="item">
-
-                    <div class="item1">
-                        <asp:CheckBox ID="chxBloquearActivos" runat="server" />
-                        <asp:Label ID="lblBloquearActivos" Class="form-label" runat="server" Text="Solo Bloquear Activos"></asp:Label>
+    <div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#insumo">Insumo</a>
+                       
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tipoInsumo">Tipo Insumo</a>
+                        
+                    </li>
+                </ul>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="tab-content">
+                    <div id="insumo" class="tab-pane fade show active">
+                        <!-- Contenido de la pestaña "Insumo" -->
                     </div>
-
-                    <asp:Button ID="btnBuscarActivos" Class="btn btn-outline-secondary" runat="server" Text="Buscar Solo Activos" />
-                </div>
-
-
-
-
-
-
-
-                <!--Aqui van todos los div del panel superior 6div  -->
-
-            </div>
-
-            <div class="container-fluid central">
-
-                <div class="item">
-                    <asp:GridView ID="GridView1" runat="server"></asp:GridView>
-                    <table class="table table-bordered border-secondary">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">First</th>
-                                <th scope="col">Last</th>
-                                <th scope="col">Handle</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td colspan="2">Larry the Bird</td>
-                                <td>@twitter</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                </div>
-
-                <!--Aqui va el gridview central -->
-
-            </div>
-
-            <div class="container-fluid inferior1">
-                <!--Aqui va un div con unos datos horizaontales -->
-
-                <div class=" itemInf1">
-                    <asp:Label ID="Label1" runat="server" Text="Descripción Objeto"></asp:Label>
-                    <asp:Button ID="Button1" CssClass="btn btn-outline-secondary" runat="server" Text="Despiece" />
-                </div>
-
-                <div class=" itemInf2">
-                    <asp:Label ID="Label2" runat="server" Text="Disp. LA"></asp:Label>
-                    <asp:Label ID="Label3" runat="server" Text="medida en centimetros "></asp:Label>
-                </div>
-
-                <div class=" itemIn2">
-                    <asp:Label ID="Label4" runat="server" Text="Disp. LB"></asp:Label>
-                    <asp:Label ID="Label5" runat="server" Text="Respuesta en centimetros"></asp:Label>
-                </div>
-
-            </div>
-
-            <div class="container-fluid inferior2">
-                <!--Aqui va uno div con el grid inferioi-->
-                <div class="item">
-                    <asp:GridView ID="GridView2" runat="server"></asp:GridView>
-
-                    <table class="table table-bordered border-secondary ">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">First</th>
-                                <th scope="col">Last</th>
-                                <th scope="col">Handle</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td colspan="2">Larry the Bird</td>
-                                <td>@twitter</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div id="tipoInsumo" class="tab-pane fade">
+                        <!-- Contenido de la pestaña "Tipo Insumo" -->
+                    </div>
                 </div>
             </div>
-
-
-
-        </form>
-
-
+        </div>
     </div>
-    <!--div principal objeto -->
+</div>
+
+<script type="text/javascript">
+    function mostrarModal() {
+        $('#myModal').modal('show');
+    }
+</script>--%>
+
+    <%-- FORMA DE HACERLO CON UN DATAGRID--%>
+
+
+
+<asp:DataGrid Class="table table-responsive custom-grid table-hover" ID="DataGrid1" runat="server" DataSourceID="DataGridInsumos" AutoGenerateColumns="false" OnItemCommand="DataGrid1_ItemCommand" DataKeyField="Id_Insumo">
+
+        <Columns>
+
+            <asp:TemplateColumn HeaderText="Insumo">
+                <ItemTemplate>
+                    <asp:LinkButton CssClass="text-decoration-none text-dark" ID="lnkInsumo" runat="server" Text='<%# Eval("Id_Insumo") %>'
+                        CommandName="RedirectToInsumoConsultar" CommandArgument='<%# Container.ItemIndex %>'></asp:LinkButton>
+                </ItemTemplate>
+            </asp:TemplateColumn>
+
+            <asp:BoundColumn DataField="ID_Inventario" HeaderText="Cod.Inv" />
+            <asp:BoundColumn DataField="Descripcion_Insumo" HeaderText="Descripcion" />
+            <asp:BoundColumn DataField="Descripcion" HeaderText="Tipo Insumo" />
+            <asp:BoundColumn DataField="Valor_Unitario" HeaderText="Valor Unitario" />
+            <asp:BoundColumn DataField="Factor_Ganancia" HeaderText="F.G" />
+            <asp:BoundColumn DataField="Factor_Desperdicio" HeaderText="F.D" />
+            <asp:BoundColumn DataField="AplicacionAcabado" HeaderText="A.A" />
+            <asp:BoundColumn DataField="FechaCreacion" HeaderText="Creacion" />
+            <asp:BoundColumn DataField="FechaActualizacion" HeaderText="U.Actualizacion" />
+            <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" />
+
+        </Columns>
+
+    </asp:DataGrid>
+
+    <asp:SqlDataSource runat="server" ID="DataGridInsumos" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>
+        "
+        SelectCommand="ctaInsumos" SelectCommandType="StoredProcedure"></asp:SqlDataSource>
+    </form>
+    </div>
+
+    
 
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
+   
+         <script type="text/javascript">
+             function redirectToInsumoConsultar(source, eventArgs) {
+                 if (eventArgs.get_commandName() === "RedirectInsumoConsultar") {
+                     var index = eventArgs.get_commandArgument();
+                     var grid = document.getElementById("<%= DataGrid1.ClientID %>");
+                     var idInsumo = grid.rows[index + 1].cells[0].innerHTML; // El índice + 1 es necesario para omitir el encabezado de la tabla
+                     window.location.href = "Insumos_Consultar.aspx?Id_Insumo=" + idInsumo;
+                 }
+             }
+         </script>
 
 </body>
-
-
 </html>
 
 

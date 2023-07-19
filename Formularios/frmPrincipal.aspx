@@ -199,32 +199,32 @@
 
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Ordenes de trabajo</a>
+                            <a class="nav-link active" aria-current="page" href="../../Formularios/frmPrincipal.aspx">Ordenes de trabajo</a>
                         </li>
                     </ul>
 
 
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="Plano.aspx">Plano</a>
+                            <a class="nav-link active" aria-current="page"  href="DiseñoYDesarrollo/Plano.aspx">Plano</a>
                         </li>
                     </ul>
 
                     <ul class="navbar-nav mx-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="Objetos.aspx">Objetos</a>
+                            <a class="nav-link active" aria-current="page" href="DiseñoYDesarrollo/Objetos.aspx">Objetos</a>
                         </li>
                     </ul>
 
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="modulo.aspx">Modulos</a>
+                            <a class="nav-link active" aria-current="page" href="DiseñoYDesarrollo/Modulo.aspx">Modulos</a>
                         </li>
                     </ul>
 
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="Insumos.aspx">Insumos</a>
+                            <a class="nav-link active" aria-current="page" href="DiseñoYDesarrollo/Insumos.aspx">Insumos</a>
                         </li>
                     </ul>
 
