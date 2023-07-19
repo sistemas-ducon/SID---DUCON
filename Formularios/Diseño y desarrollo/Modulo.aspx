@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="modulo.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.modulo" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Modulo.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.modulo" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 

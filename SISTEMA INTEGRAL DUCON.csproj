@@ -93,13 +93,20 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
-    <Content Include="Formularios\Insumos.aspx" />
-    <Content Include="Formularios\Insumos_Consultar.aspx" />
-    <Content Include="Formularios\modulo.aspx" />
-    <Content Include="Formularios\Objetos.aspx" />
-    <Content Include="Formularios\Plano.aspx" />
+    <Content Include="Formularios\Ventas\Consulta_Cotizacion.aspx" />
+    <Content Include="Formularios\Ventas\Diseño_Venta.aspx" />
+    <Content Include="Formularios\Ventas\Gestion_Comercial.aspx" />
+    <Content Include="Formularios\Diseño y desarrollo\Insumos.aspx" />
+    <Content Include="Formularios\Diseño y desarrollo\Insumos_Consultar.aspx" />
+    <Content Include="Formularios\Ventas\Licitaciones.aspx" />
+    <Content Include="Formularios\Diseño y desarrollo\Modulo.aspx" />
+    <Content Include="Formularios\Diseño y desarrollo\Objetos.aspx" />
+    <Content Include="Formularios\Diseño y desarrollo\Plano.aspx" />
     <Content Include="Formularios\Inicio.aspx" />
     <Content Include="Formularios\frmPrincipal.aspx" />
+    <Content Include="Formularios\Ventas\Render_Venta.aspx" />
+    <Content Include="Formularios\Ventas\Solicitud_Especial.aspx" />
+    <Content Include="Formularios\Ventas\Visita_Asesores.aspx" />
     <Content Include="ModeloBDSID.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ModeloBDSID.Context.cs</LastGenOutput>
@@ -143,39 +150,67 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Formularios\Insumos.aspx.cs">
+    <Compile Include="Formularios\Ventas\Consulta_Cotizacion.aspx.cs">
+      <DependentUpon>Consulta_Cotizacion.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\Ventas\Consulta_Cotizacion.aspx.designer.cs">
+      <DependentUpon>Consulta_Cotizacion.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\Ventas\Diseño_Venta.aspx.cs">
+      <DependentUpon>Diseño_Venta.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\Ventas\Diseño_Venta.aspx.designer.cs">
+      <DependentUpon>Diseño_Venta.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\Ventas\Gestion_Comercial.aspx.cs">
+      <DependentUpon>Gestion_Comercial.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\Ventas\Gestion_Comercial.aspx.designer.cs">
+      <DependentUpon>Gestion_Comercial.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\Diseño y desarrollo\Insumos.aspx.cs">
       <DependentUpon>Insumos.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Formularios\Insumos.aspx.designer.cs">
+    <Compile Include="Formularios\Diseño y desarrollo\Insumos.aspx.designer.cs">
       <DependentUpon>Insumos.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Formularios\Insumos_Consultar.aspx.cs">
+    <Compile Include="Formularios\Diseño y desarrollo\Insumos_Consultar.aspx.cs">
       <DependentUpon>Insumos_Consultar.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Formularios\Insumos_Consultar.aspx.designer.cs">
+    <Compile Include="Formularios\Diseño y desarrollo\Insumos_Consultar.aspx.designer.cs">
       <DependentUpon>Insumos_Consultar.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Formularios\modulo.aspx.cs">
-      <DependentUpon>modulo.aspx</DependentUpon>
+    <Compile Include="Formularios\Ventas\Licitaciones.aspx.cs">
+      <DependentUpon>Licitaciones.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Formularios\modulo.aspx.designer.cs">
-      <DependentUpon>modulo.aspx</DependentUpon>
+    <Compile Include="Formularios\Ventas\Licitaciones.aspx.designer.cs">
+      <DependentUpon>Licitaciones.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Formularios\Objetos.aspx.cs">
+    <Compile Include="Formularios\Diseño y desarrollo\Modulo.aspx.cs">
+      <DependentUpon>Modulo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\Diseño y desarrollo\Modulo.aspx.designer.cs">
+      <DependentUpon>Modulo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\Diseño y desarrollo\Objetos.aspx.cs">
       <DependentUpon>Objetos.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Formularios\Objetos.aspx.designer.cs">
+    <Compile Include="Formularios\Diseño y desarrollo\Objetos.aspx.designer.cs">
       <DependentUpon>Objetos.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Formularios\Plano.aspx.cs">
+    <Compile Include="Formularios\Diseño y desarrollo\Plano.aspx.cs">
       <DependentUpon>Plano.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Formularios\Plano.aspx.designer.cs">
+    <Compile Include="Formularios\Diseño y desarrollo\Plano.aspx.designer.cs">
       <DependentUpon>Plano.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\Inicio.aspx.cs">
@@ -198,6 +233,27 @@
     </Compile>
     <Compile Include="Formularios\frmPrincipal.aspx.designer.cs">
       <DependentUpon>frmPrincipal.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\Ventas\Render_Venta.aspx.cs">
+      <DependentUpon>Render_Venta.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\Ventas\Render_Venta.aspx.designer.cs">
+      <DependentUpon>Render_Venta.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\Ventas\Solicitud_Especial.aspx.cs">
+      <DependentUpon>Solicitud_Especial.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\Ventas\Solicitud_Especial.aspx.designer.cs">
+      <DependentUpon>Solicitud_Especial.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\Ventas\Visita_Asesores.aspx.cs">
+      <DependentUpon>Visita_Asesores.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\Ventas\Visita_Asesores.aspx.designer.cs">
+      <DependentUpon>Visita_Asesores.aspx</DependentUpon>
     </Compile>
     <Compile Include="ModeloBDSID.Context.cs">
       <AutoGen>True</AutoGen>

@@ -169,14 +169,14 @@
                 Ventas
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Gestión comecial</a></li>
-                    <li><a class="dropdown-item" href="#">Licitaciones</a></li>
+                    <li><a class="dropdown-item" href="ventas/Gestion_Comercial.aspx">Gestión comecial</a></li>
+                    <li><a class="dropdown-item" href="ventas/Licitaciones.aspx">Licitaciones</a></li>
                     <li><a class="dropdown-item" href="frmPrincipal.aspx">Ordenes de trabajo</a></li>
-                    <li><a class="dropdown-item" href="#">Programar diseño</a></li>
-                    <li><a class="dropdown-item" href="#">Programar render</a></li>
-                    <li><a class="dropdown-item" href="#">Seguimiento cotizaciones</a></li>
-                    <li><a class="dropdown-item" href="#">Solicitud producto especial</a></li>
-                    <li><a class="dropdown-item" href="#">Visitas asesores</a></li>
+                    <li><a class="dropdown-item" href="ventas/Diseño_Venta.aspx">Programar diseño</a></li>
+                    <li><a class="dropdown-item" href="ventas/Render_Venta.aspx">Programar render</a></li>
+                    <li><a class="dropdown-item" href="ventas/Consulta_Cotizacion.aspx">Seguimiento cotizaciones</a></li>
+                    <li><a class="dropdown-item" href="ventas/Solicitud_Especial.aspx">Solicitud producto especial</a></li>
+                    <li><a class="dropdown-item" href="ventas/Visita_Asesores.aspx">Visitas asesores</a></li>
                 </ul>
             </li>
 

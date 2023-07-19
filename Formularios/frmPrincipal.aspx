@@ -133,7 +133,7 @@
                                     <li class="nav-item dropend">
                                         <a class="nav-link dropdown-toggle " href="#" id="Ventas" role="button" data-bs-toggle="dropdown" aria-expanded="false">Ventas</a>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#">Gestión comecial</a></li>
+                                            <li><a class="dropdown-item" href="ventas/Gestion_Comercial.aspx">Gestión comecial</a></li>
                                             <li><a class="dropdown-item" href="#">Licitaciones</a></li>
                                             <li><a class="dropdown-item" href="frmPrincipal.aspx">Ordenes de trabajo</a></li>
                                             <li><a class="dropdown-item" href="#">Programar diseño</a></li>
