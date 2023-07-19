@@ -10,8 +10,8 @@
         color: inherit;
     }
 
-.contenedor-icono i{
-    font-size:24px;
+.contenedor-icono i {
+    font-size: 24px;
     margin: 5px;
 }
 
@@ -25,36 +25,27 @@
 
 .observaciones #Observacion1Id {
     height: 12rem;
-   
 }
 
 .observaciones {
     display: flex;
-    
 }
 
 .div-1 {
-    
     width: 58rem;
-    
-    
 }
 
 .div-2 {
-   
     width: 58rem;
-    
-    margin-left:3rem;
+    margin-left: 3rem;
 }
-.div-3 {
-   width: 58rem;
-    
-    margin-left:3rem;
 
+.div-3 {
+    width: 58rem;
+    margin-left: 3rem;
 }
 
 .div-4 {
-   
 }
 
 
@@ -87,7 +78,7 @@
 
     .Info1 input {
         width: 80%;
-        height:2rem;
+        height: 2rem;
     }
 
 .Info_F {
@@ -146,7 +137,7 @@
 
     .Info_M select {
         width: 25rem;
-        height:2rem;
+        height: 2rem;
     }
 
 
@@ -159,8 +150,9 @@
 .izquierda {
     margin: 2rem 0 0 1rem;
 }
-.centro{
-    margin:2rem;
+
+.centro {
+    margin: 2rem;
 }
 
 .derecha1 {
@@ -217,7 +209,50 @@
 
 .bf {
     background-color: #fff;
-    color:#212529;
+    color: #212529;
     border: none;
     border: solid 1px rgba(0,0,0,.2);
 }
+
+
+/*Funcionalidad del Nav*/
+
+.dropdown:hover > .dropdown-menu, dropdown:hover > .dropdown-menu {
+    display: block;
+    margin-top: .125em;
+}
+
+.dropend:hover > .dropdown-menu {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    margin-left: .125em;
+}
+
+/*Para deshabilitar o habilitar  los iconos*/
+
+a.icong.disabled {
+    pointer-events: none;
+    color: black; /* Cambia el color a negro para enlaces deshabilitados */
+    opacity: 0.5;
+}
+
+a.icong.enabled {
+    pointer-events: auto;
+    color: blue; /* Cambia el color a azul para enlaces habilitados */
+}
+
+    a.icong.enabled.Actualizar {
+        pointer-events: auto;
+        color: forestgreen; /* Cambia el color a azul para enlaces habilitados */
+    }
+
+    a.icong.enabled.Cancelar {
+        pointer-events: auto;
+        color: darkred; /* Cambia el color a azul para enlaces habilitados */
+    }
+
+    a.icong.enabled.Cerrar {
+        pointer-events: auto;
+        color: yellow; /* Cambia el color a azul para enlaces habilitados */
+    }

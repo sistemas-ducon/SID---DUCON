@@ -17,7 +17,7 @@
     <title>Ordenes de trabajo</title>
 </head>
 <body>
-    <h1>CARLOS</h1>
+    
 
 
     <div class="wrapper">
@@ -258,93 +258,94 @@
 
                             <%--Comienza Nueva OT--%>
 
-                            <a class="icong" href="#" title="Nueva OT">
+                           
+                            <a class="icong disabled" href="#" title="Nueva OT" id="NuevaOt" onclick="NuevaOt()">
                                 <i class="bi bi-file-earmark"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Copiar Información en una Nueva OT" disabled="true">
+                            <a class="icong disabled" href="#" title="Copiar Información en una Nueva OT" id="CopiarOt" >
                                 <i class="bi bi-files"></i>
                             </a>
-                            <a class="icong" href="#" title="Grabar Orden de Trabajo">
+                            <a class="icong disabled" href="#" title="Grabar Orden de Trabajo" id="GrabarOt">
                                 <i class="bi bi-save2"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Modificar Orden de Trabajo">
+                            <a class="icong disabled" href="#" title="Modificar Orden de Trabajo" id="ModificarOt">
                                 <i class="bi bi-wrench"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Anular o Eliminar un Pedido">
+                            <a class="icong disabled" href="#" title="Anular o Eliminar un Pedido" id="AnularPedido">
                                 <i class="bi bi-file-earmark-excel"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Documentación OT">
+                            <a class="icong disabled" href="#" title="Documentación OT" id="DocumentacionOt">
                                 <i class="bi bi-paperclip"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Observaciones OT">
+                            <a class="icong disabled" href="#" title="Observaciones OT" id="ObservacionesOt">
                                 <i class="bi bi-eye"></i>
                             </a>
-                            <a class="icong" href="#" title="Imprimir Informacion General de la OT">
+                            <a class="icong disabled" href="#" title="Imprimir Informacion General de la OT" id="imprimirOt">
                                 <i class="bi bi-printer"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Reimprimir Información Contable">
+                            <a class="icong disabled" href="#" title="Reimprimir Información Contable" id="ReimprimirOt">
                                 <i class="bi bi-printer-fill"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Consultar Bolsa">
+                            <a class="icong disabled" href="#" title="Consultar Bolsa" id="ConsultarBolsa">
                                 <i class="bi bi-coin"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Cancelar">
+                            <a class="icong disabled Cancelar" href="#" title="Cancelar" id="Cancelar" onclick="Cancelar()">
                                 <i class="bi bi-x-lg"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Visualizar OT Pendientes">
+                            <a class="icong disabled" href="#" title="Visualizar OT Pendientes" id="OtPendientes">
                                 <i class="bi bi-eyeglasses"></i>
                             </a>
-                            <a class="icong" href="#" title="Actualizar Pedidos Importados">
+                            <a class="icong disabled Actualizar" href="#" title="Actualizar Pedidos Importados" id="ActPedImp">
                                 <i class="bi bi-check-square"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Importar Pedido Asesor">
+                            <a class="icong disabled" href="#" title="Importar Pedido Asesor" id="ImpPedAse">
                                 <i class="bi bi-person-lines-fill"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Importar Pedido Sede ">
+                            <a class="icong disabled" href="#" title="Importar Pedido Sede " id="ImpPedSed">
                                 <i class="bi bi-house-up"></i>
                             </a>
-                            <a class="icong" href="#" title="Habilitar Pedido para Ventas">
+                            <a class="icong disabled" href="#" title="Habilitar Pedido para Ventas" id="HabilitarPedido">
                                 <i class="bi bi-receipt-cutoff"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Deshabilitar Orden de Trabajo para Producción ">
+                            <a class="icong disabled" href="#" title="Deshabilitar Orden de Trabajo para Producción " id="DeshabilitarOt">
                                 <i class="bi bi-sign-stop"></i>
                             </a>
-                            <a class="icong" href="#" title="Indicador Obra Reactivada ">
+                            <a class="icong disabled" href="#" title="Indicador Obra Reactivada " id="ObraReactivada">
                                 <i class="bi bi-bar-chart-line"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Registrar Pedido en el Sistema Administrativo ">
+                            <a class="icong disabled" href="#" title="Registrar Pedido en el Sistema Administrativo " id="RegPedSisAdm">
                                 <i class="bi bi-triangle"></i>
                             </a>
-                            <a class="icong" href="#" title="Cierra o Abre una OT ">
+                            <a class="icong disabled Cerrar" href="#" title="Cierra o Abre una OT " id="CierraOt">
                                 <i class="bi bi-key"></i>
                             </a>
-                            <a class="icong" href="#" title="Simular Pasar Pedido ">
+                            <a class="icong disabled" href="#" title="Simular Pasar Pedido " id="SimularPedido">
                                 <i class="bi bi-code-square"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Exportar Pedido ">
+                            <a class="icong disabled " href="#" title="Exportar Pedido " id="ExportarPedido">
                                 <i class="bi bi-airplane-engines"></i>
                             </a>
 
-                            <a class="icong" href="#" title="Entrega Perfecta ">
+                            <a class="icong disabled" href="#" title="Entrega Perfecta " id="EntregaPerfecta">
                                 <i class="bi bi-lightning-charge"></i>
                             </a>
 
 
-                            <a class="icong" href="#" title="Anular Obra">
+                            <a class="icong disabled" href="#" title="Anular Obra" id="AnularObra">
                                 <i class="bi bi-x-square"></i>
                             </a>
 
@@ -911,7 +912,51 @@
 
 
 
+    <script>
 
+    window.onload = function () {
+        var enlacesHabilitados = ["NuevaOt", "ObservacionesOt", "OtPendientes", "ActPedImp", "ImpPedAse", "ImpPedSed","CierraOt"]; // IDs de los enlaces a habilitar
+        habilitarEnlaces(enlacesHabilitados);
+    };
+
+    function habilitarEnlaces(enlacesHabilitados) {
+        for (var i = 0; i < enlacesHabilitados.length; i++) {
+            var enlace = document.getElementById(enlacesHabilitados[i]);
+            enlace.classList.add("enabled");
+        }
+    }
+
+      
+
+        function NuevaOt() {
+            // Deshabilitar enlaces
+            document.getElementById("NuevaOt").classList.remove("enabled");
+            document.getElementById("ObservacionesOt").classList.remove("enabled");
+            document.getElementById("ImpPedAse").classList.remove("enabled");
+            document.getElementById("ImpPedSed").classList.remove("enabled");
+            document.getElementById("OtPendientes").classList.remove("enabled");
+            // Habilitar enlaces
+            document.getElementById("GrabarOt").classList.add("enabled");
+            document.getElementById("Cancelar").classList.add("enabled");
+         
+        }
+
+        function Cancelar() {
+            // Deshabilitar enlaces
+            document.getElementById("Cancelar").classList.remove("enabled");
+            document.getElementById("GrabarOt").classList.remove("enabled");
+          
+            // Habilitar enlaces
+            document.getElementById("NuevaOt").classList.add("enabled");
+            document.getElementById("ObservacionesOt").classList.add("enabled");
+            document.getElementById("ImpPedAse").classList.add("enabled");
+            document.getElementById("ImpPedSed").classList.add("enabled");
+            document.getElementById("OtPendientes").classList.add("enabled");
+            
+        }
+
+   
+    </script>
 
 
 

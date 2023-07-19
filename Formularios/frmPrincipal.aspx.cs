@@ -51,7 +51,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             
             string id = tbOT.Text.Trim();
             Session["Id_OT"] = id;
-          
+            Session["pedido"] = 1;
+
+            Cargar_OT();
+
+
+
             if (!string.IsNullOrEmpty(id))
             {
                 
