@@ -409,7 +409,7 @@
 
                 <div class=" tabla-plano overflow-auto">
 
-                    <asp:DataGrid CssClass="table table-responsive custom-grid" ID="DataGrid1" runat="server" DataSourceID="DataGridPlano" AutoGenerateColumns="false">
+                    <asp:DataGrid CssClass="table table-responsive custom-grid table-hover" ID="DataGrid1" runat="server" DataSourceID="DataGridPlano" AutoGenerateColumns="false">
                         <%--OnItemDataBound="DataGrid1_ItemDataBound" OnDataBound="DataGrid1_DataBound" --%>
 
 

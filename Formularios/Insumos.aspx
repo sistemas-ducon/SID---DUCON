@@ -359,7 +359,7 @@
 
 
 
-<asp:DataGrid Class="table table-responsive custom-grid" ID="DataGrid1" runat="server" DataSourceID="DataGridInsumos" AutoGenerateColumns="false" OnItemCommand="DataGrid1_ItemCommand" DataKeyField="Id_Insumo">
+<asp:DataGrid Class="table table-responsive custom-grid table-hover" ID="DataGrid1" runat="server" DataSourceID="DataGridInsumos" AutoGenerateColumns="false" OnItemCommand="DataGrid1_ItemCommand" DataKeyField="Id_Insumo">
 
         <Columns>
 
@@ -396,6 +396,18 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+   
+         <script type="text/javascript">
+             function redirectToInsumoConsultar(source, eventArgs) {
+                 if (eventArgs.get_commandName() === "RedirectInsumoConsultar") {
+                     var index = eventArgs.get_commandArgument();
+                     var grid = document.getElementById("<%= DataGrid1.ClientID %>");
+                     var idInsumo = grid.rows[index + 1].cells[0].innerHTML; // El índice + 1 es necesario para omitir el encabezado de la tabla
+                     window.location.href = "Insumos_Consultar.aspx?Id_Insumo=" + idInsumo;
+                 }
+             }
+         </script>
 
 </body>
 </html>
