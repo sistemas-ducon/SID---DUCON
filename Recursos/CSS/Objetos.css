@@ -69,15 +69,3 @@ i {
     display: flex;
     justify-content: center;
 }
-
-.dropdown:hover > .dropdown-menu, dropdown:hover > .dropdown-menu {
-    display: block;
-    margin-top: .125em;
-}
-
-.dropend:hover > .dropdown-menu {
-    position: absolute;
-    top: 0;
-    left: 100%;
-    margin-left: .125em;
-}
