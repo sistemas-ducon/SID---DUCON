@@ -125,6 +125,7 @@
     <Content Include="Recursos\CSS\Inicio.css" />
     <Content Include="Recursos\CSS\login.css" />
     <Content Include="Formularios\Login.aspx" />
+    <Content Include="Recursos\CSS\Ventas\Visita_Asesores.css" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -316,7 +317,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="JavaScript\" />
-    <Folder Include="Recursos\CSS\Ventas\" />
     <Folder Include="Recursos\IMG\" />
   </ItemGroup>
   <ItemGroup>
