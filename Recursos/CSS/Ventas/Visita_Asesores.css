@@ -1,2 +1,14 @@
-﻿body {
+﻿.icong {
+    text-decoration: none; /* Quitar subrayado */
+    color: inherit; /* Heredar el color del texto */
+    cursor: pointer; /* Cambiar el cursor a una mano al pasar por encima */
+}
+
+    .icong:hover {
+        color: inherit;
+    }
+
+.contenedor-icono i {
+    font-size: 24px;
+    margin: 5px;
 }
