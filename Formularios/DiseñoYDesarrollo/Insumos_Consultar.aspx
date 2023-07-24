@@ -293,7 +293,7 @@
 
                                     <asp:TemplateColumn HeaderText="ID">
                                         <ItemTemplate>
-                                            <asp:LinkButton runat="server" CssClass="text-decoration-none text-dark" ID="linkID_GrupoAcabado" Text='<%# Eval("ID_GrupoAcabado") %>' OnClientClick='<%# "MostrarDatos2(\"" + Eval("ID_GrupoAcabado") + "\", \"" + Eval("Descripcion_Grupo") + "\")" %>'></asp:LinkButton>
+                                            <asp:LinkButton runat="server" CssClass="text-decoration-none text-dark" ID="linkID_GrupoAcabado" Text='<%# Eval("ID_GrupoAcabado") %>' OnClientClick='<%# "MostrarDatos2(\"" + Eval("ID_GrupoAcabado") + "\", \"" + Eval("Descripcion_Grupo") + "\")" %>' ClientIDMode="Static"></asp:LinkButton>
                                         </ItemTemplate>
                                     </asp:TemplateColumn>
 
