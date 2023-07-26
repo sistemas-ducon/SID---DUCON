@@ -127,6 +127,7 @@
     <Content Include="Recursos\CSS\login.css" />
     <Content Include="Formularios\Login.aspx" />
     <Content Include="Recursos\CSS\Ventas\Gestion_Comercial.css" />
+    <Content Include="Recursos\CSS\Ventas\Licitaciones.css" />
     <Content Include="Recursos\CSS\Ventas\Visita_Asesores.css" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />

@@ -195,22 +195,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.Label lbVistaEntre;
 
         /// <summary>
-        /// Control Date1.
+        /// Control fecha1.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl Date1;
+        protected global::System.Web.UI.WebControls.TextBox fecha1;
 
         /// <summary>
-        /// Control Date2.
+        /// Control fecha2.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl Date2;
+        protected global::System.Web.UI.WebControls.TextBox fecha2;
 
         /// <summary>
         /// Control Button1.
@@ -222,6 +222,33 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.Button Button1;
 
         /// <summary>
+        /// Control DateRangeLiteral.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal DateRangeLiteral;
+
+        /// <summary>
+        /// Control DataGrid1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DataGrid DataGrid1;
+
+        /// <summary>
+        /// Control VisitaAse.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource VisitaAse;
+
+        /// <summary>
         /// Control Label1.
         /// </summary>
         /// <remarks>
@@ -231,13 +258,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.Label Label1;
 
         /// <summary>
-        /// Control Date3.
+        /// Control fecha3.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl Date3;
+        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl fecha3;
 
         /// <summary>
         /// Control Label2.
@@ -249,13 +276,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.Label Label2;
 
         /// <summary>
-        /// Control Date4.
+        /// Control fecha4.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl Date4;
+        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl fecha4;
 
         /// <summary>
         /// Control Button2.
