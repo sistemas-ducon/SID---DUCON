@@ -95,6 +95,7 @@
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Formularios\Ventas\Consulta_Cotizacion.aspx" />
     <Content Include="Formularios\Ventas\Diseño_Venta.aspx" />
+    <Content Include="Formularios\Ventas\frmClientediseño.aspx" />
     <Content Include="Formularios\Ventas\Gestion_Comercial.aspx" />
     <Content Include="Formularios\DiseñoYDesarrollo\Insumos.aspx" />
     <Content Include="Formularios\DiseñoYDesarrollo\Insumos_Consultar.aspx" />
@@ -127,6 +128,7 @@
     <Content Include="Formularios\Login.aspx" />
     <Content Include="Recursos\CSS\Ventas\Consulta_Cotizacion.css" />
     <Content Include="Recursos\CSS\Ventas\Gestion_Comercial.css" />
+    <Content Include="Recursos\CSS\Ventas\Licitaciones.css" />
     <Content Include="Recursos\CSS\Ventas\Visita_Asesores.css" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -166,6 +168,13 @@
     </Compile>
     <Compile Include="Formularios\Ventas\Diseño_Venta.aspx.designer.cs">
       <DependentUpon>Diseño_Venta.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\Ventas\frmClientediseño.aspx.cs">
+      <DependentUpon>frmClientediseño.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\Ventas\frmClientediseño.aspx.designer.cs">
+      <DependentUpon>frmClientediseño.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\Ventas\Gestion_Comercial.aspx.cs">
       <DependentUpon>Gestion_Comercial.aspx</DependentUpon>
