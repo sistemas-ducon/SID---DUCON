@@ -218,7 +218,7 @@
 
                             <div class="row">
                                 <div class="col-10">
-                                    <textarea runat="server" class="form-control" style="width: 64rem;"></textarea>
+                                    <textarea runat="server" class="form-control"></textarea>
                                 </div>
                                 <div class="col-2 d-flex flex-column">
                                     <button runat="server" type="button" class="btn-outline-dark btn btn-sm btn-light mb-2">Grabar Seguimiento</button>
@@ -256,7 +256,7 @@
 
                 </div>
 
-                           
+                           </div>
                         </div>
                     </div>
 
