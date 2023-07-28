@@ -37,6 +37,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 string apellidos = reader["Apellidos"].ToString();
                                 TextAsesor.Text = nombre + " " + apellidos; // Asignar el nombre y apellidos al TextBox
                                 TextAsesortab2.Text = nombre + " " + apellidos;
+                                TextAsesorSeguimiento.Text = nombre + " " + apellidos;
                             }
                             else
                             {
@@ -50,10 +51,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     Response.Redirect("/Formularios/Login.aspx");
                 }
+                DataGrid2.DataBind();
+             
+
+                LoadEstados();
+                CargarDatosTotales();
             }
         }
+        
 
-        protected void LoadEstados(object sender, EventArgs e)
+        protected void LoadEstados()
         {
          
                 string connectionString = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"; 
@@ -81,20 +88,36 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BtnConsultarTab2_Click(object sender, EventArgs e)
         {
-            // Obtener el DataSource y el parámetro del filtro para el estado
-            SqlDataSource ds = DataGridPorEstado;
-            string estadoAprobado = "Aprobada";
+            // Obtén el valor seleccionado del DropDownList
+            string estadoSeleccionado = ddlEstadoCotizacion.SelectedValue;
 
-            // Agregar el parámetro de filtro para el estado "Aprobadas"
-            ds.FilterParameters.Clear();
-            ds.FilterParameters.Add("Estado", estadoAprobado);
-            ds.FilterExpression = "Estado = @Estado";
+            // Realiza la consulta utilizando el SqlDataSource
+            DataGridPorEstado.SelectCommand = "cta_Cotizaciones_Por_Estado"; // Nombre del nuevo procedimiento almacenado
+            DataGridPorEstado.SelectParameters.Clear();
+            DataGridPorEstado.SelectParameters.Add("NombreAsesor", TextAsesortab2.Text);
+            DataGridPorEstado.SelectParameters.Add("FechaInicio", TextCotizacionEntreInicio2.Text);
+            DataGridPorEstado.SelectParameters.Add("FechaFin", TextCotizacionEntreFinal2.Text);
+            DataGridPorEstado.SelectParameters.Add("Estado", estadoSeleccionado);
 
-            // Recargar el DataGrid para aplicar el filtro
-            DataGrid2.DataBind();
+            // Refresca los datos del DataGrid
+            DataGridPorEstado.DataBind();
         }
 
+        private void CargarDatosTotales()
+        {
+            // Crear un DataTable para almacenar los datos
+            System.Data.DataTable dt = new System.Data.DataTable();
+            dt.Columns.Add("");
+            dt.Columns.Add("");
+            dt.Columns.Add("");
 
+            // Agregar filas de ejemplo (puedes reemplazar esto con tus datos reales)
+            dt.Rows.Add("", "", "");
+          
+            // Asignar el DataTable como fuente de datos del GridView
+            GridViewTotales.DataSource = dt;
+            GridViewTotales.DataBind();
+        }
 
 
 
