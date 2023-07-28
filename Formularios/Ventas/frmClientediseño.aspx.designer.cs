@@ -33,22 +33,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
-        /// Control TextBox1.
+        /// Control txtBuscarNit.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox1;
+        protected global::System.Web.UI.WebControls.TextBox txtBuscarNit;
 
         /// <summary>
-        /// Control txtBuscarCliente.
+        /// Control txtBusacarnom.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtBuscarCliente;
+        protected global::System.Web.UI.WebControls.TextBox txtBusacarnom;
 
         /// <summary>
         /// Control cmdBuscarCliente.
@@ -60,13 +60,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.WebControls.Button cmdBuscarCliente;
 
         /// <summary>
-        /// Control GridView1.
+        /// Control dgrdCliente.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView GridView1;
+        protected global::System.Web.UI.WebControls.DataGrid dgrdCliente;
 
         /// <summary>
         /// Control Label1.
@@ -78,13 +78,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.WebControls.Label Label1;
 
         /// <summary>
-        /// Control TextBox2.
+        /// Control txtId_Cliente.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox2;
+        protected global::System.Web.UI.WebControls.TextBox txtId_Cliente;
 
         /// <summary>
         /// Control Label2.
@@ -96,13 +96,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.WebControls.Label Label2;
 
         /// <summary>
-        /// Control TextBox3.
+        /// Control txtNombre_Compañia.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox3;
+        protected global::System.Web.UI.WebControls.TextBox txtNombre_Compañia;
 
         /// <summary>
         /// Control Label3.
@@ -114,13 +114,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.WebControls.Label Label3;
 
         /// <summary>
-        /// Control TextBox4.
+        /// Control txttelcliente.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox4;
+        protected global::System.Web.UI.WebControls.TextBox txttelcliente;
 
         /// <summary>
         /// Control Label4.
@@ -132,13 +132,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.WebControls.Label Label4;
 
         /// <summary>
-        /// Control DropDownList1.
+        /// Control dtacboProcedencia.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DropDownList1;
+        protected global::System.Web.UI.WebControls.DropDownList dtacboProcedencia;
 
         /// <summary>
         /// Control Label5.
@@ -150,13 +150,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.WebControls.Label Label5;
 
         /// <summary>
-        /// Control TextBox5.
+        /// Control txtDir.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox5;
+        protected global::System.Web.UI.WebControls.TextBox txtDir;
 
         /// <summary>
         /// Control Label6.
@@ -168,13 +168,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.WebControls.Label Label6;
 
         /// <summary>
-        /// Control DropDownList2.
+        /// Control cboCiudad.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DropDownList2;
+        protected global::System.Web.UI.WebControls.DropDownList cboCiudad;
+
+        /// <summary>
+        /// Control SqlDataSourceCiudad.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSourceCiudad;
 
         /// <summary>
         /// Control Label7.
@@ -186,13 +195,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.WebControls.Label Label7;
 
         /// <summary>
-        /// Control TextBox6.
+        /// Control txtCompartidoCon.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox6;
+        protected global::System.Web.UI.WebControls.TextBox txtCompartidoCon;
 
         /// <summary>
         /// Control CheckBox1.
