@@ -27,10 +27,13 @@ a.icong.enabled {
     color: blue; /* Cambia el color a azul para enlaces habilitados */
 }
 
-/* Div tabla planos */
-. {
-    width: 100%;
-    height: auto;
-    border: solid 1px rgba(0, 0, 0, 0.301);
-    border-radius: 0.5rem;
-}
+
+
+
+    .auto-width-column {
+        width: auto;
+        max-width: 200px; /* Puedes ajustar este valor según el ancho máximo deseado */
+        white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
+        overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
+        text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
+    }
