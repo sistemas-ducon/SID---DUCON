@@ -1,9 +1,10 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="frmClientediseño.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.Ventas.frmClientediseño" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="frmClientediseño.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.Ventas.frmClientediseño" ResponseEncoding="utf-8" %>
 
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
+    <meta charset="utf-8"/>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
@@ -189,7 +190,7 @@
 
     
     </header>
-    <form id="form1" runat="server">
+    <form id="form1" runat="server" style="background-color: #FFFFFF">
         <div>
 
                     <nav class="navbar navbar-expand-sm navbar-light bg-light" style="background-color: #333333">
@@ -242,45 +243,51 @@
         <br />
         <br />
 
-        <div style="margin-left: 160px">
-            <asp:DataGrid ID="dgrdCliente" runat="server" AllowPaging="True" BorderColor="#333333" CellPadding="4" DataSourceID="SqlDataSourceClientes" Font-Bold="False" Font-Italic="False" Font-Names="helvetica" Font-Overline="False" Font-Strikeout="False" Font-Underline="False" ForeColor="#333333" GridLines="None" OnSelectedIndexChanged="dgrdCliente_SelectedIndexChanged1" Width="1621px">
-                <AlternatingItemStyle BackColor="White" ForeColor="#284775" />
+        <div style="margin-left: 160px; background-color: #FFFFFF;">
+            <asp:GridView ID="dgrdCliente" runat="server" AllowPaging="True" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="Nit" DataSourceID="SqlDataSourceClientes" ForeColor="#333333" GridLines="None" Height="297px" OnSelectedIndexChanged="GridView1_SelectedIndexChanged" PageSize="5" Width="1180px">
+                <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                 <Columns>
-                    <asp:ButtonColumn CommandName="Select" Text="✔️"></asp:ButtonColumn>
+                    <asp:CommandField SelectText="✅" ShowSelectButton="True" />
+                    <asp:BoundField DataField="Nit" HeaderText="Nit" ReadOnly="True" SortExpression="Nit" />
+                    <asp:BoundField DataField="Nombre_Compañia" HeaderText="Nombre Compañia" SortExpression="Nombre_Compañia" />
+                    <asp:BoundField DataField="AsesorComercial" HeaderText="Asesor Comercial" ReadOnly="True" SortExpression="AsesorComercial" />
+                    <asp:BoundField DataField="Teléfono" HeaderText="Teléfono" SortExpression="Teléfono" />
+                    <asp:BoundField DataField="Dirección" HeaderText="Dirección" SortExpression="Dirección" />
+                    <asp:BoundField DataField="Procedencia" HeaderText="Procedencia" SortExpression="Procedencia" />
+                    <asp:BoundField DataField="FCreación" HeaderText="Fecha de creación" SortExpression="FCreación" />
                 </Columns>
-                <EditItemStyle BackColor="#999999" />
+                <EditRowStyle BackColor="#999999" />
                 <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-                <HeaderStyle BackColor="#00003E" Font-Bold="True" Font-Italic="False" Font-Names="helvetica" Font-Overline="False" Font-Strikeout="False" Font-Underline="False" ForeColor="White" />
-                <ItemStyle BackColor="#F7F6F3" ForeColor="#333333" />
+                <HeaderStyle BackColor="#000020" Font-Bold="True" ForeColor="White" />
                 <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedItemStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
-            </asp:DataGrid>
-        </div>
+                <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
+                <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
+                <SortedAscendingCellStyle BackColor="#E9E7E2" />
+                <SortedAscendingHeaderStyle BackColor="#506C8C" />
+                <SortedDescendingCellStyle BackColor="#FFFDF8" />
+                <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
+            </asp:GridView>
+                    <br />
         <br />
-        <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;
         <asp:Label ID="Label1" runat="server" Text="NIT"></asp:Label>
-&nbsp;&nbsp;&nbsp;
-        <asp:TextBox ID="txtId_Cliente" runat="server" Height="22px" Width="229px" ></asp:TextBox>
+&nbsp;<asp:TextBox ID="txtId_Cliente" runat="server" Height="25px" Width="229px" ValidateRequestMode="Disabled" ></asp:TextBox>
         <asp:Label ID="Label2" runat="server" Text="Cliente"></asp:Label>
-&nbsp;<asp:TextBox ID="txtNombre_Compañia" runat="server" Width="209px"></asp:TextBox>
-&nbsp;&nbsp;
-        <asp:Label ID="Label3" runat="server" Text="Teléfono"></asp:Label>
+&nbsp;<asp:TextBox ID="txtNombre_Compañia" runat="server" Width="385px" ValidateRequestMode="Disabled" Height="26px"></asp:TextBox>
+&nbsp;&nbsp;<asp:Label ID="Label3" runat="server" Text="Teléfono"></asp:Label>
 &nbsp;
-        <asp:TextBox ID="txttelcliente" runat="server" Width="217px"></asp:TextBox>
+        <asp:TextBox ID="txttelcliente" runat="server" Width="174px" ValidateRequestMode="Disabled" Height="30px"></asp:TextBox>
         <asp:Label ID="Label4" runat="server" Text="Procedencia"></asp:Label>
-&nbsp;
-        <asp:DropDownList ID="dtacboProcedencia" runat="server" Width="189px">
+        <asp:DropDownList ID="dtacboProcedencia" runat="server" Width="124px">
         </asp:DropDownList>
         <br />
         <br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <asp:Label ID="Label5" runat="server" Text="Dirección"></asp:Label>
-        <asp:TextBox ID="txtDir" runat="server" Width="373px"></asp:TextBox>
+        <asp:TextBox ID="txtDir" runat="server" Width="361px" ValidateRequestMode="Disabled" Height="25px"></asp:TextBox>
         <asp:Label ID="Label6" runat="server" Text="Ciudad"></asp:Label>
         <asp:DropDownList ID="cboCiudad" runat="server" Width="219px">
         </asp:DropDownList>
-        <asp:SqlDataSource ID="SqlDataSourceCiudad" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT { fn CONCAT(tblDepartamentoPais.CodigoDepartamento, tblCiudad.CodigoCiudad) } AS CodCompleto, tblCiudad.NombreCiudad FROM tblDepartamentoPais INNER JOIN tblCiudad ON tblDepartamentoPais.Id_Departamento_Auto = tblCiudad.Id_Departamento ORDER BY { fn CONCAT(tblCiudad.NombreCiudad, ' - ', tblDepartamentoPais.NombreDepartamento) }"></asp:SqlDataSource>
         <asp:Label ID="Label7" runat="server" Text="Compartido Con"></asp:Label>
         <asp:TextBox ID="txtCompartidoCon" runat="server" Width="236px"></asp:TextBox>
 &nbsp;<asp:CheckBox ID="CheckBox1" runat="server" Text="Compartir" />
@@ -288,8 +295,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <br />
         <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <asp:Button ID="cmdNevoCliente" runat="server" Text="Nuevo" />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<asp:Button ID="cmdNevoCliente" runat="server" Text="Nuevo" />
         <asp:Button ID="Button2" runat="server" Text="Modificar" />
         <asp:Button ID="Button3" runat="server" Text="Grabar" />
         <asp:Button ID="Button4" runat="server" Text="Eliminar" />
@@ -297,7 +303,14 @@
         <br />
         <br />
         <br />
-        <asp:SqlDataSource ID="SqlDataSourceClientes" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT a.Id_Cliente AS Nit, a.NombreCompañía AS Nombre_Compañia, b.Nombre + b.Apellidos AS AsesorComercial, a.Fecha_Creacion AS FCreación, a.Teléfono, a.IdProcedencia, a.Dirección FROM tblCliente AS a INNER JOIN tblAsesorComercial AS b ON b.Cedula = a.Asesor"></asp:SqlDataSource>
+        </div>
+
+        <asp:SqlDataSource ID="SqlDataSourceClientes" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT a.Id_Cliente AS Nit, a.NombreCompañía AS Nombre_Compañia, 
+b.Nombre + ' ' + b.Apellidos AS AsesorComercial, a.Fecha_Creacion AS FCreación, a.Teléfono, x.Procedencia, a.Dirección
+FROM tblCliente AS a 
+INNER JOIN tblProcedenciaCliente AS X ON X.IdProcedencia = a.IdProcedencia 
+INNER JOIN tblAsesorComercial AS b ON b.Cedula = a.Asesor order by Fecha_Creacion desc"></asp:SqlDataSource>
+        <asp:SqlDataSource ID="SqlDataSourceCiudad" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT { fn CONCAT(tblDepartamentoPais.CodigoDepartamento, tblCiudad.CodigoCiudad) } AS CodCompleto, tblCiudad.NombreCiudad FROM tblDepartamentoPais INNER JOIN tblCiudad ON tblDepartamentoPais.Id_Departamento_Auto = tblCiudad.Id_Departamento ORDER BY { fn CONCAT(tblCiudad.NombreCiudad, ' - ', tblDepartamentoPais.NombreDepartamento) }"></asp:SqlDataSource>
     </form>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
