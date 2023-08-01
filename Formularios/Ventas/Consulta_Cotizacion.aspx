@@ -8,6 +8,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -376,23 +377,23 @@
                         </div>
                         <div class="row">
                             <div class="col-5">
-                              <div class="input-group input-group-sm mb-2 gap-2">
+                              <div class="input-group input-group-sm mb-2 gap-2 mt-3">
                                     <asp:Label CssClass="col-form-label-sm" runat="server">Descripción Seguimiento:</asp:Label>
                                     <textarea class="form-control" runat="server"></textarea>
                                 </div>
                         </div>
-                            <div class="col-2">
+                            <div class="col-3 mt-3">
                                 <asp:Label CssClass="col-form-label-sm" runat="server">Prox. Seguimiento</asp:Label>
                                 <asp:TextBox id="TextProxSegui" runat="server" CssClass="form-control form-control-sm" Type="Date"></asp:TextBox>
                             </div>
-                            <div class="col-2">
+                            <div class="col-2 mt-3">
                                 <asp:Button CssClass="btn-outline-dark btn btn-light text-center" runat="server" Text="Grabar Seguimiento"/>
                             </div>
 
-                            <div class="col-2">
+                            <div class="col-1 mt-3">
                                 <asp:Label CssClass="col-form-label-sm" runat="server">Cotizacion Ex</asp:Label>
                             </div>
-                             <div class="col-2">
+                             <div class="col-1 mt-3">
                                 <asp:Label CssClass="col-form-label-sm" runat="server">Cotizacion PDF</asp:Label>
                             </div>
                             </div>
@@ -450,7 +451,7 @@
                             </div>
 
                             <div class="col-2">
-                                <asp:Button CssClass="btn-outline-dark  btn btn-light btn-sm ms-auto" runat="server" Text="Exportar" />
+                                <asp:Button ID="BtnExportar" CssClass="btn-outline-dark  btn btn-light btn-sm ms-auto" runat="server" Text="Exportar" />
                             </div>
 
                             <div class="col-2">
