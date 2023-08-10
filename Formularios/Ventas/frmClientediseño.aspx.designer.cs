@@ -66,7 +66,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DataGrid dgrdCliente;
+        protected global::System.Web.UI.WebControls.GridView dgrdCliente;
 
         /// <summary>
         /// Control Label1.
@@ -177,15 +177,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.WebControls.DropDownList cboCiudad;
 
         /// <summary>
-        /// Control SqlDataSourceCiudad.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSourceCiudad;
-
-        /// <summary>
         /// Control Label7.
         /// </summary>
         /// <remarks>
@@ -265,5 +256,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSourceClientes;
+
+        /// <summary>
+        /// Control SqlDataSourceCiudad.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSourceCiudad;
     }
 }
