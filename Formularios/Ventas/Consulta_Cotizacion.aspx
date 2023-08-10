@@ -12,12 +12,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
     <link href="../../Recursos/CSS/Ventas/Consulta_Cotizacion.css" rel="stylesheet" />
     <title>Consultas de Cotizaciones</title>
 </head>
 <body>
     <form id="form1" runat="server">
-        <asp:ScriptManager runat="server" />
+        <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
 
 
         <nav class="navbar navbar-light bg-light">
@@ -54,10 +55,10 @@
 
         <div class="tab-content container">
             
-            <%-- TAB POR VENDEDOR--%>
+            <%-- TAB POR VENDEDOR--%> <%--TAB-COMPLETADO-FUNCIONALIDAD--%>
 
             <div class="tab-pane fade show active" id="PorVendedor-content">
-                <asp:UpdatePanel runat="server" ID="UpdatePanelPorVendedor">
+                <asp:UpdatePanel runat="server" ID="UpdatePanelPorVendedor" UpdateMode="Conditional">
                     <ContentTemplate>
 
                         <h6>Informacion Cotizacion</h6>
@@ -85,9 +86,10 @@
 
                             </div>
 
-                            <div class="col-2">
-                                <asp:Button CssClass="btn-outline-dark  btn btn-light btn-sm" runat="server" Text="Consultar" />
+                            <div class="col-1">
+                                <asp:Button CssClass="btn-outline-dark  btn btn-light btn-sm" runat="server" Text="Consultar" OnClick="TapPorVendedor_Click" />
                             </div>
+                            
 
                         </div>
 
@@ -99,12 +101,12 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 300px; overflow-x: auto;">
-                                                <asp:DataGrid Class="table table-bordered table-hover" ID="DataGrid1" runat="server" DataSourceID="DataGridConsultaCotizaciones" AutoGenerateColumns="false">
+                                                <asp:DataGrid Class="table table-bordered table-hover" ID="DataGrid1" runat="server" DataSourceID="DataGridConsultaCotizaciones" AutoGenerateColumns="false" OnPreRender="DataGridPorVendedor_PreRender">
                                                     <Columns>
                                                         <asp:BoundColumn DataField="Cotización" HeaderText="Cotizacion"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Estado" HeaderText="Estado"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Competencia" HeaderText="Competencia"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="Valor" HeaderText="Valor"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Valor" HeaderText="Valor" DataFormatString="{0:C0}"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Descuento" HeaderText="Dto(%)"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="VCCD" HeaderText="Valor Neto"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Cliente" HeaderText="Cliente"></asp:BoundColumn>
@@ -135,21 +137,94 @@
                         <div class="container mt-4">
                             <div class="row justify-content-center">
                                 <div class="border rounded p-3" style="height: 200px">
+
+                                    <div class="table-responsive">                                  
+                                    <table class="table table-hover table-bordered">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th style="white-space: nowrap;">Estado</th>
+                                                <th style="white-space: nowrap;">Cant</th>
+                                                <th style="white-space: nowrap;">%</th>
+                                                <th style="white-space: nowrap;">Total Valor Neto</th>
+                                                <th style="white-space: nowrap;">%</th>                                              
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                               
+                                                <td style="white-space: nowrap;">
+                                                    <label runat="server" id="lbEstudio"></label>
+                                                      
+                                                </td>
+                                                <td>
+                                                    <label runat="server" id="lbCantEstudio"></label>
+                                                </td>
+                                                <td>
+                                                    <label runat="server" id="lbPorEst"></label>
+                                                </td>
+                                                 <td>
+                                                    <label runat="server" id="lbTotEst"></label>
+                                                </td>
+                                                 <td>
+                                                    <label runat="server" id="lbPorEstTot"></label>
+                                                </td>                                              
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                 <label runat="server" id="lbAprobada"></label>
+                                                  </td>
+                                                <td>
+                                                     <label runat="server" id="lbCantApr"></label>
+                                                </td>
+                                                 <td>
+                                                      <label runat="server" id="lbPorApr"></label>
+                                                </td>
+                                                 <td>
+                                                      <label runat="server" id="lbTotApr"></label>
+                                                </td>
+                                                 <td>
+                                                      <label runat="server" id="lbTotPor"></label>
+                                                </td>
+                                            </tr>
+                                               <tr>
+                                                <td>
+                                                 <label runat="server" id="lbTotales"></label>
+                                                  </td>
+                                                <td>
+                                                     <label runat="server" id="lbCantidad"></label>
+                                                </td>
+                                                 <td>
+                                                      <label runat="server" id="lblTotal"></label>
+                                                </td>
+                                                 <td>
+                                                      <label runat="server" id="Label10"></label>
+                                                </td>
+                                                 <td>
+                                                      <label runat="server" id="lbPorTotal"></label>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                     <div class="d-flex justify-content-end align-items-center mt-3">
+                                      <asp:ImageButton ID="ImageButton1" CssClass="btn-outline-light btn btn-white btn-sm" runat="server" OnClick="LinkButton_Click"
+                                          ImageUrl="https://i.ibb.co/86fR8JK/icons8-microsoft-excel-2019-48.png" AlternateText="Excel Icon" />
+                                         </div>
                                 </div>
                             </div>
                         </div>
-
+                        
                     </ContentTemplate>
                 </asp:UpdatePanel>
 
 
             </div>
 
-            <%-- TAB POR ESTADO--%>
+            <%-- TAB POR ESTADO--%> 
 
             <div class="tab-pane fade" id="PorEstado-content">
 
-                <asp:UpdatePanel runat="server" ID="UpdatePanelPorEstado">
+                <asp:UpdatePanel runat="server" ID="UpdatePanelPorEstado" UpdateMode="Conditional">
                     <ContentTemplate>
 
                         <h6>Criterios para la estadistica</h6>
@@ -186,7 +261,7 @@
                             </div>
 
                             <div class="col-1">
-                                <asp:Button CssClass="btn-outline-dark btn btn-light btn-sm" runat="server" Text="Consultar" ID="BtnConsultarTab2" OnClick="BtnConsultarTab2_Click" />
+                                <asp:Button CssClass="btn-outline-dark btn btn-light btn-sm" runat="server" Text="Consultar" ID="BtnConsultarTab2" OnClick="BtnConsultarPorEstado_Click" />
                             </div>
                         </div>
 
@@ -197,7 +272,7 @@
                                 <div class="col-12">
                                     <div class="table-responsive mb-2 gap-2" style="max-height: 300px; overflow-x: auto;">
 
-                                        <asp:DataGrid Class="table table-bordered table-hover" ID="DataGrid2" runat="server" DataSourceID="DataGridPorEstado" AutoGenerateColumns="false">
+                                        <asp:DataGrid Class="table table-bordered table-hover" ID="DataGrid2" runat="server" DataSourceID="DataGridPorEstado" AutoGenerateColumns="false" OnPreRender="DataGridPorEstado_PreRender">
                                             <Columns>
                                                 <asp:BoundColumn DataField="Asesor" HeaderText="Asesor"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="Cotización" HeaderText="Cotizacion"></asp:BoundColumn>
@@ -214,6 +289,8 @@
 
                                             </Columns>
                                         </asp:DataGrid>
+                                       
+
                                         <asp:SqlDataSource runat="server" ID="DataGridPorEstado" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="cta_Cotizaciones_Por_Estado" SelectCommandType="StoredProcedure">
                                             <SelectParameters>
                                                 <asp:ControlParameter ControlID="TextAsesortab2" PropertyName="Text" Name="NombreAsesor" Type="String"></asp:ControlParameter>
@@ -231,9 +308,71 @@
                         </div>
 
 
-                        <div class="row justify-content-center">
-                            <div class="border rounded p-3 mt-4">
-                            </div>
+                        <div class="container mt-4">
+                            <div class="row justify-content-center">
+                                <div class="border rounded p-3" style="height: 200px">
+
+                                    <div class="table-responsive">                                  
+                                    <table class="table table-hover table-bordered" id="Table1">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th style="white-space: nowrap;">Asesor Comercial</th>
+                                                <th style="white-space: nowrap;">Cant</th>
+                                                <th style="white-space: nowrap;">%</th>
+                                                <th style="white-space: nowrap;">Valor Neto</th>
+                                                <th style="white-space: nowrap;">%</th>                                              
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                               
+                                                <td style="white-space: nowrap;">
+                                                    <label runat="server" id="lbAseCom"></label>
+                                                      
+                                                </td>
+                                                <td>
+                                                    <label runat="server" id="Label2"></label>
+                                                </td>
+                                                <td>
+                                                    <label runat="server" id="Label3"></label>
+                                                </td>
+                                                 <td>
+                                                    <label runat="server" id="Label4"></label>
+                                                </td>
+                                                 <td>
+                                                    <label runat="server" id="Label5"></label>
+                                                </td>                                              
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                 <label runat="server" id="Label6"></label>
+                                                  </td>
+                                                <td>
+                                                     <label runat="server" id="Label7"></label>
+                                                </td>
+                                                 <td>
+                                                      <label runat="server" id="Label8"></label>
+                                                </td>
+                                                 <td>
+                                                      <label runat="server" id="Label9"></label>
+                                                </td>
+                                                 <td>
+                                                     <label runat="server" id="Label11"></label>
+                                                 </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                    </div>
+
+                                    <div class="d-flex justify-content-end align-items-center mt-3">
+                                      <asp:ImageButton ID="ImgBtnExportarExcel" CssClass="btn-outline-light btn btn-white btn-sm" runat="server" OnClick="BtnExportarExcelPorEstado_Click"
+                                          ImageUrl="https://i.ibb.co/86fR8JK/icons8-microsoft-excel-2019-48.png" AlternateText="Excel Icon" />
+                                    </div>
+
+
+                                </div>
+                        </div>
                         </div>
 
                     </ContentTemplate>
@@ -245,7 +384,7 @@
 
             <div class="tab-pane fade" id="Seguimiento-content">
 
-                <asp:UpdatePanel runat="server" ID="UpdatePanelSeguimiento">
+                <asp:UpdatePanel runat="server" ID="UpdatePanelSeguimiento" UpdateMode="Conditional">
                     <ContentTemplate>
 
                         <h6>Criterios para la estadistica</h6>
@@ -355,21 +494,21 @@
                                     <div class="row d-flex justify-content-between">
                                         <div class="col-6">
                                             <asp:Label runat="server" CssClass="col-form-label-sm">Asesor</asp:Label>
-                                            <asp:DropDownList runat="server" ID="DropEstado" CssClass="form-control form-control-sm"></asp:DropDownList>
+                                            <asp:DropDownList runat="server" ID="DropEstado" CssClass="form-control form-control-sm" Enabled="false"></asp:DropDownList>
                                         </div>
                                         <div class="col-6">
                                             <asp:Label runat="server" CssClass="col-form-label-sm">Causa</asp:Label>
-                                            <asp:TextBox runat="server" ID="TextBox2" CssClass="form-control form-control-sm" Placeholder="POR DEFINIR"></asp:TextBox>
+                                            <asp:TextBox runat="server" ID="TextBox2" CssClass="form-control form-control-sm" Placeholder="POR DEFINIR" Enabled="false"></asp:TextBox>
                                         </div>
                                     </div>
 
                                     <div class="row d-flex justify-content-between mt-3">
                                         <div class="col-6">
                                             <asp:Label runat="server" CssClass="col-form-label-sm">Competencia</asp:Label>
-                                            <asp:TextBox runat="server" ID="TextBox3" CssClass="form-control form-control-sm" Placeholder="POR DEFINIR"></asp:TextBox>
+                                            <asp:TextBox runat="server" ID="TextBox3" CssClass="form-control form-control-sm" Placeholder="POR DEFINIR" Enabled="false"></asp:TextBox>
                                         </div>
                                         <div class="col-6">
-                                            <asp:Button CssClass="btn-outline-dark  btn btn-light" runat="server" Text="Cambiar Estado" />
+                                            <asp:Button CssClass="btn-outline-dark  btn btn-light" runat="server" Text="Cambiar Estado" Enabled="false"/>
                                         </div>
                                     </div>
                                 </div>
@@ -378,16 +517,16 @@
                         <div class="row">
                             <div class="col-5">
                               <div class="input-group input-group-sm mb-2 gap-2 mt-3">
-                                    <asp:Label CssClass="col-form-label-sm" runat="server">Descripción Seguimiento:</asp:Label>
+                                    <asp:Label CssClass="col-form-label-sm" runat="server" Enabled="false">Descripción Seguimiento:</asp:Label>
                                     <textarea class="form-control" runat="server"></textarea>
                                 </div>
                         </div>
                             <div class="col-3 mt-3">
                                 <asp:Label CssClass="col-form-label-sm" runat="server">Prox. Seguimiento</asp:Label>
-                                <asp:TextBox id="TextProxSegui" runat="server" CssClass="form-control form-control-sm" Type="Date"></asp:TextBox>
+                                <asp:TextBox id="TextProxSegui" runat="server" CssClass="form-control form-control-sm" Type="Date" Enabled="false"></asp:TextBox>
                             </div>
                             <div class="col-2 mt-3">
-                                <asp:Button CssClass="btn-outline-dark btn btn-light text-center" runat="server" Text="Grabar Seguimiento"/>
+                                <asp:Button CssClass="btn-outline-dark btn btn-light text-center" runat="server" Text="Grabar Seguimiento" Enabled="false"/>
                             </div>
 
                             <div class="col-1 mt-3">
@@ -409,7 +548,7 @@
             <%--TAB TOTALES--%>
 
             <div class="tab-pane fade" id="Totales-content">
-                <asp:UpdatePanel runat="server" ID="UpdatePanelTotales">
+                <asp:UpdatePanel runat="server" ID="UpdatePanelTotales" UpdateMode="Conditional">
                     <ContentTemplate>
                     </ContentTemplate>
                 </asp:UpdatePanel>
@@ -421,7 +560,7 @@
 
             <div class="tab-pane fade" id="EnEstudio-content">
 
-                <asp:UpdatePanel runat="server" ID="UpdatePanelEnEstudio">
+                <asp:UpdatePanel runat="server" ID="UpdatePanelEnEstudio" UpdateMode="Conditional">
                     <ContentTemplate>
                         <h6 class="text-center">RESUMEN DE COTIZACIONES EN ESTUDIO</h6>
                     </ContentTemplate>
@@ -431,9 +570,9 @@
 
             <%--TAB ULTIMO CONTACTO--%>
 
-            <div class="tab-pane fade" id="UltimoContacto-content">
+           <div class="tab-pane fade" id="UltimoContacto-content">
 
-                <asp:UpdatePanel runat="server" ID="UpdatePanelUltimoContacto">
+                <asp:UpdatePanel runat="server" ID="UpdatePanelUltimoContacto" UpdateMode="Conditional">
                     <ContentTemplate>
 
                         <div class="row">
@@ -447,15 +586,16 @@
                             </div>
 
                             <div class="col-2">
-                                <asp:Button CssClass="btn-outline-dark  btn btn-light btn-sm" runat="server" Text="Consultar" />
+                                <asp:Button ID="BtnConsultarCC" CssClass="btn-outline-dark btn btn-light btn-sm"
+                                    runat="server" Text="Consultar"  OnClick="bntConsultarUlCont_Click"/>
                             </div>
 
                             <div class="col-2">
-                                <asp:Button ID="BtnExportar" CssClass="btn-outline-dark  btn btn-light btn-sm ms-auto" runat="server" Text="Exportar" />
+                                <asp:Button ID="BtnExportar" CssClass="btn-outline-dark  btn btn-light btn-sm ms-auto" runat="server" Text="Exportar" OnClick="btnExportarUlCont_Click" />
                             </div>
 
                             <div class="col-2">
-                                <asp:Button CssClass="btn-outline-dark  btn btn-light btn-sm ms-auto" runat="server" Text="UCCM" />
+                                <asp:Button CssClass="btn-outline-dark  btn btn-light btn-sm ms-auto" runat="server" Text="UCCM" OnClick="btnUCCMUlCont_Click"/>
                             </div>
 
                         </div>
@@ -465,18 +605,19 @@
                                 <div class="border rounded p-3">
                                     <div class="col-12">
                                         <div class="table-responsive mb-2 gap-2" style="max-height: 400px; overflow-x: auto;">
-                                            <asp:DataGrid CssClass="table table-bordered table-hover" ID="DataGrid4" runat="server" DataSourceID="DataGridUltimoContacto">
+                                            <asp:DataGrid CssClass="table table-bordered table-hover" ID="DataGrid4" runat="server" DataSourceID="DataGridUltimoContacto" OnRowCommand="DataGrid4_RowCommand" AutoGenerateColumns="false">
+                                                <HeaderStyle Font-Bold="true" />
                                                 <Columns>
-                                                    <asp:BoundColumn DataField="uccNit" HeaderText="Nit"></asp:BoundColumn>
-                                                    <asp:BoundColumn DataField="uccRazonSocial" HeaderText="Nombre"></asp:BoundColumn>
-                                                    <asp:BoundColumn DataField="uccAsesor" HeaderText="Asesor"></asp:BoundColumn>
-                                                    <asp:BoundColumn DataField="uccActivo" HeaderText="Activo"></asp:BoundColumn>
-                                                    <asp:BoundColumn DataField="uccFecha" HeaderText="U.Contacto"></asp:BoundColumn>
-                                                    <asp:BoundColumn DataField="uccNombreContacto" HeaderText="Contacto"></asp:BoundColumn>
-                                                    <asp:BoundColumn DataField="uccTelefono" HeaderText="Teléfono"></asp:BoundColumn>
-                                                    <asp:BoundColumn DataField="uccCelular" HeaderText="Celular"></asp:BoundColumn>
-                                                    <asp:BoundColumn DataField="uccMail" HeaderText="Mail"></asp:BoundColumn>
-                                                    <asp:BoundColumn DataField="uccRazon" HeaderText="Razón"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="uccNit" HeaderText="Nit" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="uccRazonSocial" HeaderText="Nombre" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="uccAsesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="uccActivo" HeaderText="Activo" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="uccFecha" HeaderText="U.Contacto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="uccNombreContacto" HeaderText="Contacto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="uccTelefono" HeaderText="Teléfono" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="uccCelular" HeaderText="Celular" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="uccMail" HeaderText="Mail" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="uccRazon" HeaderText="Razón" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                 </Columns>
                                             </asp:DataGrid>
                                             <asp:SqlDataSource runat="server" ID="DataGridUltimoContacto" ConnectionString="<%$
@@ -499,7 +640,7 @@
             </div>
 
         </div>
-
+      
 
     </form>
 
