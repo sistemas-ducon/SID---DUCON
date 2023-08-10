@@ -37,3 +37,11 @@ a.icong.enabled {
         overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
         text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
     }
+
+/* Estilo para el encabezado del DataGrid */
+.datagrid-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f2f2f2; /* Ajusta el color de fondo del encabezado según tus preferencias */
+}

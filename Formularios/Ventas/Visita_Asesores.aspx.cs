@@ -27,12 +27,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 // Llamar al método para cargar los datos en el DropDownList
                 CargarAsesoresEnDropDownList();
-                // Aquí puedes obtener y mostrar el rango de fechas en el título del DataGrid
+                // Aquí se  obtiene y muestra el rango de fechas en el título del DataGrid
                 DateRangeLiteral.Text = GetDateRange();
+               
 
 
-
-            }
+            }        
         }
 
         private void CargarAsesoresEnDropDownList()
@@ -70,8 +70,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-        protected string GetDateRange()
-        {
+        protected string GetDateRange()     
+        { 
             string fechaInicio = fecha1.Text;
             string fechaFin = fecha2.Text;
 
@@ -83,15 +83,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             ActualizarTituloDataGrid();
             DateRangeLiteral.Text = GetDateRange();
-
-
+           
+          
         }
 
         public void Cambio(object sender, EventArgs e)
         {
 
             DateRangeLiteral.Text = GetDateRange();
-
+         
         }
 
         public void miDataGrid_PreRender(object sender, EventArgs e)
@@ -172,7 +172,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Muestra los otros resultados en sus respectivos Labels
 
 
-
+          
 
         }
 
@@ -351,9 +351,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
 
+       
 
 
+        }
 
+        protected void DataGrid1_ItemDataBound(object sender, DataGridItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                // Agregar el atributo onclick a cada fila para capturar el evento de clic
+                e.Item.Attributes["onclick"] = "seleccionarFila('" + e.Item.ItemIndex + "')";
+                e.Item.Style["cursor"] = "pointer";
+            }
         }
     }
 }

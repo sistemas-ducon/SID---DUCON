@@ -159,7 +159,7 @@
                             <a class="icong disabled Cancelar" href="#" title="Cancelar" id="CancelarVisita" onclick="CancelarVisita()">
                                 <i class="bi bi-x-lg"></i>
                             </a>
-                            <a class="icong disabled Cancelar" href="#" title="Exportar" id="Exportar">
+                            <a class="icong disabled Cancelar" href="#" runat="server" title="Exportar" id="Exportar">
                                 <i class="bi bi-airplane-engines"></i>
                             </a>
 
@@ -176,243 +176,240 @@
         <div class="tab-content">
 
             <div class="tab-pane fade show active" id="Visitas-content">
-                <asp:UpdatePanel ID="PanelRegVisitas" runat="server">
+                <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                     <ContentTemplate>
-                          <div class="container p-1">
+                        <div class="container p-1">
 
-                    <div class="row pb-1">
+                            <div class="row pb-1">
 
-                        <div class="col-4">
-                            <div class="input-group input-group-sm  mb-2 gap-2 ">
-                                <asp:Label class="form-label" Text="Asesor" runat="server" ID="lbAsesor"></asp:Label>
-                                <asp:DropDownList class="form-control" ID="ddlAsesor" runat="server" OnSelectedIndexChanged="Cambio" AutoPostBack="true"></asp:DropDownList>
-                            </div>
-                        </div>
+                                <div class="col-4">
+                                    <div class="input-group input-group-sm  mb-2 gap-2 ">
+                                        <asp:Label class="form-label" Text="Asesor" runat="server" ID="lbAsesor"></asp:Label>
+                                        <asp:DropDownList class="form-control" ID="ddlAsesor" runat="server" OnSelectedIndexChanged="Cambio" AutoPostBack="true"></asp:DropDownList>
+                                    </div>
+                                </div>
 
-                        <div class="col-4">
-                            <div class="input-group input-group-sm  mb-2 gap-2 ">
-                                <asp:Label class="form-label" Text="Visitas Por" runat="server" ID="lbVisitasPor"></asp:Label>
-                                <asp:DropDownList class="form-control" ID="ddlVisitasPor" runat="server" disabled="false" DataTextField="NombreCausa" DataValueField="Id_Causa" DataSourceID="CausaVisita"></asp:DropDownList><asp:SqlDataSource runat="server" ID="CausaVisita" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select * from tblCausaVisita"></asp:SqlDataSource>
-                            </div>
-                        </div>
-                        <div class="col-1">
-                        </div>
+                                <div class="col-4">
+                                    <div class="input-group input-group-sm  mb-2 gap-2 ">
+                                        <asp:Label class="form-label" Text="Visitas Por" runat="server" ID="lbVisitasPor"></asp:Label>
+                                        <asp:DropDownList class="form-control" ID="ddlVisitasPor" runat="server" disabled="false" DataTextField="NombreCausa" DataValueField="Id_Causa" DataSourceID="CausaVisita"></asp:DropDownList><asp:SqlDataSource runat="server" ID="CausaVisita" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select * from tblCausaVisita"></asp:SqlDataSource>
+                                    </div>
+                                </div>
+                                <div class="col-1">
+                                </div>
 
-                        <div class="col-3">
-                            <div class="input-group input-group-sm  input-group-sm mb-2 gap-2">
-                                <label class="form-label" runat="server" id="lbFecha">Fecha </label>
-                                <input type="date" id="fecha" class="form-control" runat="server" disabled="disabled" />
-                            </div>
-                        </div>
-
-
-                    </div>
-
-                    <div class="row pb-1">
-
-                        <div class="col-4">
-                            <div class="input-group input-group-sm  mb-2 gap-2 ">
-                                <asp:Button class="btn btn-outline-secondary" ID="btnCliente" type="button" Text="Cliente" runat="server" OnClientClick="abrirOtraPestana();"></asp:Button>
-                                <asp:TextBox ID="tbCliente" type="text" class="form-control" runat="server" disabled="false"></asp:TextBox>
-                            </div>
-                        </div>
-
-                        <div class="col-4">
-                            <div class="input-group input-group-sm  mb-2 gap-2">
-                                <asp:Label ID="lbTelefono" class="form-label" Text="Telefono" runat="server"></asp:Label>
-                                <asp:TextBox ID="tbTelefono" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
-                            </div>
-                        </div>
-
-                        <div class="col-1">
-                        </div>
-
-                        <div class="col-3">
-                            <div class="input-group input-group-sm  mb-2 gap-2">
-                                <asp:Label ID="lbCotizacion" class="form-label" Text="Cotizacion" runat="server"></asp:Label>
-                                <asp:TextBox ID="tbCotizacion" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
-                            </div>
-                        </div>
-
-
-                    </div>
-
-                    <div class="row pb-1">
-
-                        <div class="col-6">
-                            <div class="input-group input-group-sm  mb-2 gap-2">
-                                <asp:Label ID="lbContacto" class="form-label" Text="Contacto" runat="server"></asp:Label>
-                                <asp:TextBox ID="tbContacto" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
-                            </div>
-                        </div>
-
-                        <div class="col-6">
-                            <div class="input-group input-group-sm  mb-2 gap-2">
-                                <asp:Label ID="lbMailCont" class="form-label" Text="Mail Contacto" runat="server"></asp:Label>
-                                <asp:TextBox ID="tbMailCont" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
-                            </div>
-                        </div>
-
-
-                    </div>
-
-                    <div class="row pb-1">
-
-                        <div class="col-12">
-                            <div class="input-group input-group-sm  mb-2 gap-2">
-                                <asp:Label ID="lbObservaciones" class="form-label" Text="Obs." runat="server"></asp:Label>
-                                <textarea class="form-control form-control-sm" id="txObs" runat="server" cols="29" rows="3" disabled="disabled"></textarea>
-
-                            </div>
-                        </div>
-
-
-
-
-                    </div>
-
-                    <div class="row pt-3">
-
-                        <div class="col-5">
-                            <div class="input-group input-group-sm  mb-2 gap-2">
-                                <asp:Label ID="lbVistaEntre" class="form-label" Text="Visitas entre" runat="server"></asp:Label>
-                                <asp:TextBox ID="fecha1" type="date" runat="server" class="form-control"></asp:TextBox>
-                                <asp:TextBox ID="fecha2" type="date" runat="server" class="form-control"></asp:TextBox>
+                                <div class="col-3">
+                                    <div class="input-group input-group-sm  input-group-sm mb-2 gap-2">
+                                        <label class="form-label" runat="server" id="lbFecha">Fecha </label>
+                                        <input type="date" id="fecha" class="form-control" runat="server" disabled="disabled" />
+                                    </div>
+                                </div>
 
 
                             </div>
-                        </div>
 
-                        <div class="col-2">
-                            <div class="input-group input-group-sm  mb-2 gap-2">
+                            <div class="row pb-1">
 
-                                <asp:Button ID="btnConsultar" type="button" Text="Consultar" class="btn btn-outline-secondary"
-                                    runat="server" OnClick="Consultar" OnClientClick="return validarDropDownList()"></asp:Button>
+                                <div class="col-4">
+                                    <div class="input-group input-group-sm  mb-2 gap-2 ">
+                                        <asp:Button class="btn btn-outline-secondary" ID="btnCliente" type="button" Text="Cliente" runat="server" OnClientClick="abrirOtraPestana();"></asp:Button>
+                                        <asp:TextBox ID="tbCliente" type="text" class="form-control" runat="server" disabled="false"></asp:TextBox>
+                                    </div>
+                                </div>
+
+                                <div class="col-4">
+                                    <div class="input-group input-group-sm  mb-2 gap-2">
+                                        <asp:Label ID="lbTelefono" class="form-label" Text="Telefono" runat="server"></asp:Label>
+                                        <asp:TextBox ID="tbTelefono" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
+                                    </div>
+                                </div>
+
+                                <div class="col-1">
+                                </div>
+
+                                <div class="col-3">
+                                    <div class="input-group input-group-sm  mb-2 gap-2">
+                                        <asp:Label ID="lbCotizacion" class="form-label" Text="Cotizacion" runat="server"></asp:Label>
+                                        <asp:TextBox ID="tbCotizacion" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
+                                    </div>
+                                </div>
+
+
                             </div>
-                        </div>
+
+                            <div class="row pb-1">
+
+                                <div class="col-6">
+                                    <div class="input-group input-group-sm  mb-2 gap-2">
+                                        <asp:Label ID="lbContacto" class="form-label" Text="Contacto" runat="server"></asp:Label>
+                                        <asp:TextBox ID="tbContacto" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="input-group input-group-sm  mb-2 gap-2">
+                                        <asp:Label ID="lbMailCont" class="form-label" Text="Mail Contacto" runat="server"></asp:Label>
+                                        <asp:TextBox ID="tbMailCont" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
+                                    </div>
+                                </div>
 
 
-                    </div>
+                            </div>
 
-                    <div class="container mt-4">
-                        <div class="row justify-content-center">
-                            <div class="border rounded p-2">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="table-responsive mb-2 gap-2" style="max-height: 10rem; overflow-x: auto;">
-                                            <h6 class="datagrid-header text-center">Visita Asesores:
-                                                        <asp:Literal runat="server" ID="DateRangeLiteral"></asp:Literal></h6>
-                                            <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGrid1" runat="server" DataSourceID="VisitaAse" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnPreRender="miDataGrid_PreRender">
-                                                <HeaderStyle Font-Bold="true" />
-                                                <Columns>
+                            <div class="row pb-1">
 
-                                                    <asp:BoundColumn DataField="NombreCompañía" HeaderText="Cliente" ItemStyle-CssClass="auto-width-column" />
-                                                    <asp:BoundColumn DataField="NombreContacto" HeaderText="Contacto" ItemStyle-CssClass="auto-width-column" />
-                                                    <asp:BoundColumn DataField="Telefono" HeaderText="Telefono" ItemStyle-CssClass="auto-width-column" />
-                                                    <asp:BoundColumn DataField="MailContacto" HeaderText="Mail" ItemStyle-CssClass="auto-width-column" />
-                                                    <asp:BoundColumn DataField="NombreCausa" HeaderText="Visita Por" ItemStyle-CssClass="auto-width-column" />
-                                                    <asp:BoundColumn DataField="FechaVisita" HeaderText="Fecha Ingreso" ItemStyle-CssClass="auto-width-column" />
-                                                    <asp:BoundColumn DataField="Cotizacion" HeaderText="Cotizacion" ItemStyle-CssClass="auto-width-column" />
-
-
-                                                </Columns>
-                                            </asp:DataGrid>
-                                        </div>
-
-                                        <asp:SqlDataSource runat="server" ID="VisitaAse" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="sp_GetVisitasAsesor" SelectCommandType="StoredProcedure">
-                                            <SelectParameters>
-                                                <asp:ControlParameter ControlID="ddlAsesor" PropertyName="SelectedValue" Name="Asesor" Type="String"></asp:ControlParameter>
-                                                <asp:ControlParameter ControlID="fecha1" PropertyName="Text" Name="FechaInicio" Type="DateTime"></asp:ControlParameter>
-                                                <asp:ControlParameter ControlID="fecha2" PropertyName="Text" Name="FechaFin" Type="DateTime"></asp:ControlParameter>
-                                            </SelectParameters>
-                                        </asp:SqlDataSource>
-
+                                <div class="col-12">
+                                    <div class="input-group input-group-sm  mb-2 gap-2">
+                                        <asp:Label ID="lbObservaciones" class="form-label" Text="Obs." runat="server"></asp:Label>
+                                        <textarea class="form-control form-control-sm" id="txObs" runat="server" cols="29" rows="3" disabled="disabled" ></textarea>
 
                                     </div>
                                 </div>
+
+
+
+
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="container mt-4">
-                        <div class="row justify-content-center">
-                            <div class="border rounded p-2">
-                                <div class="table-responsive">
-                                    <h6 class="datagrid-header text-center">Estadistica Asesor:</h6>
-                                    <table class="table table-hover table-bordered">
-                                        <thead class="thead-light">
-                                            <tr>
-                                                <th style="white-space: nowrap;">Rango Fechas</th>
-                                                <th style="white-space: nowrap;">Visitas</th>
-                                                <th style="white-space: nowrap;">Visita Levantamiento %</th>
-                                                <th style="white-space: nowrap;">Visita Diseño %</th>
-                                                <th style="white-space: nowrap;">Visita Cliente Nuevo %</th>
-                                                <th style="white-space: nowrap;">Visita Cierre %</th>
-                                                <th style="white-space: nowrap;">Seguimiento Cotizacion %</th>
-                                                <th style="white-space: nowrap;">Mantenimiento %</th>
-                                                <th style="white-space: nowrap;">Entrega Cotizacion %</th>
-                                                <th style="white-space: nowrap;">Cartera %</th>
-                                                <th style="white-space: nowrap;">% Total </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
+                            <div class="row pt-3">
 
-                                                <td style="white-space: nowrap;">
-                                                    <label runat="server" id="lbFechas"></label>
-                                                </td>
-                                                <td>
-                                                    <label runat="server" id="lbVisitas"></label>
-                                                </td>
-                                                <td>
-                                                    <label runat="server" id="lbLev"></label>
-                                                </td>
-                                                <td>
-                                                    <label runat="server" id="lbDis"></label>
-                                                </td>
-                                                <td>
-                                                    <label runat="server" id="lbCli"></label>
-                                                </td>
-                                                <td>
-                                                    <label runat="server" id="lblCierre"></label>
-                                                </td>
-                                                <td>
-                                                    <label runat="server" id="lbSegCot"></label>
-                                                </td>
-                                                <td>
-                                                    <label runat="server" id="lbMantenimiento"></label>
-                                                </td>
-                                                <td>
-                                                    <label runat="server" id="lbEntregaCot"></label>
-                                                </td>
-                                                <td>
-                                                    <label runat="server" id="lbCartera"></label>
-                                                </td>
-                                                <td>
-                                                    <label runat="server" id="lbTotal"></label>
-                                                </td>
+                                <div class="col-5">
+                                    <div class="input-group input-group-sm  mb-2 gap-2">
+                                        <asp:Label ID="lbVistaEntre" class="form-label" Text="Visitas entre" runat="server"></asp:Label>
+                                        <asp:TextBox ID="fecha1" type="date" runat="server" class="form-control"></asp:TextBox>
+                                        <asp:TextBox ID="fecha2" type="date" runat="server" class="form-control"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="input-group input-group-sm  mb-2 gap-2">
 
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                        <asp:Button ID="btnConsultar" type="button" Text="Consultar" class="btn btn-outline-secondary"
+                                            runat="server" OnClick="Consultar" OnClientClick="return Excel()"></asp:Button>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="container mt-4">
+                                <div class="row justify-content-center">
+                                    <div class="border rounded p-2">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="table-responsive mb-2 gap-2" style="max-height: 12rem; overflow-x: auto;">
+                                                    <h6 class="datagrid-header text-center">Visita Asesores:
+                                                        <asp:Literal runat="server" ID="DateRangeLiteral"></asp:Literal></h6>
+                                                    <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGrid1" runat="server" DataSourceID="VisitaAse" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnPreRender="miDataGrid_PreRender" OnItemDataBound="DataGrid1_ItemDataBound">
+                                                        <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                        <Columns>
+
+
+                                                            <asp:BoundColumn DataField="NombreCompañía" HeaderText="Cliente" />
+                                                            <asp:BoundColumn DataField="NombreContacto" HeaderText="Contacto" ItemStyle-CssClass="auto-width-column" />
+                                                            <asp:BoundColumn DataField="Telefono" HeaderText="Telefono" ItemStyle-CssClass="auto-width-column" />
+                                                            <asp:BoundColumn DataField="MailContacto" HeaderText="Mail" ItemStyle-CssClass="auto-width-column" />
+                                                            <asp:BoundColumn DataField="NombreCausa" HeaderText="Visita Por" ItemStyle-CssClass="auto-width-column" />
+                                                            <asp:BoundColumn DataField="FechaVisita" HeaderText="Fecha Ingreso" ItemStyle-CssClass="auto-width-column" />
+                                                            <asp:BoundColumn DataField="Cotizacion" HeaderText="Cotizacion" ItemStyle-CssClass="auto-width-column" />
+                                                            <asp:BoundColumn DataField="Observacion" ItemStyle-CssClass="d-none" />
+
+                                                        </Columns>
+                                                    </asp:DataGrid>
+                                                </div>
+
+                                                <asp:SqlDataSource runat="server" ID="VisitaAse" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="sp_GetVisitasAsesor" SelectCommandType="StoredProcedure">
+                                                    <SelectParameters>
+                                                        <asp:ControlParameter ControlID="ddlAsesor" PropertyName="SelectedValue" Name="Asesor" Type="String"></asp:ControlParameter>
+                                                        <asp:ControlParameter ControlID="fecha1" PropertyName="Text" Name="FechaInicio" Type="DateTime"></asp:ControlParameter>
+                                                        <asp:ControlParameter ControlID="fecha2" PropertyName="Text" Name="FechaFin" Type="DateTime"></asp:ControlParameter>
+                                                    </SelectParameters>
+                                                </asp:SqlDataSource>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
+                            <div class="container mt-4">
+                                <div class="row justify-content-center">
+                                    <div class="border rounded p-2">
+                                        <div class="table-responsive">
+                                            <h6 class="datagrid-header text-center">Estadistica Asesor:</h6>
+                                            <table class="table table-hover table-bordered">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th style="white-space: nowrap;">Rango Fechas</th>
+                                                        <th style="white-space: nowrap;">Visitas</th>
+                                                        <th style="white-space: nowrap;">Visita Levantamiento %</th>
+                                                        <th style="white-space: nowrap;">Visita Diseño %</th>
+                                                        <th style="white-space: nowrap;">Visita Cliente Nuevo %</th>
+                                                        <th style="white-space: nowrap;">Visita Cierre %</th>
+                                                        <th style="white-space: nowrap;">Seguimiento Cotizacion %</th>
+                                                        <th style="white-space: nowrap;">Mantenimiento %</th>
+                                                        <th style="white-space: nowrap;">Entrega Cotizacion %</th>
+                                                        <th style="white-space: nowrap;">Cartera %</th>
+                                                        <th style="white-space: nowrap;">% Total </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+
+                                                        <td style="white-space: nowrap;">
+                                                            <label runat="server" id="lbFechas"></label>
+                                                        </td>
+                                                        <td>
+                                                            <label runat="server" id="lbVisitas"></label>
+                                                        </td>
+                                                        <td>
+                                                            <label runat="server" id="lbLev"></label>
+                                                        </td>
+                                                        <td>
+                                                            <label runat="server" id="lbDis"></label>
+                                                        </td>
+                                                        <td>
+                                                            <label runat="server" id="lbCli"></label>
+                                                        </td>
+                                                        <td>
+                                                            <label runat="server" id="lblCierre"></label>
+                                                        </td>
+                                                        <td>
+                                                            <label runat="server" id="lbSegCot"></label>
+                                                        </td>
+                                                        <td>
+                                                            <label runat="server" id="lbMantenimiento"></label>
+                                                        </td>
+                                                        <td>
+                                                            <label runat="server" id="lbEntregaCot"></label>
+                                                        </td>
+                                                        <td>
+                                                            <label runat="server" id="lbCartera"></label>
+                                                        </td>
+                                                        <td>
+                                                            <label runat="server" id="lbTotal"></label>
+                                                        </td>
+
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
                         </div>
-                    </div>
-
-
-
-
-
-                </div>
                     </ContentTemplate>
                 </asp:UpdatePanel>
-              
+
 
             </div>
 
             <div class="tab-pane fade " id="Estadisticas-content">
-                <asp:UpdatePanel ID="PanelEstadisticas" runat="server">
+                <asp:UpdatePanel ID="UpdatePanel2" runat="server">
                     <ContentTemplate>
                         <div class="container ">
 
@@ -439,22 +436,20 @@
 
                             </div>
 
-                            <div class="container mt-2">
+                            <div class="container mt-4">
                                 <div class="row justify-content-center">
                                     <div class="border rounded p-2">
                                         <div class="row">
                                             <div class="col-6">
-                                                <div class=" table table-responsive mb-2 gap-2" style="max-height: 13rem; overflow-x: auto;">
+                                                <div class=" table-responsive mb-2 gap-2" style="max-height: 14rem; overflow-x: auto;">
                                                     <h6 class="datagrid-header text-center">Estadistica Asesores:</h6>
-                                                    <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" ID="DataGrid2" runat="server" DataSourceID="EstadisticaAsesores" AutoGenerateColumns="false">
-                                                        <HeaderStyle Font-Bold="true" />
-                                                        <Columns>
+                                                    <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGrid2" runat="server" DataSourceID="EstadisticaAsesores" AutoGenerateColumns="false">
+                                                        <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
+                                                        <Columns>
                                                             <asp:BoundColumn DataField="CodigoAsesor" HeaderText="Codigo Asesor" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Asesor" HeaderText="Nombre" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="CuentaDeCausa" HeaderText="Cantidad Visitas" ItemStyle-CssClass="auto-width-column" />
-
-
 
                                                         </Columns>
                                                     </asp:DataGrid>
@@ -533,9 +528,10 @@
                                                     <div class="border rounded p-2">
                                                         <div class="row">
                                                             <div class="col-6">
-                                                                <div class=" table table-responsive mb-2 gap-2" style="max-height: 13rem; overflow-x: auto;">
+                                                                <div class=" table-responsive mb-2 gap-2" style="max-height: 13rem; overflow-x: auto;">
                                                                     <h6 class="datagrid-header text-center">Estadisticas Tipo Visitas:</h6>
                                                                     <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" ID="DataGrid3" runat="server" AutoGenerateColumns="false">
+                                                                        <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                         <Columns>
                                                                             <asp:BoundColumn DataField="Id_Causa" HeaderText="Codigo " ItemStyle-CssClass="auto-width-column" />
                                                                             <asp:BoundColumn DataField="NombreCausa" HeaderText="Tipo Visita" ItemStyle-CssClass="auto-width-column" />
@@ -568,8 +564,6 @@
                     </ContentTemplate>
                 </asp:UpdatePanel>
 
-
-
             </div>
 
         </div>
@@ -590,7 +584,7 @@
         // Formatear la fecha actual en formato "YYYY-MM-DD"
         const fechaFormateada = fechaActual.toISOString().slice(0, 10);
 
-        // Asignar las fechas a los campos de input
+        // Asignar las fechas a los campos  visitas entre y fecha 
         document.getElementById("fecha").value = fechaFormateada;
         document.getElementById("fecha1").value = primerDiaMesFormateado;
         document.getElementById("fecha2").value = fechaFormateada;
@@ -598,13 +592,15 @@
         document.getElementById("fecha6").value = fechaFormateada;
 
 
-        // Habilitar enlaces Inicio
+        // Habilitar enlace Nueva Visita 
         document.getElementById("NuevaVisita").classList.add("enabled");
 
         window.onload = function () {
             // Deshabilitar el botón en el cliente
             document.getElementById("btnCliente").disabled = true;
         };
+
+    
 
 
 
@@ -615,6 +611,13 @@
                 return false; // Evita enviar el formulario si el DropDownList está vacío.
             }
             return true; // Envía el formulario si el DropDownList tiene un valor seleccionado.
+        }
+
+        function Excel() {
+            if (validarDropDownList()) {
+                document.getElementById("Exportar").classList.add("enabled");
+            }
+
         }
 
 
@@ -644,8 +647,7 @@
                 var cotizacion = document.getElementById("<%= tbCotizacion.ClientID %>");
                 cotizacion.disabled = false;
 
-                var observacion = document.getElementById("<%= txObs.ClientID %>");
-                observacion.disabled = false;
+                document.getElementById("txObs").disabled = false;
 
                 //Deshabilitar 
                 var boton2 = document.getElementById("<%= btnConsultar.ClientID %>");
@@ -694,7 +696,7 @@
             fecha1.disabled = false;
 
             var fecha2 = document.getElementById("<%= fecha2.ClientID %>");
-            fecha2.disabled = falses;
+            fecha2.disabled = false;
 
 
         }
@@ -704,6 +706,48 @@
             window.open('frmClientediseño.aspx', '_blank');
         }
 
+
+    </script>
+
+    <script type="text/javascript">
+
+        // Función para capturar el clic en una fila del DataGrid
+        function seleccionarFila(rowIndex) {
+            // Obtener el DataGrid y la fila seleccionada utilizando jQuery
+            var dataGrid = $("#<%= DataGrid1.ClientID %>");
+            var row = dataGrid.find("tr:eq(" + (parseInt(rowIndex) + 1) + ")");
+
+            // Verificar si se encontró la fila
+            if (row.length > 0) {
+                // Obtener los datos de las celdas de la fila seleccionada
+                var cliente = row.find("td:eq(0)").text();
+                var contacto = row.find("td:eq(1)").text();
+                var telefono = row.find("td:eq(2)").text();
+                var mail = row.find("td:eq(3)").text();
+                var visitaPor = row.find("td:eq(4)").text();
+                var FechaX = row.find("td:eq(5)").text();
+                var cotizacion = row.find("td:eq(6)").text();
+                var observacion = row.find("td:eq(7)").text();
+
+
+
+                // Llenar los TextBox con los datos obtenidos
+                $("#<%= tbCliente.ClientID %>").val(cliente);
+                $("#<%= tbContacto.ClientID %>").val(contacto);
+                $("#<%= tbTelefono.ClientID %>").val(telefono);
+                $("#<%= tbMailCont.ClientID %>").val(mail);
+                $("#<%= tbCotizacion.ClientID %>").val(cotizacion);                $("#<%= txObs.ClientID %>").val(observacion);
+
+
+                // Seleccionar el elemento correcto del DropDownList por su valor
+                $("#<%= ddlVisitasPor.ClientID %> option").filter(function () {
+                    return $(this).text() === visitaPor;
+                }).prop("selected", true);
+
+                document.getElementById("ModificarVisita").classList.add("enabled");
+
+            }
+        }
 
     </script>
 
