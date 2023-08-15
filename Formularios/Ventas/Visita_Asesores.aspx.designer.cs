@@ -30,7 +30,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor Exportar;
+        protected global::System.Web.UI.WebControls.LinkButton Exportar;
 
         /// <summary>
         /// Control UpdatePanel1.
@@ -447,6 +447,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.SqlDataSource EstadisticaAsesores;
 
         /// <summary>
+        /// Control LinkButton1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton LinkButton1;
+
+        /// <summary>
         /// Control PanelDetVisitas.
         /// </summary>
         /// <remarks>
@@ -465,6 +474,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.DataGrid DataGrid4;
 
         /// <summary>
+        /// Control LlenarDetalle.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource LlenarDetalle;
+
+        /// <summary>
         /// Control PanelEstTipoVis.
         /// </summary>
         /// <remarks>
@@ -481,5 +499,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DataGrid DataGrid3;
+
+        /// <summary>
+        /// Control LinkButton2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton LinkButton2;
     }
 }

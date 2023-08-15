@@ -136,11 +136,7 @@
                 <div class="collapse navbar-collapse" id="ejemplo2">
                     <ul class="navbar-nav mx-auto contenedor-icono">
 
-
-
                         <div class="contenedor-icono">
-
-
 
                             <%--Comienza Nueva OT--%>
 
@@ -153,15 +149,16 @@
                                 <i class="bi bi-save2"></i>
                             </a>
 
-                            <a class="icong disabled" href="#" title="Modificar Visita" id="ModificarVisita">
+                            <a class="icong disabled" href="#" title="Modificar Visita" id="ModificarVisita" onclick="ModificarVisita()">
                                 <i class="bi bi-wrench"></i>
                             </a>
                             <a class="icong disabled Cancelar" href="#" title="Cancelar" id="CancelarVisita" onclick="CancelarVisita()">
                                 <i class="bi bi-x-lg"></i>
                             </a>
-                            <a class="icong disabled Cancelar" href="#" runat="server" title="Exportar" id="Exportar">
-                                <i class="bi bi-airplane-engines"></i>
-                            </a>
+
+                            <asp:LinkButton class="icong disabled" runat="server" title="Exportar" ID="Exportar" OnClick="ExportarExel2">
+                                         <i class="custom-icon"></i>
+                            </asp:LinkButton>
 
 
                             <ul />
@@ -261,7 +258,7 @@
                                 <div class="col-12">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbObservaciones" class="form-label" Text="Obs." runat="server"></asp:Label>
-                                        <textarea class="form-control form-control-sm" id="txObs" runat="server" cols="29" rows="3" disabled="disabled" ></textarea>
+                                        <textarea class="form-control form-control-sm" id="txObs" runat="server" cols="29" rows="3" disabled="disabled"></textarea>
 
                                     </div>
                                 </div>
@@ -296,11 +293,11 @@
                                     <div class="border rounded p-2">
                                         <div class="row">
                                             <div class="col-12">
-                                                <div class="table-responsive mb-2 gap-2" style="max-height: 12rem; overflow-x: auto;">
-                                                    <h6 class="datagrid-header text-center">Visita Asesores:
+                                                <div class="table-responsive mb-2 gap-2" style="max-height: 15rem; overflow-x: auto;">
+                                                    <h6 class="datagrid-header text-center">Visita Asesores 
                                                         <asp:Literal runat="server" ID="DateRangeLiteral"></asp:Literal></h6>
                                                     <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGrid1" runat="server" DataSourceID="VisitaAse" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnPreRender="miDataGrid_PreRender" OnItemDataBound="DataGrid1_ItemDataBound">
-                                                        <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                        <HeaderStyle Font-Bold="true" CssClass="datagrid-header p-2" />
                                                         <Columns>
 
 
@@ -415,7 +412,7 @@
 
                             <div class="row pt-1">
 
-                                <div class="col-7">
+                                <div class="col-6">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="Label1" class="form-label" Text="Visitas entre" runat="server"></asp:Label>
                                         <asp:TextBox ID="fecha5" type="date" runat="server" class="form-control"></asp:TextBox>
@@ -434,6 +431,8 @@
                                 </div>
 
 
+
+
                             </div>
 
                             <div class="container mt-4">
@@ -443,10 +442,15 @@
                                             <div class="col-6">
                                                 <div class=" table-responsive mb-2 gap-2" style="max-height: 14rem; overflow-x: auto;">
                                                     <h6 class="datagrid-header text-center">Estadistica Asesores:</h6>
-                                                    <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGrid2" runat="server" DataSourceID="EstadisticaAsesores" AutoGenerateColumns="false">
+                                                    <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGrid2" runat="server" DataSourceID="EstadisticaAsesores" AutoGenerateColumns="false" OnItemCommand="DataGrid2_ItemDataBound">
                                                         <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                         <Columns>
+                                                            <asp:TemplateColumn HeaderText="...">
+                                                                <ItemTemplate>
+                                                                    <asp:LinkButton ID="lnkView" runat="server" CommandName="VerDetalle" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>" />
+                                                                </ItemTemplate>
+                                                            </asp:TemplateColumn>
                                                             <asp:BoundColumn DataField="CodigoAsesor" HeaderText="Codigo Asesor" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Asesor" HeaderText="Nombre" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="CuentaDeCausa" HeaderText="Cantidad Visitas" ItemStyle-CssClass="auto-width-column" />
@@ -463,9 +467,15 @@
 
                                             </div>
 
-                                            <div class="col-6">
+                                            <div class="col-5">
                                                 <canvas id="grafica" width="400" height="200"></canvas>
 
+                                            </div>
+
+                                            <div class="col-1">
+                                                <asp:LinkButton ID="LinkButton1" runat="server" OnClick="ExportarExel">
+                                                     <i class="custom-icon2"></i>
+                                                </asp:LinkButton>
                                             </div>
 
                                         </div>
@@ -499,10 +509,29 @@
                                                 <div class="row justify-content-center">
                                                     <div class="border rounded p-2">
                                                         <div class="row">
-                                                            <div class="col-6">
-                                                                <div class=" table table-responsive mb-2 gap-2" style="max-height: 13rem; overflow-x: auto;">
-                                                                    <h6 class="datagrid-header text-center">Detalle Visita:</h6>
-                                                                    <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" ID="DataGrid4" runat="server"></asp:DataGrid>
+                                                            <div class="col-12">
+                                                                <div class=" table table-responsive mb-2 gap-2" style="max-height: 15rem; overflow-x: auto;">
+                                                                    <h6 class="datagrid-header text-center">Visitas Asesor en las fechas seleccionadas</h6>
+                                                                    <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ShowHeaderWhenEmpty="true" ID="DataGrid4" runat="server" AutoGenerateColumns="false" DataSourceID="LlenarDetalle">
+                                                                        <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                                        <Columns>
+
+
+                                                                            <asp:BoundColumn DataField="NombreCompañía" HeaderText="Cliente" />
+                                                                            <asp:BoundColumn DataField="NombreContacto" HeaderText="Contacto" ItemStyle-CssClass="auto-width-column" />
+                                                                            <asp:BoundColumn DataField="Telefono" HeaderText="Telefono Contacto" ItemStyle-CssClass="auto-width-column" />
+                                                                            <asp:BoundColumn DataField="Cotizacion" HeaderText="Cotizacion" ItemStyle-CssClass="auto-width-column" />
+                                                                            <asp:BoundColumn DataField="NombreCausa" HeaderText="Causa Por" ItemStyle-CssClass="auto-width-column" />
+                                                                            <asp:BoundColumn DataField="FechaVisita" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column" />
+
+                                                                        </Columns>
+                                                                    </asp:DataGrid><asp:SqlDataSource runat="server" ID="LlenarDetalle" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="sp_GetVisitasAsesor" SelectCommandType="StoredProcedure">
+                                                                        <SelectParameters>
+                                                                            <asp:Parameter Name="Asesor" Type="String" />
+                                                                            <asp:Parameter Name="FechaInicio" Type="DateTime" />
+                                                                            <asp:Parameter Name="FechaFin" Type="DateTime" />
+                                                                        </SelectParameters>
+                                                                    </asp:SqlDataSource>
 
                                                                 </div>
 
@@ -544,9 +573,15 @@
 
                                                             </div>
 
-                                                            <div class="col-6">
+                                                            <div class="col-5">
                                                                 <canvas id="grafica1" width="400" height="200"></canvas>
 
+                                                            </div>
+
+                                                            <div class="col-1">
+                                                                <asp:LinkButton ID="LinkButton2" runat="server" OnClick="ExportarExel3">
+                                                                             <i class="custom-icon2"></i>
+                                                                </asp:LinkButton>
                                                             </div>
 
                                                         </div>
@@ -600,7 +635,20 @@
             document.getElementById("btnCliente").disabled = true;
         };
 
-    
+
+        // Ocultar el div con clase "contenedor-icono" cuando se activa la pestaña "Info-content" 
+        $(document).ready(function () {
+            $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var targetTab = $(e.target).attr("href");
+                if (targetTab === "#Estadisticas-content") {
+                    $(".contenedor-icono").hide();
+                } else {
+                    $(".contenedor-icono").show();
+                }
+            });
+        });
+
+
 
 
 
@@ -613,18 +661,13 @@
             return true; // Envía el formulario si el DropDownList tiene un valor seleccionado.
         }
 
-        function Excel() {
-            if (validarDropDownList()) {
-                document.getElementById("Exportar").classList.add("enabled");
-            }
 
-        }
 
 
         function NuevaVisita() {
 
             if (validarDropDownList()) {
-                // Habilitar enlaces
+                // Habilitar enlaces 
                 document.getElementById("GrabarVisita").classList.add("enabled");
                 document.getElementById("CancelarVisita").classList.add("enabled");
                 // Deshabilitar enlaces
@@ -701,10 +744,60 @@
 
         }
 
+        function ModificarVisita() {
+            // Habilitar enlaces 
+            document.getElementById("GrabarVisita").classList.add("enabled");
+            document.getElementById("CancelarVisita").classList.add("enabled");
+            // Deshabilitar enlaces
+            document.getElementById("NuevaVisita").classList.remove("enabled");
+            document.getElementById("ModificarVisita").classList.remove("enabled");
+            document.getElementById("Exportar").classList.add("disabled");
+
+
+            // Habilitar o deshabilitar los DropDownList
+            var dropDownLists = document.querySelectorAll("select");
+            for (var j = 0; j < dropDownLists.length; j++) {
+                if (dropDownLists[j].id !== "ddlAsesor") {
+                    dropDownLists[j].disabled = !dropDownLists[j].disabled;
+                }
+            }
+
+            // Habilitar los TextArea
+            var textAreas = document.querySelectorAll("textarea");
+            for (var k = 0; k < textAreas.length; k++) {
+                textAreas[k].disabled = !textAreas[k].disabled;
+            }
+
+            // Habilitar o deshabilitar los TextBox Type text
+            var textBoxes = document.querySelectorAll("input[type='text']");
+            for (var i = 0; i < textBoxes.length; i++) {
+
+                if (textBoxes[i].id !== "tbCliente" && textBoxes[i].id !== "tbTelefono" && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbMailCont") {
+
+                    if (textBoxes[i].id !== "tbLicitacion1") {
+                        textBoxes[i].disabled = !textBoxes[i].disabled;
+                    }
+
+                }
+            }
+
+        }
+
+        function Excel() {
+
+            //habilitar link de Exportar Excel
+            document.getElementById("Exportar").classList.remove("disabled");
+            document.getElementById("Exportar").classList.add("enabled");
+
+        
+        }
+
         function abrirOtraPestana() {
             // Utiliza window.open para abrir "Formulario2.aspx" en otra pestaña
             window.open('frmClientediseño.aspx', '_blank');
         }
+
+
 
 
     </script>
@@ -748,6 +841,7 @@
 
             }
         }
+
 
     </script>
 
