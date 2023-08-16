@@ -196,7 +196,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void btnCliente_Click(object sender, EventArgs e)
         {
-            Response.Redirect("frmClienteDiseño.aspx");
+            Response.Redirect("Clientes.aspx");
         }
 
         protected void ConsultarEstadisticas(object sender, EventArgs e)

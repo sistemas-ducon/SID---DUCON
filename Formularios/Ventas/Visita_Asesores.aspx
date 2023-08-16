@@ -156,7 +156,7 @@
                                 <i class="bi bi-x-lg"></i>
                             </a>
 
-                            <asp:LinkButton class="icong disabled" runat="server" title="Exportar" ID="Exportar" OnClick="ExportarExel2">
+                            <asp:LinkButton class="icong disabled" runat="server" title="Exportar" ID="Exportar" OnClick="ExportarExel2" OnClientClick="DeshabilitarExcel">
                                          <i class="custom-icon"></i>
                             </asp:LinkButton>
 
@@ -792,9 +792,18 @@
         
         }
 
+        function DeshabilitarExcel() {
+
+            //habilitar link de Exportar Excel
+            document.getElementById("Exportar").classList.add("disabled");
+            document.getElementById("Exportar").classList.remove("enabled");
+
+        
+        }
+
         function abrirOtraPestana() {
             // Utiliza window.open para abrir "Formulario2.aspx" en otra pestaña
-            window.open('frmClientediseño.aspx', '_blank');
+            window.open('Clientes.aspx', '_blank');
         }
 
 
