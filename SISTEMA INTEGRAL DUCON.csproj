@@ -129,7 +129,6 @@
     <Content Include="Content\currency-dollar.svg" />
     <Content Include="Formularios\Ventas\Consulta_Cotizacion.aspx" />
     <Content Include="Formularios\Ventas\Diseño_Venta.aspx" />
-    <Content Include="Formularios\Ventas\frmClientediseño.aspx" />
     <Content Include="Formularios\Ventas\Gestion_Comercial.aspx" />
     <Content Include="Formularios\DiseñoYDesarrollo\Insumos.aspx" />
     <Content Include="Formularios\DiseñoYDesarrollo\Insumos_Consultar.aspx" />
@@ -203,13 +202,6 @@
     </Compile>
     <Compile Include="Formularios\Ventas\Diseño_Venta.aspx.designer.cs">
       <DependentUpon>Diseño_Venta.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Formularios\Ventas\frmClientediseño.aspx.cs">
-      <DependentUpon>frmClientediseño.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Formularios\Ventas\frmClientediseño.aspx.designer.cs">
-      <DependentUpon>frmClientediseño.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\Ventas\Gestion_Comercial.aspx.cs">
       <DependentUpon>Gestion_Comercial.aspx</DependentUpon>
