@@ -1,0 +1,75 @@
+﻿.destacado {
+    color: black; /* Cambia el color del texto */
+    font-weight: bold; /* Hace el texto más oscuro y sobresaliente */
+    font-size: 18px; /* Puedes ajustar el tamaño de la fuente según tus necesidades */
+    margin-bottom: 10px; /* Agrega margen inferior para destacar el control */
+    font-family: 'Times New Roman'
+}
+
+.border {
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.special-border {
+    border: 2px solid red;
+    border-radius: 6px;
+    padding: 15px;
+}
+
+.datagrid-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f2f2f2; /* Ajusta el color de fondo del encabezado según tus preferencias */
+}
+
+.auto-width-column {
+    width: auto;
+    max-width: 200px; /* Puedes ajustar este valor según el ancho máximo deseado */
+    white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
+    overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
+    text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
+}
+
+/* Estilo personalizado para el modal */
+#modal {
+    text-align: left; /* Alinea el contenido del modal a la izquierda */
+}
+
+/* Ajusta la posición del modal hacia la derecha */
+.modal-dialog {
+    margin: 0;
+    position: absolute;
+    left: 62%; /* Ajusta la posición hacia la derecha */
+    top: -160px;
+}
+/* Estilos de colores personalizados */
+.bg-success-custom {
+    background-color: #819cba;
+}
+
+.bg-white-custom {
+    background-color: #c86868;
+}
+
+.bg-warning-custom {
+    background-color: #efdd79;
+}
+
+.bg-danger-custom {
+    background-color: #e9a270;
+}
+
+.bg-penAprCot-custom {
+    background-color: #be94b9;
+    
+}
+
+.bg-penCot-custom {
+    background-color: #673f8b;
+}
+.bg-pausados-custom {
+    background-color: #74bec6;
+}

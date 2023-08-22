@@ -23,7 +23,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
-                Response.Redirect("Login.aspx");
+                Response.Redirect("/Formularios/Login.aspx");
             }
         }
 

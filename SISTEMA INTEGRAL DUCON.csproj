@@ -126,6 +126,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\currency-dollar.svg" />
     <Content Include="Formularios\Ventas\Consulta_Cotizacion.aspx" />
     <Content Include="Formularios\Ventas\Diseño_Venta.aspx" />
     <Content Include="Formularios\Ventas\frmClientediseño.aspx" />
@@ -160,6 +161,7 @@
     <Content Include="Recursos\CSS\login.css" />
     <Content Include="Formularios\Login.aspx" />
     <Content Include="Recursos\CSS\Ventas\Consulta_Cotizacion.css" />
+    <Content Include="Recursos\CSS\Ventas\Diseño_Venta.css" />
     <Content Include="Recursos\CSS\Ventas\Gestion_Comercial.css" />
     <Content Include="Recursos\CSS\Ventas\Licitaciones.css" />
     <Content Include="Recursos\CSS\Ventas\Visita_Asesores.css" />
