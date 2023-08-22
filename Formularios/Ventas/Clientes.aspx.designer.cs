@@ -42,6 +42,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.WebControls.SqlDataSource ListarClientes;
 
         /// <summary>
+        /// Control ListarClientesXNit.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource ListarClientesXNit;
+
+        /// <summary>
+        /// Control ListarClientesXNombre.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource ListarClientesXNombre;
+
+        /// <summary>
         /// Control lbNit.
         /// </summary>
         /// <remarks>
@@ -114,6 +132,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.WebControls.DropDownList ddlprocedencia;
 
         /// <summary>
+        /// Control CargarProcedencias.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource CargarProcedencias;
+
+        /// <summary>
         /// Control lbDireccion.
         /// </summary>
         /// <remarks>
@@ -148,6 +175,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlCiudaX;
+
+        /// <summary>
+        /// Control CargarCiudades.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource CargarCiudades;
 
         /// <summary>
         /// Control lbCompartido.
@@ -231,6 +267,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.WebControls.Button Buscar;
 
         /// <summary>
+        /// Control Nuevo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Nuevo;
+
+        /// <summary>
         /// Control Modificar.
         /// </summary>
         /// <remarks>
@@ -276,6 +321,159 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.UpdatePanel PanelContacto;
 
         /// <summary>
+        /// Control DataGridContacto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DataGrid DataGridContacto;
+
+        /// <summary>
+        /// Control Label4.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label4;
+
+        /// <summary>
+        /// Control tbNombreContacto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbNombreContacto;
+
+        /// <summary>
+        /// Control lbTelefonoContacto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbTelefonoContacto;
+
+        /// <summary>
+        /// Control tbTelefonoContacto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbTelefonoContacto;
+
+        /// <summary>
+        /// Control lbCelularContacto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbCelularContacto;
+
+        /// <summary>
+        /// Control tbCelularContacto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbCelularContacto;
+
+        /// <summary>
+        /// Control Label2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label2;
+
+        /// <summary>
+        /// Control tbMailContacto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbMailContacto;
+
+        /// <summary>
+        /// Control chkEstadoGuardar.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkEstadoGuardar;
+
+        /// <summary>
+        /// Control tbId_ContactoCliente.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbId_ContactoCliente;
+
+        /// <summary>
+        /// Control Label3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label3;
+
+        /// <summary>
+        /// Control tbBuscarContacto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbBuscarContacto;
+
+        /// <summary>
+        /// Control btnNuevoContacto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnNuevoContacto;
+
+        /// <summary>
+        /// Control btnGrabarContacto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnGrabarContacto;
+
+        /// <summary>
+        /// Control btnModificarContacto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnModificarContacto;
+
+        /// <summary>
+        /// Control btnCancelar.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCancelar;
+
+        /// <summary>
         /// Control PanelConsulta.
         /// </summary>
         /// <remarks>
@@ -283,6 +481,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel PanelConsulta;
+
+        /// <summary>
+        /// Control DataGridCotizacion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DataGrid DataGridCotizacion;
+
+        /// <summary>
+        /// Control DataGridVisita.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DataGrid DataGridVisita;
 
         /// <summary>
         /// Control PanelClienteNuevo.

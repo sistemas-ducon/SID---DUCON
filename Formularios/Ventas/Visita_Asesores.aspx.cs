@@ -92,7 +92,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             
 
         }
-
+        
         public void Cambio(object sender, EventArgs e)
         {
 

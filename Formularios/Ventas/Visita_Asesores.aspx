@@ -786,8 +786,12 @@
         function Excel() {
 
             //habilitar link de Exportar Excel
-            document.getElementById("Exportar").classList.remove("disabled");
-            document.getElementById("Exportar").classList.add("enabled");
+            if (validarDropDownList())
+            {
+                document.getElementById("Exportar").classList.remove("disabled");
+                document.getElementById("Exportar").classList.add("enabled");
+            }
+         
 
         
         }
