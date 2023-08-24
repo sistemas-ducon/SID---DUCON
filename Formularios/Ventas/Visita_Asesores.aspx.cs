@@ -96,6 +96,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         public void Cambio(object sender, EventArgs e)
         {
 
+            Session["AsesorDiseño"] = ddlAsesor.SelectedValue;
+            Session["AsesorDiseñoNombre"] = ddlAsesor.SelectedItem.Text;
+
             DateRangeLiteral.Text = GetDateRange();
 
         }
