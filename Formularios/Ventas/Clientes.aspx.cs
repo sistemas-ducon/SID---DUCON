@@ -21,6 +21,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         // Variable de control de insercion o actualizacion de un cliente 
         private bool GuardarCliente = false;
 
+        // Crea una clase para representar los nombres de los asesores
+        public class Asesor
+        {
+            public string Nombre { get; set; }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -125,6 +131,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 LlenarDataGridCotizacion(Nit);
                 LlenarDataGridVisita(Nit);
 
+            
+          
+
                 // Habilita el botón "Nuevo"
                 Button btnNuevo = FindControl("btnNuevoContacto") as Button;
                 if (btnNuevo != null)
@@ -139,6 +148,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     btnCancelar.Enabled = true;
                 }
 
+ 
+                //Deshabilitamos la edicion de los campos 
+                tbNit.ReadOnly = true;
+                tbNombreCliente.ReadOnly = true;
+                tbTelefono.ReadOnly = true;
+                tbDireccion.ReadOnly = true;
+
+                ddlprocedencia.Enabled = false;
+
+
+
+
+
             }
 
         }
@@ -152,6 +174,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         {
             try
             {
+                // Mostrar el modal de carga
+                ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "ShowLoadingModal", "mostrarModal();", true);
+
                 // Crear una nueva instancia de Excel
                 var excelApp = new Excel.Application();
 
@@ -241,11 +266,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     rowIndexx++;
                 }
 
+                // Refrescar la página después de cerrar el modal
+                ScriptManager.RegisterStartupScript(this, GetType(), "RefreshPage", "window.location.reload();", true);
 
 
                 worksheet.Columns.AutoFit();
                 // Mostrar la aplicación de Excel
                 excelApp.Visible = true;
+               
+
             }
             catch (Exception ex)
             {
@@ -286,7 +315,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 btnNuevo.Enabled = true;
             }
 
+            // Ponemos lo campos en Blanco
+            tbNit.Text = "";
+            tbNombreCliente.Text = "";
+            tbTelefono.Text = "";
+            ddlprocedencia.SelectedIndex = 0;
+            tbDireccion.Text = "";
+            tbCompartido.Text = "";
 
+            //Deshabilitamos la edicion de los campos 
+            tbNit.ReadOnly = true;
+            tbNombreCliente.ReadOnly = true;
+            tbTelefono.ReadOnly = true;
+            tbDireccion.ReadOnly = true;
+            CheckBox1.Enabled = false;
+  
+            ddlprocedencia.Enabled = false;
 
 
         }
@@ -386,6 +430,28 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             {
                 btnGrabar.Enabled = true;
             }
+
+            CheckBox1.Enabled = true;
+
+
+           
+
+            // Obtiene la cadena de nombres Asesores Compartidos
+            string nombresAsesores = tbCompartido.Text; // Reemplaza esto con tu lógica de obtención de datos
+
+            // Dividir la cadena en un arreglo de nombres
+            string[] arregloNombres = nombresAsesores.Split(';');
+
+            // Crea una lista de objetos Asesor y agrega los nombres
+            List<Asesor> asesores = new List<Asesor>();
+            foreach (string nombre in arregloNombres)
+            {
+                asesores.Add(new Asesor { Nombre = nombre });
+            }
+
+            // Asigna la lista como origen de datos para el DataGrid
+            DataGridAsesorCompart.DataSource = asesores;
+            DataGridAsesorCompart.DataBind();
 
 
 
@@ -785,6 +851,167 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             }
         }
 
+        protected void AgregarAsesor(object sender, EventArgs e)
+        {
+            tbNombreAsesor3.ReadOnly = false;
+            string nuevoNombreAsesor = tbNombreAsesor3.Text; // Reemplaza con el nombre del nuevo asesor a agregar
+            string cedulaCliente = tbNit.Text; // Reemplaza con la cédula del cliente
+
+
+            if (string.IsNullOrEmpty(nuevoNombreAsesor))
+            {
+                // Cerrar el modal después de agregar el asesor
+                ScriptManager.RegisterStartupScript(this, GetType(), "CloseModal", "$('#myModal').modal('hide');", true);
+
+                // Refrescar la página después de cerrar el modal
+                ScriptManager.RegisterStartupScript(this, GetType(), "RefreshPage", "window.location.reload();", true);
+                PanelCliente.Update();
+                string mensajeError = "Nose ingresó ningun Asesor para compartir.";
+                string scriptError = "alert('" + mensajeError + "');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showError", scriptError, true);
+            }
+            else
+            {
+                string consultaActual = "SELECT CompartidoCon FROM tblCliente WHERE Id_Cliente = @Cedula";
+                string cadenaActual = ""; // Aquí almacenaremos la cadena actual de nombres
+
+
+                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(consultaActual, connection))
+                    {
+                        command.Parameters.AddWithValue("@Cedula", cedulaCliente);
+                        cadenaActual = (string)command.ExecuteScalar();
+                    }
+                }
+
+                if (!cadenaActual.Contains(nuevoNombreAsesor))
+                {
+                    // Agregar el nuevo nombre a la cadena existente
+                    cadenaActual += ";" + nuevoNombreAsesor;
+                    cadenaActual = cadenaActual.TrimStart(';');
+                    string consultaActualizar = "UPDATE tblCliente SET CompartidoCon = @NuevaCadena WHERE Id_Cliente = @Cedula";
+
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
+
+                        using (SqlCommand command = new SqlCommand(consultaActualizar, connection))
+                        {
+                            command.Parameters.AddWithValue("@NuevaCadena", cadenaActual);
+                            command.Parameters.AddWithValue("@Cedula", cedulaCliente);
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                    // Cerrar el modal después de agregar el asesor
+                    ScriptManager.RegisterStartupScript(this, GetType(), "CloseModal", "$('#myModal').modal('hide');", true);
+
+                    // Refrescar la página después de cerrar el modal
+                    ScriptManager.RegisterStartupScript(this, GetType(), "RefreshPage", "window.location.reload();", true);
+
+                    // Mostrar mensaje de éxito
+                    string mensajeExito = "El Asesor " + tbNombreAsesor3.Text.Trim() + " ha sido Agregado  exitosamente.";
+                    string scriptExito = "alert('" + mensajeExito + "');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
+                    PanelCliente.Update();
+
+                }
+                else
+                {
+
+                    // Cerrar el modal después de agregar el asesor
+                    ScriptManager.RegisterStartupScript(this, GetType(), "CloseModal", "$('#myModal').modal('hide');", true);
+
+                    // Refrescar la página después de cerrar el modal
+                    ScriptManager.RegisterStartupScript(this, GetType(), "RefreshPage", "window.location.reload();", true);
+                    PanelCliente.Update();
+                    string mensajeError = "El Asesor " + tbNombreAsesor3.Text.Trim() + " ya se encuentra Agregado.";
+                    string scriptError = "alert('" + mensajeError + "');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showError", scriptError, true);
+
+                }
+            }
+
+           
+
+
+
+        }
+
+        protected void EliminarAsesor(object sender, EventArgs e)
+        {
+            string nombreAsesorEliminar = tbNombreAsesor3.Text ; // Reemplaza con el nombre del asesor a eliminar
+            string cedulaCliente = tbNit.Text; // Reemplaza con la cédula del cliente
+
+
+            if (string.IsNullOrEmpty(nombreAsesorEliminar))
+            {
+                // Cerrar el modal 
+                ScriptManager.RegisterStartupScript(this, GetType(), "CloseModal", "$('#myModal').modal('hide');", true);
+
+                // Refrescar la página después de cerrar el modal
+                ScriptManager.RegisterStartupScript(this, GetType(), "RefreshPage", "window.location.reload();", true);
+               
+                string mensajeError = "Nose ingresó ningun Asesor para Elminar.";
+                string scriptError = "alert('" + mensajeError + "');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showError", scriptError, true);
+                PanelCliente.Update();
+            }
+            else
+            {
+                string consultaActual = "SELECT CompartidoCon FROM tblCliente WHERE Id_Cliente = @Cedula";
+                string cadenaActual = ""; // Aquí almacenaremos la cadena actual de nombres
+
+                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(consultaActual, connection))
+                    {
+                        command.Parameters.AddWithValue("@Cedula", cedulaCliente);
+                        cadenaActual = (string)command.ExecuteScalar();
+                    }
+                }
+
+                // Eliminar el nombre del asesor de la cadena existente
+                cadenaActual = cadenaActual.Replace(nombreAsesorEliminar + ";", "").Replace(nombreAsesorEliminar, "");
+                cadenaActual = cadenaActual.TrimEnd(';');
+
+                string consultaActualizar = "UPDATE tblCliente SET CompartidoCon = @NuevaCadena WHERE Id_Cliente = @Cedula";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(consultaActualizar, connection))
+                    {
+                        command.Parameters.AddWithValue("@NuevaCadena", cadenaActual);
+                        command.Parameters.AddWithValue("@Cedula", cedulaCliente);
+                        command.ExecuteNonQuery();
+                    }
+                }
+
+                // Cerrar el modal después de agregar el asesor
+                ScriptManager.RegisterStartupScript(this, GetType(), "CloseModal", "$('#myModal').modal('hide');", true);
+
+                // Refrescar la página después de cerrar el modal
+                ScriptManager.RegisterStartupScript(this, GetType(), "RefreshPage", "window.location.reload();", true);
+
+                // Mostrar mensaje de éxito
+                string mensajeExito = "El Asesor " + tbNombreAsesor3.Text.Trim() + " ha sido Eliminado  exitosamente.";
+                string scriptExito = "alert('" + mensajeExito + "');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
+                PanelCliente.Update();
+            }
+
+
+           
+
+        }
 
 
         // Logica del Tap Contactos de cliente 
@@ -824,7 +1051,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 tbCelularContacto.Text = campos[2];
                 tbMailContacto.Text = campos[3];
                 tbId_ContactoCliente.Text = campos[4];
-
+                Session["ID_ContactoBD"] = campos[4];
 
 
 
@@ -958,6 +1185,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
             bool estado = chkEstadoGuardar.Checked;
 
+            //Validamos que los  Campos no esten Vacios 
+
+            if (string.IsNullOrEmpty(tbNombreContacto.Text))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "showError1", "alert('El Nombre de el contacto no puede estar vacio.');", true);
+                return;
+            }
+
+         
+            if (string.IsNullOrEmpty(tbMailContacto.Text))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "showError5", "alert('El correo del usuario no puede estar vacio .');", true);
+                return;
+            }
+
+
+
+
             if (Page.IsValid)
             {
 
@@ -982,6 +1227,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                             command.ExecuteNonQuery(); 
                         }
+
+                        // Mensaje de éxito
+                        string mensajeExito = "El Contacto " + tbNombreContacto.Text.Trim() + " ha sido agregado exitosamente.";
+                        string scriptExito = "alert('" + mensajeExito + "');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
+                        ScriptManager.RegisterStartupScript(this, GetType(), "RefreshPage", "window.location.reload();", true);
+
+
                     }
                 }
                 else
@@ -1006,8 +1259,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                             command.Parameters.AddWithValue("@IdCliente", tbNit.Text);
                             command.Parameters.AddWithValue("@IdClienteContacto", tbId_ContactoCliente.Text);
 
-                            command.ExecuteNonQuery(); 
+                            command.ExecuteNonQuery();
                         }
+
+                        // Mensaje de éxito
+                        string mensajeExito = "El Contacto " + tbNombreContacto.Text.Trim() + " ha sido Editado exitosamente.";
+                        string scriptExito = "alert('" + mensajeExito + "');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
+                        ScriptManager.RegisterStartupScript(this, GetType(), "RefreshPage", "window.location.reload();", true);
+
+
                     }
 
                 }
@@ -1016,5 +1277,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
         }
 
+        
     }
 }
