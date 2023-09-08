@@ -60,3 +60,12 @@ a.icong.enabled {
 .hidden-checkbox {
     display: none;
 }
+
+/* Estilo para el encabezado del DataGrid */
+.datagrid-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f2f2f2; /* Ajusta el color de fondo del encabezado según tus preferencias */
+}
+

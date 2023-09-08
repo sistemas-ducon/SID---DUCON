@@ -905,15 +905,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             bool guardarCliente = chkEstadoGuardarCliente.Checked;
 
-            if (string.IsNullOrEmpty(tbCliente.Text))
-            {
-                ScriptManager.RegisterStartupScript(this, GetType(), "showError5", "alert('No agregó ningun cliente.');", true);
-                return;
-            }
-
-
-
-
+         
             if (guardarCliente)
             {
                 string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
@@ -937,8 +929,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         command.ExecuteNonQuery();
                     }
-                               
-                   
+
+                    // Define el mensaje personalizado
+                    string mensajePersonalizado = "¡La Visita ha sido ingresada con Exito!";
+
+                    // Define la URL de redirección
+                    string urlRedireccion = "Ventas/Visita_Asesores.aspx";
+
+                    // Redirige a la página de éxito con el mensaje personalizado y la URL de redirección como parámetros
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+
                 }
 
 
@@ -969,13 +970,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         command.ExecuteNonQuery();
                     }
-                                                     
+                    // Define el mensaje personalizado
+                    string mensajePersonalizado = "¡La visita ha sido actualizada con exito!";
+
+                    // Define la URL de redirección
+                    string urlRedireccion = "Ventas/Visita_Asesores.aspx";
+
+                    // Redirige a la página de éxito con el mensaje personalizado y la URL de redirección como parámetros
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
 
                 }
 
             }
 
-            Response.Redirect("../SuccessMessage.aspx");
+           
+
 
         }
     }

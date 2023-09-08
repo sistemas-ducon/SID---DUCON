@@ -12,7 +12,25 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="../../Recursos/CSS/Ventas/Render_Venta.css" />
+     <script>
+         function confirmProgramarRender(event) {
+
+             var IdRender = document.getElementById("NumeroRender").innerHTML;
+             var Nombre = document.getElementById("tbCliente").value;
+             var mensaje = "Una vez aprobado el Render no podrá modificarlo. Esta seguro de Terminar el render: " + IdRender + " " + Nombre + " ?";
+
+             var result = confirm(mensaje);
+             if (result) {
+                 // Llamar al evento del botón de eliminar en el servidor
+                 $(event.target).removeAttr('onclick');
+                 $(event.target).click();
+             }
+             return false; // Previene que el evento del botón se ejecute dos veces
+         }
+     </script>
 </head>
+
+
 <body>
     <form id="formRenderVenta" runat="server">
         <asp:ScriptManager runat="server" />
@@ -45,7 +63,7 @@
 
                             <%--Comienza Nueva OT--%>
 
-                            <asp:CheckBox ID="chkEstadoGuardrRender" runat="server" CssClass="hidden-checkbox" />
+                            <asp:CheckBox ID="chkEstadoGuardarRender" runat="server" CssClass="hidden-checkbox" />
 
                             <a class="icong disabled" href="#" title="Nuevo Render" id="NuevoRender" onclick="NuevoRender()">
                                 <i class="bi bi-file-earmark"></i>
@@ -66,6 +84,7 @@
                             <a class="icong disabled " href="#" title="Actualizar Render" id="Actualizar">
                                 <i class="bi bi-arrow-clockwise"></i>
                             </a>
+                           
 
                             <a class="icong disabled " href="#" title="Pausar Render" id="PausarRender">
                                 <i class="bi bi-pause-circle"></i>
@@ -74,7 +93,7 @@
                                 <i class="bi bi-arrow-bar-down"></i>
                             </a>
 
-                            <a class="icong disabled " href="#" title="Cancelar" id="CancelarRender">
+                            <a class="icong disabled " href="#" title="Cancelar" id="CancelarRender" onclick="Cancelar()">
                                 <i class="bi bi-x-lg"></i>
                             </a>
 
@@ -96,16 +115,17 @@
             <div class="tab-pane fade show active" id="Render-Content">
                 <asp:UpdatePanel ID="PanelRender" runat="server" UpdateMode="Conditional">
                     <ContentTemplate>
+
                         <div class="container-fluid Principal mb-2   ">
 
                             <div class=" container-fluid rounded border gap-2  ">
 
-
                                 <div class="row pt-1 mt-1 pb-1 mb-1">
-                                    <div class="col-6">
+                                    <div class="col-5">
                                         <div class="input-group input-group-sm  mb-2 gap-4 ">
                                             <asp:Label ID="lbIngreso" class="form-label" Text="Ingreso" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbIngreso" type="date" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbIngreso" type="date" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
+                                            <asp:TextBox ID="tbIngresoServidor" type="date" class="form-control" runat="server" CssClass="hidden-checkbox"></asp:TextBox>
                                         </div>
                                     </div>
 
@@ -121,25 +141,28 @@
                                     <div class="col-3">
                                         <div class=" input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbUltActiv" class="form-label" Text="U.Activ" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbUltActiv" type="date" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbUltActiv" type="date" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
+                                            <asp:TextBox ID="tbUltActivServidor" type="date" class="form-control" runat="server" CssClass="hidden-checkbox"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="col-3">
                                         <div class=" input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbEntrega" class="form-label" Text="Entrega" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbEntrega" type="date" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbEntrega" type="date" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
+                                            <asp:TextBox ID="tbEntregaServidor" type="date" class="form-control" runat="server" CssClass="hidden-checkbox"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="col-3">
                                         <div class="input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbFechaOk" class="form-label" Text="Fecha OK" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbFechaOk" type="date" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbFechaOk" type="date" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
+                                            <asp:TextBox ID="tbFechaOkServidor" type="date" class="form-control" runat="server" CssClass="hidden-checkbox"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="col-3">
                                         <div class=" input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbDiseño" class="form-label" Text="Diseño" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbDiseño" type="text" class="form-control" runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbDiseño" type="text" class="form-control" runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
 
@@ -149,7 +172,7 @@
                                     <div class="col-6">
                                         <div class="input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbCliente" class="form-label" Text="Cliente" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbCliente" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbCliente" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -167,13 +190,13 @@
                                     <div class="col-6">
                                         <div class="input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbProyecto" class="form-label" Text="Proyecto" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbProyecto" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbProyecto" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class=" input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbContacto" class="form-label" Text="Contacto" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbContacto" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbContacto" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
 
@@ -185,20 +208,20 @@
                                     <div class="col-4">
                                         <div class="input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbCelular" class="form-label" Text="Celular" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbCelular" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbCelular" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <div class=" input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbMail" class="form-label" Text="Mail" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbMail" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbMail" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
 
                                     <div class="col-4">
                                         <div class=" input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbTelefono" class="form-label" Text="Telefono" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbTelefono" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbTelefono" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
 
@@ -210,7 +233,7 @@
                                     <div class="col-5">
                                         <div class="input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbPlano" class="form-label" Text="Plano" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbPlano" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbPlano" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                             <asp:Button class="btn btn-outline-secondary" ID="btnPlano" type="button" Text="..." runat="server" Enabled="false"></asp:Button>
                                         </div>
                                     </div>
@@ -227,7 +250,7 @@
                                     <div class="col-4">
                                         <div class=" input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbImagenes" class="form-label" Text="Imagenes" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbImagenes" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbImagenes" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
 
@@ -275,19 +298,20 @@
 
                             <div class=" container-fluid border rounded">
                                 <h5 class="text-sm-start">Acabados</h5>
+                                <asp:TextBox ID="tbTerminadoVentas" class="form-control" runat="server" CssClass="hidden-checkbox"></asp:TextBox>
 
                                 <div class="row pt-1 mt-1 pb-1 mb-1">
 
                                     <div class="col-6">
                                         <div class="input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lblinea" class="form-label" Text="Linea" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbLinea" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbLinea" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class=" input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbSup" class="form-label" Text="Sup" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbSup" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbSup" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
 
@@ -298,13 +322,13 @@
                                     <div class="col-6">
                                         <div class="input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbAcc" class="form-label" Text="Acc" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbAcc" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbAcc" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class=" input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbCantos" class="form-label" Text="Cantos" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbCantos" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbCantos" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
 
@@ -315,13 +339,13 @@
                                     <div class="col-6">
                                         <div class="input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbPerfil" class="form-label" Text="Perfil" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbPerfil" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbPerfil" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class=" input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbPaneles" class="form-label" Text="Paneles" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbPaneles" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbPaneles" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
 
@@ -332,13 +356,13 @@
                                     <div class="col-6">
                                         <div class="input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbArch" class="form-label" Text="Arch" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbArch" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbArch" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class=" input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbSillas" class="form-label" Text="Sillas" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbSillas" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbSillas" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
 
@@ -350,7 +374,7 @@
                                     <div class="col-6">
                                         <div class="input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbPantallas" class="form-label" Text="Pantallas" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbPantallas" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                            <asp:TextBox ID="tbPantallas" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -399,28 +423,28 @@
                                             <div class="col-12">
                                                 <div class="input-group-sm  mb-1 gap-4">
                                                     <asp:Label ID="lbAcaPisoYZocalo" class="form-label" Text="Acabados Piso y Zócalo" runat="server"></asp:Label>
-                                                    <asp:TextBox ID="tbAcaPisZoc" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                                    <asp:TextBox ID="tbAcaPisZoc" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                                 </div>
                                             </div>
 
                                             <div class="col-12">
                                                 <div class="input-group-sm  mb-1 gap-4">
                                                     <asp:Label ID="lbAcaMuros" class="form-label" Text="Acabados Muros" runat="server"></asp:Label>
-                                                    <asp:TextBox ID="tbAcaMuros" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                                    <asp:TextBox ID="tbAcaMuros" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                                 </div>
                                             </div>
 
                                             <div class="col-12">
                                                 <div class="input-group-sm  mb-1 gap-4">
                                                     <asp:Label ID="lbIluminacion" class="form-label" Text="Iluminación y  Tipos de lamparas" runat="server"></asp:Label>
-                                                    <asp:TextBox ID="tbIluminacion" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                                    <asp:TextBox ID="tbIluminacion" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                                 </div>
                                             </div>
 
                                             <div class="col-12">
                                                 <div class="input-group-sm  mb-1 gap-4">
                                                     <asp:Label ID="lbAntepecho" class="form-label" Text="Sillar o antepecho y ventanas" runat="server"></asp:Label>
-                                                    <asp:TextBox ID="tbAntepecho" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                                    <asp:TextBox ID="tbAntepecho" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                                 </div>
                                             </div>
 
@@ -449,13 +473,13 @@
 
                                     <div class="col-3 ">
                                         <div class=" input-group input-group-sm  mb-2 gap-2 justify-content-center ">
-                                            <asp:Button class="btn btn-outline-secondary" ID="Button1" runat="server" Text="Trabajar Render" />
+                                            <asp:Button class="btn btn-outline-secondary" ID="btnTrabajarRender" runat="server" Text="Trabajar Render" />
                                         </div>
                                     </div>
 
                                     <div class="col-3">
                                         <div class=" input-group input-group-sm  mb-2 gap-2 justify-content-center">
-                                            <asp:Button class="btn btn-warning  " ID="Button2" runat="server" Text="Programar" />
+                                            <asp:Button class="btn btn-warning  " ID="btnProgramarRender" runat="server" Text="Programar" OnClick="ProgramarRender" OnClientClick="return confirmProgramarRender(event);" />
                                         </div>
                                     </div>
 
@@ -514,18 +538,18 @@
 
                             </div>
 
-                        </div>
 
+                        </div>
+                        
 
                         <div class="container-fluid Bajo">
-
                             <div class="row justify-content-center">
                                 <div class="border rounded p-2">
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 15rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-start">Programacion</h5>
-                                                <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGridRenders" runat="server" DataSourceID="CargarRenders" AutoGenerateColumns="false" OnItemDataBound="DataGridRenders_ItemDataBound" OnItemCommand="DataGridRenders_LinkButton">
+                                                <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGridRenders" runat="server" DataSourceID="CargarRenders" AutoGenerateColumns="false" OnItemDataBound="DataGridRenders_ItemDataBound" OnItemCommand="DataGridRenders_LinkButton" >
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                     <Columns>
@@ -613,11 +637,17 @@
                                                         <%-- [38]--%>
                                                         <asp:BoundColumn DataField="Animacion" Visible="false" ItemStyle-CssClass="auto-width-column" />
                                                         <%-- [39]--%>
+                                                        <asp:BoundColumn DataField="ProgramadoVentas" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [40]--%>
+                                                        <asp:BoundColumn DataField="Pausado" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [41]--%>
+                                                        <asp:BoundColumn DataField="TerminadoRender" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [42]--%>
                                                     </Columns>
                                                 </asp:DataGrid>
 
-                                                <asp:SqlDataSource runat="server" ID="CargarRenders" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT   ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,    * FROM    tblRender WHERE     TerminadoRender = 0"></asp:SqlDataSource>
-                                                <asp:SqlDataSource ID="RenderPorZona" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno, * from tblRender where Zona=@Parametro and TerminadoRender = 0">
+                                                <asp:SqlDataSource runat="server" ID="CargarRenders" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT   ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,    * FROM    tblRender WHERE     TerminadoRender = 0 "></asp:SqlDataSource>
+                                                <asp:SqlDataSource ID="RenderPorZona" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno, * from tblRender where Zona=@Parametro and TerminadoRender = 0 ">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="ddlZona2" PropertyName="SelectedValue" Name="Parametro"></asp:ControlParameter>
                                                     </SelectParameters>
@@ -631,8 +661,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
 
                     </ContentTemplate>
@@ -642,7 +670,7 @@
             <div class="tab-pane fade  " id="BuscarRender-Content">
                 <asp:UpdatePanel ID="PanelBuscarRender" runat="server">
                     <ContentTemplate>
-                        <div class="container">
+                        <div class="container-fluid">
 
                             <div class="row pt-2">
                                 <div class="col-8">
@@ -655,7 +683,7 @@
                                 </div>
                                 <div class="col-2">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
-                                        <asp:Button ID="btnConsultar" type="button" Text="Consultar" class="btn btn-outline-secondary" runat="server"></asp:Button>
+                                        <asp:Button ID="btnConsultar" type="button" Text="Consultar" class="btn btn-outline-secondary" runat="server" OnClick="ConsultarRender"></asp:Button>
                                     </div>
                                 </div>
                             </div>
@@ -701,37 +729,140 @@
                                 </div>
                             </div>
 
-                            <div class="row justify-content-center">
+                            <div class="row justify-content-center pt-3">
                                 <div class="border rounded p-2">
-                                    <div class="table-responsive">
-                                        <h6 class="datagrid-header text-start">Programacion:</h6>
-                                        <table class="table table-hover table-bordered">
-                                            <thead class="thead-light">
-                                                <tr>
-                                                    <th style="white-space: nowrap;">Turno</th>
-                                                    <th style="white-space: nowrap;">ID</th>
-                                                    <th style="white-space: nowrap;">Nombre- Render</th>
-                                                    <th style="white-space: nowrap;">Activado </th>
-                                                    <th style="white-space: nowrap;">Entrega</th>
-                                                    <th style="white-space: nowrap;">Asesor</th>
-                                                    <th style="white-space: nowrap;">Responsable</th>
-                                                    <th style="white-space: nowrap;">Zona</th>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="table-responsive mb-2 gap-2" style="max-height: 20rem; overflow-x: auto;">
+                                                <h5 class="datagrid-header text-center">Render Filtrados</h5>
 
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td style="white-space: nowrap;">1</td>
-                                                    <td style="white-space: nowrap;">4560</td>
-                                                    <td style="white-space: nowrap;">Nombre de la obra </td>
-                                                    <td style="white-space: nowrap;">31/08/2023</td>
-                                                    <td style="white-space: nowrap;">02//09/2023</td>
-                                                    <td style="white-space: nowrap;">Marleny carvajal </td>
-                                                    <td style="white-space: nowrap;">Cristian Ramos</td>
-                                                    <td style="white-space: nowrap;">1</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                                <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="BuscarRender" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridBuscarRender_ItemDataBound" OnItemCommand="DataGridBuscarRenders_LinkButton">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header p-2" />
+                                                    <Columns>
+                                                        <asp:TemplateColumn HeaderText="...">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="lnkView" runat="server" CommandName="VerRenders2" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+
+                                                        <asp:BoundColumn DataField="Turno" HeaderText="Turno" />
+                                                        <%-- Turno[1]--%>
+                                                        <asp:BoundColumn DataField="Id_Render" HeaderText="ID" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [2]--%>
+                                                        <asp:BoundColumn DataField="Cliente" HeaderText="Nombre-Render" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [3]--%>
+                                                        <asp:BoundColumn DataField="UltimaActivacion" HeaderText="Activado" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [4]--%>
+                                                        <asp:BoundColumn DataField="Fecha_Programada_Entrega" HeaderText="Entregado" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [5]--%>
+                                                        <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [6]--%>
+                                                        <asp:BoundColumn DataField="RealizadoPor" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [7]--%>
+                                                        <asp:BoundColumn DataField="Zona" HeaderText="Zona" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [8]--%>
+                                                        <asp:BoundColumn DataField="FechaRenderOk" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [9]--%>
+                                                        <asp:BoundColumn DataField="Numero_Diseño" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [10]--%>
+                                                        <asp:BoundColumn DataField="Nombre_Render" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [11]--%>
+                                                        <asp:BoundColumn DataField="Contacto" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [12]--%>
+                                                        <asp:BoundColumn DataField="Fecha_Ingreso" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [13]--%>
+                                                        <asp:BoundColumn DataField="Celular" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [14]--%>
+                                                        <asp:BoundColumn DataField="Mail" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [15]--%>
+                                                        <asp:BoundColumn DataField="Telefono" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [16]--%>
+                                                        <asp:BoundColumn DataField="Plano" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [17]--%>
+                                                        <asp:BoundColumn DataField="Imagenes" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [18]--%>
+                                                        <asp:BoundColumn DataField="Areas" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [19]--%>
+                                                        <asp:BoundColumn DataField="Observaciones_Ventas" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [20]--%>
+                                                        <asp:BoundColumn DataField="SeguimientoPausa" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [21]--%>
+                                                        <asp:BoundColumn DataField="Observacion_Dibujo" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [22]--%>
+                                                        <asp:BoundColumn DataField="Linea" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [23]--%>
+                                                        <asp:BoundColumn DataField="AcabadoSuperficie" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [24]--%>
+                                                        <asp:BoundColumn DataField="AcabadoAccesorios" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [25]--%>
+                                                        <asp:BoundColumn DataField="Cantos" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [26]--%>
+                                                        <asp:BoundColumn DataField="AcabadoPerfileria" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [27]--%>
+                                                        <asp:BoundColumn DataField="AcabadoPaneles" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [28]--%>
+                                                        <asp:BoundColumn DataField="Archivadores" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [29]--%>
+                                                        <asp:BoundColumn DataField="Sillas" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [30]--%>
+                                                        <asp:BoundColumn DataField="Pantallas" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [31]--%>
+                                                        <asp:BoundColumn DataField="EspacioArquitectonico" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [32]--%>
+                                                        <asp:BoundColumn DataField="Muebles" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [33]--%>
+                                                        <asp:BoundColumn DataField="PisoyZocalo" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [34]--%>
+                                                        <asp:BoundColumn DataField="Muros" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [35]--%>
+                                                        <asp:BoundColumn DataField="Iluminacion" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [36]--%>
+                                                        <asp:BoundColumn DataField="Sillar" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [37]--%>
+                                                        <asp:BoundColumn DataField="Ambientacion" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [38]--%>
+                                                        <asp:BoundColumn DataField="Animacion" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [39]--%>
+                                                        <asp:BoundColumn DataField="ProgramadoVentas" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [40]--%>
+                                                        <asp:BoundColumn DataField="Pausado" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [41]--%>
+                                                        <asp:BoundColumn DataField="TerminadoRender" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [42]--%>
+                                                    </Columns>
+
+                                                </asp:DataGrid>
+
+                                                <asp:SqlDataSource ID="RenderFecha" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno, * from tblRender where Fecha_Ingreso between  @FechaIni and  @FechaFin ORDER BY  Fecha_Ingreso DESC  ">
+                                                    <SelectParameters>
+                                                        <asp:ControlParameter ControlID="FechaIni" PropertyName="Text" Name="FechaIni"></asp:ControlParameter>
+                                                        <asp:ControlParameter ControlID="FechaFin" PropertyName="Text" Name="FechaFin"></asp:ControlParameter>
+                                                    </SelectParameters>
+                                                </asp:SqlDataSource>
+
+                                                <asp:SqlDataSource ID="RenderCliente" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,  * FROM tblRender WHERE Cliente LIKE '%' + @NombreCliente + '%' ORDER BY  Fecha_Ingreso DESC ">
+                                                    <SelectParameters>
+                                                        <asp:ControlParameter ControlID="tbClienteX" PropertyName="Text" Name="NombreCliente"></asp:ControlParameter>
+                                                    </SelectParameters>
+                                                </asp:SqlDataSource>
+
+                                                <asp:SqlDataSource ID="RenderNombreRender" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno, * FROM tblRender WHERE Nombre_Render LIKE '%' + @NombreRender + '%' ORDER BY  Fecha_Ingreso DESC ">
+                                                    <SelectParameters>
+                                                        <asp:ControlParameter ControlID="tbProyectoX" PropertyName="Text" Name="NombreRender"></asp:ControlParameter>
+                                                    </SelectParameters>
+                                                </asp:SqlDataSource>
+                                                <asp:SqlDataSource ID="RenderXIdRender" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno, * from tblRender where Id_Render = @IdRender ORDER BY  Fecha_Ingreso DESC ">
+                                                    <SelectParameters>
+                                                        <asp:ControlParameter ControlID="tbNumeroRender" PropertyName="Text" Name="IdRender"></asp:ControlParameter>
+                                                    </SelectParameters>
+                                                </asp:SqlDataSource>
+
+                                            </div>
+
+
+
+
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -746,11 +877,10 @@
     </form>
 
     <script>
-        // Habilitar enlace Nuevo Render 
-        document.getElementById("NuevoRender").classList.add("enabled");
-        // Habilitar enlace Importar Render
-        document.getElementById("ImportarRender").classList.add("enabled");
-        // Habilitar enlace Cancelar
+
+       // se Habilitan enlaces 
+        document.getElementById("NuevoRender").classList.add("enabled");        
+        document.getElementById("ImportarRender").classList.add("enabled");      
         document.getElementById("CancelarRender").classList.add("enabled");
 
         // Habilitar o deshabilitar los DropDownList
@@ -761,12 +891,11 @@
                 dropDownLists[j].disabled = true;
                 dropDownLists[j].value = "";
             }
-
-
         }
     </script>
 
     <script>
+
         // Ocultar el div con clase "contenedor-icono" cuando se activa la pestaña "Info-content" 
         $(document).ready(function () {
             $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -803,7 +932,227 @@
             // Habilitar o deshabilitar los TextBox Type text
             var textBoxes = document.querySelectorAll("input[type='text']");
             for (var i = 0; i < textBoxes.length; i++) {
-                textBoxes[i].readOnly = false;
+                textBoxes[i].disabled = false;
+            }
+
+               // Habilitar o deshabilitar los TextBox Type date
+            var idsHabilitados = ["tbIngreso", "tbUltActiv", "tbEntrega"];       
+            var textBoxes = document.querySelectorAll("input[type='date']");
+            for (var x = 0; x < textBoxes.length; x++) {
+
+                // Comprueba si el ID del TextBox está en la lista de IDs habilitados
+                if (idsHabilitados.includes(textBoxes.id)) {
+                    textBoxes.readOnly = false; // Habilitar el TextBox
+                } else {
+                    textBoxes.readOnly = true; // Deshabilitar el TextBox
+                }
+            }
+
+
+
+            var checkBoxesToEnable = ["chxAnimacion", "chxAmbientacion", "chxEspArq"];
+
+            for (var i = 0; i < checkBoxesToEnable.length; i++) {
+                var checkBoxId = checkBoxesToEnable[i];
+                var checkBox = document.getElementById(checkBoxId);
+
+                if (checkBox) {
+                    checkBox.disabled = false; // Habilita el CheckBox
+                }
+            }
+
+            // Se cambia el Numero de Render por Definir 
+            var label = document.getElementById("NumeroRender");
+            label.textContent = "Por Definir";
+
+
+            // Obtén la fecha actual
+            var fechaActual = new Date();
+            // Calcula la fecha para 4 días después de la fecha actual
+            var fecha4DiasDespues = new Date();
+            fecha4DiasDespues.setDate(fechaActual.getDate() + 4);
+
+            // Formatea las fechas en el formato deseado (por ejemplo, YYYY-MM-DD)
+            var fechaActualFormateada = fechaActual.toISOString().split('T')[0];
+            var fecha4DiasDespuesFormateada = fecha4DiasDespues.toISOString().split('T')[0];
+
+
+
+            var FechaActualAnio = new Date();
+
+            // Establece la fecha al primer día del año actual
+            FechaActualAnio.setMonth(0); // Establece el mes a enero (0)
+            FechaActualAnio.setDate(1); // Establece el día al primero (1)
+
+
+            // Formatea la fecha en el formato deseado (por ejemplo, YYYY-MM-DD)
+            var fechaFormateada2 = FechaActualAnio.toISOString().split('T')[0];
+
+
+
+
+            // Asigna las fechas a los TextBox correspondientes por su ID
+            document.getElementById("tbIngreso").value = fechaActualFormateada;
+            document.getElementById("tbIngresoServidor").value = fechaActualFormateada;
+
+            document.getElementById("tbUltActiv").value = fechaActualFormateada;
+            document.getElementById("tbUltActivServidor").value = fechaActualFormateada;
+
+            document.getElementById("tbEntrega").value = fecha4DiasDespuesFormateada;
+            document.getElementById("tbEntregaServidor").value = fecha4DiasDespuesFormateada;
+
+
+            document.getElementById("tbFechaOk").value = fechaFormateada2;
+            document.getElementById("tbFechaOkServidor").value = fechaFormateada2;
+
+
+
+
+
+            // Deshabilitar enlace Nuevo Render 
+            document.getElementById("NuevoRender").classList.remove("enabled");
+
+            // Habilitar enlace Grabar Render
+            document.getElementById("GrabarRender").classList.add("enabled");
+
+            // Habilitar enlace Grabar Render
+            document.getElementById("Actualizar").classList.add("enabled");
+
+
+
+            var checkBox = document.getElementById('<%= chkEstadoGuardarRender.ClientID %>');
+            checkBox.checked = true; // Marcar el CheckBox para saber si insertar o modificar
+
+        }
+
+        //Funcion para habilitar Modificar Cuando dan Click en linkButton Del DataGrid 
+        function HabilitarEnlaces1() {
+
+            // Habilitar enlaces
+            document.getElementById("ModificarRender").classList.add("enabled");
+
+            // Si la pagina de Render Es para el Area de Dibujo , Se habilita Devolver, Pausar y Eliminar Render
+            /* 
+             document.getElementById("DevolverRender").classList.add("enabled");
+             document.getElementById("PausarRender").classList.add("enabled");
+             document.getElementById("EliminarRender").classList.add("enabled");
+             */
+
+        }
+
+
+        function ModificarRender() {
+
+
+            var tbTerminadoVentas = document.getElementById("tbTerminadoVentas");
+            var terminadoVentasValue = tbTerminadoVentas.value;
+
+
+            if (terminadoVentasValue.toLowerCase() === "true")
+            {
+                // No se puede modificar, muestra un mensaje de error
+                alert("El render ya fue aprobado para Dibujo y Despiece, este departamento lo debe habilitar para ser modificado");
+            }
+            else
+            {
+                // Habilitar enlace grabar
+                document.getElementById("GrabarRender").classList.add("enabled");
+
+                // Dehabilitar enlace Moficiar
+                document.getElementById("ModificarRender").classList.remove("enabled");
+
+                var checkBox = document.getElementById('<%= chkEstadoGuardarRender.ClientID %>');
+                checkBox.checked = false; // Marcar el CheckBox para saber si insertar o modificar
+
+
+                // Habilitar o deshabilitar los DropDownList
+                var dropDownLists = document.querySelectorAll("select");
+                for (var j = 0; j < dropDownLists.length; j++) {
+                    dropDownLists[j].disabled = false;
+                }
+
+                // Habilitar los TextArea
+                var textAreas = document.querySelectorAll("textarea");
+                for (var k = 0; k < textAreas.length; k++) {
+
+                    if (textAreas[k].id != "txSegPausas" && textAreas[k].id != "txObsDibujo") {
+                        textAreas[k].disabled = false;
+                    }
+
+                }
+
+                // Habilitar o deshabilitar los TextBox Type text
+                var textBoxes = document.querySelectorAll("input[type='text']");
+                for (var i = 0; i < textBoxes.length; i++) {
+                    textBoxes[i].disabled = false;
+                }
+
+
+                var idsHabilitados = ["tbIngreso", "tbUltActiv", "tbEntrega"];
+
+                // Habilitar o deshabilitar los TextBox Type text
+                var textBoxes = document.querySelectorAll("input[type='date']");
+                for (var x = 0; x < textBoxes.length; x++) {
+
+                    // Comprueba si el ID del TextBox está en la lista de IDs habilitados
+                    if (idsHabilitados.includes(textBoxes.id)) {
+                        textBoxes.readOnly = false; // Habilitar el TextBox
+                    } else {
+                        textBoxes.readOnly = true; // Deshabilitar el TextBox
+                    }
+                }
+
+                var checkBoxesToEnable = ["chxAnimacion", "chxAmbientacion", "chxEspArq"];
+
+                for (var i = 0; i < checkBoxesToEnable.length; i++) {
+                    var checkBoxId = checkBoxesToEnable[i];
+                    var checkBox = document.getElementById(checkBoxId);
+
+                    if (checkBox) {
+                        checkBox.disabled = false; // Habilita el CheckBox
+                    }
+                }
+
+            }
+
+
+        }
+
+        function Cancelar() {
+            // Habilitar enlace Nuevo Render 
+            document.getElementById("NuevoRender").classList.add("enabled");
+
+            // Deshabilitar  enlace Importar Render
+            document.getElementById("GrabarRender").classList.remove("enabled");
+
+            // Habilitar enlace Importar Render
+            document.getElementById("Actualizar").classList.remove("enabled");
+
+
+            // Habilitar o deshabilitar los DropDownList
+            var dropDownLists = document.querySelectorAll("select");
+            for (var j = 0; j < dropDownLists.length; j++) {
+
+                if (dropDownLists[j].id != "ddlZona2") {
+                    dropDownLists[j].disabled = true;
+                }
+            }
+
+
+            // Habilitar los TextArea
+            var textAreas = document.querySelectorAll("textarea");
+            for (var k = 0; k < textAreas.length; k++) {
+
+                if (textAreas[k].id != "txSegPausas" && textAreas[k].id != "txObsDibujo") {
+                    textAreas[k].disabled = true;
+                }
+
+            }
+
+            // Habilitar o deshabilitar los TextBox Type text
+            var textBoxes = document.querySelectorAll("input[type='text']");
+            for (var i = 0; i < textBoxes.length; i++) {
+                textBoxes[i].disabled = true;
             }
 
 
@@ -830,74 +1179,11 @@
                 var checkBox = document.getElementById(checkBoxId);
 
                 if (checkBox) {
-                    checkBox.disabled = false; // Habilita el CheckBox
+                    checkBox.disabled = true; // Habilita el CheckBox
                 }
             }
 
 
-
-            // Se cambia el Numero de Render por Pendiente 
-            var label = document.getElementById("NumeroRender");
-            label.textContent = "Por Definir";
-
-
-            // Obtén la fecha actual
-            var fechaActual = new Date();
-
-            // Calcula la fecha para 4 días después de la fecha actual
-            var fecha4DiasDespues = new Date();
-            fecha4DiasDespues.setDate(fechaActual.getDate() + 4);
-
-            // Formatea las fechas en el formato deseado (por ejemplo, YYYY-MM-DD)
-            var fechaActualFormateada = fechaActual.toISOString().split('T')[0];
-            var fecha4DiasDespuesFormateada = fecha4DiasDespues.toISOString().split('T')[0];
-
-            // Asigna las fechas a los TextBox correspondientes por su ID
-            document.getElementById("tbIngreso").value = fechaActualFormateada;
-            document.getElementById("tbUltActiv").value = fechaActualFormateada;
-            document.getElementById("tbEntrega").value = fecha4DiasDespuesFormateada;
-
-
-            // Deshabilitar enlace Nuevo Render 
-            document.getElementById("NuevoRender").classList.remove("enabled");
-
-            // Habilitar enlace Grabar Render
-            document.getElementById("GrabarRender").classList.add("enabled");
-
-
-
-            var checkBox = document.getElementById('<%= chkEstadoGuardrRender.ClientID %>');
-            checkBox.checked = true; // Marcar el CheckBox para saber si insertar o modificar
-
-        }
-
-        //Funcion para habilitar Modificar
-        function HabilitarEnlaces1() {
-
-            // Habilitar enlaces
-            document.getElementById("ModificarRender").classList.add("enabled");
-
-        }
-
-
-        function ModificarRender() {
-
-            // Validar Si Render ya fue Aprobado por Dibujo
-            // Si ya fue aprobado por dibujo no se puede modificar tiene que ser devuelto
-            // si no ha sido aprobado por dibujo lo puede editar
-
-
-
-
-            //
-            // Habilitar enlace grabar
-            document.getElementById("GrabarRender").classList.add("enabled");
-
-            // Dehabilitar enlace Moficiar
-            document.getElementById("ModificarRender").classList.remove("enabled");
-
-            var checkBox = document.getElementById('<%= chkEstadoGuardrRender.ClientID %>');
-            checkBox.checked = false; // Marcar el CheckBox para saber si insertar o modificar
 
         }
 

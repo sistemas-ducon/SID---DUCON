@@ -11,8 +11,15 @@
     <form id="form1" runat="server">
         <div>
             <script type="text/javascript">
-                alert('La acción se realizó con éxito.');
-                window.location.href = 'Ventas/Visita_Asesores.aspx'; // Redirigir de nuevo a la página original
+                // Obtiene el mensaje personalizado de la consulta
+                var message = "<%= HttpUtility.UrlDecode(Request.QueryString["message"]) %>";
+                alert(message);
+
+                // Obtiene la URL de redirección de la consulta
+                var redirectUrl = "<%= HttpUtility.UrlDecode(Request.QueryString["redirectUrl"]) %>";
+
+                // Redirige a la página indicada desde la página de acción
+                window.location.href = redirectUrl;
             </script>
         </div>
     </form>
