@@ -101,23 +101,26 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 300px; overflow-x: auto;">
-                                                <asp:DataGrid Class="table table-bordered table-hover" ID="DataGrid1" runat="server" DataSourceID="DataGridConsultaCotizaciones" AutoGenerateColumns="false" OnPreRender="DataGridPorVendedor_PreRender">
+                                                <asp:DataGrid Class="table table-bordered table-sm table-hover" ID="DataGrid1" runat="server"
+                                                    DataSourceID="DataGridConsultaCotizaciones" AutoGenerateColumns="false" OnPreRender="DataGridPorVendedor_PreRender">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                     <Columns>
-                                                        <asp:BoundColumn DataField="Cotización" HeaderText="Cotizacion"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="Estado" HeaderText="Estado"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="Competencia" HeaderText="Competencia"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="Valor" HeaderText="Valor" DataFormatString="{0:C0}"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="Descuento" HeaderText="Dto(%)"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="VCCD" HeaderText="Valor Neto"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="Cliente" HeaderText="Cliente"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="Obra" HeaderText="Obra"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="Asesor" HeaderText="Asesor"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="Fecha_Cotización" HeaderText="F.Cotizacion"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="Fecha_Respuesta" HeaderText="F.Respuesta"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="Plano" HeaderText="Plano"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Cotización" HeaderText="Cotizacion" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Estado" HeaderText="Estado" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Competencia" HeaderText="Competencia" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Valor" HeaderText="Valor" DataFormatString="{0:C0}" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Descuento" HeaderText="Dto(%)" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="VCCD" HeaderText="Valor Neto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Cliente" HeaderText="Cliente" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Obra" HeaderText="Obra" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Fecha_Cotización" HeaderText="F.Cotizacion" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Fecha_Respuesta" HeaderText="F.Respuesta" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Plano" HeaderText="Plano" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     </Columns>
                                                 </asp:DataGrid>
-                                                <asp:SqlDataSource runat="server" ID="DataGridConsultaCotizaciones" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="cta_Cotizaciones_Por_Vendedor" SelectCommandType="StoredProcedure">
+                                                <asp:SqlDataSource runat="server" ID="DataGridConsultaCotizaciones" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                                    SelectCommand="cta_Cotizaciones_Por_Vendedor" SelectCommandType="StoredProcedure">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="TextAsesor" PropertyName="Text" Name="NombreAsesor" Type="String"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="TextBoxStartDate" PropertyName="Text" DbType="Date" Name="FechaInicio"></asp:ControlParameter>
@@ -139,7 +142,7 @@
                                 <div class="border rounded p-3" style="height: 200px">
 
                                     <div class="table-responsive">                                  
-                                    <table class="table table-hover table-bordered">
+                                    <table class="table table-sm table-hover table-bordered">
                                         <thead class="thead-light">
                                             <tr>
                                                 <th style="white-space: nowrap;">Estado</th>
@@ -272,20 +275,21 @@
                                 <div class="col-12">
                                     <div class="table-responsive mb-2 gap-2" style="max-height: 300px; overflow-x: auto;">
 
-                                        <asp:DataGrid Class="table table-bordered table-hover" ID="DataGrid2" runat="server" DataSourceID="DataGridPorEstado" AutoGenerateColumns="false" OnPreRender="DataGridPorEstado_PreRender">
+                                        <asp:DataGrid Class="table table-bordered table-sm table-hover" ID="DataGrid2" runat="server" DataSourceID="DataGridPorEstado" AutoGenerateColumns="false" OnPreRender="DataGridPorEstado_PreRender">
+                                             <HeaderStyle Font-Bold="true" CssClass="datagrid-header auto-width-column" />
                                             <Columns>
-                                                <asp:BoundColumn DataField="Asesor" HeaderText="Asesor"></asp:BoundColumn>
-                                                <asp:BoundColumn DataField="Cotización" HeaderText="Cotizacion"></asp:BoundColumn>
-                                                <asp:BoundColumn DataField="" HeaderText="Opc"></asp:BoundColumn>
-                                                <asp:BoundColumn DataField="Valor" HeaderText="Valor"></asp:BoundColumn>
-                                                <asp:BoundColumn DataField="Descuento" HeaderText="Dto(%)"></asp:BoundColumn>
-                                                <asp:BoundColumn DataField="VCCD" HeaderText="Valor Neto"></asp:BoundColumn>
-                                                <asp:BoundColumn DataField="Cliente" HeaderText="Cliente"></asp:BoundColumn>
-                                                <asp:BoundColumn DataField="" HeaderText="Contacto"></asp:BoundColumn>
-                                                <asp:BoundColumn DataField="Obra" HeaderText="Obra"></asp:BoundColumn>
-                                                <asp:BoundColumn DataField="Plano" HeaderText="Plano"></asp:BoundColumn>
-                                                <asp:BoundColumn DataField="Fecha_Cotización" HeaderText="F.Cotizacion"></asp:BoundColumn>
-                                                <asp:BoundColumn DataField="Fecha_Respuesta" HeaderText="F.Respuesta"></asp:BoundColumn>
+                                                <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                <asp:BoundColumn DataField="Cotización" HeaderText="Cotizacion" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                <asp:BoundColumn DataField="" HeaderText="Opc" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                <asp:BoundColumn DataField="Valor" HeaderText="Valor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                <asp:BoundColumn DataField="Descuento" HeaderText="Dto(%)" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                <asp:BoundColumn DataField="VCCD" HeaderText="Valor Neto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                <asp:BoundColumn DataField="Cliente" HeaderText="Cliente" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                <asp:BoundColumn DataField="" HeaderText="Contacto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                <asp:BoundColumn DataField="Obra" HeaderText="Obra" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                <asp:BoundColumn DataField="Plano" HeaderText="Plano" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                <asp:BoundColumn DataField="Fecha_Cotización" HeaderText="F.Cotizacion" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                <asp:BoundColumn DataField="Fecha_Respuesta" HeaderText="F.Respuesta" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
 
                                             </Columns>
                                         </asp:DataGrid>
@@ -313,7 +317,7 @@
                                 <div class="border rounded p-3" style="height: 200px">
 
                                     <div class="table-responsive">                                  
-                                    <table class="table table-hover table-bordered" id="Table1">
+                                    <table class="table table-sm table-hover table-bordered" id="Table1">
                                         <thead class="thead-light">
                                             <tr>
                                                 <th style="white-space: nowrap;">Asesor Comercial</th>
@@ -425,7 +429,7 @@
 
                                             <div class="border rounded p-3" style="height: 400px">
                                                 <table class="table table-bordered">
-                                                    <thead class="table table-responsive-sm">
+                                                    <thead class="table table-sm table-responsive-sm">
                                                         <tr class="ms-auto">
                                                             <h6 class="text-center">Seg Para Hoy</h6>
                                                             <th class="text-center" scope="col">Cotización</th>
@@ -444,17 +448,17 @@
                                         <div class="col-10">
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 400px; overflow-x: auto;">
 
-                                                <asp:DataGrid Class="table table-bordered table-hover" ID="DataGrid3" runat="server" DataSourceID="DataGridSeguimiento" AutoGenerateColumns="false">
-
+                                                <asp:DataGrid Class="table table-bordered table-sm table-hover" ID="DataGrid3" runat="server" DataSourceID="DataGridSeguimiento" AutoGenerateColumns="false">
+                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header auto-width-column" />
                                                     <Columns>
-                                                        <asp:BoundColumn DataField="Asesor" HeaderText="Asesor"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="Cliente" HeaderText="Cliente"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="Teléfono" HeaderText="Teléfono"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="Cotización" HeaderText="Cotizacion"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="Fecha_Cotización" HeaderText="F.Cotizacion"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="Proximo_Seguimiento" HeaderText="Prox. Segui"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="VCCD" HeaderText="Valor Neto"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="Obra" HeaderText="Obra"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Cliente" HeaderText="Cliente" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Teléfono" HeaderText="Teléfono" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Cotización" HeaderText="Cotizacion" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Fecha_Cotización" HeaderText="F.Cotizacion" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Proximo_Seguimiento" HeaderText="Prox. Segui" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="VCCD" HeaderText="Valor Neto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Obra" HeaderText="Obra" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     </Columns>
                                                 </asp:DataGrid>
                                                 <asp:SqlDataSource runat="server" ID="DataGridSeguimiento" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="sp_Cotizaciones_Seguimiento" SelectCommandType="StoredProcedure">
@@ -476,7 +480,7 @@
                                 <div class="container mt-4">
                                     <div class="row justify-content-center">
                                         <div class="border rounded p-3" style="height: 200px">
-                                            <asp:GridView runat="server" ID="GridViewTotales" AutoGenerateColumns="false" CssClass="table table-bordered table-hover">
+                                            <asp:GridView runat="server" ID="GridViewTotales" AutoGenerateColumns="false" CssClass="table table-sm table-hover">
                                                 <HeaderStyle Font-Bold="false" />
                                                 <Columns>
                                                     <asp:BoundField DataField="" HeaderText="Cotizacion" />
@@ -605,8 +609,8 @@
                                 <div class="border rounded p-3">
                                     <div class="col-12">
                                         <div class="table-responsive mb-2 gap-2" style="max-height: 400px; overflow-x: auto;">
-                                            <asp:DataGrid CssClass="table table-bordered table-hover" ID="DataGrid4" runat="server" DataSourceID="DataGridUltimoContacto" OnRowCommand="DataGrid4_RowCommand" AutoGenerateColumns="false">
-                                                <HeaderStyle Font-Bold="true" />
+                                            <asp:DataGrid CssClass="table table-sm table-bordered table-hover" ID="DataGrid4" runat="server" DataSourceID="DataGridUltimoContacto" OnRowCommand="DataGrid4_RowCommand" AutoGenerateColumns="false">
+                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                 <Columns>
                                                     <asp:BoundColumn DataField="uccNit" HeaderText="Nit" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     <asp:BoundColumn DataField="uccRazonSocial" HeaderText="Nombre" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>

@@ -171,6 +171,7 @@
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="TreeLineImages\arrow-repeat.png" />
     <Content Include="TreeLineImages\dash.gif" />
     <Content Include="TreeLineImages\dashminus.gif" />
     <Content Include="TreeLineImages\dashplus.gif" />

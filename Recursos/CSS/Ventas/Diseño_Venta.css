@@ -34,17 +34,17 @@
 }
 
 /* Estilo personalizado para el modal */
-#modal {
-    text-align: left; /* Alinea el contenido del modal a la izquierda */
-}
+/*#modal {
+    text-align: left;*/ /* Alinea el contenido del modal a la izquierda */
+/*}*/
 
 /* Ajusta la posición del modal hacia la derecha */
-.modal-dialog {
+/*.modal-dialog {
     margin: 0;
     position: absolute;
-    left: 62%; /* Ajusta la posición hacia la derecha */
-    top: -160px;
-}
+    left: 62%;*/ /* Ajusta la posición hacia la derecha */
+    /*top: -160px;
+}*/
 /* Estilos de colores personalizados */
 .bg-success-custom {
     background-color: #819cba;
@@ -73,3 +73,47 @@
 .bg-pausados-custom {
     background-color: #74bec6;
 }
+/* Ajusta estos estilos según tus necesidades */
+/*.modal-sm {
+    max-width: 50%;*/ /* Tamaño más pequeño */
+/*}*/
+
+.table-container {
+    max-height: 300px; /* Altura máxima */
+    overflow: auto; /* Habilita el scroll si el contenido excede la altura */
+}
+
+.table-wrapper {
+    width: max-content; /* Ancho máximo para permitir el scroll horizontal */
+}
+
+
+
+.contenedor-icono {
+    font-size: 24px;
+    
+}
+
+/* Estilo para enlaces habilitados (color negro) */
+
+.disabled {
+    opacity: 0.6; /* Cambia la opacidad para indicar que el elemento está deshabilitado */
+    pointer-events: none; /* Evita la interacción con el elemento deshabilitado */
+    cursor: not-allowed; /* Cambia el cursor al icono "no permitido" */
+}
+
+
+/* Cuando los elementos están deshabilitados */
+/*a.icong.action-link.disabled {
+    color: rgba(128, 128, 128, 0.5);*/ /* Gris opaco */
+    /*cursor: default;*/ /* Cambia el cursor a predeterminado */
+    /*text-decoration: none;*/ /* Elimina cualquier decoración de texto, como subrayado */
+/*}*/
+
+/* Cuando los elementos están habilitados */
+/*a.icong.action-link.enabled {
+    color:*/ /* Tu estilo para elementos habilitados *//*;
+    cursor: pointer;*/ /* Cambia el cursor a puntero cuando está habilitado */
+    /* Otros estilos para elementos habilitados si los deseas */
+/*}*/
+
