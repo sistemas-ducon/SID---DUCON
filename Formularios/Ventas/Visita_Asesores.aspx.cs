@@ -12,6 +12,7 @@ using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
+using Button = System.Web.UI.WebControls.Button;
 using Excel = Microsoft.Office.Interop.Excel;
 
 
@@ -33,11 +34,69 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 // Llamar al método para cargar los datos en el DropDownList
                 CargarAsesoresEnDropDownList();
+                if (Session["AsesorDiseño"] != null)
+                {
+                    string asesorSeleccionado = Session["AsesorDiseño"].ToString();
+                    ddlAsesor.SelectedValue = asesorSeleccionado;
+                }
                 // Aquí se  obtiene y muestra el rango de fechas en el título del DataGrid
                 DateRangeLiteral.Text = GetDateRange();
+                CargarClienteYContacto();
 
 
+            }
+        }
 
+        private void CargarClienteYContacto()
+        {
+            if (!IsPostBack)
+            {
+                string IdCLiente = Session["Id_ClienteBD"]?.ToString();
+                string IdContaco = Session["ID_ContactoBD"]?.ToString();
+
+                if (!string.IsNullOrEmpty(IdCLiente) && !string.IsNullOrEmpty(IdContaco))
+                {
+                    string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        string query = "SELECT X.NombreCompañía, X.Teléfono, Y.NombreContacto, Y.MailContacto " +
+                                       "FROM tblCliente AS X " +
+                                       "INNER JOIN tblClienteContacto AS Y ON Y.Id_Cliente = X.Id_Cliente " +
+                                       "WHERE X.Id_Cliente = @ParametroCliente AND Y.Id_ClienteContacto = @ParametroClienteContacto";
+
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                        {
+                            command.Parameters.AddWithValue("@ParametroCliente", IdCLiente);
+                            command.Parameters.AddWithValue("@ParametroClienteContacto", IdContaco);
+
+                            connection.Open();
+
+                            using (SqlDataReader reader = command.ExecuteReader())
+                            {
+                                if (reader.Read())
+                                {
+                                    if (!reader.IsDBNull(reader.GetOrdinal("NombreCompañía")))
+                                    {
+                                        tbCliente.Text = reader["NombreCompañía"].ToString();
+                                    }
+                                    if (!reader.IsDBNull(reader.GetOrdinal("Teléfono")))
+                                    {
+                                        tbTelefono.Text = reader["Teléfono"].ToString();
+                                    }
+                                    if (!reader.IsDBNull(reader.GetOrdinal("NombreContacto")))
+                                    {
+                                        tbContacto.Text = reader["NombreContacto"].ToString();
+                                    }
+                                    if (!reader.IsDBNull(reader.GetOrdinal("MailContacto")))
+                                    {
+                                        tbMailCont.Text = reader["MailContacto"].ToString();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -89,15 +148,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             ActualizarTituloDataGrid();
             DateRangeLiteral.Text = GetDateRange();
-            
+            // habilitar el botón "Cliente"
+            Button btnCliente = FindControl("btnCliente") as Button;
+            if (btnCliente != null)
+            {
+                btnCliente.Enabled = false;
+            }
 
         }
-        
+
         public void Cambio(object sender, EventArgs e)
         {
 
-            DateRangeLiteral.Text = GetDateRange();
+            Session["AsesorDiseño"] = ddlAsesor.SelectedValue;
+            Session["AsesorDiseñoNombre"] = ddlAsesor.SelectedItem.Text;
 
+            DateRangeLiteral.Text = GetDateRange();
+            Response.Redirect(Request.Url.ToString());
         }
 
         public void miDataGrid_PreRender(object sender, EventArgs e)
@@ -396,6 +463,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             try
             {
+                // Mostrar el modal de carga
+                ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "ShowLoadingModal", "mostrarModal();", true);
+
+
+
                 // Crear una nueva instancia de Excel
                 var excelApp = new Excel.Application();
 
@@ -509,6 +581,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Agregar título al gráfico
                 chart.HasTitle = true;
                 chart.ChartTitle.Text = "Vista Asesores";
+
+
+                // Refrescar la página después de cerrar el modal
+                ScriptManager.RegisterStartupScript(this, GetType(), "RefreshPage", "window.location.reload();", true);
 
                 worksheet.Columns.AutoFit();
                 // Mostrar la aplicación de Excel
@@ -670,16 +746,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     cellRange.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
                     // Alinear el contenido de la celda al centro
                     cellRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
-                    
+
                     // Avanzar a la siguiente columna
                     colIndex++;
                 }
 
                 // Ajustar el ancho de las columnas para ambas tablas
                 worksheet.Columns.AutoFit();
-
                 // Mostrar la aplicación de Excel
                 excelApp.Visible = true;
+
+                Response.Redirect(Request.Url.ToString());
+
+
+
             }
             catch (Exception ex)
             {
@@ -817,6 +897,94 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 Console.WriteLine("Error al exportar a Excel: " + ex.Message);
             }
+
+        }
+
+
+        protected void GuardarModificarCliente(object sender, EventArgs e)
+        {
+            bool guardarCliente = chkEstadoGuardarCliente.Checked;
+
+         
+            if (guardarCliente)
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    //Realizamos la Insercion 
+                    string query = "INSERT INTO tblvisitaasesor (Observacion, Fechavisita, Causa, Cotizacion, Id_ClienteContacto,Asesor) " +
+                                   "VALUES (@Observacion, @Fechavisita, @Causa,@Cotizacion, @Id_ClienteContacto, @Asesor)";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+
+                        command.Parameters.AddWithValue("@Observacion", txObs.Value);
+                        command.Parameters.AddWithValue("@Fechavisita", fecha.Value);
+                        command.Parameters.AddWithValue("@Causa", ddlVisitasPor.SelectedValue);
+                        command.Parameters.AddWithValue("@Cotizacion", tbCotizacion.Text);
+                        command.Parameters.AddWithValue("@Id_ClienteContacto", Session["Id_contactoBD"].ToString());
+                        command.Parameters.AddWithValue("@Asesor", ddlAsesor.SelectedValue);
+
+                        command.ExecuteNonQuery();
+                    }
+
+                    // Define el mensaje personalizado
+                    string mensajePersonalizado = "¡La Visita ha sido ingresada con Exito!";
+
+                    // Define la URL de redirección
+                    string urlRedireccion = "Ventas/Visita_Asesores.aspx";
+
+                    // Redirige a la página de éxito con el mensaje personalizado y la URL de redirección como parámetros
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+
+                }
+
+
+            }
+
+            else
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    // Realizamos actualización
+                    string query = "UPDATE tblvisitaasesor SET " +
+                                   "Observacion = @Observacion, Fechavisita = @Fechavisita, Causa = @Causa, Cotizacion = @Cotizacion, Id_ClienteContacto = @Id_ClienteContacto " +
+                                   "WHERE Id = @IdVisita AND Id_Clientecontacto = @Id_ClienteContacto";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Observacion", txObs.Value);
+                        command.Parameters.AddWithValue("@Fechavisita", fecha.Value);
+                        command.Parameters.AddWithValue("@Causa", ddlVisitasPor.SelectedValue);
+                        command.Parameters.AddWithValue("@Cotizacion", tbCotizacion.Text);
+                        command.Parameters.AddWithValue("@IdVisita", tbIdVisita.Text);
+                        command.Parameters.AddWithValue("@Id_ClienteContacto", tbIdContacto.Text);
+                      
+
+                        command.ExecuteNonQuery();
+                    }
+                    // Define el mensaje personalizado
+                    string mensajePersonalizado = "¡La visita ha sido actualizada con exito!";
+
+                    // Define la URL de redirección
+                    string urlRedireccion = "Ventas/Visita_Asesores.aspx";
+
+                    // Redirige a la página de éxito con el mensaje personalizado y la URL de redirección como parámetros
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+                }
+
+            }
+
+           
+
 
         }
     }

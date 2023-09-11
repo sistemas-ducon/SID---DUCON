@@ -126,6 +126,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Formularios\SuccessMessage.aspx" />
     <Content Include="Formularios\Ventas\Clientes.aspx" />
     <Content Include="Formularios\Ventas\Consulta_Cotizacion.aspx" />
     <Content Include="Formularios\Ventas\Diseño_Venta.aspx" />
@@ -164,6 +165,7 @@
     <Content Include="Recursos\CSS\Ventas\Diseño_Venta.css" />
     <Content Include="Recursos\CSS\Ventas\Gestion_Comercial.css" />
     <Content Include="Recursos\CSS\Ventas\Licitaciones.css" />
+    <Content Include="Recursos\CSS\Ventas\Render_Venta.css" />
     <Content Include="Recursos\CSS\Ventas\Visita_Asesores.css" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -191,6 +193,13 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Formularios\SuccessMessage.aspx.cs">
+      <DependentUpon>SuccessMessage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\SuccessMessage.aspx.designer.cs">
+      <DependentUpon>SuccessMessage.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Formularios\Ventas\Clientes.aspx.cs">
       <DependentUpon>Clientes.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

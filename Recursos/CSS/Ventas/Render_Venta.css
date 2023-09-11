@@ -1,0 +1,71 @@
+﻿.Principal
+{
+    display:flex;
+    justify-content:space-around;    
+}
+
+
+.Bajo {
+  
+}
+
+.icong {
+    text-decoration: none; /* Quitar subrayado */
+    color: inherit; /* Heredar el color del texto */
+    cursor: pointer; /* Cambiar el cursor a una mano al pasar por encima */
+}
+
+    .icong:hover {
+        color: inherit;
+    }
+
+.contenedor-icono i {
+    font-size: 24px;
+    margin: 5px;
+}
+
+
+/*Para deshabilitar o habilitar  los iconos*/
+
+a.icong.disabled {
+    pointer-events: none;
+    color: black; /* Cambia el color a negro para enlaces deshabilitados */
+    opacity: 0.5;
+}
+
+a.icong.enabled {
+    pointer-events: auto;
+    color: blue; /* Cambia el color a azul para enlaces habilitados */
+}
+
+
+.NumeroRender {
+    color: black; /* Cambia el color del texto */
+    font-weight: bold; /* Hace el texto más oscuro y sobresaliente */
+    font-size: 1.2rem; /* Puedes ajustar el tamaño de la fuente según tus necesidades */ 
+    font-family: 'Times New Roman'
+}
+
+/* Estilo para el encabezado del DataGrid */
+.datagrid-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f2f2f2; /* Ajusta el color de fondo del encabezado según tus preferencias */
+}
+
+
+
+/* Para ocultar el checkbox guradar Render*/
+.hidden-checkbox {
+    display: none;
+}
+
+/* Estilo para el encabezado del DataGrid */
+.datagrid-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f2f2f2; /* Ajusta el color de fondo del encabezado según tus preferencias */
+}
+
