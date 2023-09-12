@@ -12,7 +12,9 @@
     <link rel="stylesheet" href="../../Recursos/CSS/Ventas/Visita_Asesores.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
+
         function GenerarGrafica(nombres, cantidades) {
             var ctx = document.getElementById("grafica").getContext('2d');
 
@@ -102,6 +104,7 @@
 
         }
     </script>
+
 </head>
 <body>
     <form id="form1" runat="server">
@@ -140,14 +143,16 @@
 
                             <%--Comienza Nueva OT--%>
 
+                            <asp:CheckBox ID="chkEstadoGuardarCliente" runat="server" CssClass="hidden-checkbox"  />
 
                             <a class="icong disabled" href="#" title="Nueva Visita" id="NuevaVisita" onclick="NuevaVisita()">
                                 <i class="bi bi-file-earmark"></i>
                             </a>
 
-                            <a class="icong disabled" href="#" title="Grabar Visita" id="GrabarVisita">
-                                <i class="bi bi-save2"></i>
-                            </a>
+                            <asp:LinkButton class="icong disabled" runat="server" title="Guardar Visita" ID="GrabarVisita" OnClick="GuardarModificarCliente">
+                                        <i class="bi bi-save2"></i>
+                            </asp:LinkButton>
+
 
                             <a class="icong disabled" href="#" title="Modificar Visita" id="ModificarVisita" onclick="ModificarVisita()">
                                 <i class="bi bi-wrench"></i>
@@ -156,7 +161,7 @@
                                 <i class="bi bi-x-lg"></i>
                             </a>
 
-                            <asp:LinkButton class="icong disabled" runat="server" title="Exportar" ID="Exportar" OnClick="ExportarExel2" OnClientClick="DeshabilitarExcel">
+                            <asp:LinkButton class="icong disabled" runat="server" title="Exportar" ID="Exportar" OnClick="ExportarExel2" OnClientClick="mostrarModal(); return true;DeshabilitarExcel">
                                          <i class="custom-icon"></i>
                             </asp:LinkButton>
 
@@ -176,6 +181,24 @@
                 <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                     <ContentTemplate>
                         <div class="container p-1">
+
+
+                            <!-- Agrega este div para el modal de carga -->
+                            <div class="modal fade" id="loadingModal" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-body text-center">
+                                            <div class="spinner-border" role="status">
+                                                <span class="visually-hidden">Cargando...</span>
+                                            </div>
+                                            <p class="mt-2">Generando archivo Excel...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
 
                             <div class="row pb-1">
 
@@ -259,7 +282,8 @@
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbObservaciones" class="form-label" Text="Obs." runat="server"></asp:Label>
                                         <textarea class="form-control form-control-sm" id="txObs" runat="server" cols="29" rows="3" disabled="disabled"></textarea>
-
+                                        <asp:TextBox ID="tbIdVisita" runat="server" style="display: none;" ></asp:TextBox>
+                                        <asp:TextBox ID="tbIdContacto" runat="server" style="display: none;" ></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -309,6 +333,8 @@
                                                             <asp:BoundColumn DataField="FechaVisita" HeaderText="Fecha Ingreso" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Cotizacion" HeaderText="Cotizacion" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Observacion" ItemStyle-CssClass="d-none" />
+                                                            <asp:BoundColumn DataField="Id" ItemStyle-CssClass="d-none" />
+                                                            <asp:BoundColumn DataField="Id_ClienteContacto" ItemStyle-CssClass="d-none" />
 
                                                         </Columns>
                                                     </asp:DataGrid>
@@ -661,9 +687,6 @@
             return true; // Envía el formulario si el DropDownList tiene un valor seleccionado.
         }
 
-
-
-
         function NuevaVisita() {
 
             if (validarDropDownList()) {
@@ -701,6 +724,9 @@
 
                 var fecha2 = document.getElementById("<%= fecha2.ClientID %>");
                 fecha2.disabled = true;
+
+                var checkBox = document.getElementById('<%= chkEstadoGuardarCliente.ClientID %>');
+                checkBox.checked = true; // Marcar el CheckBox
 
             }
 
@@ -774,26 +800,27 @@
 
                 if (textBoxes[i].id !== "tbCliente" && textBoxes[i].id !== "tbTelefono" && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbMailCont") {
 
-                    if (textBoxes[i].id !== "tbLicitacion1") {
+                    if (textBoxes[i].id !== "tbLicitacion1" && textBoxes[i].id != "tbIdVisita" && textBoxes[i].id !== "tbIdContacto" ) {
                         textBoxes[i].disabled = !textBoxes[i].disabled;
                     }
 
                 }
             }
+            var checkBox = document.getElementById('<%= chkEstadoGuardarCliente.ClientID %>');
+            checkBox.checked = false; // Desmarcar el CheckBox
 
         }
 
         function Excel() {
 
             //habilitar link de Exportar Excel
-            if (validarDropDownList())
-            {
+            if (validarDropDownList()) {
                 document.getElementById("Exportar").classList.remove("disabled");
                 document.getElementById("Exportar").classList.add("enabled");
             }
-         
 
-        
+
+
         }
 
         function DeshabilitarExcel() {
@@ -802,7 +829,9 @@
             document.getElementById("Exportar").classList.add("disabled");
             document.getElementById("Exportar").classList.remove("enabled");
 
-        
+
+
+
         }
 
         function abrirOtraPestana() {
@@ -810,8 +839,7 @@
             window.open('Clientes.aspx', '_blank');
         }
 
-
-
+        
 
     </script>
 
@@ -832,10 +860,11 @@
                 var mail = row.find("td:eq(3)").text();
                 var visitaPor = row.find("td:eq(4)").text();
                 var FechaX = row.find("td:eq(5)").text();
+                var formattedFechaX = cambiarFormatoFecha(FechaX);
                 var cotizacion = row.find("td:eq(6)").text();
                 var observacion = row.find("td:eq(7)").text();
-
-
+                var IdVisita = row.find("td:eq(8)").text();
+                var IdContacto = row.find("td:eq(9)").text();
 
                 // Llenar los TextBox con los datos obtenidos
                 $("#<%= tbCliente.ClientID %>").val(cliente);
@@ -843,7 +872,8 @@
                 $("#<%= tbTelefono.ClientID %>").val(telefono);
                 $("#<%= tbMailCont.ClientID %>").val(mail);
                 $("#<%= tbCotizacion.ClientID %>").val(cotizacion);                $("#<%= txObs.ClientID %>").val(observacion);
-
+                $("#<%= fecha.ClientID %>").val(formattedFechaX);
+                console.log(FechaX);
 
                 // Seleccionar el elemento correcto del DropDownList por su valor
                 $("#<%= ddlVisitasPor.ClientID %> option").filter(function () {
@@ -851,9 +881,37 @@
                 }).prop("selected", true);
 
                 document.getElementById("ModificarVisita").classList.add("enabled");
-
+                $("#<%= tbIdVisita.ClientID %>").val(IdVisita);
+                $("#<%= tbIdContacto.ClientID %>").val(IdContacto);
             }
+
+            function cambiarFormatoFecha(fecha) {
+                var partes = fecha.split('/');
+                var dia = partes[0];
+                var mes = partes[1];
+                var anioHora = partes[2].split(' ');
+                var anio = anioHora[0];
+
+                return anio + '-' + mes + '-' + dia;
+            }
+
+
         }
+
+
+    </script>
+
+    <script type="text/javascript">
+        function mostrarModal() {
+            // Muestra el modal de carga
+            $('#loadingModal').modal('show');
+
+        }
+        // Función para ocultar el modal
+        function ocultarModal() {
+            $('#loadingModal').modal('hide');
+        }
+
 
 
     </script>
