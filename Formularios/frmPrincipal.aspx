@@ -14,7 +14,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="../../Recursos/CSS/frmPrincipal.css" rel="stylesheet" />
-    <title>Ordenes de trabajo</title>
+    <titleOrdenes de trabajo</title>
 </head>
 <body>
     
@@ -238,7 +238,6 @@
 
         <%--Termina Panel principal de nombres--%>
 
-
         <%--Comienza Panel de iconos--%>
 
         <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
@@ -361,7 +360,6 @@
         <%--Termina Panel de iconos--%>
     
     </div><%--Fin div wrapper --%>
-
     
 
 
@@ -535,7 +533,7 @@
         <%--Pantalla intermedia--%>
 
 
-
+        <h5>Portada</h5>
 
         <div class="container-fluid">
             <div class="observaciones">
@@ -695,6 +693,7 @@
 
                         <div class="col-6">
                             <%--<input type="text" class="form-control" runat="server" aria-label="Sizing example input" aria-describedby="inputSaldo" />--%>
+                                <asp:TextBox type="text" class="form-control" runat="server" ID="txtValorPedido" />
                         </div>
 
                         <div class="row">

@@ -8,16 +8,22 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
-	public partial class OrdenesDeTrabajo : System.Web.UI.Page
-	{
+    public partial class OrdenesDeTrabajo : System.Web.UI.Page
+    {
         private string id;
         private string pedido;
 
+      
+
+
+
         protected void Page_Load(object sender, EventArgs e)
-		{
+        {
             if (Session["usuariologueado"] != null)
             {
                 string usuariologueado = Session["usuariologueado"].ToString();
@@ -28,7 +34,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Response.Redirect("Login.aspx");
             }
 
-            if(!IsPostBack)
+            if (!IsPostBack)
             {
                 tbOT.Attributes.Add("onkeypress", "return handleEnter(event)");
                 string usuariologueado = Session["usuariologueado"].ToString();
@@ -41,14 +47,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
 
             }
-           
+
 
 
         }
 
         protected void tbOT_TextChanged(object sender, EventArgs e)
         {
-            
+
             string id = tbOT.Text.Trim();
             Session["Id_OT"] = id;
             Session["pedido"] = 1;
@@ -59,17 +65,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (!string.IsNullOrEmpty(id))
             {
-                
-                    string inputData = tbOT.Text;
-                    List<int> numeros = ObtenerNumerosDesdeLaBaseDeDatos(inputData);
 
-                    ddlNumbers.Items.Clear(); // Limpiar las opciones existentes
+                string inputData = tbOT.Text;
+                List<int> numeros = ObtenerNumerosDesdeLaBaseDeDatos(inputData);
 
-                    foreach (int numero in numeros)
-                    {
-                        ddlNumbers.Items.Add(numero.ToString());
-                    }
-                
+                ddlNumbers.Items.Clear(); // Limpiar las opciones existentes
+
+                foreach (int numero in numeros)
+                {
+                    ddlNumbers.Items.Add(numero.ToString());
+                }
+
             }
         }
 
@@ -91,7 +97,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void ddlNumbers_SelectedIndexChanged(object sender, EventArgs e)
         {
             string pedido = ddlNumbers.SelectedValue;
-             Session["pedido"] = pedido;
+            Session["pedido"] = pedido;
 
             Cargar_OT();
         }
@@ -100,7 +106,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             List<int> numeros = new List<int>();
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString; ; 
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString; ;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -128,22 +134,38 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
         public void Cargar_OT()
-		{
+         
+        {
+
 
             id = Session["Id_OT"].ToString();
             pedido = Session["pedido"].ToString();
+       
+
+
+
             //Conexion a la BD_SIDSQL y traemos el procedimiento almacenado
             string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
 			SqlConnection sqlconectar = new SqlConnection(cn);
-			SqlCommand cmd = new SqlCommand("ctaOT", sqlconectar)
-			{
-				CommandType = CommandType.StoredProcedure
+            SqlCommand cmd = new SqlCommand("ctaOT", sqlconectar)
+       
+    
+
+              {
+                CommandType = CommandType.StoredProcedure
 			};
 			cmd.Connection.Open();
-			cmd.Parameters.Add("@OT", SqlDbType.VarChar, 30).Value = id;
-			cmd.Parameters.Add("@Con", SqlDbType.VarChar, 30).Value = pedido;
-			SqlDataReader dr = cmd.ExecuteReader();
-			if (dr.Read())
+            cmd.Parameters.Add("@OT", SqlDbType.VarChar, 30).Value = id;
+            cmd.Parameters.Add("@Con", SqlDbType.VarChar, 30).Value = pedido;
+
+       
+
+
+            SqlDataReader dr = cmd.ExecuteReader();
+      
+
+
+            if (dr.Read())
 			{
                 tbOT.Text = dr["Id_OT"].ToString();
                 ddlNumbers.Text = dr["Consecutivo_Pedido"].ToString();
@@ -179,12 +201,45 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 txtOrdenCompra.Text = dr["OrdendeCompra"].ToString();
                 txtAsesor.Text = dr["Codigo_Asesor"].ToString();
                 TextTNegociacion.Value = dr["Forma_Pago"].ToString();
+                tbBolsa.Text = dr["ValorBolsa"].ToString();
+                txtValorPedido.Text = dr ["ValorPedido"].ToString();
+
 
             }
-		
-		}
+            cmd.Connection.Close();
 
-      
+            //Codigo Harley llamado de datos de la cotización
+
+            SqlCommand cotzita = new SqlCommand("sp_datoscotizacion", sqlconectar)
+            {
+               CommandType = CommandType.StoredProcedure 
+           };
+
+            cotzita.Connection.Open();
+            cotzita.Parameters.AddWithValue("@cotizacion", txtCotizacion.Text);
+            cotzita.Parameters.AddWithValue("@NombreCliente", txtNombreEmp.Text);
+
+            SqlDataReader drcot = cotzita.ExecuteReader();
+
+
+            if (drcot.Read())
+            {
+  
+                txtNit.Text = drcot ["Cliente"].ToString();
+                txtValorSugerido.Text = drcot ["ValorSugerido"].ToString();
+                txtVcsd.Text = drcot["Valor"].ToString();
+                txtVccd.Text = drcot ["VCCD"].ToString();
+                txtNombreEmp.Text = drcot["NombreCompañía"].ToString();
+                txtComision.Text = drcot["DescuentoComision"].ToString();
+                txtDiseño.Text = drcot["Diseño"].ToString();
+                txtSaldo.Text = drcot["Saldo"].ToString();
+                tbPlano.Text = drcot["Plano"].ToString();
+
+            }
+          cotzita.Connection.Close();   
+        }
+
+       
     }
 }
 

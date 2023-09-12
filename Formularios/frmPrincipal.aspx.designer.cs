@@ -519,6 +519,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.Label lblVPedido;
 
         /// <summary>
+        /// Control txtValorPedido.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtValorPedido;
+
+        /// <summary>
         /// Control lblInstala.
         /// </summary>
         /// <remarks>
