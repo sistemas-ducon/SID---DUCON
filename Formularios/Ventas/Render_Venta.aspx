@@ -77,18 +77,20 @@
                                 <i class="bi bi-wrench"></i>
                             </a>
 
-                            <a class="icong disabled" href="#" title="Regresar el Render a un Proceso Anterior" id="DevolverRender">
-                                <i class="bi bi-skip-backward-circle"></i>
-                            </a>
+                           
+                            <asp:LinkButton class="icong disabled" title="Regresar el Render a un Proceso Anterior" ID="DevolverRender" runat="server">
+                                  <i class="bi bi-skip-backward-circle"></i>
+                            </asp:LinkButton>
+
 
                             <a class="icong disabled " href="#" title="Actualizar Render" id="Actualizar">
                                 <i class="bi bi-arrow-clockwise"></i>
                             </a>
-                           
 
-                            <a class="icong disabled " href="#" title="Pausar Render" id="PausarRender">
+                            <asp:LinkButton class="icong disabled" title="Pausar Render" ID="PausarRender" runat="server">
                                 <i class="bi bi-pause-circle"></i>
-                            </a>
+                            </asp:LinkButton>
+
                             <a class="icong disabled " href="#" title="Importar Render" id="ImportarRender">
                                 <i class="bi bi-arrow-bar-down"></i>
                             </a>
@@ -97,9 +99,9 @@
                                 <i class="bi bi-x-lg"></i>
                             </a>
 
-                            <a class="icong disabled " href="#" title="Eliminar Render " id="EliminarRender">
-                                <i class="bi bi-trash"></i>
-                            </a>
+                            <asp:LinkButton class="icong disabled" title="Eliminar Render " ID="EliminarRender" runat="server">
+                                  <i class="bi bi-trash"></i>
+                            </asp:LinkButton>
 
 
                             <ul />
@@ -155,7 +157,7 @@
                                     <div class="col-3">
                                         <div class="input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbFechaOk" class="form-label" Text="Fecha OK" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbFechaOk" type="date" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
+                                            <asp:TextBox ID="tbFechaOk" type="date" class="form-control " runat="server" disabled="disabled" OnTextChanged="tbFechaOk_TextChanged"></asp:TextBox>
                                             <asp:TextBox ID="tbFechaOkServidor" type="date" class="form-control" runat="server" CssClass="hidden-checkbox"></asp:TextBox>
                                         </div>
                                     </div>
@@ -458,7 +460,7 @@
 
                                     <div class="col-3">
                                         <div class="input-group input-group-sm  mb-2 gap-2">
-                                            <asp:CheckBox ID="chxConvenciones" runat="server" data-bs-toggle="modal" data-bs-target="#myModal" />
+                                            <asp:CheckBox ID="chxConvenciones" runat="server" OnCheckedChanged="chxConvenciones_CheckedChanged" AutoPostBack="true" />
                                             <asp:Label ID="lbConenciones" class="form-label" Text="Ver Convenciones" runat="server"></asp:Label>
                                         </div>
                                     </div>

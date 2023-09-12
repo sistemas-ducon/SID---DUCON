@@ -20,7 +20,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
     {
         // Variable de control de insercion o actualizacion de un cliente 
         private bool GuardarCliente = false;
-
+        private bool isModalVisible = false;     
         // Crea una clase para representar los nombres de los asesores
         public class Asesor
         {
@@ -29,7 +29,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["usuariologueado"] != null)
+            {
 
+            }
+            else
+            {
+                Response.Redirect("~/Formularios/Login.aspx");
+            }
         }
 
         // Llenar el primer el elemneto del dropdownlist Ciudad 
@@ -46,18 +53,52 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             ddlprocedencia.Items.Insert(0, new ListItem("Seleccione", ""));
         }
 
+        // consulta si el ususario tiene el permiso para adminitrar clientes 
+        public int PermisoEmpleado()
+        {
 
-        // logica de  Clientes 
+            string consultaActual = "select ID_Permiso  from tblPermiso_Empleado As A Inner join tblEmpleado AS B on  B.Cedula = A.ID_Empleado" +
+                                    " where B.Login = @Login And A.ID_Permiso = '22'";
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(consultaActual, connection))
+                {
+                    command.Parameters.AddWithValue("@Login", Session["usuariologueado"].ToString());
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    if (reader.HasRows)
+                    {
+                        reader.Close();
+                        // Data arrived.
+                        int permiso = (Int16)command.ExecuteScalar();                    
+                        return permiso;
+                    }
+                    else
+                    {
+                       
+                        return 0;
+                    }
+                }
+            }
+
+        }
+
+
+        // logica del Tap  Clientes 
         protected void DataGridCliente_ItemCommand(object source, DataGridCommandEventArgs e)
 
         {
-            // Enviamos los Datos de la columna a los textBox y dropdownlist, listamos los contacto y los asesores
+
             if (e.CommandName == "VerCliente")
             {
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGridCliente.Items[rowIndex];
 
-                // capturamos los campos de la fila del datagrid 
+
 
                 string Nit = row.Cells[1].Text;
                 string NombreCompañia = row.Cells[2].Text;
@@ -68,12 +109,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 string CompartidoCon = row.Cells[8].Text;
                 string CedulaAsesor = row.Cells[9].Text;
 
-                // Capturamos los datos que tiene en data grid en un arreglo 
+
                 string[] campos = {
                   Nit,NombreCompañia, Asesor, Telefono, Direccion, Procedencia, CompartidoCon,CedulaAsesor
                 };
 
-                // Recorremos  todos los campos y reemplazamos el valor  &nbsp; por nulos o valores vacíos
+
                 for (int i = 0; i < campos.Length; i++)
                 {
                     campos[i] = campos[i].Replace("&nbsp;", null);
@@ -94,7 +135,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     }
                     else
                     {
-                        
+
                         ddlprocedencia.ClearSelection(); // Deseleccionar en este caso
                     }
                 }
@@ -108,47 +149,55 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 Session["Id_ClienteBD"] = campos[0];
 
 
+                // hay que validar que el usuario que se logeó sea el mismo asesor de ese cliente para darle aceeso a la admismitracion de ese cliente 
+                // Variable se Sesion de Usuario de Login  para traer la cedula de ese usuario  y compararla con la cedula del asesore de ese cliente 
 
-                // Habilita el botón "Modificar"
-                Button btnModificar = FindControl("Modificar") as Button;
-                if (btnModificar != null)
+                int Permiso = PermisoEmpleado();
+
+                if (Permiso == 22 || campos[7] == Session["CedulaLogeada"].ToString())
                 {
-                    btnModificar.Enabled = true;
+                    // Habilita el botón "Modificar"
+                    Button btnModificar = FindControl("Modificar") as Button;
+                    if (btnModificar != null)
+                    {
+                        btnModificar.Enabled = true;
+                    }
+
+
+                    // Habilita el botón "Eliminar"
+                    Button btnEliminar = FindControl("Eliminar") as Button;
+                    if (btnEliminar != null)
+                    {
+                        btnEliminar.Enabled = true;
+                    }
+
+
+                    //Invocamos el metodo para llenar los DataGrid de  Contactos, Visitas, Cotizaciones del cliente 
+
+                    LlenarDataGridContacto(Nit);
+                    LlenarDataGridCotizacion(Nit);
+                    LlenarDataGridVisita(Nit);
+
+
+
+
+                    // Habilita el botón "Nuevo"
+                    Button btnNuevo = FindControl("btnNuevoContacto") as Button;
+                    if (btnNuevo != null)
+                    {
+                        btnNuevo.Enabled = true;
+                    }
+
+                    // Habilita el botón "Cancelar"
+                    Button btnCancelar = FindControl("btnCancelar") as Button;
+                    if (btnCancelar != null)
+                    {
+                        btnCancelar.Enabled = true;
+                    }
                 }
 
 
-                // Habilita el botón "Eliminar"
-                Button btnEliminar = FindControl("Eliminar") as Button;
-                if (btnEliminar != null)
-                {
-                    btnEliminar.Enabled = true;
-                }
 
-
-                //Invocamos el metodo para llenar los DataGrid de  Contactos, Visitas, Cotizaciones del cliente 
-
-                LlenarDataGridContacto(Nit);
-                LlenarDataGridCotizacion(Nit);
-                LlenarDataGridVisita(Nit);
-
-            
-          
-
-                // Habilita el botón "Nuevo"
-                Button btnNuevo = FindControl("btnNuevoContacto") as Button;
-                if (btnNuevo != null)
-                {
-                    btnNuevo.Enabled = true;
-                }
-
-                // Habilita el botón "Cancelar"
-                Button btnCancelar = FindControl("btnCancelar") as Button;
-                if (btnCancelar != null)
-                {
-                    btnCancelar.Enabled = true;
-                }
-
- 
                 //Deshabilitamos la edicion de los campos 
                 tbNit.ReadOnly = true;
                 tbNombreCliente.ReadOnly = true;
@@ -156,9 +205,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 tbDireccion.ReadOnly = true;
 
                 ddlprocedencia.Enabled = false;
-
-
-
 
 
             }
@@ -273,7 +319,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 worksheet.Columns.AutoFit();
                 // Mostrar la aplicación de Excel
                 excelApp.Visible = true;
-               
+
 
             }
             catch (Exception ex)
@@ -329,7 +375,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             tbTelefono.ReadOnly = true;
             tbDireccion.ReadOnly = true;
             CheckBox1.Enabled = false;
-  
+
             ddlprocedencia.Enabled = false;
 
 
@@ -434,7 +480,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             CheckBox1.Enabled = true;
 
 
-           
+
 
             // Obtiene la cadena de nombres Asesores Compartidos
             string nombresAsesores = tbCompartido.Text; // Reemplaza esto con tu lógica de obtención de datos
@@ -500,7 +546,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
             if (Session["GuardarCliente"] != null && Session["GuardarCliente"] is bool)
             {
-               //Variable para controlar guardado (Insercion o Actualizacion)
+                //Variable para controlar guardado (Insercion o Actualizacion)
                 guardarCliente = (bool)Session["GuardarCliente"];
             }
 
@@ -537,7 +583,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                         SqlCommand commandInsert = new SqlCommand(sSqlInsert, connection);
                         commandInsert.ExecuteNonQuery();
-                        
+
 
 
                         // Mensaje de éxito
@@ -574,9 +620,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
 
                 // Bloque para cuando el Asesor sea Diferente
-                if (AsesorAsignado != AsesorAsignar) 
+                if (AsesorAsignado != AsesorAsignar)
                 {
-                   
+
 
                     string sSql = "UPDATE tblCliente SET Id_Cliente='" + tbNit.Text.Trim() + "', NombreCompañía='" + tbNombreCliente.Text.Trim() + "'," +
                      " Teléfono='" + tbTelefono.Text.Trim() + "', IdProcedencia='" + ddlprocedencia.SelectedValue + "', Dirección='" + tbDireccion.Text.Trim() + "'," +
@@ -591,7 +637,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         try
                         {
                             commandUpdate.ExecuteNonQuery();
-                           
+
 
                         }
                         catch (Exception ex)
@@ -631,7 +677,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         try
                         {
                             commandUpdate.ExecuteNonQuery();
-                            
+
 
                         }
                         catch (Exception ex)
@@ -655,7 +701,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 }
 
-            }          
+            }
 
         }
 
@@ -698,7 +744,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             }
 
 
-            
+
 
             // Logica para eliminar Cliente 
             string sSqlEliminar = "Delete from tblCliente Where Id_Cliente = '" + tbNit.Text + "'";
@@ -712,7 +758,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 try
                 {
                     commandDelete.ExecuteNonQuery();
-                  
+
                 }
                 catch (Exception ex)
                 {
@@ -935,7 +981,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 }
             }
 
-           
+
 
 
 
@@ -943,7 +989,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
         protected void EliminarAsesor(object sender, EventArgs e)
         {
-            string nombreAsesorEliminar = tbNombreAsesor3.Text ; // Reemplaza con el nombre del asesor a eliminar
+            string nombreAsesorEliminar = tbNombreAsesor3.Text; // Reemplaza con el nombre del asesor a eliminar
             string cedulaCliente = tbNit.Text; // Reemplaza con la cédula del cliente
 
 
@@ -954,7 +1000,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 // Refrescar la página después de cerrar el modal
                 ScriptManager.RegisterStartupScript(this, GetType(), "RefreshPage", "window.location.reload();", true);
-               
+
                 string mensajeError = "Nose ingresó ningun Asesor para Elminar.";
                 string scriptError = "alert('" + mensajeError + "');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showError", scriptError, true);
@@ -1009,7 +1055,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             }
 
 
-           
+
 
         }
 
@@ -1193,7 +1239,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 return;
             }
 
-         
+
             if (string.IsNullOrEmpty(tbMailContacto.Text))
             {
                 ScriptManager.RegisterStartupScript(this, GetType(), "showError5", "alert('El correo del usuario no puede estar vacio .');", true);
@@ -1225,7 +1271,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                             command.Parameters.AddWithValue("@IdCliente", tbNit.Text);
                             command.Parameters.AddWithValue("@Celular", tbCelularContacto.Text);
 
-                            command.ExecuteNonQuery(); 
+                            command.ExecuteNonQuery();
                         }
 
                         // Mensaje de éxito
@@ -1277,6 +1323,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
         }
 
-        
+
+        protected void CheckBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CheckBox1.Checked)
+            {
+                isModalVisible = true;
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#myModal').modal('show');", true);
+            }
+            else
+            {
+                isModalVisible = false;
+            }
+        }
+
+
     }
 }

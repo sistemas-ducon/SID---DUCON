@@ -21,26 +21,42 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
     public partial class Render_Venta : System.Web.UI.Page
     {
+
+        private bool isModalVisible = false;
         protected void Page_Load(object sender, EventArgs e)
         {
+
+            //Evaluar los permisos del usuarioa y que departamento Pertenece 
+
+
             if (!IsPostBack)
             {
-                CargarAsesoresEnDropDownList();
-           
-                Button btnTrabajarRender = FindControl("btnTrabajarRender") as Button;
-                if (btnTrabajarRender != null)
+
+                if (Session["usuariologueado"] != null)
                 {
-                    btnTrabajarRender.Enabled = false;
-                    btnTrabajarRender.CssClass = "bnt btn-outline-secondary";
+                    CargarAsesoresEnDropDownList();
+
+                    Button btnTrabajarRender = FindControl("btnTrabajarRender") as Button;
+                    if (btnTrabajarRender != null)
+                    {
+                        btnTrabajarRender.Enabled = false;
+                        btnTrabajarRender.CssClass = "bnt btn-outline-secondary";
+                    }
+
+
+                    Button btnProgramarRender = FindControl("btnProgramarRender") as Button;
+                    if (btnProgramarRender != null)
+                    {
+                        btnProgramarRender.Enabled = false;
+
+                    }
+
+                }
+                else
+                {
+                    Response.Redirect("~/Formularios/Login.aspx");
                 }
 
-                
-                Button btnProgramarRender = FindControl("btnProgramarRender") as Button;
-                if (btnProgramarRender != null)
-                {
-                    btnProgramarRender.Enabled = false;
-                    
-                }
 
             }
 
@@ -58,6 +74,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Agregar el primer  elemento de los datagrid como "Seleccione"
             ddlZona2.Items.Insert(0, new ListItem("Todas", "0"));
 
+        }
+
+        protected void chxConvenciones_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chxConvenciones.Checked)
+            {
+                isModalVisible = true;
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#myModal').modal('show');", true);
+            }
+            else
+            {
+                isModalVisible = false;
+            }
         }
 
         private void CargarAsesoresEnDropDownList()
@@ -355,6 +384,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Ejemplo el script para habilitar el enlace de moficar despues de selecionar la fila  usando RegisterStartupScript:
                 string script = "<script>HabilitarEnlaces1();</script>";
                 ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces1", script, false);
+
+
+
+
+
+
+
+
 
 
 
@@ -931,7 +968,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-      
+        protected void PausarRender1(Object serder, EventArgs eventArgs)
+        {
+            // Para Dibujo 
+        }
 
+        protected void DevolverRender1(Object serder, EventArgs eventArgs)
+        {
+            // Para Dibujo 
+        }
+
+        protected void EliminareRender1(Object serder, EventArgs eventArgs)
+        {
+            // Para Dibujo 
+        }
+
+        
     }
 }

@@ -103,6 +103,7 @@
             });
 
         }
+
     </script>
 
 </head>
@@ -197,9 +198,6 @@
                                 </div>
                             </div>
 
-
-
-
                             <div class="row pb-1">
 
                                 <div class="col-4">
@@ -215,6 +213,7 @@
                                         <asp:DropDownList class="form-control" ID="ddlVisitasPor" runat="server" disabled="false" DataTextField="NombreCausa" DataValueField="Id_Causa" DataSourceID="CausaVisita"></asp:DropDownList><asp:SqlDataSource runat="server" ID="CausaVisita" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select * from tblCausaVisita"></asp:SqlDataSource>
                                     </div>
                                 </div>
+                               
                                 <div class="col-1">
                                 </div>
 
@@ -332,9 +331,9 @@
                                                             <asp:BoundColumn DataField="NombreCausa" HeaderText="Visita Por" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="FechaVisita" HeaderText="Fecha Ingreso" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Cotizacion" HeaderText="Cotizacion" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Observacion" ItemStyle-CssClass="d-none" />
-                                                            <asp:BoundColumn DataField="Id" ItemStyle-CssClass="d-none" />
-                                                            <asp:BoundColumn DataField="Id_ClienteContacto" ItemStyle-CssClass="d-none" />
+                                                            <asp:BoundColumn DataField="Observacion" Visible="false"/>
+                                                            <asp:BoundColumn DataField="Id" Visible="false" />
+                                                            <asp:BoundColumn DataField="Id_ClienteContacto" Visible="false"/>
 
                                                         </Columns>
                                                     </asp:DataGrid>
@@ -655,11 +654,8 @@
 
         // Habilitar enlace Nueva Visita 
         document.getElementById("NuevaVisita").classList.add("enabled");
-
-        window.onload = function () {
-            // Deshabilitar el botón en el cliente
-            document.getElementById("btnCliente").disabled = true;
-        };
+        document.getElementById("btnCliente").disabled = true;
+        
 
 
         // Ocultar el div con clase "contenedor-icono" cuando se activa la pestaña "Info-content" 
