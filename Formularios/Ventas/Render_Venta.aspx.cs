@@ -40,7 +40,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     if (btnTrabajarRender != null)
                     {
                         btnTrabajarRender.Enabled = false;
-                        btnTrabajarRender.CssClass = "bnt btn-outline-secondary";
+                        btnTrabajarRender.CssClass = "bnt btn-outline-secoundary";
                     }
 
 
@@ -48,6 +48,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     if (btnProgramarRender != null)
                     {
                         btnProgramarRender.Enabled = false;
+                        btnProgramarRender.CssClass = "btn btn-warning";
 
                     }
 
@@ -163,29 +164,29 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (terminadoDibujo == 1)
                 {
-                    e.Item.BackColor = System.Drawing.Color.FromName("#57F525"); //Verde
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#57F525"); //Verde
                 }
                 else if (fechaProgramada <= DateTime.Now)
                 {
-                    e.Item.BackColor = System.Drawing.Color.FromName("#F71A27");    //rojo 
-                    e.Item.ForeColor = System.Drawing.Color.FromName("#ffffff");
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F71A27");    //rojo 
+                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
                 else if (programadoVentas == 0)
                 {
-                    e.Item.BackColor = System.Drawing.Color.FromName("#673f8b");    //Morado 
-                    e.Item.ForeColor = System.Drawing.Color.FromName("#ffffff");
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#673f8b");    //Morado 
+                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
                 else
                 {
                     if (pausado == 1)
                     {
-                        e.Item.BackColor = System.Drawing.Color.FromName("#08F4E2"); // Aqua
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#08F4E2"); // Aqua
                     }
 
                     else
                     {
-                        e.Item.BackColor = System.Drawing.Color.FromName("#F1FF43");//amarillo 
-                        e.Item.ForeColor = System.Drawing.Color.FromName("#000000");
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F1FF43");//amarillo 
+                        e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
                     }
 
                 }
@@ -679,28 +680,28 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Cambiar el color de fondo de la fila en función de los valores de las columnas
                 if (terminadoDibujo == 1)
                 {
-                    e.Item.BackColor = System.Drawing.Color.FromName("#57F525");
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#57F525");
                 }
                 else if (fechaProgramada <= DateTime.Now)
                 {
-                    e.Item.BackColor = System.Drawing.Color.FromName("#F71A27");
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F71A27");
                 }
                 else if (programadoVentas == 0)
                 {
-                    e.Item.BackColor = System.Drawing.Color.FromName("#673f8b");
-                    e.Item.ForeColor = System.Drawing.Color.FromName("#ffffff");
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#673f8b");
+                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
                 else
                 {
                     if (pausado == 1)
                     {
-                        e.Item.BackColor = System.Drawing.Color.FromName("#08F4E2");
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#08F4E2");
                     }
 
                     else
                     {
-                        e.Item.BackColor = System.Drawing.Color.FromName("#F1FF43");//amarillo 
-                        e.Item.ForeColor = System.Drawing.Color.FromName("#000000");
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F1FF43");//amarillo 
+                        e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
                     }
 
                 }
