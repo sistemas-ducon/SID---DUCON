@@ -14,7 +14,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="../../Recursos/CSS/frmPrincipal.css" rel="stylesheet" />
-    <title> Ordenes de trabajo</title>
+    <titleOrdenes de trabajo</title>
 </head>
 <body>
     

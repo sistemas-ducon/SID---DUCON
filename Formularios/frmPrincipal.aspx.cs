@@ -203,10 +203,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 TextTNegociacion.Value = dr["Forma_Pago"].ToString();
                 tbBolsa.Text = dr["ValorBolsa"].ToString();
                 txtValorPedido.Text = dr ["ValorPedido"].ToString();
-                txtVenta.Text = dr["Precio_Venta"].ToString();
-                txtDcto.Text = dr["Descuento"].ToString();
-                txtVtte.Text = dr["ValorTteVia"].ToString();
-                txtVvia.Text = dr["ValorViatico"].ToString();
+
 
             }
             cmd.Connection.Close();
@@ -242,6 +239,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
           cotzita.Connection.Close();   
         }
 
+       
     }
 }
 
