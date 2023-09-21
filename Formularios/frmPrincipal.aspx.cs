@@ -196,14 +196,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 txtDireccion.Text = dr["Dirección"].ToString();
                 txtMunicipio.Text = dr["Ciudad"].ToString();
                 txtTelefono.Text = dr["TelDomicilio"].ToString();
-                txtObs.Text = dr["Observaciones_Contables"].ToString();
+                ObservacionCont.Value = dr["Observaciones_Contables"].ToString();
                 txtCotizacion.Text = dr["Cotizacion"].ToString();
                 txtOrdenCompra.Text = dr["OrdendeCompra"].ToString();
                 txtAsesor.Text = dr["Codigo_Asesor"].ToString();
                 TextTNegociacion.Value = dr["Forma_Pago"].ToString();
                 tbBolsa.Text = dr["ValorBolsa"].ToString();
                 txtValorPedido.Text = dr ["ValorPedido"].ToString();
-
+                txtDcto.Text = dr["Descuento"].ToString();
+                txtVtte.Text = dr["ValorTteVia"].ToString();
+                txtVvia.Text = dr["ValorViatico"].ToString();
+                txtVenta.Text = dr["Precio_Venta"].ToString();
 
             }
             cmd.Connection.Close();
@@ -224,7 +227,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (drcot.Read())
             {
-  
+                calcularDescuento();
+                calcularGranTotal();
                 txtNit.Text = drcot ["Cliente"].ToString();
                 txtValorSugerido.Text = drcot ["ValorSugerido"].ToString();
                 txtVcsd.Text = drcot["Valor"].ToString();
@@ -234,12 +238,44 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 txtDiseño.Text = drcot["Diseño"].ToString();
                 txtSaldo.Text = drcot["Saldo"].ToString();
                 tbPlano.Text = drcot["Plano"].ToString();
-
+               
             }
           cotzita.Connection.Close();   
         }
+        protected void calcularDescuento()
+        {
+            // Harley variables
+            double valorVenta = double.Parse(txtVenta.Text);
+            double valorDescuento = double.Parse(txtDcto.Text);
+  
 
-       
+            // Formulas
+            double valorDescuentoCalculado = valorVenta * valorDescuento / 100;
+
+
+            //  valor del descuento en el textbox
+            txtDctoValor.Text = valorDescuentoCalculado.ToString();
+
+        }
+
+
+        protected void calcularGranTotal()
+        {
+            double valorVenta = double.Parse(txtVenta.Text);
+            double valorDesPesos = double.Parse(txtDctoValor.Text);
+            double ValorTransporte = double.Parse(txtVtte.Text);
+            double ValorViatico = double.Parse(txtVvia.Text);
+
+            //Formula
+            double ValorGranTotal = valorVenta - valorDesPesos + ValorTransporte + ValorViatico;
+            
+            //valor del descuento en el textbox
+            txtGtotal.Text = ValorGranTotal.ToString();
+        }
+
+
+
+
     }
 }
 

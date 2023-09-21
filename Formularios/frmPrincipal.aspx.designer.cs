@@ -492,6 +492,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.TextBox tbBolsa;
 
         /// <summary>
+        /// Control lblSaldoOT.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSaldoOT;
+
+        /// <summary>
         /// Control lblFabrica.
         /// </summary>
         /// <remarks>
@@ -672,13 +681,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.Label lblObs;
 
         /// <summary>
-        /// Control txtObs.
+        /// Control ObservacionCont.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtObs;
+        protected global::System.Web.UI.HtmlControls.HtmlTextArea ObservacionCont;
 
         /// <summary>
         /// Control txtMensaje.
@@ -922,6 +931,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtDcto;
+
+        /// <summary>
+        /// Control txtDctoValor.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDctoValor;
 
         /// <summary>
         /// Control btnVtte.

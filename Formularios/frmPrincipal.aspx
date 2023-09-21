@@ -224,8 +224,8 @@
 
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="DiseñoYDesarrollo/Insumos.aspx">Insumos</a>
-                        </li>
+                            <a class="nav-link active" aria-current="page" href="DiseñoYDesarrollo/Insumos.aspx">Insumos</a
+                        </li
                     </ul>
 
 
@@ -381,7 +381,7 @@
                         <asp:TextBox ID="tbOT" runat="server" CssClass="form-control" OnTextChanged="tbOT_TextChanged" AutoPostBack="true"></asp:TextBox>
                     </div>
                 </div>
-
+                
 
                 <div class="col-1">
                     <div class="input-group input-group-sm mb-2 gap-2">
@@ -414,7 +414,7 @@
                 <div class="col-2">
                     <div class="input-group input-group-sm mb-2 gap-2">
                         <asp:Label class="form-label" Text="Ped.Depen" runat="server" ID="lblPedDepen"></asp:Label>
-                        <asp:TextBox ID="tbPedDepen" type="number" class="form-control" runat="server"></asp:TextBox>
+                        <asp:TextBox ID="tbPedDepen" type="number" class="form-control" runat="server" Width="90px"></asp:TextBox>
                     </div>
                 </div>
 
@@ -531,9 +531,9 @@
 
 
         <%--Pantalla intermedia--%>
+        <hr />
 
-
-        <h5>Portada</h5>
+        <h5>&nbsp;&nbsp;&nbsp Portada</h5>
 
         <div class="container-fluid">
             <div class="observaciones">
@@ -564,7 +564,7 @@
                         </div>
                         <div class="col-6">
                             <div class="input-group input-group-sm mb-2 gap-2">
-                                <label class="form-label" runat="server" id="inputOkVenta">Ok.Venta</label>
+                                <label class="form-label" runat="server" id="inputOkVenta">Ok.Ventaaa</label>
                                 <input type="date" class="form-control" runat="server" aria-label="Sizing example input" aria-describedby="inputOkVenta" />
                             </div>
                         </div>
@@ -669,6 +669,16 @@
                                 <asp:Label class="form-label" Text="Bolsa" runat="server" ID="lblBolsa"></asp:Label>
                                 <asp:TextBox type="text" class="form-control" runat="server" ID="tbBolsa" />
                             </div>
+
+
+                            <div class="input-group input-group-sm mb-2 gap-2">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <asp:Label class="form-label" Text="Saldo: 0" runat="server" ID="lblSaldoOT" BorderColor="#CC0000" BackColor="#CC0000" Font-Size="XX-Large"  ></asp:Label>
+                            
+                            </div>
+
+
+
                         </div>
                     </div>
 
@@ -732,8 +742,8 @@
 
             </div>
         </div>
-
-
+        <hr />
+        <h5>&nbsp;&nbsp;&nbsp Información contable</h5>
         <div class=" container-fluid Info-Contable">
 
             <div class="Datos-Cliente1">
@@ -771,7 +781,8 @@
 
                 <div class="Info1">
                     <asp:Label class="form-label" Text="Obs. Contable " runat="server" ID="lblObs"></asp:Label>
-                    <asp:TextBox type="text" class="form-control" runat="server" ID="txtObs"></asp:TextBox>
+              
+                     <textarea class="form-control form-control-sm" id="ObservacionCont" runat="server" cols="40" rows="7" high="60px"></textarea>
                 </div>
 
                 <div class="Info_F ">
@@ -837,7 +848,7 @@
                     <div class="izquierda">
                         <label>
                             Venta
-                            <br />
+                               <br />
                             Neta</label>
                     </div>
 
@@ -848,7 +859,7 @@
                     <div class="derecha">
                         <div class="derecha1">
                             <label for="">Tipo de Negociación</label>
-                            <textarea class="form-control form-control-sm" id="TextTNegociacion" runat="server" cols="25" rows="7"></textarea>
+                            <textarea class="form-control form-control-sm" id="TextTNegociacion" runat="server" cols="25" rows="7"  ></textarea>
                         </div>
                     </div>
 
@@ -878,7 +889,8 @@
 
                 <div class="Info1">
                     <asp:Button ID="btnDcto" runat="server" Text="%Dcto" class="bi bf" disabled="true" />
-                    <asp:TextBox type="text" class="form-control" runat="server" ID="txtDcto"></asp:TextBox>
+                    <asp:TextBox type="text" class="form-control" runat="server" ID="txtDcto" Width ="50px"></asp:TextBox>
+                    <asp:TextBox type="text" class="form-control" runat="server" ID="txtDctoValor"></asp:TextBox>
                 </div>
 
                 <div class="Info1">
@@ -896,7 +908,7 @@
                     <asp:TextBox type="text" class="form-control" runat="server" ID="txtGtotal"></asp:TextBox>
                 </div>
 
-
+               
             </div>
 
 
