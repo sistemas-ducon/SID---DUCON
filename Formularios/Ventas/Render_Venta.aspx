@@ -157,7 +157,7 @@
                                     <div class="col-3">
                                         <div class="input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbFechaOk" class="form-label" Text="Fecha OK" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbFechaOk" type="date" class="form-control " runat="server" disabled="disabled" OnTextChanged="tbFechaOk_TextChanged"></asp:TextBox>
+                                            <asp:TextBox ID="tbFechaOk" type="date" class="form-control " runat="server" disabled="disabled" ></asp:TextBox>
                                             <asp:TextBox ID="tbFechaOkServidor" type="date" class="form-control" runat="server" CssClass="hidden-checkbox"></asp:TextBox>
                                         </div>
                                     </div>
@@ -252,7 +252,7 @@
                                     <div class="col-4">
                                         <div class=" input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbImagenes" class="form-label" Text="Imagenes" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbImagenes" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
+                                            <asp:TextBox ID="tbImagenes" type="Number" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
 
@@ -541,8 +541,7 @@
                             </div>
 
 
-                        </div>
-                        
+                        </div>                 
 
                         <div class="container-fluid Bajo">
                             <div class="row justify-content-center">
@@ -713,7 +712,7 @@
                                 </div>
                                 <div class="col-3">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
-                                        <asp:TextBox ID="tbProyectoX" type="text" class="form-control " runat="server"></asp:TextBox>
+                                        <asp:TextBox ID="tbProyectoX" type="text"  class="form-control " runat="server"></asp:TextBox>
                                     </div>
                                 </div>
                             </div>
@@ -735,7 +734,7 @@
                                 <div class="border rounded p-2">
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="table-responsive mb-2 gap-2" style="max-height: 20rem; overflow-x: auto;">
+                                            <div class="table-responsive mb-2 gap-2" style="max-height: 30rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-center">Render Filtrados</h5>
 
                                                 <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="BuscarRender" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridBuscarRender_ItemDataBound" OnItemCommand="DataGridBuscarRenders_LinkButton">
@@ -912,6 +911,22 @@
     </script>
 
     <script>
+       
+
+        //Funcion para habilitar Modificar Cuando dan Click en linkButton Del DataGrid 
+        function HabilitarEnlaces1() {
+
+            // Habilitar enlaces
+            document.getElementById("ModificarRender").classList.add("enabled");
+
+            // Si la pagina de Render Es para el Area de Dibujo , Se habilita Devolver, Pausar y Eliminar Render
+            /* 
+             document.getElementById("DevolverRender").classList.add("enabled");
+             document.getElementById("PausarRender").classList.add("enabled");
+             document.getElementById("EliminarRender").classList.add("enabled");
+             */
+
+        }
         function NuevoRender() {
 
 
@@ -937,8 +952,15 @@
                 textBoxes[i].disabled = false;
             }
 
-               // Habilitar o deshabilitar los TextBox Type date
-            var idsHabilitados = ["tbIngreso", "tbUltActiv", "tbEntrega"];       
+
+            // Habilitar o deshabilitar los TextBox Type text
+            var textBoxes = document.querySelectorAll("input[type='Number']");
+            for (var i = 0; i < textBoxes.length; i++) {
+                textBoxes[i].disabled = false;
+            }
+
+            // Habilitar o deshabilitar los TextBox Type date
+            var idsHabilitados = ["tbIngreso", "tbUltActiv", "tbEntrega"];
             var textBoxes = document.querySelectorAll("input[type='date']");
             for (var x = 0; x < textBoxes.length; x++) {
 
@@ -1023,25 +1045,9 @@
 
 
             var checkBox = document.getElementById('<%= chkEstadoGuardarRender.ClientID %>');
-            checkBox.checked = true; // Marcar el CheckBox para saber si insertar o modificar
+             checkBox.checked = true; // Marcar el CheckBox para saber si insertar o modificar
 
-        }
-
-        //Funcion para habilitar Modificar Cuando dan Click en linkButton Del DataGrid 
-        function HabilitarEnlaces1() {
-
-            // Habilitar enlaces
-            document.getElementById("ModificarRender").classList.add("enabled");
-
-            // Si la pagina de Render Es para el Area de Dibujo , Se habilita Devolver, Pausar y Eliminar Render
-            /* 
-             document.getElementById("DevolverRender").classList.add("enabled");
-             document.getElementById("PausarRender").classList.add("enabled");
-             document.getElementById("EliminarRender").classList.add("enabled");
-             */
-
-        }
-
+         }
 
         function ModificarRender() {
 
@@ -1089,6 +1095,12 @@
                     textBoxes[i].disabled = false;
                 }
 
+
+                // Habilitar o deshabilitar los TextBox Type text
+                var textBoxes = document.querySelectorAll("input[type='Number']");
+                for (var i = 0; i < textBoxes.length; i++) {
+                    textBoxes[i].disabled = false;
+                }
 
                 var idsHabilitados = ["tbIngreso", "tbUltActiv", "tbEntrega"];
 
@@ -1153,6 +1165,12 @@
 
             // Habilitar o deshabilitar los TextBox Type text
             var textBoxes = document.querySelectorAll("input[type='text']");
+            for (var i = 0; i < textBoxes.length; i++) {
+                textBoxes[i].disabled = true;
+            }
+
+            // Habilitar o deshabilitar los TextBox Type text
+            var textBoxes = document.querySelectorAll("input[type='Number']");
             for (var i = 0; i < textBoxes.length; i++) {
                 textBoxes[i].disabled = true;
             }
