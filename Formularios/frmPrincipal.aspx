@@ -14,7 +14,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="../../Recursos/CSS/frmPrincipal.css" rel="stylesheet" />
-    <titleOrdenes de trabajo</title>
+    <title>Ordenes de Trabajo   </title>
 </head>
 <body>
     
@@ -226,7 +226,7 @@
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="DiseñoYDesarrollo/Insumos.aspx">Insumos</a
                         </li
-                    </ul>
+                    </ul
 
 
 
@@ -236,9 +236,7 @@
             </div>
         </nav>
 
-        <%--Termina Panel principal de nombres--%>
-
-        <%--Comienza Panel de iconos--%>
+        <%--Termina Panel principal de nombres--%>        <%--Comienza Panel de iconos--%>
 
         <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
             <div class="container-fluid">
@@ -360,8 +358,6 @@
         <%--Termina Panel de iconos--%>
     
     </div><%--Fin div wrapper --%>
-    
-
 
 
 
@@ -371,9 +367,14 @@
     <form class="frmPrincipal" runat="server">
 
         <div class="container-fluid">
-
+             <div class="col-1">
+                    <div class="input-group input-group-sm mb-2 gap-2">
+                        <asp:Label ID="msgOtCerrada" runat="server" Text="CERRADA EL" BackColor="#DD0000" ForeColor="Black"></asp:Label>
+                    </div>
+                </div>
             <div class="row">
-
+                
+               
 
                 <div class="col-1">
                     <div class="input-group input-group-sm mb-2 gap-2">
@@ -564,7 +565,7 @@
                         </div>
                         <div class="col-6">
                             <div class="input-group input-group-sm mb-2 gap-2">
-                                <label class="form-label" runat="server" id="inputOkVenta">Ok.Ventaaa</label>
+                                <label class="form-label" runat="server" id="inputOkVenta">Ok.Ventaaaaaa</label>
                                 <input type="date" class="form-control" runat="server" aria-label="Sizing example input" aria-describedby="inputOkVenta" />
                             </div>
                         </div>
@@ -595,19 +596,7 @@
                         </div>
 
 
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="table-responsive table-secondary overflow-auto m-2 ">
-
-                                    <h6 class="datagrid-header text-center">Grid 1</h6>
-
-                                    <asp:DataGrid ID="DataGrid1" runat="server"></asp:DataGrid>
-                                    <asp:SqlDataSource runat="server" ID="DataGridDespacho"></asp:SqlDataSource>
-
-
-                                </div>
-                            </div>
-                        </div>
+                       
 
 
                     </div>
@@ -672,8 +661,8 @@
 
 
                             <div class="input-group input-group-sm mb-2 gap-2">
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <asp:Label class="form-label" Text="Saldo: 0" runat="server" ID="lblSaldoOT" BorderColor="#CC0000" BackColor="#CC0000" Font-Size="XX-Large"  ></asp:Label>
+                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <asp:Label class="form-label" runat="server" ID="lblSaldoOT" BorderColor="#006600" BackColor="Lime" Font-Size="XX-Large"  ></asp:Label>
                             
                             </div>
 
@@ -742,6 +731,23 @@
 
             </div>
         </div>
+        <hr />
+          <div class="row">
+                            <div class="col-12">
+                                <div class="table-responsive table-secondary overflow-auto m-2 ">
+
+                                   
+                                    <h5>&nbsp;&nbsp;&nbsp Información despacho</h5>
+
+                                    <asp:DataGrid ID="dtagrdDespachoProgramado" runat="server" BorderColor="Black" CellPadding="1" CellSpacing="1" DataSourceID="DataGridDespacho" Font-Bold="False" Font-Italic="False" Font-Names="helvetica" Font-Overline="False" Font-Size="Small" Font-Strikeout="False" Font-Underline="False" HorizontalAlign="left">
+                                        <HeaderStyle BackColor="#00003C" Font-Bold="False" Font-Italic="False" Font-Overline="False" Font-Strikeout="False" Font-Underline="False" ForeColor="Gray" />
+                                    </asp:DataGrid>
+                                    <asp:SqlDataSource runat="server" ID="DataGridDespacho" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL_PRUEBAConnectionString %>" SelectCommand="SELECT DespachoInterno, DespachoCoordinado, FechaDespachoCoordinado, Fecha_Despacho, Terminado_despacho, InfDes_Fecha_Real_Despacho AS FechaRealDespacho, Entregado_Transporte, Fecha_Entregado, Receptor, Celular_Receptor FROM tblInformacionDespacho WHERE (Id_OT = '0159112') AND (Consecutivo_Pedido = 1)"></asp:SqlDataSource>
+
+
+                                </div>
+                            </div>
+                        </div>
         <hr />
         <h5>&nbsp;&nbsp;&nbsp Información contable</h5>
         <div class=" container-fluid Info-Contable">
@@ -848,7 +854,7 @@
                     <div class="izquierda">
                         <label>
                             Venta
-                               <br />
+                                    <br />
                             Neta</label>
                     </div>
 

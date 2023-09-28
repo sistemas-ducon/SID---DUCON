@@ -10,6 +10,12 @@ using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using System.Runtime.CompilerServices;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Label = System.Windows.Forms.Label;
+
+
+
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
@@ -17,13 +23,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
     {
         private string id;
         private string pedido;
-
-      
-
+        public double TotalObraMas = 0;
+        public double TotalObraMenos = 0;
+        public double TotalSaldo;
 
 
         protected void Page_Load(object sender, EventArgs e)
         {
+
             if (Session["usuariologueado"] != null)
             {
                 string usuariologueado = Session["usuariologueado"].ToString();
@@ -47,8 +54,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
 
             }
-
-
 
         }
 
@@ -100,6 +105,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session["pedido"] = pedido;
 
             Cargar_OT();
+          
         }
 
         private List<int> ObtenerNumerosDesdeLaBaseDeDatos(string dato)
@@ -134,39 +140,39 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
         public void Cargar_OT()
-         
-        {
 
+        {
+      
 
             id = Session["Id_OT"].ToString();
             pedido = Session["pedido"].ToString();
-       
+
 
 
 
             //Conexion a la BD_SIDSQL y traemos el procedimiento almacenado
             string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
-			SqlConnection sqlconectar = new SqlConnection(cn);
+            SqlConnection sqlconectar = new SqlConnection(cn);
             SqlCommand cmd = new SqlCommand("ctaOT", sqlconectar)
-       
-    
 
-              {
+
+
+            {
                 CommandType = CommandType.StoredProcedure
-			};
-			cmd.Connection.Open();
+            };
+            cmd.Connection.Open();
             cmd.Parameters.Add("@OT", SqlDbType.VarChar, 30).Value = id;
             cmd.Parameters.Add("@Con", SqlDbType.VarChar, 30).Value = pedido;
 
-       
+
 
 
             SqlDataReader dr = cmd.ExecuteReader();
-      
+
 
 
             if (dr.Read())
-			{
+            {
                 tbOT.Text = dr["Id_OT"].ToString();
                 ddlNumbers.Text = dr["Consecutivo_Pedido"].ToString();
                 tbZona.Text = dr["Zona"].ToString();
@@ -202,21 +208,28 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 txtAsesor.Text = dr["Codigo_Asesor"].ToString();
                 TextTNegociacion.Value = dr["Forma_Pago"].ToString();
                 tbBolsa.Text = dr["ValorBolsa"].ToString();
-                txtValorPedido.Text = dr ["ValorPedido"].ToString();
+                txtValorPedido.Text = dr["ValorPedido"].ToString();
                 txtDcto.Text = dr["Descuento"].ToString();
                 txtVtte.Text = dr["ValorTteVia"].ToString();
                 txtVvia.Text = dr["ValorViatico"].ToString();
                 txtVenta.Text = dr["Precio_Venta"].ToString();
+                msgOtCerrada.Text = dr["Fecha_Cierre"].ToString();
+              
 
+                CalcularSaldo();
+               
             }
+     
+
+
             cmd.Connection.Close();
 
             //Codigo Harley llamado de datos de la cotización
 
             SqlCommand cotzita = new SqlCommand("sp_datoscotizacion", sqlconectar)
             {
-               CommandType = CommandType.StoredProcedure 
-           };
+                CommandType = CommandType.StoredProcedure
+            };
 
             cotzita.Connection.Open();
             cotzita.Parameters.AddWithValue("@cotizacion", txtCotizacion.Text);
@@ -229,19 +242,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 calcularDescuento();
                 calcularGranTotal();
-                txtNit.Text = drcot ["Cliente"].ToString();
-                txtValorSugerido.Text = drcot ["ValorSugerido"].ToString();
+                txtNit.Text = drcot["Cliente"].ToString();
+                txtValorSugerido.Text = drcot["ValorSugerido"].ToString();
                 txtVcsd.Text = drcot["Valor"].ToString();
-                txtVccd.Text = drcot ["VCCD"].ToString();
+                txtVccd.Text = drcot["VCCD"].ToString();
                 txtNombreEmp.Text = drcot["NombreCompañía"].ToString();
                 txtComision.Text = drcot["DescuentoComision"].ToString();
                 txtDiseño.Text = drcot["Diseño"].ToString();
                 txtSaldo.Text = drcot["Saldo"].ToString();
                 tbPlano.Text = drcot["Plano"].ToString();
-               
+              
             }
-          cotzita.Connection.Close();   
+            cotzita.Connection.Close();
+
+           
         }
+
         protected void calcularDescuento()
         {
             // Harley variables
@@ -273,7 +289,26 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             txtGtotal.Text = ValorGranTotal.ToString();
         }
 
+        protected void CalcularSaldo()
+        {
 
+              TotalObraMas = double.Parse(tbBolsa.Text);  
+              TotalObraMenos = double.Parse(txtValorPedido.Text);
+
+ 
+            if (TotalObraMenos > 0)
+            {
+                TotalObraMenos = TotalObraMas;
+
+            }
+         
+            double TotalSaldo = TotalObraMas - TotalObraMenos;
+
+            lblSaldoOT.Text = "Saldo:" + TotalSaldo;  
+            
+
+
+        }
 
 
     }
@@ -281,7 +316,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
 
-//
 
 
 
