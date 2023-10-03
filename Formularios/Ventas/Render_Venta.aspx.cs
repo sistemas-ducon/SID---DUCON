@@ -25,9 +25,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private bool isModalVisible = false;
         protected void Page_Load(object sender, EventArgs e)
         {
-
             //Evaluar los permisos del usuarioa y que departamento Pertenece 
-
 
             if (!IsPostBack)
             {
@@ -58,9 +56,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     Response.Redirect("~/Formularios/Login.aspx");
                 }
 
-
             }
-
 
         }
 
@@ -142,6 +138,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             DataGridRenders.DataBind();
 
         }
+
         protected void DataGridRenders_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
 
@@ -268,7 +265,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
 
                 string ZonaBus = Zona; // El nombre que deseas buscar
-                foreach (ListItem item in ddlAsesor.Items)
+                foreach (ListItem item in ddlZona.Items)
                 {
                     if (item.Text == ZonaBus)
                     {
@@ -361,6 +358,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
                 tbTerminadoVentas.Text = TerminadoVentas;
 
+
                 if(TerminadoVentas == "True")
                 {
                     btnProgramarRender.Enabled = false;
@@ -385,14 +383,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Ejemplo el script para habilitar el enlace de moficar despues de selecionar la fila  usando RegisterStartupScript:
                 string script = "<script>HabilitarEnlaces1();</script>";
                 ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces1", script, false);
-
-
-
-
-
-
-
-
 
 
 
@@ -527,13 +517,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
-                            string mensajePersonalizado = "¡El Render ha sido ingresado con exito!";
+                            string mensajePersonalizado = "El Render ha sido ingresado con éxito";
                             string urlRedireccion = "Ventas/Render_Venta.aspx";
                             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                         }
                         else
                         {
-                            string mensajePersonalizado = "¡Ups! En Render no se ingresó correctamente";
+                            string mensajePersonalizado = "¡Ups! En Render no se ingresó correctamente.Por favor, comunicate con el Departamento Sistemas para obtener ayuda.";
                             string urlRedireccion = "Ventas/Render_Venta.aspx";
                             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                         }
@@ -633,7 +623,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
-                            string mensajePersonalizado = "¡El Render ha sido Actualizado con exito!";
+                            string mensajePersonalizado = "El Render ha sido Actualizado con éxito";
                             string urlRedireccion = "Ventas/Render_Venta.aspx";
                             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                         }
@@ -708,7 +698,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             }
-
 
 
 
@@ -941,7 +930,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                //Realizamos la Insercion 
+                //Realizamos la Actualizacion 
                 string query = "UPDATE tblRender SET ProgramadoVentas = 1, Fecha_Ingreso = @FechaIngreso, UltimaActivacion = @UltimaActivacion," +
                     " Fecha_Programada_Entrega = @FechaProgramadaEntrega WHERE Id_Render = @IdRender";
 
