@@ -105,7 +105,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session["pedido"] = pedido;
 
             Cargar_OT();
-          
+
         }
 
         private List<int> ObtenerNumerosDesdeLaBaseDeDatos(string dato)
@@ -142,11 +142,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         public void Cargar_OT()
 
         {
-      
+
 
             id = Session["Id_OT"].ToString();
             pedido = Session["pedido"].ToString();
-
 
 
 
@@ -173,6 +172,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (dr.Read())
             {
+                bool cerrada = dr.GetBoolean(dr.GetOrdinal("Cerrada"));
+
+                if (cerrada)
+                {
+                    // Si el campo "Cerrada" es true, muestra el label
+                    msgOtCerrada.Visible = true;
+                }
+                else
+                {
+                    // Si el campo "Cerrada" es false, oculta el label
+                    msgOtCerrada.Visible = false;
+                }
+
                 tbOT.Text = dr["Id_OT"].ToString();
                 ddlNumbers.Text = dr["Consecutivo_Pedido"].ToString();
                 tbZona.Text = dr["Zona"].ToString();
@@ -213,13 +225,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 txtVtte.Text = dr["ValorTteVia"].ToString();
                 txtVvia.Text = dr["ValorViatico"].ToString();
                 txtVenta.Text = dr["Precio_Venta"].ToString();
-                msgOtCerrada.Text = dr["Fecha_Cierre"].ToString();
-              
+                msgOtCerrada.Text = "CERRADA EL:" + dr["Fecha_Cierre"].ToString();
 
+      
                 CalcularSaldo();
-               
+
             }
-     
+
+
+
+
+
 
 
             cmd.Connection.Close();
@@ -251,12 +267,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 txtDiseño.Text = drcot["Diseño"].ToString();
                 txtSaldo.Text = drcot["Saldo"].ToString();
                 tbPlano.Text = drcot["Plano"].ToString();
-              
+
             }
             cotzita.Connection.Close();
-
-           
         }
+
+
+    
+
+    
+
+
 
         protected void calcularDescuento()
         {
@@ -306,8 +327,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             lblSaldoOT.Text = "Saldo:" + TotalSaldo;  
             
-
-
         }
 
 

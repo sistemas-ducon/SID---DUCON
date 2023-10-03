@@ -1,4 +1,4 @@
-﻿﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="frmPrincipal.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.OrdenesDeTrabajo" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="frmPrincipal.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.OrdenesDeTrabajo" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 
@@ -14,7 +14,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="../../Recursos/CSS/frmPrincipal.css" rel="stylesheet" />
-    <title>Ordenes de Trabajo   </title>
+    <title>Ordenes de Trabajo </title>
 </head>
 <body>
     
@@ -232,7 +232,7 @@
 
 
 
-                </div>
+                </div
             </div>
         </nav>
 
@@ -367,11 +367,14 @@
     <form class="frmPrincipal" runat="server">
 
         <div class="container-fluid">
-             <div class="col-1">
-                    <div class="input-group input-group-sm mb-2 gap-2">
-                        <asp:Label ID="msgOtCerrada" runat="server" Text="CERRADA EL" BackColor="#DD0000" ForeColor="Black"></asp:Label>
-                    </div>
-                </div>
+           
+       
+                   <asp:Label ID="msgOtCerrada" runat="server" Text="CERRADA EL" BackColor="#DD0000" ForeColor="Black" Font-Size="XX-Large" Width="593px" style="text-align: center;" Visible="False"></asp:Label>
+                
+                  
+                       
+              <br />   
+               <br />
             <div class="row">
                 
                
@@ -565,7 +568,7 @@
                         </div>
                         <div class="col-6">
                             <div class="input-group input-group-sm mb-2 gap-2">
-                                <label class="form-label" runat="server" id="inputOkVenta">Ok.Ventaaaaaa</label>
+                                <label class="form-label" runat="server" id="inputOkVenta">Ok.Ventaaaaaaaa</label>
                                 <input type="date" class="form-control" runat="server" aria-label="Sizing example input" aria-describedby="inputOkVenta" />
                             </div>
                         </div>
