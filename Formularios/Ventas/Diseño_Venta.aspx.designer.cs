@@ -33,6 +33,159 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.ScriptManager ScriptManager1;
 
         /// <summary>
+        /// Control UpdatePanel3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdatePanel3;
+
+        /// <summary>
+        /// Control Label8.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label8;
+
+        /// <summary>
+        /// Control TextBox1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TextBox1;
+
+        /// <summary>
+        /// Control fileUpload.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload fileUpload;
+
+        /// <summary>
+        /// Control TextBox2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TextBox2;
+
+        /// <summary>
+        /// Control Button3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button3;
+
+        /// <summary>
+        /// Control Label9.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label9;
+
+        /// <summary>
+        /// Control Textarea1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTextArea Textarea1;
+
+        /// <summary>
+        /// Control LinkButton1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton LinkButton1;
+
+        /// <summary>
+        /// Control LinkButton2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton LinkButton2;
+
+        /// <summary>
+        /// Control LinkButton3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton LinkButton3;
+
+        /// <summary>
+        /// Control DataGrid6.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DataGrid DataGrid6;
+
+        /// <summary>
+        /// Control TextBox6.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TextBox6;
+
+        /// <summary>
+        /// Control TextBox7.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TextBox7;
+
+        /// <summary>
+        /// Control FileUpload1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload FileUpload1;
+
+        /// <summary>
+        /// Control btnGuardar.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnGuardar;
+
+        /// <summary>
+        /// Control btnMostrarUbicacion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnMostrarUbicacion;
+
+        /// <summary>
         /// Control UpdatePanel2.
         /// </summary>
         /// <remarks>
@@ -219,7 +372,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button NuevoDisBit;
+        protected global::System.Web.UI.WebControls.LinkButton NuevoDisBit;
 
         /// <summary>
         /// Control Grabar.
@@ -228,7 +381,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Grabar;
+        protected global::System.Web.UI.WebControls.LinkButton Grabar;
+
+        /// <summary>
+        /// Control lblMensaje.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMensaje;
 
         /// <summary>
         /// Control Modificar.
@@ -237,7 +399,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Modificar;
+        protected global::System.Web.UI.WebControls.LinkButton Modificar;
 
         /// <summary>
         /// Control DocBitacora.
@@ -246,7 +408,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button DocBitacora;
+        protected global::System.Web.UI.WebControls.LinkButton DocBitacora;
 
         /// <summary>
         /// Control RegresarDiseño.
@@ -255,7 +417,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button RegresarDiseño;
+        protected global::System.Web.UI.WebControls.LinkButton RegresarDiseño;
 
         /// <summary>
         /// Control AdicionarElemento.
@@ -264,7 +426,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button AdicionarElemento;
+        protected global::System.Web.UI.WebControls.LinkButton AdicionarElemento;
 
         /// <summary>
         /// Control ActualizarDiseno.
@@ -273,7 +435,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button ActualizarDiseno;
+        protected global::System.Web.UI.WebControls.LinkButton ActualizarDiseno;
 
         /// <summary>
         /// Control PausarDiseño.
@@ -282,7 +444,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button PausarDiseño;
+        protected global::System.Web.UI.WebControls.LinkButton PausarDiseño;
 
         /// <summary>
         /// Control Cancelar.
@@ -291,7 +453,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Cancelar;
+        protected global::System.Web.UI.WebControls.LinkButton Cancelar;
 
         /// <summary>
         /// Control EliminarDiseño.
@@ -300,7 +462,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button EliminarDiseño;
+        protected global::System.Web.UI.WebControls.LinkButton EliminarDiseño;
 
         /// <summary>
         /// Control miDiv.
@@ -678,7 +840,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextPre;
+        protected global::System.Web.UI.WebControls.DropDownList TextPre;
+
+        /// <summary>
+        /// Control DataSourcePre.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource DataSourcePre;
 
         /// <summary>
         /// Control lblCel.
@@ -732,7 +903,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextCiuPro;
+        protected global::System.Web.UI.WebControls.DropDownList TextCiuPro;
+
+        /// <summary>
+        /// Control sqlDataSourceCiudades.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource sqlDataSourceCiudades;
 
         /// <summary>
         /// Control BtnProgramar.
@@ -1392,49 +1572,67 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.TextBox TextUbi;
 
         /// <summary>
-        /// Control Button3.
+        /// Control DataGrid5.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlButton Button3;
+        protected global::System.Web.UI.WebControls.DataGrid DataGrid5;
 
         /// <summary>
-        /// Control Button4.
+        /// Control SqldatasourceTxt.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlButton Button4;
+        protected global::System.Web.UI.WebControls.SqlDataSource SqldatasourceTxt;
 
         /// <summary>
-        /// Control Button5.
+        /// Control Button2.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlButton Button5;
+        protected global::System.Web.UI.WebControls.Button Button2;
 
         /// <summary>
-        /// Control Button6.
+        /// Control ButtonD.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlButton Button6;
+        protected global::System.Web.UI.WebControls.Button ButtonD;
 
         /// <summary>
-        /// Control Button7.
+        /// Control ButtonE.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlButton Button7;
+        protected global::System.Web.UI.WebControls.Button ButtonE;
+
+        /// <summary>
+        /// Control ButtonS.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button ButtonS;
+
+        /// <summary>
+        /// Control ButtonV.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button ButtonV;
 
         /// <summary>
         /// Control UpdatePanel1.
@@ -1464,13 +1662,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource1;
 
         /// <summary>
-        /// Control ImageButton8.
+        /// Control LinkButton8.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton ImageButton8;
+        protected global::System.Web.UI.WebControls.LinkButton LinkButton8;
 
         /// <summary>
         /// Control lbZona.
@@ -1518,13 +1716,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.DataGrid DataGrid3;
 
         /// <summary>
-        /// Control DataGridResumenDibujante.
+        /// Control SqlDataSource4.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.SqlDataSource DataGridResumenDibujante;
+        protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource4;
 
         /// <summary>
         /// Control Button9.

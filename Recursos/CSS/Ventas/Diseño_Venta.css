@@ -73,6 +73,10 @@
 .bg-pausados-custom {
     background-color: #74bec6;
 }
+
+.bg-terminado-custom {
+    background-color: #3d803f;
+}
 /* Ajusta estos estilos según tus necesidades */
 /*.modal-sm {
     max-width: 50%;*/ /* Tamaño más pequeño */
@@ -91,7 +95,12 @@
 
 .contenedor-icono {
     font-size: 24px;
-    
+    text-decoration-line:none;
+}
+
+.contenedor-icono2 {
+    font-size: 34px;
+   
 }
 
 /* Estilo para enlaces habilitados (color negro) */
@@ -102,18 +111,19 @@
     cursor: not-allowed; /* Cambia el cursor al icono "no permitido" */
 }
 
+.fila-verde {
+    background-color: #3d803f; /* Cambia el color de fondo a verde */
+    color:aliceblue;
+}
 
-/* Cuando los elementos están deshabilitados */
-/*a.icong.action-link.disabled {
-    color: rgba(128, 128, 128, 0.5);*/ /* Gris opaco */
-    /*cursor: default;*/ /* Cambia el cursor a predeterminado */
-    /*text-decoration: none;*/ /* Elimina cualquier decoración de texto, como subrayado */
-/*}*/
+.button-disabled {
+    color: rgba(0, 0, 0, 0.5); /* Color opaco cuando está disabled */
+    text-decoration: none; /* Evita subrayar el texto */
+}
 
-/* Cuando los elementos están habilitados */
-/*a.icong.action-link.enabled {
-    color:*/ /* Tu estilo para elementos habilitados *//*;
-    cursor: pointer;*/ /* Cambia el cursor a puntero cuando está habilitado */
-    /* Otros estilos para elementos habilitados si los deseas */
-/*}*/
+.button-enabled {
+    color: #000; /* Color negro oscuro cuando está enabled */
+}
+
+
 
