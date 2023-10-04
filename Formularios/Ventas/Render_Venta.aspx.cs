@@ -21,29 +21,42 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
     public partial class Render_Venta : System.Web.UI.Page
     {
+
+        private bool isModalVisible = false;
         protected void Page_Load(object sender, EventArgs e)
         {
+            //Evaluar los permisos del usuarioa y que departamento Pertenece 
+
             if (!IsPostBack)
             {
-                CargarAsesoresEnDropDownList();
-           
-                Button btnTrabajarRender = FindControl("btnTrabajarRender") as Button;
-                if (btnTrabajarRender != null)
-                {
-                    btnTrabajarRender.Enabled = false;
-                    btnTrabajarRender.CssClass = "bnt btn-outline-secondary";
-                }
 
-                
-                Button btnProgramarRender = FindControl("btnProgramarRender") as Button;
-                if (btnProgramarRender != null)
+                if (Session["usuariologueado"] != null)
                 {
-                    btnProgramarRender.Enabled = false;
-                    
+                    CargarAsesoresEnDropDownList();
+
+                    Button btnTrabajarRender = FindControl("btnTrabajarRender") as Button;
+                    if (btnTrabajarRender != null)
+                    {
+                        btnTrabajarRender.Enabled = false;
+                        btnTrabajarRender.CssClass = "bnt btn-outline-secoundary";
+                    }
+
+
+                    Button btnProgramarRender = FindControl("btnProgramarRender") as Button;
+                    if (btnProgramarRender != null)
+                    {
+                        btnProgramarRender.Enabled = false;
+                        btnProgramarRender.CssClass = "btn btn-warning";
+
+                    }
+
+                }
+                else
+                {
+                    Response.Redirect("~/Formularios/Login.aspx");
                 }
 
             }
-
 
         }
 
@@ -58,6 +71,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Agregar el primer  elemento de los datagrid como "Seleccione"
             ddlZona2.Items.Insert(0, new ListItem("Todas", "0"));
 
+        }
+
+        protected void chxConvenciones_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chxConvenciones.Checked)
+            {
+                isModalVisible = true;
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#myModal').modal('show');", true);
+            }
+            else
+            {
+                isModalVisible = false;
+            }
         }
 
         private void CargarAsesoresEnDropDownList()
@@ -112,6 +138,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             DataGridRenders.DataBind();
 
         }
+
         protected void DataGridRenders_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
 
@@ -134,29 +161,29 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (terminadoDibujo == 1)
                 {
-                    e.Item.BackColor = System.Drawing.Color.FromName("#57F525"); //Verde
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#57F525"); //Verde
                 }
                 else if (fechaProgramada <= DateTime.Now)
                 {
-                    e.Item.BackColor = System.Drawing.Color.FromName("#F71A27");    //rojo 
-                    e.Item.ForeColor = System.Drawing.Color.FromName("#ffffff");
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F71A27");    //rojo 
+                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
                 else if (programadoVentas == 0)
                 {
-                    e.Item.BackColor = System.Drawing.Color.FromName("#673f8b");    //Morado 
-                    e.Item.ForeColor = System.Drawing.Color.FromName("#ffffff");
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#673f8b");    //Morado 
+                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
                 else
                 {
                     if (pausado == 1)
                     {
-                        e.Item.BackColor = System.Drawing.Color.FromName("#08F4E2"); // Aqua
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#08F4E2"); // Aqua
                     }
 
                     else
                     {
-                        e.Item.BackColor = System.Drawing.Color.FromName("#F1FF43");//amarillo 
-                        e.Item.ForeColor = System.Drawing.Color.FromName("#000000");
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F1FF43");//amarillo 
+                        e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
                     }
 
                 }
@@ -238,7 +265,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
 
                 string ZonaBus = Zona; // El nombre que deseas buscar
-                foreach (ListItem item in ddlAsesor.Items)
+                foreach (ListItem item in ddlZona.Items)
                 {
                     if (item.Text == ZonaBus)
                     {
@@ -330,6 +357,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     chxAnimacion.Checked = false;
                 }
                 tbTerminadoVentas.Text = TerminadoVentas;
+
 
                 if(TerminadoVentas == "True")
                 {
@@ -489,13 +517,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
-                            string mensajePersonalizado = "¡El Render ha sido ingresado con exito!";
+                            string mensajePersonalizado = "El Render ha sido ingresado con éxito";
                             string urlRedireccion = "Ventas/Render_Venta.aspx";
                             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                         }
                         else
                         {
-                            string mensajePersonalizado = "¡Ups! En Render no se ingresó correctamente";
+                            string mensajePersonalizado = "¡Ups! En Render no se ingresó correctamente.Por favor, comunicate con el Departamento Sistemas para obtener ayuda.";
                             string urlRedireccion = "Ventas/Render_Venta.aspx";
                             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                         }
@@ -595,7 +623,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
-                            string mensajePersonalizado = "¡El Render ha sido Actualizado con exito!";
+                            string mensajePersonalizado = "El Render ha sido Actualizado con éxito";
                             string urlRedireccion = "Ventas/Render_Venta.aspx";
                             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                         }
@@ -642,35 +670,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Cambiar el color de fondo de la fila en función de los valores de las columnas
                 if (terminadoDibujo == 1)
                 {
-                    e.Item.BackColor = System.Drawing.Color.FromName("#57F525");
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#57F525");
                 }
                 else if (fechaProgramada <= DateTime.Now)
                 {
-                    e.Item.BackColor = System.Drawing.Color.FromName("#F71A27");
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F71A27");
                 }
                 else if (programadoVentas == 0)
                 {
-                    e.Item.BackColor = System.Drawing.Color.FromName("#673f8b");
-                    e.Item.ForeColor = System.Drawing.Color.FromName("#ffffff");
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#673f8b");
+                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
                 else
                 {
                     if (pausado == 1)
                     {
-                        e.Item.BackColor = System.Drawing.Color.FromName("#08F4E2");
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#08F4E2");
                     }
 
                     else
                     {
-                        e.Item.BackColor = System.Drawing.Color.FromName("#F1FF43");//amarillo 
-                        e.Item.ForeColor = System.Drawing.Color.FromName("#000000");
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F1FF43");//amarillo 
+                        e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
                     }
 
                 }
 
 
             }
-
 
 
 
@@ -903,7 +930,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                //Realizamos la Insercion 
+                //Realizamos la Actualizacion 
                 string query = "UPDATE tblRender SET ProgramadoVentas = 1, Fecha_Ingreso = @FechaIngreso, UltimaActivacion = @UltimaActivacion," +
                     " Fecha_Programada_Entrega = @FechaProgramadaEntrega WHERE Id_Render = @IdRender";
 
@@ -931,7 +958,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-      
+        protected void PausarRender1(Object serder, EventArgs eventArgs)
+        {
+            // Para Dibujo 
+        }
 
+        protected void DevolverRender1(Object serder, EventArgs eventArgs)
+        {
+            // Para Dibujo 
+        }
+
+        protected void EliminareRender1(Object serder, EventArgs eventArgs)
+        {
+            // Para Dibujo 
+        }
+
+        
     }
 }

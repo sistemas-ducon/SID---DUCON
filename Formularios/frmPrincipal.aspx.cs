@@ -8,16 +8,29 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using System.Runtime.CompilerServices;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Label = System.Windows.Forms.Label;
+
+
+
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
-	public partial class OrdenesDeTrabajo : System.Web.UI.Page
-	{
+    public partial class OrdenesDeTrabajo : System.Web.UI.Page
+    {
         private string id;
         private string pedido;
+        public double TotalObraMas = 0;
+        public double TotalObraMenos = 0;
+        public double TotalSaldo;
+
 
         protected void Page_Load(object sender, EventArgs e)
-		{
+        {
+
             if (Session["usuariologueado"] != null)
             {
                 string usuariologueado = Session["usuariologueado"].ToString();
@@ -28,7 +41,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Response.Redirect("Login.aspx");
             }
 
-            if(!IsPostBack)
+            if (!IsPostBack)
             {
                 tbOT.Attributes.Add("onkeypress", "return handleEnter(event)");
                 string usuariologueado = Session["usuariologueado"].ToString();
@@ -41,14 +54,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
 
             }
-           
-
 
         }
 
         protected void tbOT_TextChanged(object sender, EventArgs e)
         {
-            
+
             string id = tbOT.Text.Trim();
             Session["Id_OT"] = id;
             Session["pedido"] = 1;
@@ -59,17 +70,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (!string.IsNullOrEmpty(id))
             {
-                
-                    string inputData = tbOT.Text;
-                    List<int> numeros = ObtenerNumerosDesdeLaBaseDeDatos(inputData);
 
-                    ddlNumbers.Items.Clear(); // Limpiar las opciones existentes
+                string inputData = tbOT.Text;
+                List<int> numeros = ObtenerNumerosDesdeLaBaseDeDatos(inputData);
 
-                    foreach (int numero in numeros)
-                    {
-                        ddlNumbers.Items.Add(numero.ToString());
-                    }
-                
+                ddlNumbers.Items.Clear(); // Limpiar las opciones existentes
+
+                foreach (int numero in numeros)
+                {
+                    ddlNumbers.Items.Add(numero.ToString());
+                }
+
             }
         }
 
@@ -91,16 +102,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void ddlNumbers_SelectedIndexChanged(object sender, EventArgs e)
         {
             string pedido = ddlNumbers.SelectedValue;
-             Session["pedido"] = pedido;
+            Session["pedido"] = pedido;
 
             Cargar_OT();
+
         }
 
         private List<int> ObtenerNumerosDesdeLaBaseDeDatos(string dato)
         {
             List<int> numeros = new List<int>();
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString; ; 
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString; ;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -128,23 +140,51 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
         public void Cargar_OT()
-		{
+
+        {
+
 
             id = Session["Id_OT"].ToString();
             pedido = Session["pedido"].ToString();
+
+
+
             //Conexion a la BD_SIDSQL y traemos el procedimiento almacenado
             string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
-			SqlConnection sqlconectar = new SqlConnection(cn);
-			SqlCommand cmd = new SqlCommand("ctaOT", sqlconectar)
-			{
-				CommandType = CommandType.StoredProcedure
-			};
-			cmd.Connection.Open();
-			cmd.Parameters.Add("@OT", SqlDbType.VarChar, 30).Value = id;
-			cmd.Parameters.Add("@Con", SqlDbType.VarChar, 30).Value = pedido;
-			SqlDataReader dr = cmd.ExecuteReader();
-			if (dr.Read())
-			{
+            SqlConnection sqlconectar = new SqlConnection(cn);
+            SqlCommand cmd = new SqlCommand("ctaOT", sqlconectar)
+
+
+
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Connection.Open();
+            cmd.Parameters.Add("@OT", SqlDbType.VarChar, 30).Value = id;
+            cmd.Parameters.Add("@Con", SqlDbType.VarChar, 30).Value = pedido;
+
+
+
+
+            SqlDataReader dr = cmd.ExecuteReader();
+
+
+
+            if (dr.Read())
+            {
+                bool cerrada = dr.GetBoolean(dr.GetOrdinal("Cerrada"));
+
+                if (cerrada)
+                {
+                    // Si el campo "Cerrada" es true, muestra el label
+                    msgOtCerrada.Visible = true;
+                }
+                else
+                {
+                    // Si el campo "Cerrada" es false, oculta el label
+                    msgOtCerrada.Visible = false;
+                }
+
                 tbOT.Text = dr["Id_OT"].ToString();
                 ddlNumbers.Text = dr["Consecutivo_Pedido"].ToString();
                 tbZona.Text = dr["Zona"].ToString();
@@ -174,20 +214,124 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 txtDireccion.Text = dr["Dirección"].ToString();
                 txtMunicipio.Text = dr["Ciudad"].ToString();
                 txtTelefono.Text = dr["TelDomicilio"].ToString();
-                txtObs.Text = dr["Observaciones_Contables"].ToString();
+                ObservacionCont.Value = dr["Observaciones_Contables"].ToString();
                 txtCotizacion.Text = dr["Cotizacion"].ToString();
                 txtOrdenCompra.Text = dr["OrdendeCompra"].ToString();
                 txtAsesor.Text = dr["Codigo_Asesor"].ToString();
                 TextTNegociacion.Value = dr["Forma_Pago"].ToString();
-
-            }
-		
-		}
+                tbBolsa.Text = dr["ValorBolsa"].ToString();
+                txtValorPedido.Text = dr["ValorPedido"].ToString();
+                txtDcto.Text = dr["Descuento"].ToString();
+                txtVtte.Text = dr["ValorTteVia"].ToString();
+                txtVvia.Text = dr["ValorViatico"].ToString();
+                txtVenta.Text = dr["Precio_Venta"].ToString();
+                msgOtCerrada.Text = "CERRADA EL:" + dr["Fecha_Cierre"].ToString();
 
       
+                CalcularSaldo();
+
+            }
+
+
+
+
+
+
+
+            cmd.Connection.Close();
+
+            //Codigo Harley llamado de datos de la cotización
+
+            SqlCommand cotzita = new SqlCommand("sp_datoscotizacion", sqlconectar)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+
+            cotzita.Connection.Open();
+            cotzita.Parameters.AddWithValue("@cotizacion", txtCotizacion.Text);
+            cotzita.Parameters.AddWithValue("@NombreCliente", txtNombreEmp.Text);
+
+            SqlDataReader drcot = cotzita.ExecuteReader();
+
+
+            if (drcot.Read())
+            {
+                calcularDescuento();
+                calcularGranTotal();
+                txtNit.Text = drcot["Cliente"].ToString();
+                txtValorSugerido.Text = drcot["ValorSugerido"].ToString();
+                txtVcsd.Text = drcot["Valor"].ToString();
+                txtVccd.Text = drcot["VCCD"].ToString();
+                txtNombreEmp.Text = drcot["NombreCompañía"].ToString();
+                txtComision.Text = drcot["DescuentoComision"].ToString();
+                txtDiseño.Text = drcot["Diseño"].ToString();
+                txtSaldo.Text = drcot["Saldo"].ToString();
+                tbPlano.Text = drcot["Plano"].ToString();
+
+            }
+            cotzita.Connection.Close();
+        }
+
+
+    
+
+    
+
+
+
+        protected void calcularDescuento()
+        {
+            // Harley variables
+            double valorVenta = double.Parse(txtVenta.Text);
+            double valorDescuento = double.Parse(txtDcto.Text);
+  
+
+            // Formulas
+            double valorDescuentoCalculado = valorVenta * valorDescuento / 100;
+
+
+            //  valor del descuento en el textbox
+            txtDctoValor.Text = valorDescuentoCalculado.ToString();
+
+        }
+
+
+        protected void calcularGranTotal()
+        {
+            double valorVenta = double.Parse(txtVenta.Text);
+            double valorDesPesos = double.Parse(txtDctoValor.Text);
+            double ValorTransporte = double.Parse(txtVtte.Text);
+            double ValorViatico = double.Parse(txtVvia.Text);
+
+            //Formula
+            double ValorGranTotal = valorVenta - valorDesPesos + ValorTransporte + ValorViatico;
+            
+            //valor del descuento en el textbox
+            txtGtotal.Text = ValorGranTotal.ToString();
+        }
+
+        protected void CalcularSaldo()
+        {
+
+              TotalObraMas = double.Parse(tbBolsa.Text);  
+              TotalObraMenos = double.Parse(txtValorPedido.Text);
+
+ 
+            if (TotalObraMenos > 0)
+            {
+                TotalObraMenos = TotalObraMas;
+
+            }
+         
+            double TotalSaldo = TotalObraMas - TotalObraMenos;
+
+            lblSaldoOT.Text = "Saldo:" + TotalSaldo;  
+            
+        }
+
+
     }
 }
-
 
 
 

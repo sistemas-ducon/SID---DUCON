@@ -32,17 +32,26 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             if (!IsPostBack)
             {
-                // Llamar al método para cargar los datos en el DropDownList
-                CargarAsesoresEnDropDownList();
-                if (Session["AsesorDiseño"] != null)
-                {
-                    string asesorSeleccionado = Session["AsesorDiseño"].ToString();
-                    ddlAsesor.SelectedValue = asesorSeleccionado;
-                }
-                // Aquí se  obtiene y muestra el rango de fechas en el título del DataGrid
-                DateRangeLiteral.Text = GetDateRange();
-                CargarClienteYContacto();
 
+                if (Session["usuariologueado"] != null)
+                {
+                    string usuariologueado = Session["usuariologueado"].ToString();
+                    // Llamar al método para cargar los datos en el DropDownList
+                    CargarAsesoresEnDropDownList();
+                    if (Session["AsesorDiseño"] != null)
+                    {
+                        string asesorSeleccionado = Session["AsesorDiseño"].ToString();
+                        ddlAsesor.SelectedValue = asesorSeleccionado;
+                    }
+                    // Aquí se  obtiene y muestra el rango de fechas en el título del DataGrid
+                    DateRangeLiteral.Text = GetDateRange();
+                    CargarClienteYContacto();
+
+                }
+                else
+                {
+                    Response.Redirect("~/Formularios/Login.aspx");
+                }
 
             }
         }
@@ -92,11 +101,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     {
                                         tbMailCont.Text = reader["MailContacto"].ToString();
                                     }
+
+                                    Session.Remove("ID_ContactoBD");
+                                    Session.Remove("Id_ClienteBD");
+
                                 }
                             }
                         }
                     }
+
+                  
+
                 }
+
+
             }
         }
 
@@ -125,7 +143,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ddlAsesor.Items.Insert(0, new ListItem("-- Seleccione --", "0"));
         }
 
-
         protected void ActualizarTituloDataGrid()
         {
             // Verificamos que ambas fechas estén seleccionadas antes de actualizar el título.
@@ -153,6 +170,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (btnCliente != null)
             {
                 btnCliente.Enabled = false;
+                btnCliente.CssClass = "btn btn-outline-secondary";
             }
 
         }
@@ -242,8 +260,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             double suma = VisLev + VisitaDiseño + VisCliNuevo + VisCierre + SegCotizacion + VisMantenimiento + EntregaCotizacion + Cartera;
             lbTotal.InnerText = CalcularPorcentaje(suma, cantidadFilas).ToString() + " %";
-
-
 
 
 
@@ -419,13 +435,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 ScriptManager.RegisterStartupScript(this, GetType(), "GenerarGrafica1", script, true);
 
-
-
             }
-
-
-
-
 
         }
 
@@ -931,7 +941,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
 
                     // Define el mensaje personalizado
-                    string mensajePersonalizado = "¡La Visita ha sido ingresada con Exito!";
+                    string mensajePersonalizado = "La Visita ha sido ingresada con éxito";
 
                     // Define la URL de redirección
                     string urlRedireccion = "Ventas/Visita_Asesores.aspx";
@@ -971,11 +981,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.ExecuteNonQuery();
                     }
                     // Define el mensaje personalizado
-                    string mensajePersonalizado = "¡La visita ha sido actualizada con exito!";
-
+                    string mensajePersonalizado = "La visita ha sido actualizada con éxito";
                     // Define la URL de redirección
                     string urlRedireccion = "Ventas/Visita_Asesores.aspx";
-
                     // Redirige a la página de éxito con el mensaje personalizado y la URL de redirección como parámetros
                     Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
 
@@ -987,5 +995,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
         }
+
     }
 }

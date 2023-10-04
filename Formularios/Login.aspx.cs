@@ -38,6 +38,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Login
 
 				//Agregamos la vista que queremos mostrar al logearseSession
 				Session["usuariologueado"] = tbUsuario.Text;
+                CedulaUsuarioLogeado();
 				Response.Redirect("Inicio.aspx");
 			}
 			else
@@ -47,42 +48,71 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Login
 			}
 			cmd.Connection.Close();	
 		}
-		//login();
 
 
-		//private void login()
-  //      {
+        public void  CedulaUsuarioLogeado()
+        {
 
+            string consultaActual = "Select Cedula from tblEmpleado where  Login = @Login";
+                                  
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
 
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
 
+                using (SqlCommand command = new SqlCommand(consultaActual, connection))
+                {
+                    command.Parameters.AddWithValue("@Login",tbUsuario.Text);
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        reader.Close();
+                        // Data arrived.
+                        string CedulaLogeada = (string)command.ExecuteScalar();
+                        Session["CedulaLogeada"] = CedulaLogeada;
+                    }
+                    
+                   
+                }
+            }
 
-
-
-		//}
-
-
-
-
-		//         SqlConnection cn = new SqlConnection("Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL;User ID=pcadmin;Password=password");
-		//         cn.Open();
-		//         SqlCommand cm = new SqlCommand("select Login,Password from tblEmpleado where Login='" + tbUsuario.Text + "' and Password= '" + tbPassword.Text + "'", cn);
-		//         SqlDataReader dr = cm.ExecuteReader();
-		//         if (dr.Read())
-		//         {
-
-		//             Response.Redirect("Inicio.aspx");
-
-		//         }
-		//         else
-		//         {
-		//	Response.Redirect("Login.aspx");
-
-		//}
-
-
+        }
 
 
 
-	}
+        //login();
+
+
+        //private void login()
+        //      {
+
+
+        //}
+
+
+
+
+        //         SqlConnection cn = new SqlConnection("Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL;User ID=pcadmin;Password=password");
+        //         cn.Open();
+        //         SqlCommand cm = new SqlCommand("select Login,Password from tblEmpleado where Login='" + tbUsuario.Text + "' and Password= '" + tbPassword.Text + "'", cn);
+        //         SqlDataReader dr = cm.ExecuteReader();
+        //         if (dr.Read())
+        //         {
+
+        //             Response.Redirect("Inicio.aspx");
+
+        //         }
+        //         else
+        //         {
+        //	Response.Redirect("Login.aspx");
+
+        //}
+
+
+
+
+
+    }
 
 }

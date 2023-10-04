@@ -1,13 +1,6 @@
-﻿.Principal
-{
-    display:flex;
-    justify-content:space-around;    
+﻿body {
 }
 
-
-.Bajo {
-  
-}
 
 .icong {
     text-decoration: none; /* Quitar subrayado */
@@ -25,6 +18,33 @@
 }
 
 
+.icong1 {
+    text-decoration: none; /* Quitar subrayado */
+    color: inherit; /* Heredar el color del texto */
+    cursor: pointer; /* Cambiar el cursor a una mano al pasar por encima */
+    font-size: 24px;
+}
+
+    .icong1:hover {
+        color: inherit;
+    }
+
+
+/*Para deshabilitar o habilitar  los iconos*/
+
+a.icong1.disabled {
+    pointer-events: none;
+    color: black; /* Cambia el color a negro para enlaces deshabilitados */
+    opacity: 0.5;
+}
+
+a.icong1.enabled {
+    pointer-events: auto;
+    color: blue; /* Cambia el color a azul para enlaces habilitados */
+}
+
+
+
 /*Para deshabilitar o habilitar  los iconos*/
 
 a.icong.disabled {
@@ -38,14 +58,30 @@ a.icong.enabled {
     color: blue; /* Cambia el color a azul para enlaces habilitados */
 }
 
-
-.NumeroRender {
+.lbDesarrolloNumero {
     color: black; /* Cambia el color del texto */
     font-weight: bold; /* Hace el texto más oscuro y sobresaliente */
-    font-size: 1.2rem; /* Puedes ajustar el tamaño de la fuente según tus necesidades */ 
+    font-size: 1.2rem; /* Puedes ajustar el tamaño de la fuente según tus necesidades */
     font-family: 'Times New Roman'
 }
 
+.Principal-centro {
+    display: flex;
+    justify-content:space-around;
+}
+
+.izq{
+   align-content:center;
+}
+
+.PrecioSugerido {
+    color: black; /* Cambia el color del texto */
+    font-weight: bold; /* Hace el texto más oscuro y sobresaliente */
+    font-size: 1.5rem !important; /* Puedes ajustar el tamaño de la fuente según tus necesidades */
+    font-family: 'Times New Roman'
+}
+
+
 /* Estilo para el encabezado del DataGrid */
 .datagrid-header {
     position: sticky;
@@ -54,20 +90,11 @@ a.icong.enabled {
     background-color: #f2f2f2; /* Ajusta el color de fondo del encabezado según tus preferencias */
 }
 
-
-
 /* Para ocultar el checkbox guradar Render*/
-.hidden-checkbox {
+.hidden-textBox {
     display: none;
 }
 
-/* Estilo para el encabezado del DataGrid */
-.datagrid-header {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background-color: #f2f2f2; /* Ajusta el color de fondo del encabezado según tus preferencias */
-}
 
 .auto-width-column {
     width: auto;
@@ -75,5 +102,14 @@ a.icong.enabled {
     white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
     overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
     text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
+    height:1em;
 }
 
+
+.fila-seleccionada {
+    background-color: #D6FAFA; /* Cambia el color de fondo según tus preferencias */
+}
+
+.fila-seleccionada1 {
+    opacity: 0.8;
+}

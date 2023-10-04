@@ -1,4 +1,4 @@
-﻿﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="frmPrincipal.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.OrdenesDeTrabajo" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="frmPrincipal.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.OrdenesDeTrabajo" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 
@@ -14,7 +14,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="../../Recursos/CSS/frmPrincipal.css" rel="stylesheet" />
-    <title>Ordenes de trabajo</title>
+    <title>Ordenes de Trabajo </title>
 </head>
 <body>
     
@@ -224,22 +224,19 @@
 
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="DiseñoYDesarrollo/Insumos.aspx">Insumos</a>
-                        </li>
-                    </ul>
+                            <a class="nav-link active" aria-current="page" href="DiseñoYDesarrollo/Insumos.aspx">Insumos</a
+                        </li
+                    </ul
 
 
 
 
 
-                </div>
+                </div
             </div>
         </nav>
 
-        <%--Termina Panel principal de nombres--%>
-
-
-        <%--Comienza Panel de iconos--%>
+        <%--Termina Panel principal de nombres--%>        <%--Comienza Panel de iconos--%>
 
         <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
             <div class="container-fluid">
@@ -362,9 +359,6 @@
     
     </div><%--Fin div wrapper --%>
 
-    
-
-
 
 
     <%--Comienza Formulario Principal--%>
@@ -373,9 +367,17 @@
     <form class="frmPrincipal" runat="server">
 
         <div class="container-fluid">
-
+           
+       
+                   <asp:Label ID="msgOtCerrada" runat="server" Text="CERRADA EL" BackColor="#DD0000" ForeColor="Black" Font-Size="XX-Large" Width="593px" style="text-align: center;" Visible="False"></asp:Label>
+                
+                  
+                       
+              <br />   
+               <br />
             <div class="row">
-
+                
+               
 
                 <div class="col-1">
                     <div class="input-group input-group-sm mb-2 gap-2">
@@ -383,7 +385,7 @@
                         <asp:TextBox ID="tbOT" runat="server" CssClass="form-control" OnTextChanged="tbOT_TextChanged" AutoPostBack="true"></asp:TextBox>
                     </div>
                 </div>
-
+                
 
                 <div class="col-1">
                     <div class="input-group input-group-sm mb-2 gap-2">
@@ -416,7 +418,7 @@
                 <div class="col-2">
                     <div class="input-group input-group-sm mb-2 gap-2">
                         <asp:Label class="form-label" Text="Ped.Depen" runat="server" ID="lblPedDepen"></asp:Label>
-                        <asp:TextBox ID="tbPedDepen" type="number" class="form-control" runat="server"></asp:TextBox>
+                        <asp:TextBox ID="tbPedDepen" type="number" class="form-control" runat="server" Width="90px"></asp:TextBox>
                     </div>
                 </div>
 
@@ -533,9 +535,9 @@
 
 
         <%--Pantalla intermedia--%>
+        <hr />
 
-
-
+        <h5>&nbsp;&nbsp;&nbsp Portada</h5>
 
         <div class="container-fluid">
             <div class="observaciones">
@@ -566,7 +568,7 @@
                         </div>
                         <div class="col-6">
                             <div class="input-group input-group-sm mb-2 gap-2">
-                                <label class="form-label" runat="server" id="inputOkVenta">Ok.Venta</label>
+                                <label class="form-label" runat="server" id="inputOkVenta">Ok.Ventaaaaaaaa</label>
                                 <input type="date" class="form-control" runat="server" aria-label="Sizing example input" aria-describedby="inputOkVenta" />
                             </div>
                         </div>
@@ -597,19 +599,7 @@
                         </div>
 
 
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="table-responsive table-secondary overflow-auto m-2 ">
-
-                                    <h6 class="datagrid-header text-center">Grid 1</h6>
-
-                                    <asp:DataGrid ID="DataGrid1" runat="server"></asp:DataGrid>
-                                    <asp:SqlDataSource runat="server" ID="DataGridDespacho"></asp:SqlDataSource>
-
-
-                                </div>
-                            </div>
-                        </div>
+                       
 
 
                     </div>
@@ -671,6 +661,16 @@
                                 <asp:Label class="form-label" Text="Bolsa" runat="server" ID="lblBolsa"></asp:Label>
                                 <asp:TextBox type="text" class="form-control" runat="server" ID="tbBolsa" />
                             </div>
+
+
+                            <div class="input-group input-group-sm mb-2 gap-2">
+                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <asp:Label class="form-label" runat="server" ID="lblSaldoOT" BorderColor="#006600" BackColor="Lime" Font-Size="XX-Large"  ></asp:Label>
+                            
+                            </div>
+
+
+
                         </div>
                     </div>
 
@@ -695,6 +695,7 @@
 
                         <div class="col-6">
                             <%--<input type="text" class="form-control" runat="server" aria-label="Sizing example input" aria-describedby="inputSaldo" />--%>
+                                <asp:TextBox type="text" class="form-control" runat="server" ID="txtValorPedido" />
                         </div>
 
                         <div class="row">
@@ -733,8 +734,25 @@
 
             </div>
         </div>
+        <hr />
+          <div class="row">
+                            <div class="col-12">
+                                <div class="table-responsive table-secondary overflow-auto m-2 ">
+
+                                   
+                                    <h5>&nbsp;&nbsp;&nbsp Información despacho</h5>
+
+                                    <asp:DataGrid ID="dtagrdDespachoProgramado" runat="server" BorderColor="Black" CellPadding="1" CellSpacing="1" DataSourceID="DataGridDespacho" Font-Bold="False" Font-Italic="False" Font-Names="helvetica" Font-Overline="False" Font-Size="Small" Font-Strikeout="False" Font-Underline="False" HorizontalAlign="left">
+                                        <HeaderStyle BackColor="#00003C" Font-Bold="False" Font-Italic="False" Font-Overline="False" Font-Strikeout="False" Font-Underline="False" ForeColor="Gray" />
+                                    </asp:DataGrid>
+                                    <asp:SqlDataSource runat="server" ID="DataGridDespacho" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL_PRUEBAConnectionString %>" SelectCommand="SELECT DespachoInterno, DespachoCoordinado, FechaDespachoCoordinado, Fecha_Despacho, Terminado_despacho, InfDes_Fecha_Real_Despacho AS FechaRealDespacho, Entregado_Transporte, Fecha_Entregado, Receptor, Celular_Receptor FROM tblInformacionDespacho WHERE (Id_OT = '0159112') AND (Consecutivo_Pedido = 1)"></asp:SqlDataSource>
 
 
+                                </div>
+                            </div>
+                        </div>
+        <hr />
+        <h5>&nbsp;&nbsp;&nbsp Información contable</h5>
         <div class=" container-fluid Info-Contable">
 
             <div class="Datos-Cliente1">
@@ -772,7 +790,8 @@
 
                 <div class="Info1">
                     <asp:Label class="form-label" Text="Obs. Contable " runat="server" ID="lblObs"></asp:Label>
-                    <asp:TextBox type="text" class="form-control" runat="server" ID="txtObs"></asp:TextBox>
+              
+                     <textarea class="form-control form-control-sm" id="ObservacionCont" runat="server" cols="40" rows="7" high="60px"></textarea>
                 </div>
 
                 <div class="Info_F ">
@@ -838,7 +857,7 @@
                     <div class="izquierda">
                         <label>
                             Venta
-                            <br />
+                                    <br />
                             Neta</label>
                     </div>
 
@@ -849,7 +868,7 @@
                     <div class="derecha">
                         <div class="derecha1">
                             <label for="">Tipo de Negociación</label>
-                            <textarea class="form-control form-control-sm" id="TextTNegociacion" runat="server" cols="25" rows="7"></textarea>
+                            <textarea class="form-control form-control-sm" id="TextTNegociacion" runat="server" cols="25" rows="7"  ></textarea>
                         </div>
                     </div>
 
@@ -879,7 +898,8 @@
 
                 <div class="Info1">
                     <asp:Button ID="btnDcto" runat="server" Text="%Dcto" class="bi bf" disabled="true" />
-                    <asp:TextBox type="text" class="form-control" runat="server" ID="txtDcto"></asp:TextBox>
+                    <asp:TextBox type="text" class="form-control" runat="server" ID="txtDcto" Width ="50px"></asp:TextBox>
+                    <asp:TextBox type="text" class="form-control" runat="server" ID="txtDctoValor"></asp:TextBox>
                 </div>
 
                 <div class="Info1">
@@ -897,7 +917,7 @@
                     <asp:TextBox type="text" class="form-control" runat="server" ID="txtGtotal"></asp:TextBox>
                 </div>
 
-
+               
             </div>
 
 

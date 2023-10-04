@@ -203,7 +203,8 @@
 
                                 <div class="col-5">
                                     <div class="input-group input-group-sm  mb-2 gap-2 text-end ">
-                                        <asp:CheckBox ID="CheckBox1" CssClass="form-check" runat="server" Enabled="false" data-bs-toggle="modal" data-bs-target="#myModal" />
+                                        <asp:CheckBox ID="CheckBox1" CssClass="form-check " runat="server" Enabled="false" OnCheckedChanged="CheckBox1_CheckedChanged" AutoPostBack="true"/>
+                                      
 
                                         <asp:Label ID="chxCompartir" class="form-label" Text="Compartir:" runat="server"></asp:Label>
                                     </div>
@@ -744,6 +745,8 @@
         function check() {
             document.getElementById("CheckBox1").classList.remove("disabled");
         }
+
+
     </script>
 
     <script type="text/javascript">
@@ -765,9 +768,12 @@
 
             // Actualiza el formulario 1
             window.opener.location.reload(); // Recarga el formulario padre
-          
+
         }
     </script>
+
+    
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
