@@ -33,6 +33,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 if (Session["usuariologueado"] != null)
                 {
                     CargarAsesoresEnDropDownList();
+                    DepartamentoAsesor();
 
                     Button btnTrabajarRender = FindControl("btnTrabajarRender") as Button;
                     if (btnTrabajarRender != null)
@@ -111,6 +112,36 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ddlAsesor.Items.Insert(0, new ListItem("-- Seleccione --", "0"));
         }
 
+        public void DepartamentoAsesor()
+        {
+
+            string consultaActual = "SELECT B.Descripcion FROM tblEmpleado As A INNER join tblDepartamento As B on B.ID_Departamento = A.Dependencia WHERE  Cedula = @Cedula";
+
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(consultaActual, connection))
+                {
+                    command.Parameters.AddWithValue("@Cedula", Session["CedulaLogeada"].ToString());
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        reader.Close();
+                        // Data arrived.
+                        string Departamento = (string)command.ExecuteScalar();
+                        Session["Departamento"] = Departamento;
+
+                    }
+
+
+                }
+            }
+
+        } // Campo se podria Cargar en el login
+
         protected void RenderPorZonaX(object sender, EventArgs e)
         {
 
@@ -163,7 +194,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#57F525"); //Verde
                 }
-                else if (fechaProgramada <= DateTime.Now)
+                else if (fechaProgramada <= DateTime.Now && programadoVentas == 1)
                 {
                     e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F71A27");    //rojo 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
@@ -175,7 +206,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
                 else
                 {
-                    if (pausado == 1)
+                    if (pausado == 1 &&  programadoVentas == 1)
                     {
                         e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#08F4E2"); // Aqua
                     }
@@ -423,6 +454,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void GuardarModificarRender(object sender, EventArgs e)
         {
+
+            //Pendiente Validaciones que el Render tenga un numero de Diseño Asociado 
+
+
             bool guardarRender = chkEstadoGuardarRender.Checked;
 
             if (guardarRender)
@@ -672,7 +707,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#57F525");
                 }
-                else if (fechaProgramada <= DateTime.Now)
+                else if (fechaProgramada <= DateTime.Now && programadoVentas == 1)
                 {
                     e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F71A27");
                 }
@@ -683,7 +718,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
                 else
                 {
-                    if (pausado == 1)
+                    if (pausado == 1 && programadoVentas == 1)
                     {
                         e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#08F4E2");
                     }
@@ -883,77 +918,101 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void ProgramarRender(object sender, EventArgs e)
         {
 
-            DateTime FechaIngresoRender = DateTime.Now;
-            DateTime UltimaActivacionRender = FechaIngresoRender;
-          
-
-            while (UltimaActivacionRender.DayOfWeek == DayOfWeek.Saturday || UltimaActivacionRender.DayOfWeek == DayOfWeek.Sunday)
+            switch (Session["Departamento"].ToString().ToUpper())
             {
-                UltimaActivacionRender = UltimaActivacionRender.AddDays(1);
-                UltimaActivacionRender = new DateTime(UltimaActivacionRender.Year, UltimaActivacionRender.Month, UltimaActivacionRender.Day, 8, 0, 0);
-            }
-            DateTime FechaEntrega = UltimaActivacionRender.AddDays(4);
-            if (chxAnimacion.Checked)
-            {
-                FechaEntrega = FechaEntrega.AddDays(1); 
+                case "VENTAS":
 
-            }
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                    DateTime FechaIngresoRender = DateTime.Now;
+                    DateTime UltimaActivacionRender = FechaIngresoRender;
 
-            // Calcula el día siguiente a la fecha de entrega
-            DateTime DiaSiguiente = FechaEntrega.AddDays(1);
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-
-                // Consulta SQL para verificar si la fecha de entrega es un día feriado
-                string query = "SELECT COUNT(*) FROM tblDiaNoLaboral WHERE dnlFecha BETWEEN @UltimaActivacionRender AND @FechaEntrega OR dnlFecha = @DiaSiguiente";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    // Agrega el parámetro para la fecha de entrega
-                    command.Parameters.AddWithValue("@FechaEntrega", FechaEntrega);
-                    command.Parameters.AddWithValue("@UltimaActivacionRender", UltimaActivacionRender);
-                    command.Parameters.AddWithValue("@DiaSiguiente", DiaSiguiente);
-
-                    int count = (int)command.ExecuteScalar(); // Ejecuta la consulta y obtén el resultado
-
-                    if (count > 0)
+                    while (UltimaActivacionRender.DayOfWeek == DayOfWeek.Saturday || UltimaActivacionRender.DayOfWeek == DayOfWeek.Sunday)
                     {
-                        // Si la fecha de entrega o el día siguiente son días feriados, agrega el número correcto de días adicionales a la fecha de entrega
-                        FechaEntrega = FechaEntrega.AddDays(count);
+                        UltimaActivacionRender = UltimaActivacionRender.AddDays(1);
+                        UltimaActivacionRender = new DateTime(UltimaActivacionRender.Year, UltimaActivacionRender.Month, UltimaActivacionRender.Day, 8, 0, 0);
                     }
-                }
+                    DateTime FechaEntrega = UltimaActivacionRender.AddDays(4);
+                    if (chxAnimacion.Checked)
+                    {
+                        FechaEntrega = FechaEntrega.AddDays(1);
+
+                    }
+                    string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+                    // Calcula el día siguiente a la fecha de entrega
+                    DateTime DiaSiguiente = FechaEntrega.AddDays(1);
+
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
+
+                        // Consulta SQL para verificar si la fecha de entrega es un día feriado
+                        string query = "SELECT COUNT(*) FROM tblDiaNoLaboral WHERE dnlFecha BETWEEN @UltimaActivacionRender AND @FechaEntrega OR dnlFecha = @DiaSiguiente";
+
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                        {
+                            // Agrega el parámetro para la fecha de entrega
+                            command.Parameters.AddWithValue("@FechaEntrega", FechaEntrega);
+                            command.Parameters.AddWithValue("@UltimaActivacionRender", UltimaActivacionRender);
+                            command.Parameters.AddWithValue("@DiaSiguiente", DiaSiguiente);
+
+                            int count = (int)command.ExecuteScalar(); // Ejecuta la consulta y obtén el resultado
+
+                            if (count > 0)
+                            {
+                                // Si la fecha de entrega o el día siguiente son días feriados, agrega el número correcto de días adicionales a la fecha de entrega
+                                FechaEntrega = FechaEntrega.AddDays(count);
+                            }
+                        }
+                    }
+
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
+                        //Realizamos la Actualizacion 
+                        string query = "UPDATE tblRender SET ProgramadoVentas = 1, Fecha_Ingreso = @FechaIngreso, UltimaActivacion = @UltimaActivacion," +
+                            " Fecha_Programada_Entrega = @FechaProgramadaEntrega WHERE Id_Render = @IdRender";
+
+
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                        {
+                            // Aquí defines los parámetros de la consulta
+                            command.Parameters.AddWithValue("@FechaIngreso", FechaIngresoRender);
+                            command.Parameters.AddWithValue("@UltimaActivacion", UltimaActivacionRender);
+                            command.Parameters.AddWithValue("@FechaProgramadaEntrega", FechaEntrega);
+                            command.Parameters.AddWithValue("@IdRender", NumeroRender.Text);
+
+                            command.ExecuteNonQuery();
+                        }
+
+                        // Mensaje de éxito
+                        string mensajeExito = "El Render " + tbProyecto.Text.Trim() + " ha sido agregado exitosamente.";
+                        string scriptExito = "alert('" + mensajeExito + "');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
+                        ScriptManager.RegisterStartupScript(this, GetType(), "RefreshPage", "window.location.reload();", true);
+
+
+                    }
+
+
+
+                    break;
+
+                case "COMPRA": //Boton Programar  Departamento Compras
+
+                    break;
+
+                case "DESARROLLO DE PRODUCTO": // Boton Programar  Departamento Compras Desarrollo Producto
+
+
+                    break;
+
+
+                default:
+                    // Error Con el despartamento de ese usuario Validar con Sistemas 
+                    break;
             }
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                //Realizamos la Actualizacion 
-                string query = "UPDATE tblRender SET ProgramadoVentas = 1, Fecha_Ingreso = @FechaIngreso, UltimaActivacion = @UltimaActivacion," +
-                    " Fecha_Programada_Entrega = @FechaProgramadaEntrega WHERE Id_Render = @IdRender";
-
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    // Aquí defines los parámetros de la consulta
-                    command.Parameters.AddWithValue("@FechaIngreso", FechaIngresoRender);
-                    command.Parameters.AddWithValue("@UltimaActivacion", UltimaActivacionRender);
-                    command.Parameters.AddWithValue("@FechaProgramadaEntrega", FechaEntrega);
-                    command.Parameters.AddWithValue("@IdRender", NumeroRender.Text);
-
-                    command.ExecuteNonQuery();
-                }
-
-                // Mensaje de éxito
-                string mensajeExito = "El Render " + tbProyecto.Text.Trim() + " ha sido agregado exitosamente.";
-                string scriptExito = "alert('" + mensajeExito + "');";
-                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
-                ScriptManager.RegisterStartupScript(this, GetType(), "RefreshPage", "window.location.reload();", true);
-
-
-            }
 
 
         }

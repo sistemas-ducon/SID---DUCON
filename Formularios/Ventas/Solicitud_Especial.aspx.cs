@@ -24,7 +24,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private bool terminadoVentas;
         public bool VariableSolicitudSesion;
 
-  
+
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -104,7 +104,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     }
 
-                  
+
 
                 }
                 else
@@ -309,7 +309,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
-        }
+        }  // Este  Campo se podria cargar en el Login
 
         public void DepartamentoAsesor()
         {
@@ -339,7 +339,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
-        }
+        } // Este  Campo se podria cargar en el Login
+
         protected void chxConvenciones_CheckedChanged(object sender, EventArgs e)
         {
             if (chxConvenciones.Checked)
@@ -1282,12 +1283,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session["Dirigido"] = ddlDirigido.SelectedItem.Text;
             Session["Tipo"] = ddlTipo.SelectedItem.Text;
             Session["AsesorSol"] = ddlAsesor.SelectedItem.Text;
+
+            Session["chxGuardar"] = chkEstadoGuardarSolicitud.Checked;
         }
 
 
         private void CargarSession()
         {
-            
+
 
             string proyecto = Session["ProyectoSession"]?.ToString();
             string SoliOrigen = Session["SolicitudOrigen"]?.ToString();
@@ -1297,6 +1300,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string Dirigido = Session["Dirigido"]?.ToString();
             string Tipo = Session["Tipo"]?.ToString();
             string AsesorSol = Session["AsesorSol"]?.ToString();
+
+
+            
 
             if (!IsPostBack)
             {
@@ -1355,7 +1361,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
 
 
-                    if (tbCliente.Text != "")
+                    if (tbCliente.Text != "" && Session["chxGuardar"].ToString() == "True")
                     {
                         Session.Remove("ProyectoSession");
                         Session.Remove("SolicitudOrigen");
@@ -1366,7 +1372,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         Session.Remove("Tipo");
                         Session.Remove("AsesorSol");
 
+
+                        string script = "<script>NuevaSolicitud();</script>";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "NuevaSolicitud", script, false);
+
                     }
+                    else
+                    {
+
+                        string script = "<script>NuevaSolicitud();</script>";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "NuevaSolicitud", script, false);
+                    }
+
+                   
+
+
 
 
                 }
@@ -1374,7 +1394,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
 
-        
+
         }
 
         protected void LimpiarCampos(object sender, EventArgs e)
@@ -1720,7 +1740,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             int count = (int)cmd.ExecuteScalar();
                             if (count > 0)
                             {
-                                
+
                                 DetalleEntrados = true;
                                 connection.Close();
                             }
@@ -1772,7 +1792,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                                     using (SqlCommand command = new SqlCommand(query, connection))
                                     {
-                                        
+
                                         command.Parameters.AddWithValue("@FechaIngreso", FechaIngreso);
                                         command.Parameters.AddWithValue("@FechaProgramadaEntrega", FechaEntrega);
                                         command.Parameters.AddWithValue("@Id_Solicitud", lbNumeroSolicitud.Text);
@@ -1859,7 +1879,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
                             }
-   
+
                         }
 
 
@@ -1878,11 +1898,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     break;
 
-                case "COMPRA": //Boton Programar  Departamento Compras
+                case "DISEÑO": //Boton Programar  Departamento Compras
 
                     break;
 
-                case "DESARROLLO DE PRODUCTO": // Boton Programar  Departamento Compras Desarrollo Producto
+                case "RECEPCION": // Boton Programar  Departamento Compras Desarrollo Producto
 
 
                     break;

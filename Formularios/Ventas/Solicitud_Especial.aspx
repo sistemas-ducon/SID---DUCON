@@ -12,23 +12,110 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="../../Recursos/CSS/Ventas/SolicitudesEspeciales.css" />
 
-     <script>
-         function confirmProgramarSolicitud(event) {
+    <script>
+        function confirmProgramarSolicitud(event) {
 
-             var IdSolicitud = document.getElementById("lbNumeroSolicitud").innerHTML;
-             var mensaje = "Una vez programada la solicitud, no podrá realizar modificaciones. Esta seguro de programar la solicitud:" + IdSolicitud;
+            var IdSolicitud = document.getElementById("lbNumeroSolicitud").innerHTML;
+            var mensaje = "Una vez programada la solicitud, no podrá realizar modificaciones. Esta seguro de programar la solicitud:" + IdSolicitud;
 
-             var result = confirm(mensaje);
-             if (result) {
+            var result = confirm(mensaje);
+            if (result) {
 
-                 $(event.target).removeAttr('onclick');
-                 $(event.target).click();
-             }
-             return false;
-         }
+                $(event.target).removeAttr('onclick');
+                $(event.target).click();
+            }
+            return false;
+        }
+
+        function NuevaSolicitud() {
 
 
-     </script>
+
+
+            // Habilitar o deshabilitar los TextBox Type text
+            var textBoxes = document.querySelectorAll("input[type='text']");
+            for (var i = 0; i < textBoxes.length; i++) {
+
+                if (textBoxes[i].id !== "tbProveedor" && textBoxes[i].id !== "tbAncho" && textBoxes[i].id !== "tbAltura" && textBoxes[i].id !== "tbProfundidad"
+                    && textBoxes[i].id !== "tbMaterial" && textBoxes[i].id !== "tbCliente" && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbTelefono"
+                    && textBoxes[i].id !== "tbCelular" && textBoxes[i].id !== "tbMail" && textBoxes[i].id !== "tbDireccion" && textBoxes[i].id !== "tbPrecioSugerido"
+                    && textBoxes[i].id !== "tbCantidad" && textBoxes[i].id !== "tbDesarrollaPor") {
+                    textBoxes[i].disabled = false;
+
+
+                }
+
+            }
+
+            var checkBoxesToEnable = ["chxViaticos"];
+
+            for (var i = 0; i < checkBoxesToEnable.length; i++) {
+                var checkBoxId = checkBoxesToEnable[i];
+                var checkBox = document.getElementById(checkBoxId);
+
+                if (checkBox) {
+                    checkBox.disabled = false; // Habilita el CheckBox
+                }
+            }
+
+
+            // Obtén la fecha actual
+            var fechaActual = new Date();
+            // Formatea las fechas en el formato deseado (por ejemplo, YYYY-MM-DD)
+            var fechaActualFormateada = fechaActual.toISOString().split('T')[0];
+
+            var FechaActualAnio = new Date();
+
+            // Establece la fecha al primer día del año actual
+            FechaActualAnio.setMonth(0); // Establece el mes a enero (0)
+            FechaActualAnio.setDate(1); // Establece el día al primero (1)
+            // Formatea la fecha en el formato deseado (por ejemplo, YYYY-MM-DD)
+            var fechaFormateada2 = FechaActualAnio.toISOString().split('T')[0];
+
+
+
+
+            // Asigna las fechas a los TextBox correspondientes por su ID
+            document.getElementById("tbFechaIngreso").value = fechaActualFormateada;
+            document.getElementById("tbFechaIngresoServidor").value = fechaActualFormateada;
+
+            document.getElementById("tbFechaEntrega").value = fechaFormateada2;
+            document.getElementById("tbFechaEntregaServidor").value = fechaFormateada2;
+
+            document.getElementById("tbFechaRespuesta").value = fechaFormateada2;
+            document.getElementById("tbFechaRespuestaServidor").value = fechaFormateada2;
+
+
+            // Deshabilitar enlaces 
+            document.getElementById("NuevaSolicitud").classList.remove("enabled");
+            document.getElementById("ModificarSolicitud").classList.remove("enabled");
+
+
+            // Habilitar enlaces
+            document.getElementById("GrabarSolicitud").classList.add("enabled");
+
+
+            //Habilitar
+            var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
+             boton1.disabled = false;
+
+
+
+             var checkBox = document.getElementById('<%= chkEstadoGuardarSolicitud.ClientID %>');
+            checkBox.checked = true; // Marcar el CheckBox para saber si insertar o modificar
+
+
+            // Limpiar el contenido del label
+            var label = document.getElementById("lbNumeroSolicitud");
+            label.textContent = "";
+
+
+
+        }
+
+
+
+    </script>
 
     <script>
         function confirmarQuitarDetalle(event) {
@@ -36,7 +123,7 @@
             var IdSolicitud = document.getElementById("lbNumeroSolicitud").innerHTML;
             var IdDetalle = document.getElementById("lbIdDetalle").innerHTML;
 
-            var mensaje = "Estás seguro de eliminar el detalle " + IdDetalle + " de la solicitud " + IdSolicitud ;
+            var mensaje = "Estás seguro de eliminar el detalle " + IdDetalle + " de la solicitud " + IdSolicitud;
             var result = confirm(mensaje);
             if (!result) {
                 event.preventDefault(); // Cancelar el postback
@@ -46,18 +133,18 @@
 
     </script>
 
-  <script>
-      function precio(event) {
+    <script>
+        function precio(event) {
 
-          var mensaje = "Estás seguro de eliminar el detalle " ;
-          var result = confirm(mensaje);
-          if (!result) {
-              event.preventDefault(); // Cancelar el postback
-          }
-          return result; // Devolver el resultado de la confirmación
-      }
+            var mensaje = "Estás seguro de eliminar el detalle ";
+            var result = confirm(mensaje);
+            if (!result) {
+                event.preventDefault(); // Cancelar el postback
+            }
+            return result; // Devolver el resultado de la confirmación
+        }
 
-  </script>
+    </script>
 
 
 
@@ -606,11 +693,11 @@
                                                         <asp:LinkButton class="icong disabled" title="Carrito" ID="OkCompras" runat="server">
                                                         <i class="bi bi-arrow-down-left-circle"></i>
                                                         </asp:LinkButton>
-                                                       
+
                                                         <asp:LinkButton class="icong disabled" title="Quitar Detalle " ID="QuitarDetalle" runat="server" OnClick="EliminarDetalle" OnClientClick="return confirmarQuitarDetalle(event);">
                                                          <i class="bi bi-dash-circle"></i>
                                                         </asp:LinkButton>
-                                                     
+
                                                         <asp:Label ID="lbIdDetalle" runat="server" Text="Label"></asp:Label>
 
                                                         <ul />
@@ -621,7 +708,7 @@
                                     </nav>
 
                                     <div class=" input-group input-group-sm  mt-2 gap-2 justify-content-center">
-                                        <asp:Button class=" btn btn-warning  " ID="btnProgramarSolicitud" runat="server" Text="Programar" OnClick="ProgramarSolicitud"  OnClientClick="return confirmProgramarSolicitud(event);" />
+                                        <asp:Button class=" btn btn-warning  " ID="btnProgramarSolicitud" runat="server" Text="Programar" OnClick="ProgramarSolicitud" OnClientClick="return confirmProgramarSolicitud(event);" />
                                     </div>
                                 </div>
 
@@ -1109,7 +1196,7 @@
         document.getElementById("Observaciones").classList.add("enabled");
         document.getElementById("CancelarSolicitud").classList.add("enabled");
 
-    
+
 
 
         // Obtener la fecha actual
@@ -1129,91 +1216,7 @@
 
         document.getElementById("btnCliente").disabled = true;
 
-        function NuevaSolicitud() {
 
-
-
-
-            // Habilitar o deshabilitar los TextBox Type text
-            var textBoxes = document.querySelectorAll("input[type='text']");
-            for (var i = 0; i < textBoxes.length; i++) {
-
-                if (textBoxes[i].id !== "tbProveedor" && textBoxes[i].id !== "tbAncho" && textBoxes[i].id !== "tbAltura" && textBoxes[i].id !== "tbProfundidad"
-                    && textBoxes[i].id !== "tbMaterial" && textBoxes[i].id !== "tbCliente" && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbTelefono"
-                    && textBoxes[i].id !== "tbCelular" && textBoxes[i].id !== "tbMail" && textBoxes[i].id !== "tbDireccion" && textBoxes[i].id !== "tbPrecioSugerido"
-                    && textBoxes[i].id !== "tbCantidad" && textBoxes[i].id !== "tbDesarrollaPor") {
-                    textBoxes[i].disabled = false;
-
-
-                }
-
-            }
-
-            var checkBoxesToEnable = ["chxViaticos"];
-
-            for (var i = 0; i < checkBoxesToEnable.length; i++) {
-                var checkBoxId = checkBoxesToEnable[i];
-                var checkBox = document.getElementById(checkBoxId);
-
-                if (checkBox) {
-                    checkBox.disabled = false; // Habilita el CheckBox
-                }
-            }
-
-
-            // Obtén la fecha actual
-            var fechaActual = new Date();
-            // Formatea las fechas en el formato deseado (por ejemplo, YYYY-MM-DD)
-            var fechaActualFormateada = fechaActual.toISOString().split('T')[0];
-
-            var FechaActualAnio = new Date();
-
-            // Establece la fecha al primer día del año actual
-            FechaActualAnio.setMonth(0); // Establece el mes a enero (0)
-            FechaActualAnio.setDate(1); // Establece el día al primero (1)
-            // Formatea la fecha en el formato deseado (por ejemplo, YYYY-MM-DD)
-            var fechaFormateada2 = FechaActualAnio.toISOString().split('T')[0];
-
-
-
-
-            // Asigna las fechas a los TextBox correspondientes por su ID
-            document.getElementById("tbFechaIngreso").value = fechaActualFormateada;
-            document.getElementById("tbFechaIngresoServidor").value = fechaActualFormateada;
-
-            document.getElementById("tbFechaEntrega").value = fechaFormateada2;
-            document.getElementById("tbFechaEntregaServidor").value = fechaFormateada2;
-
-            document.getElementById("tbFechaRespuesta").value = fechaFormateada2;
-            document.getElementById("tbFechaRespuestaServidor").value = fechaFormateada2;
-
-
-            // Deshabilitar enlaces 
-            document.getElementById("NuevaSolicitud").classList.remove("enabled");
-            document.getElementById("ModificarSolicitud").classList.remove("enabled");
-
-
-            // Habilitar enlaces
-            document.getElementById("GrabarSolicitud").classList.add("enabled");
-
-
-            //Habilitar
-            var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
-            boton1.disabled = false;
-
-
-
-            var checkBox = document.getElementById('<%= chkEstadoGuardarSolicitud.ClientID %>');
-            checkBox.checked = true; // Marcar el CheckBox para saber si insertar o modificar
-
-
-            // Limpiar el contenido del label
-            var label = document.getElementById("lbNumeroSolicitud");
-            label.textContent = "";
-
-
-
-        }
 
         function CancelarSolicitud() {
             // Habilitar enlaces 
@@ -1623,7 +1626,6 @@
             // Devuelve true si los campos son válidos, de lo contrario, devuelve false
             return isValid;
         }
-
 
     </script>
 
