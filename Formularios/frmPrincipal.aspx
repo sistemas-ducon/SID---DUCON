@@ -236,7 +236,7 @@
             </div>
         </nav>
 
-        <%--Termina Panel principal de nombres--%>        <%--Comienza Panel de iconos--%>
+        <%--Termina Panel principal de nombres--%><%--Comienza Panel de iconos--%>
 
         <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
             <div class="container-fluid">
@@ -360,7 +360,6 @@
     </div><%--Fin div wrapper --%>
 
 
-
     <%--Comienza Formulario Principal--%>
 
 
@@ -404,14 +403,17 @@
                 <div class="col-3">
                     <div class="input-group input-group-sm mb-2 gap-2">
                         <asp:Label class="form-label" Text="T.Ped" runat="server" ID="lblTped"></asp:Label>
-                        <asp:TextBox ID="tbTped" type="text" class="form-control" runat="server"></asp:TextBox>
+                        <asp:DropDownList ID="dtacboTipoPedido" runat="server" Width="335px" AutoPostBack="True" DataSourceID="TiposDePedidos" DataTextField="Descripcion_TipoPedido" DataValueField="Descripcion_TipoPedido"></asp:DropDownList>
+                        <asp:SqlDataSource ID="TiposDePedidos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select Descripcion_TipoPedido from tblTipoPedido order by Descripcion_TipoPedido"></asp:SqlDataSource>
                     </div>
                 </div>
 
                 <div class="col-1">
                     <div class="input-group input-group-sm mb-2 gap-2">
                         <asp:Label class="form-label" Text="Ped.Base" runat="server" ID="lblPedBase"></asp:Label>
-                        <asp:TextBox ID="tbPedBase" type="number" class="form-control" runat="server"></asp:TextBox>
+              
+                        <asp:DropDownList ID="cboPedidoBase" runat="server" DataSourceID="PedidoBase" DataTextField="PedidoBase" DataValueField="PedidoBase" Width="217px"></asp:DropDownList>
+                        <asp:SqlDataSource ID="PedidoBase" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT DISTINCT PedidoBase FROM tblOT WHERE (PedidoBase BETWEEN 1 AND 1000) ORDER BY PedidoBase"></asp:SqlDataSource>
                     </div>
                 </div>
 
@@ -425,7 +427,11 @@
                 <div class="col-2">
                     <div class="input-group input-group-sm mb-2 gap-2">
                         <asp:Label class="form-label" Text="Aprob" runat="server" ID="lblAprob"></asp:Label>
-                        <asp:TextBox ID="tbAprob" type="text" class="form-control" runat="server"></asp:TextBox>
+                        <asp:TextBox ID="tbAprob" type="text" class="form-control" runat="server" Visible ="false"></asp:TextBox>
+                        <asp:DropDownList ID="DtaCboTipoAprobacion" runat="server" Width="197px" DataSourceID="Aprob" DataTextField="TipoAprobacion" DataValueField="IdTipoAprobacion"></asp:DropDownList>
+
+                        <asp:SqlDataSource ID="Aprob" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select * from tblTipoAprobacion order by TipoAprobacion"></asp:SqlDataSource>
+
                     </div>
                 </div>
 
@@ -525,15 +531,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
         <%--Pantalla intermedia--%>
         <hr />
 
@@ -568,15 +565,15 @@
                         </div>
                         <div class="col-6">
                             <div class="input-group input-group-sm mb-2 gap-2">
-                                <label class="form-label" runat="server" id="inputOkVenta">Ok.Ventaaaaaaaa</label>
-                                <input type="date" class="form-control" runat="server" aria-label="Sizing example input" aria-describedby="inputOkVenta" />
+                                <label class="form-label" runat="server" id="inputOkVenta">Ok.Venta</label>
+                                         <asp:TextBox ID="dtpFechaEntregaDibujoDespiece" type="date" class="form-control" runat="server"></asp:TextBox>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-6">
                                 <div class="input-group input-group-sm mb-2 gap-2">
                                     <label class="form-label" runat="server" id="inputDibujo">Ok.Dibujo</label>
-                                    <input type="date" class="form-control" runat="server" aria-label="Sizing example input" aria-describedby="inputDibujo" />
+                                   <asp:TextBox ID="dtpFechaEntregaProduccion" type="date" class="form-control" runat="server"></asp:TextBox>
                                 </div>
                             </div>
 
@@ -586,14 +583,14 @@
                             <div class="col-6">
                                 <div class="input-group input-group-sm mb-2 gap-2">
                                     <label class="form-label" runat="server" id="inputEmpaque">Empaque</label>
-                                    <input type="date" class="form-control" runat="server" aria-label="Sizing example input" aria-describedby="inputEmpaque" />
+                                    <asp:TextBox ID="dtpEmpaque" type="date" class="form-control" runat="server"></asp:TextBox>
                                 </div>
                             </div>
 
                             <div class="col-6">
                                 <div class="input-group input-group-sm mb-2 gap-2">
                                     <label class="form-label" runat="server" id="inputRealEmp">Real Emp.</label>
-                                    <input type="date" class="form-control" runat="server" aria-label="Sizing example input" aria-describedby="inputRealEmp" />
+                              <asp:TextBox ID="dtpRealEmpaque" type="date" class="form-control" runat="server"></asp:TextBox>
                                 </div>
                             </div>
                         </div>
@@ -717,7 +714,7 @@
                                         <div class="input-group-prepend">
                                             <asp:Button class="btn btn-outline-secondary" runat="server" Text="TXT" type="button"></asp:Button>
                                         </div>
-                                        <input type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1" />
+                                        
                                     </div>
                                 </div>
                             </div>
