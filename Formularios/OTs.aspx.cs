@@ -50,6 +50,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     id = Session["Id_OT"].ToString();
                     pedido = Session["pedido"].ToString();
                     Cargar_OTs();
+                    Cargar_Plano();
+                    Resumen_Plano();
+                    Panel_Bajo();
+
                 }
 
             }
@@ -67,6 +71,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session["pedido"] = 1;
 
             Cargar_OTs();
+            Cargar_Plano();
+            Resumen_Plano();
+            Panel_Bajo();
 
 
 
@@ -270,10 +277,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
 
-
-
-
-
             cmd.Connection.Close();
 
             //Codigo Harley llamado de datos de la cotización
@@ -402,7 +405,80 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblSaldoOT.Text = "Saldo:" + TotalSaldo;
 
         }
+        //Logica de llamada de datos del plano.
+        public void Cargar_Plano()
+        {
 
+            //Conexion a la BD_SIDSQL y traemos el procedimiento almacenado
+            string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            SqlConnection sqlconectar = new SqlConnection(cn);
+            SqlCommand cmd = new SqlCommand("CtaPlano_OT", sqlconectar)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Connection.Open();
+            cmd.Parameters.Add("@OT", SqlDbType.VarChar, 30).Value = id;
+            cmd.Parameters.Add("@Conse", SqlDbType.VarChar, 30).Value = pedido;
+            SqlDataReader dr = cmd.ExecuteReader();
+            if (dr.Read())
+            {
+                txtPlano.Text = dr["Plano"].ToString();
+                txtCliente.Text = dr["Nombre_Cliente"].ToString();
+                txtArea.Text = dr["Area"].ToString();
+                txtAsesor.Text = dr["AsesorComercial"].ToString();
+                txtDibuja.Text = dr["RealizadoPor"].ToString();
+                txtBolsa.Text = dr["Bolsa"].ToString();
+                txtContactoPlano.Text = dr["Contacto_Cliente"].ToString();
+                txtAsesorPlano.Text = dr["AsesorComercial"].ToString();
+            }
+
+        }
+
+        public void Resumen_Plano()
+        {
+
+            //Conexion a la BD_SIDSQL y traemos el procedimiento almacenado
+            string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            SqlConnection sqlconectar = new SqlConnection(cn);
+            SqlCommand cmd = new SqlCommand("CtaOT", sqlconectar)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Connection.Open();
+            cmd.Parameters.Add("@OT", SqlDbType.VarChar, 30).Value = id;
+            cmd.Parameters.Add("@Con", SqlDbType.VarChar, 30).Value = pedido;
+            SqlDataReader dr = cmd.ExecuteReader();
+            if (dr.Read())
+            {
+                txResumen.Value = dr["ResumenObra"].ToString();
+
+
+            }
+        }
+
+
+        public void Panel_Bajo()
+        {
+
+            //Conexion a la BD_SIDSQL y traemos el procedimiento almacenado
+            string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            SqlConnection sqlconectar = new SqlConnection(cn);
+            SqlCommand cmd = new SqlCommand("cta_Plano_Paneles", sqlconectar)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Connection.Open();
+            cmd.Parameters.Add("@Plan", SqlDbType.VarChar, 30).Value = txtPlano.Text;
+
+            SqlDataReader dr = cmd.ExecuteReader();
+            if (dr.Read())
+            {
+                txtCantidad.Text = dr["Cantidad"].ToString();
+
+
+            }
+        }
 
     }
 }
+

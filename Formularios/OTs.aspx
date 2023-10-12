@@ -1045,13 +1045,13 @@
                     <div class="item-plano">
                         <asp:Label ID="Label1" class="form-label" Text="Contacto" runat="server">
                         </asp:Label>
-                        <asp:TextBox ID="TextBox1" type="text" class="form-control input" runat="server">
+                        <asp:TextBox ID="txtContactoPlano" type="text" class="form-control input" runat="server">
                         </asp:TextBox>
                     </div>
 
                     <div class="item-plano">
                         <asp:Label ID="lblAsesor" class="form-label" Text="Asesor" runat="server"></asp:Label>
-                        <asp:TextBox ID="TextBox2" type="text" class="form-control input" runat="server"></asp:TextBox>
+                        <asp:TextBox ID="txtAsesorPlano" type="text" class="form-control input" runat="server"></asp:TextBox>
                     </div>
                     <div class="item-plano">
                         <asp:Label ID="lblDibuja" class="form-label" Text="Dibuja" runat="server"></asp:Label>
