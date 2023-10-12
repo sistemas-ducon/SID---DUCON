@@ -1,15 +1,19 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.Wordprocessing;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data;
 using System.Data.SqlClient;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Windows.Forms;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using System.Runtime.CompilerServices;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Label = System.Windows.Forms.Label;
+
 
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
@@ -22,7 +26,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         public double TotalObraMenos = 0;
         public double TotalSaldo;
         string cadenaConexion = "Server=SRVDBAPPS;Database=BD_SIDSQL_PRUEBA;User Id=pcadmin;Password=password";
-
+        
+        //Validacion de Usuario Logueado
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["usuariologueado"] != null)
@@ -44,21 +49,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     id = Session["Id_OT"].ToString();
                     pedido = Session["pedido"].ToString();
-                    Cargar_OT();
+                    Cargar_OTs();
                 }
 
             }
 
 
         }
+        //FIN Validacion de Usuario Logueado
 
+
+        //CONTROL DEL TEXTBOX TBOT (NÚMERO DE LA OT)
         protected void tbOT_TextChanged(object sender, EventArgs e)
         {
             string id = tbOT.Text.Trim();
             Session["Id_OT"] = id;
             Session["pedido"] = 1;
 
-
+            Cargar_OTs();
 
 
 
@@ -77,6 +85,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
         }
+        //FIN CONTROL DEL TEXTBOX TBOT (NÚMERO DE LA OT)
+       
+       
+        
+        
+        //CONTROL DEL COMBO QUE VALIDA LOS PEDIDOS QUE TIENE UNA OT
         protected void ddlNumbers_SelectedIndexChanged(object sender, EventArgs e)
         {
             string pedido = ddlNumbers.SelectedValue;
@@ -85,6 +99,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
         }
+
+        // FIN CONTROL DEL COMBO QUE VALIDA LOS PEDIDOS QUE TIENE UNA OT
 
 
         private List<int> ObtenerNumerosDesdeLaBaseDeDatos(string dato)
@@ -118,7 +134,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return numeros;
         }
 
-        public void Cargar_OT()
+        public void Cargar_OTs()
 
         {
 
@@ -145,14 +161,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
 
-            SqlDataReader dr = cmd.ExecuteReader();
+            SqlDataReader leer = cmd.ExecuteReader();
 
 
 
-            if (dr.Read())
+            if (leer.Read())
             {
-                bool cerrada = dr.GetBoolean(dr.GetOrdinal("Cerrada")); // Variable para OTCerrada
-                string valorPedidoBase = dr["PedidoBase"].ToString(); // Variable para Pedido Base
+                bool cerrada = leer.GetBoolean(leer.GetOrdinal("Cerrada")); // Variable para OTCerrada
+                string valorPedidoBase = leer["PedidoBase"].ToString(); // Variable para Pedido Base
                 bool valorExiste = false;
 
                 //IF PARA OT CERRADA
@@ -192,53 +208,53 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
 
 
-                tbOT.Text = dr["Id_OT"].ToString();
-                ddlNumbers.Text = dr["Consecutivo_Pedido"].ToString();
-                tbZona.Text = dr["Zona"].ToString();
-                dtacboTipoPedido.Text = dr["Descripcion_TipoPedido"].ToString();
-                DtaCboTipoAprobacion.Text = dr["TipoAprobacion"].ToString();
-                tbPedDepen.Text = dr["Consecutivo_Pedido"].ToString();
-                tbObra.Text = dr["Nombre_Obra"].ToString();
-                tbDir.Text = dr["Dirección"].ToString();
-                tbContac.Text = dr["Persona_Receptora"].ToString();
-                tbEmail.Text = dr["mail_Contacto"].ToString();
-                tbRecibe.Text = dr["RecibeElPedido"].ToString();
-                tbCiudad.Text = dr["Ciudad"].ToString();
-                tbTel.Text = dr["TelDomicilio"].ToString();
-                tbCel.Text = dr["CelularContacto"].ToString();
-                tbPais.Text = dr["País"].ToString();
-                DateTime Dato = (DateTime)dr["Fecha_Confirmacion_Venta"];
-                DateTime Dato2 = (DateTime)dr["Fecha_Entrega_Produccion"];
-                DateTime Dato3 = (DateTime)dr["Fecha_Empaque"];
-                DateTime Dato4 = (DateTime)dr["Fecha_Real_Empaque"];
+                tbOT.Text = leer["Id_OT"].ToString();
+                ddlNumbers.Text = leer["Consecutivo_Pedido"].ToString();
+                tbZona.Text = leer["Zona"].ToString();
+                dtacboTipoPedido.Text = leer["Descripcion_TipoPedido"].ToString();
+                DtaCboTipoAprobacion.Text = leer["TipoAprobacion"].ToString();
+                tbPedDepen.Text = leer["Consecutivo_Pedido"].ToString();
+                tbObra.Text = leer["Nombre_Obra"].ToString();
+                tbDir.Text = leer["Dirección"].ToString();
+                tbContac.Text = leer["Persona_Receptora"].ToString();
+                tbEmail.Text = leer["mail_Contacto"].ToString();
+                tbRecibe.Text = leer["RecibeElPedido"].ToString();
+                tbCiudad.Text = leer["Ciudad"].ToString();
+                tbTel.Text = leer["TelDomicilio"].ToString();
+                tbCel.Text = leer["CelularContacto"].ToString();
+                tbPais.Text = leer["País"].ToString();
+                DateTime Dato = (DateTime)leer["Fecha_Confirmacion_Venta"];
+                DateTime Dato2 = (DateTime)leer["Fecha_Entrega_Produccion"];
+                DateTime Dato3 = (DateTime)leer["Fecha_Empaque"];
+                DateTime Dato4 = (DateTime)leer["Fecha_Real_Empaque"];
                 tbVenta.Text = Dato.ToString("yyyy-MM-dd");
                 dtpFechaEntregaDibujoDespiece.Text = Dato.ToString("yyyy-MM-dd");
                 dtpFechaEntregaProduccion.Text = Dato2.ToString("yyyy-MM-dd");
                 dtpEmpaque.Text = Dato3.ToString("yyyy-MM-dd");
                 dtpRealEmpaque.Text = Dato4.ToString("yyyy-MM-dd");
-                Observacion5Id.Value = dr["Observacion_Pedido"].ToString();
-                Observacion1Id.Value = dr["Observacion_Dibujo"].ToString();
-                tbSupervisor.Text = dr["Supervisor"].ToString();
-                TextFabrica.Text = dr["FabricadoPor"].ToString();
-                TextInstala.Text = dr["InstaladaPor"].ToString();
+                Observacion5Id.Value = leer["Observacion_Pedido"].ToString();
+                Observacion1Id.Value = leer["Observacion_Dibujo"].ToString();
+                tbSupervisor.Text = leer["Supervisor"].ToString();
+                TextFabrica.Text = leer["FabricadoPor"].ToString();
+                TextInstala.Text = leer["InstaladaPor"].ToString();
 
-                txtcontacto.Text = dr["Persona_Receptora"].ToString();
-                txtMail.Text = dr["mail_Contacto"].ToString();
-                txtDireccion.Text = dr["Dirección"].ToString();
-                txtMunicipio.Text = dr["Ciudad"].ToString();
-                txtTelefono.Text = dr["TelDomicilio"].ToString();
-                ObservacionCont.Value = dr["Observaciones_Contables"].ToString();
-                txtCotizacion.Text = dr["Cotizacion"].ToString();
-                txtOrdenCompra.Text = dr["OrdendeCompra"].ToString();
-                txtAsesor.Text = dr["Codigo_Asesor"].ToString();
-                TextTNegociacion.Value = dr["Forma_Pago"].ToString();
-                tbBolsa.Text = dr["ValorBolsa"].ToString();
-                txtValorPedido.Text = dr["ValorPedido"].ToString();
-                txtDcto.Text = dr["Descuento"].ToString();
-                txtVtte.Text = dr["ValorTteVia"].ToString();
-                txtVvia.Text = dr["ValorViatico"].ToString();
-                txtVenta.Text = dr["Precio_Venta"].ToString();
-                msgOtCerrada.Text = "CERRADA EL:" + dr["Fecha_Cierre"].ToString();
+                txtcontacto.Text = leer["Persona_Receptora"].ToString();
+                txtMail.Text = leer["mail_Contacto"].ToString();
+                txtDireccion.Text = leer["Dirección"].ToString();
+                txtMunicipio.Text = leer["Ciudad"].ToString();
+                txtTelefono.Text = leer["TelDomicilio"].ToString();
+                ObservacionCont.Value = leer["Observaciones_Contables"].ToString();
+                txtCotizacion.Text = leer["Cotizacion"].ToString();
+                txtOrdenCompra.Text = leer["OrdendeCompra"].ToString();
+                txtAsesor.Text = leer["Codigo_Asesor"].ToString();
+                TextTNegociacion.Value = leer["Forma_Pago"].ToString();
+                tbBolsa.Text = leer["ValorBolsa"].ToString();
+                txtValorPedido.Text = leer["ValorPedido"].ToString();
+                txtDcto.Text = leer["Descuento"].ToString();
+                txtVtte.Text = leer["ValorTteVia"].ToString();
+                txtVvia.Text = leer["ValorViatico"].ToString();
+                txtVenta.Text = leer["Precio_Venta"].ToString();
+                msgOtCerrada.Text = "CERRADA EL:" + leer["Fecha_Cierre"].ToString();
 
 
 

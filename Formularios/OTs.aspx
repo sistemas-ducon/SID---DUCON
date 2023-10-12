@@ -230,8 +230,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
          
 
-              <%--FIN MENU PRINCIPAL--%>
-       
+              <%--FIN MENU PRINCIPAL--%>       
          <%--Inicio de tab--%>
 
 
@@ -426,7 +425,6 @@
                 <div class="col-1">
                     <div class="input-group input-group-sm mb-2 gap-2">
                         <asp:Label class="form-label" Text="Ped.Base" runat="server" ID="lblPedBase"></asp:Label>
-              
                         <asp:DropDownList ID="cboPedidoBase" runat="server" DataSourceID="PedidoBase" DataTextField="PedidoBase" DataValueField="PedidoBase" Width="217px"></asp:DropDownList>
                         <asp:SqlDataSource ID="PedidoBase" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT DISTINCT PedidoBase FROM tblOT WHERE (PedidoBase BETWEEN 1 AND 1000) ORDER BY PedidoBase"></asp:SqlDataSource>
                     </div>
@@ -540,7 +538,9 @@
                 </div>
             </div>
         </div>
+               
          <div class="container-fluid">
+              <h6>PORTADA</h6>
             <div class="observaciones">
 
                 <div class="div-1">
@@ -733,12 +733,16 @@
 
             </div>
         </div>
-                
+                <div>
+                          <h6>&nbsp;&nbsp;&nbsp; INFORMACIÓN CONTABLE</h6>
+              
+                </div>
                 <div class=" container-fluid Info-Contable">
-
+                   
             <div class="Datos-Cliente1">
-
+          
                 <div class="Info1 input-group input-group-sm">
+                     
                     <asp:Label class="form-label" Text="NIT" runat="server" ID="lblNit1"></asp:Label>
                     <asp:TextBox type="text" class="form-control" runat="server" ID="txtNit"></asp:TextBox>
                     <asp:TextBox type="text" class="form-control" runat="server" ID="txtNombreEmp"></asp:TextBox>
@@ -932,7 +936,6 @@
 
 
 
-
                         <%--Termina Nueva OT--%>
 
                         <a class="text-dark" href="#" title="Adicionar Objeto al Plano">
@@ -1051,7 +1054,7 @@
                         <asp:TextBox ID="TextBox2" type="text" class="form-control input" runat="server"></asp:TextBox>
                     </div>
                     <div class="item-plano">
-                        <asp:Label ID="lblDibuja" class="form-label" Text="Dibija" runat="server"></asp:Label>
+                        <asp:Label ID="lblDibuja" class="form-label" Text="Dibuja" runat="server"></asp:Label>
                         <asp:TextBox ID="txtDibuja" type="text" class="form-control input" runat="server"></asp:TextBox>
                     </div>
 
