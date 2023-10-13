@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Render_Venta.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.Render_Venta" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Render_Venta.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.Render_Venta" EnableViewState="true" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 <!DOCTYPE html>
@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="../../Recursos/CSS/Ventas/Render_Venta.css" />
-     <script>
+    <script>
          function confirmProgramarRender(event) {
 
              var IdRender = document.getElementById("NumeroRender").innerHTML;
@@ -27,7 +27,7 @@
              }
              return false; // Previene que el evento del botón se ejecute dos veces
          }
-     </script>
+    </script>
 </head>
 
 
@@ -37,7 +37,7 @@
 
         <nav class="navbar navbar-light bg-light">
             <div class="container d-flex justify-content-center ">
-                <ul class="nav nav-tabs gap-5">
+                <ul class="nav nav-tabs gap-5" id="miPestañas">
 
 
                     <li class="nav-item">
@@ -63,13 +63,13 @@
 
                             <%--Comienza Nueva OT--%>
 
-                            <asp:CheckBox ID="chkEstadoGuardarRender" runat="server" CssClass="hidden-checkbox" />
+
 
                             <a class="icong disabled" href="#" title="Nuevo Render" id="NuevoRender" onclick="NuevoRender()">
                                 <i class="bi bi-file-earmark"></i>
                             </a>
 
-                            <asp:LinkButton class="icong disabled" runat="server" title="Guardar Render" ID="GrabarRender" OnClick="GuardarModificarRender">
+                            <asp:LinkButton class="icong disabled" runat="server" title="Guardar Render" ID="GrabarRender" OnClick="GuardarModificarRender" OnClientClick="return validarFormularioRender();">
                                         <i class="bi bi-save2"></i>
                             </asp:LinkButton>
 
@@ -77,7 +77,7 @@
                                 <i class="bi bi-wrench"></i>
                             </a>
 
-                           
+
                             <asp:LinkButton class="icong disabled" title="Regresar el Render a un Proceso Anterior" ID="DevolverRender" runat="server">
                                   <i class="bi bi-skip-backward-circle"></i>
                             </asp:LinkButton>
@@ -106,6 +106,8 @@
 
                             <ul />
                     </ul>
+
+                        <span id="ErrorValidacionRender" style="color: red;"></span>
                 </div>
 
             </div>
@@ -157,14 +159,14 @@
                                     <div class="col-3">
                                         <div class="input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbFechaOk" class="form-label" Text="Fecha OK" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbFechaOk" type="date" class="form-control " runat="server" disabled="disabled" ></asp:TextBox>
+                                            <asp:TextBox ID="tbFechaOk" type="date" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                             <asp:TextBox ID="tbFechaOkServidor" type="date" class="form-control" runat="server" CssClass="hidden-checkbox"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="col-3">
                                         <div class=" input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbDiseño" class="form-label" Text="Diseño" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbDiseño" type="text" class="form-control" runat="server" disabled="disabled"></asp:TextBox>
+                                            <asp:TextBox ID="tbDiseño" type="text" class="form-control" runat="server" disabled="disabled" EnableViewState="true" ></asp:TextBox>
                                         </div>
                                     </div>
 
@@ -222,7 +224,7 @@
 
                                     <div class="col-4">
                                         <div class=" input-group input-group-sm  mb-2 gap-4">
-                                            <asp:Label ID="lbTelefono" class="form-label" Text="Telefono" runat="server"></asp:Label>
+                                            <asp:Label ID="lbTelefono" class="form-label" Text="Teléfono" runat="server"></asp:Label>
                                             <asp:TextBox ID="tbTelefono" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
@@ -251,7 +253,7 @@
 
                                     <div class="col-4">
                                         <div class=" input-group input-group-sm  mb-2 gap-4">
-                                            <asp:Label ID="lbImagenes" class="form-label" Text="Imagenes" runat="server"></asp:Label>
+                                            <asp:Label ID="lbImagenes" class="form-label" Text="Imágenes" runat="server"></asp:Label>
                                             <asp:TextBox ID="tbImagenes" type="Number" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
@@ -264,14 +266,14 @@
 
                                     <div class="col-6">
                                         <div class=" input-group-sm  mb-2 gap-2">
-                                            <asp:Label ID="lbAreasRenderizar" class="form-label" Text="Areas a Renderizar." runat="server"></asp:Label>
+                                            <asp:Label ID="lbAreasRenderizar" class="form-label" Text="Áreas a Renderizar." runat="server"></asp:Label>
                                             <textarea class="form-control form-control-sm" id="txAreaRender" runat="server" cols="29" rows="4" disabled="disabled"></textarea>
                                         </div>
                                     </div>
 
                                     <div class="col-6">
                                         <div class=" input-group-sm  mb-2 gap-2">
-                                            <asp:Label ID="lbObsVentas" class="form-label" Text="Observacion Ventas." runat="server"></asp:Label>
+                                            <asp:Label ID="lbObsVentas" class="form-label" Text="Observación Ventas." runat="server"></asp:Label>
                                             <textarea class="form-control form-control-sm" id="txObsVentas" runat="server" cols="29" rows="4" disabled="disabled"></textarea>
                                         </div>
                                     </div>
@@ -289,7 +291,7 @@
 
                                     <div class="col-6">
                                         <div class=" input-group-sm  mb-2 gap-2">
-                                            <asp:Label ID="lbObsDibujo" class="form-label" Text="Observacion Dibujo." runat="server"></asp:Label>
+                                            <asp:Label ID="lbObsDibujo" class="form-label" Text="Observación Dibujo." runat="server"></asp:Label>
                                             <textarea class="form-control form-control-sm" id="txObsDibujo" runat="server" cols="29" rows="4" disabled="disabled"></textarea>
                                         </div>
                                     </div>
@@ -306,7 +308,7 @@
 
                                     <div class="col-6">
                                         <div class="input-group input-group-sm  mb-2 gap-4">
-                                            <asp:Label ID="lblinea" class="form-label" Text="Linea" runat="server"></asp:Label>
+                                            <asp:Label ID="lblinea" class="form-label" Text="Línea" runat="server"></asp:Label>
                                             <asp:TextBox ID="tbLinea" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
@@ -381,7 +383,7 @@
                                     </div>
                                     <div class="col-6">
                                         <div class=" input-group input-group-sm  mb-2 gap-4">
-                                            <asp:Label ID="lbEspArq" class="form-label" Text="Espacio Arquitectonico" runat="server"></asp:Label>
+                                            <asp:Label ID="lbEspArq" class="form-label" Text="Espacio Arquitectónico" runat="server"></asp:Label>
                                             <asp:CheckBox ID="chxEspArq" runat="server" Enabled="false" />
                                         </div>
                                     </div>
@@ -403,7 +405,7 @@
                                         <div class="row pt-1 mt-1 pb-1 mb-1">
                                             <div class="col-6">
                                                 <div class=" input-group-sm  mb-1 gap-4">
-                                                    <asp:Label ID="lbAmbientacion" class="form-label" Text="Ambientacion" runat="server"></asp:Label>
+                                                    <asp:Label ID="lbAmbientacion" class="form-label" Text="Ambientación" runat="server"></asp:Label>
                                                     <asp:CheckBox ID="chxAmbientacion" runat="server" Enabled="false" />
                                                 </div>
                                             </div>
@@ -438,7 +440,7 @@
 
                                             <div class="col-12">
                                                 <div class="input-group-sm  mb-1 gap-4">
-                                                    <asp:Label ID="lbIluminacion" class="form-label" Text="Iluminación y  Tipos de lamparas" runat="server"></asp:Label>
+                                                    <asp:Label ID="lbIluminacion" class="form-label" Text="Iluminación y  Tipos de lámparas" runat="server"></asp:Label>
                                                     <asp:TextBox ID="tbIluminacion" type="text" class="form-control " runat="server" disabled="disabled"></asp:TextBox>
                                                 </div>
                                             </div>
@@ -514,7 +516,7 @@
                                                                 </div>
                                                                 <div class="input-group input-group-sm mb-1 gap-2">
                                                                     <div class="input-group " style="width: 20px; height: 20px; border: 1px; background-color: yellow"></div>
-                                                                    <label for="lbNormal" class="form-label">Programacion Normal</label>
+                                                                    <label for="lbNormal" class="form-label">Programación Normal</label>
                                                                 </div>
                                                                 <div class="input-group input-group-sm mb-1 gap-2">
                                                                     <div class="input-group " style="width: 20px; height: 20px; border: 1px; background-color: lawngreen"></div>
@@ -541,16 +543,16 @@
                             </div>
 
 
-                        </div>                 
+                        </div>
 
                         <div class="container-fluid Bajo">
                             <div class="row justify-content-center">
                                 <div class="border rounded p-2">
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="table-responsive mb-2 gap-2" style="max-height: 15rem; overflow-x: auto;">
+                                            <div class="table-responsive mb-2 gap-2" style="max-height: 20rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-start">Programacion</h5>
-                                                <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGridRenders" runat="server" DataSourceID="CargarRenders" AutoGenerateColumns="false" OnItemDataBound="DataGridRenders_ItemDataBound" OnItemCommand="DataGridRenders_LinkButton" >
+                                                <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGridRenders" runat="server" DataSourceID="CargarRenders" AutoGenerateColumns="false" OnItemDataBound="DataGridRenders_ItemDataBound" OnItemCommand="DataGridRenders_LinkButton">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                     <Columns>
@@ -564,7 +566,7 @@
                                                         <%-- Turno[1]--%>
                                                         <asp:BoundColumn DataField="Id_Render" HeaderText="ID" ItemStyle-CssClass="auto-width-column" />
                                                         <%-- [2]--%>
-                                                        <asp:BoundColumn DataField="Cliente" HeaderText="Nombre-Render" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Nombre" HeaderText="Nombre-Render" ItemStyle-CssClass="auto-width-column" />
                                                         <%-- [3]--%>
                                                         <asp:BoundColumn DataField="UltimaActivacion" HeaderText="Activado" ItemStyle-CssClass="auto-width-column" />
                                                         <%-- [4]--%>
@@ -644,11 +646,13 @@
                                                         <%-- [41]--%>
                                                         <asp:BoundColumn DataField="TerminadoRender" Visible="false" ItemStyle-CssClass="auto-width-column" />
                                                         <%-- [42]--%>
+                                                         <asp:BoundColumn DataField="Cliente" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [43]--%>
                                                     </Columns>
                                                 </asp:DataGrid>
 
-                                                <asp:SqlDataSource runat="server" ID="CargarRenders" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT   ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,    * FROM    tblRender WHERE     TerminadoRender = 0 "></asp:SqlDataSource>
-                                                <asp:SqlDataSource ID="RenderPorZona" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno, * from tblRender where Zona=@Parametro and TerminadoRender = 0 ">
+                                                <asp:SqlDataSource runat="server" ID="CargarRenders" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT   ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno, Cliente +'-'+ Nombre_Render AS Nombre,    * FROM    tblRender WHERE     TerminadoRender = 0  "></asp:SqlDataSource>
+                                                <asp:SqlDataSource ID="RenderPorZona" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,Cliente +'-'+ Nombre_Render AS Nombre, * from tblRender where Zona=@Parametro and TerminadoRender = 0 ">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="ddlZona2" PropertyName="SelectedValue" Name="Parametro"></asp:ControlParameter>
                                                     </SelectParameters>
@@ -712,7 +716,7 @@
                                 </div>
                                 <div class="col-3">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
-                                        <asp:TextBox ID="tbProyectoX" type="text"  class="form-control " runat="server"></asp:TextBox>
+                                        <asp:TextBox ID="tbProyectoX" type="text" class="form-control " runat="server"></asp:TextBox>
                                     </div>
                                 </div>
                             </div>
@@ -742,7 +746,8 @@
                                                     <Columns>
                                                         <asp:TemplateColumn HeaderText="...">
                                                             <ItemTemplate>
-                                                                <asp:LinkButton ID="lnkView" runat="server" CommandName="VerRenders2" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
+                                                                <asp:LinkButton ID="lnkView" runat="server" CommandName="VerRenders2" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" 
+                                                                     OnClientClick="activarTab('Render-Content');"/>
                                                             </ItemTemplate>
                                                         </asp:TemplateColumn>
 
@@ -750,7 +755,7 @@
                                                         <%-- Turno[1]--%>
                                                         <asp:BoundColumn DataField="Id_Render" HeaderText="ID" ItemStyle-CssClass="auto-width-column" />
                                                         <%-- [2]--%>
-                                                        <asp:BoundColumn DataField="Cliente" HeaderText="Nombre-Render" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Nombre" HeaderText="Nombre-Render" ItemStyle-CssClass="auto-width-column" />
                                                         <%-- [3]--%>
                                                         <asp:BoundColumn DataField="UltimaActivacion" HeaderText="Activado" ItemStyle-CssClass="auto-width-column" />
                                                         <%-- [4]--%>
@@ -830,30 +835,38 @@
                                                         <%-- [41]--%>
                                                         <asp:BoundColumn DataField="TerminadoRender" Visible="false" ItemStyle-CssClass="auto-width-column" />
                                                         <%-- [42]--%>
+                                                           <asp:BoundColumn DataField="Cliente" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <%-- [43]--%>
                                                     </Columns>
 
                                                 </asp:DataGrid>
 
-                                                <asp:SqlDataSource ID="RenderFecha" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno, * from tblRender where Fecha_Ingreso between  @FechaIni and  @FechaFin ORDER BY  Fecha_Ingreso DESC  ">
+                                                <asp:SqlDataSource ID="RenderFecha" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,Cliente +'-'+ Nombre_Render AS Nombre,  * from tblRender where Fecha_Ingreso between  @FechaIni and  @FechaFin ORDER BY  Fecha_Ingreso DESC  ">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="FechaIni" PropertyName="Text" Name="FechaIni"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="FechaFin" PropertyName="Text" Name="FechaFin"></asp:ControlParameter>
                                                     </SelectParameters>
                                                 </asp:SqlDataSource>
 
-                                                <asp:SqlDataSource ID="RenderCliente" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,  * FROM tblRender WHERE Cliente LIKE '%' + @NombreCliente + '%' ORDER BY  Fecha_Ingreso DESC ">
+                                                <asp:SqlDataSource ID="RenderCliente" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,Cliente +'-'+ Nombre_Render AS Nombre,   * FROM tblRender WHERE Cliente LIKE '%' + @NombreCliente + '%' AND Fecha_Ingreso between  @FechaIni and  @FechaFin ORDER BY  Fecha_Ingreso DESC ">
                                                     <SelectParameters>
+                                                         <asp:ControlParameter ControlID="FechaIni" PropertyName="Text" Name="FechaIni"></asp:ControlParameter>
+                                                        <asp:ControlParameter ControlID="FechaFin" PropertyName="Text" Name="FechaFin"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="tbClienteX" PropertyName="Text" Name="NombreCliente"></asp:ControlParameter>
                                                     </SelectParameters>
                                                 </asp:SqlDataSource>
 
-                                                <asp:SqlDataSource ID="RenderNombreRender" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno, * FROM tblRender WHERE Nombre_Render LIKE '%' + @NombreRender + '%' ORDER BY  Fecha_Ingreso DESC ">
+                                                <asp:SqlDataSource ID="RenderNombreRender" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,Cliente +'-'+ Nombre_Render AS Nombre,  * FROM tblRender WHERE Nombre_Render LIKE '%' + @NombreRender + '%' AND Fecha_Ingreso between  @FechaIni and  @FechaFin ORDER BY  Fecha_Ingreso DESC ">
                                                     <SelectParameters>
+                                                          <asp:ControlParameter ControlID="FechaIni" PropertyName="Text" Name="FechaIni"></asp:ControlParameter>
+                                                        <asp:ControlParameter ControlID="FechaFin" PropertyName="Text" Name="FechaFin"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="tbProyectoX" PropertyName="Text" Name="NombreRender"></asp:ControlParameter>
                                                     </SelectParameters>
                                                 </asp:SqlDataSource>
-                                                <asp:SqlDataSource ID="RenderXIdRender" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno, * from tblRender where Id_Render = @IdRender ORDER BY  Fecha_Ingreso DESC ">
+                                                <asp:SqlDataSource ID="RenderXIdRender" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,Cliente +'-'+ Nombre_Render AS Nombre,  * from tblRender where Id_Render = @IdRender AND Fecha_Ingreso between  @FechaIni and  @FechaFin ORDER BY  Fecha_Ingreso DESC ">
                                                     <SelectParameters>
+                                                         <asp:ControlParameter ControlID="FechaIni" PropertyName="Text" Name="FechaIni"></asp:ControlParameter>
+                                                        <asp:ControlParameter ControlID="FechaFin" PropertyName="Text" Name="FechaFin"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="tbNumeroRender" PropertyName="Text" Name="IdRender"></asp:ControlParameter>
                                                     </SelectParameters>
                                                 </asp:SqlDataSource>
@@ -927,6 +940,7 @@
              */
 
         }
+
         function NuevoRender() {
 
 
@@ -1039,13 +1053,22 @@
             // Habilitar enlace Grabar Render
             document.getElementById("GrabarRender").classList.add("enabled");
 
-            // Habilitar enlace Grabar Render
-            document.getElementById("Actualizar").classList.add("enabled");
+          
 
 
 
-            var checkBox = document.getElementById('<%= chkEstadoGuardarRender.ClientID %>');
-             checkBox.checked = true; // Marcar el CheckBox para saber si insertar o modificar
+            $.ajax({
+                type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                url: "Render_Venta.aspx/NuevoRender", // La URL debe apuntar al método en el servidor
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                },
+                error: function (error) {
+                    // Manejar errores si los hay
+                }
+            });
 
          }
 
@@ -1068,9 +1091,6 @@
 
                 // Dehabilitar enlace Moficiar
                 document.getElementById("ModificarRender").classList.remove("enabled");
-
-                var checkBox = document.getElementById('<%= chkEstadoGuardarRender.ClientID %>');
-                checkBox.checked = false; // Marcar el CheckBox para saber si insertar o modificar
 
 
                 // Habilitar o deshabilitar los DropDownList
@@ -1129,6 +1149,21 @@
 
             }
 
+             $.ajax({
+                type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                url: "Render_Venta.aspx/ModificarRender", // La URL debe apuntar al método en el servidor
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                },
+                error: function (error) {
+                    // Manejar errores si los hay
+                }
+            });
+
+
+
 
         }
 
@@ -1166,7 +1201,13 @@
             // Habilitar o deshabilitar los TextBox Type text
             var textBoxes = document.querySelectorAll("input[type='text']");
             for (var i = 0; i < textBoxes.length; i++) {
-                textBoxes[i].disabled = true;
+
+
+                if (textBoxes[i].id != "tbClienteX" && textBoxes[i].id != "tbProyectoX" && textBoxes[i].id != "tbNumeroRender") {
+                    textBoxes[i].disabled = true;
+                }
+
+               
             }
 
             // Habilitar o deshabilitar los TextBox Type text
@@ -1205,6 +1246,148 @@
 
 
 
+        }
+
+        function AlertaBuscar(mensaje) {
+            alert(mensaje);
+        }
+
+        function validarFormularioRender() {
+            var Diseño = document.getElementById("tbDiseño").value;
+            var Cliente = document.getElementById("tbCliente").value;
+            var Asesor = document.getElementById("ddlAsesor").value
+            var Proyecto = document.getElementById("tbProyecto").value;
+            var Contacto = document.getElementById("tbContacto").value;
+            var Celular = document.getElementById("tbCelular").value;
+            var Mail = document.getElementById("tbMail").value;
+            var Telefono = document.getElementById("tbTelefono").value;
+            var Plano = document.getElementById("tbPlano").value;
+            var Zona = document.getElementById("ddlZona").value;
+            var Imagenes = document.getElementById("tbImagenes").value;
+            var ObsAreaRender = document.getElementById("txAreaRender").value;
+            var ObsVentas = document.getElementById("txObsVentas").value;
+            //
+            var Linea = document.getElementById("tbLinea").value;
+            var Sup = document.getElementById("tbSup").value;
+            var Acc = document.getElementById("tbAcc").value;
+            var Cantos = document.getElementById("tbCantos").value;
+            var Perfil = document.getElementById("tbPerfil").value;
+            var Paneles = document.getElementById("tbPaneles").value;
+            var Arch = document.getElementById("tbArch").value;
+            var Sillas = document.getElementById("tbSillas").value;
+            var Pantallas = document.getElementById("tbPantallas").value;
+            var Muebles = document.getElementById("txMuebles").value;
+            var AcaPisZoc = document.getElementById("tbAcaPisZoc").value;
+            var AcaMuros = document.getElementById("tbAcaMuros").value;
+            var Iluminacion = document.getElementById("tbIluminacion").value;
+            var Antepecho = document.getElementById("tbAntepecho").value;
+
+
+
+            var isValid = true;
+
+            if (Diseño === "") {
+                ErrorValidacionRender.innerHTML = "Campo Diseño obligatorio.";
+                isValid = false;
+            } else if (Cliente === "") {
+                ErrorValidacionRender.innerHTML = "Campo Cliente obligatorio.";
+                isValid = false;
+            } else if (Asesor === "") {
+                ErrorValidacionRender.innerHTML = "Por favor, seleccione un  Asesor.";
+                isValid = false;
+            } else if (Proyecto === "") {
+                ErrorValidacionRender.innerHTML = "Campo Proyecto obligatorio.";
+                isValid = false;
+            }
+            else if (Contacto === "") {
+                ErrorValidacionRender.innerHTML = "Campo Contacto obligatorio.";
+                isValid = false;
+            } else if (Celular === "") {
+                ErrorValidacionRender.innerHTML = "Campo Celular obligatorio.";
+                isValid = false;
+            } else if (Mail === "") {
+                ErrorValidacionRender.innerHTML = "Campo Mail obligatorio.";
+                isValid = false;
+            }
+            else if (Telefono === "") {
+                ErrorValidacionRender.innerHTML = "Campo Teléfono obligatorio.";
+                isValid = false;
+            } else if (Plano === "") {
+                ErrorValidacionRender.innerHTML = "Campo Plano obligatorio.";
+                isValid = false;
+            } else if (Zona === "") {
+                ErrorValidacionRender.innerHTML = "Campo Zona obligatorio.";
+                isValid = false;
+            } else if (Imagenes === "") {
+                ErrorValidacionRender.innerHTML = "Campo Imágenes obligatorio.";
+                isValid = false;
+            } else if (ObsAreaRender === "") {
+                ErrorValidacionRender.innerHTML = "El Campo Área Renderizar es obligatorio.";
+                isValid = false;
+            } else if (ObsVentas === "") {
+                ErrorValidacionRender.innerHTML = "El Campo Obs. Ventas es obligatorio.";
+                isValid = false;
+            }
+            else if (Linea === "") {
+                ErrorValidacionRender.innerHTML = "El campo Línea es obligatorio.";
+                isValid = false;
+            } else if (Sup === "") {
+                ErrorValidacionRender.innerHTML = "El campo Sup es obligatorio.";
+                isValid = false;
+            } else if (Acc === "") {
+                ErrorValidacionRender.innerHTML = "El campo Acc es obligatorio.";
+                isValid = false;
+            } else if (Cantos === "") {
+                ErrorValidacionRender.innerHTML = "El campo Cantos es obligatorio.";
+                isValid = false;
+            }
+            else if (Perfil === "") {
+                ErrorValidacionRender.innerHTML = "El Campo Perfil es obligatorio.";
+                isValid = false;
+            } else if (Paneles === "") {
+                ErrorValidacionRender.innerHTML = "El Campo Paneles es obligatorio.";
+                isValid = false;
+            } else if (Arch === "") {
+                ErrorValidacionRender.innerHTML = "El campo  Arch  es obligatorio.";
+                isValid = false;
+            }
+            else if (Sillas === "") {
+                ErrorValidacionRender.innerHTML = "El Campo Sillas es obligatorio.";
+                isValid = false;
+            } else if (Pantallas === "") {
+                ErrorValidacionRender.innerHTML = "El Campo Pantallas es obligatorio.";
+                isValid = false;
+            } else if (Muebles === "") {
+                ErrorValidacionRender.innerHTML = "El Campo Muebles es obligatorio.";
+                isValid = false;
+            } else if (AcaPisZoc === "") {
+                ErrorValidacionRender.innerHTML = "El Campo Acabados Piso y Zócalo es obligatorio.";
+                isValid = false;
+            } else if (AcaMuros === "") {
+                ErrorValidacionRender.innerHTML = "El Campo Acabados Muros es obligatorio.";
+                isValid = false;
+            } else if (Iluminacion === "") {
+                ErrorValidacionRender.innerHTML = "El Campo Iluminación y Tipos de lámparas es obligatorio.";
+                isValid = false;
+            } else if (Antepecho === "") {
+                ErrorValidacionRender.innerHTML = "El Campo Sillar o antepecho es obligatorio.";
+                isValid = false;
+            }
+
+
+
+            // Devuelve true si los campos son válidos, de lo contrario, devuelve false
+            return isValid;
+        }
+
+        //Funcion para cuando seleccionan un desarrollo o una cotizacion nos lleva al formulario
+        function activarTab(tabId) {
+            // Oculta todas las pestañas
+            $('#miPestañas a.BuscarRender-Content').removeClass('active');
+            $('.tab-pane').removeClass('active show');
+
+            // Activa la pestaña deseada
+            $('#miPestañas a[href="#' + tabId + '"]').tab('show');
         }
 
     </script>

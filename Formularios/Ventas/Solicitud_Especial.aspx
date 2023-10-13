@@ -16,7 +16,7 @@
         function confirmProgramarSolicitud(event) {
 
             var IdSolicitud = document.getElementById("lbNumeroSolicitud").innerHTML;
-            var mensaje = "Una vez programada la solicitud, no podrá realizar modificaciones. Esta seguro de programar la solicitud:" + IdSolicitud;
+            var mensaje = "Una vez programada la solicitud, no podrá realizar modificaciones. Esta seguro de programar la solicitud: " + IdSolicitud;
 
             var result = confirm(mensaje);
             if (result) {
@@ -27,9 +27,7 @@
             return false;
         }
 
-        function NuevaSolicitud() {
-
-
+        function ActivarGuardar() {
 
 
             // Habilitar o deshabilitar los TextBox Type text
@@ -48,7 +46,6 @@
             }
 
             var checkBoxesToEnable = ["chxViaticos"];
-
             for (var i = 0; i < checkBoxesToEnable.length; i++) {
                 var checkBoxId = checkBoxesToEnable[i];
                 var checkBox = document.getElementById(checkBoxId);
@@ -95,29 +92,9 @@
             document.getElementById("GrabarSolicitud").classList.add("enabled");
 
 
-            //Habilitar
-            var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
-             boton1.disabled = false;
-
-
-
-             var checkBox = document.getElementById('<%= chkEstadoGuardarSolicitud.ClientID %>');
-            checkBox.checked = true; // Marcar el CheckBox para saber si insertar o modificar
-
-
-            // Limpiar el contenido del label
-            var label = document.getElementById("lbNumeroSolicitud");
-            label.textContent = "";
-
-
 
         }
 
-
-
-    </script>
-
-    <script>
         function confirmarQuitarDetalle(event) {
 
             var IdSolicitud = document.getElementById("lbNumeroSolicitud").innerHTML;
@@ -130,6 +107,8 @@
             }
             return result; // Devolver el resultado de la confirmación
         }
+
+
 
     </script>
 
@@ -185,7 +164,7 @@
 
                             <%--Comienza Nueva OT--%>
 
-                            <asp:CheckBox ID="chkEstadoGuardarSolicitud" runat="server" CssClass="hidden-textBox" />
+
 
                             <a class="icong disabled" href="#" title="Nueva Solicitud" id="NuevaSolicitud" onclick="NuevaSolicitud()">
                                 <i class="bi bi-file-earmark"></i>
@@ -238,7 +217,6 @@
 
 
         <div class="tab-content">
-
             <div class="tab-pane fade  show active" id="BitacoraDesarrollo-content">
                 <asp:UpdatePanel ID="PanelBitacora" runat="server">
                     <ContentTemplate>
@@ -281,7 +259,7 @@
                                     <div class=" input-group-sm  mb-2 gap-4">
                                         <asp:Label ID="lbDirigido" class=" col-form-label-sm" Text="Dirigido a" runat="server"></asp:Label>
                                         <asp:DropDownList class="form-control form-control-sm" ID="ddlDirigido" runat="server">
-                                            <asp:ListItem Value="">-- Seleccione --</asp:ListItem>
+                                            <asp:ListItem Value="">Seleccione</asp:ListItem>
                                             <asp:ListItem Value="COMPRAS">COMPRAS</asp:ListItem>
                                             <asp:ListItem Value="DESARROLLO DE PRODUCTO">DESARROLLO DE PRODUCTO</asp:ListItem>
                                         </asp:DropDownList>
@@ -292,7 +270,7 @@
                                     <div class=" input-group-sm  mb-2 gap-4">
                                         <asp:Label ID="lbTipo" class="col-form-label-sm" Text="Tipo" runat="server"></asp:Label>
                                         <asp:DropDownList class="form-control form-control-sm" ID="ddlTipo" runat="server">
-                                            <asp:ListItem Value="">-- Seleccione --</asp:ListItem>
+                                            <asp:ListItem Value="">Seleccione</asp:ListItem>
                                             <asp:ListItem Value="COTIZACIÓN">COTIZACIÓN</asp:ListItem>
                                             <asp:ListItem Value="DESARROLLO">DESARROLLO</asp:ListItem>
                                             <asp:ListItem Value="PRODUCTO EN LINEA">PRODUCTO EN LINEA</asp:ListItem>
@@ -355,28 +333,28 @@
                                     <div class=" input-group input-group-sm  mb-2 gap-4">
                                         <asp:Button CssClass="btn btn-outline-secondary" ID="btnCliente" runat="server" Text="Cliente" OnClick="GuardarDatosSesion" OnClientClick="abrirOtraPestana();" />
                                         <asp:TextBox ID="tbCliente" type="text" class="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
-                                        <asp:TextBox ID="tbClienteServidor" type="text" class="form-control form-control-sm " runat="server" CssClass="hidden-textBox"></asp:TextBox>
+                                        <asp:TextBox ID="tbClienteServidor" type="text" class="form-control form-control-sm " runat="server"  CssClass="hidden-textBox" ></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class=" input-group input-group-sm  mb-2 gap-4">
                                         <asp:Label ID="lbContacto" class=" col-form-label-sm  " Text="Contacto" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbContacto" type="text" class="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
-                                        <asp:TextBox ID="tbContactoServidor" type="text" class="form-control form-control-sm " runat="server" CssClass="hidden-textBox"></asp:TextBox>
+                                        <asp:TextBox ID="tbContactoServidor" type="text" class="form-control form-control-sm " runat="server"  CssClass="hidden-textBox" ></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class=" input-group input-group-sm  mb-2 gap-4">
                                         <asp:Label ID="lbTelefono" class="col-form-label-sm " Text="Telefono" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbTelefono" type="text" class="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
-                                        <asp:TextBox ID="tbTelefonoServidor" type="text" class="form-control form-control-sm " runat="server" CssClass="hidden-textBox"></asp:TextBox>
+                                        <asp:TextBox ID="tbTelefonoServidor" type="text" class="form-control form-control-sm " runat="server"  CssClass="hidden-textBox" ></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class=" input-group input-group-sm  mb-2 gap-4">
                                         <asp:Label ID="lbCelular" class="col-form-label-sm" Text="Celular" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbCelular" type="text" class="form-control form-control-sm" runat="server" disabled="disabled"></asp:TextBox>
-                                        <asp:TextBox ID="tbCelularServidor" type="text" class="form-control form-control-sm " runat="server" CssClass="hidden-textBox"></asp:TextBox>
+                                        <asp:TextBox ID="tbCelularServidor" type="text" class="form-control form-control-sm " runat="server"  CssClass="hidden-textBox" ></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -396,7 +374,7 @@
                                     <div class="input-group input-group-sm  mb-2 gap-3 justify-content-center">
                                         <asp:Label ID="lbMail" class="col-form-label-sm" Text="Mail" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbMail" type="text" class="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
-                                        <asp:TextBox ID="tbMailServidor" type="text" class="form-control form-control-sm " runat="server" CssClass="hidden-textBox"></asp:TextBox>
+                                        <asp:TextBox ID="tbMailServidor" type="text" class="form-control form-control-sm " runat="server"  CssClass="hidden-textBox" ></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -405,7 +383,7 @@
                                     <div class=" input-group input-group-sm  mb-2 gap-2 justify-content-center">
                                         <asp:Label ID="lbDireccion" class="col-form-label-sm" Text="Dirección" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbDireccion" type="text" class="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
-                                        <asp:TextBox ID="tbDireccionServidor" type="text" class="form-control form-control-sm " runat="server" CssClass="hidden-textBox"></asp:TextBox>
+                                        <asp:TextBox ID="tbDireccionServidor" type="text" class="form-control form-control-sm " runat="server"  CssClass="hidden-textBox" ></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -431,6 +409,7 @@
                         </div>
 
                         <div class="container-fluid Principal-centro pt-1 mt-1 gap-1 ">
+
                             <div class="container-fluid  izq">
                                 <h6 class="p-0 m-0">Producto</h6>
 
@@ -633,7 +612,6 @@
                                 </div>
                             </div>
 
-
                             <div class="row">
 
                                 <div class=" col-4">
@@ -663,7 +641,7 @@
 
                                                     <div class="contenedor-icono">
 
-                                                        <asp:CheckBox ID="chxGuardarDetalle" runat="server" CssClass="hidden-textBox" />
+
 
                                                         <a class="icong disabled" href="#" title="Nueva Detalle" id="NuevoDetalle" onclick="NuevoDetalle()">
                                                             <i class="bi bi-file-earmark"></i>
@@ -673,7 +651,7 @@
                                                             <i class="bi bi-arrow-bar-down"></i>
                                                         </a>
 
-                                                        <asp:LinkButton class="icong disabled" runat="server" title="Guardar Detalle" ID="GrabarDetalle" OnClick="GuardarModificarDetalle">
+                                                        <asp:LinkButton class="icong disabled" runat="server" title="Guardar Detalle" ID="GrabarDetalle" OnClick="GuardarModificarDetalle" OnClientClick="return validarFormularioDetalle();">
                                                            <i class="bi bi-save2"></i>
                                                         </asp:LinkButton>
 
@@ -698,10 +676,13 @@
                                                          <i class="bi bi-dash-circle"></i>
                                                         </asp:LinkButton>
 
-                                                        <asp:Label ID="lbIdDetalle" runat="server" Text="Label"></asp:Label>
+                                                        <asp:Label ID="lbIdDetalle" runat="server" Text=""></asp:Label>
 
                                                         <ul />
                                                 </ul>
+                                                <span id="ErrorValidacionDetalle" style="color: red;"></span>
+
+
                                             </div>
 
                                         </div>
@@ -904,22 +885,13 @@
                             <h4 style="border-radius: 0.5rem; height: 2.5rem" class="text-center" title="Listado  Correspondiente a Cotizaciones">Cotizaciones</h4>
 
                             <div class="row">
-                                <div class="col-2">
-                                    <div class=" input-group input-group-sm  mb-2 gap-4">
-                                        <asp:Label ID="lbZona2" class="form-label" Text="Zona" runat="server"></asp:Label>
-                                        <asp:DropDownList class="form-control" ID="ddlZona2" runat="server" DataSourceID="Zona2" DataTextField="Zona" DataValueField="Zona" OnSelectedIndexChanged="CambioZona2" AutoPostBack="true" OnDataBound="ddlZona2_DataBound"></asp:DropDownList>
-                                        <asp:SqlDataSource runat="server" ID="Zona2" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="
-                                        select Zona from tblRender group by Zona"></asp:SqlDataSource>
-                                    </div>
-                                </div>
-
-                                <div class="col-2">
+                                <div class="col-3 text-center">
                                     <div class=" input-group input-group-sm  mb-2 gap-2">
                                         <asp:Button ID="btnTrbajarCotizacion" CssClass="btn btn-outline-secondary" runat="server" Text="Trabajar Cotización" />
                                     </div>
                                 </div>
 
-                                <div class="col-2">
+                                <div class="col-3">
                                     <div class=" input-group input-group-sm  mb-2 gap-2">
                                         <asp:Button ID="btnDesprogramar1" CssClass="btn btn-outline-secondary" runat="server" Text="Desprogramar" />
                                     </div>
@@ -980,7 +952,7 @@
                                                 </asp:DataGrid>
                                                 <asp:SqlDataSource runat="server" ID="Cotizaciones" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="spObtenerSolicitudCotizaciones" SelectCommandType="StoredProcedure">
                                                     <SelectParameters>
-                                                        <asp:ControlParameter ControlID="ddlZona2" PropertyName="SelectedValue" Name="Zona" Type="String"></asp:ControlParameter>
+                                                        <asp:ControlParameter ControlID="ddlZona" PropertyName="SelectedValue" Name="Zona" Type="String"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="tbNombreAsesor" PropertyName="Text" Name="Asesor" Type="String"></asp:ControlParameter>
                                                     </SelectParameters>
                                                 </asp:SqlDataSource>
@@ -1179,10 +1151,6 @@
 
             </div>
 
-
-
-
-
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
 
@@ -1216,7 +1184,107 @@
 
         document.getElementById("btnCliente").disabled = true;
 
+        function NuevaSolicitud() {
 
+
+            var dropDownLists = document.querySelectorAll("select");
+            for (var j = 0; j < dropDownLists.length; j++) {
+
+                if (dropDownLists[j].id != "ddlZona") {
+                    if (dropDownLists[j].id != "ddlZona2") {
+                        dropDownLists[j].disabled = false;
+
+                    }
+                }
+
+            }
+
+            // Habilitar o deshabilitar los TextBox Type text
+            var textBoxes = document.querySelectorAll("input[type='text']");
+            for (var i = 0; i < textBoxes.length; i++) {
+
+                if (textBoxes[i].id !== "tbProveedor" && textBoxes[i].id !== "tbAncho" && textBoxes[i].id !== "tbAltura" && textBoxes[i].id !== "tbProfundidad"
+                    && textBoxes[i].id !== "tbMaterial" && textBoxes[i].id !== "tbCliente" && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbTelefono"
+                    && textBoxes[i].id !== "tbCelular" && textBoxes[i].id !== "tbMail" && textBoxes[i].id !== "tbDireccion" && textBoxes[i].id !== "tbPrecioSugerido"
+                    && textBoxes[i].id !== "tbCantidad" && textBoxes[i].id !== "tbDesarrollaPor") {
+                    textBoxes[i].disabled = false;
+
+
+                }
+
+            }
+
+            var checkBoxesToEnable = ["chxViaticos"];
+
+            for (var i = 0; i < checkBoxesToEnable.length; i++) {
+                var checkBoxId = checkBoxesToEnable[i];
+                var checkBox = document.getElementById(checkBoxId);
+
+                if (checkBox) {
+                    checkBox.disabled = false; // Habilita el CheckBox
+                }
+            }
+
+
+            // Obtén la fecha actual
+            var fechaActual = new Date();
+            // Formatea las fechas en el formato deseado (por ejemplo, YYYY-MM-DD)
+            var fechaActualFormateada = fechaActual.toISOString().split('T')[0];
+
+            var FechaActualAnio = new Date();
+
+            // Establece la fecha al primer día del año actual
+            FechaActualAnio.setMonth(0); // Establece el mes a enero (0)
+            FechaActualAnio.setDate(1); // Establece el día al primero (1)
+            // Formatea la fecha en el formato deseado (por ejemplo, YYYY-MM-DD)
+            var fechaFormateada2 = FechaActualAnio.toISOString().split('T')[0];
+
+
+
+
+            // Asigna las fechas a los TextBox correspondientes por su ID
+            document.getElementById("tbFechaIngreso").value = fechaActualFormateada;
+            document.getElementById("tbFechaIngresoServidor").value = fechaActualFormateada;
+
+            document.getElementById("tbFechaEntrega").value = fechaFormateada2;
+            document.getElementById("tbFechaEntregaServidor").value = fechaFormateada2;
+
+            document.getElementById("tbFechaRespuesta").value = fechaFormateada2;
+            document.getElementById("tbFechaRespuestaServidor").value = fechaFormateada2;
+
+
+            // Deshabilitar enlaces 
+            document.getElementById("NuevaSolicitud").classList.remove("enabled");
+            document.getElementById("ModificarSolicitud").classList.remove("enabled");
+
+
+            // Habilitar enlaces
+            document.getElementById("GrabarSolicitud").classList.add("enabled");
+
+
+            //Habilitar
+            var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
+            boton1.disabled = false;
+
+
+            // Limpiar el contenido del label
+            var label = document.getElementById("lbNumeroSolicitud");
+            label.textContent = "";
+
+            $.ajax({
+                type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                url: "Solicitud_Especial.aspx/NuevaSolicitud", // La URL debe apuntar al método en el servidor
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                },
+                error: function (error) {
+                    // Manejar errores si los hay
+                }
+            });
+
+        }
 
         function CancelarSolicitud() {
             // Habilitar enlaces 
@@ -1333,9 +1401,22 @@
                 }
             }
 
+            var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
+            boton1.disabled = false;
 
-            var checkBox = document.getElementById('<%= chkEstadoGuardarSolicitud.ClientID %>');
-            checkBox.checked = false; // Desmarcar el CheckBox
+
+            $.ajax({
+                type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                url: "Solicitud_Especial.aspx/ModificarSolicitud", // La URL debe apuntar al método en el servidor
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                },
+                error: function (error) {
+                    // Manejar errores si los hay
+                }
+            });
 
         }
 
@@ -1368,8 +1449,14 @@
 
             document.getElementById("txInformacionDetalle").value = "";
 
+            var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
+            boton1.disabled = true;
 
+        }
 
+        function ControlBtnCliente() {
+            var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
+            boton1.disabled = true;
         }
 
         function HabilitarEnlaces2() {
@@ -1438,11 +1525,15 @@
 
             }
 
+            var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
+            boton1.disabled = true;
 
 
         }
 
         function abrirOtraPestana() {
+
+            document.getElementById("tbCliente").value = "";
             // Utiliza window.open para abrir "Formulario2.aspx" en otra pestaña
             window.open('Clientes.aspx', '_blank');
         }
@@ -1465,11 +1556,10 @@
             var textBoxes = document.querySelectorAll("input[type='text']");
             for (var i = 0; i < textBoxes.length; i++) {
 
-                if (textBoxes[i].id !== "tbProyecto" && textBoxes[i].id !== "tbSolicitudOrigen" && textBoxes[i].id !== "tbCotizacionEsp" && textBoxes[i].id !== "tbCliente"
-                    && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbTelefono" && textBoxes[i].id !== "tbTelefono"
-                    && textBoxes[i].id !== "tbCelular" && textBoxes[i].id !== "tbMail" && textBoxes[i].id !== "tbDireccion" && textBoxes[i].id !== "tbPrecioSugerido") {
+                if (textBoxes[i].id !== "tbProyecto" && textBoxes[i].id !== "tbSolicitudOrigen" && textBoxes[i].id !== "tbCotizacionEsp" && textBoxes[i].id !== "tbCliente" && textBoxes[i].id !== "tbClienteServidor" &&
+                    textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbContactoServidor" && textBoxes[i].id !== "tbTelefono" && textBoxes[i].id !== "tbTelefonoServidor" && textBoxes[i].id !== "tbCelular" && textBoxes[i].id !== "tbCelularServidor" && textBoxes[i].id !== "tbMail" && textBoxes[i].id !== "tbMailServidor" && textBoxes[i].id !== "tbDireccion" && textBoxes[i].id !== "tbDireccionServidor" && textBoxes[i].id !== "tbPrecioSugerido") {
                     textBoxes[i].disabled = false;
-
+                    textBoxes[i].value = "";
 
                 }
 
@@ -1480,6 +1570,7 @@
             var textBoxes = document.querySelectorAll("input[type='number']");
             for (var i = 0; i < textBoxes.length; i++) {
                 textBoxes[i].disabled = false;
+                textBoxes[i].value = "";
             }
 
 
@@ -1502,12 +1593,23 @@
 
                 if (textAreas[k].id != "txobsCompras" && textAreas[k].id != "txObsDesarrollo" && textAreas[k].id != "txInformacionDetalle" && textAreas[k].id != "txSegPausa") {
                     textAreas[k].disabled = false;
+                    textAreas[k].value = "";
                 }
 
             }
 
-            var checkBox = document.getElementById('<%= chxGuardarDetalle.ClientID %>');
-            checkBox.checked = true; // Marcar el CheckBox para saber si insertar o modificar
+            $.ajax({
+                type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                url: "Solicitud_Especial.aspx/NuevoDetalle", // La URL debe apuntar al método en el servidor
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                },
+                error: function (error) {
+                    // Manejar errores si los hay
+                }
+            });
 
 
 
@@ -1570,8 +1672,19 @@
 
             }
 
-            var checkBox = document.getElementById('<%= chxGuardarDetalle.ClientID %>');
-            checkBox.checked = false; // Marcar el CheckBox para saber si insertar o modificar
+
+            $.ajax({
+                type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                url: "Solicitud_Especial.aspx/ModificarDetalle", // La URL debe apuntar al método en el servidor
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                },
+                error: function (error) {
+                    // Manejar errores si los hay
+                }
+            });
 
         }
 
@@ -1580,7 +1693,7 @@
             window.open('AdjuntarDocumentos.aspx', '_blank');
         }
 
-        //Funcion para cuando seleccionan un desarrollo o una cotizacion no lleva al formulario
+        //Funcion para cuando seleccionan un desarrollo o una cotizacion nos lleva al formulario
         function activarTab(tabId) {
             // Oculta todas las pestañas
             $('#miPestañas a.Programacion-content').removeClass('active');
@@ -1597,7 +1710,8 @@
             var CotEsp = document.getElementById("tbCotizacionEsp").value;
             var Asesor = document.getElementById("ddlAsesor").value;
             var Cliente = document.getElementById("tbClienteServidor").value;
-
+            var solicitudOrigen = document.getElementById("tbSolicitudOrigen").value;
+            var regex = /^[0-9]+$/;
             var isValid = true;
 
             if (proyecto === "") {
@@ -1609,15 +1723,82 @@
             } else if (Tipo === "") {
                 ErrorValidacion.innerHTML = "El campo Tipo Solicitud es obligatorio.";
                 isValid = false;
-            } else if (CotEsp === "") {
+            } else if (solicitudOrigen === "")
+            {
+                ErrorValidacion.innerHTML = "El campo  Solicitud Origen  es obligatorio.";
+                isValid = false;
+            } else if (!regex.test(solicitudOrigen)) {
+                ErrorValidacion.innerHTML = "El campo Solicitud Origen debe ser un número.";
+                isValid = false;
+            }
+            else if (CotEsp === "") {
                 ErrorValidacion.innerHTML = "El campo Cotizacion Esp  es obligatorio.";
                 isValid = false;
             }
-            else if (Asesor === "") {
+            else if (Asesor === "0") {
                 ErrorValidacion.innerHTML = "El Campo Asesor es obligatorio.";
                 isValid = false;
             } else if (Cliente === "") {
                 ErrorValidacion.innerHTML = "El Campo Cliente es obligatorio.";
+                isValid = false;
+            }
+
+
+
+            // Devuelve true si los campos son válidos, de lo contrario, devuelve false
+            return isValid;
+        }
+
+
+        function ActivarBotonDetalle() {
+            //habilitar enlaces de Detalle
+            document.getElementById("NuevoDetalle").classList.add("enabled");
+            document.getElementById("ImportarDetalle").classList.add("enabled");
+        }
+
+        function ActivarBotonDetalle1() {
+            var boton2 = document.getElementById("<%= btnProgramarSolicitud.ClientID %>");
+            boton2.disabled = false;
+            
+        }
+
+        function validarFormularioDetalle() {
+
+            var producto = document.getElementById("txDescProduc").value;
+            var proveedor = document.getElementById("tbProveedor").value;
+            var Ancho = document.getElementById("tbAncho").value;
+            var Altura = document.getElementById("tbAltura").value;
+            var Profundidad = document.getElementById("tbProfundidad").value;
+            var Material = document.getElementById("tbMaterial").value;
+            var Cantidad = document.getElementById("tbCantidad").value;
+            var EspecificacionesGenerales = document.getElementById("txEspGen").value;
+            var isValid = true;
+
+
+            if (producto === "") {
+                ErrorValidacionDetalle.innerHTML = "El campo producto es obligatorio.";
+                isValid = false;
+            } else if (proveedor === "") {
+                ErrorValidacionDetalle.innerHTML = "El campo proveedor a es obligatorio.";
+                isValid = false;
+            } else if (Ancho === "") {
+                ErrorValidacionDetalle.innerHTML = "El campo Ancho  es obligatorio.";
+                isValid = false;
+            } else if (Altura === "") {
+                ErrorValidacionDetalle.innerHTML = "El campo Altura  es obligatorio.";
+                isValid = false;
+            }
+            else if (Profundidad === "") {
+                ErrorValidacionDetalle.innerHTML = "El Campo Profundidad es obligatorio.";
+                isValid = false;
+            } else if (Material === "") {
+                ErrorValidacionDetalle.innerHTML = "El Campo Material es obligatorio.";
+                isValid = false;
+            } else if (Cantidad === "") {
+                ErrorValidacionDetalle.innerHTML = "El Campo Cantidad es obligatorio.";
+                isValid = false;
+            } else if (EspecificacionesGenerales === "") {
+                ErrorValidacionDetalle.innerHTML = "El Campo Especificaciones Generales es obligatorio.";
                 isValid = false;
             }
 
@@ -1646,6 +1827,29 @@
 
     </script>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const scriptToExecute = '<%= Session["ScriptEspecifico"] %>';
+            if (scriptToExecute) {
+                eval(scriptToExecute);
+
+                $.ajax({
+                    type: "POST", 
+                    url: "Solicitud_Especial.aspx/LimpiarVaribleSessiondetalle", 
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                   
+                });
+
+               
+            }
+        });
+
+       
+
+    </script>
+
+  
 
 </body>
 

@@ -14,6 +14,9 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using static SISTEMA_INTEGRAL_DUCON.Formularios.Ventas.Clientes;
 using Button = System.Web.UI.WebControls.Button;
+using CheckBox = System.Web.UI.WebControls.CheckBox;
+using Label = System.Web.UI.WebControls.Label;
+using TextBox = System.Web.UI.WebControls.TextBox;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
@@ -38,7 +41,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     ZonaAsesorLog();
                     DepartamentoAsesor();
                     CargarSession();
-
+                    CargarVariablesDeSesion();
 
                     // Programar es para varios departamento
                     Button btnProgramarRender = FindControl("btnProgramarSolicitud") as Button;
@@ -103,8 +106,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         btnDesprogramar1.CssClass = "btn-sm btn-outline-secondary";
 
                     }
-
-
+     
 
                 }
                 else
@@ -117,6 +119,134 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
         }
+
+        public void CargarVariablesDeSesion()
+        {
+            Dictionary<string, Control> variablesDeSesionYControles = new Dictionary<string, Control>
+            {
+                //Variables de Session de la solicitud
+                { "FecIngrSolSession", tbFechaIngresoServidor },
+                { "FecEntregaSolSession", tbFechaEntregaServidor },
+                { "FechaRespuestaSession", tbFechaRespuestaServidor },
+                { "DirigidoSession", ddlDirigido },
+                { "TipoSession", ddlTipo },
+                { "SolOrigenSession", tbSolicitudOrigen },
+                { "ProyectoSolSession", tbProyecto },
+                { "CiudadSession", ddlCiudad },
+                { "ViaticoSession", chxViaticos },
+                { "CotizacionSession", tbCotizacionEsp },
+                { "ClienteSolSession", tbClienteServidor },
+                { "ContactoSolSession", tbContactoServidor },
+                { "TelSeolSession", tbTelefonoServidor },
+                { "CelularSolSession", tbCelularServidor },
+                { "Mailsolsession", tbMailServidor },
+                { "DirecccionSolSession", tbDireccionServidor },
+                { "AsesorSolSession", ddlAsesor},
+                { "numeroSolicitudSession", lbNumeroSolicitud},
+                //Variables de Session de Detalle
+                { "ProductoSession", txDescProduc},
+                { "ProveedorVentaSession", tbProveedor},
+                { "AnchoSession", tbAncho},
+                { "AlturaSession", tbAltura},
+                { "ProfundidadSession", tbProfundidad},
+                { "MaterialSession", tbMaterial},
+                { "CantidadSession", tbCantidad},
+                { "EspGeneralSession", txEspGen}
+       
+        };
+
+            foreach (var kvp in variablesDeSesionYControles)
+            {
+                string valorSesion = Session[kvp.Key] as string;
+                if (!string.IsNullOrEmpty(valorSesion))
+                {
+                    if (kvp.Value is TextBox)
+                    {
+                        ((TextBox)kvp.Value).Text = valorSesion;
+                    }
+                    if (kvp.Key == "FecIngrSolSession")
+                    {
+
+                        tbFechaIngreso.Text = valorSesion;
+                    }
+                    if (kvp.Key == "FecEntregaSolSession")
+                    {
+
+                        tbFechaEntrega.Text = valorSesion;
+                    }
+                    if (kvp.Key == "FechaRespuestaSession")
+                    {
+
+                        tbFechaRespuesta.Text = valorSesion;
+                    }
+                    if (kvp.Key == "ClienteSolSession")
+                    {
+
+                        tbCliente.Text = valorSesion;
+                    }
+                    if (kvp.Key == "ContactoSolSession")
+                    {
+
+                        tbContacto.Text = valorSesion;
+                    }
+                    if (kvp.Key == "TelSeolSession")
+                    {
+
+                        tbTelefono.Text = valorSesion;
+                    }
+                    if (kvp.Key == "CelularSolSession")
+                    {
+
+                        tbCelular.Text = valorSesion;
+                    }
+                    if (kvp.Key == "Mailsolsession")
+                    {
+
+                        tbMail.Text = valorSesion;
+                    }
+                    if (kvp.Key == "DirecccionSolSession")
+                    {
+
+                        tbDireccion.Text = valorSesion;
+                    }
+                    else if (kvp.Value is DropDownList)
+                    {
+                        ddlDirigido.DataBind();
+                        ddlTipo.DataBind();
+                        ddlCiudad.DataBind();
+                      
+                        ((DropDownList)kvp.Value).SelectedItem.Text = valorSesion;
+                    }
+                    else if (kvp.Value is CheckBox)
+                    {
+                        ((CheckBox)kvp.Value).Checked = Convert.ToBoolean(valorSesion);
+                    }
+                    else if (kvp.Value is Label)
+                    {
+                        ((Label)kvp.Value).Text = valorSesion;
+                    }
+
+                    string Produc = Session["ProductoSession"] as string;
+                    if (!string.IsNullOrEmpty(Produc))
+                    {
+                        txDescProduc.InnerText = Produc;
+                        Session.Remove("ProductoSession");
+                    }
+                    string EspGeneral = Session["EspGeneralSession"] as string;
+                    if (!string.IsNullOrEmpty(EspGeneral))
+                    {
+                        txEspGen.InnerText = EspGeneral;
+                        Session.Remove("EspGeneralSession");
+                    }
+
+                    
+
+                    Session.Remove(kvp.Key);
+                }
+            }
+
+        }
+
 
         private void CargarClienteYContacto()
         {
@@ -225,7 +355,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
             // Agregar un elemento inicial si lo deseas
-            ddlAsesor.Items.Insert(0, new ListItem("-- Seleccione --", "0"));
+            ddlAsesor.Items.Insert(0, new ListItem("Seleccione", "0"));
         }
 
         protected void ddlZona_DataBound(object sender, EventArgs e)
@@ -240,14 +370,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             // Agregar el primer  elemento de los datagrid como "Seleccione"
             ddlCiudad.Items.Insert(0, new ListItem("Seleccione", ""));
-        }
-
-
-        protected void ddlZona2_DataBound(object sender, EventArgs e)
-        {
-            // Agregar el primer  elemento de los datagrid como "Seleccione"
-            ddlZona2.Items.Insert(0, new ListItem("Todas", ""));
-
         }
 
         public void NombreAsesorLogeado()
@@ -437,14 +559,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 DataGrid1.DataSourceID = "CargarDesarrollos";
             }
-            // Programar es para varios departamento
-            Button btnCliente = FindControl("btnCliente") as Button;
-            if (btnCliente != null)
-            {
-                btnCliente.Enabled = false;
-                btnCliente.CssClass = "btn-outline-secondary";
-
-            }
+            string script = "<script>ControlBtnCliente();</script>";
+            ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, false);
             DataGrid1.DataBind();
 
         }
@@ -452,7 +568,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         public void CambioZona2(object sender, EventArgs e)
         {
-            string valorSeleccionado = ddlZona2.SelectedValue;
+            string valorSeleccionado = ddlZona.SelectedValue;
 
             CambiarSqlDataSource2(valorSeleccionado);
 
@@ -461,15 +577,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private void CambiarSqlDataSource2(string valorSeleccionado)
         {
-
-            // Programar es para varios departamento
-            Button btnCliente = FindControl("btnCliente") as Button;
-            if (btnCliente != null)
-            {
-                btnCliente.Enabled = false;
-                btnCliente.CssClass = "btn-outline-secondary";
-
-            }
 
             if (valorSeleccionado == "01" || valorSeleccionado == "02")
             {
@@ -480,6 +587,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 DataGrid2.DataSourceID = "CargarCotizaciones";
             }
 
+            string script = "<script>ControlBtnCliente();</script>";
+            ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, false);
             DataGrid2.DataBind();
 
         }
@@ -577,6 +686,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 BuscarDesarrollo.DataBind();
             }
 
+            string script = "<script>HabilitarEnlaces1();</script>";
+            ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces1", script, false);
+
         }
 
 
@@ -585,7 +697,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-
+              
 
 
                 // Obtener los valores de las columnas ocultas
@@ -651,6 +763,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGrid1.Items[rowIndex];
+
+                // Se utiliza para darle el color solo a la fila seleccionada 
+                foreach (DataGridItem item in DataGrid1.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
 
                 //se usa Para darle un color a la fila seleccionada  anderson
                 e.Item.CssClass = "fila-seleccionada1";
@@ -809,6 +931,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGrid2.Items[rowIndex];
 
+                // Se utiliza para darle el color solo a la fila seleccionada 
+                foreach (DataGridItem item in DataGrid2.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+
                 //se usa Para darle un color a la fila seleccionada  anderson
                 e.Item.CssClass = "fila-seleccionada1";
 
@@ -964,6 +1096,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = BuscarDesarrollo.Items[rowIndex];
 
+                // Se utiliza para darle el color solo a la fila seleccionada 
+                foreach (DataGridItem item in BuscarDesarrollo.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
                 //se usa Para darle un color a la fila seleccionada  anderson
                 e.Item.CssClass = "fila-seleccionada1";
 
@@ -1118,15 +1259,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void GuardarModificarSolicitud(object sender, EventArgs e)
         {
-            bool guardarCliente = chkEstadoGuardarSolicitud.Checked;
+           
+            string insertUpdate = Session["InsertUpdate"] as string;
 
-
-            if (guardarCliente)
+            if (insertUpdate == "Insertar")
             {
                 // Validar Campos de cliente 
-
-
-
 
                 string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
 
@@ -1183,9 +1321,35 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             int rowsAffected = cmd.ExecuteNonQuery();
                             if (rowsAffected > 0)
                             {
+                                //Variables de Session para mantener a la hora de Guardar, Se pueden eliminar si cargan mucho el proceso  
+
+                                Session["FecIngrSolSession"] = tbFechaIngresoServidor.Text;
+                                Session["FecEntregaSolSession"] = tbFechaEntregaServidor.Text;
+                                Session["FechaRespuestaSession"] = tbFechaRespuestaServidor.Text;
+                                Session["DirigidoSession"] = ddlDirigido.SelectedItem.Text;
+                                Session["TipoSession"] = ddlTipo.SelectedItem.Text;
+                                Session["SolOrigenSession"] = tbSolicitudOrigen.Text;
+                                Session["ProyectoSolSession"] = tbProyecto.Text;
+                                Session["CiudadSession"] = ddlCiudad.Text;
+                                Session["ViaticoSession"] = chxViaticos.Checked;
+                                Session["CotizacionSession"] = tbCotizacionEsp.Text;
+                                Session["ClienteSolSession"] = tbClienteServidor.Text;
+                                Session["ContactoSolSession"] = tbContactoServidor.Text;
+                                Session["TelSeolSession"] = tbTelefonoServidor.Text;
+                                Session["CelularSolSession"] = tbCelularServidor.Text;
+                                Session["Mailsolsession"] = tbMailServidor.Text;
+                                Session["DirecccionSolSession"] = tbDireccionServidor.Text;
+                                Session["AsesorSolSession"] = ddlAsesor.SelectedItem.Text;
+                                Session["numeroSolicitudSession"] = IdSolicitud;
+
+                                Session["ScriptEspecifico"] = "ActivarBotonDetalle();";
+                            
                                 string mensajePersonalizado = "La solicitud ha sido ingresada con éxito.";
                                 string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
                                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+                               
+
                             }
                             else
                             {
@@ -1194,15 +1358,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                             }
 
-
-
-
                         }
                     }
                 }
             }
 
-            else
+            else if(insertUpdate == "Actualizar")
             {
 
                 //CalcularFechaEntregaSolicitudEspecial() de momento se envia fecha del primer dia del año  !!!!IMPORTANTE !!!!
@@ -1219,7 +1380,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
 
-                        cmd.Parameters.AddWithValue("@ID_Solicitud", lbNumeroSolicitud.Text);
+                        cmd.Parameters.AddWithValue("@ID_Solicitud", Session["Id_Solicitud"].ToString());
                         cmd.Parameters.AddWithValue("@Fecha_Ingreso", tbFechaIngresoServidor.Text);
                         cmd.Parameters.AddWithValue("@Fecha_Programada_Entrega", tbFechaEntregaServidor.Text);
                         cmd.Parameters.AddWithValue("@FechaRespuesta", tbFechaRespuestaServidor.Text);
@@ -1250,6 +1411,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
+                            Session["FecIngrSolSession"] = tbFechaIngresoServidor.Text;
+                            Session["FecEntregaSolSession"] = tbFechaEntregaServidor.Text;
+                            Session["FechaRespuestaSession"] = tbFechaRespuestaServidor.Text;
+                            Session["DirigidoSession"] = ddlDirigido.SelectedItem.Text;
+                            Session["TipoSession"] = ddlTipo.SelectedItem.Text;
+                            Session["SolOrigenSession"] = tbSolicitudOrigen.Text;
+                            Session["ProyectoSolSession"] = tbProyecto.Text;
+                            Session["CiudadSession"] = ddlCiudad.Text;
+                            Session["ViaticoSession"] = chxViaticos.Checked;
+                            Session["CotizacionSession"] = tbCotizacionEsp.Text;
+                            Session["ClienteSolSession"] = tbClienteServidor.Text;
+                            Session["ContactoSolSession"] = tbContactoServidor.Text;
+                            Session["TelSeolSession"] = tbTelefonoServidor.Text;
+                            Session["CelularSolSession"] = tbCelularServidor.Text;
+                            Session["Mailsolsession"] = tbMailServidor.Text;
+                            Session["DirecccionSolSession"] = tbDireccionServidor.Text;
+                            Session["AsesorSolSession"] = ddlAsesor.SelectedItem.Text;
+                            Session["numeroSolicitudSession"] = lbNumeroSolicitud.Text;
+
+                            Session["ScriptEspecifico"] = "ActivarBotonDetalle();";
+
                             string mensajePersonalizado = "La solicitud  ha sido actualizada con éxito";
                             string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
                             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
@@ -1272,37 +1454,33 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-
         protected void GuardarDatosSesion(object sender, EventArgs e)
         {
             Session["ProyectoSession"] = tbProyecto.Text;
             Session["SolicitudOrigen"] = tbSolicitudOrigen.Text;
             Session["Cotizacion"] = tbCotizacionEsp.Text;
-            Session["Desarrolado"] = tbDesarrollaPor.Text;
+            Session["Desarrollado"] = tbDesarrollaPor.Text;
             Session["Ciudad"] = ddlCiudad.SelectedItem.Text;
             Session["Dirigido"] = ddlDirigido.SelectedItem.Text;
             Session["Tipo"] = ddlTipo.SelectedItem.Text;
             Session["AsesorSol"] = ddlAsesor.SelectedItem.Text;
+            Session["Id_Solicitud_Pantalla"] = lbNumeroSolicitud.Text;
 
-            Session["chxGuardar"] = chkEstadoGuardarSolicitud.Checked;
         }
 
 
         private void CargarSession()
         {
 
-
             string proyecto = Session["ProyectoSession"]?.ToString();
             string SoliOrigen = Session["SolicitudOrigen"]?.ToString();
             string Cotizacion = Session["Cotizacion"]?.ToString();
-            string Desarrolado = Session["Desarrolado"]?.ToString();
+            string Desarrolado = Session["Desarrollado"]?.ToString();
             string Ciudad = Session["Ciudad"]?.ToString();
             string Dirigido = Session["Dirigido"]?.ToString();
             string Tipo = Session["Tipo"]?.ToString();
             string AsesorSol = Session["AsesorSol"]?.ToString();
-
-
-            
+            string NumeroSolPantalla = Session["Id_Solicitud_Pantalla"]?.ToString();
 
             if (!IsPostBack)
             {
@@ -1360,8 +1538,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         }
                     }
 
+                    //Cargar Numero solicitud
+                    lbNumeroSolicitud.Text = NumeroSolPantalla;
 
-                    if (tbCliente.Text != "" && Session["chxGuardar"].ToString() == "True")
+
+                    if (tbCliente.Text != "" )
                     {
                         Session.Remove("ProyectoSession");
                         Session.Remove("SolicitudOrigen");
@@ -1371,23 +1552,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         Session.Remove("Dirigido");
                         Session.Remove("Tipo");
                         Session.Remove("AsesorSol");
-
-
-                        string script = "<script>NuevaSolicitud();</script>";
-                        ScriptManager.RegisterStartupScript(this, GetType(), "NuevaSolicitud", script, false);
+                        Session.Remove("Id_Solicitud_Pantalla");
+                
+                        string script = "<script>ActivarGuardar();</script>";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "ActivarGuardar", script, false);
 
                     }
-                    else
-                    {
-
-                        string script = "<script>NuevaSolicitud();</script>";
-                        ScriptManager.RegisterStartupScript(this, GetType(), "NuevaSolicitud", script, false);
-                    }
-
                    
-
-
-
 
                 }
 
@@ -1414,6 +1585,273 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
+        protected void ProgramarSolicitud(object sender, EventArgs e)
+        {
+
+            bool DetalleEntrados = false;
+            bool PrecioSugerido = false;
+            DateTime FechaIngreso = DateTime.Now;
+            DateTime FechaEntrega;
+
+            //Verificar Cual departamento de la boton 
+            switch (Session["Departamento"].ToString().ToUpper())
+            {
+                case "VENTAS":
+
+
+                    string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
+
+                        string consultaSQL = "SELECT COUNT(*) FROM tblSoliciDiseEspeDeta WHERE ID_Solicitud = @IdSolicitud";
+
+                        using (SqlCommand cmd = new SqlCommand(consultaSQL, connection))
+                        {
+                            cmd.Parameters.AddWithValue("@IdSolicitud", lbNumeroSolicitud.Text);
+
+                            int count = (int)cmd.ExecuteScalar();
+                            if (count > 0)
+                            {
+
+                                DetalleEntrados = true;
+                                connection.Close();
+                            }
+                        }
+                    }
+
+                    if (DetalleEntrados) // Si  tiene detalles validamos 
+                    {
+                        // validamos si es destinatario es Desarrollo 
+                        if (ddlTipo.Text == "DESARROLLO")
+                        {
+
+                            //Vaidamos si alguno de los detalles tiene valor sugerido =< 0
+                            using (SqlConnection connection = new SqlConnection(connectionString))
+                            {
+                                connection.Open();
+
+                                string consultaSQL = "SELECT COUNT(*) FROM tblSoliciDiseEspeDeta WHERE ID_Solicitud = @IdSolicitud AND PrecioSugerido<=0";
+
+                                using (SqlCommand cmd = new SqlCommand(consultaSQL, connection))
+                                {
+                                    cmd.Parameters.AddWithValue("@IdSolicitud", lbNumeroSolicitud.Text);
+
+                                    int count = (int)cmd.ExecuteScalar();
+                                    if (count > 0)
+                                    {
+                                        // Se encontraron registros que cumplen la condición
+                                        PrecioSugerido = true;
+                                    }
+                                }
+                            }
+
+
+                            if (PrecioSugerido)
+                            {
+                                //Se calcula la Fecha de entrega 
+                                FechaEntrega = CalcularFechaEntrega(FechaIngreso);
+
+                                // Se encontraron Detalles de esa solicitud con PrecioSugerido =< 0 
+                                // Se debe Realizar Validacion  aun no esta clara  ?????????????? Penidiente 
+
+                                using (SqlConnection connection = new SqlConnection(connectionString))
+                                {
+                                    connection.Open();
+                                    //Realizamos la Actializacion 
+                                    string query = "Update  tblSoliciDiseEspe set ProgramadoVentas = 1,Fecha_Ingreso = @FechaIngreso," +
+                                        "Fecha_Programada_Entrega = @FechaProgramadaEntrega where Id_Solicitud =  @Id_Solicitud";
+
+
+                                    using (SqlCommand command = new SqlCommand(query, connection))
+                                    {
+
+                                        command.Parameters.AddWithValue("@FechaIngreso", FechaIngreso);
+                                        command.Parameters.AddWithValue("@FechaProgramadaEntrega", FechaEntrega);
+                                        command.Parameters.AddWithValue("@Id_Solicitud", lbNumeroSolicitud.Text);
+
+                                        command.ExecuteNonQuery();
+                                    }
+
+                                    // Mensaje de éxito
+                                    string mensajePersonalizado = "La Solicitud. " + lbNumeroSolicitud.Text + " ha sido programada éxitosamente";
+                                    string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+
+                                }
+
+                            }
+
+                            else
+                            {
+                                //Se  Realizar Calculo de fecha entrega y
+                                FechaEntrega = CalcularFechaEntrega(FechaIngreso);
+
+                                //  se realiza la la actualizacion en la base de datos del campo programar
+
+                                using (SqlConnection connection = new SqlConnection(connectionString))
+                                {
+                                    connection.Open();
+                                    //Realizamos la Actializacion 
+                                    string query = "Update  tblSoliciDiseEspe set ProgramadoVentas = 1,Fecha_Ingreso = @FechaIngreso," +
+                                        "Fecha_Programada_Entrega = @FechaProgramadaEntrega where Id_Solicitud =  @Id_Solicitud";
+
+
+                                    using (SqlCommand command = new SqlCommand(query, connection))
+                                    {
+                                        // Aquí defines los parámetros de la consulta
+                                        command.Parameters.AddWithValue("@FechaIngreso", FechaIngreso);
+                                        command.Parameters.AddWithValue("@FechaProgramadaEntrega", FechaEntrega);
+                                        command.Parameters.AddWithValue("@Id_Solicitud", lbNumeroSolicitud.Text);
+
+                                        command.ExecuteNonQuery();
+                                    }
+
+                                    // Mensaje de éxito
+                                    string mensajePersonalizado = "La Solicitud. " + lbNumeroSolicitud.Text + " ha sido programada éxitosamente";
+                                    string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+
+                                }
+
+
+
+                            }
+
+                        }
+
+                        else
+                        {
+                            // Es para Compras o Desarralo de Producto  simplemente se calcula la fecha de entrega y se realiza la 
+                            FechaEntrega = CalcularFechaEntrega(FechaIngreso);
+
+                            using (SqlConnection connection = new SqlConnection(connectionString))
+                            {
+                                connection.Open();
+                                //Realizamos la Actializacion 
+                                string query = "Update  tblSoliciDiseEspe set ProgramadoVentas = 1,Fecha_Ingreso = @FechaIngreso," +
+                                       "Fecha_Programada_Entrega = @FechaProgramadaEntrega where Id_Solicitud =  @Id_Solicitud";
+
+
+                                using (SqlCommand command = new SqlCommand(query, connection))
+                                {
+                                    // Aquí defines los parámetros de la consulta
+                                    command.Parameters.AddWithValue("@FechaIngreso", FechaIngreso);
+                                    command.Parameters.AddWithValue("@FechaProgramadaEntrega", FechaEntrega);
+                                    command.Parameters.AddWithValue("@Id_Solicitud", lbNumeroSolicitud.Text);
+
+                                    command.ExecuteNonQuery();
+                                }
+
+                                // Mensaje de éxito
+                                string mensajePersonalizado = "La Solicitud: " + lbNumeroSolicitud.Text + " ha sido programada éxitosamente";
+                                string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+
+                            }
+
+                        }
+
+
+
+
+                    }
+
+                    else
+                    {
+                        string mensajePersonalizado = "La solicitud no tiene ningun detalle asociado, No se puede programar en este momento";
+                        string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+
+                    }
+
+                    break;
+
+                case "DISEÑO": //Boton Programar  Departamento Compras
+
+                    break;
+
+                case "RECEPCION": // Boton Programar  Departamento Compras Desarrollo Producto
+
+
+                    break;
+
+
+                default:
+                    // Error Con el despartamento de ese usuario Validar con Sistemas 
+                    break;
+            }
+
+
+
+
+        }
+
+
+        //Calculo de la Fecha de entrega 
+        public DateTime CalcularFechaEntrega(DateTime FechaIngreso)
+        {
+
+            DateTime UltimaActivacionSolicitud = FechaIngreso;
+
+            while (UltimaActivacionSolicitud.DayOfWeek == DayOfWeek.Saturday || UltimaActivacionSolicitud.DayOfWeek == DayOfWeek.Sunday)
+            {
+                UltimaActivacionSolicitud = UltimaActivacionSolicitud.AddDays(1);
+                UltimaActivacionSolicitud = new DateTime(UltimaActivacionSolicitud.Year, UltimaActivacionSolicitud.Month, UltimaActivacionSolicitud.Day, 8, 0, 0);
+            }
+            DateTime FechaEntrega = UltimaActivacionSolicitud.AddDays(5);
+
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            // Calcula el día siguiente a la fecha de entrega
+            DateTime DiaSiguiente = FechaEntrega.AddDays(1);
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                // Consulta SQL para verificar si la fecha de entrega es un día feriado
+                string query = "SELECT COUNT(*) FROM tblDiaNoLaboral WHERE dnlFecha BETWEEN @UltimaActivacionRender AND @FechaEntrega OR dnlFecha = @DiaSiguiente";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Agrega el parámetro para la fecha de entrega
+                    command.Parameters.AddWithValue("@FechaEntrega", FechaEntrega);
+                    command.Parameters.AddWithValue("@UltimaActivacionRender", UltimaActivacionSolicitud);
+                    command.Parameters.AddWithValue("@DiaSiguiente", DiaSiguiente);
+
+                    int count = (int)command.ExecuteScalar(); // Ejecuta la consulta y obtén el resultado
+
+                    if (count > 0)
+                    {
+                        // Si la fecha de entrega o el día siguiente son días feriados, agrega el número correcto de días adicionales a la fecha de entrega
+                        FechaEntrega = FechaEntrega.AddDays(count);
+                    }
+                }
+            }
+
+
+            return FechaEntrega;
+        }
+
+
+        
+        [WebMethod] // Cambiar estado de variable de Session cuando dan click en NuevaSolicitud 
+        public static void NuevaSolicitud()
+        {
+            HttpContext.Current.Session["InsertUpdate"] = "Insertar";
+        }
+
+        [WebMethod]  // Cambiar estado de variable de Session cuando dan click en Modificarsolicitud 
+        public static void ModificarSolicitud()
+        {
+            HttpContext.Current.Session["InsertUpdate"] = "Actualizar";
+        }
+
         // Detalle solicitud
 
         protected void DataGridDetalleSolicitud_LinkButton(object source, DataGridCommandEventArgs e)
@@ -1427,6 +1865,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGridDetalleSolicitud.Items[rowIndex];
 
+                // Se utiliza para darle el color solo a la fila seleccionada 
+                foreach (DataGridItem item in DataGridDetalleSolicitud.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
 
                 //se usa Para darle un color a la fila seleccionada  anderson
                 e.Item.CssClass = "fila-seleccionada";
@@ -1593,9 +2039,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void GuardarModificarDetalle(object sender, EventArgs e)
         {
-            bool guardarDetalle = chxGuardarDetalle.Checked;
+           
 
-            if (guardarDetalle)
+            if (Session["InsertUpdateDetalle"].ToString() == "Insertar")
             {
                 string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
 
@@ -1637,6 +2083,39 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             int rowsAffected = cmd.ExecuteNonQuery();
                             if (rowsAffected > 0)
                             {
+                               // Variables de session de Detalle 
+                                Session["ProductoSession"] = txDescProduc.InnerText;
+                                Session["ProveedorVentaSession"] = tbProveedor.Text;
+                                Session["AnchoSession"] = tbAncho.Text;
+                                Session["AlturaSession"] = tbAltura.Text;
+                                Session["ProfundidadSession"] = tbProfundidad.Text;
+                                Session["MaterialSession"] = tbMaterial.Text;
+                                Session["CantidadSession"] = tbCantidad.Text;
+                                Session["EspGeneralSession"] = txEspGen.InnerText;
+
+                                // Variables de Session de la solicitud 
+                                Session["FecIngrSolSession"] = tbFechaIngresoServidor.Text;
+                                Session["FecEntregaSolSession"] = tbFechaEntregaServidor.Text;
+                                Session["FechaRespuestaSession"] = tbFechaRespuestaServidor.Text;
+                                Session["DirigidoSession"] = ddlDirigido.SelectedItem.Text;
+                                Session["TipoSession"] = ddlTipo.SelectedItem.Text;
+                                Session["SolOrigenSession"] = tbSolicitudOrigen.Text;
+                                Session["ProyectoSolSession"] = tbProyecto.Text;
+                                Session["CiudadSession"] = ddlCiudad.Text;
+                                Session["ViaticoSession"] = chxViaticos.Checked;
+                                Session["CotizacionSession"] = tbCotizacionEsp.Text;
+                                Session["ClienteSolSession"] = tbClienteServidor.Text;
+                                Session["ContactoSolSession"] = tbContactoServidor.Text;
+                                Session["TelSeolSession"] = tbTelefonoServidor.Text;
+                                Session["CelularSolSession"] = tbCelularServidor.Text;
+                                Session["Mailsolsession"] = tbMailServidor.Text;
+                                Session["DirecccionSolSession"] = tbDireccionServidor.Text;
+                                Session["AsesorSolSession"] = ddlAsesor.SelectedItem.Text;
+                                Session["numeroSolicitudSession"] = lbNumeroSolicitud.Text; ;
+
+                                Session["ScriptEspecifico"] = "ActivarBotonDetalle1();";
+
+
                                 string mensajePersonalizado = "El detalle  ha sido ingresado con éxito";
                                 string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
                                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
@@ -1656,7 +2135,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
-            else
+            else if(Session["InsertUpdateDetalle"].ToString() == "Actualizar")
             {
 
                 //CalcularFechaEntregaSolicitudEspecial() de momento se envia fecha del primer dia del año  !!!!IMPORTANTE !!!!
@@ -1692,6 +2171,39 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
+                            // Variables de session de Detalle 
+
+                            Session["ProductoSession"] = txDescProduc.InnerText;
+                            Session["ProveedorVentaSession"] = tbProveedor.Text;
+                            Session["AnchoSession"] = tbAncho.Text;
+                            Session["AlturaSession"] = tbAltura.Text;
+                            Session["ProfundidadSession"] = tbProfundidad.Text;
+                            Session["MaterialSession"] = tbMaterial.Text;
+                            Session["CantidadSession"] =tbCantidad.Text;
+                            Session["EspGeneralSession"] = txEspGen.InnerText;
+
+                            // Variables de Session de la solicitud 
+                            Session["FecEntregaSolSession"] = tbFechaEntregaServidor.Text;
+                            Session["FechaRespuestaSession"] = tbFechaRespuestaServidor.Text;
+                            Session["DirigidoSession"] = ddlDirigido.SelectedItem.Text;
+                            Session["TipoSession"] = ddlTipo.SelectedItem.Text;
+                            Session["SolOrigenSession"] = tbSolicitudOrigen.Text;
+                            Session["ProyectoSolSession"] = tbProyecto.Text;
+                            Session["CiudadSession"] = ddlCiudad.Text;
+                            Session["ViaticoSession"] = chxViaticos.Checked;
+                            Session["CotizacionSession"] = tbCotizacionEsp.Text;
+                            Session["ClienteSolSession"] = tbClienteServidor.Text;
+                            Session["ContactoSolSession"] = tbContactoServidor.Text;
+                            Session["TelSeolSession"] = tbTelefonoServidor.Text;
+                            Session["CelularSolSession"] = tbCelularServidor.Text;
+                            Session["Mailsolsession"] = tbMailServidor.Text;
+                            Session["DirecccionSolSession"] = tbDireccionServidor.Text;
+                            Session["AsesorSolSession"] = ddlAsesor.SelectedItem.Text;
+                            Session["numeroSolicitudSession"] = lbNumeroSolicitud.Text;
+
+                            Session["ScriptEspecifico"] = "ActivarBotonDetalle1();";
+
+
                             string mensajePersonalizado = "¡El detalle  ha sido actualizado con exito!";
                             string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
                             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
@@ -1712,261 +2224,25 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-        protected void ProgramarSolicitud(object sender, EventArgs e)
+
+
+        [WebMethod] 
+        public static void NuevoDetalle()
         {
-
-            bool DetalleEntrados = false;
-            bool PrecioSugerido = false;
-            DateTime FechaIngreso = DateTime.Now;
-            DateTime FechaEntrega;
-
-            //Verificar Cual departamento de la boton 
-            switch (Session["Departamento"].ToString().ToUpper())
-            {
-                case "VENTAS":
-
-
-                    string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
-                    using (SqlConnection connection = new SqlConnection(connectionString))
-                    {
-                        connection.Open();
-
-                        string consultaSQL = "SELECT COUNT(*) FROM tblSoliciDiseEspeDeta WHERE ID_Solicitud = @IdSolicitud";
-
-                        using (SqlCommand cmd = new SqlCommand(consultaSQL, connection))
-                        {
-                            cmd.Parameters.AddWithValue("@IdSolicitud", lbNumeroSolicitud.Text);
-
-                            int count = (int)cmd.ExecuteScalar();
-                            if (count > 0)
-                            {
-
-                                DetalleEntrados = true;
-                                connection.Close();
-                            }
-                        }
-                    }
-
-                    if (DetalleEntrados) // Si  tiene detalles validamos 
-                    {
-                        // validamos si es destinatario es Desarrollo 
-                        if (ddlTipo.Text == "DESARROLLO")
-                        {
-
-                            //Vaidamos si alguno de los detalles tiene valor sugerido =< 0
-                            using (SqlConnection connection = new SqlConnection(connectionString))
-                            {
-                                connection.Open();
-
-                                string consultaSQL = "SELECT COUNT(*) FROM tblSoliciDiseEspeDeta WHERE ID_Solicitud = @IdSolicitud AND PrecioSugerido<=0";
-
-                                using (SqlCommand cmd = new SqlCommand(consultaSQL, connection))
-                                {
-                                    cmd.Parameters.AddWithValue("@IdSolicitud", lbNumeroSolicitud.Text);
-
-                                    int count = (int)cmd.ExecuteScalar();
-                                    if (count > 0)
-                                    {
-                                        // Se encontraron registros que cumplen la condición
-                                        PrecioSugerido = true;
-                                    }
-                                }
-                            }
-
-
-                            if (PrecioSugerido)
-                            {
-                                //Se calcula la Fecha de entrega 
-                                FechaEntrega = CalcularFechaEntrega(FechaIngreso);
-
-                                // Se encontraron Detalles de esa solicitud con PrecioSugerido =< 0 
-                                // Se debe Realizar Validacion  aun no esta clara  ?????????????? Penidiente 
-
-                                using (SqlConnection connection = new SqlConnection(connectionString))
-                                {
-                                    connection.Open();
-                                    //Realizamos la Actializacion 
-                                    string query = "Update  tblSoliciDiseEspe set ProgramadoVentas = 1,Fecha_Ingreso = @FechaIngreso," +
-                                        "Fecha_Programada_Entrega = @FechaProgramadaEntrega where Id_Solicitud =  @Id_Solicitud";
-
-
-                                    using (SqlCommand command = new SqlCommand(query, connection))
-                                    {
-
-                                        command.Parameters.AddWithValue("@FechaIngreso", FechaIngreso);
-                                        command.Parameters.AddWithValue("@FechaProgramadaEntrega", FechaEntrega);
-                                        command.Parameters.AddWithValue("@Id_Solicitud", lbNumeroSolicitud.Text);
-
-                                        command.ExecuteNonQuery();
-                                    }
-
-                                    // Mensaje de éxito
-                                    string mensajePersonalizado = "La Solicitud." + lbNumeroSolicitud.Text + "ha sido programada éxitosamente";
-                                    string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
-                                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-
-
-                                }
-
-                            }
-
-                            else
-                            {
-                                //Se  Realizar Calculo de fecha entrega y
-                                FechaEntrega = CalcularFechaEntrega(FechaIngreso);
-
-                                //  se realiza la la actualizacion en la base de datos del campo programar
-
-                                using (SqlConnection connection = new SqlConnection(connectionString))
-                                {
-                                    connection.Open();
-                                    //Realizamos la Actializacion 
-                                    string query = "Update  tblSoliciDiseEspe set ProgramadoVentas = 1,Fecha_Ingreso = @FechaIngreso," +
-                                        "Fecha_Programada_Entrega = @FechaProgramadaEntrega where Id_Solicitud =  @Id_Solicitud";
-
-
-                                    using (SqlCommand command = new SqlCommand(query, connection))
-                                    {
-                                        // Aquí defines los parámetros de la consulta
-                                        command.Parameters.AddWithValue("@FechaIngreso", FechaIngreso);
-                                        command.Parameters.AddWithValue("@FechaProgramadaEntrega", FechaEntrega);
-                                        command.Parameters.AddWithValue("@Id_Solicitud", lbNumeroSolicitud.Text);
-
-                                        command.ExecuteNonQuery();
-                                    }
-
-                                    // Mensaje de éxito
-                                    string mensajePersonalizado = "La Solicitud." + lbNumeroSolicitud.Text + "ha sido programada éxitosamente";
-                                    string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
-                                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-
-
-                                }
-
-
-
-                            }
-
-                        }
-
-                        else
-                        {
-                            // Es para Compras o Desarralo de Producto  simplemente se calcula la fecha de entrega y se realiza la 
-                            FechaEntrega = CalcularFechaEntrega(FechaIngreso);
-
-                            using (SqlConnection connection = new SqlConnection(connectionString))
-                            {
-                                connection.Open();
-                                //Realizamos la Actializacion 
-                                string query = "Update  tblSoliciDiseEspe set ProgramadoVentas = 1,Fecha_Ingreso = @FechaIngreso," +
-                                       "Fecha_Programada_Entrega = @FechaProgramadaEntrega where Id_Solicitud =  @Id_Solicitud";
-
-
-                                using (SqlCommand command = new SqlCommand(query, connection))
-                                {
-                                    // Aquí defines los parámetros de la consulta
-                                    command.Parameters.AddWithValue("@FechaIngreso", FechaIngreso);
-                                    command.Parameters.AddWithValue("@FechaProgramadaEntrega", FechaEntrega);
-                                    command.Parameters.AddWithValue("@Id_Solicitud", lbNumeroSolicitud.Text);
-
-                                    command.ExecuteNonQuery();
-                                }
-
-                                // Mensaje de éxito
-                                string mensajePersonalizado = "La Solicitud." + lbNumeroSolicitud.Text + "ha sido programada éxitosamente";
-                                string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
-                                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-
-
-                            }
-
-                        }
-
-
-
-
-                    }
-
-                    else
-                    {
-                        string mensajePersonalizado = "La solicitud no tiene ningun detalle asociado, No se puede programar en este momento";
-                        string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
-                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-
-
-                    }
-
-                    break;
-
-                case "DISEÑO": //Boton Programar  Departamento Compras
-
-                    break;
-
-                case "RECEPCION": // Boton Programar  Departamento Compras Desarrollo Producto
-
-
-                    break;
-
-
-                default:
-                    // Error Con el despartamento de ese usuario Validar con Sistemas 
-                    break;
-            }
-
-
-
-
-
-
-
+            HttpContext.Current.Session["InsertUpdateDetalle"] = "Insertar";
         }
 
-
-        public DateTime CalcularFechaEntrega(DateTime FechaIngreso)
+        [WebMethod] 
+        public static void ModificarDetalle()
         {
-
-            DateTime UltimaActivacionSolicitud = FechaIngreso;
-
-            while (UltimaActivacionSolicitud.DayOfWeek == DayOfWeek.Saturday || UltimaActivacionSolicitud.DayOfWeek == DayOfWeek.Sunday)
-            {
-                UltimaActivacionSolicitud = UltimaActivacionSolicitud.AddDays(1);
-                UltimaActivacionSolicitud = new DateTime(UltimaActivacionSolicitud.Year, UltimaActivacionSolicitud.Month, UltimaActivacionSolicitud.Day, 8, 0, 0);
-            }
-            DateTime FechaEntrega = UltimaActivacionSolicitud.AddDays(5);
-
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
-
-            // Calcula el día siguiente a la fecha de entrega
-            DateTime DiaSiguiente = FechaEntrega.AddDays(1);
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-
-                // Consulta SQL para verificar si la fecha de entrega es un día feriado
-                string query = "SELECT COUNT(*) FROM tblDiaNoLaboral WHERE dnlFecha BETWEEN @UltimaActivacionRender AND @FechaEntrega OR dnlFecha = @DiaSiguiente";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    // Agrega el parámetro para la fecha de entrega
-                    command.Parameters.AddWithValue("@FechaEntrega", FechaEntrega);
-                    command.Parameters.AddWithValue("@UltimaActivacionRender", UltimaActivacionSolicitud);
-                    command.Parameters.AddWithValue("@DiaSiguiente", DiaSiguiente);
-
-                    int count = (int)command.ExecuteScalar(); // Ejecuta la consulta y obtén el resultado
-
-                    if (count > 0)
-                    {
-                        // Si la fecha de entrega o el día siguiente son días feriados, agrega el número correcto de días adicionales a la fecha de entrega
-                        FechaEntrega = FechaEntrega.AddDays(count);
-                    }
-                }
-            }
-
-
-            return FechaEntrega;
+            HttpContext.Current.Session["InsertUpdateDetalle"] = "Actualizar";
         }
 
+        [WebMethod] 
+        public static void LimpiarVaribleSessiondetalle()
+        {
+            HttpContext.Current.Session["ScriptEspecifico"] = null;
+        }
 
     }
 }

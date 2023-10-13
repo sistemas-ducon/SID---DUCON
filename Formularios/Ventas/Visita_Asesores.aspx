@@ -14,7 +14,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-
         function GenerarGrafica(nombres, cantidades) {
             var ctx = document.getElementById("grafica").getContext('2d');
 
@@ -57,6 +56,8 @@
                 canvas.style.height = (currentHeight * 1) + "px";
                 myChart.resize();
             });
+
+            ControlBtnCliente();
 
         }
 
@@ -102,8 +103,47 @@
                 myChart1.resize();
             });
 
+            ControlBtnCliente();
         }
 
+        function MantenerCampos() {
+
+            document.getElementById("GrabarVisita").classList.add("enabled");
+
+            // Habilitar o deshabilitar los DropDownList
+            var dropDownLists = document.querySelectorAll("select");
+            for (var j = 0; j < dropDownLists.length; j++) {
+                if (dropDownLists[j].id !== "ddlAsesor") {
+                    dropDownLists[j].disabled = !dropDownLists[j].disabled;
+                }
+            }
+
+            // Habilitar los TextArea
+            var textAreas = document.querySelectorAll("textarea");
+            for (var k = 0; k < textAreas.length; k++) {
+                textAreas[k].disabled = !textAreas[k].disabled;
+            }
+
+            // Habilitar o deshabilitar los TextBox Type text
+            var textBoxes = document.querySelectorAll("input[type='text']");
+            for (var i = 0; i < textBoxes.length; i++) {
+
+                if (textBoxes[i].id !== "tbCliente" && textBoxes[i].id !== "tbTelefono" && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbMailCont") {
+
+                    if (textBoxes[i].id !== "tbLicitacion1" && textBoxes[i].id != "tbIdVisita" && textBoxes[i].id != "tbClienteServidor" && textBoxes[i].id != "tbTelefonoServidor" && textBoxes[i].id != "tbContactoServidor" && textBoxes[i].id != "tbMailContServidor") {
+                        textBoxes[i].disabled = !textBoxes[i].disabled;
+                    }
+
+                }
+            }
+
+        }
+
+
+        function Estadistica() {
+            var boton1 = document.getElementById("<%= Button2.ClientID %>");
+            boton1.disabled = true;
+        }
     </script>
 
 </head>
@@ -125,8 +165,9 @@
                         <a class="nav-link text-dark active" id="Visitas-tab" data-bs-toggle="tab" href="#Visitas-content">Registro Visitas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="Estadistica-tab" data-bs-toggle="tab" href="#Estadisticas-content">Estadisticas</a>
+                        <a class="nav-link text-dark" id="Estadistica-tab" data-bs-toggle="tab" href="#Estadisticas_content">Estadisticas</a>
                     </li>
+
                 </ul>
             </div>
         </nav>
@@ -144,13 +185,12 @@
 
                             <%--Comienza Nueva OT--%>
 
-                            <asp:CheckBox ID="chkEstadoGuardarCliente" runat="server" CssClass="hidden-checkbox"  />
 
                             <a class="icong disabled" href="#" title="Nueva Visita" id="NuevaVisita" onclick="NuevaVisita()">
                                 <i class="bi bi-file-earmark"></i>
                             </a>
 
-                            <asp:LinkButton class="icong disabled" runat="server" title="Guardar Visita" ID="GrabarVisita" OnClick="GuardarModificarCliente">
+                            <asp:LinkButton class="icong disabled" runat="server" title="Guardar Visita" ID="GrabarVisita" OnClick="GuardarModificarCliente" OnClientClick="return ValidarFormulario();">
                                         <i class="bi bi-save2"></i>
                             </asp:LinkButton>
 
@@ -169,6 +209,8 @@
 
                             <ul />
                     </ul>
+
+                     <span id="ErrorValidacion1" style="color: red;"></span>
                 </div>
 
             </div>
@@ -181,8 +223,7 @@
             <div class="tab-pane fade show active" id="Visitas-content">
                 <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                     <ContentTemplate>
-                        <div class="container p-1">
-
+                        <div class="container p-1" >
 
                             <!-- Agrega este div para el modal de carga -->
                             <div class="modal fade" id="loadingModal" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
@@ -213,14 +254,15 @@
                                         <asp:DropDownList class="form-control" ID="ddlVisitasPor" runat="server" disabled="false" DataTextField="NombreCausa" DataValueField="Id_Causa" DataSourceID="CausaVisita"></asp:DropDownList><asp:SqlDataSource runat="server" ID="CausaVisita" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select * from tblCausaVisita"></asp:SqlDataSource>
                                     </div>
                                 </div>
-                               
+
                                 <div class="col-1">
                                 </div>
 
                                 <div class="col-3">
                                     <div class="input-group input-group-sm  input-group-sm mb-2 gap-2">
                                         <label class="form-label" runat="server" id="lbFecha">Fecha </label>
-                                        <input type="date" id="fecha" class="form-control" runat="server" disabled="disabled" />
+                                        <asp:TextBox ID="fecha" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
+
                                     </div>
                                 </div>
 
@@ -231,8 +273,10 @@
 
                                 <div class="col-4">
                                     <div class="input-group input-group-sm  mb-2 gap-2 ">
-                                        <asp:Button class="btn btn-outline-secondary" ID="btnCliente" type="button" Text="Cliente" runat="server" OnClientClick="abrirOtraPestana();"></asp:Button>
+                                        <asp:Button class="btn btn-outline-secondary" ID="btnCliente" type="button" Text="Cliente" runat="server" OnClick="GuardarDatosSesion" OnClientClick="abrirOtraPestana();"></asp:Button>
                                         <asp:TextBox ID="tbCliente" type="text" class="form-control" runat="server" disabled="false"></asp:TextBox>
+                                        <asp:TextBox ID="tbClienteServidor" type="text" class="form-control" runat="server" Visible="false" ></asp:TextBox>
+
                                     </div>
                                 </div>
 
@@ -240,6 +284,7 @@
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbTelefono" class="form-label" Text="Telefono" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbTelefono" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
+                                         <asp:TextBox ID="tbTelefonoServidor" type="text" class="form-control " runat="server" Visible="false" ></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -250,6 +295,7 @@
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbCotizacion" class="form-label" Text="Cotizacion" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbCotizacion" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
+                                       
                                     </div>
                                 </div>
 
@@ -262,6 +308,7 @@
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbContacto" class="form-label" Text="Contacto" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbContacto" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
+                                          <asp:TextBox ID="tbContactoServidor" type="text" class="form-control " runat="server" Visible="false"></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -269,6 +316,7 @@
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbMailCont" class="form-label" Text="Mail Contacto" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbMailCont" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
+                                           <asp:TextBox ID="tbMailContServidor" type="text" class="form-control " runat="server" Visible="false" ></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -281,8 +329,8 @@
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbObservaciones" class="form-label" Text="Obs." runat="server"></asp:Label>
                                         <textarea class="form-control form-control-sm" id="txObs" runat="server" cols="29" rows="3" disabled="disabled"></textarea>
-                                        <asp:TextBox ID="tbIdVisita" runat="server" style="display: none;" ></asp:TextBox>
-                                        <asp:TextBox ID="tbIdContacto" runat="server" style="display: none;" ></asp:TextBox>
+                                        <asp:TextBox ID="tbIdVisita" runat="server" Visible="false"></asp:TextBox>
+
                                     </div>
                                 </div>
 
@@ -319,21 +367,25 @@
                                                 <div class="table-responsive mb-2 gap-2" style="max-height: 15rem; overflow-x: auto;">
                                                     <h6 class="datagrid-header text-center">Visita Asesores 
                                                         <asp:Literal runat="server" ID="DateRangeLiteral"></asp:Literal></h6>
-                                                    <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGrid1" runat="server" DataSourceID="VisitaAse" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnPreRender="miDataGrid_PreRender" OnItemDataBound="DataGrid1_ItemDataBound">
+                                                    <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGrid1" runat="server" DataSourceID="VisitaAse" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnPreRender="miDataGrid_PreRender" OnItemCommand="DataGridVisita_LinkButton">
                                                         <HeaderStyle Font-Bold="true" CssClass="datagrid-header p-2" />
                                                         <Columns>
+                                                            <asp:TemplateColumn HeaderText="...">
+                                                                <ItemTemplate>
+                                                                    <asp:LinkButton ID="lnkVisita" runat="server" CommandName="VerVisita" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
+                                                                </ItemTemplate>
+                                                            </asp:TemplateColumn>
 
-
-                                                            <asp:BoundColumn DataField="NombreCompañía" HeaderText="Cliente" />
+                                                            <asp:BoundColumn DataField="NombreCompañía" HeaderText="Cliente" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="NombreContacto" HeaderText="Contacto" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Telefono" HeaderText="Telefono" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="MailContacto" HeaderText="Mail" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="NombreCausa" HeaderText="Visita Por" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="FechaVisita" HeaderText="Fecha Ingreso" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Cotizacion" HeaderText="Cotizacion" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Observacion" Visible="false"/>
+                                                            <asp:BoundColumn DataField="Observacion" Visible="false" />
                                                             <asp:BoundColumn DataField="Id" Visible="false" />
-                                                            <asp:BoundColumn DataField="Id_ClienteContacto" Visible="false"/>
+                                                            <asp:BoundColumn DataField="Id_ClienteContacto" Visible="false" />
 
                                                         </Columns>
                                                     </asp:DataGrid>
@@ -430,14 +482,30 @@
 
             </div>
 
-            <div class="tab-pane fade " id="Estadisticas-content">
+            <div class="tab-pane fade " id="Estadisticas_content" runat="server" >
                 <asp:UpdatePanel ID="UpdatePanel2" runat="server">
                     <ContentTemplate>
-                        <div class="container ">
+                        <div class="container" >
 
-                            <div class="row pt-1">
+                            <!-- Agrega este div para el modal de carga -->
+                            <div class="modal fade" id="loadingModal1" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-body text-center">
+                                            <div class="spinner-border" role="status">
+                                                <span class="visually-hidden">Cargando...</span>
+                                            </div>
+                                            <p class="mt-2">Generando archivo Excel...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                                <div class="col-6">
+                            
+
+                            <div class="row pt-1" >
+
+                                <div class="col-6" >
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="Label1" class="form-label" Text="Visitas entre" runat="server"></asp:Label>
                                         <asp:TextBox ID="fecha5" type="date" runat="server" class="form-control"></asp:TextBox>
@@ -460,14 +528,19 @@
 
                             </div>
 
-                            <div class="container mt-4">
+                            <div class="container text-bg-warning  text-center ">
+                                <asp:Label CssClass=" text-danger" ID="EstMensaje" runat="server" Text="Lo siento, no tienes acceso a esta sección." style="font-size: 2rem; opacity:0.5;" Visible="false"></asp:Label>
+                            </div>
+                            
+
+                            <div class="container mt-4" id="Est1" runat="server">
                                 <div class="row justify-content-center">
                                     <div class="border rounded p-2">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class=" table-responsive mb-2 gap-2" style="max-height: 14rem; overflow-x: auto;">
                                                     <h6 class="datagrid-header text-center">Estadistica Asesores:</h6>
-                                                    <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGrid2" runat="server" DataSourceID="EstadisticaAsesores" AutoGenerateColumns="false" OnItemCommand="DataGrid2_ItemDataBound">
+                                                    <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGrid2" runat="server" DataSourceID="EstadisticaAsesores" AutoGenerateColumns="false" OnItemCommand="DataGrid2_linkButton">
                                                         <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                         <Columns>
@@ -498,7 +571,7 @@
                                             </div>
 
                                             <div class="col-1">
-                                                <asp:LinkButton ID="LinkButton1" runat="server" OnClick="ExportarExel">
+                                                <asp:LinkButton ID="LinkButton1" runat="server" OnClick="ExportarExel" OnClientClick="mostrarModal1();">
                                                      <i class="custom-icon2"></i>
                                                 </asp:LinkButton>
                                             </div>
@@ -508,7 +581,7 @@
                                 </div>
                             </div>
 
-                            <nav class="navbar navbar-light bg-light">
+                            <nav class="navbar navbar-light bg-light" id="Est2" runat="server">
                                 <div class="container d-flex justify-content-center">
                                     <ul class="nav nav-tabs">
                                         <li class="nav-item">
@@ -522,11 +595,7 @@
                                 </div>
                             </nav>
 
-
-
-
-
-                            <div class="tab-content">
+                            <div class="tab-content" id="Est3" runat="server">
                                 <div class="tab-pane fade show active " id="DetVis-content">
                                     <asp:UpdatePanel ID="PanelDetVisitas" runat="server">
                                         <ContentTemplate>
@@ -535,7 +604,7 @@
                                                     <div class="border rounded p-2">
                                                         <div class="row">
                                                             <div class="col-12">
-                                                                <div class=" table table-responsive mb-2 gap-2" style="max-height: 15rem; overflow-x: auto;">
+                                                                <div class=" table table-responsive mb-2 gap-2" style="max-height: 25rem; overflow-x: auto;">
                                                                     <h6 class="datagrid-header text-center">Visitas Asesor en las fechas seleccionadas</h6>
                                                                     <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ShowHeaderWhenEmpty="true" ID="DataGrid4" runat="server" AutoGenerateColumns="false" DataSourceID="LlenarDetalle">
                                                                         <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
@@ -604,7 +673,7 @@
                                                             </div>
 
                                                             <div class="col-1">
-                                                                <asp:LinkButton ID="LinkButton2" runat="server" OnClick="ExportarExel3">
+                                                                <asp:LinkButton ID="LinkButton2" runat="server" OnClick="ExportarExel3" OnClientClick="mostrarModal1();">
                                                                              <i class="custom-icon2"></i>
                                                                 </asp:LinkButton>
                                                             </div>
@@ -655,7 +724,7 @@
         // Habilitar enlace Nueva Visita 
         document.getElementById("NuevaVisita").classList.add("enabled");
         document.getElementById("btnCliente").disabled = true;
-        
+
 
 
         // Ocultar el div con clase "contenedor-icono" cuando se activa la pestaña "Info-content" 
@@ -669,9 +738,6 @@
                 }
             });
         });
-
-
-
 
 
         function validarDropDownList() {
@@ -721,8 +787,18 @@
                 var fecha2 = document.getElementById("<%= fecha2.ClientID %>");
                 fecha2.disabled = true;
 
-                var checkBox = document.getElementById('<%= chkEstadoGuardarCliente.ClientID %>');
-                checkBox.checked = true; // Marcar el CheckBox
+                $.ajax({
+                    type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                    url: "Visita_Asesores.aspx/NuevaVisita", // La URL debe apuntar al método en el servidor
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                    },
+                    error: function (error) {
+                        // Manejar errores si los hay
+                    }
+                });
 
             }
 
@@ -767,6 +843,11 @@
         }
 
         function ModificarVisita() {
+
+            //Habilitar
+            var BtnCliente = document.getElementById("<%= btnCliente.ClientID %>");
+            BtnCliente.disabled = false;
+
             // Habilitar enlaces 
             document.getElementById("GrabarVisita").classList.add("enabled");
             document.getElementById("CancelarVisita").classList.add("enabled");
@@ -796,14 +877,27 @@
 
                 if (textBoxes[i].id !== "tbCliente" && textBoxes[i].id !== "tbTelefono" && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbMailCont") {
 
-                    if (textBoxes[i].id !== "tbLicitacion1" && textBoxes[i].id != "tbIdVisita" && textBoxes[i].id !== "tbIdContacto" ) {
+                    if (textBoxes[i].id !== "tbLicitacion1" && textBoxes[i].id != "tbIdVisita" && textBoxes[i].id != "tbClienteServidor" && textBoxes[i].id != "tbTelefonoServidor" && textBoxes[i].id != "tbContactoServidor" && textBoxes[i].id != "tbMailContServidor") {
                         textBoxes[i].disabled = !textBoxes[i].disabled;
                     }
 
                 }
             }
-            var checkBox = document.getElementById('<%= chkEstadoGuardarCliente.ClientID %>');
-            checkBox.checked = false; // Desmarcar el CheckBox
+
+
+
+            $.ajax({
+                type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                url: "Visita_Asesores.aspx/ModificarVisita", // La URL debe apuntar al método en el servidor
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                },
+                error: function (error) {
+                    // Manejar errores si los hay
+                }
+            });
 
         }
 
@@ -830,71 +924,61 @@
 
         }
 
+        function HabilitarEnlaces1() {
+            // Habilitar enlaces de Detalle
+            document.getElementById("ModificarVisita").classList.add("enabled");
+            //Habilitar
+            var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
+            boton1.disabled = true;
+
+        }
+
         function abrirOtraPestana() {
+
+            document.getElementById("tbCliente").value = "";
+
+
             // Utiliza window.open para abrir "Formulario2.aspx" en otra pestaña
             window.open('Clientes.aspx', '_blank');
+
         }
 
+        function ControlBtnCliente() {
+
+            //Habilitar
+            var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
+            boton1.disabled = true;
+
+        }
+
+        function ValidarFormulario() {
+            var cliente = document.getElementById("tbCliente").value;
+
+            var isValid = true;
+
+            if (cliente === "") {
+                ErrorValidacion1.innerHTML = "El campo cliente es obligatorio.";
+                isValid = false;
+            }
+
+            // Devuelve true si los campos son válidos, de lo contrario, devuelve false
+            return isValid;
+        }
         
 
-    </script>
+        // Ocultar el div con clase "contenedor-icono" cuando se activa la pestaña "Info-content" 
+        $(document).ready(function () {
+            $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var targetTab = $(e.target).attr("href");
+                if (targetTab === "#Estadisticas_content") {
+                    $(".contenedor-icono").hide();
+                } else {
+                    $(".contenedor-icono").show();
+                }
+            });
+        });
 
-    <script type="text/javascript">
-
-        // Función para capturar el clic en una fila del DataGrid
-        function seleccionarFila(rowIndex) {
-            // Obtener el DataGrid y la fila seleccionada utilizando jQuery
-            var dataGrid = $("#<%= DataGrid1.ClientID %>");
-            var row = dataGrid.find("tr:eq(" + (parseInt(rowIndex) + 1) + ")");
-
-            // Verificar si se encontró la fila
-            if (row.length > 0) {
-                // Obtener los datos de las celdas de la fila seleccionada
-                var cliente = row.find("td:eq(0)").text();
-                var contacto = row.find("td:eq(1)").text();
-                var telefono = row.find("td:eq(2)").text();
-                var mail = row.find("td:eq(3)").text();
-                var visitaPor = row.find("td:eq(4)").text();
-                var FechaX = row.find("td:eq(5)").text();
-                var formattedFechaX = cambiarFormatoFecha(FechaX);
-                var cotizacion = row.find("td:eq(6)").text();
-                var observacion = row.find("td:eq(7)").text();
-                var IdVisita = row.find("td:eq(8)").text();
-                var IdContacto = row.find("td:eq(9)").text();
-
-                // Llenar los TextBox con los datos obtenidos
-                $("#<%= tbCliente.ClientID %>").val(cliente);
-                $("#<%= tbContacto.ClientID %>").val(contacto);
-                $("#<%= tbTelefono.ClientID %>").val(telefono);
-                $("#<%= tbMailCont.ClientID %>").val(mail);
-                $("#<%= tbCotizacion.ClientID %>").val(cotizacion);                $("#<%= txObs.ClientID %>").val(observacion);
-                $("#<%= fecha.ClientID %>").val(formattedFechaX);
-                console.log(FechaX);
-
-                // Seleccionar el elemento correcto del DropDownList por su valor
-                $("#<%= ddlVisitasPor.ClientID %> option").filter(function () {
-                    return $(this).text() === visitaPor;
-                }).prop("selected", true);
-
-                document.getElementById("ModificarVisita").classList.add("enabled");
-                $("#<%= tbIdVisita.ClientID %>").val(IdVisita);
-                $("#<%= tbIdContacto.ClientID %>").val(IdContacto);
-            }
-
-            function cambiarFormatoFecha(fecha) {
-                var partes = fecha.split('/');
-                var dia = partes[0];
-                var mes = partes[1];
-                var anioHora = partes[2].split(' ');
-                var anio = anioHora[0];
-
-                return anio + '-' + mes + '-' + dia;
-            }
-
-
-        }
-
-
+     
     </script>
 
     <script type="text/javascript">
@@ -908,7 +992,18 @@
             $('#loadingModal').modal('hide');
         }
 
+    </script>
 
+    <script type="text/javascript">
+        function mostrarModal1() {
+            // Muestra el modal de carga
+            $('#loadingModal1').modal('show');
+
+        }
+        // Función para ocultar el modal
+        function ocultarModal1() {
+            $('#loadingModal1').modal('hide');
+        }
 
     </script>
 

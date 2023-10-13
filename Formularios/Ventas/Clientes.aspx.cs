@@ -1099,8 +1099,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 tbId_ContactoCliente.Text = campos[4];
                 Session["ID_ContactoBD"] = campos[4];
 
-
-
             }
 
 
@@ -1113,6 +1111,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 btnModificar.Enabled = true;
             }
 
+
+            string script = "<script>enviarFormulario();</script>";
+            ScriptManager.RegisterStartupScript(this, GetType(), "enviarFormulario", script, false);
 
         }
 

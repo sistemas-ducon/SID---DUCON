@@ -30,13 +30,14 @@ a.icong.enabled {
 
 
 
-    .auto-width-column {
-        width: auto;
-        max-width: 200px; /* Puedes ajustar este valor según el ancho máximo deseado */
-        white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
-        overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
-        text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
-    }
+.auto-width-column {
+    width: auto;
+    max-width: 200px; /* Puedes ajustar este valor según el ancho máximo deseado */
+    white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
+    overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
+    text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
+    height: 1em;
+}
 
 /* Estilo para el encabezado del DataGrid */
 .datagrid-header {
@@ -96,8 +97,18 @@ a.icong.enabled {
     height: 3rem;
     color: #007bff; /* Color azul - puedes cambiarlo a tu preferencia */
 }
+#loadingModal1 .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    color: #007bff; /* Color azul - puedes cambiarlo a tu preferencia */
+}
 
 /* Para ocultar el checkbox guradar Cliente*/
 .hidden-checkbox {
     display: none;
+}
+
+.fila-seleccionada {
+    background-color: black; /* Cambia el color de fondo según tus preferencias */
+    color: white;
 }
