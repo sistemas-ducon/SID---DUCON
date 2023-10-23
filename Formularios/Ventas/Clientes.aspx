@@ -77,6 +77,7 @@
         <asp:ScriptManager runat="server" />
 
         <div class="tab-content">
+
             <div class="tab-pane fade show active" id="Cliente-content">
                 <asp:UpdatePanel ID="PanelCliente" runat="server" UpdateMode="Conditional">
                     <ContentTemplate>
@@ -357,7 +358,6 @@
 
 
                         </div>
-
                     </ContentTemplate>
                 </asp:UpdatePanel>
 
@@ -381,7 +381,7 @@
 
                                                         <asp:TemplateColumn HeaderText="...">
                                                             <ItemTemplate>
-                                                                <asp:LinkButton ID="lnkContacto" runat="server" CommandName="VerContacto" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>" OnClientClick="enviarFormulario();" />
+                                                                <asp:LinkButton ID="lnkContacto" runat="server" CommandName="VerContacto" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>"  />
                                                             </ItemTemplate>
                                                         </asp:TemplateColumn>
 
@@ -698,10 +698,6 @@
                 </asp:UpdatePanel>
 
             </div>
-
-
-
-
 
         </div>
     </form>

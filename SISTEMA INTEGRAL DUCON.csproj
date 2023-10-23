@@ -153,6 +153,7 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Formularios\Administrativo\EstadisticasVentas.aspx" />
+    <Content Include="Formularios\OTs.aspx" />
     <Content Include="Formularios\SuccessMessage.aspx" />
     <Content Include="Formularios\Ventas\AdjuntarDocumentos.aspx" />
     <Content Include="Formularios\Ventas\Clientes.aspx" />
@@ -230,6 +231,13 @@
     </Compile>
     <Compile Include="Formularios\Administrativo\EstadisticasVentas.aspx.designer.cs">
       <DependentUpon>EstadisticasVentas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\OTs.aspx.cs">
+      <DependentUpon>OTs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\OTs.aspx.designer.cs">
+      <DependentUpon>OTs.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\SuccessMessage.aspx.cs">
       <DependentUpon>SuccessMessage.aspx</DependentUpon>

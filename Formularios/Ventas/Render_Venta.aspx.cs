@@ -9,13 +9,18 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Windows.Forms;
 using static SISTEMA_INTEGRAL_DUCON.Formularios.Ventas.Clientes;
 using Button = System.Web.UI.WebControls.Button;
+using CheckBox = System.Web.UI.WebControls.CheckBox;
+using Control = System.Web.UI.Control;
+using TextBox = System.Web.UI.WebControls.TextBox;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
@@ -23,6 +28,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
     {
 
         private bool isModalVisible = false;
+        string mensaje = "";
         protected void Page_Load(object sender, EventArgs e)
         {
             //Evaluar los permisos del usuarioa y que departamento Pertenece 
@@ -33,6 +39,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 if (Session["usuariologueado"] != null)
                 {
                     CargarAsesoresEnDropDownList();
+                    DepartamentoAsesor();
 
                     Button btnTrabajarRender = FindControl("btnTrabajarRender") as Button;
                     if (btnTrabajarRender != null)
@@ -50,6 +57,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     }
 
+                    CargarVariablesDeSesion();
+
+
+
                 }
                 else
                 {
@@ -59,6 +70,89 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         }
+
+        public void CargarVariablesDeSesion()
+        {
+            Dictionary<string, Control> variablesDeSesionYControles = new Dictionary<string, Control>
+            {
+                { "DiseñoSession", tbDiseño },
+                { "FecIngresoSession", tbIngreso },
+                { "FechaUltActiv", tbUltActiv },
+                { "FecEntregaSession", tbEntrega },
+                { "FechaOKSession", tbFechaOk },
+                { "ClienteSession", tbCliente },
+                { "AsesorSession", ddlAsesor },
+                { "ProyectoSession", tbProyecto },
+                { "ContactoSession", tbContacto },
+                { "CelularSession", tbCelular },
+                { "MailSession", tbMail },
+                { "TelefonoSession", tbTelefono },
+                { "PlanoSession", tbPlano },
+                { "ZonaSession", ddlZona },
+                { "ImagenSession", tbImagenes },
+                { "LineaSession", tbLinea },
+                { "SupSession", tbSup },
+                { "AccSession", tbAcc },
+                { "CantosSession", tbCantos },
+                { "PerfilSession", tbPerfil },
+                { "PanelesSession", tbPaneles },
+                { "ArcSession", tbArch },
+                { "SillasSession", tbSillas },
+                { "PantallasSession", tbPantallas },
+                { "EspArqSession", chxAnimacion },             
+                { "AcabPisSession", tbAcaPisZoc },
+                { "AcabMuroSession", tbAcaMuros },
+                { "IluSession", tbIluminacion },
+                { "AntSession", tbAntepecho },
+                { "AmbientacionSession", chxAmbientacion },
+                { "AnimacionSession", chxAnimacion }
+            };
+
+            foreach (var kvp in variablesDeSesionYControles)
+            {
+                string valorSesion = Session[kvp.Key] as string;
+                if (!string.IsNullOrEmpty(valorSesion))
+                {
+                    if (kvp.Value is TextBox)
+                    {
+                        ((TextBox)kvp.Value).Text = valorSesion;
+                    }
+                    else if (kvp.Value is DropDownList)
+                    {
+                        ((DropDownList)kvp.Value).SelectedItem.Text = valorSesion;
+                    }
+                    else if (kvp.Value is CheckBox)
+                    {
+                        ((CheckBox)kvp.Value).Checked = Convert.ToBoolean(valorSesion);
+                    }
+
+                    Session.Remove(kvp.Key);
+                }
+            }
+
+            string Area = Session["AreaSession"] as string;
+            if (!string.IsNullOrEmpty(Area))
+            {
+                txAreaRender.InnerText = Area;
+                Session.Remove("AreaSession");
+            }
+            string ObservacionVenta = Session["ObVentaSession"] as string;
+            if (!string.IsNullOrEmpty(ObservacionVenta))
+            {
+                txObsVentas.InnerText = ObservacionVenta;
+                Session.Remove("ObVentaSession");
+            }
+
+            string Mueble = Session["MuebleSession"] as string;
+            if (!string.IsNullOrEmpty(Mueble))
+            {
+                txMuebles.InnerText = Mueble;
+                Session.Remove("MuebleSession");
+            }
+
+
+        }
+
 
         protected void ddlAsesores_DataBound(object sender, EventArgs e)
         {
@@ -92,7 +186,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string consulta = "SELECT Cedula, CONCAT(Nombre, ' ', Apellidos) AS NombreCompleto FROM tblAsesorComercial WHERE activo =1 order by Nombre";
+                string consulta = "SELECT Cedula, CONCAT(Nombre, ' ', Apellidos) AS NombreCompleto FROM tblAsesorComercial  order by Nombre";
 
                 SqlCommand command = new SqlCommand(consulta, connection);
                 connection.Open();
@@ -107,9 +201,38 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 reader.Close();
             }
 
-            // Agregar un elemento inicial si lo deseas
-            ddlAsesor.Items.Insert(0, new ListItem("-- Seleccione --", "0"));
+
         }
+
+        public void DepartamentoAsesor()
+        {
+
+            string consultaActual = "SELECT B.Descripcion FROM tblEmpleado As A INNER join tblDepartamento As B on B.ID_Departamento = A.Dependencia WHERE  Cedula = @Cedula";
+
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(consultaActual, connection))
+                {
+                    command.Parameters.AddWithValue("@Cedula", Session["CedulaLogeada"].ToString());
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        reader.Close();
+                        // Data arrived.
+                        string Departamento = (string)command.ExecuteScalar();
+                        Session["Departamento"] = Departamento;
+
+                    }
+
+
+                }
+            }
+
+        } // Campo se podria Cargar en el login
 
         protected void RenderPorZonaX(object sender, EventArgs e)
         {
@@ -141,8 +264,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void DataGridRenders_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
-
-
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
 
@@ -163,7 +284,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#57F525"); //Verde
                 }
-                else if (fechaProgramada <= DateTime.Now)
+                else if (pausado == 1 && programadoVentas == 1)
+                {
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#08F4E2"); // Aqua
+                }
+                else if (fechaProgramada <= DateTime.Now && programadoVentas == 1)
                 {
                     e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F71A27");    //rojo 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
@@ -175,17 +300,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
                 else
                 {
-                    if (pausado == 1)
-                    {
-                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#08F4E2"); // Aqua
-                    }
-
-                    else
-                    {
-                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F1FF43");//amarillo 
-                        e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
-                    }
-
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F1FF43");//amarillo 
+                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
                 }
 
 
@@ -199,11 +315,25 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (e.CommandName == "VerRenders")
             {
+
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGridRenders.Items[rowIndex];
 
+                // Se utiliza para darle el color solo a la fila seleccionada 
+                foreach (DataGridItem item in DataGridRenders.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+                //se usa Para darle un color a la fila seleccionada  anderson
+                e.Item.CssClass = "fila-seleccionada";
+
+
                 string IdRender = row.Cells[2].Text;
-                string NomRender = row.Cells[3].Text;
+                string NomRender = row.Cells[43].Text;
                 string FechaUltimaActivacion = row.Cells[4].Text;
                 DateTime FechaUltimaActivacionFormat = DateTime.Parse(FechaUltimaActivacion);
                 string FechaEntrega = row.Cells[5].Text;
@@ -291,15 +421,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 if (Areas == "&nbsp;")
                 {
                     string AreasRep = Areas.Replace("&nbsp;", "");
-                    txSegPausas.InnerText = AreasRep;
+                    txAreaRender.InnerText = AreasRep;
+                }
+                else
+                {
+                    txAreaRender.InnerText = Areas;
                 }
 
                 if (ObsVentas == "&nbsp;")
                 {
                     string ObsVentasRep = ObsVentas.Replace("&nbsp;", "");
 
-                    txObsDibujo.InnerText = ObsVentasRep;
+                    txObsVentas.InnerText = ObsVentasRep;
 
+                }
+                else
+                {
+                    txObsVentas.InnerText = ObsVentas;
                 }
 
                 if (SegPausa == "&nbsp;")
@@ -359,7 +497,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 tbTerminadoVentas.Text = TerminadoVentas;
 
 
-                if(TerminadoVentas == "True")
+                if (TerminadoVentas == "True")
                 {
                     btnProgramarRender.Enabled = false;
                     btnProgramarRender.CssClass = "btn btn btn-warning";
@@ -395,37 +533,49 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Validamos si el campo esta vacio para ejecurar un sqldatasource sino usamoos el otr 
 
-            if (FechaIni.Text != "" && FechaFin.Text != "")
+           
+            if (FechaIni.Text != "" && FechaFin.Text != "" && tbNumeroRender.Text != "")
             {
-                BuscarRender.DataSourceID = "RenderFecha";
+                BuscarRender.DataSourceID = "RenderXIdRender";
                 BuscarRender.DataBind();
-
             }
-            else if (tbClienteX.Text != "")
+            else if(FechaIni.Text != "" && FechaFin.Text != "" && tbClienteX.Text != "")
             {
                 BuscarRender.DataSourceID = "RenderCliente";
                 BuscarRender.DataBind();
             }
-
-            else if (tbProyectoX.Text != "")
+            else if (FechaIni.Text != "" && FechaFin.Text != "" && tbProyectoX.Text != "")
             {
                 BuscarRender.DataSourceID = "RenderNombreRender";
                 BuscarRender.DataBind();
-            }
-
-            else if (tbNumeroRender.Text != "")
+            }       
+            else if (FechaIni.Text != "" && FechaFin.Text != "")
             {
-                BuscarRender.DataSourceID = "RenderXIdRender";
+                BuscarRender.DataSourceID = "RenderFecha";
                 BuscarRender.DataBind();
+            }
+            else if (FechaIni.Text != "" && FechaFin.Text != "")
+            {
+                mensaje = "No has elegido un medio de búsqueda.";
+                string script = "<script>AlertaBuscar('" + mensaje + "');</script>";
+                ScriptManager.RegisterStartupScript(this, GetType(), "AlertaBuscar", script, false);
+            }
+            else
+            {
+                 mensaje = "Por favor, selecciona una fecha de búsqueda.";
+                string script = "<script>AlertaBuscar('" + mensaje + "');</script>";
+                ScriptManager.RegisterStartupScript(this, GetType(), "AlertaBuscar", script, false);
+
             }
 
         }
 
         protected void GuardarModificarRender(object sender, EventArgs e)
         {
-            bool guardarRender = chkEstadoGuardarRender.Checked;
 
-            if (guardarRender)
+            //Pendiente Validaciones que el Render tenga un numero de Diseño Asociado 
+
+            if (Session["InsertUpdateRender"].ToString() == "Insertar")
             {
                 //insercion 
 
@@ -457,12 +607,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     ScriptManager.RegisterStartupScript(this, GetType(), "showError3", "alert('La fecha Ok no es valida .');", true);
                     return;
                 }
-
-                if (string.IsNullOrEmpty(tbCliente.Text))
+                if (!IsValidEmail(tbMail.Text))
                 {
-                    ScriptManager.RegisterStartupScript(this, GetType(), "showError4", "alert('El campo de cliente no puede estar vacio .');", true);
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showError4", "alert('El formato del correo electrónico no es válido.');", true);
                     return;
                 }
+
 
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -517,6 +667,44 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
+                            // Crear Variables de Session o Cookies para guardar los datos del guardado 
+
+                            Session["FecIngresoSession"] = tbIngresoServidor.Text;
+                            Session["FechaUltActiv"] = tbUltActivServidor.Text;
+                            Session["FecEntregaSession"] = tbEntregaServidor.Text;
+                            Session["FechaOKSession"] = tbFechaOkServidor.Text;
+                            Session["DiseñoSession"] = tbDiseño.Text;
+                            Session["ClienteSession"] = tbCliente.Text;
+                            Session["AsesorSession"] = ddlAsesor.SelectedItem.Text;
+                            Session["ProyectoSession"] = tbProyecto.Text;
+                            Session["ContactoSession"] = tbContacto.Text;
+                            Session["CelularSession"] = tbCelular.Text;
+                            Session["MailSession"] = tbMail.Text;
+                            Session["TelefonoSession"] = tbMail.Text;
+                            Session["PlanoSession"] = tbPlano.Text;
+                            Session["ZonaSession"] = ddlZona.SelectedItem.Text;
+                            Session["ImagenSession"] = tbImagenes.Text;
+                            Session["AreaSession"] = txAreaRender.InnerText;
+                            Session["ObVentaSession"] = txObsVentas.InnerText;
+                            Session["LineaSession"] = tbLinea.Text;
+                            Session["SupSession"] = tbSup.Text;
+                            Session["AccSession"] = tbAcc.Text;
+                            Session["CantosSession"] = tbCantos.Text;
+                            Session["PerfilSession"] = tbPerfil.Text;
+                            Session["PanelesSession"] = tbPaneles.Text;
+                            Session["ArcSession"] = tbArch.Text;
+                            Session["SillasSession"] = tbSillas.Text;
+                            Session["PantallasSession"] = tbPantallas.Text;
+                            Session["EspArqSession"] = chxEspArq.Checked;
+                            Session["MuebleSession"] = txMuebles.InnerText;
+                            Session["AcabPisSession"] = tbAcaPisZoc.Text;
+                            Session["AcabMuroSession"] = tbAcaMuros.Text;
+                            Session["IluSession"] = tbIluminacion.Text;
+                            Session["AntSession"] = tbAntepecho.Text;
+                            Session["AmbientacionSession"] = chxAmbientacion.Checked;
+                            Session["AnimacionSession"] = chxAnimacion.Checked;
+
+
                             string mensajePersonalizado = "El Render ha sido ingresado con éxito";
                             string urlRedireccion = "Ventas/Render_Venta.aspx";
                             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
@@ -537,7 +725,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
 
-            else
+            else if (Session["InsertUpdateRender"].ToString() == "Actualizar")
             {
                 string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
 
@@ -623,6 +811,44 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
+
+
+                            Session["FecIngresoSession"] = tbIngresoServidor.Text;
+                            Session["FechaUltActiv"] = tbUltActivServidor.Text;
+                            Session["FecEntregaSession"] = tbEntregaServidor.Text;
+                            Session["FechaOKSession"] = tbFechaOkServidor.Text;
+                            Session["DiseñoSession"] = tbDiseño.Text;
+                            Session["ClienteSession"] = tbCliente.Text;
+                            Session["AsesorSession"] = ddlAsesor.SelectedItem.Text;
+                            Session["ProyectoSession"] = tbProyecto.Text;
+                            Session["ContactoSession"] = tbContacto.Text;
+                            Session["CelularSession"] = tbCelular.Text;
+                            Session["MailSession"] = tbMail.Text;
+                            Session["TelefonoSession"] = tbTelefono.Text;
+                            Session["PlanoSession"] = tbPlano.Text;
+                            Session["ZonaSession"] = ddlZona.SelectedItem.Text;
+                            Session["ImagenSession"] = tbImagenes.Text;
+                            Session["AreaSession"] = txAreaRender.InnerText;
+                            Session["ObVentaSession"] = txObsVentas.InnerText;
+                            Session["LineaSession"] = tbLinea.Text;
+                            Session["SupSession"] = tbSup.Text;
+                            Session["AccSession"] = tbAcc.Text;
+                            Session["CantosSession"] = tbCantos.Text;
+                            Session["PerfilSession"] = tbPerfil.Text;
+                            Session["PanelesSession"] = tbPaneles.Text;
+                            Session["ArcSession"] = tbArch.Text;
+                            Session["SillasSession"] = tbSillas.Text;
+                            Session["PantallasSession"] = tbPantallas.Text;
+                            Session["EspArqSession"] = chxEspArq.Checked;
+                            Session["MuebleSession"] = txMuebles.InnerText;
+                            Session["AcabPisSession"] = tbAcaPisZoc.Text;
+                            Session["AcabMuroSession"] = tbAcaMuros.Text;
+                            Session["IluSession"] = tbIluminacion.Text;
+                            Session["AntSession"] = tbAntepecho.Text;
+                            Session["AmbientacionSession"] = chxAmbientacion.Checked;
+                            Session["AnimacionSession"] = chxAnimacion.Checked;
+
+
                             string mensajePersonalizado = "El Render ha sido Actualizado con éxito";
                             string urlRedireccion = "Ventas/Render_Venta.aspx";
                             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
@@ -646,6 +872,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
 
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            string emailPattern = @"^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$";
+            return Regex.IsMatch(email, emailPattern);
+        }
+
+        [WebMethod] // Cambiar estado de variable de Session cuando dan click en NuevoRender
+        public static void NuevoRender()
+        {
+            HttpContext.Current.Session["InsertUpdateRender"] = "Insertar";
+        }
+
+        [WebMethod] // Cambiar estado de variable de Session cuando dan click en NuevoRender 
+        public static void ModificarRender()
+        {
+            HttpContext.Current.Session["InsertUpdateRender"] = "Actualizar";
         }
 
 
@@ -672,7 +916,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#57F525");
                 }
-                else if (fechaProgramada <= DateTime.Now)
+                else if (fechaProgramada <= DateTime.Now && programadoVentas == 1)
                 {
                     e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F71A27");
                 }
@@ -683,7 +927,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
                 else
                 {
-                    if (pausado == 1)
+                    if (pausado == 1 && programadoVentas == 1)
                     {
                         e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#08F4E2");
                     }
@@ -711,8 +955,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = BuscarRender.Items[rowIndex];
 
+
+                foreach (DataGridItem item in BuscarRender.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+
+                //se usa Para darle un color a la fila seleccionada  anderson
+                e.Item.CssClass = "fila-seleccionada";
+
                 string IdRender = row.Cells[2].Text;
-                string NomRender = row.Cells[3].Text;
+                string NomRender = row.Cells[43].Text;
                 string FechaUltimaActivacion = row.Cells[4].Text;
                 DateTime FechaUltimaActivacionFormat = DateTime.Parse(FechaUltimaActivacion);
                 string FechaEntrega = row.Cells[5].Text;
@@ -805,13 +1062,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     string SegPausaRep = SegPausa.Replace("&nbsp;", "N/A");
                     txSegPausas.InnerText = SegPausaRep;
                 }
+                else
+                {
+                    txSegPausas.InnerText = SegPausa;
+                }
 
                 if (Observacion_Dibujo == "&nbsp;")
                 {
-                    string Observacion_DibujoRep = SegPausa.Replace("&nbsp;", "N/A");
+                    string Observacion_DibujoRep = Observacion_Dibujo.Replace("&nbsp;", "N/A");
 
                     txObsDibujo.InnerText = Observacion_DibujoRep;
 
+                }
+                else
+                {
+                    txObsDibujo.InnerText = Observacion_Dibujo;
                 }
 
                 tbLinea.Text = Linea;
@@ -883,77 +1148,101 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void ProgramarRender(object sender, EventArgs e)
         {
 
-            DateTime FechaIngresoRender = DateTime.Now;
-            DateTime UltimaActivacionRender = FechaIngresoRender;
-          
-
-            while (UltimaActivacionRender.DayOfWeek == DayOfWeek.Saturday || UltimaActivacionRender.DayOfWeek == DayOfWeek.Sunday)
+            switch (Session["Departamento"].ToString().ToUpper())
             {
-                UltimaActivacionRender = UltimaActivacionRender.AddDays(1);
-                UltimaActivacionRender = new DateTime(UltimaActivacionRender.Year, UltimaActivacionRender.Month, UltimaActivacionRender.Day, 8, 0, 0);
-            }
-            DateTime FechaEntrega = UltimaActivacionRender.AddDays(4);
-            if (chxAnimacion.Checked)
-            {
-                FechaEntrega = FechaEntrega.AddDays(1); 
+                case "VENTAS":
 
-            }
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                    DateTime FechaIngresoRender = DateTime.Now;
+                    DateTime UltimaActivacionRender = FechaIngresoRender;
 
-            // Calcula el día siguiente a la fecha de entrega
-            DateTime DiaSiguiente = FechaEntrega.AddDays(1);
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-
-                // Consulta SQL para verificar si la fecha de entrega es un día feriado
-                string query = "SELECT COUNT(*) FROM tblDiaNoLaboral WHERE dnlFecha BETWEEN @UltimaActivacionRender AND @FechaEntrega OR dnlFecha = @DiaSiguiente";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    // Agrega el parámetro para la fecha de entrega
-                    command.Parameters.AddWithValue("@FechaEntrega", FechaEntrega);
-                    command.Parameters.AddWithValue("@UltimaActivacionRender", UltimaActivacionRender);
-                    command.Parameters.AddWithValue("@DiaSiguiente", DiaSiguiente);
-
-                    int count = (int)command.ExecuteScalar(); // Ejecuta la consulta y obtén el resultado
-
-                    if (count > 0)
+                    while (UltimaActivacionRender.DayOfWeek == DayOfWeek.Saturday || UltimaActivacionRender.DayOfWeek == DayOfWeek.Sunday)
                     {
-                        // Si la fecha de entrega o el día siguiente son días feriados, agrega el número correcto de días adicionales a la fecha de entrega
-                        FechaEntrega = FechaEntrega.AddDays(count);
+                        UltimaActivacionRender = UltimaActivacionRender.AddDays(1);
+                        UltimaActivacionRender = new DateTime(UltimaActivacionRender.Year, UltimaActivacionRender.Month, UltimaActivacionRender.Day, 8, 0, 0);
                     }
-                }
+                    DateTime FechaEntrega = UltimaActivacionRender.AddDays(4);
+                    if (chxAnimacion.Checked)
+                    {
+                        FechaEntrega = FechaEntrega.AddDays(1);
+
+                    }
+                    string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+                    // Calcula el día siguiente a la fecha de entrega
+                    DateTime DiaSiguiente = FechaEntrega.AddDays(1);
+
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
+
+                        // Consulta SQL para verificar si la fecha de entrega es un día feriado
+                        string query = "SELECT COUNT(*) FROM tblDiaNoLaboral WHERE dnlFecha BETWEEN @UltimaActivacionRender AND @FechaEntrega OR dnlFecha = @DiaSiguiente";
+
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                        {
+                            // Agrega el parámetro para la fecha de entrega
+                            command.Parameters.AddWithValue("@FechaEntrega", FechaEntrega);
+                            command.Parameters.AddWithValue("@UltimaActivacionRender", UltimaActivacionRender);
+                            command.Parameters.AddWithValue("@DiaSiguiente", DiaSiguiente);
+
+                            int count = (int)command.ExecuteScalar(); // Ejecuta la consulta y obtén el resultado
+
+                            if (count > 0)
+                            {
+                                // Si la fecha de entrega o el día siguiente son días feriados, agrega el número correcto de días adicionales a la fecha de entrega
+                                FechaEntrega = FechaEntrega.AddDays(count);
+                            }
+                        }
+                    }
+
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
+                        //Realizamos la Actualizacion 
+                        string query = "UPDATE tblRender SET ProgramadoVentas = 1, Fecha_Ingreso = @FechaIngreso, UltimaActivacion = @UltimaActivacion," +
+                            " Fecha_Programada_Entrega = @FechaProgramadaEntrega WHERE Id_Render = @IdRender";
+
+
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                        {
+                            // Aquí defines los parámetros de la consulta
+                            command.Parameters.AddWithValue("@FechaIngreso", FechaIngresoRender);
+                            command.Parameters.AddWithValue("@UltimaActivacion", UltimaActivacionRender);
+                            command.Parameters.AddWithValue("@FechaProgramadaEntrega", FechaEntrega);
+                            command.Parameters.AddWithValue("@IdRender", NumeroRender.Text);
+
+                            command.ExecuteNonQuery();
+                        }
+
+                        // Mensaje de éxito
+                        string mensajeExito = "El Render " + tbProyecto.Text.Trim() + " ha sido agregado exitosamente.";
+                        string scriptExito = "alert('" + mensajeExito + "');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
+                        ScriptManager.RegisterStartupScript(this, GetType(), "RefreshPage", "window.location.reload();", true);
+
+
+                    }
+
+
+
+                    break;
+
+                case "COMPRA": //Boton Programar  Departamento Compras
+
+                    break;
+
+                case "DESARROLLO DE PRODUCTO": // Boton Programar  Departamento Compras Desarrollo Producto
+
+
+                    break;
+
+
+                default:
+                    // Error Con el despartamento de ese usuario Validar con Sistemas 
+                    break;
             }
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                //Realizamos la Actualizacion 
-                string query = "UPDATE tblRender SET ProgramadoVentas = 1, Fecha_Ingreso = @FechaIngreso, UltimaActivacion = @UltimaActivacion," +
-                    " Fecha_Programada_Entrega = @FechaProgramadaEntrega WHERE Id_Render = @IdRender";
-
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    // Aquí defines los parámetros de la consulta
-                    command.Parameters.AddWithValue("@FechaIngreso", FechaIngresoRender);
-                    command.Parameters.AddWithValue("@UltimaActivacion", UltimaActivacionRender);
-                    command.Parameters.AddWithValue("@FechaProgramadaEntrega", FechaEntrega);
-                    command.Parameters.AddWithValue("@IdRender", NumeroRender.Text);
-
-                    command.ExecuteNonQuery();
-                }
-
-                // Mensaje de éxito
-                string mensajeExito = "El Render " + tbProyecto.Text.Trim() + " ha sido agregado exitosamente.";
-                string scriptExito = "alert('" + mensajeExito + "');";
-                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
-                ScriptManager.RegisterStartupScript(this, GetType(), "RefreshPage", "window.location.reload();", true);
-
-
-            }
 
 
         }
@@ -973,6 +1262,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Para Dibujo 
         }
 
-        
+
     }
+
 }

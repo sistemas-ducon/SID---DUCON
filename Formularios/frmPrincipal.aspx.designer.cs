@@ -96,13 +96,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.Label lblTped;
 
         /// <summary>
-        /// Control tbTped.
+        /// Control dtacboTipoPedido.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tbTped;
+        protected global::System.Web.UI.WebControls.DropDownList dtacboTipoPedido;
+
+        /// <summary>
+        /// Control TiposDePedidos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource TiposDePedidos;
 
         /// <summary>
         /// Control lblPedBase.
@@ -114,13 +123,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.Label lblPedBase;
 
         /// <summary>
-        /// Control tbPedBase.
+        /// Control cboPedidoBase.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tbPedBase;
+        protected global::System.Web.UI.WebControls.DropDownList cboPedidoBase;
+
+        /// <summary>
+        /// Control PedidoBase.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource PedidoBase;
 
         /// <summary>
         /// Control lblPedDepen.
@@ -157,6 +175,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox tbAprob;
+
+        /// <summary>
+        /// Control DtaCboTipoAprobacion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList DtaCboTipoAprobacion;
+
+        /// <summary>
+        /// Control Aprob.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource Aprob;
 
         /// <summary>
         /// Control btnNuevoPedido.
@@ -402,6 +438,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl inputOkVenta;
 
         /// <summary>
+        /// Control dtpFechaEntregaDibujoDespiece.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox dtpFechaEntregaDibujoDespiece;
+
+        /// <summary>
         /// Control inputDibujo.
         /// </summary>
         /// <remarks>
@@ -409,6 +454,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl inputDibujo;
+
+        /// <summary>
+        /// Control dtpFechaEntregaProduccion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox dtpFechaEntregaProduccion;
 
         /// <summary>
         /// Control inputEmpaque.
@@ -420,6 +474,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl inputEmpaque;
 
         /// <summary>
+        /// Control dtpEmpaque.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox dtpEmpaque;
+
+        /// <summary>
         /// Control inputRealEmp.
         /// </summary>
         /// <remarks>
@@ -427,6 +490,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl inputRealEmp;
+
+        /// <summary>
+        /// Control dtpRealEmpaque.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox dtpRealEmpaque;
 
         /// <summary>
         /// Control Observacion1Id.

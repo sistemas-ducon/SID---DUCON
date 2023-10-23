@@ -1,4 +1,7 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Drawing.ChartDrawing;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Office.Word;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -12,11 +15,14 @@ using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
+using System.Windows.Media.Media3D;
+using static SISTEMA_INTEGRAL_DUCON.Formularios.Ventas.Clientes;
 using Button = System.Web.UI.WebControls.Button;
+using CheckBox = System.Web.UI.WebControls.CheckBox;
+using Control = System.Web.UI.Control;
+using DataTable = System.Data.DataTable;
 using Excel = Microsoft.Office.Interop.Excel;
-
-
-
+using TextBox = System.Web.UI.WebControls.TextBox;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
@@ -27,6 +33,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private DateTime fechaFinSeleccionada;
         private string Fechas;
         private object filePath;
+       int permisoAcceso ;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -46,6 +53,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     // Aquí se  obtiene y muestra el rango de fechas en el título del DataGrid
                     DateRangeLiteral.Text = GetDateRange();
                     CargarClienteYContacto();
+
+                    //Mantener Datos de Session si los tiene 
+                    CargarSession();
+                    CargarVariablesDeSesion();
+                    permisoAcceso = PermisoEmpleado();
+
+                    if (permisoAcceso != 12)
+                    {
+                        EstMensaje.Visible = true;                    
+                        Est1.Visible = false;
+                        Est2.Visible = false;
+                        Est3.Visible = false;
+                        Button2.Enabled = false;
+                        Button2.CssClass = "btn btn-outline-secondary";
+
+                    }
+
 
                 }
                 else
@@ -88,22 +112,29 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     if (!reader.IsDBNull(reader.GetOrdinal("NombreCompañía")))
                                     {
                                         tbCliente.Text = reader["NombreCompañía"].ToString();
+                                        tbClienteServidor.Text = reader["NombreCompañía"].ToString();
                                     }
                                     if (!reader.IsDBNull(reader.GetOrdinal("Teléfono")))
                                     {
                                         tbTelefono.Text = reader["Teléfono"].ToString();
+                                        tbTelefonoServidor.Text = reader["Teléfono"].ToString();
                                     }
                                     if (!reader.IsDBNull(reader.GetOrdinal("NombreContacto")))
                                     {
                                         tbContacto.Text = reader["NombreContacto"].ToString();
+                                        tbContactoServidor.Text = reader["NombreContacto"].ToString();
                                     }
                                     if (!reader.IsDBNull(reader.GetOrdinal("MailContacto")))
                                     {
                                         tbMailCont.Text = reader["MailContacto"].ToString();
+                                        tbMailContServidor.Text = reader["MailContacto"].ToString();
                                     }
 
+                                    Session["Id_Contacto"] = Session["ID_ContactoBD"]?.ToString();                              
                                     Session.Remove("ID_ContactoBD");
                                     Session.Remove("Id_ClienteBD");
+                                    
+                                   
 
                                 }
                             }
@@ -117,6 +148,109 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
         }
+
+        public void CargarVariablesDeSesion()
+        {
+            Dictionary<string, Control> variablesDeSesionYControles = new Dictionary<string, Control>
+            {
+                { "AsesoVisSession", ddlAsesor },
+                { "VisitaPorSession", ddlVisitasPor },
+                { "FechaVisitaSession", fecha },
+                { "CotizacionSession", tbCotizacion },
+                { "ClienteVisSession", tbClienteServidor },
+                { "TelefonoVisSession", tbTelefonoServidor },
+                { "ContactoVisSession", tbContactoServidor },
+                { "MailVisSession", tbMailContServidor }
+            };
+
+           
+
+            foreach (var kvp in variablesDeSesionYControles)
+            {
+                string valorSesion = Session[kvp.Key] as string;
+            
+                if (!string.IsNullOrEmpty(valorSesion))
+                {
+                    if (kvp.Value is TextBox)
+                    {
+                        ((TextBox)kvp.Value).Text = valorSesion;
+                    }
+                    if (kvp.Key == "ClienteVisSession")
+                    {
+
+                        tbCliente.Text = valorSesion;
+                    }
+                    if (kvp.Key == "TelefonoVisSession")
+                    {
+
+                        tbTelefono.Text = valorSesion;
+                    }
+                    if (kvp.Key == "ContactoVisSession")
+                    {
+
+                        tbContacto.Text = valorSesion;
+                    }
+                    if (kvp.Key == "MailVisSession")
+                    {
+
+                        tbMailCont.Text = valorSesion;
+                    }
+                    else if (kvp.Value is DropDownList)
+                    {
+                        ddlVisitasPor.DataBind();
+                        ((DropDownList)kvp.Value).SelectedItem.Text = valorSesion;
+                    }
+                    else if (kvp.Value is CheckBox)
+                    {
+                        ((CheckBox)kvp.Value).Checked = Convert.ToBoolean(valorSesion);
+                    }
+
+                    Session.Remove(kvp.Key);
+                }
+            }
+
+            string ObVisita = Session["ObservacionVisitaSession"] as string;
+            if (!string.IsNullOrEmpty(ObVisita))
+            {
+                txObs.InnerText = ObVisita;
+                Session.Remove("ObservacionVisitaSession");
+            }
+
+        }
+
+        public int PermisoEmpleado()
+        {
+
+            string consultaActual = "select ID_Permiso  from tblPermiso_Empleado As A Inner join tblEmpleado AS B on  B.Cedula = A.ID_Empleado" +
+                                    " where B.Login = @Login And A.ID_Permiso = '12'";
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(consultaActual, connection))
+                {
+                    command.Parameters.AddWithValue("@Login", Session["usuariologueado"].ToString());
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    if (reader.HasRows)
+                    {
+                        reader.Close();
+                        // Data arrived.
+                        int permiso = (Int16)command.ExecuteScalar();
+                        return permiso;
+                    }
+                    else
+                    {
+
+                        return 0;
+                    }
+                }
+            }
+
+        }
+
 
         private void CargarAsesoresEnDropDownList()
         {
@@ -165,13 +299,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             ActualizarTituloDataGrid();
             DateRangeLiteral.Text = GetDateRange();
-            // habilitar el botón "Cliente"
-            Button btnCliente = FindControl("btnCliente") as Button;
-            if (btnCliente != null)
-            {
-                btnCliente.Enabled = false;
-                btnCliente.CssClass = "btn btn-outline-secondary";
-            }
+
+            string script = "<script>ControlBtnCliente();</script>";
+            ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, false);
 
         }
 
@@ -223,7 +353,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 foreach (string texto in textosABuscar)
                 {
                     // Asegúrate de ajustar el índice (en Cells[0]) según la columna en la que deseas buscar el texto
-                    if (item.Cells[4].Text.Contains(texto))
+                    if (item.Cells[5].Text.Contains(texto))
                     {
                         conteoPorTexto[texto]++;
                     }
@@ -277,11 +407,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return 0; // Si cantidadFilas es 0, devolver 0 para evitar división por cero.
         }
 
-        protected void btnCliente_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("Clientes.aspx");
-        }
-
+   
         protected void ConsultarEstadisticas(object sender, EventArgs e)
         {
 
@@ -437,24 +563,85 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
 
+
         }
 
-        protected void DataGrid1_ItemDataBound(object sender, DataGridItemEventArgs e)
+        protected void DataGridVisita_LinkButton(object source, DataGridCommandEventArgs e)
         {
-            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            //Este Codigo se puede optimizar para no repetir el mismo proceso , solo cambiaria el Datagrid con otros metodos ma pequeños 
+
+            if (e.CommandName == "VerVisita")
             {
-                // Agregamos el atributo onclick a cada fila para capturar el evento de clic y agregmos el cursor
-                e.Item.Attributes["onclick"] = "seleccionarFila('" + e.Item.ItemIndex + "')";
-                e.Item.Style["cursor"] = "pointer";
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGrid1.Items[rowIndex];
+
+                // Se utiliza para darle el color solo a la fila seleccionada 
+                foreach (DataGridItem item in DataGrid1.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+
+                //se usa Para darle un color a la fila seleccionada  anderson
+                e.Item.CssClass = "fila-seleccionada";
+
+                string Cliente = row.Cells[1].Text;              
+                string contacto = row.Cells[2].Text;
+                string telefono = row.Cells[3].Text;
+                string mail = row.Cells[4].Text;         
+                string visitaPor = row.Cells[5].Text;
+                string FechaX = row.Cells[6].Text;
+                DateTime FechaForma = DateTime.Parse(FechaX);
+                string cotizacion = row.Cells[7].Text;
+                string observacion = row.Cells[8].Text;
+                string IdVisita = row.Cells[9].Text;
+                string IdContacto = row.Cells[10].Text;
+                Session["Id_Contacto"] = IdContacto;
+                tbCliente.Text = Cliente;
+                tbClienteServidor.Text = Cliente;
+                tbContacto.Text = contacto;
+                tbContactoServidor.Text = contacto;
+                tbTelefono.Text = telefono;
+                tbTelefonoServidor.Text= telefono;
+                tbMailCont.Text = mail;
+                tbMailContServidor.Text = mail;
+                foreach (ListItem item in ddlVisitasPor.Items)
+                {
+                    if (item.Text == visitaPor)
+                    {
+                        ddlVisitasPor.ClearSelection();
+                        item.Selected = true;
+                        break;
+                    }
+                }
+                fecha.Text = FechaForma.ToString("yyyy-MM-dd");
+                tbCotizacion.Text = cotizacion;
+                txObs.InnerText = observacion;
+                tbIdVisita.Text = IdVisita;
+              
+
+
+                string script = "<script>HabilitarEnlaces1();</script>";
+                ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces1", script, false);
+
+
             }
+
+
         }
 
-        protected void DataGrid2_ItemDataBound(object source, DataGridCommandEventArgs e)
+
+        protected void DataGrid2_linkButton(object source, DataGridCommandEventArgs e)
         {
             if (e.CommandName == "VerDetalle")
             {
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGrid2.Items[rowIndex];
+
+
 
                 string Asesor = row.Cells[1].Text;
                 string FechaInicio = fecha5.Text;
@@ -473,11 +660,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             try
             {
-                // Mostrar el modal de carga
-                ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "ShowLoadingModal", "mostrarModal();", true);
-
-
-
+               
                 // Crear una nueva instancia de Excel
                 var excelApp = new Excel.Application();
 
@@ -609,6 +792,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void ExportarExel2(object sender, EventArgs e)
         {
+
+            //funciona correctamente
+
             try
             {
                 // Crear una nueva instancia de Excel
@@ -641,28 +827,30 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 subtitleRange.Font.Size = 12;
                 subtitleRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
 
-                int rowIndexx = 4; // Comenzar a escribir la tabla a partir de la fila 4
+                int rowIndexx = 4; // Comenzar a escribir la tabla a partir de la fila 3
 
                 // Escribir el encabezado de la primera tabla
                 int colIndex = 1; // Columna 1 en Excel
+                int maxColumnIndex = 8;
 
                 foreach (DataGridColumn column in DataGrid1.Columns)
                 {
-                    if (colIndex != 8)
-                    {
-                        // Escribe el valor del encabezado en la hoja de Excel
-                        worksheet.Cells[rowIndexx - 1, colIndex] = column.HeaderText;
-                        // Obtener el rango de la celda de encabezado
-                        var headerCell = (Excel.Range)worksheet.Cells[rowIndexx - 1, colIndex];
-                        headerCell.Font.Bold = true;  // Establecer el texto en negrita
-                        headerCell.Interior.Color = System.Drawing.Color.LightGray;  // Cambiar el color de fondo
+                    
+                        if (colIndex != 1 &&  colIndex <= maxColumnIndex)
+                        {
+                            // Escribe el valor del encabezado en la hoja de Excel
+                            worksheet.Cells[rowIndexx - 1, colIndex - 1] = column.HeaderText;
+                            // Obtener el rango de la celda de encabezado
+                            var headerCell = (Excel.Range)worksheet.Cells[rowIndexx - 1, colIndex - 1];
+                            headerCell.Font.Bold = true;  // Establecer el texto en negrita
+                            headerCell.Interior.Color = System.Drawing.Color.LightGray;  // Cambiar el color de fondo
 
-                        // Aplicar bordes a la celda de encabezado
-                        headerCell.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
-                        headerCell.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
-                        headerCell.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
-                        headerCell.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
-                    }
+                            // Aplicar bordes a la celda de encabezado
+                            headerCell.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
+                            headerCell.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
+                            headerCell.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
+                            headerCell.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
+                        }
 
                     colIndex++;
                 }
@@ -672,15 +860,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     colIndex = 1; // Comenzar en la columna 1 de Excel
                     foreach (TableCell cell in item.Cells)
                     {
-                        if (colIndex != 8)
+                        if (colIndex != 1 && colIndex <= maxColumnIndex)
                         {
                             // Reemplazar "&nbsp;" con un valor vacío
                             string cellValue = cell.Text.Replace("&nbsp;", string.Empty);
 
                             // Escribe el valor de la celda en la hoja de Excel
-                            worksheet.Cells[rowIndexx, colIndex] = cellValue;
+                            worksheet.Cells[rowIndexx, colIndex - 1] = cellValue;
                             // Obtener el rango de la celda actual
-                            var cellRange = (Excel.Range)worksheet.Cells[rowIndexx, colIndex];
+                            var cellRange = (Excel.Range)worksheet.Cells[rowIndexx, colIndex - 1];
 
                             // Aplicar bordes a la celda actual
                             cellRange.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
@@ -902,6 +1090,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 worksheet.Columns.AutoFit();
                 // Mostrar la aplicación de Excel
                 excelApp.Visible = true;
+
+                Response.Redirect(Request.Url.ToString());
+
+
             }
             catch (Exception ex)
             {
@@ -913,10 +1105,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void GuardarModificarCliente(object sender, EventArgs e)
         {
-            bool guardarCliente = chkEstadoGuardarCliente.Checked;
+            string insertUpdate = Session["InsertUpdateVisita"] as string;
 
-         
-            if (guardarCliente)
+
+            if( Session["InsertUpdateVisita"].ToString() == "Insertar")
             {
                 string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
 
@@ -931,23 +1123,47 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     {
 
                         command.Parameters.AddWithValue("@Observacion", txObs.Value);
-                        command.Parameters.AddWithValue("@Fechavisita", fecha.Value);
+                        command.Parameters.AddWithValue("@Fechavisita", fecha.Text);
                         command.Parameters.AddWithValue("@Causa", ddlVisitasPor.SelectedValue);
                         command.Parameters.AddWithValue("@Cotizacion", tbCotizacion.Text);
-                        command.Parameters.AddWithValue("@Id_ClienteContacto", Session["Id_contactoBD"].ToString());
+                        command.Parameters.AddWithValue("@Id_ClienteContacto", Session["Id_Contacto"].ToString());
                         command.Parameters.AddWithValue("@Asesor", ddlAsesor.SelectedValue);
+                      
+                        
 
-                        command.ExecuteNonQuery();
+                        int rowsAffected = command.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            // Crear Variables de Session o Cookies para guardar los datos del guardado 
+
+                            Session["AsesoVisSession"] = ddlAsesor.SelectedItem.Text;
+                            Session["VisitaPorSession"] = ddlVisitasPor.SelectedItem.Text;
+                            Session["FechaVisitaSession"] = fecha.Text;
+                            Session["CotizacionSession"] = tbCotizacion.Text;
+                            Session["ObservacionVisitaSession"] = txObs.InnerText;
+                            Session["ClienteVisSession"] = tbClienteServidor.Text;
+                            Session["TelefonoVisSession"] = tbTelefonoServidor.Text;
+                            Session["ContactoVisSession"] = tbContactoServidor.Text;
+                            Session["MailVisSession"] = tbMailContServidor.Text;
+
+
+                            string mensajePersonalizado = "La Visita ha sido ingresada con éxito";
+                            string urlRedireccion = "Ventas/Visita_Asesores.aspx";
+                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                        }
+                        else
+                        {
+                            string mensajePersonalizado = "¡Ups! La visita no se ingresó correctamente.Por favor, comunicate con el Departamento Sistemas para obtener ayuda.";
+                            string urlRedireccion = "Ventas/Visita_Asesores.aspx";
+                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                        }
+
                     }
 
-                    // Define el mensaje personalizado
-                    string mensajePersonalizado = "La Visita ha sido ingresada con éxito";
-
-                    // Define la URL de redirección
-                    string urlRedireccion = "Ventas/Visita_Asesores.aspx";
-
-                    // Redirige a la página de éxito con el mensaje personalizado y la URL de redirección como parámetros
-                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                   
+                   
+                   
+                   
 
 
                 }
@@ -955,7 +1171,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
 
-            else
+            else if(Session["InsertUpdateVisita"].ToString() == "Actualizar")
             {
                 string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
 
@@ -966,32 +1182,139 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     // Realizamos actualización
                     string query = "UPDATE tblvisitaasesor SET " +
                                    "Observacion = @Observacion, Fechavisita = @Fechavisita, Causa = @Causa, Cotizacion = @Cotizacion, Id_ClienteContacto = @Id_ClienteContacto " +
-                                   "WHERE Id = @IdVisita AND Id_Clientecontacto = @Id_ClienteContacto";
+                                   "WHERE Id = @IdVisita";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Observacion", txObs.Value);
-                        command.Parameters.AddWithValue("@Fechavisita", fecha.Value);
+                        command.Parameters.AddWithValue("@Fechavisita", fecha.Text);
                         command.Parameters.AddWithValue("@Causa", ddlVisitasPor.SelectedValue);
                         command.Parameters.AddWithValue("@Cotizacion", tbCotizacion.Text);
                         command.Parameters.AddWithValue("@IdVisita", tbIdVisita.Text);
-                        command.Parameters.AddWithValue("@Id_ClienteContacto", tbIdContacto.Text);
-                      
+                        command.Parameters.AddWithValue("@Id_ClienteContacto", Session["Id_Contacto"].ToString());
+                     
+                        int rowsAffected = command.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            Session["AsesoVisSession"] = ddlAsesor.SelectedItem.Text;
+                            Session["VisitaPorSession"] = ddlVisitasPor.SelectedItem.Text;
+                            Session["FechaVisitaSession"] = fecha.Text;
+                            Session["CotizacionSession"] = tbCotizacion.Text;
+                            Session["ObservacionVisitaSession"] = txObs.InnerText;
+                            Session["ClienteVisSession"] = tbClienteServidor.Text;
+                            Session["TelefonoVisSession"] = tbTelefonoServidor.Text;
+                            Session["ContactoVisSession"] = tbContactoServidor.Text;
+                            Session["MailVisSession"] = tbMailContServidor.Text;
 
-                        command.ExecuteNonQuery();
+                            // Define el mensaje personalizado
+                            string mensajePersonalizado = "La visita ha sido actualizada con éxito";
+                            // Define la URL de redirección
+                            string urlRedireccion = "Ventas/Visita_Asesores.aspx";
+                            // Redirige a la página de éxito con el mensaje personalizado y la URL de redirección como parámetros
+                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                        }
+                        else
+                        {
+                            string mensajePersonalizado = "¡Ups! La Visita no se ingresó correctamente. Por favor, comuníquese con el Departamento de Sistemas para obtener ayuda.";
+                            string urlRedireccion = "Ventas/Visita_Asesores.aspx";
+                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                        }
+
                     }
-                    // Define el mensaje personalizado
-                    string mensajePersonalizado = "La visita ha sido actualizada con éxito";
-                    // Define la URL de redirección
-                    string urlRedireccion = "Ventas/Visita_Asesores.aspx";
-                    // Redirige a la página de éxito con el mensaje personalizado y la URL de redirección como parámetros
-                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+
+
+
+                   
 
                 }
 
             }
 
            
+
+
+        }
+
+   
+
+        [WebMethod] // Cambiar estado de variable de Session cuando dan click en NuevaSolicitud 
+        public static void NuevaVisita()
+        {
+            HttpContext.Current.Session["InsertUpdateVisita"] = "Insertar";
+        }
+
+        [WebMethod] // Cambiar estado de variable de Session cuando dan click en NuevaSolicitud 
+        public static void ModificarVisita()
+        {
+            HttpContext.Current.Session["InsertUpdateVisita"] = "Actualizar";
+           
+        }
+
+
+        // posible codigo que debo eliminar ya que no es necesario 
+        protected void GuardarDatosSesion(object sender, EventArgs e)
+        {
+            Session["VisitasPor_Session"] = ddlVisitasPor.SelectedItem.Text;
+            Session["Cotizacion_Session"] = tbCotizacion.Text;
+            Session["Observacion_Session"] = txObs.InnerText;          
+            Session["FechaVisitaSession"] = fecha.Text;
+            Session["Id_VisitaSesion"] = tbIdVisita.Text;
+        }
+
+        // posible codigo que debo eliminar ya que no es necesario 
+        private void CargarSession()
+        {
+
+            if (!IsPostBack)
+            {
+                if (!string.IsNullOrEmpty(Session["VisitasPor_Session"]?.ToString()) || !string.IsNullOrEmpty(Session["Cotizacion_Session"]?.ToString()) || !string.IsNullOrEmpty(Session["Observacion_Session"]?.ToString()) )
+                {
+
+
+                    string fechaVisitaSession = Session["FechaVisitaSession"].ToString();
+                    DateTime fechaVisitaSessionFo = DateTime.Parse(fechaVisitaSession);
+                    fecha.Text = fechaVisitaSessionFo.ToString("yyyy-MM-dd");
+                    tbCotizacion.Text = Session["Cotizacion_Session"].ToString();
+                    txObs.InnerText = Session["Observacion_Session"].ToString();
+
+                    ddlVisitasPor.DataBind();
+                    foreach (ListItem item in ddlVisitasPor.Items)
+                    {
+                        if (item.Text == Session["VisitasPor_Session"].ToString())
+                        {
+                            ddlVisitasPor.ClearSelection();
+                            item.Selected = true;
+                            break;
+                        }
+                    }
+                    tbIdVisita.Text = Session["Id_VisitaSesion"].ToString();
+
+
+
+
+                    if (tbCliente.Text != "")
+                    {
+                        Session.Remove("VisitasPor_Session");
+                        Session.Remove("FechaVisita_Session");
+                        Session.Remove("Cotizacion_Session");
+                        Session.Remove("Observacion_Session");
+                        Session.Remove("Id_Visita_Session");
+                       
+
+                        GrabarVisita.Enabled = true;
+                        string script = "<script>MantenerCampos();</script>";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "MantenerCampos", script, false);
+
+
+
+                    }
+
+
+                }
+
+
+            }
 
 
         }

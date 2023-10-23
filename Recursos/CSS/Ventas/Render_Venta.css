@@ -77,3 +77,8 @@ a.icong.enabled {
     text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
 }
 
+
+.fila-seleccionada {
+    background-color: black !important; /*Se Cambia el color de la fila Seleccionada  */
+    color: white !important;
+}

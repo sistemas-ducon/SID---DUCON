@@ -18,8 +18,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 {
     public partial class AdjuntarDocumentos : System.Web.UI.Page
     {
-        private int filaSeleccionada = -1; // Inicialmente no hay fila seleccionada
-
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["Id_Detalle"] != null)
@@ -284,7 +282,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
          
         }
-
 
     }
 }

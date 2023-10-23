@@ -107,9 +107,11 @@ a.icong.enabled {
 
 
 .fila-seleccionada {
-    background-color: #D6FAFA; /* Cambia el color de fondo según tus preferencias */
+    background-color: black; /* Cambia el color de fondo según tus preferencias */
+    color:white;
 }
 
 .fila-seleccionada1 {
-    opacity: 0.8;
+    background-color: black !important;
+    color: white !important;
 }
