@@ -13,13 +13,19 @@ using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using System.Web.Services;
 using System.IO;
+using Button = System.Web.UI.WebControls.Button;
+using System.Diagnostics;
+using DocumentFormat.OpenXml.Office2010.Drawing;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
+using System.Windows.Media.TextFormatting;
 
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
     public partial class Diseño_Venta : System.Web.UI.Page
     {
-       
+        
+
         private bool isModalVisible = false;
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -27,42 +33,47 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (!IsPostBack)
             {
 
-               
+             
+
+
+                if (Session["usuariologueado"] != null)
+                {
+                    string usuariologueado = Session["usuariologueado"].ToString();
+
+                }
+                else
+                {
+                    Response.Redirect("/Formularios/Login.aspx");
+                }
+
+                if (Session["CedulaLogeada"] != null)
+                {
+                    string cedulaLogeada = Session["CedulaLogeada"].ToString();
+                    SqlDataSource1.SelectParameters["Cedula"].DefaultValue = cedulaLogeada;
+                    DataGridDiseño.SelectParameters["Cedula"].DefaultValue = cedulaLogeada;                
+                    DataGridDiseñosPorFecha.SelectParameters["Cedula"].DefaultValue = cedulaLogeada;
+                    DataGridRenderPorFechaYAsesor.SelectParameters["Cedula"].DefaultValue = cedulaLogeada;
+                }
+
+
+                ConfigureSqlDataSource();
+                UpdateDivsVisibility();
 
                 ApplyButtonStyles();
                 Session["ModificarEjecutado"] = false;
-
-                //ViewState["Accion"] = "Insercion";
-
-                TextIngDis.Text = DateTime.Now.ToString("yyyy-MM-dd");
-                TextUltAc.Text = DateTime.Now.ToString("yyyy-MM-dd");
-                TextFecOkDib.Text = DateTime.Now.ToString("yyyy-MM-dd");
-
-                DateTime fechaActual = DateTime.Now;
-
-                // Agregar 5 días a la fecha actual
-                DateTime fechaEntrega = fechaActual.AddDays(5);
-
-                // Establecer el valor por defecto en el TextBox
-                TextEntrega.Text = fechaEntrega.ToString("yyyy-MM-dd");
-
                 DropDownList1.DataBind();
-
-                DropDownList1.SelectedValue = "";
-
+                DropDownList1.Items.Insert(0, new ListItem(""));
+                TextCiuPro.DataBind();
+                TextCiuPro.Items.Insert(0, new ListItem(""));
                 habilitarbotones();
                 DeshabilitarDivYContenido(miDiv);
-
-                CheckBox22.Checked = isModalVisible;
-
-                Nombreasesor();
+                CheckBox22.Checked = isModalVisible;              
                 elementosllenosalcargarlapagina();
                 CargarClienteYContacto();
-            }
-           
-
-
+            }           
         }
+
+        
 
         protected void BtnProgramar_Click(object sender, EventArgs e)
         {
@@ -102,6 +113,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void SiButton_Click(object sender, EventArgs e)
         {
+            TextIngDis.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            TextUltAc.Text = DateTime.Now.ToString("yyyy-MM-dd");
+
             // Limpiar el contenido del TextBox
             TextProyecto.Text = string.Empty;
             TextCliente.Text = string.Empty;
@@ -110,7 +124,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             TextContacto.Text = string.Empty;
             TextTel.Text = string.Empty;
             TextMail.Text = string.Empty;
-            TextCiuPro.Text = string.Empty;
+            //TextCiuPro.Text = string.Empty;
             TexHTot.Text = string.Empty;
             TextLin.Text = string.Empty;
             TextMos.Text = string.Empty;
@@ -129,7 +143,100 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             TextObsVen.Value = string.Empty;
             TextObsDibDes.Value = string.Empty;
             TextSegPauDev.Value = string.Empty;
+
+          
+
+            lblNumDise.Text = "Por definir";
+
+            HabilitarDivYContenido(miDiv);
+
+            TextIngDis.Enabled = false;
+            TextIngDis.CssClass = "form-control form-control-sm";
+
+            TextUltAc.Enabled = false;
+            TextUltAc.CssClass = "form-control form-control-sm";
+
+            TextEntrega.Enabled = false;
+            TextEntrega.CssClass = "form-control form-control-sm";
+
+            TextFecOkDib.Enabled = false;
+            TextFecOkDib.CssClass = "form-control form-control-sm";
+
+            BtnProgramar.Enabled = false;
+            BtnProgramar.CssClass = "form-control form-control-sm";
+
+            TextFec.Enabled = false;
+            TextFec.CssClass = "form-control form-control-sm";
+
+            TextFech.Enabled = false;
+            TextFech.CssClass = "form-control form-control-sm";
+
+            // Deshabilitar el botón "NuevoDisBit"
+            NuevoDisBit.Enabled = false;
+            NuevoDisBit.CssClass = "button-disabled";
+
+            
+            Grabar.Enabled = true;
+            Grabar.CssClass = "button-enabled";
+
+            Modificar.Enabled = false;
+            Modificar.CssClass = "button-disabled";
+
+            ActualizarDiseno.Enabled = false;
+            ActualizarDiseno.CssClass = "button-disabled";
+
+            // Cambiar el color del Label lblCotizar
+            lblCotizar.CssClass = "col-form-label-sm text-danger";
+            lblCotizar.Font.Bold = true;
         }
+
+        protected void NoButton_Click(object sender, EventArgs e)
+        {
+
+            lblNumDise.Text = "Por definir";
+
+            HabilitarDivYContenido(miDiv);
+
+            TextIngDis.Enabled = false;
+            TextIngDis.CssClass = "form-control form-control-sm";
+
+            TextUltAc.Enabled = false;
+            TextUltAc.CssClass = "form-control form-control-sm";
+
+            TextEntrega.Enabled = false;
+            TextEntrega.CssClass = "form-control form-control-sm";
+
+            TextFecOkDib.Enabled = false;
+            TextFecOkDib.CssClass = "form-control form-control-sm";
+
+            BtnProgramar.Enabled = false;
+            BtnProgramar.CssClass = "form-control form-control-sm";
+
+            TextFec.Enabled = false;
+            TextFec.CssClass = "form-control form-control-sm";
+
+            TextFech.Enabled = false;
+            TextFech.CssClass = "form-control form-control-sm";
+
+            // Deshabilitar el botón "NuevoDisBit"
+            NuevoDisBit.Enabled = false;
+            NuevoDisBit.CssClass = "button-disabled";
+
+
+            Grabar.Enabled = true;
+            Grabar.CssClass = "button-enabled";
+
+            Modificar.Enabled = false;
+            Modificar.CssClass = "button-disabled";
+
+            ActualizarDiseno.Enabled = false;
+            ActualizarDiseno.CssClass = "button-disabled";
+
+            // Cambiar el color del Label lblCotizar
+            lblCotizar.CssClass = "col-form-label-sm text-danger";
+            lblCotizar.Font.Bold = true;
+        }
+
 
         private void ApplyButtonStyles()
         {
@@ -143,9 +250,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ApplyButtonStyle(PausarDiseño);
             ApplyButtonStyle(Cancelar);
             ApplyButtonStyle(EliminarDiseño);
-            ApplyButtonStyle(LinkButton1);
-            ApplyButtonStyle(LinkButton2);
-            ApplyButtonStyle(LinkButton3);
+          
         }
         private void ApplyButtonStyle(WebControl button)
         {
@@ -219,14 +324,32 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void elementosllenosalcargarlapagina()
         {
-            BtnProgramar.CssClass = "btn btn-warning shadow btn-sm";
+            // Obtener la fecha y hora actual
+            DateTime now = DateTime.Now;
+
+            // Asignar la fecha al TextBox de fecha
+            TextFec.Text = now.ToString("yyyy-MM-dd");
+
+            // Asignar la hora al TextBox de hora
+            TextFech.Text = now.ToString("HH:mm");
+
+            TextIngDis.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            TextUltAc.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            TextFecOkDib.Text = DateTime.Now.ToString("yyyy-MM-dd");
 
             DateTime fechaActual = DateTime.Now;
 
-           
+            // Agregar 5 días a la fecha actual
+            DateTime fechaEntrega = fechaActual.AddDays(5);
+
+            // Establecer el valor por defecto en el TextBox
+            TextEntrega.Text = fechaEntrega.ToString("yyyy-MM-dd");
+
+            BtnProgramar.CssClass = "btn btn-warning shadow btn-sm";
  
-            TextTel.Text = fechaActual.ToString("2889898");
-            TextCel.Text = fechaActual.ToString("3002025400");
+ 
+            TextTel.Text = ("2889898");
+            TextCel.Text = ("3002025400");
 
             ChecConDeCab.Checked = true;
             ChecPiso.Checked = true;
@@ -254,12 +377,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Cancelar.Enabled = true;
 
             NuevoDisBit.CssClass = "button-enabled";
+          
+
             ActualizarDiseno.CssClass = "button-enabled";
             Cancelar.CssClass = "button-enabled";
         }
 
         private void DeshabilitarDivYContenido(System.Web.UI.Control container)
         {
+            TextPla.Enabled = false;
+            TextPla.CssClass = "form-control form-control-sm";
+
             Button16.Enabled = false;
             Button16.CssClass = "form-control form-control-sm";
 
@@ -278,9 +406,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Button11.Enabled = false;
             Button11.CssClass = "form-control form-control-sm";
 
-           
+            Button9.Enabled = false;
+            Button9.CssClass = "form-control form-control-sm";
 
-            lblNumDise.Enabled = false;
+            Button10.Enabled = false;
+            Button10.CssClass = "form-control form-control-sm";
+
+
+           
            
             TextCliente.Enabled = false;
             TextCliente.CssClass = "form-control form-control-sm";
@@ -592,8 +725,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             lblUbi.Enabled = false;
             TextUbi.CssClass = "col-form-label-sm";
+
+
         }
 
+
+        //BUSCAR DISE
         protected void But_Click(object sender, EventArgs e)
         {
             // Verificar cuáles campos tienen datos y seleccionar el SqlDataSource correspondiente.
@@ -621,8 +758,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void ddlCiudadX_DataBound(object sender, EventArgs e)
         {
-            // Agregar el primer  elemento de los datagrid como "Seleccione"
-            TextPre.Items.Insert(0, new ListItem("Seleccione", ""));
+           
         }
 
 
@@ -657,6 +793,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ActualizarDiseno.Enabled = false;
                 ActualizarDiseno.CssClass = "button-disabled";
 
+
                 // Habilitar el div y su contenido
                 HabilitarDivYContenido(miDiv);
 
@@ -671,23 +808,46 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 lblCotizar.CssClass = "col-form-label-sm text-danger";
                 lblCotizar.Font.Bold = true;
 
+                Cancelar.Enabled = true;
+                // Deshabilita los TextBox
+                TextFec.Enabled = false;
+                TextFech.Enabled = false;
 
-               
-                
             }
             Session.Remove("lnkClieClicked");
+            Session.Remove("lnkClieeClicked");
 
         }
 
-       
+        protected void CheckBox21_CheckedChanged(object sender, EventArgs e)
+        {
+            // Verifica el estado del CheckBox
+            if (CheckBox21.Checked)
+            {
+                // Habilita los TextBox
+                TextFec.Enabled = true;
+                TextFech.Enabled = true;
+            }
+            else
+            {
+                // Deshabilita los TextBox
+                TextFec.Enabled = false;
+                TextFech.Enabled = false;
+            }
+        }
+
         private void HabilitarDivYContenido(System.Web.UI.Control container)
         {
             foreach (System.Web.UI.Control control in container.Controls)
             {
                 if (control is System.Web.UI.WebControls.WebControl)
                 {
-                    // Si el control es un control web (como un botón), habilitarlo
-                    ((System.Web.UI.WebControls.WebControl)control).Enabled = true;
+                    // Verificar si el control es el botón BtnProgramar
+                    if (control != BtnProgramar)
+                    {
+                        // Si el control no es el botón BtnProgramar, habilitarlo
+                        ((System.Web.UI.WebControls.WebControl)control).Enabled = true;
+                    }
                 }
 
                 // Si el control es un contenedor, llamar recursivamente a la función
@@ -697,6 +857,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
+
 
         protected void Cancelar_Click(object sender, EventArgs e)
         {
@@ -757,7 +918,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void lnkClie_Click(object sender, EventArgs e)
         {
-          
+
+            Session["lnkClieClicked"] = true;
 
             Grabar.Enabled = false;
             Grabar.CssClass = "button-disabled";
@@ -777,13 +939,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             AdicionarElemento.Enabled = true;
             AdicionarElemento.CssClass = "button-enabled";
 
-            BtnProgramar.CssClass = "btn-outline-dark btn btn-white shadow btn-sm";
+          
 
             DeshabilitarDivYContenido(miDiv);
 
-           
+            BtnProgramar.Enabled = true;
 
-            ;
+          
         }
 
         protected void lnkCliee_Click(object sender, EventArgs e)
@@ -808,13 +970,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             AdicionarElemento.Enabled = true;
             AdicionarElemento.CssClass = "button-enabled";
 
-            BtnProgramar.CssClass = "btn-outline-dark btn btn-white shadow btn-sm";
+            BtnProgramar.Enabled = true;
+
 
             DeshabilitarDivYContenido(miDiv);
 
+          
 
-
-            ;
+            
         }
         protected void Nombreasesor()
         {
@@ -838,7 +1001,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             string zona = reader["Zona"].ToString();
                             string nombre = reader["Nombre"].ToString();
                             string apellidos = reader["Apellidos"].ToString();
-                            DropDownList1.SelectedValue = Cedula; // Asignar el nombre y apellidos al TextBox
+                           
                             TextZona.Text = zona;
                         }
 
@@ -855,7 +1018,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
        
         protected void Modificar_Click(object sender, EventArgs e)
         {
-         
+            BtnProgramar.Enabled = false;
+            BtnProgramar.CssClass = "button-disabled";
 
             // Deshabilitar el botón "NuevoDisBit"
             NuevoDisBit.Enabled = false;
@@ -893,171 +1057,227 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session["ModificarEjecutado"] = true;
         }
 
+        private string ValidarCampos()
+        {
+            string campoFaltante = string.Empty;
+
+            if (string.IsNullOrEmpty(TextCiuPro.Text))
+            {
+                campoFaltante = "Ciudad del Proyecto";
+            }
+            else if (string.IsNullOrEmpty(TextMail.Text))
+            {
+                campoFaltante = "Email";
+            }
+            else if (string.IsNullOrEmpty(TextPre.Text))
+            {
+                campoFaltante = "Pre";
+            }
+            else if (string.IsNullOrEmpty(TextCel.Text))
+            {
+                campoFaltante = "Celular";
+            }
+            else if (!CheckBox4.Checked)
+            {
+                campoFaltante = "Cotizar transporte";
+            }
+            else if (!ChecCotVia.Checked)
+            {
+                campoFaltante = "Cotizar Viáticos";
+            }
+            else if (!ChecMailTer.Checked)
+            {
+                campoFaltante = "Mail Terminado";
+            }
+            else if (string.IsNullOrEmpty(TextTel.Text))
+            {
+                campoFaltante = "Teléfono";
+            }
+            else if (string.IsNullOrEmpty(TextContacto.Text))
+            {
+                campoFaltante = "Contacto";
+            }
+            else if (string.IsNullOrEmpty(TextZona.Text))
+            {
+                campoFaltante = "Zona";
+            }
+            else if (string.IsNullOrEmpty(TextFecOkDib.Text))
+            {
+                campoFaltante = "Fecha de Dibujo OK";
+            }
+            else if (string.IsNullOrEmpty(TextEntrega.Text))
+            {
+                campoFaltante = "Fecha Programada de Entrega";
+            }
+            else if (!ChecCot.Checked)
+            {
+                campoFaltante = "Pasar a Cotizar";
+            }
+            else if (string.IsNullOrEmpty(TextPla.Text))
+            {
+                campoFaltante = "Plano";
+            }
+            else if (string.IsNullOrEmpty(TextProyecto.Text))
+            {
+                campoFaltante = "Nombre del Proyecto";
+            }
+            else if (string.IsNullOrEmpty(TextUltAc.Text))
+            {
+                campoFaltante = "Última Activación";
+            }
+            else if (string.IsNullOrEmpty(TextIngDis.Text))
+            {
+                campoFaltante = "Fecha de Ingreso";
+            }
+            else if (DropDownList1.SelectedItem == null)
+            {
+                campoFaltante = "Asesor";
+            }
+            else if (string.IsNullOrEmpty(TextCliente.Text))
+            {
+                campoFaltante = "Cliente";
+            }
+            else if (string.IsNullOrEmpty(TextDir.Text))
+            {
+                campoFaltante = "Dirección";
+            }
+            else if (string.IsNullOrEmpty(TextDes.Text))
+            {
+                campoFaltante = "Descuento";
+            }
+            else if (!ChecPiso.Checked)
+            {
+                campoFaltante = "Conducción de Cables por Piso";
+            }
+            else if (!ChecDiv.Checked)
+            {
+                campoFaltante = "Conducción de Cables por División";
+            }
+            else if (!ChecCie.Checked)
+            {
+                campoFaltante = "Conducción de Cables por Cielo";
+            }
+            else if (!ChecCan.Checked)
+            {
+                campoFaltante = "Conducción de Cables por Canaleta";
+            }
+            else if (!ChecBteEle.Checked)
+            {
+                campoFaltante = "Bajantes Eléctricos";
+            }
+            else if (!ChecBteSw.Checked)
+            {
+                campoFaltante = "Bajantes de Switches";
+            }
+            else if (!ChecAlCie.Checked)
+            {
+                campoFaltante = "Sujeción de Cielo";
+            }
+            else if (!ChecPerRef.Checked)
+            {
+                campoFaltante = "Perfil de Refuerzo";
+            }
+            else if (!ChecGuaEsc.Checked)
+            {
+                campoFaltante = "Guarda Escobas";
+            }
+            else if (string.IsNullOrEmpty(TexHTot.Text))
+            {
+                campoFaltante = "H.Total";
+            }
+            else if (string.IsNullOrEmpty(TextLin.Text))
+            {
+                campoFaltante = "Línea";
+            }
+            else if (string.IsNullOrEmpty(TextMos.Text))
+            {
+                campoFaltante = "Tipo de Mostrador";
+            }
+            else if (string.IsNullOrEmpty(TextSup.Text))
+            {
+                campoFaltante = "Acabado de Superficie";
+            }
+            else if (!CheckBox16.Checked)
+            {
+                campoFaltante = "Balance de Superficies";
+            }
+            else if (string.IsNullOrEmpty(TextSop.Text))
+            {
+                campoFaltante = "Tipo de Soporte";
+            }
+            else if (string.IsNullOrEmpty(TextGav.Text))
+            {
+                campoFaltante = "Tipo de Gaveta";
+            }
+            else if (string.IsNullOrEmpty(TextPan.Text))
+            {
+                campoFaltante = "Acabado de Paneles";
+            }
+            else if (string.IsNullOrEmpty(TextTapPie.Text))
+            {
+                campoFaltante = "Tipo de Tapa de Pierna";
+            }
+            else if (string.IsNullOrEmpty(TextRep.Text))
+            {
+                campoFaltante = "Tipo de Repisa";
+            }
+            else if (string.IsNullOrEmpty(TextPant.Text))
+            {
+                campoFaltante = "Tipo de Pantalla";
+            }
+            else if (string.IsNullOrEmpty(TextTipVid.Text))
+            {
+                campoFaltante = "Tipo de vidrio";
+            }
+            else if (string.IsNullOrEmpty(TextArch.Text))
+            {
+                campoFaltante = "Tipo de Archivador";
+            }
+            else if (string.IsNullOrEmpty(TextCoc.Text))
+            {
+                campoFaltante = "Tipo de mueble coco";
+            }
+            else if (string.IsNullOrEmpty(TextEnt.Text))
+            {
+                campoFaltante = "Mueble Entrepaño";
+            }
+            else if (string.IsNullOrEmpty(TextPuer.Text))
+            {
+                campoFaltante = "Mueble Puertas";
+            }
+            else if (string.IsNullOrEmpty(TextObsVen.InnerText))
+            {
+                campoFaltante = "Observaciones de Ventas";
+            }
+            return campoFaltante;
+        }
+
+     
+
         protected void btnInsertar_Click(object sender, EventArgs e)
         {
-            if (Session["ModificarEjecutado"] != null && (bool)Session["ModificarEjecutado"])
-            {
+            
 
+           if (Session["ModificarEjecutado"] != null && (bool)Session["ModificarEjecutado"])
+            {
                 Session["ModificarEjecutado"] = false;
 
-                // Crear la consulta SQL para la actualización
-                string query = "update tblDiseño set " +
-                    "Nombre_Diseño = @Nombre_Diseño," +
-                    " id_CiudadProyecto = @id_CiudadProyecto," +
-                    "Mail = @Mail, Celular = @Celular, Cotizartransporte = @Cotizartransporte, CotizarViaticos = @CotizarViaticos," +
-                    "MailTerminado = @MailTerminado, Telefono = @Telefono, Contacto = @Contacto, Zona = @Zona, FechaDibujoOK = @FechaDibujoOK," +
-                    "Fecha_Programada_Entrega = @Fecha_Programada_Entrega, PasarACotizar = @PasarACotizar, Urgente = @Urgente, Plano = @Plano," +
-                    "UltimaActivacion = @UltimaActivacion, Fecha_Ingreso = @Fecha_Ingreso, Asesor = @Asesor, Cliente = @Cliente, Direccion = @Direccion," +
-                    "Descuento = @Descuento, ConduccionCablesPiso = @ConduccionCablesPiso, ConduccionCablesDivision = @ConduccionCablesDivision," +
-                    "ConduccionCablesCielo = @ConduccionCablesCielo, ConduccionCablesCanaleta = @ConduccionCablesCanaleta, BajantesElectricos = @BajantesElectricos," +
-                    "Bajantesswitches = @Bajantesswitches, SujecionCielo = @SujecionCielo, PerfilRefuerzo = @PerfilRefuerzo, GuardaEscobas = @GuardaEscobas," +
-                    "Linea = @Linea, TipoMostrador = @TipoMostrador, AcabadoSuperficie = @AcabadoSuperficie, BalanceSuperficies = @BalanceSuperficies, TipoSoporte = @TipoSoporte," +
-                    "TipoGaveta = @TipoGaveta, AcabadoPaneles = @AcabadoPaneles, TipoTapaPierna = @TipoTapaPierna, TipoRepisa = @TipoRepisa, TipodePantalla = @TipodePantalla," +
-                    "TipoArchivador = @TipoArchivador, MuebleEntrepano = @MuebleEntrepano, MueblePuertas = @MueblePuertas, Observaciones_Ventas = @Observaciones_Ventas," +
-                    "SeguimientoPausa = @SeguimientoPausa, SC_Presentacionppt = @SC_Presentacionppt, SC_Imagenes = @SC_Imagenes, SC_Accesorios = @SC_Accesorios," +
-                    "SC_Tiemporeal = @SC_Tiemporeal, SC_Fecha = @SC_Fecha, SC_Ubicacion = @SC_Ubicacion " +
-                    " where Numero_Diseño = @Numero_Diseño";
+                string campoFaltante = ValidarCampos();
 
-                using (SqlConnection connection = new SqlConnection("Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"))
+                if (string.IsNullOrEmpty(campoFaltante))
                 {
-
-                    string Proyect = TextProyecto.Text;
-                    string NumDis = lblNumDise.Text;
-
-                    string cliente = TextCliente.Text;
-                    string direccion = TextDir.Text;
-                    string descuento = TextDes.Text;
-                    string nombreDiseño = TextProyecto.Text;
-                    string fechaIngreso = TextIngDis.Text;
-
-                    string Asesor = DropDownList1.SelectedItem.Text;
-                    string UltAct = TextUltAc.Text;
-
-                    string Plano = TextPla.Text;
-                    bool Urgente = ChecUrgent.Checked;
-                    bool Cotizar = ChecCot.Checked;
-                    string Entrega = TextEntrega.Text;
-                    string FecOkDib = TextFecOkDib.Text;
-                    string Zona = TextZona.Text;
-                    string Contacto = TextContacto.Text;
-                    string Tel = TextTel.Text;
-                    bool MaiTer = ChecMailTer.Checked;
-                    bool CotVia = ChecCotVia.Checked;
-                    bool CotTte = CheckBox4.Checked;
-                    string Cel = TextCel.Text;
-                    string Mail = TextMail.Text;
-                    string CiuPro = TextCiuPro.Text;
-                    bool Pis = ChecPiso.Checked;
-                    bool Div = ChecDiv.Checked;
-                    bool Cie = ChecCie.Checked;
-                    bool Can = ChecCan.Checked;
-                    bool BteEle = ChecBteEle.Checked;
-                    bool BteSw = ChecBteSw.Checked;
-                    bool SujPt = ChecSujPt.Checked;
-                    bool PerRef = ChecPerRef.Checked;
-                    bool GuaEsc = ChecGuaEsc.Checked;
-                    string Lin = TextLin.Text;
-                    string Most = TextMos.Text;
-                    string Superficies = TextSup.Text;
-                    string Balance = CheckBox16.Text;
-                    string Soporte = TextSop.Text;
-                    string Gaveta = TextGav.Text;
-                    string Paneles = TextPan.Text;
-                    string TapPier = TextTapPie.Text;
-                    string Repisa = TextRep.Text;
-                    string Pantalla = TextTipVid.Text;
-                    string Arch = TextArch.Text;
-                    string Entrepano = TextEnt.Text;
-                    string Puertas = TextPuer.Text;
-                    string ObservacionVenta = TextObsVen.InnerText;
-                    string ObservacionDibDes = TextObsDibDes.InnerText;
-                    string ObservacionPauDev = TextSegPauDev.InnerText;
-                    bool PresentacionPtt = CheckBox18.Checked;
-                    bool Imagenes = CheckBox19.Checked;
-                    bool Accesorios = CheckBox20.Checked;
-                    bool TiempoReal = CheckBox21.Checked;
-                    string SCFecha = TextFec.Text;
-                    string ubicacionSC = TextUbi.Text;
-                    // Abrir la conexión
-                    connection.Open();
-
-
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    if (RealizarActualizacion())
                     {
-                        // Asignar valores a los parámetros de actualización
-                        command.Parameters.AddWithValue("@Nombre_Diseño", Proyect);
-                        command.Parameters.AddWithValue("@Numero_Diseño", NumDis);
-
-                        command.Parameters.AddWithValue("@id_CiudadProyecto", CiuPro);
-
-                        command.Parameters.AddWithValue("@Mail", Mail);
-                        command.Parameters.AddWithValue("@Celular", Cel);
-                        command.Parameters.AddWithValue("@Cotizartransporte", CotTte);
-                        command.Parameters.AddWithValue("@CotizarViaticos", CotVia);
-                        command.Parameters.AddWithValue("@MailTerminado", MaiTer);
-                        command.Parameters.AddWithValue("@Telefono", Tel);
-                        command.Parameters.AddWithValue("@Contacto", Contacto);
-                        command.Parameters.AddWithValue("@Zona", Zona);
-                        command.Parameters.AddWithValue("@FechaDibujoOK", FecOkDib);
-                        command.Parameters.AddWithValue("@Fecha_Programada_Entrega", Entrega);
-                        command.Parameters.AddWithValue("@PasarACotizar", Cotizar);
-                        command.Parameters.AddWithValue("@Urgente", Urgente);
-                        command.Parameters.AddWithValue("@Plano", Plano);
-
-                        command.Parameters.AddWithValue("@UltimaActivacion", UltAct);
-                        command.Parameters.AddWithValue("@Fecha_Ingreso", fechaIngreso);
-                        command.Parameters.AddWithValue("@Asesor", Asesor);
-                        command.Parameters.AddWithValue("@Cliente", cliente);
-                        command.Parameters.AddWithValue("@Direccion", direccion);
-                        command.Parameters.AddWithValue("@Descuento", descuento);
-                        command.Parameters.AddWithValue("@ConduccionCablesPiso", Pis);
-                        command.Parameters.AddWithValue("@ConduccionCablesDivision", Div);
-                        command.Parameters.AddWithValue("@ConduccionCablesCielo", Cie);
-                        command.Parameters.AddWithValue("@ConduccionCablesCanaleta", Can);
-                        command.Parameters.AddWithValue("@BajantesElectricos", BteEle);
-                        command.Parameters.AddWithValue("@Bajantesswitches", BteSw);
-                        command.Parameters.AddWithValue("@SujecionCielo", SujPt);
-                        command.Parameters.AddWithValue("@PerfilRefuerzo", PerRef);
-                        command.Parameters.AddWithValue("@GuardaEscobas", GuaEsc);
-                        command.Parameters.AddWithValue("@Linea", Lin);
-                        command.Parameters.AddWithValue("@TipoMostrador", Most);
-                        command.Parameters.AddWithValue("@AcabadoSuperficie", Superficies);
-                        command.Parameters.AddWithValue("@BalanceSuperficies", Balance);
-                        command.Parameters.AddWithValue("@TipoSoporte", Soporte);
-                        command.Parameters.AddWithValue("@TipoGaveta", Gaveta);
-                        command.Parameters.AddWithValue("@AcabadoPaneles", Paneles);
-                        command.Parameters.AddWithValue("@TipoTapaPierna", TapPier);
-                        command.Parameters.AddWithValue("@TipoRepisa", Repisa);
-                        command.Parameters.AddWithValue("@TipodePantalla", Pantalla);
-                        command.Parameters.AddWithValue("@TipoArchivador", Arch);
-                        command.Parameters.AddWithValue("@MuebleEntrepano", Entrepano);
-                        command.Parameters.AddWithValue("@MueblePuertas", Puertas);
-                        command.Parameters.AddWithValue("@Observaciones_Ventas", ObservacionVenta);
-                        command.Parameters.AddWithValue("@Observaciones_Diseño", ObservacionDibDes);
-                        command.Parameters.AddWithValue("@SeguimientoPausa", ObservacionPauDev);
-                        command.Parameters.AddWithValue("@SC_Presentacionppt", PresentacionPtt);
-                        command.Parameters.AddWithValue("@SC_Imagenes", Imagenes);
-                        command.Parameters.AddWithValue("@SC_Accesorios", Accesorios);
-                        command.Parameters.AddWithValue("@SC_Tiemporeal", TiempoReal);
-                        command.Parameters.AddWithValue("@SC_Fecha", SCFecha);
-                        command.Parameters.AddWithValue("@SC_Ubicacion", ubicacionSC);
-
-
-                        // Ejecutar la consulta SQL de actualización
-                        int rowsAffected = command.ExecuteNonQuery();
-
-                        // Comprobar si se actualizó al menos una fila
-                        if (rowsAffected > 0)
-                        {
-                            // Éxito: los datos se actualizaron correctamente
-                            Response.Write("Datos actualizados correctamente.");
-                        }
-                        else
-                        {
-                            // Error: no se actualizó ninguna fila (puede deberse a un número de diseño no válido)
-                            Response.Write("No se encontró ningún diseño para actualizar.");
-                        }
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalExito').modal('show');", true);
                     }
+                    else
+                    {
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
+                    }
+                }
+                else
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalll').modal('show'); $('#campoFaltante').text('" + campoFaltante + "');", true);
                 }
 
 
@@ -1065,187 +1285,250 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             else
             {
-                // Obtener la cadena de conexión desde Web.config
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string campoFaltante = ValidarCampos();
 
-                // Obtener los valores de los TextBox
-                string cliente = TextCliente.Text;
-                string direccion = TextDir.Text;
-                string descuento = TextDes.Text;
-                string nombreDiseño = TextProyecto.Text;
-                string fechaIngreso = TextIngDis.Text;
+                if (string.IsNullOrEmpty(campoFaltante))
+                {
+                    if (RealizarInsercion())
+                    {
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalExito').modal('show');", true);
+                    }
+                    else
+                    {
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
+                    }
+                }
+                else
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalll').modal('show'); $('#campoFaltante').text('" + campoFaltante + "');", true);
+                }
+            }
 
-                string Asesor = DropDownList1.SelectedItem.Text;
-                string UltAct = TextUltAc.Text;
-                string Proyecto = TextProyecto.Text;
-                string Plano = TextPla.Text;
-                bool Urgente = ChecUrgent.Checked;
-                bool Cotizar = ChecCot.Checked;
-                string Entrega = TextEntrega.Text;
-                string FecOkDib = TextFecOkDib.Text;
-                string Zona = TextZona.Text;
-                string Contacto = TextContacto.Text;
-                string Tel = TextTel.Text;
-                bool MaiTer = ChecMailTer.Checked;
-                bool CotVia = ChecCotVia.Checked;
-                bool CotTte = CheckBox4.Checked;
-                string Cel = TextCel.Text;
-                string Mail = TextMail.Text;
-                string CiuPro = TextCiuPro.Text;
-                bool Pis = ChecPiso.Checked;
-                bool Div = ChecDiv.Checked;
-                bool Cie = ChecCie.Checked;
-                bool Can = ChecCan.Checked;
-                bool BteEle = ChecBteEle.Checked;
-                bool BteSw = ChecBteSw.Checked;
-                bool SujPt = ChecSujPt.Checked;
-                bool PerRef = ChecPerRef.Checked;
-                bool GuaEsc = ChecGuaEsc.Checked;
-                string Lin = TextLin.Text;
-                string Most = TextMos.Text;
-                string Superficies = TextSup.Text;
-                string Balance = CheckBox16.Text;
-                string Soporte = TextSop.Text;
-                string Gaveta = TextGav.Text;
-                string Paneles = TextPan.Text;
-                string TapPier = TextTapPie.Text;
-                string Repisa = TextRep.Text;
-                string Pantalla = TextTipVid.Text;
-                string Arch = TextArch.Text;
-                string Entrepano = TextEnt.Text;
-                string Puertas = TextPuer.Text;
-                string ObservacionVenta = TextObsVen.InnerText;
-                string ObservacionDibDes = TextObsDibDes.InnerText;
-                string ObservacionPauDev = TextSegPauDev.InnerText;
-                bool PresentacionPtt = CheckBox18.Checked;
-                bool Imagenes = CheckBox19.Checked;
-                bool Accesorios = CheckBox20.Checked;
-                bool TiempoReal = CheckBox21.Checked;
-                string SCFecha = TextFec.Text;
-                string ubicacionSC = TextUbi.Text;
 
-                // Crear una consulta SQL para obtener el valor máximo actual de Numero_Diseño y calcular el siguiente número consecutivo
+        }
+
+        private bool RealizarInsercion()
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+            {
+                connection.Open();
+
                 string queryGetMaxNumeroDiseño = "SELECT MAX(Numero_Diseño) FROM tbldiseño";
                 int numerodiseño = 0;
 
-                // Crear una conexión SQL
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlCommand commandGetMaxNumeroDiseño = new SqlCommand(queryGetMaxNumeroDiseño, connection))
                 {
-                    // Abrir la conexión
-                    connection.Open();
+                    object result = commandGetMaxNumeroDiseño.ExecuteScalar();
 
-                    // Crear un comando SQL para obtener el valor máximo actual de Numero_Diseño
-                    using (SqlCommand commandGetMaxNumeroDiseño = new SqlCommand(queryGetMaxNumeroDiseño, connection))
+                    if (result != DBNull.Value)
                     {
-                        // Ejecutar la consulta para obtener el valor máximo actual
-                        object result = commandGetMaxNumeroDiseño.ExecuteScalar();
-
-                        if (result != DBNull.Value)
-                        {
-                            // Si hay un valor máximo actual, incrementarlo en 1
-                            numerodiseño = Convert.ToInt32(result) + 1;
-                        }
-                        else
-                        {
-                            // Si no hay registros en la tabla, comenzar desde 1
-                            numerodiseño = 1;
-                        }
+                        numerodiseño = Convert.ToInt32(result) + 1;
+                    }
+                    else
+                    {
+                        numerodiseño = 1;
                     }
                 }
 
-                // Crear la consulta SQL para la inserción
-                string query = "INSERT INTO tbldiseño (id_CiudadProyecto, Numero_Diseño, Nombre_Diseño, Asesor, Fecha_Ingreso, Fecha_Programada_Entrega, UltimaActivacion, Contacto, Telefono, Mail, Celular, Zona, Cotizartransporte, CotizarViaticos, MailTerminado, FechaDibujoOK, PasarACotizar, Urgente, Plano, Cliente, Direccion, Descuento, ConduccionCablesPiso, ConduccionCablesDivision, ConduccionCablesCielo, ConduccionCablesCanaleta, BajantesElectricos, Bajantesswitches, SujecionCielo, PerfilRefuerzo, GuardaEscobas, Linea, TipoMostrador, AcabadoSuperficie, BalanceSuperficies, TipoSoporte, TipoGaveta, AcabadoPaneles, TipoTapaPierna, TipoRepisa, TipodePantalla, TipoArchivador, MuebleEntrepano, MueblePuertas, Observaciones_Ventas, Observaciones_Diseño, SeguimientoPausa, SC_Presentacionppt, SC_Imagenes, SC_Accesorios, SC_Tiemporeal, SC_Fecha, SC_Ubicacion)" +
-                    " VALUES (@id_CiudadProyecto, @Numero_Diseño, @Nombre_Diseño, @Asesor, @Fecha_Ingreso, @Fecha_Programada_Entrega, @UltimaActivacion, @Contacto, @Telefono, @Mail, @Celular, @Zona, @Cotizartransporte, @CotizarViaticos, @MailTerminado, @FechaDibujoOK, @PasarACotizar, @Urgente, @Plano, @Cliente, @Direccion, @Descuento, @ConduccionCablesPiso, @ConduccionCablesDivision, @ConduccionCablesCielo, @ConduccionCablesCanaleta, @BajantesElectricos, @Bajantesswitches, @SujecionCielo, @PerfilRefuerzo, @GuardaEscobas, @Linea, @TipoMostrador, @AcabadoSuperficie, @BalanceSuperficies, @TipoSoporte, @TipoGaveta, @AcabadoPaneles, @TipoTapaPierna, @TipoRepisa, @TipodePantalla, @TipoArchivador, @MuebleEntrepano, @MueblePuertas, @Observaciones_Ventas, @Observaciones_Diseño, @SeguimientoPausa, @SC_Presentacionppt, @SC_Imagenes, @SC_Accesorios, @SC_Tiemporeal, @SC_Fecha, @SC_Ubicacion)";
-
-
-                // Crear una conexión SQL
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                if (numerodiseño > 0)
                 {
-                    // Abrir la conexión
-                    connection.Open();
-
-                    // Crear un comando SQL
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand("sp_InsertarDiseño", connection))
                     {
-                        // Asignar valores a los parámetros
-                        command.Parameters.AddWithValue("@id_CiudadProyecto", CiuPro);
-                        command.Parameters.AddWithValue("@Numero_Diseño", numerodiseño);
-                        command.Parameters.AddWithValue("@Mail", Mail);
-                        command.Parameters.AddWithValue("@Celular", Cel);
-                        command.Parameters.AddWithValue("@Cotizartransporte", CotTte);
-                        command.Parameters.AddWithValue("@CotizarViaticos", CotVia);
-                        command.Parameters.AddWithValue("@MailTerminado", MaiTer);
-                        command.Parameters.AddWithValue("@Telefono", Tel);
-                        command.Parameters.AddWithValue("@Contacto", Contacto);
-                        command.Parameters.AddWithValue("@Zona", Zona);
-                        command.Parameters.AddWithValue("@FechaDibujoOK", FecOkDib);
-                        command.Parameters.AddWithValue("@Fecha_Programada_Entrega", Entrega);
-                        command.Parameters.AddWithValue("@PasarACotizar", Cotizar);
-                        command.Parameters.AddWithValue("@Urgente", Urgente);
-                        command.Parameters.AddWithValue("@Plano", Plano);
-                        command.Parameters.AddWithValue("@Nombre_Diseño", Proyecto);
-                        command.Parameters.AddWithValue("@UltimaActivacion", UltAct);
-                        command.Parameters.AddWithValue("@Fecha_Ingreso", fechaIngreso);
-                        command.Parameters.AddWithValue("@Asesor", Asesor);
-                        command.Parameters.AddWithValue("@Cliente", cliente);
-                        command.Parameters.AddWithValue("@Direccion", direccion);
-                        command.Parameters.AddWithValue("@Descuento", descuento);
-                        command.Parameters.AddWithValue("@ConduccionCablesPiso", Pis);
-                        command.Parameters.AddWithValue("@ConduccionCablesDivision", Div);
-                        command.Parameters.AddWithValue("@ConduccionCablesCielo", Cie);
-                        command.Parameters.AddWithValue("@ConduccionCablesCanaleta", Can);
-                        command.Parameters.AddWithValue("@BajantesElectricos", BteEle);
-                        command.Parameters.AddWithValue("@Bajantesswitches", BteSw);
-                        command.Parameters.AddWithValue("@SujecionCielo", SujPt);
-                        command.Parameters.AddWithValue("@PerfilRefuerzo", PerRef);
-                        command.Parameters.AddWithValue("@GuardaEscobas", GuaEsc);
-                        command.Parameters.AddWithValue("@Linea", Lin);
-                        command.Parameters.AddWithValue("@TipoMostrador", Most);
-                        command.Parameters.AddWithValue("@AcabadoSuperficie", Superficies);
-                        command.Parameters.AddWithValue("@BalanceSuperficies", Balance);
-                        command.Parameters.AddWithValue("@TipoSoporte", Soporte);
-                        command.Parameters.AddWithValue("@TipoGaveta", Gaveta);
-                        command.Parameters.AddWithValue("@AcabadoPaneles", Paneles);
-                        command.Parameters.AddWithValue("@TipoTapaPierna", TapPier);
-                        command.Parameters.AddWithValue("@TipoRepisa", Repisa);
-                        command.Parameters.AddWithValue("@TipodePantalla", Pantalla);
-                        command.Parameters.AddWithValue("@TipoArchivador", Arch);
-                        command.Parameters.AddWithValue("@MuebleEntrepano", Entrepano);
-                        command.Parameters.AddWithValue("@MueblePuertas", Puertas);
-                        command.Parameters.AddWithValue("@Observaciones_Ventas", ObservacionVenta);
-                        command.Parameters.AddWithValue("@Observaciones_Diseño", ObservacionDibDes);
-                        command.Parameters.AddWithValue("@SeguimientoPausa", ObservacionPauDev);
-                        command.Parameters.AddWithValue("@SC_Presentacionppt", PresentacionPtt);
-                        command.Parameters.AddWithValue("@SC_Imagenes", Imagenes);
-                        command.Parameters.AddWithValue("@SC_Accesorios", Accesorios);
-                        command.Parameters.AddWithValue("@SC_Tiemporeal", TiempoReal);
-                        command.Parameters.AddWithValue("@SC_Fecha", SCFecha);
-                        command.Parameters.AddWithValue("@SC_Ubicacion", ubicacionSC);
+                        command.CommandType = CommandType.StoredProcedure;
 
-                        // Ejecutar la consulta SQL
+                        command.Parameters.AddWithValue("@id_CiudadProyecto", TextCiuPro.Text);
+                        command.Parameters.AddWithValue("@Mail", TextMail.Text);
+                        command.Parameters.AddWithValue("@PresentacionCotizacion", TextPre.Text);
+                        command.Parameters.AddWithValue("@Celular", TextCel.Text);
+                        command.Parameters.AddWithValue("@Cotizartransporte", CheckBox4.Checked);
+                        command.Parameters.AddWithValue("@CotizarViaticos", ChecCotVia.Checked);
+                        command.Parameters.AddWithValue("@MailTerminado", ChecMailTer.Checked);
+                        command.Parameters.AddWithValue("@Telefono", TextTel.Text);
+                        command.Parameters.AddWithValue("@Contacto", TextContacto.Text);
+                        command.Parameters.AddWithValue("@Zona", TextZona.Text);
+                        command.Parameters.AddWithValue("@FechaDibujoOK", TextFecOkDib.Text);
+                        command.Parameters.AddWithValue("@Fecha_Programada_Entrega", TextEntrega.Text);
+                        command.Parameters.AddWithValue("@PasarACotizar", ChecCot.Checked);
+                        command.Parameters.AddWithValue("@Urgente", ChecUrgent.Checked);
+                        command.Parameters.AddWithValue("@PlanoBitacora", TextPla.Text);
+                        command.Parameters.AddWithValue("@Nombre_Diseño", TextProyecto.Text);
+                        command.Parameters.AddWithValue("@UltimaActivacion", TextUltAc.Text);
+                        command.Parameters.AddWithValue("@Fecha_Ingreso", TextIngDis.Text);
+                        command.Parameters.AddWithValue("@Asesor", DropDownList1.SelectedItem.Text);
+                        command.Parameters.AddWithValue("@Cliente", TextCliente.Text);
+                        command.Parameters.AddWithValue("@Direccion", TextDir.Text);
+                        command.Parameters.AddWithValue("@Descuento", TextDes.Text);
+                        command.Parameters.AddWithValue("@ConduccionCablesPiso", ChecPiso.Checked);
+                        command.Parameters.AddWithValue("@ConduccionCablesDivision", ChecDiv.Checked);
+                        command.Parameters.AddWithValue("@ConduccionCablesCielo", ChecCie.Checked);
+                        command.Parameters.AddWithValue("@ConduccionCablesCanaleta", ChecCan.Checked);
+                        command.Parameters.AddWithValue("@BajantesElectricos", ChecBteEle.Checked);
+                        command.Parameters.AddWithValue("@Bajantesswitches", ChecBteSw.Checked);
+                        command.Parameters.AddWithValue("@SujecionCielo", ChecSujPt.Checked);
+                        command.Parameters.AddWithValue("@PerfilRefuerzo", ChecPerRef.Checked);
+                        command.Parameters.AddWithValue("@GuardaEscobas", ChecGuaEsc.Checked);
+                        command.Parameters.AddWithValue("@AlturaCielo", TexHTot.Text);
+                        command.Parameters.AddWithValue("@Linea", TextLin.Text);
+                        command.Parameters.AddWithValue("@TipoMostrador", TextMos.Text);
+                        command.Parameters.AddWithValue("@AcabadoSuperficie", TextSup.Text);
+                        command.Parameters.AddWithValue("@BalanceSuperficies", CheckBox16.Checked);
+                        command.Parameters.AddWithValue("@TipoSoporte", TextSop.Text);
+                        command.Parameters.AddWithValue("@TipoGaveta", TextGav.Text);
+                        command.Parameters.AddWithValue("@AcabadoPaneles", TextPan.Text);
+                        command.Parameters.AddWithValue("@TipoTapaPierna", TextTapPie.Text);
+                        command.Parameters.AddWithValue("@TipoRepisa", TextRep.Text);
+                        command.Parameters.AddWithValue("@TipodePantalla", TextPant.Text);
+
+                        command.Parameters.AddWithValue("@TipodeVidrio", TextTipVid.Text);
+
+                        command.Parameters.AddWithValue("@TipoArchivador", TextArch.Text);
+                        command.Parameters.AddWithValue("@MuebleCoco", TextCoc.Text);
+                        command.Parameters.AddWithValue("@MuebleEntrepano", TextEnt.Text);
+                        command.Parameters.AddWithValue("@MueblePuertas", TextPuer.Text);
+                        command.Parameters.AddWithValue("@Observaciones_Ventas", TextObsVen.InnerText);
+                        command.Parameters.AddWithValue("@Observaciones_Diseño", TextObsDibDes.InnerText);
+                        command.Parameters.AddWithValue("@SeguimientoPausa", TextSegPauDev.InnerText);
+                        command.Parameters.AddWithValue("@SC_Presentacionppt", CheckBox18.Checked);
+                        command.Parameters.AddWithValue("@SC_Imagenes", CheckBox19.Checked);
+                        command.Parameters.AddWithValue("@SC_Accesorios", CheckBox20.Checked);
+                        command.Parameters.AddWithValue("@SC_Tiemporeal", CheckBox21.Checked);
+                        command.Parameters.AddWithValue("@SC_Fecha", TextFec.Text);
+                        command.Parameters.AddWithValue("@SC_Ubicacion", TextUbi.Text);
+
+                        command.Parameters.AddWithValue("@Numero_Diseño", numerodiseño);
+
+
                         int rowsAffected = command.ExecuteNonQuery();
 
-                        // Comprobar si se insertaron filas
-                        if (rowsAffected > 0)
+                        return rowsAffected > 0;
+                    }
+                }
+                else
+                {
+                    Response.Write("Error al obtener el número de diseño.");
+                    return false;
+                }
+            }
+        }
+
+
+        private bool RealizarActualizacion()
+        {
+            // Obtén el número de diseño de la etiqueta lblNumDise
+            string numeroDiseño = lblNumDise.Text;
+
+            // Crear la conexión a la base de datos
+            using (SqlConnection connection = new SqlConnection("Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"))
+            {
+                // Abrir la conexión
+                connection.Open();
+
+                // Consulta SQL para verificar el campo ProgramadoVentas
+                string consulta = "SELECT ProgramadoVentas FROM tbldiseño WHERE Numero_Diseño = @Numero_Diseño";
+
+                using (SqlCommand command = new SqlCommand(consulta, connection))
+                {
+                    // Asignar el valor del parámetro
+                    command.Parameters.AddWithValue("@Numero_Diseño", numeroDiseño);
+
+                    // Ejecutar la consulta y obtener el valor de ProgramadoVentas
+                    bool programadoVentas = false; // Suponemos que el valor predeterminado es false
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
                         {
-                            // Éxito: los datos se insertaron correctamente
-                            Response.Write("Datos insertados correctamente.");
+                            programadoVentas = reader.GetBoolean(0);
                         }
-                        else
-                        {
-                            // Error: los datos no se insertaron
-                            Response.Write("Error al insertar los datos.");
-                        }
+                    }
+
+                    // Verificar el valor de ProgramadoVentas
+                    if (programadoVentas)
+                    {
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
+                        return false;
                     }
                 }
 
+                // Crear el nombre del procedimiento almacenado
+                string storedProcedureName = "sp_ActualizarDiseño";
+
+                // Crear el comando para ejecutar el procedimiento almacenado
+                using (SqlCommand command = new SqlCommand(storedProcedureName, connection))
+                {
+                    // Especificar que el comando es un procedimiento almacenado
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Asignar los valores a los parámetros del procedimiento almacenado
+                    command.Parameters.AddWithValue("@Nombre_Diseño", TextProyecto.Text);
+
+
+                    command.Parameters.AddWithValue("@Numero_Diseño", lblNumDise.Text);
+                    command.Parameters.AddWithValue("@id_CiudadProyecto", TextCiuPro.Text);
+                    command.Parameters.AddWithValue("@Mail", TextMail.Text);
+                    command.Parameters.AddWithValue("@PresentacionCotizacion", TextPre.Text);
+                    command.Parameters.AddWithValue("@Celular", TextCel.Text);
+                    command.Parameters.AddWithValue("@Cotizartransporte", CheckBox4.Checked);
+                    command.Parameters.AddWithValue("@CotizarViaticos", ChecCotVia.Checked);
+                    command.Parameters.AddWithValue("@MailTerminado", ChecMailTer.Checked);
+                    command.Parameters.AddWithValue("@Telefono", TextTel.Text);
+                    command.Parameters.AddWithValue("@Contacto", TextContacto.Text);
+                    command.Parameters.AddWithValue("@Zona", TextZona.Text);
+                    command.Parameters.AddWithValue("@FechaDibujoOK", TextFecOkDib.Text);
+                    command.Parameters.AddWithValue("@Fecha_Programada_Entrega", TextEntrega.Text);
+                    command.Parameters.AddWithValue("@PasarACotizar", ChecCot.Checked);
+                    command.Parameters.AddWithValue("@Urgente", ChecUrgent.Checked);
+                    command.Parameters.AddWithValue("@PlanoBitacora", TextPla.Text);
+                    command.Parameters.AddWithValue("@UltimaActivacion", TextUltAc.Text);
+                    command.Parameters.AddWithValue("@Fecha_Ingreso", TextIngDis.Text);
+                    command.Parameters.AddWithValue("@Asesor", DropDownList1.SelectedItem.Text);
+                    command.Parameters.AddWithValue("@Cliente", TextCliente.Text);
+                    command.Parameters.AddWithValue("@Direccion", TextDir.Text);
+                    command.Parameters.AddWithValue("@Descuento", TextDes.Text);
+                    command.Parameters.AddWithValue("@ConduccionCablesPiso", ChecPiso.Checked);
+                    command.Parameters.AddWithValue("@ConduccionCablesDivision", ChecDiv.Checked);
+                    command.Parameters.AddWithValue("@ConduccionCablesCielo", ChecCie.Checked);
+                    command.Parameters.AddWithValue("@ConduccionCablesCanaleta", ChecCan.Checked);
+                    command.Parameters.AddWithValue("@BajantesElectricos", ChecBteEle.Checked);
+                    command.Parameters.AddWithValue("@Bajantesswitches", ChecBteSw.Checked);
+                    command.Parameters.AddWithValue("@SujecionCielo", ChecSujPt.Checked);
+                    command.Parameters.AddWithValue("@PerfilRefuerzo", ChecPerRef.Checked);
+                    command.Parameters.AddWithValue("@GuardaEscobas", ChecGuaEsc.Checked);
+                    command.Parameters.AddWithValue("@AlturaCielo", TexHTot.Text);
+                    command.Parameters.AddWithValue("@Linea", TextLin.Text);
+                    command.Parameters.AddWithValue("@TipoMostrador", TextMos.Text);
+                    command.Parameters.AddWithValue("@AcabadoSuperficie", TextSup.Text);
+                    command.Parameters.AddWithValue("@BalanceSuperficies", CheckBox16.Text);
+                    command.Parameters.AddWithValue("@TipoSoporte", TextSop.Text);
+                    command.Parameters.AddWithValue("@TipoGaveta", TextGav.Text);
+                    command.Parameters.AddWithValue("@AcabadoPaneles", TextPan.Text);
+                    command.Parameters.AddWithValue("@TipoTapaPierna", TextTapPie.Text);
+                    command.Parameters.AddWithValue("@TipoRepisa", TextRep.Text);
+                    command.Parameters.AddWithValue("@TipodePantalla", TextPant.Text);
+                    command.Parameters.AddWithValue("@TipodeVidrio", TextTipVid.Text);
+                    command.Parameters.AddWithValue("@TipoArchivador", TextArch.Text);
+                    command.Parameters.AddWithValue("@MuebleCoco", TextCoc.Text);
+                    command.Parameters.AddWithValue("@MuebleEntrepano", TextEnt.Text);
+                    command.Parameters.AddWithValue("@MueblePuertas", TextPuer.Text);
+                    command.Parameters.AddWithValue("@Observaciones_Ventas", TextObsVen.InnerText);
+                    command.Parameters.AddWithValue("@Observaciones_Diseño", TextObsDibDes.InnerText);
+                    command.Parameters.AddWithValue("@SeguimientoPausa", TextSegPauDev.InnerText);
+                    command.Parameters.AddWithValue("@SC_Presentacionppt", CheckBox18.Checked);
+                    command.Parameters.AddWithValue("@SC_Imagenes", CheckBox19.Checked);
+                    command.Parameters.AddWithValue("@SC_Accesorios", CheckBox20.Checked);
+                    command.Parameters.AddWithValue("@SC_Tiemporeal", CheckBox21.Checked);
+                    command.Parameters.AddWithValue("@SC_Fecha", TextFec.Text);
+                    command.Parameters.AddWithValue("@SC_Ubicacion", TextUbi.Text);
+
+                    // Ejecutar el procedimiento almacenado
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    return rowsAffected > 0;
+                }
             }
-
-           
-           
-
-         
         }
+
+
 
 
 
@@ -1270,51 +1553,67 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string pasarACotizar = DataBinder.Eval(e.Item.DataItem, "PasarACotizar").ToString();
                 string terminadoDibujo = DataBinder.Eval(e.Item.DataItem, "TerminadoDibujo").ToString();
                 string pausado = DataBinder.Eval(e.Item.DataItem, "Pausado").ToString();
+                string FechaEntrega = DataBinder.Eval(e.Item.DataItem, "Fecha_Programada_Entrega").ToString();
+                string urgente = DataBinder.Eval(e.Item.DataItem, "Urgente").ToString();
 
-                if (programadoVentas == "True" && terminadoDibujo == "False" && pausado == "False")
+                if (DateTime.TryParse(FechaEntrega, out DateTime fechaEntrega))
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#ead97b"); /*Amarillo*/
-                    e.Item.ForeColor = System.Drawing.Color.Black;
-                }
-                else if (programadoVentas == "True" && pasarACotizar == "True" && terminadoDibujo == "True")
-                {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#673f8b"); /*Violeta*/
-                    e.Item.ForeColor = System.Drawing.Color.White;
-                }
-                else if (programadoVentas == "False")
-                {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#819cba"); /*Azul*/
-                    e.Item.ForeColor = System.Drawing.Color.White;
-                }
-                else if (programadoVentas == "True" && pasarACotizar == "False")
-                {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#be94b9"); /*Rosado*/
-                    e.Item.ForeColor = System.Drawing.Color.White;
-                }
+                    if (fechaEntrega < DateTime.Now && programadoVentas == "True" && terminadoDibujo == "False" && pausado == "False")
+                    {
 
-                else if (pausado == "True")
-                {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#74bec6"); /*Celeste*/
-                    e.Item.ForeColor = System.Drawing.Color.White;
-                }
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868"); /* Rojo */
+                        e.Item.ForeColor = System.Drawing.Color.White;
+                    }
+                    else if (programadoVentas == "True" && terminadoDibujo == "False" && pausado == "False" && urgente == "False")
+                    {
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#ead97b"); /* Amarillo */
+                        e.Item.ForeColor = System.Drawing.Color.Black;
+                    }
+                    else if (programadoVentas == "True" && pasarACotizar == "True" && terminadoDibujo == "True")
+                    {
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#673f8b"); /* Violeta */
+                        e.Item.ForeColor = System.Drawing.Color.White;
+                    }
+                    else if (programadoVentas == "False")
+                    {
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#819cba"); /* Azul */
+                        e.Item.ForeColor = System.Drawing.Color.White;
+                    }
+                    else if (programadoVentas == "True" && pasarACotizar == "False")
+                    {
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#be94b9"); /* Rosado */
+                        e.Item.ForeColor = System.Drawing.Color.White;
+                    }
+                    else if (pausado == "True")
+                    {
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#74bec6"); /* Celeste */
+                        e.Item.ForeColor = System.Drawing.Color.Black;
+                    }
+                    else if (urgente == "True" && programadoVentas == "True" && terminadoDibujo == "False" && pausado == "False")
+                    {
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#e9a270"); /* Naranja */
+                        e.Item.ForeColor = System.Drawing.Color.Black;
+                    }
 
 
 
 
-                // Combinar los valores de Cliente y Nombre_Diseño en la celda de Descripción
-                string cliente = DataBinder.Eval(e.Item.DataItem, "Cliente").ToString();
-                string nombreDiseño = DataBinder.Eval(e.Item.DataItem, "Nombre_Diseño").ToString();
 
-                
-                TableCell descripcionCell = e.Item.Cells[2];
+                    // Combinar los valores de Cliente y Nombre_Diseño en la celda de Descripción
+                    string cliente = DataBinder.Eval(e.Item.DataItem, "Cliente").ToString();
+                    string nombreDiseño = DataBinder.Eval(e.Item.DataItem, "Nombre_Diseño").ToString();
 
-               
-                if (descripcionCell != null)
-                {
-                    descripcionCell.Text = $"{cliente} - {nombreDiseño}";
+                    TableCell descripcionCell = e.Item.Cells[3];
+
+                    if (descripcionCell != null)
+                    {
+                        descripcionCell.Text = $"{cliente} - {nombreDiseño}";
+                    }
                 }
             }
         }
+
+
         protected void DataGridDise_ItemCommand(object source, DataGridCommandEventArgs e)
         {
             if (e.CommandName == "Numero_Diseño")
@@ -1322,7 +1621,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGrid2.Items[rowIndex];
 
-                string numeroDiseño = row.Cells[1].Text.Replace("&nbsp;", null);
+                string numeroDiseño = row.Cells[2].Text.Replace("&nbsp;", null);
 
                 if (int.TryParse(numeroDiseño, out int numDise))
                 {
@@ -1338,6 +1637,37 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     {
                         connection.Open();
 
+
+                        // Consulta SQL para verificar el campo ProgramadoVentas
+                        string consultaProgramadoVentas = "SELECT ProgramadoVentas FROM tbldiseño WHERE Numero_Diseño = @Numero_Diseño";
+
+                        using (SqlCommand commandProgramadoVentas = new SqlCommand(consultaProgramadoVentas, connection))
+                        {
+                            commandProgramadoVentas.Parameters.AddWithValue("@Numero_Diseño", numDise);
+
+                            bool programadoVentas = false; // Valor predeterminado
+
+                            using (SqlDataReader readerProgramadoVentas = commandProgramadoVentas.ExecuteReader())
+                            {
+                                if (readerProgramadoVentas.Read())
+                                {
+                                    programadoVentas = readerProgramadoVentas.GetBoolean(0);
+                                }
+                            }
+
+                            // Validar ProgramadoVentas
+                            if (programadoVentas)
+                            {
+                                // ProgramadoVentas es 1, deshabilitar el botón
+                                BtnProgramar.Enabled = false;
+                            }
+                            else
+                            {
+                                // ProgramadoVentas es 0, habilitar el botón
+                                BtnProgramar.Enabled = true;
+                            }
+                        }
+
                         using (SqlCommand command = new SqlCommand("sp_FormularioDisBita", connection))
                         {
                             command.CommandType = CommandType.StoredProcedure;
@@ -1347,9 +1677,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             {
                                 if (reader.Read())
                                 {
-                                   
 
 
+                                    // Obtener el valor de "id_CiudadProyecto"
+                                    int idCiudadProyecto = 0;
+                                    if (int.TryParse(row.Cells[14].Text, out idCiudadProyecto)) // Reemplaza "x" con el índice correcto de la columna
+                                    {
+                                        // Asignar el valor de "id_CiudadProyecto" al DropDownList
+                                        TextCiuPro.SelectedValue = idCiudadProyecto.ToString();
+                                    }
 
 
                                     int numeroDiseno;
@@ -1382,10 +1718,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                                     TextZona.Text = GetString(reader, "Zona");
 
-                                    string presentacionCotizacion = GetString(reader, "PresentacionCotizacion");
-                                    ListItem presentacionCotizacionItem = new ListItem(presentacionCotizacion, presentacionCotizacion);
-                                    TextPre.Items.Add(presentacionCotizacionItem);
+                                    TextPre.Text = GetString(reader, "PresentacionCotizacion");
 
+                                    string asesor = GetString(reader, "Asesor");
+                                    ListItem asesorItem = new ListItem(asesor, asesor);
+                                    DropDownList1.Items.Add(asesorItem);
+
+                                    // Selecciona el valor en DropDownList1 para que coincida con el "Asesor" obtenido de la base de datos
+                                    DropDownList1.SelectedValue = asesor;
+
+
+                                    TexHTot.Text = GetString(reader, "AlturaCielo");                                  
                                     TextCliente.Text = GetString(reader, "Cliente");
                                     TextProyecto.Text = GetString(reader, "Nombre_Diseño");
                                     TextContacto.Text = GetString(reader, "Contacto");
@@ -1399,11 +1742,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     ChecCot.Checked = reader.GetBoolean(reader.GetOrdinal("PasarACotizar"));
                                     ChecMailTer.Checked = reader.GetBoolean(reader.GetOrdinal("MailTerminado"));
 
-                                    //TextCiuPro.Text = GetString(reader, "CiudadYDepartamento");
-                                    //string ciudadProvincia = GetString(reader, "CiudadYDepartamento");
-                                    //ListItem ciudadProvinciaItem = new ListItem(ciudadProvincia, ciudadProvincia);
-                                    //TextCiuPro.Items.Add(ciudadProvinciaItem);
-
+                                    CheckBox16.Checked = reader.GetBoolean(reader.GetOrdinal("BalanceSuperficies"));
                                     ChecUrgent.Checked = reader.GetBoolean(reader.GetOrdinal("CotizarViaticos"));
                                     ChecCot.Checked = reader.GetBoolean(reader.GetOrdinal("Cotizartransporte"));
 
@@ -1482,7 +1821,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGrid4.Items[rowIndex];
 
-                string numeroDiseño = row.Cells[1].Text.Replace("&nbsp;", null);
+                string numeroDiseño = row.Cells[2].Text.Replace("&nbsp;", null);
 
                 if (int.TryParse(numeroDiseño, out int numDise))
                 {
@@ -1497,6 +1836,36 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
                         connection.Open();
+
+                        // Consulta SQL para verificar el campo ProgramadoVentas
+                        string consultaProgramadoVentas = "SELECT ProgramadoVentas FROM tbldiseño WHERE Numero_Diseño = @Numero_Diseño";
+
+                        using (SqlCommand commandProgramadoVentas = new SqlCommand(consultaProgramadoVentas, connection))
+                        {
+                            commandProgramadoVentas.Parameters.AddWithValue("@Numero_Diseño", numDise);
+
+                            bool programadoVentas = false; // Valor predeterminado
+
+                            using (SqlDataReader readerProgramadoVentas = commandProgramadoVentas.ExecuteReader())
+                            {
+                                if (readerProgramadoVentas.Read())
+                                {
+                                    programadoVentas = readerProgramadoVentas.GetBoolean(0);
+                                }
+                            }
+
+                            // Validar ProgramadoVentas
+                            if (programadoVentas)
+                            {
+                                // ProgramadoVentas es 1, deshabilitar el botón
+                                BtnProgramar.Enabled = false;
+                            }
+                            else
+                            {
+                                // ProgramadoVentas es 0, habilitar el botón
+                                BtnProgramar.Enabled = true;
+                            }
+                        }
 
                         using (SqlCommand command = new SqlCommand("sp_FormularioDisBita", connection))
                         {
@@ -1530,9 +1899,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     TextFecOkDib.Text = fechaDibujoOK.ToString("yyyy-MM-dd");
                                     TextZona.Text = GetString(reader, "Zona");
 
-                                    string presentacionCotizacion = GetString(reader, "PresentacionCotizacion");
-                                    ListItem presentacionCotizacionItem = new ListItem(presentacionCotizacion, presentacionCotizacion);
-                                    TextPre.Items.Add(presentacionCotizacionItem);
+                                    TextPre.Text = GetString(reader, "PresentacionCotizacion");
+
+                                    string asesor = GetString(reader, "Asesor");
+                                    ListItem asesorItem = new ListItem(asesor, asesor);
+                                    DropDownList1.Items.Add(asesorItem);
+
+                                    // Selecciona el valor en DropDownList1 para que coincida con el "Asesor" obtenido de la base de datos
+                                    DropDownList1.SelectedValue = asesor;
+
 
                                     TextCliente.Text = GetString(reader, "Cliente");
                                     TextProyecto.Text = GetString(reader, "Nombre_Diseño");
@@ -1547,10 +1922,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     ChecCot.Checked = reader.GetBoolean(reader.GetOrdinal("PasarACotizar"));
                                     ChecMailTer.Checked = reader.GetBoolean(reader.GetOrdinal("MailTerminado"));
 
-                                    //TextCiuPro.Text = GetString(reader, "CiudadYDepartamento");
-                                    //string ciudadProvincia = GetString(reader, "CiudadYDepartamento");
-                                    //ListItem ciudadProvinciaItem = new ListItem(ciudadProvincia, ciudadProvincia);
-                                    //TextCiuPro.Items.Add(ciudadProvinciaItem);
+                                  
 
                                     ChecUrgent.Checked = reader.GetBoolean(reader.GetOrdinal("CotizarViaticos"));
                                     ChecCot.Checked = reader.GetBoolean(reader.GetOrdinal("Cotizartransporte"));
@@ -1688,8 +2060,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             UpdateDataGrids();
         }
 
-
-
         //DATAGRID SHOWCASE
         protected void DataGrid3_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
@@ -1699,12 +2069,32 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 string scimaganes = DataBinder.Eval(e.Item.DataItem, "SC_Imagenes").ToString();
                 string scterminado = DataBinder.Eval(e.Item.DataItem, "SC_Terminado").ToString();
+                string scTiempoReal = DataBinder.Eval(e.Item.DataItem, "SC_tiemporeal").ToString();
+                string scPresentacionPPT = DataBinder.Eval(e.Item.DataItem, "SC_Presentacionppt").ToString();
+                string scAccesorios = DataBinder.Eval(e.Item.DataItem, "SC_Accesorios").ToString();
+                string scUbicacion = DataBinder.Eval(e.Item.DataItem, "SC_Ubicacion").ToString();
 
                 if (scimaganes == "True" && scterminado == "False")
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#ead97b"); /*Amarillo*/
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868"); /*Rojo*/
                     e.Item.ForeColor = System.Drawing.Color.White;
                 }
+                else if (scTiempoReal == "True")
+                {
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868"); /* Amarillo */
+                    e.Item.ForeColor = System.Drawing.Color.Black;
+                }
+                else if (scPresentacionPPT == "True")
+                {
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868"); /* Amarillo */
+                    e.Item.ForeColor = System.Drawing.Color.Black;
+                }
+                else if (scAccesorios == "True")
+                {
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868"); /* Amarillo */
+                    e.Item.ForeColor = System.Drawing.Color.Black;
+                }
+
 
             }
 
@@ -1715,7 +2105,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     string nombreDiseño = DataBinder.Eval(e.Item.DataItem, "Nombre_Diseño").ToString();
 
                     // Encontrar la celda correspondiente a la columna Descripción por índice
-                    TableCell descripcionCell = e.Item.Cells[2]; // Ajusta el índice si es necesario
+                    TableCell descripcionCell = e.Item.Cells[3]; // Ajusta el índice si es necesario
 
                     // Combinar los valores de Cliente y Nombre_Diseño en la celda de Descripción
                     if (descripcionCell != null)
@@ -1725,29 +2115,45 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         
-            protected void DataGrid4_ItemDataBound(object sender, DataGridItemEventArgs e)
+        protected void DataGrid4_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
                 string terminadoRender = DataBinder.Eval(e.Item.DataItem, "TerminadoRender").ToString();
                 string fechaProgramadaString = DataBinder.Eval(e.Item.DataItem, "Fecha_Programada_Entrega").ToString();
+                string Pausado = DataBinder.Eval(e.Item.DataItem, "Pausado").ToString();
+                string ProgramadoVentas = DataBinder.Eval(e.Item.DataItem, "ProgramadoVentas").ToString();
+
 
                 if (terminadoRender == "False")
                 {
                     if (!string.IsNullOrEmpty(fechaProgramadaString) && DateTime.TryParse(fechaProgramadaString, out DateTime fechaProgramada))
                     {
-                        if (fechaProgramada < DateTime.Now)
+                        if (fechaProgramada < DateTime.Now && Pausado == "False" && ProgramadoVentas == "True")
                         {
-                            e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868");
+                            e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868"); /*Rojo*/
                             e.Item.ForeColor = System.Drawing.Color.White;
                         }
-                        else if (fechaProgramada > DateTime.Now)
+                        else if (fechaProgramada > DateTime.Now && Pausado == "False" && ProgramadoVentas == "True")
                         {
                             e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#ead97b"); /*Amarillo*/
+                            e.Item.ForeColor = System.Drawing.Color.Black;
+                        }
+                        else if (Pausado == "True")
+                        {
+                            e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#74bec6"); /*Celeste*/
+                            e.Item.ForeColor = System.Drawing.Color.Black;
+                        }
+                        else if (ProgramadoVentas == "False")
+                        {
+                            e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#673f8b"); /*Violeta*/
                             e.Item.ForeColor = System.Drawing.Color.White;
                         }
+
                     }
                 }
+              
+               
             }
 
 
@@ -1759,7 +2165,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                string nombreRender = DataBinder.Eval(e.Item.DataItem, "Nombre_Render").ToString();
 
                 // Encontrar la celda correspondiente a la columna Descripción por índice
-               TableCell descripcionCell = e.Item.Cells[2]; // Ajusta el índice si es necesario
+               TableCell descripcionCell = e.Item.Cells[3]; // Ajusta el índice si es necesario
                                 
                 // Combinar los valores de Cliente y Nombre_Diseño en la celda de Descripción
                if (descripcionCell != null)
@@ -1768,6 +2174,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                }
             }
         }
+
         protected void DataGrid1_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
             //if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
@@ -1791,19 +2198,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (fechaEntrega < fechaActual)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#efdd79");
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868"); 
                     e.Item.ForeColor = System.Drawing.Color.White;
                 }
                 else
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868");
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#efdd79");
                     e.Item.ForeColor = System.Drawing.Color.White;
                 }
             }
         }
-
-       
-    
 
         protected void CheckBox22_CheckedChanged(object sender, EventArgs e)
         {
@@ -1855,97 +2259,558 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string terminadoDibujo = DataBinder.Eval(e.Item.DataItem, "TerminadoDibujo").ToString();
                 string pausado = DataBinder.Eval(e.Item.DataItem, "Pausado").ToString();
                 string CotizacionOk = DataBinder.Eval(e.Item.DataItem, "CotizaciónOK").ToString();
+                string FechaEntrega = DataBinder.Eval(e.Item.DataItem, "Fecha_Programada_Entrega").ToString();
 
-                if (programadoVentas == "True" && terminadoDibujo == "False" && pausado == "False")
+
+                if (DateTime.TryParse(FechaEntrega, out DateTime fechaEntrega))
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#ead97b"); /*Amarillo*/
-                    e.Item.ForeColor = System.Drawing.Color.Black;
+                    if (fechaEntrega < DateTime.Now && programadoVentas == "True" && terminadoDibujo == "False" && pausado == "False")
+                    {
+
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868"); /* Rojo */
+                        e.Item.ForeColor = System.Drawing.Color.Black;
+                    }
+
+                    else if (programadoVentas == "True" && terminadoDibujo == "False" && pausado == "False")
+                    {
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#ead97b"); /*Amarillo*/
+                        e.Item.ForeColor = System.Drawing.Color.Black;
+                    }
+                    else if (programadoVentas == "True" && terminadoDibujo == "True" && CotizacionOk == "True")
+                    {
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#3d803f"); /*Verde*/
+                        e.Item.ForeColor = System.Drawing.Color.White;
+                    }
+
+                    else if (programadoVentas == "True" && pasarACotizar == "True" && terminadoDibujo == "True")
+                    {
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#673f8b"); /*Violeta*/
+                        e.Item.ForeColor = System.Drawing.Color.White;
+                    }
+                    else if (programadoVentas == "False")
+                    {
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#819cba"); /*Azul*/
+                        e.Item.ForeColor = System.Drawing.Color.White;
+                    }
+                    else if (programadoVentas == "True" && pasarACotizar == "False")
+                    {
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#be94b9"); /*Rosado*/
+                        e.Item.ForeColor = System.Drawing.Color.White;
+                    }
+
+
+
+
+
+
+             
                 }
-                else if (programadoVentas == "True" && terminadoDibujo == "True" && CotizacionOk == "True")
+            }
+        }
+
+        protected void Unnamed_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+        protected void DocBitacora_Click(object sender, EventArgs e)
+        {
+            ToggleDivsVisibility();
+            ConfigureSqlDataSource();
+            DataGridDocumento.DataBind();
+        }
+
+        private void ConfigureSqlDataSource()
+        {
+            string numDise = "DS" + lblNumDise.Text; // Asegúrate de que lblNumDise esté disponible
+            string query = $"SELECT Archivo, Observacion, Usuario, FechaRegistro, Id_OT FROM tblDocumentacion WHERE Id_OT = '{numDise}'";
+            SqlDataSource3.SelectCommand = query;
+        }
+
+        private void ToggleDivsVisibility()
+        {
+            if (miDiv.Style["display"] == "block")
+            {
+                miDiv.Style["display"] = "none";
+                Documentacion.Style["display"] = "block";
+            }
+            else
+            {
+                miDiv.Style["display"] = "block";
+                Documentacion.Style["display"] = "none";
+            }
+        }
+
+        private void UpdateDivsVisibility()
+        {
+            miDiv.Style["display"] = "block";
+            Documentacion.Style["display"] = "none";
+        }
+
+
+
+        protected void GuardarButton_Click(object sender, EventArgs e)
+        {
+            if (FileUpload1.HasFile)
+            {
+                HttpPostedFile uploadedFile = FileUpload1.PostedFile;
+
+                // Obtener el nombre del archivo
+                string fileName = Path.GetFileName(uploadedFile.FileName);
+
+                // Obtener el texto de lblNumDise
+                string lblText = lblNumDise.Text;
+
+                // Concatenar "DS" con el texto de lblNumDise para obtener el nombre de la carpeta
+                string folderName = "DS" + lblText;
+
+                // Combinar la ruta de guardado con el nombre de la carpeta
+                string savePath = Path.Combine(@"P:\SISTEMAS\PruebaDocumentacion", folderName);
+
+                // Verificar si la carpeta no existe y crearla si es necesario
+                if (!Directory.Exists(savePath))
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#3d803f"); /*Verde*/
-                    e.Item.ForeColor = System.Drawing.Color.White;
+                    Directory.CreateDirectory(savePath);
                 }
 
-                else if (programadoVentas == "True" && pasarACotizar == "True" && terminadoDibujo == "True")
-                {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#673f8b"); /*Violeta*/
-                    e.Item.ForeColor = System.Drawing.Color.White;
-                }
-                else if (programadoVentas == "False")
-                {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#819cba"); /*Azul*/
-                    e.Item.ForeColor = System.Drawing.Color.White;
-                }
-                else if (programadoVentas == "True" && pasarACotizar == "False")
-                {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#be94b9"); /*Rosado*/
-                    e.Item.ForeColor = System.Drawing.Color.White;
-                }
+                string filePath = Path.Combine(savePath, fileName);
+
+                // Guardar el archivo
+                uploadedFile.SaveAs(filePath);
+
+                InsertarEnBaseDeDatos(folderName, fileName);
+
+                updatePanel.Update();
+
+                ToggleDivsVisibility();
+
+                litModalScript.Text = "<script type='text/javascript'>$(document).ready(function () { $('#miModalExito').modal('show'); });</script>";
 
                
 
-
-
-
-                //// Combinar los valores de Cliente y Nombre_Diseño en la celda de Descripción
-                //string cliente = DataBinder.Eval(e.Item.DataItem, "Cliente").ToString();
-                //string nombreDiseño = DataBinder.Eval(e.Item.DataItem, "Nombre_Diseño").ToString();
-
-
-                //TableCell descripcionCell = e.Item.Cells[2];
-
-
-                //if (descripcionCell != null)
-                //{
-                //    descripcionCell.Text = $"{cliente} - {nombreDiseño}";
-                //}
-            }
-        }
-
-        protected void btnGuardar_Click(object sender, EventArgs e)
-        {
-            if (FileUpload1.HasFile)
-            {
-                // Obtiene el nombre del archivo y el contenido
-                string fileName = FileUpload1.FileName;
-                byte[] fileContent = FileUpload1.FileBytes;
-
-                // Aquí puedes escribir código para guardar la información del TextBox y el archivo en la base de datos (SQL Server)
-                // Por ejemplo, puedes usar SqlConnection y SqlCommand para insertar datos en la base de datos.
-
-                // Luego, puedes realizar cualquier acción adicional que necesites.
-
-                // Borra el contenido del TextBox después de guardar los datos
-                TextBox1.Text = string.Empty;
             }
             else
             {
-                // Muestra un mensaje de error si no se selecciona un archivo
-                // Puedes personalizar este mensaje según tus necesidades
-                Response.Write("Por favor, selecciona un archivo.");
+                litModalScript.Text = "<script type='text/javascript'>$(document).ready(function () { $('#miModalError').modal('show'); });</script>";
             }
         }
 
-        protected void btnMostrarUbicacion_Click(object sender, EventArgs e)
+
+        private void InsertarEnBaseDeDatos(string folderName, string fileName)
         {
-            if (FileUpload1.HasFile)
+            // Establecer la conexión con la base de datos
+            using (SqlConnection con = new SqlConnection("Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"))
             {
-                // Obtiene el nombre del archivo seleccionado y lo muestra en TextBox1
-                TextBox1.Text = FileUpload1.FileName;
+                con.Open();
 
-                // Obtiene la ubicación del archivo en el sistema de archivos del servidor y lo muestra en TextBox2
-                TextBox2.Text = Server.MapPath("~/uploads/") + FileUpload1.FileName;
-                // La ruta mostrada en TextBox2 se refiere a la ubicación en el servidor donde se almacenaría el archivo.
-                // Debes asegurarte de que esta carpeta exista y tenga los permisos necesarios para guardar archivos.
-            }
-            else
-            {
-                // Muestra un mensaje de error si no se ha seleccionado un archivo
-                TextBox1.Text = "No se ha seleccionado ningún archivo.";
-                TextBox2.Text = "No se ha seleccionado ningún archivo.";
+                // Crear la consulta SQL para insertar en la tabla 'tblDocumentacion'
+                string query = "INSERT INTO tblDocumentacion (Id_OT, Pedido, Archivo, Observacion, TipoDocumento, Usuario, FechaRegistro) VALUES (@Id_OT, @Pedido, @Archivo, @Observacion, @TipoDocumento, @Usuario, @FechaRegistro)";
+
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    // Establecer los parámetros de la consulta
+                    cmd.Parameters.AddWithValue("@Id_OT", folderName);
+                    cmd.Parameters.AddWithValue("@Pedido", 0);
+                    cmd.Parameters.AddWithValue("@Archivo", fileName);
+                    cmd.Parameters.AddWithValue("@Observacion", TextArea1.Value); // Obtener el valor del textarea
+                    cmd.Parameters.AddWithValue("@TipoDocumento", "BITACORA");
+                    cmd.Parameters.AddWithValue("@Usuario", DropDownList1.SelectedValue); // Obtener el valor del DropDownList
+                    cmd.Parameters.AddWithValue("@FechaRegistro", DateTime.Now);
+
+                    // Ejecutar la consulta
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    // Comprobar si se actualizó al menos una fila
+                    if (rowsAffected > 0)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
             }
         }
 
+
+        protected void lnkSelectRow_Click(object sender, EventArgs e)
+        {
+            // Obtén el LinkButton que se hizo clic
+            LinkButton lnkSelectRow = (LinkButton)sender;
+
+            // Obtén el índice de fila desde el CommandArgument
+            int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
+
+            // Accede a la fila seleccionada en el DataGrid
+            DataGridItem selectedRow = DataGridDocumento.Items[rowIndex];
+
+            // Almacena el valor de Id_OT en una variable de sesión
+            Session["SelectedIdOT"] = selectedRow.Cells[5].Text;
+
+            // Almacena el nombre del archivo en la variable de sesión
+            Session["SelectedFileName"] = selectedRow.Cells[1].Text;
+
+            // Deselecciona todas las filas previamente seleccionadas
+            foreach (DataGridItem item in DataGridDocumento.Items)
+            {
+                if (item != selectedRow)
+                {
+                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                }
+            }
+
+            // Aplica la clase CSS a la fila seleccionada
+            selectedRow.CssClass = "selected-row";
+
+            // Puedes acceder a los datos de la fila si es necesario
+            string archivo = selectedRow.Cells[1].Text;
+            string observacion = selectedRow.Cells[2].Text;
+            string usuario = selectedRow.Cells[3].Text;
+            string fechaRegistro = selectedRow.Cells[4].Text;
+            string id_OT = selectedRow.Cells[5].Text;
+        }
+
+
+        protected void BtnEliminar_Click(object sender, EventArgs e)
+        {
+            string idOTToDelete = Session["SelectedIdOT"] as string;
+
+            if (!string.IsNullOrEmpty(idOTToDelete))
+            {
+                string archivoToDelete = Session["SelectedFileName"] as string;
+
+                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string deleteQuery = "DELETE FROM tbldocumentacion WHERE Id_OT = @IdOT AND Archivo = @Archivo";
+
+                    using (SqlCommand command = new SqlCommand(deleteQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@IdOT", idOTToDelete);
+                        command.Parameters.AddWithValue("@Archivo", archivoToDelete);
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        updatePanel.Update();
+
+                        ToggleDivsVisibility();
+
+                        if (rowsAffected > 0)
+                        {
+                            litModalScript.Text = "<script type='text/javascript'>$(document).ready(function () { $('#miModalExito').modal('show'); });</script>";
+                        }
+                        else
+                        {
+                            litModalScript.Text = "<script type='text/javascript'>$(document).ready(function () { $('#miModalError').modal('show'); });</script>";
+                        }
+                    }
+                }
+
+                // Vuelve a enlazar los datos en el DataGridDocumento después de la eliminación
+                DataGridDocumento.DataBind();
+            }
+        }
+
+
+        protected void lnkViewFile_Click(object sender, EventArgs e)
+        {
+            LinkButton lnkViewFile = (LinkButton)sender;
+            int rowIndex = Convert.ToInt32(lnkViewFile.CommandArgument);
+            DataGridItem selectedRow = DataGridDocumento.Items[rowIndex];
+            string archivo = selectedRow.Cells[1].Text;
+
+            // Construye la ruta completa al archivo
+            string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\" + archivo;
+
+            try
+            {
+                System.Diagnostics.Process.Start(rutaArchivo);
+            }
+            catch (Exception ex)
+            {
+                litModalScript.Text = "<script type='text/javascript'>$(document).ready(function () { $('#miModalErrorAdj').modal('show'); });</script>";
+            }
+        }
+
+        protected void lnkSelectRowRender_Click(object sender, EventArgs e)
+        {
+                
+        }
+
+
+        //protected void btnUpload_Click(object sender, EventArgs e)
+        // {
+        //    if (FileUpload1.HasFile)
+        //    {
+
+
+        //        string fileName = FileUpload1.FileName;
+
+        //        // Obtener el texto de lblNumDise
+        //        string lblText = lblNumDise.Text;
+
+        //        // Concatenar "DS" con el texto de lblNumDise para obtener el nombre de la carpeta
+        //        string folderName = "DS" + lblText;
+
+        //        // Combina la ruta de guardado con el nombre de la carpeta
+        //        string savePath = Path.Combine(@"P:\SISTEMAS\PruebaDocumentacion", folderName);
+
+        //        // Verifica si la carpeta no existe y créala si es necesario
+        //        if (!Directory.Exists(savePath))
+        //        {
+        //            Directory.CreateDirectory(savePath);
+        //        }
+
+        //        string filePath = Path.Combine(savePath, fileName);
+
+        //        FileUpload1.SaveAs(filePath);
+
+        //        InsertarEnBaseDeDatos(folderName, fileName);
+
+        //        // Puedes guardar la ruta del archivo en tu base de datos si es necesario
+        //        // GuardarRutaEnBaseDeDatos(filePath);
+
+        //        // Actualiza el TextBox con el nombre del archivo seleccionado
+        //        TextBox2.Text = fileName;
+
+        //               // Muestra un mensaje de éxito o realiza otras acciones necesarias
+        //              lblMessage.Text = "Archivo subido exitosamente.";
+
+        //                  // Actualiza el UpdatePanel para reflejar los cambios en la página
+
+        //   }
+        //                        else
+        //                        {
+        //                            lblMessage.Text = "Por favor, selecciona un archivo para subir.";
+        //                        }
+
+
+
+
+        //}
+
+
+        //private void InsertarEnBaseDeDatos(string folderName, string fileName)
+        //{
+        //    // Establecer la conexión con la base de datos
+        //    using (SqlConnection con = new SqlConnection("Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"))
+        //    {
+        //        con.Open();
+
+        //        // Crear la consulta SQL para insertar en la tabla 'tblDocumentacion'
+        //        string query = "INSERT INTO tblDocumentacion (Id_OT, Pedido, Archivo, Observacion, TipoDocumento, Usuario, FechaRegistro) VALUES (@Id_OT, @Pedido, @Archivo, @Observacion, @TipoDocumento, @Usuario, @FechaRegistro)";
+
+        //        using (SqlCommand cmd = new SqlCommand(query, con))
+        //        {
+        //            // Establecer los parámetros de la consulta
+        //            cmd.Parameters.AddWithValue("@Id_OT", folderName);
+        //            cmd.Parameters.AddWithValue("@Pedido", 0);
+        //            cmd.Parameters.AddWithValue("@Archivo", fileName);
+        //            cmd.Parameters.AddWithValue("@Observacion", Textarea1.Value); // Obtener el valor del textarea
+        //            cmd.Parameters.AddWithValue("@TipoDocumento", "BITACORA");
+        //            cmd.Parameters.AddWithValue("@Usuario", DropDownList1.SelectedValue); // Obtener el valor del DropDownList
+        //            cmd.Parameters.AddWithValue("@FechaRegistro", DateTime.Now);
+
+        //            // Ejecutar la consulta
+        //            int rowsAffected = cmd.ExecuteNonQuery();
+
+        //            // Comprobar si se actualizó al menos una fila
+        //            if (rowsAffected > 0)
+        //            {
+
+
+        //            }
+        //            else
+        //            {
+
+
+        //            }
+        //        }
+        //    }
+
+
+        //}
+
+        //protected void btnUploadd_Click(object sender, EventArgs e)
+        //{
+        //    Documentacion.Visible = !Documentacion.Visible;
+        //    miDiv.Visible = !miDiv.Visible;
+
+        //    // Obtener el valor del Label
+        //    string numDise = "DS" + lblNumDise.Text;
+
+        //    // Construir la consulta SQL con el valor del Label en el WHERE
+        //    string consultaSql = $"SELECT Archivo, Observacion, Usuario, FechaRegistro, Id_OT FROM tblDocumentacion WHERE Id_OT = '{numDise}'";
+
+        //    // Actualizar el comando SQL del SqlDataSource con la nueva consulta
+        //    SqlDataSource3.SelectCommand = consultaSql;
+
+        //    // Actualizar el DataGrid
+        //    DataGridDocumento.DataBind();
+
+
+        //}
+
+        ////SELECCIONA
+        //protected void lnkSelectRow_Click(object sender, EventArgs e)
+        //{
+
+
+        //    // Obtén el LinkButton que se hizo clic
+        //    LinkButton lnkSelectRow = (LinkButton)sender;
+
+        //    // Obtén el índice de fila desde el CommandArgument
+        //    int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
+
+        //    // Accede a la fila seleccionada en el DataGrid
+        //    DataGridItem selectedRow = DataGridDocumento.Items[rowIndex];
+
+        //    // Almacena el valor de Id_OT en una variable de sesión
+        //    Session["SelectedIdOT"] = selectedRow.Cells[5].Text;
+
+        //    // Almacena el nombre del archivo en la variable de sesión
+        //    Session["SelectedFileName"] = selectedRow.Cells[1].Text;
+
+        //    // Deselecciona todas las filas previamente seleccionadas
+        //    foreach (DataGridItem item in DataGridDocumento.Items)
+        //    {
+        //        if (item != selectedRow)
+        //        {
+        //            item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+        //        }
+        //    }
+
+        //    // Aplica la clase CSS a la fila seleccionada
+        //    selectedRow.CssClass = "selected-row";
+
+        //    // Puedes acceder a los datos de la fila si es necesario
+        //    string archivo = selectedRow.Cells[1].Text;
+        //    string observacion = selectedRow.Cells[2].Text;
+        //    string usuario = selectedRow.Cells[3].Text;
+        //    string fechaRegistro = selectedRow.Cells[4].Text;
+        //    string id_OT = selectedRow.Cells[5].Text;
+
+        //}
+
+        ////VER
+        //protected void lnkViewFile_Click(object sender, EventArgs e)
+        //{
+        //    LinkButton lnkViewFile = (LinkButton)sender;
+        //    int rowIndex = Convert.ToInt32(lnkViewFile.CommandArgument);
+        //    DataGridItem selectedRow = DataGridDocumento.Items[rowIndex];
+        //    string archivo = selectedRow.Cells[1].Text;
+
+        //    // Construye la ruta completa al archivo
+        //    string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\" + archivo;
+
+
+        //    try
+        //   {
+        //        System.Diagnostics.Process.Start(rutaArchivo);
+        //   }
+        //    catch (Exception ex)
+        //   {
+        //        // Maneja cualquier excepción que pueda ocurrir al abrir el archivo
+        //       // Puedes registrar el error o mostrar un mensaje al usuario si es necesario
+        //    }
+        //}
+
+        ////ELIMINAR
+        //protected void LinkButton3_Click(object sender, EventArgs e)
+        //{
+        //    // Recupera el valor de Id_OT de la variable de sesión
+        //    string idOTToDelete = Session["SelectedIdOT"] as string;
+
+        //    if (!string.IsNullOrEmpty(idOTToDelete))
+        //    {
+
+        //        // Recupera el valor de "Archivo" de la variable de sesión
+        //        string archivoToDelete = Session["SelectedFileName"] as string;
+
+        //        // Conexión a la base de datos y consulta DELETE
+        //        string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+        //        using (SqlConnection connection = new SqlConnection(connectionString))
+        //        {
+        //            connection.Open();
+        //            string deleteQuery = "DELETE FROM tbldocumentacion WHERE Id_OT = @IdOT AND Archivo = @Archivo";
+        //            using (SqlCommand command = new SqlCommand(deleteQuery, connection))
+        //            {
+        //                command.Parameters.AddWithValue("@IdOT", idOTToDelete);
+        //                command.Parameters.AddWithValue("@Archivo", archivoToDelete);
+        //                command.ExecuteNonQuery();
+        //            }
+        //        }
+
+
+        //        DataGridDocumento.DataBind();
+        //    }
+        //}
+
+
+        //protected void SelectRow_Click(object sender, EventArgs e)
+        //{       
+        //}
+
+        //protected void Unnamed_Click(object sender, EventArgs e)
+        //{
+        //    lblNumDise.Text = "Por definir";
+        //}
+
+        //protected void Button3_Click(object sender, EventArgs e)
+        //{
+        //    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalDoc').modal('show');", true);
+        //}
+
+        //protected void Unnamed_Click1(object sender, EventArgs e)
+        //{
+        //    if (FileUpload1.HasFile)
+        //    {
+        //        string fileName = FileUpload1.FileName;
+
+        //        // Obtener el texto de lblNumDise
+        //        string lblText = lblNumDise.Text;
+
+        //        // Concatenar "DS" con el texto de lblNumDise para obtener el nombre de la carpeta
+        //        string folderName = "DS" + lblText;
+
+        //        // Combina la ruta de guardado con el nombre de la carpeta
+        //        string savePath = Path.Combine(@"P:\SISTEMAS\PruebaDocumentacion", folderName);
+
+        //        // Verifica si la carpeta no existe y créala si es necesario
+        //        if (!Directory.Exists(savePath))
+        //        {
+        //            Directory.CreateDirectory(savePath);
+        //        }
+
+        //        string filePath = Path.Combine(savePath, fileName);
+
+        //        FileUpload1.SaveAs(filePath);
+
+        //        InsertarEnBaseDeDatos(folderName, fileName);
+
+        //        // Actualiza el TextBox con el nombre del archivo seleccionado
+        //        TextBox2.Text = fileName;
+
+        //        // Muestra un mensaje de éxito o realiza otras acciones necesarias
+        //        lblMessage.Text = "Archivo subido exitosamente.";
+
+        //        // Actualiza solo el contenido del UpdatePanel3
+        //        UpdatePanel3.Update();
+
+        //    }
+        //    else
+        //    {
+        //        lblMessage.Text = "Por favor, selecciona un archivo para subir.";
+        //    }
+        //}
+
+        //protected void Unnamed_Click2(object sender, EventArgs e)
+        //{
+
+        //}
     }
+
+
 }

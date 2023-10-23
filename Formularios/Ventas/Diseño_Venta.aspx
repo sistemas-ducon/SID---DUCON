@@ -6,25 +6,27 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
-    
-      <link type="text/css" href="../../Recursos/CSS/Ventas/Diseño_Venta.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
+
+    <link type="text/css" href="../../Recursos/CSS/Ventas/Diseño_Venta.css" rel="stylesheet" />
     <title>Diseño - Departamento de Ventas</title>
 </head>
 <body>
-    <form id="form1" runat="server">
+   <form id="form1" runat="server" enctype="multipart/form-data">
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+       <asp:Literal ID="litModalScript" runat="server"></asp:Literal>
 
 
 
         <nav class="navbar navbar-light bg-light">
             <div class="container d-flex justify-content-center">
-                <ul class="nav nav-tabs">
+                <ul class="nav nav-tabs" id="myTabs">
                     <li class="nav-item">
                         <a class="nav-link text-dark" id="Diseño-BitacoraFPV-001-tab" data-bs-toggle="tab" href="#Diseño-BitacoraFPV-001-content">Diseño-Bitacora FPV-001</a>
                     </li>
@@ -39,119 +41,19 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" id="Buscar-tab" data-bs-toggle="tab" href="#Buscar-content" style="display: none;">Buscar Diseño</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" id="DocumentacionBitacora-tab" data-bs-toggle="tab" href="#DocumentacionBitacora-content">Documentacion Bitacora</a>
-                    </li>
+
+
+
+
+
+
+
                 </ul>
             </div>
         </nav>
 
-        <div class="tab-content">
+        <div class="tab-content" id="myTabContent">
 
-            <div class="tab-pane fade" id="DocumentacionBitacora-content">
-                <asp:UpdatePanel runat="server" ID="UpdatePanel3" UpdateMode="Conditional">
-                    <ContentTemplate>
-                        <div class="container">
-                            <h6>Documentación bitacora</h6>
-
-                            <div class="row">
-
-                                <div class="col-md-6 col-12">
-                                    <div class="row d-flex justify-content-between mt-1">
-                                        <div class="row mt-1">
-                                            <div class="col-md-12 col-12">
-                                                <asp:Label runat="server" ID="Label8" class="col-form-label-sm">Ubicación</asp:Label>
-                                                <asp:TextBox ID="TextBox1" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-1">
-                                            <div class="col-md-11 col-10">
-
-                                                <asp:FileUpload ID="fileUpload" runat="server" Style="display: none;" ClientIDMode="Static" onchange="mostrarNombreArchivo()" />
-                                                <asp:TextBox ID="TextBox2" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
-
-
-                                            </div>
-                                            <div class="col-md-1 col-2">
-                                                <asp:Panel runat="server" DefaultButton="Button3">
-                                                    <!-- Tus controles aquí -->
-                                                    <asp:Button runat="server" ID="Button3" type="button" class="btn-outline-dark btn btn-white shadow btn-sm" Text="..." OnClientClick="seleccionarArchivo(); return false;" />
-                                                    <input type="file" id="fileInput" style="display: none;" />
-                                                </asp:Panel>
-
-
-
-
-                                            </div>
-                                        </div>
-                                        <div class="row mt-1">
-                                            <div class="col-md-12 col-12">
-                                                <asp:Label runat="server" ID="Label9" class="col-form-label-sm">Observacón</asp:Label>
-                                                <textarea id="Textarea1" class="form-control" runat="server"></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="row justify-content-end mt-1">
-                                            <div class="col-md-1 col-1">
-                                                <asp:LinkButton runat="server" ID="LinkButton1" Enabled="false">
-                            <i class="bi bi-file-earmark-image contenedor-icono2"></i> 
-                                                </asp:LinkButton>
-                                            </div>
-                                            <div class="col-md-1 col-1">
-                                                <asp:LinkButton runat="server" ID="LinkButton2" Enabled="false">
-                            <i class="bi bi-plus-lg contenedor-icono2"></i> 
-                                                </asp:LinkButton>
-                                            </div>
-                                            <div class="col-md-1 col-1">
-                                                <asp:LinkButton runat="server" ID="LinkButton3" Enabled="false">
-                            <i class="bi bi-usb contenedor-icono2"></i> 
-                                                </asp:LinkButton>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="col-md-6 col-12 d-flex flex-column justify-content-center align-items-center">
-
-                                    <div class="container-fluid m-2">
-                                        <div class="row justify-content-center">
-                                            <div class="border rounded p-1 special-border col-md-12 col-12" style="height: auto; min-height: 300px;">
-
-                                                <asp:DataGrid Class="table table-bordered table-hover table-sm" ID="DataGrid6" runat="server"
-                                                    AutoGenerateColumns="false">
-                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
-                                                    <Columns>
-                                                        <asp:BoundColumn HeaderText="Dibujante" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn HeaderText="Ped" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn HeaderText="UltPedido" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn HeaderText="Dis" ItemStyle-CssClass="auto-width-column" />
-                                                    </Columns>
-                                                </asp:DataGrid>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                           <div>
-   <a<asp:TextBox ID="TextBox6" runat="server"></asp:TextBox>
-<br />
-<asp:TextBox ID="TextBox7" runat="server"></asp:TextBox>
-<br />
-<asp:FileUpload ID="FileUpload1" runat="server" />
-<br />
-<asp:Button ID="btnGuardar" runat="server" Text="Guardar" OnClick="btnGuardar_Click" />
-<br />
-<asp:Button ID="btnMostrarUbicacion" runat="server" Text="Mostrar Ubicación" OnClick="btnMostrarUbicacion_Click" />
-
-
-
-        </div>
-                    </ContentTemplate>
-                </asp:UpdatePanel>
-            </div>
 
             <div class="tab-pane fade" id="Buscar-content">
                 <asp:UpdatePanel runat="server" ID="UpdatePanel2" UpdateMode="Conditional">
@@ -255,9 +157,16 @@
                                             AutoGenerateColumns="false">
                                             <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                             <Columns>
+                                                <asp:TemplateColumn>
+                                                                            <ItemTemplate>
+
+                                                                                <asp:LinkButton ID="lnkCliee" runat="server" CommandName="Numero_Diseño"
+                                                                                    CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square text-white'></i>" OnClick="lnkCliee_Click" />
+                                                                            </ItemTemplate>
+                                                                        </asp:TemplateColumn>
                                                 <asp:TemplateColumn HeaderText="Turno" ItemStyle-CssClass="auto-width-column">
                                                     <ItemTemplate>
-                                                        <asp:LinkButton ID="lnkCliee" runat="server" CommandName="Numero_Diseño" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Container.ItemIndex + 1 %>' CssClass="text-white text-decoration-none" OnClick="lnkCliee_Click" />
+                                                        <asp:LinkButton ID="lnkSelectRow" runat="server" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Container.ItemIndex + 1 %>' CssClass="text-white text-decoration-none" />
                                                     </ItemTemplate>
                                                 </asp:TemplateColumn>
                                                 <asp:BoundColumn DataField="Numero_Diseño" HeaderText="Diseño" ItemStyle-CssClass="auto-width-column" />
@@ -272,35 +181,42 @@
                                                 <asp:BoundColumn DataField="TerminadoDibujo" HeaderText="Nueva" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="Pausado" HeaderText="Pausado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="CotizaciónOK" HeaderText="CotizaciónOK" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                 <asp:BoundColumn DataField="Cedula" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                             </Columns>
                                         </asp:DataGrid>
                                         <asp:SqlDataSource runat="server" ID="SqlDataSourceFecha" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
-                                            SelectCommand="SELECT CotizaciónOK, ProgramadoVentas, PasarACotizar, TerminadoDibujo, Pausado, Numero_Diseño, Nombre_Diseño, Asesor, Fecha_Ingreso, Fecha_Programada_Entrega, UltimaActivacion, Cliente FROM tblDiseño WHERE Fecha_Ingreso BETWEEN @FechaInicio AND @FechaFin">
+                                            SelectCommand="SELECT A.CotizaciónOK, A.ProgramadoVentas, A.PasarACotizar, A.TerminadoDibujo, A.Pausado, A.Numero_Diseño, A.Nombre_Diseño,  A.Asesor, A.Fecha_Ingreso, A.Fecha_Programada_Entrega, A.UltimaActivacion, A.Cliente FROM tblDiseño A INNER JOIN tblAsesorComercial B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor WHERE A.Fecha_Ingreso BETWEEN @FechaInicio AND @FechaFin AND B.Cedula = @Cedula">
                                             <SelectParameters>
                                                 <asp:ControlParameter Name="FechaInicio" ControlID="TextFechDeIng" PropertyName="Text" />
                                                 <asp:ControlParameter Name="FechaFin" ControlID="Texty" PropertyName="Text" />
+                                                <asp:SessionParameter Name="Cedula" SessionField="CedulaLogeada" Type="String" />
                                             </SelectParameters>
                                         </asp:SqlDataSource>
+
                                         <asp:SqlDataSource runat="server" ID="SqlDataSourceNumeroDis" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
-                                            SelectCommand="SELECT CotizaciónOK, ProgramadoVentas, PasarACotizar, TerminadoDibujo, Pausado, Numero_Diseño, Nombre_Diseño, Asesor, Fecha_Ingreso, Fecha_Programada_Entrega, UltimaActivacion, Cliente FROM tblDiseño WHERE Numero_Diseño = @NumeroDis">
+                                            SelectCommand="SELECT A.CotizaciónOK, A.ProgramadoVentas, A.PasarACotizar, A.TerminadoDibujo, A.Pausado, A.Numero_Diseño, A.Nombre_Diseño,  A.Asesor, A.Fecha_Ingreso, A.Fecha_Programada_Entrega, A.UltimaActivacion, A.Cliente FROM tblDiseño A INNER JOIN tblAsesorComercial B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor WHERE A.Numero_Diseño = @NumeroDis AND B.Cedula = @Cedula">
                                             <SelectParameters>
                                                 <asp:ControlParameter Name="NumeroDis" ControlID="TextBox3" PropertyName="Text" />
+                                                <asp:SessionParameter Name="Cedula" SessionField="CedulaLogeada" Type="String" />
                                             </SelectParameters>
                                         </asp:SqlDataSource>
 
                                         <asp:SqlDataSource runat="server" ID="SqlDataSourceNombreDiseño" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
-                                            SelectCommand="SELECT CotizaciónOK, ProgramadoVentas, PasarACotizar, TerminadoDibujo, Pausado, Numero_Diseño, Nombre_Diseño, Asesor, Fecha_Ingreso, Fecha_Programada_Entrega, UltimaActivacion, Cliente FROM tblDiseño WHERE Nombre_Diseño LIKE '%' + @NombreDiseño + '%'">
+                                            SelectCommand="SELECT A.CotizaciónOK, A.ProgramadoVentas, A.PasarACotizar, A.TerminadoDibujo, A.Pausado, A.Numero_Diseño, A.Nombre_Diseño, A.Asesor, A.Fecha_Ingreso, A.Fecha_Programada_Entrega, A.UltimaActivacion, A.Cliente FROM tblDiseño A INNER JOIN tblAsesorComercial B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor WHERE A.Nombre_Diseño LIKE '%' + @NombreDiseño + '%' AND B.Cedula = @Cedula">
                                             <SelectParameters>
                                                 <asp:ControlParameter Name="NombreDiseño" ControlID="TextBox5" PropertyName="Text" />
+                                                <asp:SessionParameter Name="Cedula" SessionField="CedulaLogeada" Type="String" />
                                             </SelectParameters>
                                         </asp:SqlDataSource>
 
                                         <asp:SqlDataSource runat="server" ID="SqlDataSourceCliente" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
-                                            SelectCommand="SELECT CotizaciónOK, ProgramadoVentas, PasarACotizar, TerminadoDibujo, Pausado, Numero_Diseño, Nombre_Diseño, Asesor, Fecha_Ingreso, Fecha_Programada_Entrega, UltimaActivacion, Cliente FROM tblDiseño WHERE Cliente LIKE '%' + @Cliente + '%'">
+                                            SelectCommand="SELECT A.CotizaciónOK, A.ProgramadoVentas, A.PasarACotizar, A.TerminadoDibujo, A.Pausado, A.Numero_Diseño, A.Nombre_Diseño,  A.Asesor, A.Fecha_Ingreso, A.Fecha_Programada_Entrega, A.UltimaActivacion, A.Cliente FROM tblDiseño A INNER JOIN tblAsesorComercial B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor WHERE A.Cliente LIKE '%' + @Cliente + '%' AND B.Cedula = @Cedula">
                                             <SelectParameters>
                                                 <asp:ControlParameter Name="Cliente" ControlID="TextBox4" PropertyName="Text" />
+                                                <asp:SessionParameter Name="Cedula" SessionField="CedulaLogeada" Type="String" />
                                             </SelectParameters>
                                         </asp:SqlDataSource>
+
 
 
 
@@ -323,6 +239,8 @@
                                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#ejemplo2" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                                     <span class="navbar-toggler-icon"></span>
                                 </button>
+
+                                <%-- BOTONES--%>
                                 <div class="collapse navbar-collapse" id="ejemplo2">
                                     <ul class="navbar-nav mx-auto contenedor-icono">
                                         <div class="contenedor-icono ">
@@ -345,7 +263,7 @@
                                                         </div>
                                                         <div class="modal-footer  d-flex align-items-center justify-content-center">
                                                             <asp:Button runat="server" type="button" class="btn btn-secondary" data-bs-dismiss="modal" OnClick="SiButton_Click" Text="Si"></asp:Button>
-                                                            <asp:Button runat="server" type="button" class="btn btn-secondary" data-bs-dismiss="modal" Text="No"></asp:Button>
+                                                            <asp:Button runat="server" type="button" class="btn btn-secondary" data-bs-dismiss="modal" Text="No" OnClick="NoButton_Click"></asp:Button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -362,9 +280,11 @@
                                                <i class="bi bi-wrench"></i>
                                             </asp:LinkButton>
 
-                                            <asp:LinkButton runat="server" ID="DocBitacora" Enabled="false">
+                                            <asp:LinkButton runat="server" ID="DocBitacora" Enabled="false" Onclick="DocBitacora_Click">
                                             <i class="bi bi-send-plus"></i>
                                             </asp:LinkButton>
+
+
 
                                             <asp:LinkButton runat="server" ID="RegresarDiseño" Enabled="false">
                                                   <i class="bi bi-box-arrow-in-left"></i>
@@ -398,7 +318,129 @@
                                 </div>
                             </nav>
                         </div>
-                        <div id="miDiv" runat="server" data-div="miDiv">
+
+                        <%-- ADJUNTAR DOCUMENTACION--%>
+                        <div id="Documentacion" runat="server" style="display: none">
+                            <asp:UpdatePanel ID="updatePanel" runat="server" UpdateMode="Conditional">
+                                <ContentTemplate>
+                                    <div class="container">
+                                        <h6>Documentación bitacora</h6>
+
+
+                                        <div class="row">
+
+                                            <div class="col-md-12 col-12">
+                                                <div class="container-fluid">
+                                                    <div class="row justify-content-center">
+                                                        <div class="border rounded p-1 special-border col-md-12 col-12" style="height: auto; min-height: 300px;">
+
+                                                            <div class="table-responsive mb-2 gap-2" style="height: auto; min-height: 300px; overflow-x: auto;">
+
+                                                                <asp:DataGrid CssClass="table table-bordered table-sm custom-grid table-hover custom-data-grid form-control-sm"
+                                                                    ID="DataGridDocumento" runat="server" AutoGenerateColumns="false"
+                                                                    DataSourceID="SqlDataSource3" DataKeyField="Id_OT">
+                                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                                    <Columns>
+                                                                        <asp:TemplateColumn>
+                                                                            <ItemTemplate>
+
+                                                                                <asp:LinkButton ID="lnkSelectRow" runat="server"
+                                                                                    CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>" OnClick="lnkSelectRow_Click" />
+                                                                            </ItemTemplate>
+                                                                        </asp:TemplateColumn>
+                                                                        <asp:BoundColumn DataField="Archivo" HeaderText="Archivo" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="Observacion" HeaderText="Observacion" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="Usuario" HeaderText="Usuario" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="FechaRegistro" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="Id_OT" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:TemplateColumn>
+                                                                            <ItemTemplate>
+                                                                                <asp:LinkButton ID="lnkViewFile" runat="server"
+                                                                                    CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-eye'></i>" OnClick="lnkViewFile_Click"/>
+                                                                            </ItemTemplate>
+                                                                        </asp:TemplateColumn>
+
+                                                                    </Columns>
+                                                                </asp:DataGrid>
+
+                                                                <asp:SqlDataSource ID="SqlDataSource3" runat="server"
+                                                                    ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                                                    SelectCommand="SELECT TOP 0 Archivo, Observacion, Usuario, FechaRegistro, Id_OT FROM tblDocumentacion"></asp:SqlDataSource>
+
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                            <div class="row mt-1">
+                                                <div class="col-md-12 col-12">
+                                                    <div class="input-group input-group-sm ">
+                                                        <asp:FileUpload ID="FileUpload1" runat="server" CssClass="form-control" />
+
+                                                        <asp:Button ID="GuardarButton" runat="server" Text="Guardar" CssClass="btn btn-outline-dark" OnClick="GuardarButton_Click" />
+                                                        <asp:Button ID="BtnEliminar" runat="server" Text="Eliminar" CssClass="btn btn-outline-dark" OnClick="BtnEliminar_Click" />
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-1">
+                                                <div class="col-md-12 col-12">
+                                                    <textarea id="TextArea1" runat="server" class="form-control"></textarea>
+                                                </div>
+                                                <div class="col-md-1 col-2">
+                                                </div>
+                                            </div>
+                                            <div class="row mt-1">
+                                                <div class="col-md-12 col-12">
+                                                </div>
+                                            </div>
+                                            <div class="row justify-content-end mt-1">
+                                                <div class="col-md-1 col-1">
+                                                </div>
+                                                <div class="col-md-1 col-1">
+                                                </div>
+                                                <div class="col-md-1 col-1">
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="modal fade" id="miModalDoc" tabindex="-1" role="dialog" aria-labelledby="miModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="miModalLabelDoc">Título del Modal</h5>
+
+
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Desea Guardar el archivo?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <asp:Button runat="server" type="button" data-dismiss="modal" Text="Si"></asp:Button>
+                                                            <asp:Button runat="server" type="button" data-dismiss="modal" Text="No"></asp:Button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </ContentTemplate>
+                                <Triggers>
+                                    <asp:PostBackTrigger ControlID="GuardarButton" />
+                                    <asp:PostBackTrigger ControlID="BtnEliminar" />
+                                </Triggers>
+                            </asp:UpdatePanel>
+                        </div>
+
+                        <div id="miDiv" runat="server" data-div="miDiv" style="display: block">
                             <%--  1/4--%>
                             <div class="container-fluid m-1">
                                 <div class="row justify-content-center">
@@ -411,13 +453,11 @@
                                                     <div class="col-md-8 col-6">
                                                         <div class="input-group input-group-sm gap-2">
                                                             <asp:Label runat="server" class="col-form-label-sm">Diseño#:</asp:Label>
-                                                            <asp:Label ID="lblNumDise" runat="server" CssClass="destacado">Número</asp:Label>
+                                                            <asp:Label ID="lblNumDise" runat="server" Style="font-size: 20px; color: black; font-weight: bold; margin-bottom: 10px; font-family: 'Times New Roman'">Número</asp:Label>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4 col-3">
                                                         <asp:Button runat="server" ID="BtnBus" type="button" OnClientClick="mostrarTab(); return false;" class="btn-outline-dark btn btn-white m-2 shadow" Text="..." />
-
-
                                                     </div>
 
                                                     <div class="row">
@@ -552,13 +592,13 @@
                                                     </div>
                                                     <div class="col-md-6 col-12">
                                                         <asp:Label runat="server" ID="lblPre" class="col-form-label-sm">Pre</asp:Label>
-                                                        <asp:DropDownList class="form-control" ID="TextPre" runat="server" DataTextField="PresentacionCotizacion"
-                                                            DataValueField="PresentacionCotizacion" DataSourceID="DataSourcePre" OnDataBound="ddlCiudadX_DataBound">
-                                                        </asp:DropDownList><asp:SqlDataSource runat="server" ID="DataSourcePre" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
-                                                            SelectCommand="SELECT TOP 9 PresentacionCotizacion, COUNT(*) AS Repetitions
-                                            FROM tblDiseño
-                                            GROUP BY PresentacionCotizacion
-                                            ORDER BY COUNT(*) DESC"></asp:SqlDataSource>
+                                                        <asp:TextBox ID="TextPre" runat="server" CssClass="form-control"></asp:TextBox>
+
+
+
+
+
+
                                                     </div>
                                                 </div>
                                                 <div class="row d-flex justify-content-between mt-1">
@@ -578,16 +618,19 @@
                                                         <div class="col-md-7 col-3">
                                                             <div class="input-group input-group-sm mt-1 gap-2">
                                                                 <asp:Label runat="server" ID="lblCiuPro" class="col-form-label-sm">Ciudad proyecto</asp:Label>
-                                                                <asp:DropDownList ID="TextCiuPro" runat="server" DataSourceID="sqlDataSourceCiudades" DataTextField="NombreCiudad"
-                                                                    DataValueField="Id_Departamento" />
+                                                                <asp:DropDownList ID="TextCiuPro" runat="server" DataSourceID="sqlDataSourceCiudades"
+                                                                    DataTextField="CiudadDepartamento" DataValueField="id_Ciudad_Aut" />
+
                                                                 <asp:SqlDataSource ID="sqlDataSourceCiudades" runat="server" ConnectionString="Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"
-                                                                    SelectCommand="SELECT C.Id_Departamento, C.NombreCiudad + ', ' + D.NombreDepartamento AS NombreCiudad FROM tblCiudad C INNER JOIN tblDepartamentoPais D ON C.Id_Departamento = D.id_Departamento_Auto"></asp:SqlDataSource>
+                                                                    SelectCommand="SELECT id_Ciudad_Aut, C.NombreCiudad + ' - ' + D.NombreDepartamento AS CiudadDepartamento
+                                                                       FROM tblCiudad C
+                                                                       INNER JOIN tblDepartamentoPais D ON C.Id_Departamento = D.id_departamento_Auto"></asp:SqlDataSource>
 
 
                                                             </div>
                                                         </div>
                                                         <div class="col-md-5 col-4 mt-1">
-                                                            <asp:Button runat="server" ID="BtnProgramar" CssClass="btn-outline-dark btn btn-sm btn-white" Text="PROGRAMAR" OnClick="BtnProgramar_Click" />
+                                                            <asp:Button runat="server" ID="BtnProgramar" CssClass="btn-outline-dark btn btn-sm btn-white" Text="PROGRAMAR" OnClick="BtnProgramar_Click" Enabled="false" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -851,15 +894,16 @@
                                                     </div>
                                                     <div class="col-md-10 col-12">
                                                         <div class="input-group input-group-sm gap-2">
-                                                            <asp:CheckBox ID="CheckBox21" runat="server" />
+                                                            <asp:CheckBox ID="CheckBox21" runat="server" AutoPostBack="true" OnCheckedChanged="CheckBox21_CheckedChanged"/>
                                                             <asp:Label ID="lblTieRea" runat="server" class="col-form-label-sm">Tiempo Real</asp:Label>
                                                         </div>
                                                     </div>
 
                                                     <div class="col-md-10 col-12">
                                                         <div class="input-group input-group-sm gap-2">
-                                                            <asp:TextBox ID="TextFec" runat="server" CssClass="form-control-sm form-control" type="Date"></asp:TextBox>
-                                                            <asp:TextBox ID="TextFech" runat="server" CssClass="form-control-sm form-control" type="Date"></asp:TextBox>
+                                                            <asp:TextBox ID="TextFec" runat="server" CssClass="form-control-sm form-control" type="date"></asp:TextBox>
+                                                            <asp:TextBox ID="TextFech" runat="server" CssClass="form-control-sm form-control" type="time"></asp:TextBox>
+
                                                         </div>
                                                     </div>
                                                     <div class="col-md-10 col-12">
@@ -872,10 +916,8 @@
                                                 <div class="container-fluid">
                                                     <div class="row justify-content-center">
 
-
-
-                                                        <div class="border rounded p-1" style="height: 250px">
-                                                            <asp:DataGrid CssClass="table table-sm table-bordered table-hover" ID="DataGrid5" runat="server" DataSourceID="SqldatasourceTxt" AutoGenerateColumns="false">
+                                                        <div class="border rounded p-1" style="height: 250px; overflow-x: auto;">
+                                                            <asp:DataGrid CssClass="table table-sm table-bordered table-hover form-control-sm" ID="DataGrid5" runat="server" DataSourceID="SqldatasourceTxt" AutoGenerateColumns="false">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                 <Columns>
                                                                     <asp:BoundColumn DataField="id_PlanoDiseno" HeaderText="ID" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
@@ -943,7 +985,7 @@
                                                         <%-- DATAGRID--%>
 
                                                         <div class="table-responsive mb-2 gap-2" style="max-height: 212px; overflow-x: auto;">
-                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover" ID="DataGrid1" runat="server" DataSourceID="SqlDataSource1"
+                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid1" runat="server" DataSourceID="SqlDataSource1"
                                                                 AutoGenerateColumns="false" OnItemDataBound="DataGrid1_ItemDataBound">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                 <Columns>
@@ -970,12 +1012,14 @@
 
                                                                     <asp:BoundColumn DataField="Fecha_Despacho_Produccion" HeaderText="F.Despacho" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Zona" HeaderText="Zona" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                                    <asp:BoundColumn DataField="Cedula" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                                 </Columns>
                                                             </asp:DataGrid>
                                                             <asp:SqlDataSource runat="server" ID="SqlDataSource1" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
                                                                 SelectCommand="sp_ProBitacoraOTs" SelectCommandType="StoredProcedure">
                                                                 <SelectParameters>
-                                                                    <asp:ControlParameter ControlID="DropDownList1" PropertyName="SelectedValue" Name="Nombre_Asesor" Type="String"></asp:ControlParameter>
+
+                                                                    <asp:SessionParameter Name="Cedula" SessionField="CedulaLogeada" Type="String" DefaultValue="ValorPorDefecto" />
 
                                                                 </SelectParameters>
                                                             </asp:SqlDataSource>
@@ -993,7 +1037,7 @@
                                                         OnClick="Button88_Click">
                                                        <i class="bi bi-arrow-clockwise text-dark"></i>
                                                     </asp:LinkButton>
-                                                    
+
 
 
                                                 </div>
@@ -1087,19 +1131,15 @@
                                                                                 <Columns>
                                                                                     <asp:BoundColumn HeaderText="Dibujante" DataField="RealizadoPor" ItemStyle-CssClass="auto-width-column" />
                                                                                     <asp:BoundColumn HeaderText="Ped" DataField="CantidadOt" ItemStyle-CssClass="auto-width-column" />
-                                                                                     <asp:BoundColumn HeaderText="Ult.Pedido" ItemStyle-CssClass="auto-width-column" />
+                                                                                    <asp:BoundColumn HeaderText="Ult.Pedido" ItemStyle-CssClass="auto-width-column" />
                                                                                     <asp:BoundColumn HeaderText="Dis" DataField="CantidadRepeticiones" ItemStyle-CssClass="auto-width-column" />
-                                                                                     <asp:BoundColumn HeaderText="Ultimo Diseño" ItemStyle-CssClass="auto-width-column" />
-                                                                                     <asp:BoundColumn HeaderText="Total" DataField="Total" ItemStyle-CssClass="auto-width-column" />                            
+                                                                                    <asp:BoundColumn HeaderText="Ultimo Diseño" ItemStyle-CssClass="auto-width-column" />
+                                                                                    <asp:BoundColumn HeaderText="Total" DataField="Total" ItemStyle-CssClass="auto-width-column" />
                                                                                 </Columns>
                                                                             </asp:DataGrid>
 
                                                                             <asp:SqlDataSource runat="server" ID="SqlDataSource4" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
-                                                                                SelectCommand="sp_ResumenDibujante" SelectCommandType="StoredProcedure">
-                                                                                <SelectParameters>
-                                                                                    <asp:ControlParameter ControlID="DropDownList1" PropertyName="SelectedValue" Name="CodigoAsesor" Type="String" />
-                                                                                </SelectParameters>
-                                                                            </asp:SqlDataSource>
+                                                                                SelectCommand="sp_ResumenDibujante" SelectCommandType="StoredProcedure"></asp:SqlDataSource>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1115,7 +1155,7 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-12 mt-1">
-                                                        <asp:Button ID="Button10" runat="server" Text="Trabajar Pedido" CssClass="btn-outline-dark btn btn-white btn-sm btn" OnClick="Button10_Click"  />
+                                                        <asp:Button ID="Button10" runat="server" Text="Trabajar Pedido" CssClass="btn-outline-dark btn btn-white btn-sm btn" OnClick="Button10_Click" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -1128,13 +1168,21 @@
                                                     <div class="border rounded p-1 special-border" style="height: auto; min-height: 212px;">
                                                         <%-- DATAGRID--%>
                                                         <div class="table-responsive mb-2 gap-2" style="max-height: 212px; overflow-x: auto;">
-                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover" ID="DataGrid2" runat="server" DataSourceID="DataGridDiseño" AutoGenerateColumns="false"
+                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid2" runat="server" DataSourceID="DataGridDiseño" AutoGenerateColumns="false"
                                                                 OnItemDataBound="DataGrid2_ItemDataBound" OnItemCommand="DataGridDise_ItemCommand">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                 <Columns>
+                                                                     <asp:TemplateColumn>
+                                                                            <ItemTemplate>
+
+                                                                                <asp:LinkButton ID="lnkClie" runat="server" CommandName="Numero_Diseño"
+                                                                                    CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square text-white'></i>" OnClick="lnkClie_Click" />
+                                                                            </ItemTemplate>
+                                                                        </asp:TemplateColumn>
+
                                                                     <asp:TemplateColumn HeaderText="Turno" ItemStyle-CssClass="auto-width-column">
                                                                         <ItemTemplate>
-                                                                            <asp:LinkButton ID="lnkClie" runat="server" CommandName="Numero_Diseño" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Container.ItemIndex + 1 %>' CssClass="text-white text-decoration-none" OnClick="lnkClie_Click" />
+                                                                            <asp:LinkButton ID="lnkSelectRow" runat="server" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Container.ItemIndex + 1 %>' CssClass="text-white text-decoration-none text-dark"/>
                                                                         </ItemTemplate>
                                                                     </asp:TemplateColumn>
                                                                     <asp:BoundColumn DataField="Numero_Diseño" HeaderText="Diseño" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
@@ -1153,14 +1201,20 @@
                                                                     <asp:BoundColumn DataField="PasarACotizar" HeaderText="Nueva" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="TerminadoDibujo" HeaderText="Nueva" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Pausado" HeaderText="Pausado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                                    <asp:BoundColumn DataField="id_CiudadProyecto" HeaderText="Ciudad" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                                    <asp:BoundColumn DataField="Cedula" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                                     <asp:BoundColumn DataField="Urgente" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                                 </Columns>
                                                             </asp:DataGrid>
                                                             <asp:SqlDataSource runat="server" ID="DataGridDiseño" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
                                                                 SelectCommand="sp_ProBitacoraDise" SelectCommandType="StoredProcedure">
                                                                 <SelectParameters>
-                                                                    <asp:ControlParameter ControlID="DropDownList1" PropertyName="SelectedValue" Name="Asesor" Type="String"></asp:ControlParameter>
+
+                                                                    <asp:SessionParameter Name="Cedula" SessionField="CedulaLogeada" Type="String" DefaultValue="ValorPorDefecto" />
+
                                                                 </SelectParameters>
                                                             </asp:SqlDataSource>
+
 
                                                         </div>
                                                     </div>
@@ -1175,18 +1229,17 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-12 mt-1">
-                                                        <asp:Button ID="Button11" runat="server" Text="Trabajar Diseño" class="btn-outline-dark btn btn-white btn-sm btn animate__animated animate__pulse"/>
+                                                        <asp:Button ID="Button11" runat="server" Text="Trabajar Diseño" class="btn-outline-dark btn btn-white btn-sm btn animate__animated animate__pulse" />
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-12 mt-1">
-                                                    <asp:Button ID="Button14" runat="server" Text="Desprogramar" class="btn-outline-dark btn btn-white btn-sm btn animate__animated animate__pulse"/>
+                                                    <asp:Button ID="Button14" runat="server" Text="Desprogramar" class="btn-outline-dark btn btn-white btn-sm btn animate__animated animate__pulse" />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="row">
                                         <div class="col-10">
                                             <div class="container-fluid m-1">
@@ -1194,10 +1247,18 @@
                                                     <div class="border rounded p-1 special-border" style="height: auto; min-height: 212px;">
                                                         <%-- DATAGRID--%>
                                                         <div class="table-responsive mb-2 gap-2" style="max-height: 212px; overflow-x: auto;">
-                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover" ID="DataGridDiseños" runat="server"
+                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGridDiseños" runat="server"
                                                                 DataSourceID="DataGridDiseñosPorFecha" AutoGenerateColumns="false" OnItemDataBound="DataGrid3_ItemDataBound">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                 <Columns>
+                                                                      <asp:TemplateColumn>
+                                                                            <ItemTemplate>
+
+                                                                                <asp:LinkButton ID="lnkSelectRow" runat="server"
+                                                                                    CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square text-white'></i>" />
+                                                                            </ItemTemplate>
+                                                                        </asp:TemplateColumn>
+
                                                                     <asp:TemplateColumn HeaderText="Turno" ItemStyle-CssClass="auto-width-column">
                                                                         <ItemTemplate>
                                                                             <%# Container.ItemIndex + 1 %>
@@ -1213,11 +1274,18 @@
                                                                     <asp:BoundColumn DataField="Zona" HeaderText="Zona" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="SC_Imagenes" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="SC_Terminado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                                    <asp:BoundColumn DataField="SC_tiemporeal" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                                    <asp:BoundColumn DataField="SC_Presentacionppt" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                                    <asp:BoundColumn DataField="SC_Accesorios" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                                    <asp:BoundColumn DataField="SC_Ubicacion" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                                    <asp:BoundColumn DataField="Cedula" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                                 </Columns>
                                                             </asp:DataGrid>
                                                             <asp:SqlDataSource runat="server" ID="DataGridDiseñosPorFecha" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="sp_ProBitacoraShowCase" SelectCommandType="StoredProcedure">
                                                                 <SelectParameters>
-                                                                    <asp:ControlParameter ControlID="DropDownList1" PropertyName="SelectedValue" Name="Asesor" Type="String"></asp:ControlParameter>
+
+                                                                    <asp:SessionParameter Name="Cedula" SessionField="CedulaLogeada" Type="String" DefaultValue="ValorPorDefecto" />
+
                                                                 </SelectParameters>
                                                             </asp:SqlDataSource>
                                                         </div>
@@ -1228,12 +1296,12 @@
                                         <div class="col-2">
                                             <div class="row">
                                                 <div class="col-12 mt-1">
-                                                    <asp:Button ID="Button13" runat="server" Text="Trabajar ShowCase" class="btn-outline-dark btn btn-white btn-sm btn animate__animated animate__pulse"/>
+                                                    <asp:Button ID="Button13" runat="server" Text="Trabajar ShowCase" class="btn-outline-dark btn btn-white btn-sm btn animate__animated animate__pulse" />
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-12 mt-1">
-                                                    <asp:Button ID="Button12" runat="server" Text="Desprogramar" class="btn-outline-dark btn btn-white btn-sm btn animate__animated animate__pulse"/>
+                                                    <asp:Button ID="Button12" runat="server" Text="Desprogramar" class="btn-outline-dark btn btn-white btn-sm btn animate__animated animate__pulse" />
                                                 </div>
                                             </div>
                                         </div>
@@ -1245,10 +1313,18 @@
                                                     <div class="border rounded p-1 special-border" style="height: auto; min-height: 212px;">
                                                         <%-- DATAGRID--%>
                                                         <div class="table-responsive mb-2 gap-2" style="max-height: 212px; overflow-x: auto;">
-                                                            <asp:DataGrid CssClass="table table-bordered table-hover table-sm" ID="DataGridRender" runat="server"
+                                                            <asp:DataGrid CssClass="table table-bordered table-hover table-sm form-control-sm" ID="DataGridRender" runat="server"
                                                                 DataSourceID="DataGridRenderPorFechaYAsesor" AutoGenerateColumns="false" OnItemDataBound="DataGrid4_ItemDataBound">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                 <Columns>
+                                                                       <asp:TemplateColumn>
+                                                                            <ItemTemplate>
+
+                                                                                <asp:LinkButton ID="lnkSelectRow" runat="server"
+                                                                                    CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square text-white'></i>" OnClick="lnkSelectRowRender_Click" />
+                                                                            </ItemTemplate>
+                                                                        </asp:TemplateColumn>
+
                                                                     <asp:TemplateColumn HeaderText="Turno" ItemStyle-CssClass="auto-width-column">
                                                                         <ItemTemplate>
                                                                             <%# Container.ItemIndex + 1 %>
@@ -1262,11 +1338,17 @@
                                                                     <asp:BoundColumn DataField="RealizadoPor" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Zona" HeaderText="Zona" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="TerminadoRender" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                                    <asp:BoundColumn DataField="Pausado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                                    <asp:BoundColumn DataField="ProgramadoVentas" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                                    <asp:BoundColumn DataField="Cedula" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                                 </Columns>
+                                                               
                                                             </asp:DataGrid>
                                                             <asp:SqlDataSource runat="server" ID="DataGridRenderPorFechaYAsesor" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="sp_ProBitacoraRender" SelectCommandType="StoredProcedure">
                                                                 <SelectParameters>
-                                                                    <asp:ControlParameter ControlID="DropDownList1" PropertyName="SelectedValue" Name="Asesor" Type="String"></asp:ControlParameter>
+
+                                                                    <asp:SessionParameter Name="Cedula" SessionField="CedulaLogeada" Type="String" DefaultValue="ValorPorDefecto" />
+
                                                                 </SelectParameters>
                                                             </asp:SqlDataSource>
                                                         </div>
@@ -1277,12 +1359,12 @@
                                         <div class="col-2">
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <asp:Button ID="Button15" runat="server" Text="Trabajar Render" class="btn-outline-dark btn btn-white btn-sm btn animate__animated animate__pulse"/>
+                                                    <asp:Button ID="Button15" runat="server" Text="Trabajar Render" class="btn-outline-dark btn btn-white btn-sm btn animate__animated animate__pulse" />
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <asp:Button ID="Button16" runat="server" Text="Desprogramar" class="btn-outline-dark btn btn-white btn-sm btn animate__animated animate__pulse"/>
+                                                    <asp:Button ID="Button16" runat="server" Text="Desprogramar" class="btn-outline-dark btn btn-white btn-sm btn animate__animated animate__pulse" />
                                                 </div>
                                             </div>
                                         </div>
@@ -1298,341 +1380,121 @@
 
         </div>
 
+    
 
+        <div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="miModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="miModalLabel">Título del Modal</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal" id="miModalll" tabindex="-1" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Mensaje</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Falta llenar el campo: <span id="campoFaltante"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- Puedes agregar botones u opciones aquí si es necesario -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <div class="modal" id="miModalExito" tabindex="-1" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Mensaje</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Los datos se guardaron correctamente</p>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- Puedes agregar botones u opciones aquí si es necesario -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+          <div class="modal" id="miModalError" tabindex="-1" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Mensaje</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>No se guardaron los datos correctamente</p>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- Puedes agregar botones u opciones aquí si es necesario -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="miModalErrorAdj" tabindex="-1" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Mensaje</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>No se pudo encontrar el archivo</p>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- Puedes agregar botones u opciones aquí si es necesario -->
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </form>
 
 
 
 
+
     <script type="text/javascript">
-    function seleccionarArchivo() {
-        // Simulamos un clic en el control de carga de archivos
-        document.getElementById('fileUpload').click();
-    }
+        function mostrarTab() {
 
-    function mostrarNombreArchivo() {
-        // Obtenemos el nombre del archivo seleccionado
-        var fileInput = document.getElementById('fileUpload');
-        var textBox = document.getElementById('<%= TextBox2.ClientID %>');
+            var tabElementt = document.getElementById('Buscar-tab');
 
-        if (fileInput.files.length > 0) {
-            textBox.value = fileInput.files[0].name;
-        } else {
-            textBox.value = ''; // Si no se selecciona ningún archivo, vaciamos el TextBox
-        }
-    }
-</script>
+            // Verifica si el tab ya está visible
+            if (tabElementt.style.display === 'block') {
+                // Oculta el tab
+                tabElementt.style.display = 'none';
+            } else {
+                // Muestra el tab
+                tabElementt.style.display = 'block';
 
-
-
-
-    <%--<script>
-       
-        
-
-        var grabarButton = document.getElementById('<%= Grabar.ClientID %>');
-        var docBitacoraButton = document.getElementById('<%= DocBitacora.ClientID %>');
-        var regresarDiseñoButton = document.getElementById('<%= RegresarDiseño.ClientID %>');
-        var pausarDiseñoButton = document.getElementById('<%= PausarDiseño.ClientID %>');
-        var eliminarDiseñoButton = document.getElementById('<%= EliminarDiseño.ClientID %>');
-
-        // Obtener los elementos de enlace por sus IDs
-        var enlace = document.getElementById("NuevoDisBit");
-
-        var modificarLink = document.getElementById("Modificar");
-        var adicionarElementoLink = document.getElementById("AdicionarElemento");
-        var actualizarDisenoLink = document.getElementById("ActualizarDiseno");
-        var cancelarLink = document.getElementById("Cancelar");
-
-        var deshabilitarGrabar = true; // Cambia esto según tus condiciones
-        var deshabilitarDocBitacora = true; // Cambia esto según tus condiciones
-        var deshabilitarRegresarDiseño = true; // Cambia esto según tus condiciones
-        var deshabilitarPausarDiseño = true; // Cambia esto según tus condiciones
-        var deshabilitarEliminarDiseño = true; // Cambia esto según tus condiciones
-
-        // Comprobar si deseas deshabilitar los enlaces
-        var deshabilitarModificar = true; // Cambia esto según tus condiciones
-        var deshabilitarAdicionarElemento = true; // Cambia esto según tus condiciones
-        var deshabilitarActualizarDiseno = true; // Cambia esto según tus condiciones
-        var deshabilitarCancelar = true; // Cambia esto según tus condiciones
-        var deshabilitarEnlace = true; // Cambia esto según tus condiciones
-
-
-        if (deshabilitarGrabar) {
-            grabarButton.disabled = true;
-            grabarButton.classList.add("disabled");
-        }
-
-        function checkDisabled(linkButton) {
-            if (linkButton.disabled) {
-                return false; // Cancelar el clic si el LinkButton está deshabilitado
+                // Activa el tab
+                $('#Buscar-tab').tab('show');
             }
-            return true; // Dejar que el clic se procese si el LinkButton está habilitado
+
+
         }
 
-
-        if (deshabilitarDocBitacora) {
-            docBitacoraButton.disabled = true;
-            docBitacoraButton.classList.add("disabled");
-        }
-
-        if (deshabilitarRegresarDiseño) {
-            regresarDiseñoButton.disabled = true;
-            regresarDiseñoButton.classList.add("disabled");
-        }
-
-        if (deshabilitarPausarDiseño) {
-            pausarDiseñoButton.disabled = true;
-            pausarDiseñoButton.classList.add("disabled");
-        }
-
-        if (deshabilitarEliminarDiseño) {
-            eliminarDiseñoButton.disabled = true;
-            eliminarDiseñoButton.classList.add("disabled");
-        }
-
-        if (deshabilitarEnlace) {
-            // Deshabilitar el enlace
-            enlace.href = "javascript:void(0);";
-            // Cambiar el estilo del enlace cuando esté deshabilitado
-            enlace.classList.add("disabled");
-            // Evitar que el enlace sea clickeable
-            enlace.addEventListener("click", function (event) {
-                event.preventDefault();
-            });
-        }
-
-        if (deshabilitarModificar) {
-            modificarLink.href = "javascript:void(0);";
-            modificarLink.classList.add("disabled");
-            modificarLink.addEventListener("click", function (event) {
-                event.preventDefault();
-            });
-        }
-
-        if (deshabilitarAdicionarElemento) {
-            adicionarElementoLink.href = "javascript:void(0);";
-            adicionarElementoLink.classList.add("disabled");
-            adicionarElementoLink.addEventListener("click", function (event) {
-                event.preventDefault();
-            });
-        }
-
-        if (deshabilitarActualizarDiseno) {
-            actualizarDisenoLink.href = "javascript:void(0);";
-            actualizarDisenoLink.classList.add("disabled");
-            actualizarDisenoLink.addEventListener("click", function (event) {
-                event.preventDefault();
-            });
-        }
-
-        if (deshabilitarCancelar) {
-            cancelarLink.href = "javascript:void(0);";
-            cancelarLink.classList.add("disabled");
-            cancelarLink.addEventListener("click", function (event) {
-                event.preventDefault();
-            });
-        }
-
-        // Habilitar el elemento 'NuevoDisBit'
-        enlace.disabled = false;
-        enlace.classList.remove("disabled");
-
-        // Habilitar el elemento 'ActualizarDiseno'
-        actualizarDisenoLink.href = "#"; // Restaurar el enlace
-        actualizarDisenoLink.classList.remove("disabled");
-        actualizarDisenoLink.removeEventListener("click", function (event) {
-            event.preventDefault();
-        });
-
-        // Habilitar el elemento 'Cancelar'
-        cancelarLink.href = "#"; // Restaurar el enlace
-        cancelarLink.classList.remove("disabled");
-        cancelarLink.removeEventListener("click", function (event) {
-            event.preventDefault();
-        });
-
-        // Obtener el div por su identificador
-        var div = document.getElementById('miDiv');
-
-        // Deshabilitar el div
-        div.setAttribute('disabled', 'true');
-
-        // Deshabilitar todos los elementos secundarios del div
-        var elements = div.getElementsByTagName('*');
-        for (var i = 0; i < elements.length; i++) {
-            elements[i].setAttribute('disabled', 'true');
-        }
-
-       
-            
-            
     </script>
-
-
-
-   <script>
-
-       
-       // Obtener el elemento 'NuevoDisBit' por su ID
-       var nuevoDisBitLink = document.getElementById("NuevoDisBit");
-
-       // Obtener el elemento 'ActualizarDiseno' por su ID
-       var actualizarDisenoLink = document.getElementById("ActualizarDiseno");
-
-       // Obtener el LinkButton 'Grabar' por su ID
-       var grabarButton = document.getElementById("<%= Grabar.ClientID %>");
-
-       // Obtener el elemento 'Cancelar' por su ID
-       var cancelarLink = document.getElementById("Cancelar");
-
-       // Obtener el div 'miDiv' por su ID
-       var miDiv = document.getElementById("miDiv");
-
-       // Agregar un controlador de eventos para el clic en 'NuevoDisBit'
-       nuevoDisBitLink.addEventListener("click", function (event) {
-           event.preventDefault(); // Evitar que el enlace se comporte normalmente
-
-           // 1. Deshabilitar el elemento 'NuevoDisBit'
-           nuevoDisBitLink.disabled = true;
-           nuevoDisBitLink.classList.add("disabled");
-
-           // 2. Deshabilitar el elemento 'ActualizarDiseno'
-           actualizarDisenoLink.disabled = true;
-           actualizarDisenoLink.classList.add("disabled");
-
-           // 3. Habilitar el LinkButton 'Grabar'
-           grabarButton.disabled = false;
-           grabarButton.classList.remove("disabled");
-
-           // 4. Habilitar el elemento 'Cancelar'
-           cancelarLink.disabled = false;
-           cancelarLink.classList.remove("disabled");
-
-           // 5. Habilitar el div 'miDiv'
-           miDiv.disabled = false;
-
-           // También puedes deshabilitar los elementos secundarios del div 'miDiv' si es necesario
-           var elements = miDiv.getElementsByTagName("*");
-           for (var i = 0; i < elements.length; i++) {
-               elements[i].disabled = false;
-           }
-
-           lblNumDise.innerText = "Por Definir";
-
-           // Obtener el label 'lblCotizar' por su ID
-           var labelCotizar = document.getElementById("<%= lblCotizar.ClientID %>");
-
-           labelCotizar.style.color = "red";
-           labelCotizar.style.fontWeight = "bold";
-       });
-
-       // Obtener el elemento 'NuevoDisBit' por su ID
-       var nuevoDisBitLink = document.getElementById("NuevoDisBit");
-
-       // Obtener el elemento 'ActualizarDiseno' por su ID
-       var actualizarDisenoLink = document.getElementById("ActualizarDiseno");
-
-       // Obtener el LinkButton 'Grabar' por su ID
-       var grabarButton = document.getElementById("<%= Grabar.ClientID %>");
-
-        // Obtener el elemento 'Cancelar' por su ID
-        var cancelarLink = document.getElementById("Cancelar");
-
-        // Obtener el div 'miDiv' por su ID
-        var miDiv = document.getElementById("miDiv");
-
-        // Agregar un controlador de eventos para el clic en 'Cancelar'
-        cancelarLink.addEventListener("click", function (event) {
-            event.preventDefault(); // Evitar que el enlace se comporte normalmente
-
-            if (!grabarButton.disabled) {
-                // 1. Deshabilitar el div 'miDiv'
-                miDiv.disabled = true;
-
-                // También puedes deshabilitar los elementos secundarios del div 'miDiv' si es necesario
-                var elements = miDiv.getElementsByTagName("*");
-                for (var i = 0; i < elements.length; i++) {
-                    elements[i].disabled = true;
-                }
-
-                // 1. Habilitar nuevamente el elemento 'NuevoDisBit'
-                nuevoDisBitLink.disabled = false;
-                nuevoDisBitLink.classList.remove("disabled");
-
-                // 2. Deshabilitar el LinkButton 'Grabar'
-                grabarButton.disabled = true;
-                grabarButton.classList.add("disabled");
-
-                // 3. Habilitar el elemento 'ActualizarDiseno'
-                actualizarDisenoLink.disabled = false;
-                actualizarDisenoLink.classList.remove("disabled");
-
-            }
-            
-
-            var labelCotizar = document.getElementById("<%= lblCotizar.ClientID %>");
-            labelCotizar.style.color = "black"; // Restaurar el color original (negro)
-            labelCotizar.style.fontWeight = "normal"; // Restaurar el peso de la fuente original (sin negrita)
-
-            lblNumDise.innerText = "Número";
-
-
-        });
-       
-   </script>
-
-   
-    <script type="text/javascript">
-        function disableElements() {
-            var elements = document.getElementsByClassName('disabled-action');
-            for (var i = 0; i < elements.length; i++) {
-                elements[i].setAttribute('disabled', 'disabled');
-                elements[i].classList.add('disabled'); // Agregar una clase 'disabled' para cambiar el estilo si es necesario.
-            }
-
-        }
-       
-
-        function checkDisabled(sender) {
-            if (sender.getAttribute('disabled') === 'disabled') {
-                alert('Los elementos están deshabilitados.');
-                return false; // Impedir la acción si los elementos están deshabilitados.
-            }
-            return true; // Permitir la acción si los elementos no están deshabilitados.
-        }
-    </script>
-
-    
-
-    <script>
-        // Obtén los LinkButton por su clase CSS
-        var linkButtons = document.querySelectorAll('.disabled-action');
-
-        linkButtons.forEach(function (linkButton) {
-            linkButton.addEventListener("click", function (event) {
-                if (linkButton.getAttribute('data-enabled') === 'false') {
-                    event.preventDefault(); // Evitar el postback si el botón está deshabilitado
-                }
-            });
-        });
-    </script>
-
-    --%>
-
-
-
-<script type="text/javascript">
-    function mostrarTab() {
-        // Cambia el estilo del tab para hacerlo visible
-        document.getElementById('Buscar-tab').style.display = 'block';
-
-        // Activa el tab
-        $('#Buscar-tab').tab('show');
-    }
- 
-</script>
 
     <script>
         function abrirOtraPestaña() {
@@ -1641,9 +1503,12 @@
         }
     </script>
 
-  
 
 
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>
