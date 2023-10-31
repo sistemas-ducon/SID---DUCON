@@ -153,6 +153,7 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Formularios\Administrativo\EstadisticasVentas.aspx" />
+    <Content Include="Formularios\OrdenTrabajo.aspx" />
     <Content Include="Formularios\OTs.aspx" />
     <Content Include="Formularios\SuccessMessage.aspx" />
     <Content Include="Formularios\Ventas\AdjuntarDocumentos.aspx" />
@@ -190,6 +191,7 @@
     <Content Include="Recursos\CSS\Inicio.css" />
     <Content Include="Recursos\CSS\login.css" />
     <Content Include="Formularios\Login.aspx" />
+    <Content Include="Recursos\CSS\OrdenTrabajo.css" />
     <Content Include="Recursos\CSS\Ventas\AdjuntarDocumento.css" />
     <Content Include="Recursos\CSS\Ventas\Clientes.css" />
     <Content Include="Recursos\CSS\Ventas\Consulta_Cotizacion.css" />
@@ -231,6 +233,13 @@
     </Compile>
     <Compile Include="Formularios\Administrativo\EstadisticasVentas.aspx.designer.cs">
       <DependentUpon>EstadisticasVentas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\OrdenTrabajo.aspx.cs">
+      <DependentUpon>OrdenTrabajo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\OrdenTrabajo.aspx.designer.cs">
+      <DependentUpon>OrdenTrabajo.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\OTs.aspx.cs">
       <DependentUpon>OTs.aspx</DependentUpon>
