@@ -375,6 +375,7 @@
                                                 <asp:TextBox ID="tbVenta" type="date" class="form-control" runat="server"></asp:TextBox>
                                             </div>
                                         </div>
+
                                         <div class="col-6">
                                             <div class="input-group input-group-sm mb-2 gap-2">
                                                 <label class="form-label" runat="server" id="inputOkVenta">Ok.Venta</label>
@@ -402,6 +403,7 @@
                                     </div>
 
                                     <div class="row">
+
                                         <div class="col-6">
                                             <div class="input-group input-group-sm mb-2 gap-2">
                                                 <label class="form-label" runat="server" id="inputEmpaque">Empaque</label>
@@ -473,7 +475,6 @@
                                         </div>
                                     </div>
 
-
                                     <div class="col-6">
                                         <!-- Esta Coluna se Puede ultilzar-->
 
@@ -482,6 +483,7 @@
                                 </div>
 
                                 <div class="row">
+
                                     <div class="col-5">
                                         <div class="input-group input-group-sm mb-2 gap-4">
                                             <asp:Button class="btn btn-outline-secondary" Text="Plano+" runat="server" type="button" disabled="disabled"></asp:Button>
@@ -755,6 +757,7 @@
                                 </div>
 
                                 <div class="Div_Grid">
+
                                     <div class="izquierda">
                                         <label>
                                             Venta
@@ -763,7 +766,6 @@
                                     </div>
 
                                     <div class=" container-fluid ">
-
                                         <div class="row justify-content-center m-1 p-1">
                                             <div class="border rounded p-2 m-2">
                                                 <div class="row">
@@ -802,7 +804,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
 
                                     <div class="derecha">
@@ -832,6 +833,7 @@
                                     <asp:Button ID="btnSaldo" runat="server" Text="Saldo" class="bi bf " disabled="true" />
                                     <asp:TextBox type="text" class="form-control text-end" runat="server" ID="txtSaldo"></asp:TextBox>
                                 </div>
+
                                 <div class="Info1">
                                     <asp:Button ID="btnVenta" runat="server" Text="Venta" class="bi bf " disabled="true" />
                                     <asp:TextBox type="text" class="form-control text-end" runat="server" ID="txtVenta"></asp:TextBox>
@@ -1429,7 +1431,7 @@
 
                                     <div class="col-3 ">
                                         <div class="input-group input-group-sm gap-4 d-flex ">
-                                            <asp:Label CssClass="fw-bold fs-6" ID="lbDipLa3" class="form-label" Text="Dip. LA" runat="server"></asp:Label>
+                                            <asp:Label CssClass="fw-bold fs-6" ID="lbDipLa3" class="form-label" Text="Dip. LB" runat="server"></asp:Label>
                                             <asp:Label CssClass="fw-bold fs-6" ID="ValorlbDipLa3" class="form-label" runat="server">0</asp:Label>
 
                                         </div>
@@ -1479,6 +1481,7 @@
 
 
                             </div>
+
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </div>
@@ -1625,7 +1628,7 @@
             // Código para cerrar el modal después de 2 segundos
             setTimeout(function () {
                 myModal.hide();
-            }, 2000);
+            }, 1000);
         }
     </script>
 

@@ -8,6 +8,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -479,7 +480,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 DataTable dataTable = new DataTable();
                 adapter.Fill(dataTable);
 
-
+                StringBuilder resumen = new StringBuilder();
                 var gruposUnicos = dataTable.AsEnumerable().Select(r => r.Field<string>("Descripcion_Grupo")).Distinct();
 
                 List<DatosFiltrados> datosFiltradosList = new List<DatosFiltrados>();
@@ -487,6 +488,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 foreach (var grupo in gruposUnicos)
                 {
+
+                    if (resumen.Length > 0)
+                    {
+                        resumen.Append(" - ");
+                    }
+
+                    int sumaCantidad = dataTable.AsEnumerable()
+                        .Where(r => r.Field<string>("Descripcion_Grupo") == grupo)
+                        .Sum(r => Convert.ToInt32(r["Cantidad"]));
+
+                    resumen.Append(grupo.Substring(0, 3) + " (" + sumaCantidad + ")");
+
 
                     datosFiltradosList.Add(new DatosFiltrados { Tipo = "Titulo", Titulo = "<b>" + grupo });
 
@@ -501,7 +514,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         ValorUnd = r["Precio_Venta"].ToString(),
                         SubTotal = (Convert.ToDecimal(r["Cantidad"]) * Convert.ToDecimal(r["Precio_Venta"])).ToString(),
                         Id_Panel = r["Id_Panel"].ToString()
+
+
+                        
                     });
+
+                    
 
                     datosFiltradosList.AddRange(datosFiltrados);
 
@@ -510,6 +528,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
                 }
+
+
+                // Agregar el resumen al del plano 
+                txResumen.InnerText = resumen.ToString();
 
                 decimal totalGeneral = datosFiltradosList.Where(d => d.Tipo != "Titulo" && d.Tipo != "Total").Sum(d => Convert.ToDecimal(d.SubTotal));
                 decimal Cantidad = datosFiltradosList.Where(d => d.Tipo != "Titulo" && d.Tipo != "Total").Sum(d => Convert.ToDecimal(d.Cantidad));
@@ -566,6 +588,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 e.Item.CssClass = "fila-seleccionada";
                 string ID = row.Cells[2].Text;
                 string Descri = row.Cells[9].Text;
+                string Ancho = row.Cells[5].Text;
 
                 LlenarDataGridObjeto(ID);
 
@@ -573,9 +596,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
                 // Se envia la descripcion como parametro de busqueda al tap objetos  y se refresca el panel deobjetos 
-
+                txtCantidad.Text = Ancho;
                 tbCriterio.Text = Descri;
                 PanelObjeto.Update();
+
+                btnCambiar.Enabled = true;
+                btnCambiar.CssClass = "btn btn-outline-secondary";
 
             }
         }
@@ -663,6 +689,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BuscarObjeto(object sender, EventArgs e)
         {
+
+
             if (chxBloques.Checked == true)
             {
                 if (rbObjeto.SelectedValue == "Objeto")
@@ -697,9 +725,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             }
-
+  
             DataGridModuloObjetos.DataBind();
-
+            lbTituloObjeto.Text = "Descripcion Objeto";
+            ValorlbDipLa2.Text = "0 Cms";
+            ValorlbDipLa3.Text = "0 Cms";
         }
 
         protected void DataGridObtenerDatosObjetos_ItemDataBound(object sender, DataGridItemEventArgs e)
@@ -743,7 +773,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 e.Item.CssClass = "fila-seleccionada";
 
                 string Id_Panel = row.Cells[8].Text;
+                string descrip = row.Cells[2].Text;
+                string Altura = row.Cells[4].Text;
                 LlenarDataGridModuloObjeto(Id_Panel);
+
+
+                lbTituloObjeto.Text = descrip;
+
+                ValorlbDipLa2.Text = Altura + " Cms";
+                ValorlbDipLa3.Text = Altura + " Cms";
 
             }
         }
