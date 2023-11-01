@@ -101,7 +101,7 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 300px; overflow-x: auto;">
-                                                <asp:DataGrid Class="table table-bordered table-sm table-hover" ID="DataGrid1" runat="server"
+                                                <asp:DataGrid Class="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid1" runat="server"
                                                     DataSourceID="DataGridConsultaCotizaciones" AutoGenerateColumns="false" OnPreRender="DataGridPorVendedor_PreRender">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                     <Columns>
@@ -142,7 +142,7 @@
                                 <div class="border rounded p-3" style="height: 200px">
 
                                     <div class="table-responsive">                                  
-                                    <table class="table table-sm table-hover table-bordered">
+                                    <table class="table table-sm table-hover table-bordered form-control-sm">
                                         <thead class="thead-light">
                                             <tr>
                                                 <th style="white-space: nowrap;">Estado</th>
@@ -275,7 +275,7 @@
                                 <div class="col-12">
                                     <div class="table-responsive mb-2 gap-2" style="max-height: 300px; overflow-x: auto;">
 
-                                        <asp:DataGrid Class="table table-bordered table-sm table-hover" ID="DataGrid2" runat="server" DataSourceID="DataGridPorEstado" AutoGenerateColumns="false" OnPreRender="DataGridPorEstado_PreRender">
+                                        <asp:DataGrid Class="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid2" runat="server" DataSourceID="DataGridPorEstado" AutoGenerateColumns="false" OnPreRender="DataGridPorEstado_PreRender">
                                              <HeaderStyle Font-Bold="true" CssClass="datagrid-header auto-width-column" />
                                             <Columns>
                                                 <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
@@ -317,7 +317,7 @@
                                 <div class="border rounded p-3" style="height: 200px">
 
                                     <div class="table-responsive">                                  
-                                    <table class="table table-sm table-hover table-bordered" id="Table1">
+                                    <table class="table table-sm table-hover table-bordered form-control-sm" id="Table1">
                                         <thead class="thead-light">
                                             <tr>
                                                 <th style="white-space: nowrap;">Asesor Comercial</th>
@@ -448,7 +448,7 @@
                                         <div class="col-10">
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 400px; overflow-x: auto;">
 
-                                                <asp:DataGrid Class="table table-bordered table-sm table-hover" ID="DataGrid3" runat="server" DataSourceID="DataGridSeguimiento" AutoGenerateColumns="false">
+                                                <asp:DataGrid Class="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid3" runat="server" DataSourceID="DataGridSeguimiento" AutoGenerateColumns="false">
                                                      <HeaderStyle Font-Bold="true" CssClass="datagrid-header auto-width-column" />
                                                     <Columns>
                                                         <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
@@ -609,7 +609,7 @@
                                 <div class="border rounded p-3">
                                     <div class="col-12">
                                         <div class="table-responsive mb-2 gap-2" style="max-height: 400px; overflow-x: auto;">
-                                            <asp:DataGrid CssClass="table table-sm table-bordered table-hover" ID="DataGrid4" runat="server" DataSourceID="DataGridUltimoContacto" OnRowCommand="DataGrid4_RowCommand" AutoGenerateColumns="false">
+                                            <asp:DataGrid CssClass="table table-sm table-bordered table-hover form-control-sm" ID="DataGrid4" runat="server" DataSourceID="DataGridUltimoContacto" OnRowCommand="DataGrid4_RowCommand" AutoGenerateColumns="false">
                                                  <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                 <Columns>
                                                     <asp:BoundColumn DataField="uccNit" HeaderText="Nit" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>

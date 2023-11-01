@@ -158,12 +158,12 @@
                                             <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                             <Columns>
                                                 <asp:TemplateColumn>
-                                                                            <ItemTemplate>
+                                                    <ItemTemplate>
 
-                                                                                <asp:LinkButton ID="lnkCliee" runat="server" CommandName="Numero_Diseño"
-                                                                                    CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square text-white'></i>" OnClick="lnkCliee_Click" />
-                                                                            </ItemTemplate>
-                                                                        </asp:TemplateColumn>
+                                                        <asp:LinkButton ID="lnkCliee" runat="server" CommandName="Numero_Diseño"
+                                                            CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square text-white'></i>" OnClick="lnkCliee_Click" />
+                                                    </ItemTemplate>
+                                                </asp:TemplateColumn>
                                                 <asp:TemplateColumn HeaderText="Turno" ItemStyle-CssClass="auto-width-column">
                                                     <ItemTemplate>
                                                         <asp:LinkButton ID="lnkSelectRow" runat="server" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Container.ItemIndex + 1 %>' CssClass="text-white text-decoration-none" />
@@ -181,11 +181,11 @@
                                                 <asp:BoundColumn DataField="TerminadoDibujo" HeaderText="Nueva" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="Pausado" HeaderText="Pausado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="CotizaciónOK" HeaderText="CotizaciónOK" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
-                                                 <asp:BoundColumn DataField="Cedula" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                <asp:BoundColumn DataField="Cedula" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                             </Columns>
                                         </asp:DataGrid>
                                         <asp:SqlDataSource runat="server" ID="SqlDataSourceFecha" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
-                                            SelectCommand="SELECT A.CotizaciónOK, A.ProgramadoVentas, A.PasarACotizar, A.TerminadoDibujo, A.Pausado, A.Numero_Diseño, A.Nombre_Diseño,  A.Asesor, A.Fecha_Ingreso, A.Fecha_Programada_Entrega, A.UltimaActivacion, A.Cliente FROM tblDiseño A INNER JOIN tblAsesorComercial B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor WHERE A.Fecha_Ingreso BETWEEN @FechaInicio AND @FechaFin AND B.Cedula = @Cedula">
+                                            SelectCommand="SELECT A.CotizaciónOK, A.ProgramadoVentas, A.PasarACotizar, A.TerminadoDibujo, A.Pausado, A.Numero_Diseño, A.Nombre_Diseño,  A.Asesor, A.Fecha_Ingreso, A.Fecha_Programada_Entrega, A.UltimaActivacion, A.Cliente, B.Cedula FROM tblDiseño A INNER JOIN tblAsesorComercial B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor WHERE A.Fecha_Ingreso BETWEEN @FechaInicio AND @FechaFin AND B.Cedula = @Cedula">
                                             <SelectParameters>
                                                 <asp:ControlParameter Name="FechaInicio" ControlID="TextFechDeIng" PropertyName="Text" />
                                                 <asp:ControlParameter Name="FechaFin" ControlID="Texty" PropertyName="Text" />
@@ -194,7 +194,7 @@
                                         </asp:SqlDataSource>
 
                                         <asp:SqlDataSource runat="server" ID="SqlDataSourceNumeroDis" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
-                                            SelectCommand="SELECT A.CotizaciónOK, A.ProgramadoVentas, A.PasarACotizar, A.TerminadoDibujo, A.Pausado, A.Numero_Diseño, A.Nombre_Diseño,  A.Asesor, A.Fecha_Ingreso, A.Fecha_Programada_Entrega, A.UltimaActivacion, A.Cliente FROM tblDiseño A INNER JOIN tblAsesorComercial B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor WHERE A.Numero_Diseño = @NumeroDis AND B.Cedula = @Cedula">
+                                            SelectCommand="SELECT A.CotizaciónOK, A.ProgramadoVentas, A.PasarACotizar, A.TerminadoDibujo, A.Pausado, A.Numero_Diseño, A.Nombre_Diseño,  A.Asesor, A.Fecha_Ingreso, A.Fecha_Programada_Entrega, A.UltimaActivacion, A.Cliente, B.Cedula FROM tblDiseño A INNER JOIN tblAsesorComercial B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor WHERE A.Numero_Diseño = @NumeroDis AND B.Cedula = @Cedula">
                                             <SelectParameters>
                                                 <asp:ControlParameter Name="NumeroDis" ControlID="TextBox3" PropertyName="Text" />
                                                 <asp:SessionParameter Name="Cedula" SessionField="CedulaLogeada" Type="String" />
@@ -202,7 +202,7 @@
                                         </asp:SqlDataSource>
 
                                         <asp:SqlDataSource runat="server" ID="SqlDataSourceNombreDiseño" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
-                                            SelectCommand="SELECT A.CotizaciónOK, A.ProgramadoVentas, A.PasarACotizar, A.TerminadoDibujo, A.Pausado, A.Numero_Diseño, A.Nombre_Diseño, A.Asesor, A.Fecha_Ingreso, A.Fecha_Programada_Entrega, A.UltimaActivacion, A.Cliente FROM tblDiseño A INNER JOIN tblAsesorComercial B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor WHERE A.Nombre_Diseño LIKE '%' + @NombreDiseño + '%' AND B.Cedula = @Cedula">
+                                            SelectCommand="SELECT A.CotizaciónOK, A.ProgramadoVentas, A.PasarACotizar, A.TerminadoDibujo, A.Pausado, A.Numero_Diseño, A.Nombre_Diseño, A.Asesor, A.Fecha_Ingreso, A.Fecha_Programada_Entrega, A.UltimaActivacion, A.Cliente, B.Cedula FROM tblDiseño A INNER JOIN tblAsesorComercial B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor WHERE A.Nombre_Diseño LIKE '%' + @NombreDiseño + '%' AND B.Cedula = @Cedula">
                                             <SelectParameters>
                                                 <asp:ControlParameter Name="NombreDiseño" ControlID="TextBox5" PropertyName="Text" />
                                                 <asp:SessionParameter Name="Cedula" SessionField="CedulaLogeada" Type="String" />
@@ -210,7 +210,7 @@
                                         </asp:SqlDataSource>
 
                                         <asp:SqlDataSource runat="server" ID="SqlDataSourceCliente" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
-                                            SelectCommand="SELECT A.CotizaciónOK, A.ProgramadoVentas, A.PasarACotizar, A.TerminadoDibujo, A.Pausado, A.Numero_Diseño, A.Nombre_Diseño,  A.Asesor, A.Fecha_Ingreso, A.Fecha_Programada_Entrega, A.UltimaActivacion, A.Cliente FROM tblDiseño A INNER JOIN tblAsesorComercial B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor WHERE A.Cliente LIKE '%' + @Cliente + '%' AND B.Cedula = @Cedula">
+                                            SelectCommand="SELECT A.CotizaciónOK, A.ProgramadoVentas, A.PasarACotizar, A.TerminadoDibujo, A.Pausado, A.Numero_Diseño, A.Nombre_Diseño,  A.Asesor, A.Fecha_Ingreso, A.Fecha_Programada_Entrega, A.UltimaActivacion, A.Cliente, B.Cedula FROM tblDiseño A INNER JOIN tblAsesorComercial B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor WHERE A.Cliente LIKE '%' + @Cliente + '%' AND B.Cedula = @Cedula">
                                             <SelectParameters>
                                                 <asp:ControlParameter Name="Cliente" ControlID="TextBox4" PropertyName="Text" />
                                                 <asp:SessionParameter Name="Cedula" SessionField="CedulaLogeada" Type="String" />
