@@ -154,7 +154,6 @@
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Formularios\Administrativo\EstadisticasVentas.aspx" />
     <Content Include="Formularios\FormExtPrin\AcabadosOT.aspx" />
-    <Content Include="Formularios\FormExtPrin\ObjetoDespiece.aspx" />
     <Content Include="Formularios\FormExtPrin\ObservacionesOT.aspx" />
     <Content Include="Formularios\FormExtPrin\OTsPendientes.aspx" />
     <Content Include="Formularios\OrdenTrabajo.aspx" />
@@ -192,7 +191,6 @@
     <Content Include="Recursos\CSS\DiseñoYDesarrollo\Objetos.css" />
     <Content Include="Recursos\CSS\DiseñoYDesarrollo\Plano.css" />
     <Content Include="Recursos\CSS\FormExtPrin\AcabadosOT.css" />
-    <Content Include="Recursos\CSS\FormExtPrin\ObjetoDespiece.css" />
     <Content Include="Recursos\CSS\FormExtPrin\ObservacionesOT.css" />
     <Content Include="Recursos\CSS\frmPrincipal.css" />
     <Content Include="Recursos\CSS\Inicio.css" />
@@ -247,13 +245,6 @@
     </Compile>
     <Compile Include="Formularios\FormExtPrin\AcabadosOT.aspx.designer.cs">
       <DependentUpon>AcabadosOT.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Formularios\FormExtPrin\ObjetoDespiece.aspx.cs">
-      <DependentUpon>ObjetoDespiece.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Formularios\FormExtPrin\ObjetoDespiece.aspx.designer.cs">
-      <DependentUpon>ObjetoDespiece.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\FormExtPrin\ObservacionesOT.aspx.cs">
       <DependentUpon>ObservacionesOT.aspx</DependentUpon>
