@@ -753,6 +753,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.DataGrid DataGridDespacho;
 
         /// <summary>
+        /// Control obtenerInfoDespacho.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource obtenerInfoDespacho;
+
+        /// <summary>
+        /// Control InfoDespachos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource InfoDespachos;
+
+        /// <summary>
         /// Control txObs2.
         /// </summary>
         /// <remarks>
@@ -1776,7 +1794,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnDespiece;
+        protected global::System.Web.UI.WebControls.LinkButton btnDespiece;
 
         /// <summary>
         /// Control lbDipLa2.
