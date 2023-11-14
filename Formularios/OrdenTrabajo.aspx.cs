@@ -32,7 +32,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
-            {
+            {  
+                
                 Session["CargarOTsEjecutada"] = null;
 
                 habilitarbotones();          
