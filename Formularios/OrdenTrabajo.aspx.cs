@@ -1137,6 +1137,32 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        protected void DataGridDespacho_ItemDataBound(object sender, DataGridItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+
+                int DespachoInterno = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "DespachoInterno"));
+                int DespachoCoordinado = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "DespachoCoordinado"));
+                int Terminado_despacho = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "Terminado_despacho"));
+                int Entregado_Transporte = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "Entregado_Transporte"));
+
+                TableCell cell = e.Item.Cells[1];
+                cell.Text = (DespachoInterno == 1) ? "Si" : "No";
+
+                TableCell cell2 = e.Item.Cells[2];
+                cell2.Text = (DespachoCoordinado == 1) ? "Si" : "No";
+
+                TableCell cell3 = e.Item.Cells[5];
+                cell3.Text = (Terminado_despacho == 1) ? "Si" : "No";
+
+                TableCell cell4 = e.Item.Cells[7];
+                cell4.Text = (Entregado_Transporte == 1) ? "Si" : "No";
+
+
+            }
+        }
+
 
 
         // Logica Tap de Objetos 
@@ -1193,14 +1219,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 int OK = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "Chequeado"));
                 int Activo = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "Activo"));
+                int Esc = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "Escalable"));
 
                 TableCell cell = e.Item.Cells[10];
                 cell.Text = (OK == 1) ? "Si" : "No";
 
                 TableCell cell1 = e.Item.Cells[17];
-                cell.Text = (Activo == 1) ? "Si" : "No";
+                cell1.Text = (Activo == 1) ? "Si" : "No";
 
-           
+                TableCell cell2 = e.Item.Cells[18];
+                cell2.Text = (Esc == 1) ? "Si" : "No";
+
+
 
 
             }
@@ -1210,37 +1240,77 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
 
             if (e.CommandName == "VerObjetoDet")
-            {
-                int rowIndex = Convert.ToInt32(e.CommandArgument);
-                DataGridItem row = DataGridObjetos.Items[rowIndex];
-
-
-                foreach (DataGridItem item in DataGridObjetos.Items)
+                if (e.CommandName == "VerObjetoDet")
                 {
-                    if (item != row)
+                    int rowIndex = Convert.ToInt32(e.CommandArgument);
+                    DataGridItem row = DataGridObjetos.Items[rowIndex];
+
+
+                    foreach (DataGridItem item in DataGridObjetos.Items)
                     {
-                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                        if (item != row)
+                        {
+                            item.CssClass = "";
+                        }
                     }
+
+                    e.Item.CssClass = "fila-seleccionada";
+
+                    // Variable de Session para consultar informacion del modulo en la pagina Despiece 
+                    string Id_PanelNum = row.Cells[8].Text;
+                    Session["Id_PanelNum_Session"] = Id_PanelNum;
+
+                    // Variable de Session para consultar Campos del objeto en la pagina despiece 
+                    string Id_Objeto = row.Cells[1].Text;
+                    Session["Id_ObjetoSession"] = Id_Objeto;
+
+
+                    string ValorVenta = row.Cells[6].Text;
+                    Session["ValorVentaSession"] = ValorVenta;
+
+
+                    string descrip = row.Cells[2].Text;
+                    string Altura = row.Cells[4].Text;
+
+
+
+                    LlenarDataGridModuloObjeto(Id_PanelNum);
+
+                    lbTituloObjeto.Text = descrip;
+                    ValorlbDipLa2.Text = Altura + " Cms";
+                    ValorlbDipLa3.Text = Altura + " Cms";
+
+
+
+
+
                 }
-
-                //se usa Para darle un color a la fila seleccionada  anderson
-                e.Item.CssClass = "fila-seleccionada";
-
-                string Id_Panel = row.Cells[8].Text;
-                string descrip = row.Cells[2].Text;
-                string Altura = row.Cells[4].Text;
-                LlenarDataGridModuloObjeto(Id_Panel);
+        }
 
 
-                lbTituloObjeto.Text = descrip;
+        protected void DataGridModuloObjeto_ItemDataBound(object sender, DataGridItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
 
-                ValorlbDipLa2.Text = Altura + " Cms";
-                ValorlbDipLa3.Text = Altura + " Cms";
+                int Chequeado = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "Chequeado"));
+
+                TableCell cell = e.Item.Cells[4];
+                cell.Text = (Chequeado == 1) ? "Si" : "No";
+
+
+
 
             }
         }
 
-       
+
+        protected void Reedireccion_ObjetoDespiece(object sender, EventArgs e)
+        {
+            string url = "FormExtPrin/ObjetoDespiece.aspx";
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+        }
 
     }
 }

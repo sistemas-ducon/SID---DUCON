@@ -41,14 +41,13 @@
 }
 
 .Obs1 {
-    width: 58rem;
+    width: 50%;
 }
 
 .Der {
-    width: 58rem;
-    margin-left: 3rem;
+    width: 50%;
+    margin-left: 1.2em;
 }
-
 
 /* Estilo para el encabezado del DataGrid */
 .datagrid-header {

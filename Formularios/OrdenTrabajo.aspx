@@ -369,7 +369,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <div class=" input-group-sm  mb-2 gap-2">
-                                            <textarea class="form-control form-control-sm" id="txObs1" runat="server" cols="20" rows="8" disabled="disabled"></textarea>
+                                            <textarea class="form-control form-control-sm" id="txObs1" runat="server" cols="20" rows="10" disabled="disabled"></textarea>
 
                                         </div>
                                     </div>
@@ -434,19 +434,43 @@
 
                                 </div>
 
-                                <div class="Abajo">
+                                <div class=" Abajo">
                                     <div class="row justify-content-center">
-                                        <div class="border rounded p-0" style="margin-right: 2rem">
+                                        <div class="border rounded">
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <div class="table-responsive mb-1 " style="max-height: 10rem; overflow-x: auto;">
-                                                        <h5 class="datagrid-header text-center">Despacho</h5>
-                                                        <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGridDespacho" runat="server">
+                                                    <div class="table-responsive" style="max-height: 8rem; max-width: auto; overflow-x: auto;">
+                                                        <h6 class="datagrid-header text-center">Despacho</h6>
+                                                        <asp:DataGrid CssClass="table table-bordered custom-grid table-hover custom-data-grid form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDespacho" runat="server" DataSourceID="obtenerInfoDespacho" OnItemDataBound="DataGridDespacho_ItemDataBound">
                                                             <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                             <Columns>
+                                                                <asp:TemplateColumn HeaderText="...">
+                                                                    <ItemTemplate>
+                                                                        <asp:LinkButton ID="lnkDespacho" runat="server" CommandName="Ver" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateColumn>
+
+
+                                                                <asp:BoundColumn DataField="DespachoInterno" HeaderText="DI" ItemStyle-CssClass="auto-width-column" DataFormatString="{0:Si;No}" />
+                                                                <asp:BoundColumn DataField="DespachoCoordinado" HeaderText="Coor" ItemStyle-CssClass="auto-width-column" DataFormatString="{0:Si;No}" />
+                                                                <asp:BoundColumn DataField="FechaDespachoCoordinado" HeaderText="Coordinado el" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Fecha_Despacho" HeaderText="F. Despacho" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Terminado_despacho" HeaderText="Despachado" ItemStyle-CssClass="auto-width-column" DataFormatString="{0:Si;No}" />
+                                                                <asp:BoundColumn DataField="FechaRealDespacho" HeaderText="F. Real Despacho" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Entregado_Transporte" HeaderText="Entregado" ItemStyle-CssClass="auto-width-column" DataFormatString="{0:Si;No}" />
+                                                                <asp:BoundColumn DataField="Fecha_Entregado" HeaderText="F. OK.entrega" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Receptor" HeaderText="Receptor" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Celular_Receptor" HeaderText="Celular" ItemStyle-CssClass="auto-width-column" />
                                                             </Columns>
                                                         </asp:DataGrid>
+                                                        <asp:SqlDataSource runat="server" ID="obtenerInfoDespacho" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL_PRUEBAConnectionString %>" SelectCommand="sp_ObtenerInformacionDespacho" SelectCommandType="StoredProcedure">
+                                                            <SelectParameters>
+                                                                <asp:ControlParameter ControlID="tbOT" PropertyName="Text" Name="Id_OT" Type="String"></asp:ControlParameter>
+                                                                <asp:ControlParameter ControlID="ddlNumbers" PropertyName="SelectedValue" Name="Pedido" Type="Int32"></asp:ControlParameter>
+                                                            </SelectParameters>
+                                                        </asp:SqlDataSource>
+                                                        <asp:SqlDataSource runat="server" ID="InfoDespachos"></asp:SqlDataSource>
 
                                                     </div>
 
@@ -1355,7 +1379,6 @@
 
                                 </div>
 
-
                                 <div class="row justify-content-center">
                                     <div class="border rounded p-1 m-1">
                                         <div class="row">
@@ -1429,7 +1452,9 @@
 
                                     <div class="col-2 ">
                                         <div class="input-group input-group-sm justify-content-end">
-                                            <asp:Button ID="btnDespiece" runat="server" Text="Despiece" CssClass="btn btn-sm btn-outline-secondary" />
+                                           <asp:LinkButton ID="btnDespiece" Text="Despiece" runat="server" CssClass="btn btn-sm btn-outline-secondary"  OnClick="Reedireccion_ObjetoDespiece">
+
+                                            </asp:LinkButton>
                                         </div>
                                     </div>
 
@@ -1492,7 +1517,6 @@
                                     </div>
                                 </div>
 
-
                             </div>
 
                     </ContentTemplate>
@@ -1551,7 +1575,6 @@
                                             </div>
                                     </div>
                             </nav>
-
 
                         </div>
                     </ContentTemplate>
@@ -1622,7 +1645,6 @@
 
     </form>
 
-
     <script type="text/javascript">
         function openModal() {
             var myModal = new bootstrap.Modal(document.getElementById('myModal'), {
@@ -1659,10 +1681,6 @@
             });
         });
     </script>
-
-    
-    
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
