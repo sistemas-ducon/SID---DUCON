@@ -8,6 +8,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.ServiceModel.Channels;
 using System.Text;
 using System.Web;
 using System.Web.UI;
@@ -20,6 +21,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
     public partial class OrdenTrabajo : System.Web.UI.Page
     {
+
+       
+
         private string id;
         private string pedido;
         private List<TextBox> listaTextBoxes;
@@ -27,8 +31,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+            {
+                Session["CargarOTsEjecutada"] = null;
 
-            listaTextBoxes = new List<TextBox>
+                habilitarbotones();          
+
+                DeshabilitarBotones(sender, e);
+
+                listaTextBoxes = new List<TextBox>
                 {
                     tbPedDepen,tbObra,tbDir,tbContac,tbEmail,tbRecibe,tbTel,tbCel,tbPais,tbHTotal,tbVenta,dtpFechaEntregaDibujoDespiece,dtpFechaEntregaProduccion,dtpEmpaque,dtpRealEmpaque,tbSupervisor,
                     tbBolsa,tbValorPedido,txtNit,txtNombreEmp,txtcontacto,txtMail,txtDireccion,txtMunicipio,txtTelefono,txtCotizacion,txtValorSugerido,txtVcsd,txtVccd,txtOrdenCompra,txtAsesor,txtComision,
@@ -36,28 +47,310 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 };
 
-            listaDropDownLists = new List<DropDownList>
+                listaDropDownLists = new List<DropDownList>
                 {
                    ddlZona,dtacboTipoPedido,cboPedidoBase,DtaCboTipoAprobacion,ddlFabrica1,ddlInstala,ddlAsesor,ddlCiudad
 
                 };
 
+                txObs2.Disabled = true;
+                txObs1.Disabled = true;
 
-            txObs2.Disabled = true;
-            txObs1.Disabled = true;
-
-
-            CargarAsesoresEnDropDownList();
-            DeshabilitarTextBoxes(listaTextBoxes);
-            DeshabilitarDropDownLists(listaDropDownLists);
-            Nit.Enabled = false;
-            Nit.CssClass = "bi bf  btn btn-outline-secondary";
-            btnCotizacion.Enabled = false;
-            btnCotizacion.CssClass = "bi bf  btn btn-outline-secondary";
+                CargarAsesoresEnDropDownList();
+                DeshabilitarTextBoxes(listaTextBoxes);
+                DeshabilitarDropDownLists(listaDropDownLists);
+                Nit.Enabled = false;
+                Nit.CssClass = "bi bf  btn btn-outline-secondary";
+                btnCotizacion.Enabled = false;
+                btnCotizacion.CssClass = "bi bf  btn btn-outline-secondary";
 
 
+            }
+        }
+
+        //MODIFICADO POR CARLOS PINEDA
+        protected void Cancelar_Click(object sender, EventArgs e)
+        {
+
+            if (Session["CargarOTsEjecutada"] != null && (bool)Session["CargarOTsEjecutada"])
+            {
+                tbOT.Text = "Por Asig";
+
+            }
+            else
+            {
+                // Coloca aquí el código que deseas ejecutar si Cargar_OTs no se ha ejecutado
+                GrabarOt.Enabled = false;
+                GrabarOt.CssClass = "btn btn-sm shadow button-disabled";
+                Cancelar.Enabled = false;
+                Cancelar.CssClass = "btn btn-sm shadow button-disabled";
+                NuevaOt.Enabled = true;
+                NuevaOt.CssClass = "btn btn-sm shadow button-enabled";
+                ObservacionesOt.Enabled = true;
+                ObservacionesOt.CssClass = "btn btn-sm shadow button-enabled";
+                OtPendientes.Enabled = true;
+                OtPendientes.CssClass = "btn btn-sm shadow button-enabled";
+            }
+
+            // Limpia la variable de sesión después de su uso
+            Session["CargarOTsEjecutada"] = null;
+
+            if (tbOT.Text == "Por Asig")
+            {
+                NuevaOt.Enabled = true;
+                NuevaOt.CssClass = "btn btn-sm shadow button-enabled";
+
+                CopiarOt.Enabled = true;
+                CopiarOt.CssClass = "btn btn-sm shadow button-enabled";
+
+                ModificarOt.Enabled = true;
+                ModificarOt.CssClass = "btn btn-sm shadow button-enabled";
+
+                AnularPedido.Enabled = true;
+                AnularPedido.CssClass = "btn btn-sm shadow button-enabled";
+
+                DocumentacionOt.Enabled = true;
+                DocumentacionOt.CssClass = "btn btn-sm shadow button-enabled";
+
+                ObservacionesOt.Enabled = true;
+                ObservacionesOt.CssClass = "btn btn-sm shadow button-enabled";
+
+                imprimirOt.Enabled = true;
+                imprimirOt.CssClass = "btn btn-sm shadow button-enabled";
+
+                ConsultarBolsa.Enabled = true;
+                ConsultarBolsa.CssClass = "btn btn-sm shadow button-enabled";
+
+                OtPendientes.Enabled = true;
+                OtPendientes.CssClass = "btn btn-sm shadow button-enabled";
+
+                GrabarOt.Enabled = false;
+                GrabarOt.CssClass = "btn btn-sm shadow button-disabled";
+
+                ReimprimirOt.Enabled = false;
+                ReimprimirOt.CssClass = "btn btn-sm shadow button-disabled";
+
+                Cancelar.Enabled = false;
+                Cancelar.CssClass = "btn btn-sm shadow button-disabled";
+
+                Cargar_OTs();
+
+                Session["CargarOTsEjecutada"] = true;
+            }
+
+           
+          
+
+          
+        }
+
+
+
+        protected void NuevaOT_Click(object sender, EventArgs e)
+        {
+
+            // Verificar si Cargar_OTs se ha ejecutado
+            if (Session["CargarOTsEjecutada"] != null && (bool)Session["CargarOTsEjecutada"])
+            {
+                tbOT.Text = "Por Asig";
+    
+            }
+            else
+            {
+                NuevaOt.Enabled = false;
+                NuevaOt.CssClass = "btn btn-sm shadow button-disabled";
+                ObservacionesOt.Enabled = false;
+                ObservacionesOt.CssClass = "btn btn-sm shadow button-disabled";
+                OtPendientes.Enabled = false;
+                OtPendientes.CssClass = "btn btn-sm shadow button-disabled";
+                GrabarOt.Enabled = true;
+                GrabarOt.CssClass = "btn btn-sm shadow button-enabled";
+                Cancelar.Enabled = true;
+                Cancelar.CssClass = "btn btn-sm shadow button-enabled";
+            }
+            if (tbOT.Text == "Por Asig")
+            {
+                NuevaOt.Enabled = false;
+                NuevaOt.CssClass = "btn btn-sm shadow button-disabled";
+                CopiarOt.Enabled = false;
+                CopiarOt.CssClass = "btn btn-sm shadow button-disabled";
+                OtPendientes.Enabled = false;
+                OtPendientes.CssClass = "btn btn-sm shadow button-disabled";
+                DocumentacionOt.Enabled = false;
+                DocumentacionOt.CssClass = "btn btn-sm shadow button-disabled";
+                ObservacionesOt.Enabled = false;
+                ObservacionesOt.CssClass = "btn btn-sm shadow button-disabled";
+                imprimirOt.Enabled = false;
+                imprimirOt.CssClass = "btn btn-sm shadow button-disabled";
+                ReimprimirOt.Enabled = false;
+                ReimprimirOt.CssClass = "btn btn-sm shadow button-disabled";
+                ConsultarBolsa.Enabled = false;
+                ConsultarBolsa.CssClass = "btn btn-sm shadow button-disabled";
+                ObraReactivada.Enabled = false;
+                ObraReactivada.CssClass = "btn btn-sm shadow button-disabled";
+                ExportarPedido.Enabled = false;
+                ExportarPedido.CssClass = "btn btn-sm shadow button-disabled";
+                GrabarOt.Enabled = true;
+                GrabarOt.CssClass = "btn btn-sm shadow button-enabled";
+                Cancelar.Enabled = true;
+                Cancelar.CssClass = "btn btn-sm shadow button-enabled";
+                ObraReactivada.Enabled = true;
+                ObraReactivada.CssClass = "btn btn-sm shadow button-enabled";
+                ModificarOt.Enabled = false;
+                ModificarOt.CssClass = "btn btn-sm shadow button-disabled";
+                AnularPedido.Enabled = false;
+                AnularPedido.CssClass = "btn btn-sm shadow button-disabled";
+
+                LabelOTCerrada.Visible = false;
+       
+                List<string> elementIds = new List<string>
+{
+                "LabelOTCerrada", "LiteralFechaCierre", "ddlZona",
+                "dtacboTipoPedido", "tbPedDepen", "DtaCboTipoAprobacion", "tbObra", "tbDir",
+                "tbContac", "tbEmail", "tbRecibe", "ddlCiudad", "tbTel", "tbCel", "tbPais",
+                "txObs1", "txObs2", "tbVenta", "dtpFechaEntregaDibujoDespiece",
+                "dtpFechaEntregaProduccion", "dtpEmpaque", "dtpRealEmpaque", "tbSupervisor",
+                "ddlFabrica1", "ddlInstala", "ObservacionCont", "txtCotizacion", "txtOrdenCompra",
+                "txtAsesor", "TextTNegociacion", "tbBolsa", "ddlAsesor", "txtDcto", "txtVtte",
+                "txtVvia", "txtVenta", "tbValorPedido"
+};
+
+                foreach (string elementId in elementIds)
+                {
+                    var element = Page.FindControl(elementId);
+
+                    if (element is TextBox)
+                    {
+                        TextBox textBox = (TextBox)element;
+                        textBox.Text = string.Empty; // Limpia el contenido del TextBox
+                    }
+                    else if (element is DropDownList)
+                    {
+                        DropDownList dropDownList = (DropDownList)element;
+                        dropDownList.ClearSelection(); // Limpia la selección del DropDownList
+                    }
+                    else if (element is Label)
+                    {
+                        Label label = (Label)element;
+                        label.Text = string.Empty; // Limpia el texto del Label
+                    }
+                  
+                }
+
+
+            }
 
         }
+
+        protected void ImprimirOt_Click(object sender, EventArgs e)
+        {
+          
+        }
+
+
+        protected void BtnObservaciones_Click(object sender, EventArgs e)
+        {
+            // Verifica si el LinkButton está habilitado
+            if (EstaHabilitado())
+            {   
+                string url = "FormExtPrin/ObservacionesOT.aspx";
+                string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+            }
+        }
+
+        private bool EstaHabilitado()
+        {
+            // Agrega tu lógica para determinar si el LinkButton está habilitado o no.
+            // Devuelve true si está habilitado y false si no lo está.
+            // Ejemplo: Siempre habilitado
+            return true;
+        }
+
+
+        protected void habilitarbotones()
+        {
+            NuevaOt.Enabled = true;
+            NuevaOt.CssClass = "btn btn-sm shadow button-enabled";
+
+            ObservacionesOt.Enabled = true;
+            ObservacionesOt.CssClass = "btn btn-sm shadow button-enabled";
+
+            OtPendientes.Enabled = true;
+            OtPendientes.CssClass = "btn btn-sm shadow button-enabled";
+
+        }
+
+        protected void DeshabilitarBotones(object sender, EventArgs e)
+            {
+            List<System.Web.UI.Control> botones = new List<System.Web.UI.Control>
+            {
+       
+                CopiarOt,
+                GrabarOt,
+                ModificarOt,
+                AnularPedido,
+                DocumentacionOt,  
+                imprimirOt,
+                ReimprimirOt,
+                ConsultarBolsa,
+                Cancelar,
+                ActPedImp,
+                ImpPedAse,
+                ImpPedSed,
+                HabilitarPedido,
+                DeshabilitarOt,
+                ObraReactivada,
+                RegPedSisAdm,
+                CierraOt,
+                SimularPedido,
+                ExportarPedido,
+                EntregaPerfecta,
+                AnularObra,
+                btnNuevoPedido,
+                btnAcabados,
+                btnOk
+            };
+
+            string cssClass = "btn btn-sm shadow button-disabled";
+
+            foreach (System.Web.UI.Control boton in botones)
+            {
+                if (boton is System.Web.UI.WebControls.LinkButton)
+                {
+                    System.Web.UI.WebControls.LinkButton linkButton = (System.Web.UI.WebControls.LinkButton)boton;
+                    linkButton.Enabled = false;
+                    linkButton.CssClass = cssClass;
+                }
+            }
+        }
+
+      
+
+        protected void OtPendientes_Click(object sender, EventArgs e)
+        {
+            // Verifica si el LinkButton está habilitado
+            if (EstaHabilitado2())
+            {
+                string url = "FormExtPrin/OTsPendientes.aspx";
+                string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+          
+            }
+
+        }
+
+        private bool EstaHabilitado2()
+        {
+            // Agrega tu lógica para determinar si el LinkButton está habilitado o no.
+            // Devuelve true si está habilitado y false si no lo está.
+            // Ejemplo: Siempre habilitado
+            return true;
+        }
+
+        //FIN
+
+
 
         public class DatosFiltrados
         {
@@ -224,167 +517,310 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
 
-
+        //MODIFICADO POR CARLOS PINEDA
         public void Cargar_OTs()
         {
+            id = Session["Id_OT"]?.ToString();
+            pedido = Session["pedido"]?.ToString();
 
-            id = Session["Id_OT"].ToString();
-            pedido = Session["pedido"].ToString();
+            try
+            {
 
-            //Conexion a la BD_SIDSQL y traemos el procedimiento almacenado
-            string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
-            SqlConnection sqlconectar = new SqlConnection(cn);
-            SqlCommand cmd = new SqlCommand("ctaOT", sqlconectar)
 
+
+                using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+                {
+                    sqlconectar.Open();
+
+                    if (TryExecuteOTQuery(id, pedido, sqlconectar, out SqlDataReader leer))
+                    {
+                        if (leer.Read())
+                        {
+
+                            // Extraer datos y asignarlos a controles
+                            AssignDataToControls(leer);
+
+                            EnableButtons();
+
+                            // Obtener datos de cotización y asignarlos a controles
+                            AssignCotizacionData(id, pedido, txtCotizacion.Text, sqlconectar);
+
+                           
+                        }
+                    }
+
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejo de excepciones
+            }
+          
+            Cargar_Plano( id, pedido);
+            Cargar_Despiece_Plano();
+
+          
+
+            Session["CargarOTsEjecutada"] = true;
+        }
+       
+        private bool TryExecuteOTQuery(string id, string pedido, SqlConnection connection, out SqlDataReader leer)
+        {
+            SqlCommand cmd = new SqlCommand("ctaOT", connection)
             {
                 CommandType = CommandType.StoredProcedure
             };
-            cmd.Connection.Open();
             cmd.Parameters.Add("@OT", SqlDbType.VarChar, 30).Value = id;
             cmd.Parameters.Add("@Con", SqlDbType.VarChar, 30).Value = pedido;
 
+            leer = cmd.ExecuteReader();
+            return leer.HasRows;
+        }
+
+        private void AssignDataToControls(SqlDataReader leer)
+        {
+            bool cerrada = leer.GetBoolean(leer.GetOrdinal("Cerrada")); // Variable para OTCerrada
 
 
 
-            SqlDataReader leer = cmd.ExecuteReader();
-
-
-
-            if (leer.Read())
+            if (cerrada)
             {
-                bool cerrada = leer.GetBoolean(leer.GetOrdinal("Cerrada")); // Variable para OTCerrada
-
-
-
-                if (cerrada)
-                {
-                    DateTime fechaCierre = (DateTime)leer["Fecha_Cierre"];
-                    LabelOTCerrada.Visible = true;
-                    LabelOTCerrada.Text = "OT cerrada el día " + fechaCierre.ToString("dd/MM/yyyy");
-                    LiteralFechaCierre.Text = fechaCierre.ToString("dd/MM/yyyy");
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "openModal();", true);
-
-                }
-                else
-                {
-                    LabelOTCerrada.Visible = false;
-                }
-
-
-
-
-
-
-                tbOT.Text = leer["Id_OT"].ToString();                                         // Numero de la OT
-                ddlNumbers.Text = leer["Consecutivo_Pedido"].ToString();                      //Numero Pedido
-                ddlZona.Text = leer["Zona"].ToString();                                       // Zona 
-                dtacboTipoPedido.Text = leer["Descripcion_TipoPedido"].ToString();            //T.Ped
-                tbPedDepen.Text = leer["Consecutivo_Pedido"].ToString();                      // Ped.Deped
-                DtaCboTipoAprobacion.Text = leer["TipoAprobacion"].ToString();                // Aprob
-                tbObra.Text = leer["Nombre_Obra"].ToString();                                 // Nombre obra
-                tbDir.Text = leer["Dirección"].ToString();                                    //Direccion
-                tbContac.Text = leer["Persona_Receptora"].ToString();                         //Contacto
-                tbEmail.Text = leer["mail_Contacto"].ToString();                              // Mail
-                tbRecibe.Text = leer["RecibeElPedido"].ToString();                            // Recibe
-                string Ciudad = leer["Ciudad"].ToString() + " - " + leer["Región"].ToString(); //Ciudad
-                foreach (ListItem item in ddlCiudad.Items)
-                {
-                    if (item.Text == Ciudad)
-                    {
-                        ddlCiudad.ClearSelection();
-                        item.Selected = true;
-                        break;
-                    }
-                }
-                tbTel.Text = leer["TelDomicilio"].ToString();                                 //Telefono
-                tbCel.Text = leer["CelularContacto"].ToString();                              //Celular
-                tbPais.Text = leer["País"].ToString();                                        //Pais
-                txObs1.Value = leer["Observacion_Pedido"].ToString();                         //Observacion Pedido
-                txObs2.Value = leer["Observacion_Dibujo"].ToString();                         // Observacion Dibujo
-                DateTime Dato = (DateTime)leer["Fecha_Confirmacion_Venta"];
-                DateTime Dato2 = (DateTime)leer["Fecha_Entrega_Produccion"];
-                DateTime Dato3 = (DateTime)leer["Fecha_Empaque"];
-                DateTime Dato4 = (DateTime)leer["Fecha_Real_Empaque"];
-                tbVenta.Text = Dato.ToString("yyyy-MM-dd");                                   //FechaVenta
-                dtpFechaEntregaDibujoDespiece.Text = Dato.ToString("yyyy-MM-dd");             //FechaOkVenta
-                dtpFechaEntregaProduccion.Text = Dato2.ToString("yyyy-MM-dd");                //FechaOkDibujo
-                dtpEmpaque.Text = Dato3.ToString("yyyy-MM-dd");                              //FechaEmpaque
-                dtpRealEmpaque.Text = Dato4.ToString("yyyy-MM-dd");                          //FechaRealEmpaque
-                tbSupervisor.Text = leer["Supervisor"].ToString();                           //Supervisor
-                ddlFabrica1.SelectedItem.Text = leer["FabricadoPor"].ToString();
-                ddlInstala.SelectedItem.Text = leer["InstaladaPor"].ToString();
-
-
-                ObservacionCont.Value = leer["Observaciones_Contables"].ToString();
-                txtCotizacion.Text = leer["Cotizacion"].ToString();
-                txtOrdenCompra.Text = leer["OrdendeCompra"].ToString();
-                txtAsesor.Text = leer["Codigo_Asesor"].ToString();
-                TextTNegociacion.Value = leer["Forma_Pago"].ToString();
-                tbBolsa.Text = leer["ValorBolsa"].ToString();
-                ddlAsesor.SelectedValue = leer["Codigo_Asesor"].ToString();
-
-                txtDcto.Text = leer["Descuento"].ToString();
-                txtVtte.Text = leer["ValorTteVia"].ToString();
-                txtVvia.Text = leer["ValorViatico"].ToString();
-                txtVenta.Text = leer["Precio_Venta"].ToString();
-                tbValorPedido.Text = leer["ValorPedido"].ToString();
-
-                btnCotizacion.Enabled = true;
+                DateTime fechaCierre = (DateTime)leer["Fecha_Cierre"];
+                LabelOTCerrada.Visible = true;
+                LabelOTCerrada.Text = "OT cerrada el día " + fechaCierre.ToString("dd/MM/yyyy");
+                LiteralFechaCierre.Text = fechaCierre.ToString("dd/MM/yyyy");
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "openModal();", true);
 
             }
-
-
-            cmd.Connection.Close();
-
-
-
-            SqlCommand cotzita = new SqlCommand("Sp_DatosCotizacionyPlano", sqlconectar)
+            else
             {
-                CommandType = CommandType.StoredProcedure
-            };
-
-
-
-            cotzita.Connection.Open();
-            cotzita.Parameters.AddWithValue("@Id_OT", id);
-            cotzita.Parameters.AddWithValue("@Consecutivo_Pedido", pedido);
-            cotzita.Parameters.AddWithValue("@Cotizacion", txtCotizacion.Text);
-
-            SqlDataReader drcot = cotzita.ExecuteReader();
-
-
-            if (drcot.Read())
-            {
-                txtValorSugerido.Text = drcot["ValorSugerido"].ToString();
-                txtVcsd.Text = drcot["Valor"].ToString();
-                txtVccd.Text = drcot["VCCD"].ToString();
-                txtComision.Text = drcot["DescuentoComision"].ToString();
-                txtDiseño.Text = drcot["Diseño"].ToString();
-                txtSaldo.Text = drcot["Saldo"].ToString();
-                lbPlano.Text = drcot["PlanoOk"].ToString();
-
-                if (txtCotizacion.Text.ToUpper() == "NO TIENE" || txtCotizacion.Text == "")
-                {
-
-                    txtValorSugerido.Text = "0";
-                    txtVcsd.Text = "0";
-                    txtVccd.Text = "0";
-                    txtComision.Text = "0";
-                    txtDiseño.Text = "0";
-                    txtSaldo.Text = "0";
-                    txtDctoValor.Text = "0";
-                    txtGtotal.Text = "0";
-                }
-
+                LabelOTCerrada.Visible = false;
             }
 
-            cotzita.Connection.Close();
+            tbOT.Text = leer["Id_OT"].ToString();                     // Numero de la OT
+            ddlNumbers.Text = leer["Consecutivo_Pedido"].ToString();  // Numero Pedido
+            ddlZona.Text = leer["Zona"].ToString();                   // Zona 
+            dtacboTipoPedido.Text = leer["Descripcion_TipoPedido"].ToString(); // T.Ped
+            tbPedDepen.Text = leer["Consecutivo_Pedido"].ToString();  // Ped.Deped
+            DtaCboTipoAprobacion.Text = leer["TipoAprobacion"].ToString(); // Aprob
+            tbObra.Text = leer["Nombre_Obra"].ToString();              // Nombre obra
+            tbDir.Text = leer["Dirección"].ToString();                 // Direccion
+            tbContac.Text = leer["Persona_Receptora"].ToString();       // Contacto
+            tbEmail.Text = leer["mail_Contacto"].ToString();            // Mail
+            tbRecibe.Text = leer["RecibeElPedido"].ToString();          // Recibe
+            string Ciudad = leer["Ciudad"].ToString() + " - " + leer["Región"].ToString(); // Ciudad
+            foreach (ListItem item in ddlCiudad.Items)
+            {
+                if (item.Text == Ciudad)
+                {
+                    ddlCiudad.ClearSelection();
+                    item.Selected = true;
+                    break;
+                }
+            }
+            tbTel.Text = leer["TelDomicilio"].ToString();                // Telefono
+            tbCel.Text = leer["CelularContacto"].ToString();             // Celular
+            tbPais.Text = leer["País"].ToString();                      // Pais
+            txObs1.Value = leer["Observacion_Pedido"].ToString();       // Observacion Pedido
+            txObs2.Value = leer["Observacion_Dibujo"].ToString();       // Observacion Dibujo
+            DateTime Dato = (DateTime)leer["Fecha_Confirmacion_Venta"];
+            DateTime Dato2 = (DateTime)leer["Fecha_Entrega_Produccion"];
+            DateTime Dato3 = (DateTime)leer["Fecha_Empaque"];
+            DateTime Dato4 = (DateTime)leer["Fecha_Real_Empaque"];
+            tbVenta.Text = Dato.ToString("yyyy-MM-dd");               // FechaVenta
+            dtpFechaEntregaDibujoDespiece.Text = Dato.ToString("yyyy-MM-dd"); // FechaOkVenta
+            dtpFechaEntregaProduccion.Text = Dato2.ToString("yyyy-MM-dd");   // FechaOkDibujo
+            dtpEmpaque.Text = Dato3.ToString("yyyy-MM-dd");               // FechaEmpaque
+            dtpRealEmpaque.Text = Dato4.ToString("yyyy-MM-dd");           // FechaRealEmpaque
+            tbSupervisor.Text = leer["Supervisor"].ToString();           // Supervisor
+            ddlFabrica1.SelectedItem.Text = leer["FabricadoPor"].ToString();
+            ddlInstala.SelectedItem.Text = leer["InstaladaPor"].ToString();
+
+            ObservacionCont.Value = leer["Observaciones_Contables"].ToString();
+            txtCotizacion.Text = leer["Cotizacion"].ToString();
+            txtOrdenCompra.Text = leer["OrdendeCompra"].ToString();
+            txtAsesor.Text = leer["Codigo_Asesor"].ToString();
+            TextTNegociacion.Value = leer["Forma_Pago"].ToString();
+            tbBolsa.Text = leer["ValorBolsa"].ToString();
+            ddlAsesor.SelectedValue = leer["Codigo_Asesor"].ToString();
+
+            txtDcto.Text = leer["Descuento"].ToString();
+            txtVtte.Text = leer["ValorTteVia"].ToString();
+            txtVvia.Text = leer["ValorViatico"].ToString();
+            txtVenta.Text = leer["Precio_Venta"].ToString();
+            tbValorPedido.Text = leer["ValorPedido"].ToString();
+
+            btnCotizacion.Enabled = true;
 
             calcularDescuento();
             calcularGranTotal();
-            Cargar_Plano();
-            Cargar_Despiece_Plano();
+           
         }
+
+        private void AssignCotizacionData(string id, string pedido, string cotizacion, SqlConnection connection)
+        {
+            using (SqlCommand cotzita = new SqlCommand("Sp_DatosCotizacionyPlano", connection))
+            {
+                cotzita.CommandType = CommandType.StoredProcedure;
+                cotzita.Parameters.AddWithValue("@Id_OT", id);
+                cotzita.Parameters.AddWithValue("@Consecutivo_Pedido", pedido);
+                cotzita.Parameters.AddWithValue("@Cotizacion", cotizacion);
+
+                cotzita.Connection.Open();
+                SqlDataReader drcot = cotzita.ExecuteReader();
+
+                if (drcot.Read())
+                {
+                    txtValorSugerido.Text = drcot["ValorSugerido"].ToString();
+                    txtVcsd.Text = drcot["Valor"].ToString();
+                    txtVccd.Text = drcot["VCCD"].ToString();
+                    txtComision.Text = drcot["DescuentoComision"].ToString();
+                    txtDiseño.Text = drcot["Diseño"].ToString();
+                    txtSaldo.Text = drcot["Saldo"].ToString();
+                    lbPlano.Text = drcot["PlanoOk"].ToString();
+
+                    if (cotizacion.ToUpper() == "NO TIENE" || string.IsNullOrEmpty(cotizacion))
+                    {
+                        txtValorSugerido.Text = "0";
+                        txtVcsd.Text = "0";
+                        txtVccd.Text = "0";
+                        txtComision.Text = "0";
+                        txtDiseño.Text = "0";
+                        txtSaldo.Text = "0";
+                        txtDctoValor.Text = "0";
+                        txtGtotal.Text = "0";
+                    }
+                }
+                cotzita.Connection.Close();
+            }
+        }
+
+        private bool EstaCerrada(string id, string pedido)
+        {
+            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+            {
+                sqlconectar.Open();
+                using (SqlCommand cmd = new SqlCommand("select * from tblOT where Id_OT = @Id and Consecutivo_Pedido = @Con and Cerrada = '0'", sqlconectar))
+                {
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    cmd.Parameters.AddWithValue("@Con", pedido);
+
+                    SqlDataReader leer = cmd.ExecuteReader();
+
+                    return leer.Read();
+                }
+            }
+        }
+
+        private void EnableButtons()
+        {
+
+          
+           
+
+            bool estaAbierta = false;
+
+           
+
+            // Obtenga los valores de las variables
+            string id = Session["Id_OT"]?.ToString();
+            string pedido = Session["pedido"]?.ToString();
+
+            bool estaCerrada = EstaCerrada(id, pedido);
+
+            // Realice la consulta
+            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+            {
+                sqlconectar.Open();
+                using (SqlCommand cmd = new SqlCommand("select * from tblOT where Id_OT = @Id and Consecutivo_Pedido = @Con and Terminado_Ventas = @C", sqlconectar))
+                {
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    cmd.Parameters.AddWithValue("@Con", pedido);
+                    cmd.Parameters.AddWithValue("@C", 0);
+
+                    SqlDataReader leer = cmd.ExecuteReader();
+
+                    if (leer.Read())
+                    {
+                        estaAbierta = true;
+                    }
+                }
+            }
+
+            // Habilite o deshabilite el botón
+            if (estaAbierta)
+            {
+                btnOk.Enabled = true;
+                btnOk.CssClass = "btn btn-sm shadow button-enabled rojo fw-bold";
+
+                ModificarOt.Enabled = true;
+                ModificarOt.CssClass = "btn btn-sm shadow button-enabled";
+
+                AnularPedido.Enabled = true;
+                AnularPedido.CssClass = "btn btn-sm shadow button-enabled ";
+
+                ReimprimirOt.Enabled = false;
+                ReimprimirOt.CssClass = "btn btn-sm shadow button-disabled";
+            }
+            else
+            {
+                btnOk.Enabled = false;
+                btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
+
+                ModificarOt.Enabled = false;
+                ModificarOt.CssClass = "btn btn-sm shadow button-disabled";
+
+                AnularPedido.Enabled = false;
+                AnularPedido.CssClass = "btn btn-sm shadow button-disabled ";
+
+                ReimprimirOt.Enabled = true;
+                ReimprimirOt.CssClass = "btn btn-sm shadow button-enabled";
+            }
+
+           
+
+            if (estaCerrada) // Habilitar solo si está abierta y no está cerrada
+            {
+                btnNuevoPedido.Enabled = true;
+                btnNuevoPedido.CssClass = "btn btn-sm shadow button-enabled";
+
+                ExportarPedido.Enabled = true;
+                ExportarPedido.CssClass = "btn btn-sm shadow button-enabled";
+         
+            }
+            else
+            {
+                btnNuevoPedido.Enabled = false;
+                btnNuevoPedido.CssClass = "btn btn-sm shadow button-disabled";
+
+                ExportarPedido.Enabled = false;
+                ExportarPedido.CssClass = "btn btn-sm shadow button-disabled";
+            }
+
+
+            CopiarOt.Enabled = true;
+            CopiarOt.CssClass = "btn btn-sm shadow button-enabled";
+
+            DocumentacionOt.Enabled = true;
+            DocumentacionOt.CssClass = "btn btn-sm shadow button-enabled";
+
+            imprimirOt.Enabled = true;
+            imprimirOt.CssClass = "btn btn-sm shadow button-enabled";
+
+
+            ConsultarBolsa.Enabled = true;
+            ConsultarBolsa.CssClass = "btn btn-sm shadow button-enabled";
+
+            ObraReactivada.Enabled = true;
+            ObraReactivada.CssClass = "btn btn-sm shadow button-enabled";
+
+            btnAcabados.Enabled = true;
+            btnAcabados.CssClass = "btn btn-sm shadow button-enabled";
+        }
+
+        //FIN MODIFICACION
 
         protected void calcularDescuento()
         {
@@ -422,9 +858,25 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-        protected void Acabados(object sender, EventArgs e)
+        //MODIFICADO POR CARLOS PINEDA
+        protected void Acabados_Click(object sender, EventArgs e)
         {
-
+            // Verifica si el LinkButton está habilitado
+            if (EstaHabilitado3())
+            {
+                string url = "FormExtPrin/AcabadosOT.aspx";
+                string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+   
+            }
+        }
+       
+        private bool EstaHabilitado3()
+        {
+            // Agrega tu lógica para determinar si el LinkButton está habilitado o no.
+            // Devuelve true si está habilitado y false si no lo está.
+            // Ejemplo: Siempre habilitado
+            return true;
         }
 
         protected void Boton_Ok(object sender, EventArgs e)
@@ -432,11 +884,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
+        //FIN
 
 
         // Logica de tap de plano 
 
-        public void Cargar_Plano()
+        public void Cargar_Plano( string id,  string pedido)
         {
 
             //Conexion a la BD_SIDSQL y traemos el procedimiento almacenado

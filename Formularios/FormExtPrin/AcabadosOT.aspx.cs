@@ -13,6 +13,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Verificar si la variable de sesión "Id_OT" existe
+            if (Session["Id_OT"] != null)
+            {
+                // Obtener el valor de la variable de sesión "Id_OT" y asignarlo a una variable local
+                string id = Session["Id_OT"].ToString();
+
+                // Puedes usar la variable "id" en este formulario según tus necesidades
+                // Por ejemplo, para configurar el SqlDataSource
+                SqlDataSource1.SelectParameters["Id_OT"].DefaultValue = id;      
+
+                // Ahora puedes utilizar el valor "id" en el SqlDataSource o en cualquier otro lugar necesario en este formulario.
+            }
 
         }
 
@@ -83,17 +95,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         private string GetDescripcionGrupo(string grupoObjetoparaAcabado)
         {
             string sqlQuery = "SELECT Descripcion_Grupo FROM tblAcabado A " +
-                "JOIN tblOTAcabados OT ON A.ID_Acabado = OT.ID_Acabado " +
-                "JOIN tblGrupodeAcabado GA ON A.ID_GrupoAcabado = GA.ID_GrupoAcabado " +
-                "JOIN tblGrupoObjetoParaAcabado GOA ON GOA.ID_GrupoObjetoparaAcabado = OT.ID_GrupoObjetoparaAcabado " +
-                "WHERE OT.Id_OT = '0158301' AND GrupoObjetoparaAcabado = @grupoObjetoparaAcabado";
+                    "JOIN tblOTAcabados OT ON A.ID_Acabado = OT.ID_Acabado " +
+                    "JOIN tblGrupodeAcabado GA ON A.ID_GrupoAcabado = GA.ID_GrupoAcabado " +
+                    "JOIN tblGrupoObjetoParaAcabado GOA ON GOA.ID_GrupoObjetoparaAcabado = OT.ID_GrupoObjetoparaAcabado " +
+                    "WHERE OT.Id_OT = @Id_OT AND GOA.GrupoObjetoparaAcabado = @grupoObjetoparaAcabado";
 
             using (SqlConnection conn = new SqlConnection("Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"))
             using (SqlCommand cmd = new SqlCommand(sqlQuery, conn))
             {
+                cmd.Parameters.AddWithValue("@Id_OT", Session["Id_OT"].ToString());
                 cmd.Parameters.AddWithValue("@grupoObjetoparaAcabado", grupoObjetoparaAcabado);
                 conn.Open();
-                var descripcionGrupo = cmd.ExecuteScalar()?.ToString();
+
+                
+            
+
+            var descripcionGrupo = cmd.ExecuteScalar()?.ToString();
                 conn.Close();
 
                 // Asigna el valor al Label y hazlo visible
@@ -115,23 +132,28 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         // Función para obtener la descripción del acabado
         private string GetDescripcionAcabado(string descripcionGrupo)
         {
-            // Realiza la consulta adicional y devuelve la descripción del acabado
             string sqlQuery = "SELECT A.Descripcion_Acabado FROM tblAcabado A " +
-                             "JOIN tblOTAcabados OT ON A.ID_Acabado = OT.ID_Acabado " +
-                             "JOIN tblGrupodeAcabado GA ON A.ID_GrupoAcabado = GA.ID_GrupoAcabado " +
-                             "JOIN tblGrupoObjetoParaAcabado GOA ON GOA.ID_GrupoObjetoparaAcabado = OT.ID_GrupoObjetoparaAcabado " +
-                             "WHERE OT.Id_OT = '0158301' AND GOA.GrupoObjetoparaAcabado = @descripcionGrupo " +
-                             "UNION " +
-                             "SELECT Descripcion_Acabado FROM tblAcabado " +
-                             "WHERE ID_GrupoAcabado = (SELECT ID_GrupoAcabado FROM tblGrupodeAcabado WHERE Descripcion_Grupo = @descripcionGrupo AND Activo = '1')";
+                    "JOIN tblOTAcabados OT ON A.ID_Acabado = OT.ID_Acabado " +
+                    "JOIN tblGrupodeAcabado GA ON A.ID_GrupoAcabado = GA.ID_GrupoAcabado " +
+                    "JOIN tblGrupoObjetoParaAcabado GOA ON GOA.ID_GrupoObjetoparaAcabado = OT.ID_GrupoObjetoparaAcabado " +
+                    "WHERE OT.Id_OT = @Id_OT AND GOA.GrupoObjetoparaAcabado = @descripcionGrupo " +
+                    "UNION " +
+                    "SELECT Descripcion_Acabado FROM tblAcabado " +
+                    "WHERE ID_GrupoAcabado = (SELECT ID_GrupoAcabado FROM tblGrupodeAcabado WHERE Descripcion_Grupo = @descripcionGrupo AND Activo = '1')";
+
 
             using (SqlConnection conn = new SqlConnection("Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"))
             using (SqlCommand cmd = new SqlCommand(sqlQuery, conn))
             {
+                cmd.Parameters.AddWithValue("@Id_OT", Session["Id_OT"].ToString());
                 cmd.Parameters.AddWithValue("@descripcionGrupo", descripcionGrupo);
                 conn.Open();
 
-                var resultText = new StringBuilder();
+               
+            
+
+
+            var resultText = new StringBuilder();
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())

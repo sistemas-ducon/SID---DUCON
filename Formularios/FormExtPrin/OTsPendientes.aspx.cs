@@ -1,10 +1,15 @@
-﻿using System;
+﻿using Microsoft.Office.Interop.Excel;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Drawing;
+
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 {
@@ -12,63 +17,42 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+            {
+                CargarDatosPorDefecto();
 
+                Button3.Enabled = true;
+                Button3.CssClass = "btn btn-sm shadow button-enabled";
+
+                Button2.Enabled = false;
+                Button2.CssClass = "btn shadow button-disabled";
+            }
+          
         }
 
-        protected void Button1_Click(object sender, EventArgs e)
+        private void CargarDatosPorDefecto()
         {
-            string nombreObra = TextDir.Text.Trim();
-            string codigoAsesor = TextBox2.Text.Trim();
-            int maxRegistros = 100;
+            // Nombre de la conexión a la base de datos
+            string connectionString = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"; // Reemplaza esto con tu cadena de conexión
 
-            // Obtener valores de los TextBox de fecha
-            string fechaDesde = TextBox3.Text;
-            string fechaHasta = TextBox1.Text;
-
-            // Obtener el nombre del campo de fecha seleccionado en el DropDownList
-            string campoFecha = DropDownList1.SelectedValue;
-
-            bool checkBox18Marcado = CheckBox18.Checked;
-            bool checkBox2Marcado = CheckBox2.Checked;
-
-            if (checkBox18Marcado && !checkBox2Marcado)
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                // Filtrar por Terminado_Ventas = '0'
-                SqlDataSource2.SelectCommand = $"SELECT TOP {maxRegistros} Id_OT, Consecutivo_Pedido, Nombre_Obra, Codigo_Asesor, Fecha_Confirmacion_Venta, Fecha_Entrega_Dibujo_Despiece, RealizadoPor, Importacion, Fecha_Empaque, Fecha_Despacho_Produccion, Fecha_Real_Despacho_Produccion, Fecha_Instalacion, Terminada_Almacen, Terminada_Produccion, ValorViatico, Terminado_Diseño, Terminada_Empaque, Terminada_Despacho, Terminada_Compras, Terminada_Facturacion, ResumenObra, Id_OT_secundario FROM tblOT WHERE Terminado_Ventas = '0'";
+                using (SqlCommand command = new SqlCommand("sp_OTsPendientesVPD", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    connection.Open();
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    {
+                        DataSet dataSet = new DataSet();
+                        adapter.Fill(dataSet);
+
+                        DataGrid1.DataSource = dataSet;
+                        DataGrid1.DataBind();
+                    }
+                }
             }
-            else if (checkBox2Marcado && !checkBox18Marcado)
-            {
-                // Filtrar por Terminado_Ventas = '1'
-                SqlDataSource2.SelectCommand = $"SELECT TOP {maxRegistros} Id_OT, Consecutivo_Pedido, Nombre_Obra, Codigo_Asesor, Fecha_Confirmacion_Venta, Fecha_Entrega_Dibujo_Despiece, RealizadoPor, Importacion, Fecha_Empaque, Fecha_Despacho_Produccion, Fecha_Real_Despacho_Produccion, Fecha_Instalacion, Terminada_Almacen, Terminada_Produccion, ValorViatico, Terminado_Diseño, Terminada_Empaque, Terminada_Despacho, Terminada_Compras, Terminada_Facturacion, ResumenObra, Id_OT_secundario FROM tblOT WHERE Terminado_Ventas = '1'";
-            }
-
-            else if (!string.IsNullOrEmpty(nombreObra))
-            {
-                SqlDataSource2.SelectParameters.Clear();
-                SqlDataSource2.SelectParameters.Add("NombreObra", nombreObra);
-
-                SqlDataSource2.SelectCommand = $"SELECT TOP {maxRegistros} Id_OT, Consecutivo_Pedido, Nombre_Obra, Codigo_Asesor, Fecha_Confirmacion_Venta, Fecha_Entrega_Dibujo_Despiece, RealizadoPor, Importacion, Fecha_Empaque, Fecha_Despacho_Produccion, Fecha_Real_Despacho_Produccion, Fecha_Instalacion, Terminada_Almacen, Terminada_Produccion, ValorViatico, Terminado_Diseño, Terminada_Empaque, Terminada_Despacho, Terminada_Compras, Terminada_Facturacion, ResumenObra, Id_OT_secundario FROM tblOT WHERE Nombre_Obra LIKE '%' + @NombreObra + '%'";
-            }
-            else if (!string.IsNullOrEmpty(codigoAsesor))
-            {
-                SqlDataSource2.SelectParameters.Clear();
-                SqlDataSource2.SelectParameters.Add("CodigoAsesor", codigoAsesor);
-
-                SqlDataSource2.SelectCommand = $"SELECT TOP {maxRegistros} Id_OT, Consecutivo_Pedido, Nombre_Obra, Codigo_Asesor, Fecha_Confirmacion_Venta, Fecha_Entrega_Dibujo_Despiece, RealizadoPor, Importacion, Fecha_Empaque, Fecha_Despacho_Produccion, Fecha_Real_Despacho_Produccion, Fecha_Instalacion, Terminada_Almacen, Terminada_Produccion, ValorViatico, Terminado_Diseño, Terminada_Empaque, Terminada_Despacho, Terminada_Compras, Terminada_Facturacion, ResumenObra, Id_OT_secundario FROM tblOT WHERE Codigo_Asesor = @CodigoAsesor";
-            }
-            else
-            {
-                SqlDataSource2.SelectParameters.Clear();
-                SqlDataSource2.SelectParameters.Add("FechaDesde", fechaDesde);
-                SqlDataSource2.SelectParameters.Add("FechaHasta", fechaHasta);
-                SqlDataSource2.SelectParameters.Add("CampoFecha", campoFecha);
-
-                // Usar el campo de fecha seleccionado dinámicamente
-                SqlDataSource2.SelectCommand = $"SELECT TOP {maxRegistros} Id_OT, Consecutivo_Pedido, Nombre_Obra, Codigo_Asesor, Fecha_Confirmacion_Venta, Fecha_Entrega_Dibujo_Despiece, RealizadoPor, Importacion, Fecha_Empaque, Fecha_Despacho_Produccion, Fecha_Real_Despacho_Produccion, Fecha_Instalacion, Terminada_Almacen, Terminada_Produccion, ValorViatico, Terminado_Diseño, Terminada_Empaque, Terminada_Despacho, Terminada_Compras, Terminada_Facturacion, ResumenObra, Id_OT_secundario FROM tblOT WHERE {campoFecha} BETWEEN @FechaDesde AND @FechaHasta";
-
-            }
-
-            DataGrid1.DataBind();
 
             if (DataGrid1.Items.Count == 0)
             {
@@ -78,6 +62,156 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             {
                 NoResultsLabel.Visible = false;
             }
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            string nombreObra = TextDir.Text.Trim();
+            string codigoAsesor = TextBox2.Text.Trim();
+            
+
+            string fechaDesde = TextBox3.Text;
+            string fechaHasta = TextBox1.Text;
+            string campoFecha = DropDownList1.SelectedValue;
+
+            bool radioButton18Marcado = RadioButton18.Checked;
+            bool radioButton2Marcado = RadioButton2.Checked;
+
+            // Nombre de la conexión a la base de datos
+            string connectionString = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"; // Reemplaza esto con tu cadena de conexión
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand("sp_ObtenerDatosConFiltros", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.Add("@NombreObra", SqlDbType.NVarChar, 255).Value = string.IsNullOrEmpty(nombreObra) ? (object)DBNull.Value : nombreObra;
+                    command.Parameters.Add("@CodigoAsesor", SqlDbType.NVarChar, 255).Value = string.IsNullOrEmpty(codigoAsesor) ? (object)DBNull.Value : codigoAsesor;
+                    command.Parameters.Add("@TerminadoVentas", SqlDbType.Bit).Value = radioButton18Marcado ? false : radioButton2Marcado ? true : (object)DBNull.Value;
+                    command.Parameters.Add("@FechaDesde", SqlDbType.Date).Value = string.IsNullOrEmpty(fechaDesde) ? (object)DBNull.Value : Convert.ToDateTime(fechaDesde);
+                    command.Parameters.Add("@FechaHasta", SqlDbType.Date).Value = string.IsNullOrEmpty(fechaHasta) ? (object)DBNull.Value : Convert.ToDateTime(fechaHasta);
+                    command.Parameters.Add("@CampoFecha", SqlDbType.NVarChar, 255).Value = string.IsNullOrEmpty(campoFecha) ? (object)DBNull.Value : campoFecha;
+
+                    connection.Open();
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    {
+                        DataSet dataSet = new DataSet();
+                        adapter.Fill(dataSet);
+
+                        DataGrid1.DataSource = dataSet;
+                        DataGrid1.DataBind();
+                    }
+                }
+            }
+
+            if (DataGrid1.Items.Count == 0)
+            {
+                NoResultsLabel.Visible = true;
+            }
+            else
+            {
+                NoResultsLabel.Visible = false;
+            }
+        }
+
+
+        protected void lnkSelectRow_Click(object sender, EventArgs e)
+        {
+            // Obtén el LinkButton que se hizo clic
+            LinkButton lnkSelectRow = (LinkButton)sender;
+
+            // Obtén el índice de fila desde el CommandArgument
+            int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
+
+            // Accede a la fila seleccionada en el DataGrid
+            DataGridItem selectedRow = DataGrid1.Items[rowIndex];
+
+          
+
+          
+
+            // Deselecciona todas las filas previamente seleccionadas
+            foreach (DataGridItem item in DataGrid1.Items)
+            {
+                if (item != selectedRow)
+                {
+                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                }
+            }
+
+            // Aplica la clase CSS a la fila seleccionada
+            selectedRow.CssClass = "selected-row";
+
+         
+        }
+
+        protected void Button3_Click(object sender, EventArgs e)
+        {
+            // Crear una nueva instancia de Excel
+            var excelApp = new Application();
+
+            // Crear un nuevo libro y hoja de Excel
+            var workbook = excelApp.Workbooks.Add();
+            var worksheet = (Worksheet)workbook.ActiveSheet;
+
+            // Establecer un encabezado para el archivo Excel
+            Range headerRange = worksheet.Range["A1:L1"]; // Rango desde la celda A1 hasta L1
+            headerRange.Merge(); // Combinar celdas
+            headerRange.Font.Size = 22; // Tamaño de letra 22
+            headerRange.Font.Bold = true; // Tipo de letra en negrita
+            headerRange.HorizontalAlignment = XlHAlign.xlHAlignCenter; // Centrar el texto horizontalmente
+
+            // Agregar el texto en dos líneas
+            headerRange.Value = "Obra"; // Texto del encabezado con salto de línea (\n)
+            headerRange.WrapText = true; // Activar el ajuste de texto automático para que las líneas se muestren correctamente
+
+            // Establecer bordes al encabezado
+            headerRange.Borders.LineStyle = XlLineStyle.xlContinuous;
+            headerRange.Borders.Weight = XlBorderWeight.xlThin;
+
+            // Ajustar el ancho de las columnas para que los datos se muestren correctamente
+            worksheet.Columns.AutoFit();
+
+            int rowIndex = 3; // Comenzar a escribir la tabla a partir de la fila 3
+
+            // Escribir los encabezados de las columnas
+            int colIndex = 1;
+            foreach (DataGridColumn column in DataGrid1.Columns)
+            {
+                worksheet.Cells[rowIndex - 1, colIndex] = column.HeaderText;
+
+                // Establecer el formato y estilo del encabezado de la columna
+                Range headerCell = worksheet.Cells[rowIndex - 1, colIndex];
+                headerCell.Font.Bold = true;
+                headerCell.Interior.Color = Color.LightGray; // Color de fondo del encabezado
+
+                colIndex++;
+            }
+
+            // Obtener los datos de la tabla en el DataGrid y escribirlos en la hoja de Excel
+            foreach (DataGridItem item in DataGrid1.Items)
+            {
+                colIndex = 1; // Comenzar en la columna 1 de Excel
+
+                foreach (TableCell cell in item.Cells)
+                {
+                    // Verificar si el valor de la celda es igual a "&nbsp;"
+                    if (cell.Text != "&nbsp;")
+                    {
+                        // Escribe el valor de la celda en la hoja de Excel
+                        worksheet.Cells[rowIndex, colIndex] = cell.Text;
+                    }
+
+                    colIndex++;
+                }
+
+                rowIndex++;
+            }
+
+            // Mostrar la aplicación de Excel
+            excelApp.Visible = true;
         }
 
 

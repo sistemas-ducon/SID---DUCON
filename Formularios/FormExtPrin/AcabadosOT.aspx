@@ -53,7 +53,11 @@
                                 FROM tblOTAcabados A
                                 INNER JOIN tblGrupoObjetoParaAcabado GOA ON A.ID_GrupoObjetoparaAcabado = GOA.ID_GrupoObjetoparaAcabado
                                 INNER JOIN tblAcabado AC ON A.ID_Acabado = AC.ID_Acabado
-                                WHERE A.Id_OT = '0158301'"></asp:SqlDataSource>
+                                 WHERE Id_OT = @Id_OT">
+                                        <SelectParameters>
+                                            <asp:SessionParameter Name="Id_OT" SessionField="Id_OT" Type="String" />
+                                        </SelectParameters>
+                                    </asp:SqlDataSource>
                                 </div>
 
                                 <div class="container-fluid  mt-3">

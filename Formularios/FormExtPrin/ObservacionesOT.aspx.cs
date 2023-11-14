@@ -9,22 +9,52 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.Mail;
 using System.Windows.Forms;
+using DocumentFormat.OpenXml.Office2010.Excel;
+
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 {
     public partial class ObservacionesOT : System.Web.UI.Page
     {
+
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                // Enlaza el DataGrid al SqlDataSource
-                DataGrid5.DataSource = SqlDataSource4;
-                DataGrid5.DataBind();
-
-
+                ManejarIdOT();
+                ManejarPedido();
+                EnlazarDataGrid();
             }
         }
+
+        private void ManejarIdOT()
+        {
+            string idOT = Session["Id_OT"] as string;
+            bool habilitarObservaciones = !string.IsNullOrEmpty(idOT);
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "HabilitarObservaciones", $"var habilitarObservaciones = {habilitarObservaciones.ToString().ToLower()};", true);
+
+            if (!string.IsNullOrEmpty(idOT))
+            {
+                SqlDataSource1.SelectParameters["Id_OT"].DefaultValue = idOT;
+                TextBox5.Text = idOT;
+            }
+        }
+
+        private void ManejarPedido()
+        {
+            if (Session["pedido"] != null)
+            {
+                TextBox4.Text = Session["pedido"].ToString();
+            }
+        }
+
+        private void EnlazarDataGrid()
+        {
+            DataGrid5.DataSource = SqlDataSource4;
+            DataGrid5.DataBind();
+        }
+
         protected void DataGrid1_ItemCommand(object source, DataGridCommandEventArgs e)
         {
             if (e.CommandName == "Select")

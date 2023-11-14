@@ -27,7 +27,7 @@
                     <ul class="nav nav-tabs" id="myTabs">
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark active" id="Observaciones-tab" data-bs-toggle="tab" href="#Observaciones-content">Observaciones a la OT</a>
+                            <a class="nav-link text-dark" id="Observaciones-tab" data-bs-toggle="tab" href="#Observaciones-content">Observaciones a la OT</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" id="Personales-tab" data-bs-toggle="tab" href="#Personales-content">Observaciones Personales</a>
@@ -77,16 +77,21 @@
                                                                 <asp:BoundColumn HeaderText="Tipo Observacion" DataField="Aplicacion" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn HeaderText="Descripcion" DataField="Descripcion" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn HeaderText="Fecha Obs." DataField="FechaObservacion" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                <asp:BoundColumn HeaderText="F.Ingreso" DataField="Nombre_Emisor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn> 
+                                                                <asp:BoundColumn HeaderText="F.Ingreso" DataField="Nombre_Emisor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                 <asp:BoundColumn DataField="Observacion" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                                 <asp:BoundColumn DataField="Id_Observacion" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                             </Columns>
                                                         </asp:DataGrid>
-                                                        <asp:SqlDataSource ID="SqlDataSource1" runat="server"
-                                                            ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL_PRUEBAConnectionString%>"
-                                                            SelectCommand=" SELECT O.Id_OT, O.Consecutivo_Pedido, O.FechaObservacion, O.Nombre_Emisor, T.Aplicacion, T.Descripcion, O.Observacion, O.Id_Observacion
-                                                                        FROM tblOTObservacion AS O
-                                                                        INNER JOIN tblTipoObservacion AS T ON O.ID_TipoObservacion = T.ID_TipoObservacion where Id_OT = '0158301'"></asp:SqlDataSource>
+                                                        <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL_PRUEBAConnectionString%>"
+                                                            SelectCommand="SELECT O.Id_OT, O.Consecutivo_Pedido, O.FechaObservacion, O.Nombre_Emisor, T.Aplicacion, T.Descripcion, O.Observacion, O.Id_Observacion
+                                                               FROM tblOTObservacion AS O
+                                                               INNER JOIN tblTipoObservacion AS T ON O.ID_TipoObservacion = T.ID_TipoObservacion
+                                                               WHERE Id_OT = @Id_OT">
+                                                            <SelectParameters>
+                                                                <asp:SessionParameter Name="Id_OT" SessionField="Id_OT" Type="String" />
+                                                            </SelectParameters>
+                                                        </asp:SqlDataSource>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -392,7 +397,32 @@
             </div>
 
         </div>
+
+        <script>
+            $(document).ready(function () {
+                if (habilitarObservaciones) {
+                    // Habilitar el tab "Observaciones"
+                    $("#Observaciones-tab").removeClass("disabled");
+                    $("#Observaciones-tab").addClass("active");
+                    $("#Observaciones-content").addClass("show active");
+
+                    // Deshabilitar el tab "Personales"
+                    $("#Personales-tab").removeClass("active");
+                    $("#Personales-content").removeClass("show active");
+                } else {
+                    // Habilitar el tab "Personales"
+                    $("#Personales-tab").addClass("active");
+                    $("#Personales-content").addClass("show active");
+
+                    // Deshabilitar el tab "Observaciones"
+                    $("#Observaciones-tab").addClass("disabled");
+                    $("#Observaciones-content").removeClass("show active");
+                }
+            });
+
+        </script>
     </form>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>

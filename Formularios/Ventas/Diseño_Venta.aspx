@@ -256,7 +256,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title  d-flex align-items-center justify-content-center" id="modallLabel">Dejar Infomación</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            <asp:button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></asp:button>
                                                         </div>
                                                         <div class="modal-body d-flex align-items-center justify-content-center">
                                                             <h6>Desea Limpiar los campos del diseño?</h6>
@@ -985,7 +985,7 @@
                                                         <%-- DATAGRID--%>
 
                                                         <div class="table-responsive mb-2 gap-2" style="max-height: 212px; overflow-x: auto;">
-                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid1" runat="server" DataSourceID="SqlDataSource1"
+                                                            <asp:DataGrid CssClass="table table-bordered table-hover table-sm form-control-sm" ID="DataGrid1" runat="server" DataSourceID="SqlDataSource1"
                                                                 AutoGenerateColumns="false" OnItemDataBound="DataGrid1_ItemDataBound">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                 <Columns>
@@ -999,12 +999,12 @@
                                                                     <asp:BoundColumn DataField="Nombre_Obra" HeaderText="Nombre de la Obra" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Nombre_Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Fecha_Entrega_Dibujo_Despiece" HeaderText="F.Ingreso" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                    <asp:TemplateColumn HeaderText="Nueva Columna">
+                                                                    <asp:TemplateColumn HeaderText="Nueva Columna" ItemStyle-CssClass="auto-width-column">
                                                                         <ItemTemplate>
                                                                             <asp:Label ID="Label1" runat="server" Text='<%# Convert.ToDateTime(Eval("Fecha_Entrega_Dibujo_Despiece")).AddDays(2).ToString("dd/MM/yyyy hh:mm:ss tt") %>'></asp:Label>
                                                                         </ItemTemplate>
                                                                     </asp:TemplateColumn>
-                                                                    <asp:TemplateColumn HeaderText="Dibujante">
+                                                                    <asp:TemplateColumn HeaderText="Dibujante" ItemStyle-CssClass="auto-width-column">
                                                                         <ItemTemplate>
                                                                             <asp:Label ID="lbDibujante" runat="server" Text='<%# Eval("RealizadoPor") %>'></asp:Label>
                                                                         </ItemTemplate>
@@ -1172,7 +1172,7 @@
                                                                 OnItemDataBound="DataGrid2_ItemDataBound" OnItemCommand="DataGridDise_ItemCommand">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                 <Columns>
-                                                                     <asp:TemplateColumn>
+                                                                     <asp:TemplateColumn ItemStyle-CssClass="auto-width-column">
                                                                             <ItemTemplate>
 
                                                                                 <asp:LinkButton ID="lnkClie" runat="server" CommandName="Numero_Diseño"
@@ -1190,7 +1190,7 @@
                                                                     <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="UltimaActivacion" HeaderText="Ult.Act" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Fecha_Programada_Entrega" HeaderText="F.Entrega" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                    <asp:TemplateColumn HeaderText="Dibujante">
+                                                                    <asp:TemplateColumn HeaderText="Dibujante" ItemStyle-CssClass="auto-width-column">
                                                                         <ItemTemplate>
                                                                             <asp:Label ID="lbDibujante2" runat="server" Text='<%# Eval("RealizadoPor") %>'></asp:Label>
                                                                         </ItemTemplate>
@@ -1380,93 +1380,94 @@
 
         </div>
 
-    
-
-        <div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="miModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="miModalLabel">Título del Modal</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-
-                    </div>
-                    <div class="modal-body">
-                    </div>
-                    <div class="modal-footer">
-                    </div>
-                </div>
-            </div>
-        </div>
 
 
-        <div class="modal" id="miModalll" tabindex="-1" style="display: none;">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Mensaje</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Falta llenar el campo: <span id="campoFaltante"></span></p>
-                    </div>
-                    <div class="modal-footer">
-                        <!-- Puedes agregar botones u opciones aquí si es necesario -->
-                    </div>
-                </div>
-            </div>
-        </div>
+       <div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="miModalLabel" aria-hidden="true">
+           <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <h5 class="modal-title" id="miModalLabel">Título del Modal</h5>
+                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                           <span aria-hidden="true">&times;</span>
+                       </button>
 
-         <div class="modal" id="miModalExito" tabindex="-1" style="display: none;">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Mensaje</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Los datos se guardaron correctamente</p>
-                    </div>
-                    <div class="modal-footer">
-                        <!-- Puedes agregar botones u opciones aquí si es necesario -->
-                    </div>
-                </div>
-            </div>
-        </div>
+                   </div>
+                   <div class="modal-body">
+                   </div>
+                   <div class="modal-footer">
+                   </div>
+               </div>
+           </div>
+       </div>
 
-          <div class="modal" id="miModalError" tabindex="-1" style="display: none;">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Mensaje</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>No se guardaron los datos correctamente</p>
-                    </div>
-                    <div class="modal-footer">
-                        <!-- Puedes agregar botones u opciones aquí si es necesario -->
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal" id="miModalErrorAdj" tabindex="-1" style="display: none;">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Mensaje</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>No se pudo encontrar el archivo</p>
-                    </div>
-                    <div class="modal-footer">
-                        <!-- Puedes agregar botones u opciones aquí si es necesario -->
-                    </div>
-                </div>
-            </div>
-        </div>
+
+       <div class="modal" id="miModalll" tabindex="-1" style="display: none;">
+           <div class="modal-dialog">
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <h5 class="modal-title">Mensaje</h5>
+                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                   </div>
+                   <div class="modal-body">
+                       <p>Falta llenar el campo: <span id="campoFaltante"></span></p>
+                   </div>
+                   <div class="modal-footer">
+                       <!-- Puedes agregar botones u opciones aquí si es necesario -->
+                   </div>
+               </div>
+           </div>
+       </div>
+
+       <div class="modal" id="miModalExito" tabindex="-1" style="display: none;">
+           <div class="modal-dialog">
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <h5 class="modal-title">Mensaje</h5>
+                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                   </div>
+                   <div class="modal-body">
+                       <p>Los datos se guardaron correctamente</p>
+                   </div>
+                   <div class="modal-footer">
+                       <!-- Puedes agregar botones u opciones aquí si es necesario -->
+                   </div>
+               </div>
+           </div>
+       </div>
+
+       <div class="modal" id="miModalError" tabindex="-1" style="display: none;">
+           <div class="modal-dialog">
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <h5 class="modal-title">Mensaje</h5>
+                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                   </div>
+                   <div class="modal-body">
+                       <p>No se guardaron los datos correctamente</p>
+                   </div>
+                   <div class="modal-footer">
+                       <!-- Puedes agregar botones u opciones aquí si es necesario -->
+                   </div>
+               </div>
+           </div>
+       </div>
+
+       <div class="modal" id="miModalErrorAdj" tabindex="-1" style="display: none;">
+           <div class="modal-dialog">
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <h5 class="modal-title">Mensaje</h5>
+                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                   </div>
+                   <div class="modal-body">
+                       <p>No se pudo encontrar el archivo</p>
+                   </div>
+                   <div class="modal-footer">
+                       <!-- Puedes agregar botones u opciones aquí si es necesario -->
+                   </div>
+               </div>
+           </div>
+       </div>
 
     </form>
 

@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,7 +24,57 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
     public partial class Diseño_Venta : System.Web.UI.Page
     {
-        
+        // Variables para almacenar los valores originales de los campos
+        private string valorOriginalCiuPro;
+        private string valorOriginalMail;
+        private string valorOriginalPre;
+        private string valorOriginalCel;
+        private bool valorOriginalCotizarTransporte;
+        private bool valorOriginalCotizarViaticos;
+        private bool valorOriginalMailTerminado;
+
+        // Otras variables originales para otros campos
+        private string valorOriginalTelefono;
+        private string valorOriginalContacto;
+        private string valorOriginalZona;
+        private string valorOriginalFechaDibujoOK;
+        private string valorOriginalFechaProgramadaEntrega;
+        private bool valorOriginalPasarACotizar;
+        private bool valorOriginalUrgente;
+        private string valorOriginalPlanoBitacora;
+        private string valorOriginalNombreDiseño;
+        private string valorOriginalUltimaActivacion;
+        private string valorOriginalFechaIngreso;
+        private string valorOriginalAsesor;
+        private string valorOriginalCliente;
+        private string valorOriginalDireccion;
+        private string valorOriginalDescuento;
+        private bool valorOriginalConduccionCablesPiso;
+        private bool valorOriginalConduccionCablesDivision;
+        private bool valorOriginalConduccionCablesCielo;
+        private bool valorOriginalConduccionCablesCanaleta;
+        private bool valorOriginalBajantesElectricos;
+        private bool valorOriginalBajantesSwitches;
+        private bool valorOriginalSujecionCielo;
+        private bool valorOriginalPerfilRefuerzo;
+        private bool valorOriginalGuardaEscobas;
+        private string valorOriginalAlturaCielo;
+        private string valorOriginalLinea;
+        private string valorOriginalTipoMostrador;
+        private string valorOriginalAcabadoSuperficie;
+        private bool valorOriginalBalanceSuperficies;
+        private string valorOriginalTipoSoporte;
+        private string valorOriginalTipoGaveta;
+        private string valorOriginalAcabadoPaneles;
+        private string valorOriginalTipoTapaPierna;
+        private string valorOriginalTipoRepisa;
+        private string valorOriginalTipoPantalla;
+        private string valorOriginalTipoVidrio;
+        private string valorOriginalTipoArchivador;
+        private string valorOriginalMuebleCoco;
+        private string valorOriginalMuebleEntrepano;
+        private string valorOriginalMueblePuertas;
+        private string valorOriginalObservacionesVentas;
 
         private bool isModalVisible = false;
         protected void Page_Load(object sender, EventArgs e)
@@ -32,8 +82,58 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (!IsPostBack)
             {
+                // Al cargar la página, guarda los valores originales de los campos
+                valorOriginalCiuPro = TextCiuPro.Text;
+                valorOriginalMail = TextMail.Text;
+                valorOriginalPre = TextPre.Text;
+                valorOriginalCel = TextCel.Text;
+                valorOriginalCotizarTransporte = CheckBox4.Checked;
+                valorOriginalCotizarViaticos = ChecCotVia.Checked;
+                valorOriginalMailTerminado = ChecMailTer.Checked;
 
-             
+                // Otras asignaciones de valores originales para otros campos
+                valorOriginalTelefono = TextTel.Text;
+                valorOriginalContacto = TextContacto.Text;
+                valorOriginalZona = TextZona.Text;
+                valorOriginalFechaDibujoOK = TextFecOkDib.Text;
+                valorOriginalFechaProgramadaEntrega = TextEntrega.Text;
+                valorOriginalPasarACotizar = ChecCot.Checked;
+                valorOriginalUrgente = ChecUrgent.Checked;
+                valorOriginalPlanoBitacora = TextPla.Text;
+                valorOriginalNombreDiseño = TextProyecto.Text;
+                valorOriginalUltimaActivacion = TextUltAc.Text;
+                valorOriginalFechaIngreso = TextIngDis.Text;
+                valorOriginalAsesor = DropDownList1.SelectedItem != null ? DropDownList1.SelectedItem.Text : "";
+                valorOriginalCliente = TextCliente.Text;
+                valorOriginalDireccion = TextDir.Text;
+                valorOriginalDescuento = TextDes.Text;
+                valorOriginalConduccionCablesPiso = ChecPiso.Checked;
+                valorOriginalConduccionCablesDivision = ChecDiv.Checked;
+                valorOriginalConduccionCablesCielo = ChecCie.Checked;
+                valorOriginalConduccionCablesCanaleta = ChecCan.Checked;
+                valorOriginalBajantesElectricos = ChecBteEle.Checked;
+                valorOriginalBajantesSwitches = ChecBteSw.Checked;
+                valorOriginalSujecionCielo = ChecSujPt.Checked;
+                valorOriginalPerfilRefuerzo = ChecPerRef.Checked;
+                valorOriginalGuardaEscobas = ChecGuaEsc.Checked;
+                valorOriginalAlturaCielo = TexHTot.Text;
+                valorOriginalLinea = TextLin.Text;
+                valorOriginalTipoMostrador = TextMos.Text;
+                valorOriginalAcabadoSuperficie = TextSup.Text;
+                valorOriginalBalanceSuperficies = CheckBox16.Checked;
+                valorOriginalTipoSoporte = TextSop.Text;
+                valorOriginalTipoGaveta = TextGav.Text;
+                valorOriginalAcabadoPaneles = TextPan.Text;
+                valorOriginalTipoTapaPierna = TextTapPie.Text;
+                valorOriginalTipoRepisa = TextRep.Text;
+                valorOriginalTipoPantalla = TextPant.Text;
+                valorOriginalTipoVidrio = TextTipVid.Text;
+                valorOriginalTipoArchivador = TextArch.Text;
+                valorOriginalMuebleCoco = TextCoc.Text;
+                valorOriginalMuebleEntrepano = TextEnt.Text;
+                valorOriginalMueblePuertas = TextPuer.Text;
+                valorOriginalObservacionesVentas = TextObsVen.InnerText;
+
 
 
                 if (Session["usuariologueado"] != null)
@@ -376,11 +476,33 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ActualizarDiseno.Enabled = true;
             Cancelar.Enabled = true;
 
-            NuevoDisBit.CssClass = "button-enabled";
+            NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled";
           
 
-            ActualizarDiseno.CssClass = "button-enabled";
-            Cancelar.CssClass = "button-enabled";
+            ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
+            Cancelar.CssClass = "btn btn-sm shadow button-enabled";
+
+
+            Grabar.Enabled = false;
+            Grabar.CssClass = "btn btn-sm shadow button-disabled";
+
+            Modificar.Enabled = false;
+            Modificar.CssClass = "btn btn-sm shadow button-disabled";
+
+            DocBitacora.Enabled = false;
+            DocBitacora.CssClass = "btn btn-sm shadow button-disabled";
+
+            RegresarDiseño.Enabled = false;
+            RegresarDiseño.CssClass = "btn btn-sm shadow button-disabled";
+
+            AdicionarElemento.Enabled = false;
+            AdicionarElemento.CssClass = "btn btn-sm shadow button-disabled";
+
+            PausarDiseño.Enabled = false;
+            PausarDiseño.CssClass = "btn btn-sm shadow button-disabled";
+
+            EliminarDiseño.Enabled = false;
+            EliminarDiseño.CssClass = "btn btn-sm shadow button-disabled";
         }
 
         private void DeshabilitarDivYContenido(System.Web.UI.Control container)
@@ -782,16 +904,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Modificar.Enabled = false;
 
                 // Aplicar clases CSS para botones deshabilitados
-                NuevoDisBit.CssClass = "button-disabled";
-                Modificar.CssClass = "button-disabled";
+                NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
+                Modificar.CssClass = "btn btn-sm shadow button-disabled";
 
                 // Habilitar el botón "Grabar"
                 Grabar.Enabled = true;
-                Grabar.CssClass = "button-enabled";
+                Grabar.CssClass = "btn btn-sm shadow button-enabled";
 
                 // Deshabilitar el botón "ActualizarDiseno"
                 ActualizarDiseno.Enabled = false;
-                ActualizarDiseno.CssClass = "button-disabled";
+                ActualizarDiseno.CssClass = "btn btn-sm shadow button-disabled";
 
 
                 // Habilitar el div y su contenido
@@ -816,7 +938,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             Session.Remove("lnkClieClicked");
             Session.Remove("lnkClieeClicked");
-
+            Session["NuevoDisBitEjecutado"] = true;
         }
 
         protected void CheckBox21_CheckedChanged(object sender, EventArgs e)
@@ -868,13 +990,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 // Si se hizo clic en Modificar antes, realiza las acciones necesarias para volver al estado anterior.
                 NuevoDisBit.Enabled = false;
-                NuevoDisBit.CssClass = "button-disabled";
+                NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
 
                 Modificar.Enabled = true;
-                Modificar.CssClass = "button-enabled";
+                Modificar.CssClass = "btn btn-sm shadow button-enabled";
 
                 ActualizarDiseno.Enabled = false;
-                ActualizarDiseno.CssClass = "button-disabled";
+                ActualizarDiseno.CssClass = "btn btn-sm shadow button-disabled";
 
 
                 // Resto de las acciones para volver al estado anterior...
@@ -883,13 +1005,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 // Si no se hizo clic en Modificar antes, simplemente restablece todo como estaba antes de Cancelar.
                 Grabar.Enabled = false;
-                Grabar.CssClass = "button-disabled";
+                Grabar.CssClass = "btn btn-sm shadow button-disabled";
 
                 NuevoDisBit.Enabled = true;
-                NuevoDisBit.CssClass = "button-enabled";
+                NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled";
 
                 ActualizarDiseno.Enabled = true;
-                ActualizarDiseno.CssClass = "button-enabled";
+                ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
 
                 // Resto de las acciones para cancelar...
             }
@@ -899,14 +1021,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Deshabilitar el botón "Grabar"
             Grabar.Enabled = false;
-            Grabar.CssClass = "button-disabled";
+            Grabar.CssClass = "btn btn-sm shadow button-disabled";
 
             // Habilitar el botón "NuevoDisBit"
             NuevoDisBit.Enabled = true;
 
             // Habilitar el botón "ActualizarDiseno"
             ActualizarDiseno.Enabled = true;
-            NuevoDisBit.CssClass = "button-enabled";
+            NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled";
 
             // Ocultar el div y su contenido
             DeshabilitarDivYContenido(miDiv);
@@ -922,22 +1044,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session["lnkClieClicked"] = true;
 
             Grabar.Enabled = false;
-            Grabar.CssClass = "button-disabled";
+            Grabar.CssClass = "btn btn-sm shadow button-disabled";
 
             // Habilitar el botón "ActualizarDiseno"
             ActualizarDiseno.Enabled = true;
-            ActualizarDiseno.CssClass = "button-enabled";
+            ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
 
             // Habilitar el botón "Modificar"
             Modificar.Enabled = true;
-            Modificar.CssClass = "button-enabled";
+            Modificar.CssClass = "btn btn-sm shadow button-enabled";
 
             DocBitacora.Enabled = true;
-            DocBitacora.CssClass = "button-enabled";
+            DocBitacora.CssClass = "btn btn-sm shadow button-enabled";
 
             // Habilitar el botón "AdicionarElemento"
             AdicionarElemento.Enabled = true;
-            AdicionarElemento.CssClass = "button-enabled";
+            AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled";
 
           
 
@@ -953,22 +1075,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session["lnkClieeClicked"] = true;
 
             Grabar.Enabled = false;
-            Grabar.CssClass = "button-disabled";
+            Grabar.CssClass = "btn btn-sm shadow button-disabled";
 
             // Habilitar el botón "ActualizarDiseno"
             ActualizarDiseno.Enabled = true;
-            ActualizarDiseno.CssClass = "button-enabled";
+            ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
 
             // Habilitar el botón "Modificar"
             Modificar.Enabled = true;
-            Modificar.CssClass = "button-enabled";
+            Modificar.CssClass = "btn btn-sm shadow button-enabled";
 
             DocBitacora.Enabled = true;
-            DocBitacora.CssClass = "button-enabled";
+            DocBitacora.CssClass = "btn btn-sm shadow button-enabled";
 
             // Habilitar el botón "AdicionarElemento"
             AdicionarElemento.Enabled = true;
-            AdicionarElemento.CssClass = "button-enabled";
+            AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled";
 
             BtnProgramar.Enabled = true;
 
@@ -1019,24 +1141,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void Modificar_Click(object sender, EventArgs e)
         {
             BtnProgramar.Enabled = false;
-            BtnProgramar.CssClass = "button-disabled";
+            BtnProgramar.CssClass = "btn btn-sm shadow button-disabled";
 
             // Deshabilitar el botón "NuevoDisBit"
             NuevoDisBit.Enabled = false;
-            Grabar.CssClass = "button-disabled";
+            Grabar.CssClass = "btn btn-sm shadow button-disabled";
 
             Modificar.Enabled = false;
-            Modificar.CssClass = "button-disabled";
+            Modificar.CssClass = "btn btn-sm shadow button-disabled";
 
             ActualizarDiseno.Enabled = false;
-            ActualizarDiseno.CssClass = "button-disabled";
+            ActualizarDiseno.CssClass = "btn btn-sm shadow button-disabled";
 
             // Habilitar el botón "Grabar"
             Grabar.Enabled = true;
-            Grabar.CssClass = "button-enabled";
+            Grabar.CssClass = "btn btn-sm shadow button-enabled";
 
             DocBitacora.Enabled = true;
-            DocBitacora.CssClass = "button-enabled";
+            DocBitacora.CssClass = "btn btn-sm shadow button-enabled";
 
             // Habilitar el div y su contenido
             HabilitarDivYContenido(miDiv);
@@ -1252,43 +1374,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return campoFaltante;
         }
 
-     
+
 
         protected void btnInsertar_Click(object sender, EventArgs e)
         {
-            
+            // Verifica si "NuevoDisBit" se ejecutó previamente
+            bool nuevoDisBitEjecutado = Session["NuevoDisBitEjecutado"] != null && (bool)Session["NuevoDisBitEjecutado"];
 
-           if (Session["ModificarEjecutado"] != null && (bool)Session["ModificarEjecutado"])
+            // Realiza la validación de campos
+            string campoFaltante = ValidarCampos();
+
+            if (string.IsNullOrEmpty(campoFaltante))
             {
-                Session["ModificarEjecutado"] = false;
-
-                string campoFaltante = ValidarCampos();
-
-                if (string.IsNullOrEmpty(campoFaltante))
+                if (nuevoDisBitEjecutado)
                 {
-                    if (RealizarActualizacion())
-                    {
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalExito').modal('show');", true);
-                    }
-                    else
-                    {
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
-                    }
-                }
-                else
-                {
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalll').modal('show'); $('#campoFaltante').text('" + campoFaltante + "');", true);
-                }
-
-
-            }
-
-            else
-            {
-                string campoFaltante = ValidarCampos();
-
-                if (string.IsNullOrEmpty(campoFaltante))
-                {
+                    // Realiza la inserción
                     if (RealizarInsercion())
                     {
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalExito').modal('show');", true);
@@ -1300,12 +1400,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
                 else
                 {
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalll').modal('show'); $('#campoFaltante').text('" + campoFaltante + "');", true);
+                    // Realiza solo la actualización o inserción según corresponda
+                    if (Session["ModificarEjecutado"] != null && (bool)Session["ModificarEjecutado"])
+                    {
+                        // Realiza la actualización
+                        if (RealizarActualizacion())
+                        {
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalExito').modal('show');", true);
+                        }
+                        else
+                        {
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
+                        }
+                    }
                 }
             }
+            else
+            {
+                // Muestra el modal de advertencia si faltan campos
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalll').modal('show'); $('#campoFaltante').text('" + campoFaltante + "');", true);
+            }
 
-
+            // Limpia la variable de sesión después de usarla
+            Session["NuevoDisBitEjecutado"] = false;
         }
+
+
+
+
 
         private bool RealizarInsercion()
         {
@@ -1411,7 +1533,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
         private bool RealizarActualizacion()
         {
             // Obtén el número de diseño de la etiqueta lblNumDise
@@ -1450,83 +1571,340 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
 
-                // Crear el nombre del procedimiento almacenado
-                string storedProcedureName = "sp_ActualizarDiseño";
-
-                // Crear el comando para ejecutar el procedimiento almacenado
-                using (SqlCommand command = new SqlCommand(storedProcedureName, connection))
+                // Verificar si algún campo ha sido modificado
+                if (CamposModificados())
                 {
-                    // Especificar que el comando es un procedimiento almacenado
-                    command.CommandType = CommandType.StoredProcedure;
+                    // Crear el nombre del procedimiento almacenado
+                    string storedProcedureName = "sp_ActualizarDiseño";
 
-                    // Asignar los valores a los parámetros del procedimiento almacenado
-                    command.Parameters.AddWithValue("@Nombre_Diseño", TextProyecto.Text);
+                    // Crear el comando para ejecutar el procedimiento almacenado
+                    using (SqlCommand command = new SqlCommand(storedProcedureName, connection))
+                    {
+                        // Especificar que el comando es un procedimiento almacenado
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Asignar los valores a los parámetros del procedimiento almacenado
+                        command.Parameters.AddWithValue("@Nombre_Diseño", TextProyecto.Text);
 
 
-                    command.Parameters.AddWithValue("@Numero_Diseño", lblNumDise.Text);
-                    command.Parameters.AddWithValue("@id_CiudadProyecto", TextCiuPro.Text);
-                    command.Parameters.AddWithValue("@Mail", TextMail.Text);
-                    command.Parameters.AddWithValue("@PresentacionCotizacion", TextPre.Text);
-                    command.Parameters.AddWithValue("@Celular", TextCel.Text);
-                    command.Parameters.AddWithValue("@Cotizartransporte", CheckBox4.Checked);
-                    command.Parameters.AddWithValue("@CotizarViaticos", ChecCotVia.Checked);
-                    command.Parameters.AddWithValue("@MailTerminado", ChecMailTer.Checked);
-                    command.Parameters.AddWithValue("@Telefono", TextTel.Text);
-                    command.Parameters.AddWithValue("@Contacto", TextContacto.Text);
-                    command.Parameters.AddWithValue("@Zona", TextZona.Text);
-                    command.Parameters.AddWithValue("@FechaDibujoOK", TextFecOkDib.Text);
-                    command.Parameters.AddWithValue("@Fecha_Programada_Entrega", TextEntrega.Text);
-                    command.Parameters.AddWithValue("@PasarACotizar", ChecCot.Checked);
-                    command.Parameters.AddWithValue("@Urgente", ChecUrgent.Checked);
-                    command.Parameters.AddWithValue("@PlanoBitacora", TextPla.Text);
-                    command.Parameters.AddWithValue("@UltimaActivacion", TextUltAc.Text);
-                    command.Parameters.AddWithValue("@Fecha_Ingreso", TextIngDis.Text);
-                    command.Parameters.AddWithValue("@Asesor", DropDownList1.SelectedItem.Text);
-                    command.Parameters.AddWithValue("@Cliente", TextCliente.Text);
-                    command.Parameters.AddWithValue("@Direccion", TextDir.Text);
-                    command.Parameters.AddWithValue("@Descuento", TextDes.Text);
-                    command.Parameters.AddWithValue("@ConduccionCablesPiso", ChecPiso.Checked);
-                    command.Parameters.AddWithValue("@ConduccionCablesDivision", ChecDiv.Checked);
-                    command.Parameters.AddWithValue("@ConduccionCablesCielo", ChecCie.Checked);
-                    command.Parameters.AddWithValue("@ConduccionCablesCanaleta", ChecCan.Checked);
-                    command.Parameters.AddWithValue("@BajantesElectricos", ChecBteEle.Checked);
-                    command.Parameters.AddWithValue("@Bajantesswitches", ChecBteSw.Checked);
-                    command.Parameters.AddWithValue("@SujecionCielo", ChecSujPt.Checked);
-                    command.Parameters.AddWithValue("@PerfilRefuerzo", ChecPerRef.Checked);
-                    command.Parameters.AddWithValue("@GuardaEscobas", ChecGuaEsc.Checked);
-                    command.Parameters.AddWithValue("@AlturaCielo", TexHTot.Text);
-                    command.Parameters.AddWithValue("@Linea", TextLin.Text);
-                    command.Parameters.AddWithValue("@TipoMostrador", TextMos.Text);
-                    command.Parameters.AddWithValue("@AcabadoSuperficie", TextSup.Text);
-                    command.Parameters.AddWithValue("@BalanceSuperficies", CheckBox16.Text);
-                    command.Parameters.AddWithValue("@TipoSoporte", TextSop.Text);
-                    command.Parameters.AddWithValue("@TipoGaveta", TextGav.Text);
-                    command.Parameters.AddWithValue("@AcabadoPaneles", TextPan.Text);
-                    command.Parameters.AddWithValue("@TipoTapaPierna", TextTapPie.Text);
-                    command.Parameters.AddWithValue("@TipoRepisa", TextRep.Text);
-                    command.Parameters.AddWithValue("@TipodePantalla", TextPant.Text);
-                    command.Parameters.AddWithValue("@TipodeVidrio", TextTipVid.Text);
-                    command.Parameters.AddWithValue("@TipoArchivador", TextArch.Text);
-                    command.Parameters.AddWithValue("@MuebleCoco", TextCoc.Text);
-                    command.Parameters.AddWithValue("@MuebleEntrepano", TextEnt.Text);
-                    command.Parameters.AddWithValue("@MueblePuertas", TextPuer.Text);
-                    command.Parameters.AddWithValue("@Observaciones_Ventas", TextObsVen.InnerText);
-                    command.Parameters.AddWithValue("@Observaciones_Diseño", TextObsDibDes.InnerText);
-                    command.Parameters.AddWithValue("@SeguimientoPausa", TextSegPauDev.InnerText);
-                    command.Parameters.AddWithValue("@SC_Presentacionppt", CheckBox18.Checked);
-                    command.Parameters.AddWithValue("@SC_Imagenes", CheckBox19.Checked);
-                    command.Parameters.AddWithValue("@SC_Accesorios", CheckBox20.Checked);
-                    command.Parameters.AddWithValue("@SC_Tiemporeal", CheckBox21.Checked);
-                    command.Parameters.AddWithValue("@SC_Fecha", TextFec.Text);
-                    command.Parameters.AddWithValue("@SC_Ubicacion", TextUbi.Text);
+                        command.Parameters.AddWithValue("@Numero_Diseño", lblNumDise.Text);
+                        command.Parameters.AddWithValue("@id_CiudadProyecto", TextCiuPro.Text);
+                        command.Parameters.AddWithValue("@Mail", TextMail.Text);
+                        command.Parameters.AddWithValue("@PresentacionCotizacion", TextPre.Text);
+                        command.Parameters.AddWithValue("@Celular", TextCel.Text);
+                        command.Parameters.AddWithValue("@Cotizartransporte", CheckBox4.Checked);
+                        command.Parameters.AddWithValue("@CotizarViaticos", ChecCotVia.Checked);
+                        command.Parameters.AddWithValue("@MailTerminado", ChecMailTer.Checked);
+                        command.Parameters.AddWithValue("@Telefono", TextTel.Text);
+                        command.Parameters.AddWithValue("@Contacto", TextContacto.Text);
+                        command.Parameters.AddWithValue("@Zona", TextZona.Text);
+                        command.Parameters.AddWithValue("@FechaDibujoOK", TextFecOkDib.Text);
+                        command.Parameters.AddWithValue("@Fecha_Programada_Entrega", TextEntrega.Text);
+                        command.Parameters.AddWithValue("@PasarACotizar", ChecCot.Checked);
+                        command.Parameters.AddWithValue("@Urgente", ChecUrgent.Checked);
+                        command.Parameters.AddWithValue("@PlanoBitacora", TextPla.Text);
+                        command.Parameters.AddWithValue("@UltimaActivacion", TextUltAc.Text);
+                        command.Parameters.AddWithValue("@Fecha_Ingreso", TextIngDis.Text);
+                        command.Parameters.AddWithValue("@Asesor", DropDownList1.SelectedItem.Text);
+                        command.Parameters.AddWithValue("@Cliente", TextCliente.Text);
+                        command.Parameters.AddWithValue("@Direccion", TextDir.Text);
+                        command.Parameters.AddWithValue("@Descuento", TextDes.Text);
+                        command.Parameters.AddWithValue("@ConduccionCablesPiso", ChecPiso.Checked);
+                        command.Parameters.AddWithValue("@ConduccionCablesDivision", ChecDiv.Checked);
+                        command.Parameters.AddWithValue("@ConduccionCablesCielo", ChecCie.Checked);
+                        command.Parameters.AddWithValue("@ConduccionCablesCanaleta", ChecCan.Checked);
+                        command.Parameters.AddWithValue("@BajantesElectricos", ChecBteEle.Checked);
+                        command.Parameters.AddWithValue("@Bajantesswitches", ChecBteSw.Checked);
+                        command.Parameters.AddWithValue("@SujecionCielo", ChecSujPt.Checked);
+                        command.Parameters.AddWithValue("@PerfilRefuerzo", ChecPerRef.Checked);
+                        command.Parameters.AddWithValue("@GuardaEscobas", ChecGuaEsc.Checked);
+                        command.Parameters.AddWithValue("@AlturaCielo", TexHTot.Text);
+                        command.Parameters.AddWithValue("@Linea", TextLin.Text);
+                        command.Parameters.AddWithValue("@TipoMostrador", TextMos.Text);
+                        command.Parameters.AddWithValue("@AcabadoSuperficie", TextSup.Text);
+                        command.Parameters.AddWithValue("@BalanceSuperficies", CheckBox16.Text);
+                        command.Parameters.AddWithValue("@TipoSoporte", TextSop.Text);
+                        command.Parameters.AddWithValue("@TipoGaveta", TextGav.Text);
+                        command.Parameters.AddWithValue("@AcabadoPaneles", TextPan.Text);
+                        command.Parameters.AddWithValue("@TipoTapaPierna", TextTapPie.Text);
+                        command.Parameters.AddWithValue("@TipoRepisa", TextRep.Text);
+                        command.Parameters.AddWithValue("@TipodePantalla", TextPant.Text);
+                        command.Parameters.AddWithValue("@TipodeVidrio", TextTipVid.Text);
+                        command.Parameters.AddWithValue("@TipoArchivador", TextArch.Text);
+                        command.Parameters.AddWithValue("@MuebleCoco", TextCoc.Text);
+                        command.Parameters.AddWithValue("@MuebleEntrepano", TextEnt.Text);
+                        command.Parameters.AddWithValue("@MueblePuertas", TextPuer.Text);
+                        command.Parameters.AddWithValue("@Observaciones_Ventas", TextObsVen.InnerText);
+                        command.Parameters.AddWithValue("@Observaciones_Diseño", TextObsDibDes.InnerText);
+                        command.Parameters.AddWithValue("@SeguimientoPausa", TextSegPauDev.InnerText);
+                        command.Parameters.AddWithValue("@SC_Presentacionppt", CheckBox18.Checked);
+                        command.Parameters.AddWithValue("@SC_Imagenes", CheckBox19.Checked);
+                        command.Parameters.AddWithValue("@SC_Accesorios", CheckBox20.Checked);
+                        command.Parameters.AddWithValue("@SC_Tiemporeal", CheckBox21.Checked);
+                        command.Parameters.AddWithValue("@SC_Fecha", TextFec.Text);
+                        command.Parameters.AddWithValue("@SC_Ubicacion", TextUbi.Text);
+                        // Ejecutar el procedimiento almacenado
+                        int rowsAffected = command.ExecuteNonQuery();
 
-                    // Ejecutar el procedimiento almacenado
-                    int rowsAffected = command.ExecuteNonQuery();
-
-                    return rowsAffected > 0;
+                        return rowsAffected > 0;
+                    }
+                }
+                else
+                {
+                    // No se ha modificado ningún campo, no es necesario realizar la actualización.
+                    return false;
                 }
             }
         }
+
+        private bool CamposModificados()
+        {
+            // Variable para llevar un registro de si se ha modificado algún campo
+            bool seModificoAlgo = false;
+
+            // Comparar cada campo con su valor original y actualizar la variable 'seModificoAlgo' si se modifica algún campo.
+
+            if (TextCiuPro.Text != valorOriginalCiuPro)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextMail.Text != valorOriginalMail)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextPre.Text != valorOriginalPre)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextCel.Text != valorOriginalCel)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (CheckBox4.Checked != valorOriginalCotizarTransporte)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (ChecCotVia.Checked != valorOriginalCotizarViaticos)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (ChecMailTer.Checked != valorOriginalMailTerminado)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextTel.Text != valorOriginalTelefono)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextContacto.Text != valorOriginalContacto)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextZona.Text != valorOriginalZona)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextFecOkDib.Text != valorOriginalFechaDibujoOK)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextEntrega.Text != valorOriginalFechaProgramadaEntrega)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (ChecCot.Checked != valorOriginalPasarACotizar)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextPla.Text != valorOriginalPlanoBitacora)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextProyecto.Text != valorOriginalNombreDiseño)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextUltAc.Text != valorOriginalUltimaActivacion)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextIngDis.Text != valorOriginalFechaIngreso)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (DropDownList1.SelectedItem == null || DropDownList1.SelectedItem.Text != valorOriginalAsesor)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextCliente.Text != valorOriginalCliente)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextDir.Text != valorOriginalDireccion)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextDes.Text != valorOriginalDescuento)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (ChecPiso.Checked != valorOriginalConduccionCablesPiso)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (ChecDiv.Checked != valorOriginalConduccionCablesDivision)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (ChecCie.Checked != valorOriginalConduccionCablesCielo)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (ChecCan.Checked != valorOriginalConduccionCablesCanaleta)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (ChecBteEle.Checked != valorOriginalBajantesElectricos)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (ChecBteSw.Checked != valorOriginalBajantesSwitches)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (ChecAlCie.Checked != valorOriginalSujecionCielo)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (ChecPerRef.Checked != valorOriginalPerfilRefuerzo)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (ChecGuaEsc.Checked != valorOriginalGuardaEscobas)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TexHTot.Text != valorOriginalAlturaCielo)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextLin.Text != valorOriginalLinea)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextMos.Text != valorOriginalTipoMostrador)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextSup.Text != valorOriginalAcabadoSuperficie)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (CheckBox16.Checked != valorOriginalBalanceSuperficies)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextSop.Text != valorOriginalTipoSoporte)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextGav.Text != valorOriginalTipoGaveta)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextPan.Text != valorOriginalAcabadoPaneles)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextTapPie.Text != valorOriginalTipoTapaPierna)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextRep.Text != valorOriginalTipoRepisa)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextPant.Text != valorOriginalTipoPantalla)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextTipVid.Text != valorOriginalTipoVidrio)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextArch.Text != valorOriginalTipoArchivador)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextCoc.Text != valorOriginalMuebleCoco)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextEnt.Text != valorOriginalMuebleEntrepano)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextPuer.Text != valorOriginalMueblePuertas)
+            {
+                seModificoAlgo = true;
+            }
+
+            if (TextObsVen.InnerText != valorOriginalObservacionesVentas)
+            {
+                seModificoAlgo = true;
+            }
+
+            // Continúa comparando los demás campos de la misma manera...
+
+            // Una vez que hayas comparado todos los campos necesarios, retorna el valor de 'seModificoAlgo'.
+            return seModificoAlgo;
+        }
+
 
 
 

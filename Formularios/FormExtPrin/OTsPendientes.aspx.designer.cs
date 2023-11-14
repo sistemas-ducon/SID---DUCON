@@ -24,13 +24,31 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
-        /// Control CheckBox18.
+        /// Control ScriptManager1.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox CheckBox18;
+        protected global::System.Web.UI.ScriptManager ScriptManager1;
+
+        /// <summary>
+        /// Control PanelOrdPen.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel PanelOrdPen;
+
+        /// <summary>
+        /// Control RadioButton18.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton RadioButton18;
 
         /// <summary>
         /// Control lblPrePpt.
@@ -42,13 +60,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected global::System.Web.UI.WebControls.Label lblPrePpt;
 
         /// <summary>
-        /// Control CheckBox1.
+        /// Control RadioButton1.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox CheckBox1;
+        protected global::System.Web.UI.WebControls.RadioButton RadioButton1;
 
         /// <summary>
         /// Control Label1.
@@ -60,13 +78,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected global::System.Web.UI.WebControls.Label Label1;
 
         /// <summary>
-        /// Control CheckBox2.
+        /// Control RadioButton2.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox CheckBox2;
+        protected global::System.Web.UI.WebControls.RadioButton RadioButton2;
 
         /// <summary>
         /// Control Label2.
@@ -192,7 +210,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button3;
+        protected global::System.Web.UI.WebControls.LinkButton Button3;
 
         /// <summary>
         /// Control DataGrid1.
