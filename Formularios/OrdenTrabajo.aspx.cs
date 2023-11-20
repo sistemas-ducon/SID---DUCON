@@ -21,9 +21,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
     public partial class OrdenTrabajo : System.Web.UI.Page
     {
-
-       
-
         private string id;
         private string pedido;
         private List<TextBox> listaTextBoxes;
@@ -31,16 +28,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
-            {  
-                
-                Session["CargarOTsEjecutada"] = null;
+            if (Session["usuariologueado"] != null)
+            {
+                string usuariologueado = Session["usuariologueado"].ToString();
 
-                habilitarbotones();          
+                if (!IsPostBack)
+                {
 
-                DeshabilitarBotones(sender, e);
+                    Session["CargarOTsEjecutada"] = null;
 
-                listaTextBoxes = new List<TextBox>
+                    habilitarbotones();
+
+                    DeshabilitarBotones(sender, e);
+
+                    listaTextBoxes = new List<TextBox>
                 {
                     tbPedDepen,tbObra,tbDir,tbContac,tbEmail,tbRecibe,tbTel,tbCel,tbPais,tbHTotal,tbVenta,dtpFechaEntregaDibujoDespiece,dtpFechaEntregaProduccion,dtpEmpaque,dtpRealEmpaque,tbSupervisor,
                     tbBolsa,tbValorPedido,txtNit,txtNombreEmp,txtcontacto,txtMail,txtDireccion,txtMunicipio,txtTelefono,txtCotizacion,txtValorSugerido,txtVcsd,txtVccd,txtOrdenCompra,txtAsesor,txtComision,
@@ -48,25 +49,35 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 };
 
-                listaDropDownLists = new List<DropDownList>
+                    listaDropDownLists = new List<DropDownList>
                 {
                    ddlZona,dtacboTipoPedido,cboPedidoBase,DtaCboTipoAprobacion,ddlFabrica1,ddlInstala,ddlAsesor,ddlCiudad
 
                 };
 
-                txObs2.Disabled = true;
-                txObs1.Disabled = true;
+                    txObs2.Disabled = true;
+                    txObs1.Disabled = true;
 
-                CargarAsesoresEnDropDownList();
-                DeshabilitarTextBoxes(listaTextBoxes);
-                DeshabilitarDropDownLists(listaDropDownLists);
-                Nit.Enabled = false;
-                Nit.CssClass = "bi bf  btn btn-outline-secondary";
-                btnCotizacion.Enabled = false;
-                btnCotizacion.CssClass = "bi bf  btn btn-outline-secondary";
+                    CargarAsesoresEnDropDownList();
+                    DeshabilitarTextBoxes(listaTextBoxes);
+                    DeshabilitarDropDownLists(listaDropDownLists);
+                    Nit.Enabled = false;
+                    Nit.CssClass = "bi bf  btn btn-outline-secondary";
+                    btnCotizacion.Enabled = false;
+                    btnCotizacion.CssClass = "bi bf  btn btn-outline-secondary";
+
+
+                }
+
 
 
             }
+            else
+            {
+                Response.Redirect("Login.aspx");
+            }
+
+           
         }
 
         //MODIFICADO POR CARLOS PINEDA
@@ -447,8 +458,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
-
         protected void ObtenerInfoOt(object sender, EventArgs e)
         {
             string id = tbOT.Text.Trim();
@@ -526,9 +535,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             try
             {
-
-
-
                 using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
                 {
                     sqlconectar.Open();
@@ -1060,6 +1066,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+
+        // Se Debe Modificar el procedimienato almacenado
         public void LlenarDataGridObjeto(string idPanelNum)
         {
             string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
@@ -1084,7 +1092,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(cn))
             {
-                SqlCommand command = new SqlCommand("Sp_ObtenerDatosModulo", connection);
+                SqlCommand command = new SqlCommand("sp_ObtenerDatosModulo1", connection);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.Add("@IdPanelNum", SqlDbType.VarChar, 30).Value = idPanelNum;
 
@@ -1094,6 +1102,47 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 DataGridModuloObjetos.DataSource = dataTable;
                 DataGridModuloObjetos.DataBind();
+
+            }
+        }
+
+        public void LlennarDatagridAcabado(string Idmodulo, string IdFamilia)
+        {
+            string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(cn))
+            {
+                SqlCommand command = new SqlCommand("sp_ObtenerAcabadosItemPlano", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add("@Plano", SqlDbType.VarChar, 30).Value = txtPlano.Text;
+                command.Parameters.Add("@IdModulo", SqlDbType.VarChar, 30).Value = Idmodulo ;
+                command.Parameters.Add("@IdFamilia", SqlDbType.VarChar, 30).Value = IdFamilia;
+
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                DataTable dataTable = new DataTable();
+                adapter.Fill(dataTable);
+
+                if (dataTable.Rows.Count > 0)
+                {    
+                    DataGridAcabado.DataSource = dataTable;
+                    DataGridAcabado.DataBind();
+                }
+                else
+                {
+                    // El procedimiento no devolvió datos, ejecutar otro procedimiento o manejar la lógica correspondiente
+                    // Por ejemplo, podrías llamar a otro procedimiento almacenado aquí
+                    SqlCommand command1 = new SqlCommand("sp_ObtenerAcabadosItemPlano2", connection);
+                    command1.CommandType = CommandType.StoredProcedure;
+
+                    command1.Parameters.Add("@Plano", SqlDbType.VarChar, 30).Value = txtPlano.Text;
+                    command1.Parameters.Add("@IdModulo", SqlDbType.VarChar, 30).Value = Idmodulo;
+
+                    SqlDataAdapter adapter2 = new SqlDataAdapter(command1);
+                    DataTable dataTable2 = new DataTable();
+                    adapter2.Fill(dataTable2);
+
+                    DataGridAcabado.DataSource = dataTable2;
+                    DataGridAcabado.DataBind();
+                }
 
             }
         }
@@ -1112,7 +1161,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
         protected void DataGridDescripcionObjeto_LinkButton(object source, DataGridCommandEventArgs e)
         {
 
@@ -1121,6 +1169,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGridDescripcionObjetos.Items[rowIndex];
 
+                string IdModulo = row.Cells[1].Text;
+                string IdFamilia = row.Cells[12].Text;
+                LlennarDatagridAcabado(IdModulo, IdFamilia);
 
                 foreach (DataGridItem item in DataGridDescripcionObjetos.Items)
                 {
@@ -1162,7 +1213,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
         }
-
 
 
         // Logica Tap de Objetos 
@@ -1238,13 +1288,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void DataGridObtenerDatosObjetos_LinkButton(object source, DataGridCommandEventArgs e)
         {
-
-            if (e.CommandName == "VerObjetoDet")
                 if (e.CommandName == "VerObjetoDet")
                 {
                     int rowIndex = Convert.ToInt32(e.CommandArgument);
                     DataGridItem row = DataGridObjetos.Items[rowIndex];
-
 
                     foreach (DataGridItem item in DataGridObjetos.Items)
                     {
@@ -1280,9 +1327,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     ValorlbDipLa2.Text = Altura + " Cms";
                     ValorlbDipLa3.Text = Altura + " Cms";
 
-
-
-
+                    string url = "FormExtPrin/ObjetoDespiece.aspx";
+                    string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
 
                 }
         }

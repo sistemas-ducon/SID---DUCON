@@ -171,7 +171,7 @@
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="ventas/Gestion_Comercial.aspx">Gestión comecial</a></li>
                     <li><a class="dropdown-item" href="ventas/Licitaciones.aspx">Licitaciones</a></li>
-                    <li><a class="dropdown-item" href="OTs.aspx">Ordenes de trabajo</a></li>
+                    <li><a class="dropdown-item" href="OrdenTrabajo.aspx">Ordenes de trabajo</a></li>
                     <li><a class="dropdown-item" href="ventas/Diseño_Venta.aspx">Programar diseño</a></li>
                     <li><a class="dropdown-item" href="ventas/Render_Venta.aspx">Programar render</a></li>
                     <li><a class="dropdown-item" href="ventas/Consulta_Cotizacion.aspx">Seguimiento cotizaciones</a></li>
