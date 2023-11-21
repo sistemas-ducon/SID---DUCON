@@ -193,6 +193,7 @@
     <Content Include="Recursos\CSS\DiseñoYDesarrollo\Objetos.css" />
     <Content Include="Recursos\CSS\DiseñoYDesarrollo\Plano.css" />
     <Content Include="Recursos\CSS\FormExtPrin\AcabadosOT.css" />
+    <Content Include="Recursos\CSS\FormExtPrin\NitOts.css" />
     <Content Include="Recursos\CSS\FormExtPrin\ObjetoDespiece.css" />
     <Content Include="Recursos\CSS\FormExtPrin\ObservacionesOT.css" />
     <Content Include="Recursos\CSS\FormExtPrin\OtsPendientes.css" />

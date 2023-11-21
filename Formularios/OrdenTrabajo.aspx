@@ -80,9 +80,9 @@
                                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#ejemplo2" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                                         <span class="navbar-toggler-icon"></span>
                                     </button>
+
                                     <div class="collapse navbar-collapse" id="ejemplo2">
                                         <ul class="navbar-nav mx-auto contenedor-icono">
-
                                             <div class="contenedor-icono">
 
 
@@ -94,7 +94,7 @@
                                                    <i class="bi bi-files"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server"  Text="Grabar Orden de Trabajo" ID="GrabarOt">
+                                                <asp:LinkButton runat="server" Text="Grabar Orden de Trabajo" ID="GrabarOt">
                                                   <i class="bi bi-save2"></i>
                                                 </asp:LinkButton>
 
@@ -102,7 +102,7 @@
                                                    <i class="bi bi-wrench"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Anular o Eliminar un Pedido" ID="AnularPedido" >
+                                                <asp:LinkButton runat="server" Text="Anular o Eliminar un Pedido" ID="AnularPedido">
                                                  <i class="bi bi-file-earmark-excel"></i>
                                                 </asp:LinkButton>
 
@@ -182,10 +182,8 @@
                                                  <i class="bi bi-x-square"></i>
                                                 </asp:LinkButton>
 
+                                            </div>
 
-
-
-                                                <ul />
                                         </ul>
                                     </div>
 
@@ -300,14 +298,9 @@
                                     </div>
                                 </div>
 
-
-
-
-
                             </div>
 
                             <div class="row">
-
 
                                 <div class="col-3">
                                     <div class="input-group input-group-sm mb-2 gap-2">
@@ -331,6 +324,7 @@
 
                                     </div>
                                 </div>
+
                                 <div class="col-2">
                                     <div class="input-group input-group-sm mb-2 gap-4">
                                         <asp:Label class="form-label" Text="Tel" runat="server" ID="lblTel"></asp:Label>
@@ -344,7 +338,6 @@
                                         <asp:TextBox ID="tbCel" type="tel" class="form-control" runat="server"></asp:TextBox>
                                     </div>
                                 </div>
-
 
                                 <div class="col-2">
                                     <div class="input-group input-group-sm mb-2 gap-2">
@@ -396,7 +389,6 @@
                                             </div>
                                         </div>
 
-
                                     </div>
 
                                     <div class="row">
@@ -416,7 +408,6 @@
                                     </div>
 
                                     <div class="row">
-
                                         <div class="col-6">
                                             <div class="input-group input-group-sm mb-2 gap-2">
                                                 <label class="form-label" runat="server" id="inputEmpaque">Empaque</label>
@@ -463,13 +454,16 @@
                                                                 <asp:BoundColumn DataField="Receptor" HeaderText="Receptor" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Celular_Receptor" HeaderText="Celular" ItemStyle-CssClass="auto-width-column" />
                                                             </Columns>
+
                                                         </asp:DataGrid>
+
                                                         <asp:SqlDataSource runat="server" ID="obtenerInfoDespacho" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL_PRUEBAConnectionString %>" SelectCommand="sp_ObtenerInformacionDespacho" SelectCommandType="StoredProcedure">
                                                             <SelectParameters>
                                                                 <asp:ControlParameter ControlID="tbOT" PropertyName="Text" Name="Id_OT" Type="String"></asp:ControlParameter>
                                                                 <asp:ControlParameter ControlID="ddlNumbers" PropertyName="SelectedValue" Name="Pedido" Type="Int32"></asp:ControlParameter>
                                                             </SelectParameters>
                                                         </asp:SqlDataSource>
+
                                                         <asp:SqlDataSource runat="server" ID="InfoDespachos"></asp:SqlDataSource>
 
                                                     </div>
@@ -520,7 +514,6 @@
                                 </div>
 
                                 <div class="row">
-
                                     <div class="col-5">
                                         <div class="input-group input-group-sm mb-2 gap-4">
                                             <asp:Button class="btn btn-outline-secondary" Text="Plano+" runat="server" type="button" disabled="disabled"></asp:Button>
@@ -906,11 +899,10 @@
                 </asp:UpdatePanel>
             </div>
 
-
-
             <div class="tab-pane fade  " id="Plano-Content">
                 <asp:UpdatePanel ID="PanelPlano" runat="server">
                     <ContentTemplate>
+
                         <div class="container-fluid">
                             <!--Nav iconos Planos-->
                             <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
@@ -1073,24 +1065,18 @@
                                         <div class="border rounded p-1 m-1">
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <div class="table-responsive mb-1" style="max-height: 11rem; overflow-x: auto;">
+                                                    <div class="table-responsive mb-1" style="max-height: 7rem; overflow-x: auto;">
                                                         <h5 class="datagrid-header text-center">Acabado objeto</h5>
-                                                        <asp:DataGrid CssClass="table table-bordered custom-grid table-hover custom-data-grid form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridAcabado" runat="server">
+                                                        <asp:DataGrid CssClass="table table-bordered custom-grid table-hover custom-data-grid form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridAcabado" runat="server" >
                                                             <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                             <Columns>
-
-                                                                <asp:BoundColumn DataField="" HeaderText="" />
-                                                                <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="oadDescripcionAcabado" HeaderText="Acabado" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="oadDescripcion_Insumo" HeaderText="Apliacado a" ItemStyle-CssClass="auto-width-column" />
+                                                               
 
                                                             </Columns>
                                                         </asp:DataGrid>
-
                                                     </div>
 
 
@@ -1108,7 +1094,7 @@
                                         <div class="border rounded p-1 m-1">
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <div class="table-responsive mb-1" style="max-height: 28rem; overflow-x: auto;">
+                                                    <div class="table-responsive mb-1" style="max-height: 29rem; overflow-x: auto;">
                                                         <h5 class="datagrid-header text-center">Despiece</h5>
                                                         <asp:DataGrid CssClass="table table-bordered custom-grid table-hover custom-data-grid form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDespiecePlano" runat="server" OnItemDataBound="DataGridDespiecePlano_ItemDataBound" OnItemCommand="DataGridDespiecePlano_LinkButton">
                                                             <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
@@ -1138,7 +1124,7 @@
                                                                 <asp:BoundColumn DataField="ValorUnd" HeaderText="Valor Und" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="SubTotal" HeaderText="Sub Total" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Id_Panel" HeaderText="" Visible="false" />
-
+                                                                
 
 
                                                             </Columns>
@@ -1183,8 +1169,9 @@
                                                             <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Lado" HeaderText="Lado" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Descripcion_Familia" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="PanModResponsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
+                                                            <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="FechaChequeo" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column" />
+                                                            <asp:BoundColumn DataField="ID_Familia"  Visible="false" />
 
                                                         </Columns>
                                                     </asp:DataGrid>
@@ -1245,6 +1232,7 @@
                             </div>
 
                         </div>
+
                     </ContentTemplate>
                 </asp:UpdatePanel>
 
@@ -1253,6 +1241,7 @@
             <div class="tab-pane fade " id="Objeto-Content">
                 <asp:UpdatePanel ID="PanelObjeto" runat="server" UpdateMode="Conditional">
                     <ContentTemplate>
+
                         <div class="container-fluid">
 
                             <!--Nav iconos Objetos-->
@@ -1384,7 +1373,9 @@
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="table-responsive mb-1" style="max-height: 20rem; overflow-x: auto;">
+
                                                     <h5 class="datagrid-header text-center">Objeto</h5>
+
                                                     <asp:DataGrid CssClass="table table-bordered custom-grid table-hover custom-data-grid form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridObjetos" runat="server" DataSourceID="ObtenerDatosObjetos" OnItemCommand=" DataGridObtenerDatosObjetos_LinkButton" OnItemDataBound="DataGridObtenerDatosObjetos_ItemDataBound">
                                                         <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
@@ -1406,7 +1397,7 @@
                                                             <asp:BoundColumn DataField="Descripcion_Grupo" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Id_Numerico" HeaderText="Ensamble" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="CubicajeM3" HeaderText="Cub(M3)" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Chequeado" HeaderText="Ok" ItemStyle-CssClass="auto-width-column"  DataFormatString="{0:Si;No}"/>
+                                                            <asp:BoundColumn DataField="Chequeado" HeaderText="Ok" ItemStyle-CssClass="auto-width-column" DataFormatString="{0:Si;No}" />
                                                             <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="FechaChequeo" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Divisiones" HeaderText="Div" ItemStyle-CssClass="auto-width-column" />
@@ -1419,7 +1410,9 @@
 
 
                                                         </Columns>
+
                                                     </asp:DataGrid>
+
                                                     <asp:SqlDataSource ID="ObtenerDatosObjetos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommandType="StoredProcedure">
                                                         <SelectParameters>
                                                             <asp:ControlParameter Name="Altura" ControlID="tbAltura" PropertyName="Text" DefaultValue="%" Type="String" />
@@ -1430,12 +1423,7 @@
                                                     </asp:SqlDataSource>
 
 
-
-
                                                 </div>
-
-
-
 
                                             </div>
                                         </div>
@@ -1452,7 +1440,7 @@
 
                                     <div class="col-2 ">
                                         <div class="input-group input-group-sm justify-content-end">
-                                           <asp:LinkButton ID="btnDespiece" Text="Despiece" runat="server" CssClass="btn btn-sm btn-outline-secondary"  OnClick="Reedireccion_ObjetoDespiece">
+                                            <asp:LinkButton ID="btnDespiece" Text="Despiece" runat="server" CssClass="btn btn-sm btn-outline-secondary" OnClick="Reedireccion_ObjetoDespiece">
 
                                             </asp:LinkButton>
                                         </div>
@@ -1489,22 +1477,24 @@
                                                         <Columns>
                                                             <asp:TemplateColumn HeaderText="...">
                                                                 <ItemTemplate>
-                                                                    <asp:LinkButton ID="lnkView2" runat="server" CommandName="VerModulo" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
+                                                                    <asp:LinkButton ID="lnkView2" runat="server" CommandName="VerModulo" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>"  />
                                                                 </ItemTemplate>
                                                             </asp:TemplateColumn>
+                                                             <asp:BoundColumn DataField="Num_Fila" HeaderText="Item" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Id_Modulo" HeaderText="Módulo" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Descripcion_TipoModulo" HeaderText="Tipo Módulo" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Descripcion_Modulo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Chequeado" HeaderText="OK" ItemStyle-CssClass="auto-width-column"  />
+                                                            <asp:BoundColumn DataField="Chequeado" HeaderText="OK" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Ubicacion_Modulo" HeaderText="Pos" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Lado" HeaderText="Lado" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Descripcion_Familia" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="PanModResponsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
-                                                           
+                                                            <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
+
 
                                                         </Columns>
+
                                                     </asp:DataGrid>
 
                                                 </div>
@@ -1516,6 +1506,8 @@
                                         </div>
                                     </div>
                                 </div>
+
+                            </div>
 
                             </div>
 
@@ -1681,6 +1673,10 @@
             });
         });
     </script>
+
+    
+  
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
