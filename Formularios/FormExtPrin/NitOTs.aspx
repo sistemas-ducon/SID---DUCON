@@ -27,7 +27,7 @@
                         <a class="nav-link text-dark" id="Cliente-tab" data-bs-toggle="tab" href="#Cliente-content">Cliente</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="ConFac-tab" data-bs-toggle="tab" href="#ConFac-content">Contacto Factura</a>
+                        <a class="nav-link text-dark" id="ConFac-tab" data-bs-toggle="tab" href="#ConFac_content">Contacto Factura</a>
                     </li>
 
                 </ul>
@@ -393,7 +393,7 @@
 
                                         <div class="col-3">
                                             <div class=" input-group input-group-sm gap-2  ">
-                                                <asp:CheckBox ID="CheckBox1" runat="server" />
+                                                <asp:CheckBox ID="chxAgenteRete" runat="server" />
                                                 <asp:Label ID="lbAgeRet" class="form-label pt-1 " Text="Agente Retenedor" runat="server"></asp:Label>
 
 
@@ -402,7 +402,7 @@
 
                                         <div class="col-3">
                                             <div class=" input-group input-group-sm gap-2  ">
-                                                <asp:CheckBox ID="CheckBox2" runat="server" />
+                                                <asp:CheckBox ID="chxAutoRete" runat="server" />
                                                 <asp:Label ID="lbAutRetendor" class="form-label pt-1" Text="AutoRetenedor" runat="server"></asp:Label>
 
                                             </div>
@@ -410,7 +410,7 @@
 
                                         <div class="col-3">
                                             <div class=" input-group input-group-sm gap-2  ">
-                                                <asp:CheckBox ID="CheckBox3" runat="server" />
+                                                <asp:CheckBox ID="chxDeclarante" runat="server" />
                                                 <asp:Label ID="lbDeclranteRenta" class="form-label pt-1 " Text="Declarante(Renta)" runat="server"></asp:Label>
                                             </div>
                                         </div>
@@ -428,21 +428,21 @@
 
                                         <div class="col-3">
                                             <div class=" input-group input-group-sm gap-2  ">
-                                                <asp:CheckBox ID="CheckBox4" runat="server" />
+                                                <asp:CheckBox ID="chxGranContri" runat="server" />
                                                 <asp:Label ID="lbGranContribuyente" class="form-label pt-1" Text="Gran Contribuyente" runat="server"></asp:Label>
                                             </div>
                                         </div>
 
                                         <div class="col-3">
                                             <div class=" input-group input-group-sm gap-2  ">
-                                                <asp:CheckBox ID="CheckBox5" runat="server" />
+                                                <asp:CheckBox ID="chxExento" runat="server" />
                                                 <asp:Label ID="lbExcentoRete" class="form-label pt-1" Text="Exento de Retención" runat="server"></asp:Label>
                                             </div>
                                         </div>
 
                                         <div class="col-3">
                                             <div class=" input-group input-group-sm gap-2  ">
-                                                <asp:CheckBox ID="CheckBox6" runat="server" />
+                                                <asp:CheckBox ID="chxReteIca" runat="server" />
                                                 <asp:Label ID="lbAgtRetIca" class="form-label pt-1" Text="Agente Retenedor ICA" runat="server"></asp:Label>
                                             </div>
                                         </div>
@@ -503,7 +503,7 @@
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </div>
-            <div class="tab-pane fade" id="ConFac-content">
+            <div class="tab-pane fade" id="ConFac_content"  runat="server" >
                 <asp:UpdatePanel runat="server" ID="PanelContacto" UpdateMode="Conditional">
                     <ContentTemplate>
 
@@ -641,7 +641,7 @@
 
                                 <div class="col-1">
                                     <div class="input-group   mb-2 ">
-                                        <asp:Button CssClass="btn btn-outline-secondary" ID="Button1" runat="server" Text="Cancelar" />
+                                        <asp:Button CssClass="btn btn-outline-secondary" ID="btnCancelar1" runat="server" Text="Cancelar" />
                                     </div>
                                 </div>
 

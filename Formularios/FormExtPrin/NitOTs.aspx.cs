@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -7,15 +8,92 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using CheckBox = DocumentFormat.OpenXml.Wordprocessing.CheckBox;
+using ListItem = System.Web.UI.WebControls.ListItem;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 {
     public partial class NitOTs : System.Web.UI.Page
     {
+        private List<TextBox> listaTextBoxes;
+        private List<DropDownList> listaDropDownLists;
+        private List<CheckBox> listaCheckBox;
         protected void Page_Load(object sender, EventArgs e)
         {
             CargarActividadesEnDropDownList();
             CargarCiudadesEnDropDownList();
+
+            listaTextBoxes = new List<TextBox>
+                {
+                   tbFechaCreacion,tbUltimaAct,tbCompartido,tbNumero,tbTelefono,tbFax,tbPriApellido,tbSegApellido,tbNombre,tbDireccion,tbRazonSocial,tbCod,tbNombreContacto,tbDirección1,
+                   tbMailContacto,tbTelefono1,tbCelular,tbSede
+
+                };
+
+            listaDropDownLists = new List<DropDownList>
+                {
+                   ddlNaturaleza,ddlTipoDoc,ddlTipoCliente,ddlActividad,ddlSector,ddlZona,ddlFormaPago,ddlRegIva,ddlCiudad,ddlCiudad1
+
+                };
+
+            DeshabilitarTextBoxes(listaTextBoxes);
+            DeshabilitarDropDownLists(listaDropDownLists);
+            DeshabilitarCheckBoxes();
+            DisposicionBotonesIniciales();
+        
+
+        }
+
+        public void DeshabilitarTextBoxes(List<TextBox> textBoxes)
+        {
+            foreach (TextBox textBox in textBoxes)
+            {
+                if (textBox == tbNom || textBox == tbNom1)
+                {
+                    textBox.CssClass = "form-control  ";
+
+                }
+                else
+                {
+                    textBox.Enabled = false;
+                    textBox.CssClass = "form-control ";
+                }
+
+            }
+        }
+
+        protected void DisposicionBotonesIniciales()
+        {
+            List<Button> botones = new List<Button>
+                {
+                    btnActRut, btnActRegCli, btnGrabar, btnModificar,
+                    btnNuevoContacto, btnGrabarContacto, btnModificarContacto, btnCancelar1
+                };
+
+            foreach (Button boton in botones)
+            {
+                boton.Enabled = false;
+                boton.CssClass = "btn btn-outline-secondary";
+            }
+        }
+        public void DeshabilitarDropDownLists(List<DropDownList> dropDownLists)
+        {
+            foreach (DropDownList dropDownList in dropDownLists)
+            {
+                dropDownList.Enabled = false;
+                dropDownList.CssClass = "form-control";
+            }
+        }
+
+        public void DeshabilitarCheckBoxes()
+        {
+            chxCompartir.Enabled = false;
+            chxAgenteRete.Enabled = false;
+            chxAutoRete.Enabled = false;
+            chxDeclarante.Enabled = false;
+            chxGranContri.Enabled = false;
+            chxReteIca.Enabled = false;
+            chxExento.Enabled = false;
         }
 
         protected void DatagridClientes_LinkButton(object source, DataGridCommandEventArgs e)
@@ -103,15 +181,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     }
                     tbRazonSocial.Text = razonSocial;
                     tbDireccion.Text = direccion;
-                    foreach(ListItem item1 in ddlCiudad.Items)
+                    foreach (ListItem item1 in ddlCiudad.Items)
                     {
-                        if(item1.Text == ciudad)
+                        if (item1.Text == ciudad)
                         {
                             ddlCiudad.ClearSelection();
                             item1.Selected = true;
                             break;
                         }
-                    }              
+                    }
                     foreach (ListItem item1 in ddlFormaPago.Items)
                     {
                         if (item1.Text == Pago)
@@ -130,8 +208,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             break;
                         }
                     }
-                    tbFax.Text = fax;                 
-                    tbCod.Text = ObtenerSubcadena( ciudad);
+                    tbFax.Text = fax;
+                    tbCod.Text = ObtenerSubcadena(ciudad);
 
 
 
@@ -144,6 +222,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     DataGridVentaAsesor.DataBind();
                     PanelContacto.Update();
 
+                 
+
                 }
             }
 
@@ -151,7 +231,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
         static string ObtenerSubcadena(string cadena)
         {
-            
+
             int indiceEspacio = cadena.LastIndexOf(' ');
 
             if (indiceEspacio != -1)
@@ -161,12 +241,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 return subcadena;
             }
 
-            
+
             return cadena;
         }
-
-
-
         private void CargarActividadesEnDropDownList()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;

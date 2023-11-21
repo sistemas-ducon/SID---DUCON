@@ -501,13 +501,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected global::System.Web.UI.WebControls.Button btnActRegCli;
 
         /// <summary>
-        /// Control CheckBox1.
+        /// Control chxAgenteRete.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox CheckBox1;
+        protected global::System.Web.UI.WebControls.CheckBox chxAgenteRete;
 
         /// <summary>
         /// Control lbAgeRet.
@@ -519,13 +519,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected global::System.Web.UI.WebControls.Label lbAgeRet;
 
         /// <summary>
-        /// Control CheckBox2.
+        /// Control chxAutoRete.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox CheckBox2;
+        protected global::System.Web.UI.WebControls.CheckBox chxAutoRete;
 
         /// <summary>
         /// Control lbAutRetendor.
@@ -537,13 +537,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected global::System.Web.UI.WebControls.Label lbAutRetendor;
 
         /// <summary>
-        /// Control CheckBox3.
+        /// Control chxDeclarante.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox CheckBox3;
+        protected global::System.Web.UI.WebControls.CheckBox chxDeclarante;
 
         /// <summary>
         /// Control lbDeclranteRenta.
@@ -564,13 +564,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected global::System.Web.UI.WebControls.Label lbRegimenIva;
 
         /// <summary>
-        /// Control CheckBox4.
+        /// Control chxGranContri.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox CheckBox4;
+        protected global::System.Web.UI.WebControls.CheckBox chxGranContri;
 
         /// <summary>
         /// Control lbGranContribuyente.
@@ -582,13 +582,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected global::System.Web.UI.WebControls.Label lbGranContribuyente;
 
         /// <summary>
-        /// Control CheckBox5.
+        /// Control chxExento.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox CheckBox5;
+        protected global::System.Web.UI.WebControls.CheckBox chxExento;
 
         /// <summary>
         /// Control lbExcentoRete.
@@ -600,13 +600,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected global::System.Web.UI.WebControls.Label lbExcentoRete;
 
         /// <summary>
-        /// Control CheckBox6.
+        /// Control chxReteIca.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox CheckBox6;
+        protected global::System.Web.UI.WebControls.CheckBox chxReteIca;
 
         /// <summary>
         /// Control lbAgtRetIca.
@@ -661,6 +661,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnCancelar;
+
+        /// <summary>
+        /// Control ConFac_content.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl ConFac_content;
 
         /// <summary>
         /// Control PanelContacto.
@@ -843,12 +852,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected global::System.Web.UI.WebControls.Button btnModificarContacto;
 
         /// <summary>
-        /// Control Button1.
+        /// Control btnCancelar1.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button1;
+        protected global::System.Web.UI.WebControls.Button btnCancelar1;
     }
 }
