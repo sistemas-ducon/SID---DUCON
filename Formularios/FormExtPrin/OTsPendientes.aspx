@@ -16,7 +16,7 @@
 
     <link type="text/css" href="../../Recursos/CSS/FormExtPrin/OTsPendientes.css" rel="stylesheet" />
 
-    <title>Ordenes de Trabajo Pendientes - Departamento de Ventas</title>
+    <title><i class="bi bi-gear"></i>Ordenes de Trabajo Pendientes - Departamento de Ventas</title>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -40,7 +40,7 @@
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-12">
-                                <div class="border container-fluid mt-2" style="height: 54rem;">
+                                <div class="border rounded-3 container-fluid mt-2" style="height: 54rem;">
 
                                     <div class="container-fluid mt-2">
                                         <div class="row">
@@ -81,41 +81,47 @@
                                             </div>
 
                                         </div>
-                                        <div class="row mt-2">
-                                            <div class="col-md-4 col-3">
-                                                <div class="input-group input-group-sm gap-1">
-                                                    <asp:Label runat="server" ID="Label4" class="col-form-label-sm">F.Busqueda</asp:Label>
-                                                    <asp:SqlDataSource ID="SqlDataSource1" runat="server"
-                                                        ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
-                                                        SelectCommand="SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'tblOT' AND COLUMN_NAME IN ('Fecha_Real_Despacho_Produccion', 'Fecha_Entrega_Produccion', 'Fecha_Entrega_Dibujo_Despiece', 'Fecha_Terminada_Despacho', 'Fecha_Terminada_Empaque', 'Fecha_Instalacion', 'Fecha_Final_Instalacion')"></asp:SqlDataSource>
+                                        <div class="d-flex">
+                                            <div class="col-11">
+                                                <div class="row mt-2">
+                                                    <div class="col-md-4 col-3">
+                                                        <div class="input-group input-group-sm gap-1">
+                                                            <asp:Label runat="server" ID="Label4" class="col-form-label-sm">F.Busqueda</asp:Label>
+                                                            <asp:SqlDataSource ID="SqlDataSource1" runat="server"
+                                                                ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                                                SelectCommand="SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'tblOT' AND COLUMN_NAME IN ('Fecha_Real_Despacho_Produccion', 'Fecha_Entrega_Produccion', 'Fecha_Entrega_Dibujo_Despiece', 'Fecha_Terminada_Despacho', 'Fecha_Terminada_Empaque', 'Fecha_Instalacion', 'Fecha_Final_Instalacion')"></asp:SqlDataSource>
 
-                                                    <asp:DropDownList ID="DropDownList1" runat="server" DataSourceID="SqlDataSource1" DataTextField="COLUMN_NAME" DataValueField="COLUMN_NAME" CssClass="form-control-sm form-control">
-                                                    </asp:DropDownList>
+                                                            <asp:DropDownList ID="DropDownList1" runat="server" DataSourceID="SqlDataSource1" DataTextField="COLUMN_NAME" DataValueField="COLUMN_NAME" CssClass="form-control-sm form-control">
+                                                            </asp:DropDownList>
 
 
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 col-3">
+                                                        <div class="input-group input-group-sm">
+                                                            <asp:TextBox ID="TextBox3" runat="server" CssClass="form-control form-control-sm" type="Date"></asp:TextBox>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 col-3">
+                                                        <div class="input-group input-group-sm gap-2">
+                                                            <asp:Label runat="server" ID="Label6" class="col-form-label-sm">Y</asp:Label>
+                                                            <asp:TextBox ID="TextBox1" runat="server" CssClass="form-control form-control-sm" type="Date"></asp:TextBox>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2 col-3">
+                                                        <asp:Button ID="Button2" runat="server" Text="Terminar Pedido" CssClass="form-control btn btn-outline-dark" />
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-3 col-3">
-                                                <div class="input-group input-group-sm">
-                                                    <asp:TextBox ID="TextBox3" runat="server" CssClass="form-control form-control-sm" type="Date"></asp:TextBox>
+                                            <div class="col-1">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <asp:ImageButton ID="Button3" runat="server" OnClick="Button3_Click"
+                                                            ImageUrl="https://i.ibb.co/86fR8JK/icons8-microsoft-excel-2019-48.png" AlternateText="Excel Icon" />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-3 col-3">
-                                                <div class="input-group input-group-sm gap-2">
-                                                    <asp:Label runat="server" ID="Label6" class="col-form-label-sm">Y</asp:Label>
-                                                    <asp:TextBox ID="TextBox1" runat="server" CssClass="form-control form-control-sm" type="Date"></asp:TextBox>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-1 col-3">
-                                                <asp:Button ID="Button2" runat="server" Text="Terminar Pedido" CssClass="form-control-sm btn-sm btn btn-outline-dark" />
-                                            </div>
-                                            <div class="col-md-1 col-3">
-                                                <asp:LinkButton runat="server" ID="Button3" OnClick="Button3_Click">
-                                                     <i class="bi bi-file-excel-fill grande"></i>
-                                                </asp:LinkButton>
                                             </div>
                                         </div>
-
 
 
                                     </div>
@@ -123,7 +129,7 @@
                                     <div class="container-fluid">
                                         <div class="row mt-2">
                                             <div class="col-12">
-                                                <div class="border mt-2">
+                                                <div class="border rounded-3 mt-2">
                                                     <h6 class="text-center">PEDIDOS PENDIENTES - VENTAS</h6>
                                                     <div class="table-responsive table-responsive-sm mb-2 gap-2 form-control-sm" style="max-height: 40rem; overflow-x: auto;">
                                                         <asp:DataGrid Class="table table-bordered table-hover table-sm form-control-sm" ID="DataGrid1" runat="server"
@@ -140,21 +146,21 @@
                                                                 <asp:BoundColumn DataField="Consecutivo_Pedido" HeaderText="Ped" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Nombre_Obra" HeaderText="Nombre Obra" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Codigo_Asesor" HeaderText="Vend" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn DataField="Fecha_Confirmacion_Venta" HeaderText="F.Ok.Venta" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn DataField="Fecha_Entrega_Dibujo_Despiece" HeaderText="F.Ok.Dib" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn HeaderText="T.Dib" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Fecha_Entrega_Dibujo_Despiece" HeaderText="F.Ok.Venta" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Fecha_Entrega_Produccion" HeaderText="F.Ok.Dib" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="TDibujo" HeaderText="T.Dib" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="RealizadoPor" HeaderText="Dibujante" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Importacion" HeaderText="Imp" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Fecha_Empaque" HeaderText="F.Ok.Emp" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn HeaderText="Pcción" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="TPccion" HeaderText="Pcción" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Fecha_Despacho_Produccion" HeaderText="Des Prod" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Fecha_Real_Despacho_Produccion" HeaderText="F.R.Desp" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn HeaderText="Cump" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="CumpPccion" HeaderText="Cump" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Fecha_Instalacion" HeaderText="F.Inst" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn HeaderText="Planta" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn HeaderText="F.F.Inst" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn HeaderText="Inst" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn HeaderText="F.Fact" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="EnPlanta" HeaderText="Planta" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Fecha_Final_Instalacion" HeaderText="F.F.Inst" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="TInstala" HeaderText="Inst" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Fecha_Factura" HeaderText="F.Fact" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Terminada_Almacen" HeaderText="Alm" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Terminada_Produccion" HeaderText="Prod" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="ValorViatico" HeaderText="Vta" ItemStyle-CssClass="auto-width-column" />
@@ -163,7 +169,7 @@
                                                                 <asp:BoundColumn DataField="Terminada_Despacho" HeaderText="Desp" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Terminada_Compras" HeaderText="Comp" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Terminada_Facturacion" HeaderText="F.y.C" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn DataField="ResumenObra" HeaderText="Resumen Obra" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="ResumenObra" HeaderText="ResumenObra" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Id_OT_secundario" HeaderText="Altern" ItemStyle-CssClass="auto-width-column" />
                                                             </Columns>
                                                         </asp:DataGrid>

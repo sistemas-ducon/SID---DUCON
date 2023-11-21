@@ -14,7 +14,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
             if (Session["usuariologueado"] != null)
             {
                 string usuariologueado = Session["usuariologueado"].ToString();
-                lblBienvenida.Text = "Bienvenido " + usuariologueado + "  |";
+                lblBienvenida.Text = "Bienvenid@ " + usuariologueado + "  |";
             }
             else
             {

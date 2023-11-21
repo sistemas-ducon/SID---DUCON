@@ -21,11 +21,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             {
                 CargarDatosPorDefecto();
 
-                Button3.Enabled = true;
-                Button3.CssClass = "btn btn-sm shadow button-enabled";
+              
 
                 Button2.Enabled = false;
-                Button2.CssClass = "btn shadow button-disabled";
+                Button2.CssClass = "form-control-sm btn-sm btn btn-outline-dark button-disabled";
             }
           
         }

@@ -110,7 +110,7 @@
                                                         <asp:BoundColumn DataField="Competencia" HeaderText="Competencia" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Valor" HeaderText="Valor" DataFormatString="{0:C0}" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Descuento" HeaderText="Dto(%)" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="VCCD" HeaderText="Valor Neto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="VCCD" HeaderText="ValorNeto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Cliente" HeaderText="Cliente" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Obra" HeaderText="Obra" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
@@ -210,7 +210,7 @@
                                     </table>
                                 </div>
                                      <div class="d-flex justify-content-end align-items-center mt-3">
-                                      <asp:ImageButton ID="ImageButton1" CssClass="btn-outline-light btn btn-white btn-sm" runat="server" OnClick="LinkButton_Click"
+                                      <asp:ImageButton ID="ImageButton1" runat="server" OnClick="LinkButton_Click"
                                           ImageUrl="https://i.ibb.co/86fR8JK/icons8-microsoft-excel-2019-48.png" AlternateText="Excel Icon" />
                                          </div>
                                 </div>

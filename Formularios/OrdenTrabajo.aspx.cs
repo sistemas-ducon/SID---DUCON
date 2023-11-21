@@ -562,7 +562,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Cargar_Plano( id, pedido);
             Cargar_Despiece_Plano();
 
-          
+            string valorTextBox = tbObra.Text.Trim(); // Obtener el valor del TextBox
+
+            // Guardar el valor en una variable de sesión
+            Session["ValorDeObra"] = valorTextBox;
 
             Session["CargarOTsEjecutada"] = true;
         }

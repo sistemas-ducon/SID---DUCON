@@ -33,21 +33,55 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Login
 			cmd.Parameters.Add("@Log", SqlDbType.VarChar, 30).Value = tbUsuario.Text;
 			cmd.Parameters.Add("@Pass", SqlDbType.VarChar, 30).Value = tbPassword.Text;
 			SqlDataReader dr = cmd.ExecuteReader();
-			if (dr.Read())
-			{
+            if (dr.Read())
+            {
+                string login = tbUsuario.Text;
+                string password = tbPassword.Text;
 
-				//Agregamos la vista que queremos mostrar al logearseSession
-				Session["usuariologueado"] = tbUsuario.Text;
-                CedulaUsuarioLogeado();
-				Response.Redirect("Inicio.aspx");
-			}
-			else
-			{
+                // Obtener el Nombre del empleado basado en las credenciales ingresadas
+                string nombreEmpleado = ObtenerNombreEmpleado(login, password);
 
-				lblError.Text = "Ingrese sus credenciales";
-			}
-			cmd.Connection.Close();	
-		}
+                if (!string.IsNullOrEmpty(nombreEmpleado))
+                {
+                    // Establecer la variable de sesión 'usuariologueado' con el Nombre del empleado obtenido
+                    Session["usuariologueado"] = nombreEmpleado;
+                    CedulaUsuarioLogeado();
+                    Response.Redirect("Inicio.aspx");
+                }
+                else
+                {
+                    lblError.Text = "Credenciales inválidas";
+                }
+            }
+            else
+            {
+                lblError.Text = "Ingrese sus credenciales";
+            }
+
+            cmd.Connection.Close();
+        }
+
+        public string ObtenerNombreEmpleado(string login, string password)
+        {
+            string nombreEmpleado = string.Empty;
+
+            string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            using (SqlConnection sqlconectar = new SqlConnection(cn))
+            {
+                SqlCommand cmd = new SqlCommand("SELECT Nombre FROM tblEmpleado WHERE Login = @Login AND Password = @Password", sqlconectar);
+                cmd.Parameters.Add("@Login", SqlDbType.VarChar, 30).Value = login;
+                cmd.Parameters.Add("@Password", SqlDbType.VarChar, 30).Value = password;
+
+                sqlconectar.Open();
+                object result = cmd.ExecuteScalar();
+                if (result != null)
+                {
+                    nombreEmpleado = result.ToString();
+                }
+            }
+
+            return nombreEmpleado;
+        }
 
 
         public void  CedulaUsuarioLogeado()

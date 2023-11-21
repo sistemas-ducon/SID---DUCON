@@ -106,35 +106,43 @@
                                             </div>
                                             <div class="col-3">
                                                 <div class="input-group input-group-sm gap-2">
-                                     <asp:Label ID="Label2" runat="server" CssClass="col-form-label-sm" Text="F.Actividad"></asp:Label>
-                                    <asp:TextBox ID="TextBox2" runat="server" CssClass="form-control form-control-sm" type="Date"></asp:TextBox>
-                                </div>
-                                    </div>
-                            </div>
+                                                    <asp:Label ID="Label2" runat="server" CssClass="col-form-label-sm" Text="F.Actividad"></asp:Label>
+                                                    <asp:TextBox ID="TextBox2" runat="server" CssClass="form-control form-control-sm" type="Date"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="p-3 m-2 border" style="height: 26rem;">
-                                    <h6>Observación</h6>
-                                        <textarea id="TextArea1" runat="server" class="form-control" style="height: 13rem;">
+                                        <h6>Observación</h6>
+                                        <textarea id="TextArea1" runat="server" class="form-control form-control-sm" style="height: 13rem;">
                                         </textarea>
                                         <div class="border rounded p-1 special-border mt-1" style="height: auto; min-height: 8rem;">
                                             <h6 class="text-center">Receptores de la Observación Seleccionada</h6>
 
-                                             <div class="table-responsive table-responsive-sm gap-2" style="max-height: 7rem; overflow-x: auto;">
-                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid3" runat="server" AutoGenerateColumns="false" DataSourceID="SqlDataSource3">
-                                                <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
-                                                <Columns>
-                                                    <asp:BoundColumn DataField="Nombre_Receptor" HeaderText="Nombre" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                    <asp:BoundColumn DataField="Leida" HeaderText="Leida" ItemStyle-CssClass="auto-width-column" />
-                                                    <asp:BoundColumn DataField="FechaLectura" HeaderText="F.Lectura" ItemStyle-CssClass="auto-width-column" />
-                                                </Columns>
-                                            </asp:DataGrid>
-                                            <asp:SqlDataSource ID="SqlDataSource3" runat="server" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL_PRUEBAConnectionString %>"
-                                                SelectCommand="SELECT Nombre_Receptor, Leida, FechaLectura, Id_Observacion FROM tblOTObservacion_Receptor WHERE Id_Observacion = @Id_Observacion">
-                                                <SelectParameters>
-                                                    <asp:Parameter Name="Id_Observacion" Type="String" />
-                                                </SelectParameters>
-                                            </asp:SqlDataSource>
-                                                  </div>
+                                            <div class="table-responsive table-responsive-sm gap-2" style="max-height: 7rem; overflow-x: auto;">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid3" runat="server" AutoGenerateColumns="false" DataSourceID="SqlDataSource3">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                    <Columns>
+                                                        <asp:BoundColumn DataField="Nombre_Receptor" HeaderText="Nombre" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="LeidaTexto" HeaderText="Leida" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="FechaLectura" HeaderText="F.Lectura" ItemStyle-CssClass="auto-width-column" />
+                                                    </Columns>
+                                                </asp:DataGrid>
+                                                <asp:SqlDataSource ID="SqlDataSource3" runat="server" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL_PRUEBAConnectionString %>"
+                                                      SelectCommand="SELECT Nombre_Receptor, 
+                                                      CASE 
+                                                        WHEN Leida = 1 THEN 'SI'
+                                                        ELSE 'NO'
+                                                      END AS LeidaTexto, 
+                                                      FechaLectura, 
+                                                      Id_Observacion 
+                                               FROM tblOTObservacion_Receptor 
+                                               WHERE Id_Observacion = @Id_Observacion">
+                                                    <SelectParameters>
+                                                        <asp:Parameter Name="Id_Observacion" Type="String" />
+                                                    </SelectParameters>
+                                                </asp:SqlDataSource>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -146,12 +154,15 @@
                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                 <Columns>
                                                     <asp:BoundColumn HeaderText="Departamento/Cargo" DataField="Cargo" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                    <asp:BoundColumn HeaderText="Nombre" DataField="Nombre_Receptor" ItemStyle-CssClass="auto-width-column" />
+                                                    <asp:BoundColumn HeaderText="Nombre" DataField="NombreCompleto" ItemStyle-CssClass="auto-width-column" />
                                                 </Columns>
                                             </asp:DataGrid>
 
                                             <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL_PRUEBAConnectionString%>"
-                                                SelectCommand="SELECT DISTINCT E.Cargo, B.Nombre_Receptor FROM tblOTObservacion_Receptor AS B JOIN tblEmpleado AS E ON B.Receptor = E.Cedula"></asp:SqlDataSource>
+                                                SelectCommand="SELECT Cedula, Nombre + ' ' + Apellidos AS NombreCompleto, Cargo
+                                                    FROM tblEmpleado
+                                                    WHERE Activo = 1 AND ReceptorObservaciones = 1
+                                                    ORDER BY Cargo ASC, Nombre ASC"></asp:SqlDataSource>
                                         </div>
                                         <div class="container-fluid">
                                             <div class="row col-12">
@@ -201,78 +212,118 @@
                             <div class="col-7">
                                 <div class="p-3 m-2 border" style="height: 25rem;">
                                  <h6 class="text-center">Observaciones por Leer</h6>
-                                     <div class="table-responsive table-responsive-sm gap-2 border" style="max-height: 18rem; overflow-x: auto;">
+                                     <div class="table-responsive table-responsive-sm gap-2 border" style="height: 18rem; overflow-x: auto;">
                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid5" runat="server" AutoGenerateColumns="false">                                     
                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                 <Columns>
                                                       <asp:TemplateColumn>
                                                                     <ItemTemplate>
-                                                                        <asp:LinkButton ID="SelecOtOb" runat="server" CommandName="SelectOb" CommandArgument='<%# Container.ItemIndex %>'
-                                                                            Text="<i class='bi bi-pencil-square text-dark'></i>" />
-                                                                    </ItemTemplate>
-                                                                </asp:TemplateColumn>
-                                                    <asp:BoundColumn HeaderText="OT" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                    <asp:BoundColumn  HeaderText="Pedido" ItemStyle-CssClass="auto-width-column" />
-                                                    <asp:BoundColumn  HeaderText="Tipo Observacion" ItemStyle-CssClass="auto-width-column" />
-                                                    <asp:BoundColumn HeaderText="Fecha Obs." ItemStyle-CssClass="auto-width-column" />
-                                                    <asp:BoundColumn  HeaderText="Emisor" ItemStyle-CssClass="auto-width-column" />
-                                                    <asp:BoundColumn  HeaderText="Leida" ItemStyle-CssClass="auto-width-column" />                                                                                                        
-                                                </Columns>
-                                     </asp:DataGrid>
-                                         </div>
-                                </div>
-                                <div class="p-3 m-2 border" style="height: 25rem;">
-                                   <h6 class="text-center">Observaciones Grabadas y No Leidas</h6>
-                                     <div class="table-responsive table-responsive-sm gap-2" style="max-height: 21rem; overflow-x: auto;">
-                                     <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid4" runat="server" AutoGenerateColumns="false"
-                                         OnItemCommand="DataGrid2_ItemCommand" DataSourceID="SqlDataSource4">
-                                                <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
-                                                <Columns>
-                                                      <asp:TemplateColumn>
-                                                                    <ItemTemplate>
-                                                                        <asp:LinkButton ID="SelecOtOb" runat="server" CommandName="SelectOb" CommandArgument='<%# Container.ItemIndex %>'
+                                                                        <asp:LinkButton ID="SelecOtOb" OnClick="lnkSelectRow_Click" runat="server" CommandName="SelectOb" CommandArgument='<%# Container.ItemIndex %>'
                                                                             Text="<i class='bi bi-pencil-square text-dark'></i>" />
                                                                     </ItemTemplate>
                                                                 </asp:TemplateColumn>
                                                     <asp:BoundColumn DataField="Id_OT" HeaderText="OT" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     <asp:BoundColumn DataField="Consecutivo_Pedido" HeaderText="Pedido" ItemStyle-CssClass="auto-width-column" />
-                                                    <asp:BoundColumn DataField="ID_TipoObservacion" HeaderText="Tipo Observacion" ItemStyle-CssClass="auto-width-column" />
+                                                    <asp:BoundColumn HeaderText="Tipo Observacion" ItemStyle-CssClass="auto-width-column" />
                                                     <asp:BoundColumn DataField="FechaObservacion" HeaderText="Fecha Obs." ItemStyle-CssClass="auto-width-column" />
-                                                    <asp:BoundColumn DataField="Nombre_Receptor" HeaderText="Receptor" ItemStyle-CssClass="auto-width-column" />
-                                                    <asp:BoundColumn DataField="Leida" HeaderText="Leida" ItemStyle-CssClass="auto-width-column" />                                                     
-                                                     <asp:BoundColumn DataField="Emisor" ItemStyle-CssClass="auto-width-column" visible="false"/>
-                                                      <asp:BoundColumn DataField="Nombre_Obra" ItemStyle-CssClass="auto-width-column" visible="false"/>
-                                                    <asp:BoundColumn DataField="Observacion" ItemStyle-CssClass="auto-width-column" visible="false"/>
+                                                    <asp:BoundColumn DataField="Nombre_Emisor"  HeaderText="Emisor" ItemStyle-CssClass="auto-width-column" />
+                                                    <asp:BoundColumn DataField="LeidaTexto" HeaderText="Leida" ItemStyle-CssClass="auto-width-column" />
+                                                     <asp:BoundColumn DataField="Observacion" HeaderText="Observacion" ItemStyle-CssClass="auto-width-column" visible="false"/>
+                                                      <asp:BoundColumn DataField="Id_Observacion" ItemStyle-CssClass="auto-width-column" visible="false"/>                       
+                                                     <asp:BoundColumn DataField="Nombre_Obra" ItemStyle-CssClass="auto-width-column" visible="false"/>
                                                 </Columns>
-                                     </asp:DataGrid>
-                                         <asp:SqlDataSource ID="SqlDataSource4" runat="server" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL_PRUEBAConnectionString %>"
-                                             SelectCommand="SELECT Id_OT, Consecutivo_Pedido, ID_TipoObservacion, FechaObservacion, B.Nombre_Receptor, B.Leida, Emisor, Observacion, Nombre_Obra
-                                                FROM tblOTObservacion AS A
-                                                INNER JOIN tblOTObservacion_Receptor AS B ON A.Id_Observacion = B.Id_Observacion
-                                                WHERE Emisor = '1037610897' AND Leida = '0'"></asp:SqlDataSource>
+                                           </asp:DataGrid>
+                                         <asp:SqlDataSource ID="SqlDataSource5" runat="server" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL_PRUEBAConnectionString %>"
+                                             SelectCommand="SELECT   tblOTObservacion_Receptor.Nombre_Receptor, tblOTObservacion.*, CASE 
+                                                        WHEN tblOTObservacion_Receptor.Leida = 1 THEN 'SI'
+                                                        ELSE 'NO'
+                                                      END AS LeidaTexto,  tblOTObservacion.FechaObservacion
+                                                FROM tblOTObservacion
+                                                INNER JOIN tblOTObservacion_Receptor ON tblOTObservacion.Id_Observacion = tblOTObservacion_Receptor.Id_Observacion
+                                                WHERE tblOTObservacion_Receptor.Receptor = @CedulaLogeada AND tblOTObservacion_Receptor.Leida = 0
+                                                ORDER BY tblOTObservacion.FechaObservacion">
+
+
+                                             <SelectParameters>
+                                                 <asp:SessionParameter Name="CedulaLogeada" SessionField="CedulaLogeada" Type="String" />
+                                             </SelectParameters>
+                                         </asp:SqlDataSource>
                                      </div>
+                                    <div class="container-fluid mt-2">
+                                        <div class="row">
+                                            <div class="col-10">
+                                         <div class="input-group input-group-sm gap-2">
+                                                             <asp:Label runat="server" class="col-form-label-sm">Obra</asp:Label>
+                                                            <asp:TextBox ID="TextBox7" CssClass="form-control form-control-sm" runat="server"></asp:TextBox>                        
+                                                        </div>
+                                             </div>
+                                            <div class="col-2">
+                                                <asp:Button ID="Button1" runat="server" Text="Responder" CssClass="btn btn-sm btn-outline-dark" Enabled="false"/>
+                                            </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="p-3 m-2 border" style="height: 25rem;">
+                                    <h6 class="text-center">Observaciones Grabadas y No Leidas</h6>
+                                    <div class="table-responsive table-responsive-sm gap-2" style="max-height: 21rem; overflow-x: auto;">
+                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid4" runat="server" AutoGenerateColumns="false"
+                                            OnItemCommand="DataGrid2_ItemCommand" DataSourceID="SqlDataSource4">
+                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                            <Columns>
+                                                <asp:TemplateColumn>
+                                                    <ItemTemplate>
+                                                        <asp:LinkButton ID="SelecOtOb"  OnClick="lnkSelectRow4_Click" runat="server" CommandName="SelectOb" CommandArgument='<%# Container.ItemIndex %>'
+                                                            Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                    </ItemTemplate>
+                                                </asp:TemplateColumn>
+                                                <asp:BoundColumn DataField="Id_OT" HeaderText="OT" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                <asp:BoundColumn DataField="Consecutivo_Pedido" HeaderText="Pedido" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="ID_TipoObservacion" HeaderText="Tipo Observacion" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="FechaObservacion" HeaderText="Fecha Obs." ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="Nombre_Receptor" HeaderText="Receptor" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="LeidaTexto" HeaderText="Leida" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="Emisor" ItemStyle-CssClass="auto-width-column" Visible="false" />
+                                                <asp:BoundColumn DataField="Nombre_Obra" ItemStyle-CssClass="auto-width-column" Visible="false" />
+                                                <asp:BoundColumn DataField="Observacion" ItemStyle-CssClass="auto-width-column" Visible="false" />
+                                            </Columns>
+                                        </asp:DataGrid>
+                                        <asp:SqlDataSource ID="SqlDataSource4" runat="server" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL_PRUEBAConnectionString %>"
+                                            SelectCommand="SELECT CASE WHEN tblOTObservacion_Receptor.Leida = 1 THEN 'SI'
+                                                        ELSE 'NO'
+                                                      END AS LeidaTexto, tblOTObservacion_Receptor.*, tblOTObservacion.*
+                                            FROM tblOTObservacion
+                                            INNER JOIN tblOTObservacion_Receptor ON tblOTObservacion.Id_Observacion = tblOTObservacion_Receptor.Id_Observacion
+                                            WHERE (((tblOTObservacion.Emisor)=@CedulaLogeada) AND ((tblOTObservacion_Receptor.Leida)=0))">
+                                            <SelectParameters>
+                                                <asp:SessionParameter Name="CedulaLogeada" SessionField="CedulaLogeada" Type="String" />
+                                            </SelectParameters>
+                                        </asp:SqlDataSource>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-5">
                                 <div class="p-3 m-2 border" style="height: 25rem;">
                                     <h6>Observacion</h6>
-                                    <textarea id="TextArea3" class="form-control" cols="20" rows="2" style="height: 13rem;"></textarea>
+                                    <textarea id="TextArea3" runat="server" class="form-control form-control-sm" cols="20" rows="2" style="height: 11rem;"></textarea>
 
                                     <h6 class="text-center mt-2">Receptores de la Observación Seleccionada</h6>
+                                    <div class="table-responsive table-responsive-sm gap-2 border" style="max-height: 8rem; overflow-x: auto;">
                                     <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid6" runat="server" AutoGenerateColumns="false">
                                         <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                         <Columns>
                                             <asp:TemplateColumn>
                                                 <ItemTemplate>
-                                                    <asp:LinkButton ID="SelecOtOb" runat="server" CommandName="SelectOb" CommandArgument='<%# Container.ItemIndex %>'
+                                                    <asp:LinkButton ID="SelecOtOb"  OnClick="lnkSelectRow6_Click" runat="server" CommandName="SelectOb" CommandArgument='<%# Container.ItemIndex %>'
                                                         Text="<i class='bi bi-pencil-square text-dark'></i>" />
                                                 </ItemTemplate>
                                             </asp:TemplateColumn>
-                                            <asp:BoundColumn HeaderText="Nombre" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                            <asp:BoundColumn HeaderText="Leida" ItemStyle-CssClass="auto-width-column" />
-                                            <asp:BoundColumn HeaderText="F.Lectura" ItemStyle-CssClass="auto-width-column" />                                                                      
+                                            <asp:BoundColumn DataField="Nombre_Receptor" HeaderText="Nombre" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                            <asp:BoundColumn DataField="LeidaText" HeaderText="Leida" ItemStyle-CssClass="auto-width-column" />
+                                            <asp:BoundColumn DataField="FechaLectura" HeaderText="F.Lectura" ItemStyle-CssClass="auto-width-column" />                            
                                         </Columns>
                                     </asp:DataGrid>
+                                        </div>
+                                     
                                 </div>
                                 <div class="p-3 m-2 border" style="height: 25rem;">
                                     <div class="row col-12 container">
@@ -283,7 +334,7 @@
                                     </div>
                                     <div class="row col-12 container mt-2">
                                         <h6>Observación</h6>
-                                        <textarea id="TextArea2" runat="server" class="form-control" style="height: 17rem;">
+                                        <textarea id="TextArea2" runat="server" class="form-control form-control-sm" style="height: 17rem;">
                                         </textarea>
                                           </div>
                                 </div>
@@ -397,7 +448,39 @@
             </div>
 
         </div>
+         <%--   <div class="modal" id="miModalExito" tabindex="-1" style="display: none;">
+           <div class="modal-dialog">
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <h5 class="modal-title">Mensaje</h5>
+                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                   </div>
+                   <div class="modal-body">
+                       <p>Los datos se guardaron correctamente</p>
+                   </div>
+                   <div class="modal-footer">
+                       <!-- Puedes agregar botones u opciones aquí si es necesario -->
+                   </div>
+               </div>
+           </div>
+       </div>
 
+             <div class="modal" id="miModalError" tabindex="-1" style="display: none;">
+           <div class="modal-dialog">
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <h5 class="modal-title">Mensaje</h5>
+                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                   </div>
+                   <div class="modal-body">
+                       <p>No se pudo completar la acción</p>
+                   </div>
+                   <div class="modal-footer">
+                       <!-- Puedes agregar botones u opciones aquí si es necesario -->
+                   </div>
+               </div>
+           </div>
+       </div>--%>
         <script>
             $(document).ready(function () {
                 if (habilitarObservaciones) {
