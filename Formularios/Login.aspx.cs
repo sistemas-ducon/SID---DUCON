@@ -68,7 +68,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Login
             string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
             using (SqlConnection sqlconectar = new SqlConnection(cn))
             {
-                SqlCommand cmd = new SqlCommand("SELECT Nombre FROM tblEmpleado WHERE Login = @Login AND Password = @Password", sqlconectar);
+                SqlCommand cmd = new SqlCommand("SELECT CONCAT(Nombre, ' ', Apellidos) AS Nombre FROM tblEmpleado WHERE Login = @Login AND Password = @Password", sqlconectar);
                 cmd.Parameters.Add("@Login", SqlDbType.VarChar, 30).Value = login;
                 cmd.Parameters.Add("@Password", SqlDbType.VarChar, 30).Value = password;
 

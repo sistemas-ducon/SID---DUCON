@@ -165,7 +165,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (Session["CargarOTsEjecutada"] != null && (bool)Session["CargarOTsEjecutada"])
             {
                 tbOT.Text = "Por Asig";
-    
+              
             }
             else
             {
@@ -251,6 +251,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             }
+
+
+
+            Nit.Enabled = true;
 
         }
 
@@ -1361,6 +1365,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
             ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
         }
+
+        protected void Redireccion_Nit(object sender, EventArgs e)
+        {
+            string url = "FormExtPrin/NitOts.aspx";
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+        }
+
+
 
     }
 }
