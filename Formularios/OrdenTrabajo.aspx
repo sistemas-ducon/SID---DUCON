@@ -600,7 +600,7 @@
                                     <div class="col-3">
 
                                         <div class=" input-group input-group-sm">
-                                            <asp:Button ID="Nit" runat="server" Text="Nit  ..." class="bi bf btn btn-secondary" />
+                                            <asp:Button ID="Nit" runat="server" Text="Nit  ..." class="bi bf btn btn-secondary" OnClick="Redireccion_Nit" />
 
                                         </div>
                                     </div>
