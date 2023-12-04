@@ -53,19 +53,19 @@
             </div>
         </nav>
 
-        <div class="tab-content container">
+        <div class="tab-content">
             
             <%-- TAB POR VENDEDOR--%> <%--TAB-COMPLETADO-FUNCIONALIDAD--%>
 
             <div class="tab-pane fade show active" id="PorVendedor-content">
                 <asp:UpdatePanel runat="server" ID="UpdatePanelPorVendedor" UpdateMode="Conditional">
                     <ContentTemplate>
-
+                        <div class="container">
                         <h6>Informacion Cotizacion</h6>
 
                         <div class="row">
 
-                            <div class="col-5">
+                            <div class="col-lg-5 col-md-6 col-sm-6 col-xs-12">
 
                                 <div class="input-group input-group-sm mb-2 gap-2">
                                     <asp:Label CssClass="col-form-label-sm" runat="server">Contizacion Entre</asp:Label>
@@ -76,7 +76,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-5">
+                            <div class="col-lg-5 col-md-6 col-sm-6 col-xs-12">
 
                                 <div class="input-group input-group-sm mb-2 gap-2">
                                     <asp:Label CssClass="col-form-label-sm" runat="server">Asesor:</asp:Label>
@@ -86,31 +86,31 @@
 
                             </div>
 
-                            <div class="col-1">
+                            <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                                 <asp:Button CssClass="btn-outline-dark  btn btn-light btn-sm" runat="server" Text="Consultar" OnClick="TapPorVendedor_Click" />
                             </div>
                             
 
                         </div>
-
-                        <div class="container mt-4">
+                            </div>
+                        <div class="container-fluid mt-4">
                             <div class="row justify-content-center">
-                                <div class="border rounded p-3">
+                                <div class="border rounded p-3" style="height:26rem; width:100rem">
 
 
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="table-responsive mb-2 gap-2" style="max-height: 300px; overflow-x: auto;">
+                                            <div class="table-responsive mb-2 gap-2" style="max-height: 24rem; overflow-x: auto;">
                                                 <asp:DataGrid Class="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid1" runat="server"
                                                     DataSourceID="DataGridConsultaCotizaciones" AutoGenerateColumns="false" OnPreRender="DataGridPorVendedor_PreRender">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                     <Columns>
                                                         <asp:BoundColumn DataField="Cotización" HeaderText="Cotizacion" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Estado" HeaderText="Estado" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="Competencia" HeaderText="Competencia" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="NombreCompetencia" HeaderText="Competencia" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Valor" HeaderText="Valor" DataFormatString="{0:C0}" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Descuento" HeaderText="Dto(%)" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="VCCD" HeaderText="ValorNeto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="ValorNeto" HeaderText="ValorNeto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Cliente" HeaderText="Cliente" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Obra" HeaderText="Obra" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
@@ -139,7 +139,7 @@
 
                         <div class="container mt-4">
                             <div class="row justify-content-center">
-                                <div class="border rounded p-3" style="height: 200px">
+                                <div class="border rounded p-2" style="height: 10rem; width:50rem;">
 
                                     <div class="table-responsive">                                  
                                     <table class="table table-sm table-hover table-bordered form-control-sm">
@@ -230,8 +230,9 @@
                 <asp:UpdatePanel runat="server" ID="UpdatePanelPorEstado" UpdateMode="Conditional">
                     <ContentTemplate>
 
-                        <h6>Criterios para la estadistica</h6>
-
+                       
+                        <div class="container">
+                             <h6>Criterios para la estadistica</h6>
                         <div class="row">
 
                             <div class="col-5">
@@ -267,34 +268,29 @@
                                 <asp:Button CssClass="btn-outline-dark btn btn-light btn-sm" runat="server" Text="Consultar" ID="BtnConsultarTab2" OnClick="BtnConsultarPorEstado_Click" />
                             </div>
                         </div>
-
-
+                         </div>
                         <div class="row justify-content-center">
-                            <div class="border rounded p-3 mt-4">
+                            <div class="border rounded p-3 mt-4" style="height:26rem; width:100rem">
 
                                 <div class="col-12">
-                                    <div class="table-responsive mb-2 gap-2" style="max-height: 300px; overflow-x: auto;">
-
+                                    <div class="table-responsive mb-2 gap-2" style="max-height: 24rem; overflow-x: auto;">
                                         <asp:DataGrid Class="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid2" runat="server" DataSourceID="DataGridPorEstado" AutoGenerateColumns="false" OnPreRender="DataGridPorEstado_PreRender">
                                              <HeaderStyle Font-Bold="true" CssClass="datagrid-header auto-width-column" />
                                             <Columns>
-                                                <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                <asp:BoundColumn DataField="AsesorComercial" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="Cotización" HeaderText="Cotizacion" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="" HeaderText="Opc" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="Valor" HeaderText="Valor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="Descuento" HeaderText="Dto(%)" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                <asp:BoundColumn DataField="VCCD" HeaderText="Valor Neto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                <asp:BoundColumn DataField="ValorNeto" HeaderText="Valor Neto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="Cliente" HeaderText="Cliente" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="" HeaderText="Contacto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="Obra" HeaderText="Obra" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="Plano" HeaderText="Plano" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="Fecha_Cotización" HeaderText="F.Cotizacion" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="Fecha_Respuesta" HeaderText="F.Respuesta" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-
                                             </Columns>
-                                        </asp:DataGrid>
-                                       
-
+                                        </asp:DataGrid>                                      
                                         <asp:SqlDataSource runat="server" ID="DataGridPorEstado" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="cta_Cotizaciones_Por_Estado" SelectCommandType="StoredProcedure">
                                             <SelectParameters>
                                                 <asp:ControlParameter ControlID="TextAsesortab2" PropertyName="Text" Name="NombreAsesor" Type="String"></asp:ControlParameter>
@@ -314,7 +310,7 @@
 
                         <div class="container mt-4">
                             <div class="row justify-content-center">
-                                <div class="border rounded p-3" style="height: 200px">
+                                <div class="border rounded p-2" style="height: 10rem; width:50rem;">
 
                                     <div class="table-responsive">                                  
                                     <table class="table table-sm table-hover table-bordered form-control-sm" id="Table1">
@@ -390,7 +386,7 @@
 
                 <asp:UpdatePanel runat="server" ID="UpdatePanelSeguimiento" UpdateMode="Conditional">
                     <ContentTemplate>
-
+                        <div class="container">
                         <h6>Criterios para la estadistica</h6>
 
                         <div class="row">
@@ -420,16 +416,16 @@
                             </div>
 
                         </div>
-
-                        <div class="container mt-4">
+                            </div>
+                        <div class="container-fluid mt-2">
                             <div class="row justify-content-center">
-                                <div class="border rounded p-3">
+                                <div class="border rounded p-1" style="width:110rem">
                                     <div class="row">
                                         <div class="col-2">
 
-                                            <div class="border rounded p-3" style="height: 400px">
-                                                <table class="table table-bordered">
-                                                    <thead class="table table-sm table-responsive-sm">
+                                            <div class="border rounded p-1" style="height: 25rem">
+                                                <table class="table table-bordered form-control-sm">
+                                                    <thead class="table table-sm table-responsive-sm form-control-sm">
                                                         <tr class="ms-auto">
                                                             <h6 class="text-center">Seg Para Hoy</h6>
                                                             <th class="text-center" scope="col">Cotización</th>
@@ -474,13 +470,13 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="container-fluid" style="width:100rem">
                         <div class="row">
                             <div class="col-9">
-                                <div class="container mt-4">
-                                    <div class="row justify-content-center">
-                                        <div class="border rounded p-3" style="height: 200px">
-                                            <asp:GridView runat="server" ID="GridViewTotales" AutoGenerateColumns="false" CssClass="table table-sm table-hover">
+                                <div class="container-fluid mt-2">
+                                    <div class="row container">
+                                        <div class="border rounded p-3" style="height: 10rem">
+                                            <asp:GridView runat="server" ID="GridViewTotales" AutoGenerateColumns="false" CssClass="table table-sm table-hover table-responsive form-control-sm">
                                                 <HeaderStyle Font-Bold="false" />
                                                 <Columns>
                                                     <asp:BoundField DataField="" HeaderText="Cotizacion" />
@@ -518,6 +514,8 @@
                                 </div>
                             </div>
                         </div>
+                            </div>
+                        <div class="container">
                         <div class="row">
                             <div class="col-5">
                               <div class="input-group input-group-sm mb-2 gap-2 mt-3">
@@ -540,7 +538,7 @@
                                 <asp:Label CssClass="col-form-label-sm" runat="server">Cotizacion PDF</asp:Label>
                             </div>
                             </div>
-
+                            </div>
 
 
 
@@ -554,6 +552,52 @@
             <div class="tab-pane fade" id="Totales-content">
                 <asp:UpdatePanel runat="server" ID="UpdatePanelTotales" UpdateMode="Conditional">
                     <ContentTemplate>
+                        <div class="container">
+                            <h6>Intervalos de Fecha</h6>
+                            <div class="row">
+                                <div class="col-11">
+                               <div class="input-group input-group-sm mb-2 gap-2">
+                                    <asp:Label CssClass="col-form-label-sm" runat="server">Contizacion Entre</asp:Label>
+                                    <asp:TextBox CssClass="form-control" runat="server" Type="date" ID="TextBox1"></asp:TextBox>
+                                    <asp:Label CssClass="col-form-label-sm" runat="server">y</asp:Label>
+                                    <asp:TextBox CssClass="form-control" runat="server" Type="Date" ID="TextBox4"></asp:TextBox>
+                                   </div>
+                                </div>
+                                <div class="col-1">
+                                    <asp:Button ID="Button1" runat="server" Text="Button" />
+                                </div>
+                                </div>
+                            </div>
+                        <div class="container-fluid">
+                            <div class="row justify-content-center">
+                             
+                                     <div class="border rounded p-1" style="height: 25rem; width:100rem;">
+                                   <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm"
+                                        ID="DataGrid5" runat="server" AutoGenerateColumns="false" AllowSorting="true">
+
+                                        <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                        <Columns>
+                                            <asp:TemplateColumn>
+                                                <ItemTemplate>
+                                                    <asp:LinkButton ID="SelecOt" runat="server" CommandName="Select" CommandArgument='<%# Container.ItemIndex %>'
+                                                        Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                </ItemTemplate>
+                                            </asp:TemplateColumn>
+                                            <asp:BoundColumn HeaderText="Empleado" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                            <asp:BoundColumn HeaderText="Estado Cot."  ItemStyle-CssClass="auto-width-column" />
+                                            <asp:BoundColumn HeaderText="Cantidad"  ItemStyle-CssClass="auto-width-column" />
+                                            <asp:BoundColumn HeaderText="%Estado"  ItemStyle-CssClass="auto-width-column" />
+                                            <asp:BoundColumn HeaderText="Monto"  ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                            <asp:BoundColumn HeaderText="%Estado" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                             
+                                        </Columns>
+                                    </asp:DataGrid> 
+                                         
+                                    </div>
+                            
+                                </div>
+
+                        </div>
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </div>
@@ -578,7 +622,7 @@
 
                 <asp:UpdatePanel runat="server" ID="UpdatePanelUltimoContacto" UpdateMode="Conditional">
                     <ContentTemplate>
-
+                        <div class="container">
                         <div class="row">
 
                             <div class="col-5">
@@ -603,7 +647,7 @@
                             </div>
 
                         </div>
-
+                            </div>
                         <div class="container mt-4">
                             <div class="row justify-content-center">
                                 <div class="border rounded p-3">

@@ -26,3 +26,7 @@
 .grande {
     font-size: 18px;
 }
+
+.no-scroll {
+    overflow: hidden;
+}

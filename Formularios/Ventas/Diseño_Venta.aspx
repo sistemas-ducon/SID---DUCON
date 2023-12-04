@@ -256,7 +256,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title  d-flex align-items-center justify-content-center" id="modallLabel">Dejar Infomación</h5>
-                                                            <asp:button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></asp:button>
+                                                            <asp:button type="button" runat="server" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></asp:button>
                                                         </div>
                                                         <div class="modal-body d-flex align-items-center justify-content-center">
                                                             <h6>Desea Limpiar los campos del diseño?</h6>
@@ -382,8 +382,8 @@
                                                     <div class="input-group input-group-sm ">
                                                         <asp:FileUpload ID="FileUpload1" runat="server" CssClass="form-control" />
 
-                                                        <asp:Button ID="GuardarButton" runat="server" Text="Guardar" CssClass="btn btn-outline-dark" OnClick="GuardarButton_Click" />
-                                                        <asp:Button ID="BtnEliminar" runat="server" Text="Eliminar" CssClass="btn btn-outline-dark" OnClick="BtnEliminar_Click" />
+                                                        <asp:Button ID="GuardarButton" runat="server" Text="Guardar" OnClick="GuardarButton_Click" />
+                                                        <asp:Button ID="BtnEliminar" runat="server" Text="Eliminar" OnClick="BtnEliminar_Click" />
 
                                                     </div>
                                                 </div>
@@ -447,7 +447,7 @@
                                     <div class="border rounded p-1">
 
                                         <div class="row">
-                                            <div class="col-3">
+                                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
 
                                                 <div class="row d-flex justify-content-between mt-2">
                                                     <div class="col-md-8 col-6">
@@ -457,7 +457,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4 col-3">
-                                                        <asp:Button runat="server" ID="BtnBus" type="button" OnClientClick="mostrarTab(); return false;" class="btn-outline-dark btn btn-white m-2 shadow" Text="..." />
+                                                        <asp:Button runat="server" ID="BtnBus" type="button" OnClientClick="mostrarTab(); return false;" class="btn-outline-dark btn btn-white m-2 shadow btn-sm" Text="..." />
                                                     </div>
 
                                                     <div class="row">
@@ -484,15 +484,15 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-3">
+                                           <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                                 <div class="row d-flex justify-content-between mt-1">
                                                     <div class="col-md-6 col-6">
                                                         <asp:Label runat="server" ID="lblIngDis" class="col-form-label-sm">Ingreso de Diseño</asp:Label>
-                                                        <asp:TextBox ID="TextIngDis" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                        <asp:TextBox ID="TextIngDis" runat="server" CssClass="form-control form-control-sm" type="datetime-local"></asp:TextBox>
                                                     </div>
                                                     <div class="col-md-6 col-6">
                                                         <asp:Label runat="server" ID="lblUltAct" class="col-form-label-sm">Ultima Activacion</asp:Label>
-                                                        <asp:TextBox ID="TextUltAc" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                        <asp:TextBox ID="TextUltAc" runat="server" CssClass="form-control form-control-sm" type="datetime-local"></asp:TextBox>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -526,15 +526,15 @@
 
                                                 </div>
                                             </div>
-                                            <div class="col-3 ">
+                                           <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                                 <div class="row d-flex justify-content-between mt-1">
                                                     <div class="col-md-5 col-6">
                                                         <asp:Label runat="server" ID="lblEnt" class="col-form-label-sm">Entrega</asp:Label>
-                                                        <asp:TextBox ID="TextEntrega" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                        <asp:TextBox ID="TextEntrega" runat="server" CssClass="form-control form-control-sm" type="datetime-local"></asp:TextBox>
                                                     </div>
                                                     <div class="col-md-5 col-6">
                                                         <asp:Label runat="server" ID="lblEntDib" class="col-form-label-sm">Fecha Ok Dibujo</asp:Label>
-                                                        <asp:TextBox ID="TextFecOkDib" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                        <asp:TextBox ID="TextFecOkDib" runat="server" CssClass="form-control form-control-sm" type="datetime-local"></asp:TextBox>
                                                     </div>
                                                     <div class="col-md-2 col-6">
                                                         <asp:Label runat="server" ID="lblZon" class="col-form-label-sm">Zona</asp:Label>
@@ -578,7 +578,7 @@
                                             </div>
 
 
-                                            <div class="col-3 ">
+                                           <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                                 <div class="row d-flex justify-content-between mt-1">
                                                     <div class="col-md-6 col-12">
                                                         <asp:Label runat="server" ID="lblAse" class="col-form-label-sm">Asesor</asp:Label>
@@ -586,7 +586,7 @@
                                                         </asp:DropDownList>
 
                                                         <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"
-                                                            SelectCommand="SELECT Cedula, Nombre + ' ' + Apellidos AS NombreCompleto FROM tblAsesorComercial WHERE Activo = '1'"></asp:SqlDataSource>
+                                                            SelectCommand="SELECT Cedula, Nombre + ' ' + Apellidos AS NombreCompleto FROM tblAsesorComercial WHERE Activo = '1' ORDER BY nombre ASC;"></asp:SqlDataSource>
 
 
                                                     </div>
@@ -622,9 +622,12 @@
                                                                     DataTextField="CiudadDepartamento" DataValueField="id_Ciudad_Aut" />
 
                                                                 <asp:SqlDataSource ID="sqlDataSourceCiudades" runat="server" ConnectionString="Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"
-                                                                    SelectCommand="SELECT id_Ciudad_Aut, C.NombreCiudad + ' - ' + D.NombreDepartamento AS CiudadDepartamento
-                                                                       FROM tblCiudad C
-                                                                       INNER JOIN tblDepartamentoPais D ON C.Id_Departamento = D.id_departamento_Auto"></asp:SqlDataSource>
+                                                                    SelectCommand="SELECT tblCiudad.id_Ciudad_Aut, tblCiudad.NombreCiudad + ' - ' + tblDepartamentoPais.NombreDepartamento AS CiudadDepartamento
+                                                                        FROM tblCiudad
+                                                                        INNER JOIN tblCostoTransporte ON tblCiudad.id_Ciudad_Aut = tblCostoTransporte.tte_ID_Ciudad
+                                                                        INNER JOIN tblDepartamentoPais ON tblCiudad.Id_Departamento = tblDepartamentoPais.Id_Departamento_Auto
+                                                                        GROUP BY tblCiudad.id_Ciudad_Aut, tblCiudad.NombreCiudad + ' - ' + tblDepartamentoPais.NombreDepartamento
+                                                                        ORDER BY tblCiudad.NombreCiudad + ' - ' + tblDepartamentoPais.NombreDepartamento;"></asp:SqlDataSource>
 
 
                                                             </div>
@@ -646,7 +649,7 @@
                                     <div class="border rounded p-3">
 
                                         <div class="row">
-                                            <div class="col-2 border">
+                                            <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12 border">
                                                 <div class="col-md-12 col-12">
                                                     <div class="input-group input-group-sm gap-2">
                                                         <asp:Label ID="lblConCab" runat="server" class="form-label" Style="font-size: 16px; font-weight: bold;">Conduccion de Cables</asp:Label>
@@ -695,7 +698,7 @@
                                                 </div>
 
                                             </div>
-                                            <div class="col-2 border">
+                                           <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12 border">
                                                 <div class="col-md-12 col-12">
                                                     <div class="input-group input-group-sm gap-2">
                                                         <asp:Label ID="lblSujPt" runat="server" class="form-label" Style="font-size: 16px; font-weight: bold;">Sujeción PT</asp:Label>
@@ -727,7 +730,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-6 border">
+                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 border">
                                                 <div class="row d-flex justify-content-between">
                                                     <div class="col-md-6 col-6">
                                                         <div class="input-group input-group-sm mt-1 gap-2">
@@ -814,7 +817,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-2 border">
+                                             <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12 border">
                                                 <div class="col-md-10 col-12">
                                                     <div class="input-group input-group-sm gap-2">
                                                         <asp:Label ID="lblMue" runat="server" class="form-label" Style="font-size: 16px; font-weight: bold;">Muebles</asp:Label>
@@ -850,17 +853,17 @@
                                 <div class="row justify-content-center">
                                     <div class="border rounded p-1">
                                         <div class="row">
-                                            <div class="col-4">
+                                             <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
                                                 <h6>Observaciones Ventas</h6>
-                                                <textarea id="TextObsVen" class="form-control" style="height: 100px" runat="server"></textarea>
+                                                <textarea id="TextObsVen" class="form-control form-control-sm" style="height: 100px" runat="server"></textarea>
                                             </div>
-                                            <div class="col-4">
+                                            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
                                                 <h6>Observaciones de Dibujo y Despiece</h6>
-                                                <textarea id="TextObsDibDes" class="form-control" style="height: 100px" runat="server"></textarea>
+                                                <textarea id="TextObsDibDes" class="form-control form-control-sm" style="height: 100px" runat="server"></textarea>
                                             </div>
-                                            <div class="col-4">
+                                            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
                                                 <h6>Seguimiento de Pausas y Devoluciones</h6>
-                                                <textarea id="TextSegPauDev" class="form-control" style="height: 100px" runat="server"></textarea>
+                                                <textarea id="TextSegPauDev" class="form-control form-control-sm" style="height: 100px" runat="server"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -871,7 +874,7 @@
                                 <div class="row justify-content-center">
                                     <div class="border rounded p-1">
                                         <div class="row">
-                                            <div class="col-2">
+                                            <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                                                 <div class="border rounded p-1" style="height: 250px">
                                                     <h6>ShowCase</h6>
                                                     <div class="col-md-10 col-12">
@@ -912,7 +915,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-10">
+                                            <div class="col-lg-10 col-md-6 col-sm-6 col-xs-12">
                                                 <div class="container-fluid">
                                                     <div class="row justify-content-center">
 

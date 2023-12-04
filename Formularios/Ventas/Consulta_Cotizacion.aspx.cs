@@ -24,16 +24,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 LoadEstados();
                 CargarDatosTotales();
 
-                if (Session["usuariologueado"] != null)
+                if (Session["CedulaLogeada"] != null)
                 {
-                    string usuariologueado = Session["usuariologueado"].ToString();
+                    string usuariologueado = Session["CedulaLogeada"].ToString();
 
                     // Realizar la conexión a la base de datos y la consulta para obtener el nombre y apellido del usuario
                     string connectionString = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password";
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
                         connection.Open();
-                        string query = "SELECT Nombre, Apellidos FROM tblEmpleado WHERE Login = @nombreUsuario";
+                        string query = "SELECT Nombre, Apellidos, cedula FROM tblEmpleado WHERE cedula = @nombreUsuario";
                         using (SqlCommand command = new SqlCommand(query, connection))
                         {
                             command.Parameters.AddWithValue("@nombreUsuario", usuariologueado);

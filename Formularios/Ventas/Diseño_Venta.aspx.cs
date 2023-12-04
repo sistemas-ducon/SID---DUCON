@@ -18,7 +18,7 @@ using System.Diagnostics;
 using DocumentFormat.OpenXml.Office2010.Drawing;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 using System.Windows.Media.TextFormatting;
-
+using System.Globalization;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
@@ -32,8 +32,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private bool valorOriginalCotizarTransporte;
         private bool valorOriginalCotizarViaticos;
         private bool valorOriginalMailTerminado;
-
-        // Otras variables originales para otros campos
         private string valorOriginalTelefono;
         private string valorOriginalContacto;
         private string valorOriginalZona;
@@ -89,9 +87,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 valorOriginalCel = TextCel.Text;
                 valorOriginalCotizarTransporte = CheckBox4.Checked;
                 valorOriginalCotizarViaticos = ChecCotVia.Checked;
-                valorOriginalMailTerminado = ChecMailTer.Checked;
-
-                // Otras asignaciones de valores originales para otros campos
+                valorOriginalMailTerminado = ChecMailTer.Checked;        
                 valorOriginalTelefono = TextTel.Text;
                 valorOriginalContacto = TextContacto.Text;
                 valorOriginalZona = TextZona.Text;
@@ -153,6 +149,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     DataGridDiseño.SelectParameters["Cedula"].DefaultValue = cedulaLogeada;                
                     DataGridDiseñosPorFecha.SelectParameters["Cedula"].DefaultValue = cedulaLogeada;
                     DataGridRenderPorFechaYAsesor.SelectParameters["Cedula"].DefaultValue = cedulaLogeada;
+                    SqlDataSource4.SelectParameters.Add("CodigoAsesor", cedulaLogeada);
                 }
 
 
@@ -170,11 +167,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 CheckBox22.Checked = isModalVisible;              
                 elementosllenosalcargarlapagina();
                 CargarClienteYContacto();
+                Session.Remove("lnkClieClicked");
+                Session.Remove("lnkClieeClicked");          
+                Session["EventoItemCommandEjecutado"] = false;
+                Session["EventoNoButtonEjecutado"] = false;
             }           
         }
-
-        
-
+      
         protected void BtnProgramar_Click(object sender, EventArgs e)
         {
             // Obtener el valor del label lblNumDise
@@ -210,11 +209,33 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
         protected void SiButton_Click(object sender, EventArgs e)
         {
-            TextIngDis.Text = DateTime.Now.ToString("yyyy-MM-dd");
-            TextUltAc.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            // Obtener la fecha y hora actual
+            DateTime now = DateTime.Now;
+
+            string fechaHoraActual = now.ToString("yyyy-MM-ddTHH:mm");
+
+            // Asignar la fecha y hora actual al TextBox
+            TextUltAc.Text = fechaHoraActual;
+
+
+            string fechaEntrega = now.ToString("yyyy-MM-ddTHH:mm");
+
+            // Asignar la fecha y hora actual al TextBox
+            TextEntrega.Text = fechaEntrega;
+
+
+            string fechaInDis = now.ToString("yyyy-MM-ddTHH:mm");
+
+            // Asignar la fecha y hora actual al TextBox
+            TextIngDis.Text = fechaInDis;
+
+            string fechaOkDib = now.ToString("yyyy-MM-ddTHH:mm");
+
+            // Asignar la fecha y hora actual al TextBox
+            TextFecOkDib.Text = fechaOkDib;
+
 
             // Limpiar el contenido del TextBox
             TextProyecto.Text = string.Empty;
@@ -273,25 +294,60 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Deshabilitar el botón "NuevoDisBit"
             NuevoDisBit.Enabled = false;
-            NuevoDisBit.CssClass = "button-disabled";
+            NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
 
             
             Grabar.Enabled = true;
-            Grabar.CssClass = "button-enabled";
+            Grabar.CssClass = "btn btn-sm shadow button-enabled";
 
             Modificar.Enabled = false;
-            Modificar.CssClass = "button-disabled";
+            Modificar.CssClass = "btn btn-sm shadow button-disabled";
 
             ActualizarDiseno.Enabled = false;
-            ActualizarDiseno.CssClass = "button-disabled";
+            ActualizarDiseno.CssClass = "btn btn-sm shadow button-disabled";
 
             // Cambiar el color del Label lblCotizar
             lblCotizar.CssClass = "col-form-label-sm text-danger";
             lblCotizar.Font.Bold = true;
+
+            Modificar.Enabled = false;
+            Modificar.CssClass = "btn btn-sm shadow button-disabled";
+
+            Session["EventoItemCommandEjecutado"] = false;
+            Session.Remove("lnkClieClicked");
+            Session.Remove("lnkClieeClicked");
         }
 
         protected void NoButton_Click(object sender, EventArgs e)
         {
+
+            // Obtener la fecha y hora actual
+            DateTime now = DateTime.Now;
+
+            string fechaHoraActual = now.ToString("yyyy-MM-ddTHH:mm");
+
+            // Asignar la fecha y hora actual al TextBox
+            TextUltAc.Text = fechaHoraActual;
+
+          
+            string fechaEntrega = now.ToString("yyyy-MM-ddTHH:mm");
+
+            // Asignar la fecha y hora actual al TextBox
+            TextEntrega.Text = fechaEntrega;
+
+
+            string fechaInDis = now.ToString("yyyy-MM-ddTHH:mm");
+
+            // Asignar la fecha y hora actual al TextBox
+            TextIngDis.Text = fechaInDis;
+
+            string fechaOkDib = now.ToString("yyyy-MM-ddTHH:mm");
+
+            // Asignar la fecha y hora actual al TextBox
+            TextFecOkDib.Text = fechaOkDib;
+
+            
+
 
             lblNumDise.Text = "Por definir";
 
@@ -320,23 +376,25 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Deshabilitar el botón "NuevoDisBit"
             NuevoDisBit.Enabled = false;
-            NuevoDisBit.CssClass = "button-disabled";
+            NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
 
 
             Grabar.Enabled = true;
-            Grabar.CssClass = "button-enabled";
+            Grabar.CssClass = "btn btn-sm shadow button-enabled";
 
             Modificar.Enabled = false;
-            Modificar.CssClass = "button-disabled";
+            Modificar.CssClass = "btn btn-sm shadow button-disabled";
 
             ActualizarDiseno.Enabled = false;
-            ActualizarDiseno.CssClass = "button-disabled";
+            ActualizarDiseno.CssClass = "btn btn-sm shadow button-disabled";
 
             // Cambiar el color del Label lblCotizar
             lblCotizar.CssClass = "col-form-label-sm text-danger";
             lblCotizar.Font.Bold = true;
-        }
 
+            Session["EventoNoButtonEjecutado"] = true;
+           
+        }
 
         private void ApplyButtonStyles()
         {
@@ -433,9 +491,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Asignar la hora al TextBox de hora
             TextFech.Text = now.ToString("HH:mm");
 
-            TextIngDis.Text = DateTime.Now.ToString("yyyy-MM-dd");
-            TextUltAc.Text = DateTime.Now.ToString("yyyy-MM-dd");
-            TextFecOkDib.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            TextIngDis.Text = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+
+            string fechaHoraActual = now.ToString("yyyy-MM-ddTHH:mm");
+
+            // Asignar la fecha y hora actual al TextBox
+            TextUltAc.Text = fechaHoraActual;
+
+            TextFecOkDib.Text = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
 
             DateTime fechaActual = DateTime.Now;
 
@@ -443,7 +506,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             DateTime fechaEntrega = fechaActual.AddDays(5);
 
             // Establecer el valor por defecto en el TextBox
-            TextEntrega.Text = fechaEntrega.ToString("yyyy-MM-dd");
+            TextEntrega.Text = fechaEntrega.ToString("yyyy-MM-ddTHH:mm");
 
             BtnProgramar.CssClass = "btn btn-warning shadow btn-sm";
  
@@ -851,7 +914,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-
         //BUSCAR DISE
         protected void But_Click(object sender, EventArgs e)
         {
@@ -877,14 +939,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             DataGrid4.DataBind();
         }
 
-
         protected void ddlCiudadX_DataBound(object sender, EventArgs e)
         {
            
         }
-
-
-
 
         protected void NuevoDisBit_Click(object sender, EventArgs e)
         {
@@ -895,6 +953,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 // Mostrar el modal si se hizo clic en lnkClie o lnkCliee
                 ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modall').modal('show');", true);
+                Session["NuevoDisBitEjecutado"] = true;
+
             }
             else
             {
@@ -935,10 +995,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 TextFec.Enabled = false;
                 TextFech.Enabled = false;
 
+                lblNumDise.Text = "Por Definir";
+
             }
-            Session.Remove("lnkClieClicked");
-            Session.Remove("lnkClieeClicked");
-            Session["NuevoDisBitEjecutado"] = true;
+            
+           
+
+           
         }
 
         protected void CheckBox21_CheckedChanged(object sender, EventArgs e)
@@ -980,9 +1043,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
         protected void Cancelar_Click(object sender, EventArgs e)
         {
+
             // Verifica si la variable de sesión "Modificado" está establecida como true.
             bool modificado = Session["Modificado"] as bool? ?? false;
 
@@ -1012,8 +1075,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 ActualizarDiseno.Enabled = true;
                 ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
+  
 
-                // Resto de las acciones para cancelar...
             }
 
             // Limpia la variable de sesión "Modificado" después de utilizarla.
@@ -1033,15 +1096,57 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Ocultar el div y su contenido
             DeshabilitarDivYContenido(miDiv);
 
-            lblNumDise.Text = "Número";
+           
             lblCotizar.CssClass = "col-form-label-sm text-dark";
             lblCotizar.Font.Bold = false;
+
+            // Manejo del evento DataGridDise_ItemCommand
+            bool eventoItemCommandEjecutado = Session["EventoItemCommandEjecutado"] as bool? ?? false;
+
+            if (eventoItemCommandEjecutado)
+            {
+                // Si el evento DataGridDise_ItemCommand se ejecutó correctamente,
+                // obtener el valor de la variable de sesión "NumeroDisenoSession" y asignarlo a lblNumDise
+                int numeroDiseno = Session["NumeroDisenoSession"] as int? ?? 0;
+                lblNumDise.Text = numeroDiseno.ToString();
+   
+
+            }
+            else
+            {
+                Grabar.Enabled = false;
+                Grabar.CssClass = "btn btn-sm shadow button-disabled";
+
+                NuevoDisBit.Enabled = true;
+                NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled";
+
+                ActualizarDiseno.Enabled = true;
+                ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
+
+                lblNumDise.Text = "Numero";
+
+              
+
+                // Limpia la variable de sesión "EventoItemCommandEjecutado" después de utilizarla.
+                Session["EventoItemCommandEjecutado"] = false;
+            }
+
+            // Manejo del evento DataGridDise_ItemCommand
+            bool eventoNoButtonEjecutado = Session["EventoNoButtonEjecutado"] as bool? ?? false;
+
+
+            if (eventoNoButtonEjecutado)
+            {
+                Modificar.Enabled = true;
+                Modificar.CssClass = "btn btn-sm shadow button-enabled";
+            }
+            
         }
 
         protected void lnkClie_Click(object sender, EventArgs e)
         {
 
-            Session["lnkClieClicked"] = true;
+          
 
             Grabar.Enabled = false;
             Grabar.CssClass = "btn btn-sm shadow button-disabled";
@@ -1067,7 +1172,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             BtnProgramar.Enabled = true;
 
-          
+            Session["lnkClieClicked"] = true;
         }
 
         protected void lnkCliee_Click(object sender, EventArgs e)
@@ -1136,8 +1241,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Response.Redirect("/Formularios/Login.aspx");
             }
         }
-
-       
+    
         protected void Modificar_Click(object sender, EventArgs e)
         {
             BtnProgramar.Enabled = false;
@@ -1176,6 +1280,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblCotizar.Font.Bold = true;
 
 
+            // Deshabilitar el botón "NuevoDisBit"
+            NuevoDisBit.Enabled = false;
+  
+            NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
+         
+
             Session["ModificarEjecutado"] = true;
         }
 
@@ -1198,19 +1308,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             else if (string.IsNullOrEmpty(TextCel.Text))
             {
                 campoFaltante = "Celular";
-            }
-            else if (!CheckBox4.Checked)
-            {
-                campoFaltante = "Cotizar transporte";
-            }
-            else if (!ChecCotVia.Checked)
-            {
-                campoFaltante = "Cotizar Viáticos";
-            }
-            else if (!ChecMailTer.Checked)
-            {
-                campoFaltante = "Mail Terminado";
-            }
+            }           
             else if (string.IsNullOrEmpty(TextTel.Text))
             {
                 campoFaltante = "Teléfono";
@@ -1230,11 +1328,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             else if (string.IsNullOrEmpty(TextEntrega.Text))
             {
                 campoFaltante = "Fecha Programada de Entrega";
-            }
-            else if (!ChecCot.Checked)
-            {
-                campoFaltante = "Pasar a Cotizar";
-            }
+            }       
             else if (string.IsNullOrEmpty(TextPla.Text))
             {
                 campoFaltante = "Plano";
@@ -1266,43 +1360,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             else if (string.IsNullOrEmpty(TextDes.Text))
             {
                 campoFaltante = "Descuento";
-            }
-            else if (!ChecPiso.Checked)
-            {
-                campoFaltante = "Conducción de Cables por Piso";
-            }
-            else if (!ChecDiv.Checked)
-            {
-                campoFaltante = "Conducción de Cables por División";
-            }
-            else if (!ChecCie.Checked)
-            {
-                campoFaltante = "Conducción de Cables por Cielo";
-            }
-            else if (!ChecCan.Checked)
-            {
-                campoFaltante = "Conducción de Cables por Canaleta";
-            }
-            else if (!ChecBteEle.Checked)
-            {
-                campoFaltante = "Bajantes Eléctricos";
-            }
-            else if (!ChecBteSw.Checked)
-            {
-                campoFaltante = "Bajantes de Switches";
-            }
-            else if (!ChecAlCie.Checked)
-            {
-                campoFaltante = "Sujeción de Cielo";
-            }
-            else if (!ChecPerRef.Checked)
-            {
-                campoFaltante = "Perfil de Refuerzo";
-            }
-            else if (!ChecGuaEsc.Checked)
-            {
-                campoFaltante = "Guarda Escobas";
-            }
+            } 
             else if (string.IsNullOrEmpty(TexHTot.Text))
             {
                 campoFaltante = "H.Total";
@@ -1318,11 +1376,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             else if (string.IsNullOrEmpty(TextSup.Text))
             {
                 campoFaltante = "Acabado de Superficie";
-            }
-            else if (!CheckBox16.Checked)
-            {
-                campoFaltante = "Balance de Superficies";
-            }
+            } 
             else if (string.IsNullOrEmpty(TextSop.Text))
             {
                 campoFaltante = "Tipo de Soporte";
@@ -1374,8 +1428,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return campoFaltante;
         }
 
-
-
         protected void btnInsertar_Click(object sender, EventArgs e)
         {
             // Verifica si "NuevoDisBit" se ejecutó previamente
@@ -1400,7 +1452,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
                 else
                 {
-                    // Realiza solo la actualización o inserción según corresponda
+                    // Realiza solo la actualización 
                     if (Session["ModificarEjecutado"] != null && (bool)Session["ModificarEjecutado"])
                     {
                         // Realiza la actualización
@@ -1421,13 +1473,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalll').modal('show'); $('#campoFaltante').text('" + campoFaltante + "');", true);
             }
 
-            // Limpia la variable de sesión después de usarla
-            Session["NuevoDisBitEjecutado"] = false;
+          
         }
-
-
-
-
 
         private bool RealizarInsercion()
         {
@@ -1468,14 +1515,39 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@Telefono", TextTel.Text);
                         command.Parameters.AddWithValue("@Contacto", TextContacto.Text);
                         command.Parameters.AddWithValue("@Zona", TextZona.Text);
-                        command.Parameters.AddWithValue("@FechaDibujoOK", TextFecOkDib.Text);
-                        command.Parameters.AddWithValue("@Fecha_Programada_Entrega", TextEntrega.Text);
+
+                        DateTime fechaOkDib = DateTime.ParseExact(TextFecOkDib.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
+
+
+                        command.Parameters.AddWithValue("@FechaDibujoOK", fechaOkDib);
+
+                        DateTime fechaProEnt = DateTime.ParseExact(TextEntrega.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
+
+
+                        command.Parameters.AddWithValue("@Fecha_Programada_Entrega", fechaProEnt);
+
+                      
+
+
                         command.Parameters.AddWithValue("@PasarACotizar", ChecCot.Checked);
                         command.Parameters.AddWithValue("@Urgente", ChecUrgent.Checked);
                         command.Parameters.AddWithValue("@PlanoBitacora", TextPla.Text);
                         command.Parameters.AddWithValue("@Nombre_Diseño", TextProyecto.Text);
-                        command.Parameters.AddWithValue("@UltimaActivacion", TextUltAc.Text);
-                        command.Parameters.AddWithValue("@Fecha_Ingreso", TextIngDis.Text);
+
+                        // Obtener la fecha y hora del TextBox con type="datetime-local"
+                        DateTime fechaHora = DateTime.ParseExact(TextUltAc.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
+
+                        // Utilizar el valor formateado en el comando SQL
+                        command.Parameters.AddWithValue("@UltimaActivacion", fechaHora);
+
+                        DateTime fechaIngreso = DateTime.ParseExact(TextIngDis.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
+
+                       
+                        command.Parameters.AddWithValue("@Fecha_Ingreso", fechaIngreso);
+
+                       
+
+
                         command.Parameters.AddWithValue("@Asesor", DropDownList1.SelectedItem.Text);
                         command.Parameters.AddWithValue("@Cliente", TextCliente.Text);
                         command.Parameters.AddWithValue("@Direccion", TextDir.Text);
@@ -1598,13 +1670,32 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@Telefono", TextTel.Text);
                         command.Parameters.AddWithValue("@Contacto", TextContacto.Text);
                         command.Parameters.AddWithValue("@Zona", TextZona.Text);
-                        command.Parameters.AddWithValue("@FechaDibujoOK", TextFecOkDib.Text);
-                        command.Parameters.AddWithValue("@Fecha_Programada_Entrega", TextEntrega.Text);
+
+                        DateTime fechaOkDib = DateTime.ParseExact(TextFecOkDib.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
+
+
+                        command.Parameters.AddWithValue("@FechaDibujoOK", fechaOkDib);
+
+                        DateTime fechaProEnt = DateTime.ParseExact(TextEntrega.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
+
+
+                        command.Parameters.AddWithValue("@Fecha_Programada_Entrega", fechaProEnt);
+
                         command.Parameters.AddWithValue("@PasarACotizar", ChecCot.Checked);
                         command.Parameters.AddWithValue("@Urgente", ChecUrgent.Checked);
                         command.Parameters.AddWithValue("@PlanoBitacora", TextPla.Text);
-                        command.Parameters.AddWithValue("@UltimaActivacion", TextUltAc.Text);
-                        command.Parameters.AddWithValue("@Fecha_Ingreso", TextIngDis.Text);
+
+                        // Obtener la fecha y hora del TextBox con type="datetime-local"
+                        DateTime fechaHora = DateTime.ParseExact(TextUltAc.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
+
+                        // Utilizar el valor formateado en el comando SQL
+                        command.Parameters.AddWithValue("@UltimaActivacion", fechaHora);
+
+                        DateTime fechaIngreso = DateTime.ParseExact(TextIngDis.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
+
+
+                        command.Parameters.AddWithValue("@Fecha_Ingreso", fechaIngreso);
+
                         command.Parameters.AddWithValue("@Asesor", DropDownList1.SelectedItem.Text);
                         command.Parameters.AddWithValue("@Cliente", TextCliente.Text);
                         command.Parameters.AddWithValue("@Direccion", TextDir.Text);
@@ -1905,11 +1996,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return seModificoAlgo;
         }
 
-
-
-
-
-
         protected void Button9_Click(object sender, EventArgs e)
         {
             // Lógica para el botón Button9
@@ -1919,8 +2005,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             // Lógica para el botón Button10
         }
-
-
 
         //DATAGRID DISEÑO
         protected void DataGrid2_ItemDataBound(object sender, DataGridItemEventArgs e)
@@ -1991,7 +2075,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
         protected void DataGridDise_ItemCommand(object source, DataGridCommandEventArgs e)
         {
             if (e.CommandName == "Numero_Diseño")
@@ -2038,11 +2121,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             {
                                 // ProgramadoVentas es 1, deshabilitar el botón
                                 BtnProgramar.Enabled = false;
+
+                                GuardarButton.Enabled = false;
+                                GuardarButton.CssClass = "btn btn-sm shadow button-disabled";
+
+                                BtnEliminar.Enabled = false;
+                                BtnEliminar.CssClass = "btn btn-sm shadow button-disabled";
                             }
                             else
                             {
                                 // ProgramadoVentas es 0, habilitar el botón
                                 BtnProgramar.Enabled = true;
+                                GuardarButton.Enabled = true;
+                                GuardarButton.CssClass = "btn btn-sm shadow button-enabled";
+
+                                BtnEliminar.Enabled = true;
+                                BtnEliminar.CssClass = "btn btn-sm shadow button-enabled";
                             }
                         }
 
@@ -2059,7 +2153,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                                     // Obtener el valor de "id_CiudadProyecto"
                                     int idCiudadProyecto = 0;
-                                    if (int.TryParse(row.Cells[14].Text, out idCiudadProyecto)) // Reemplaza "x" con el índice correcto de la columna
+                                    if (int.TryParse(row.Cells[14].Text, out idCiudadProyecto)) 
                                     {
                                         // Asignar el valor de "id_CiudadProyecto" al DropDownList
                                         TextCiuPro.SelectedValue = idCiudadProyecto.ToString();
@@ -2071,28 +2165,53 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     {
                                         // El valor se pudo convertir a int, asignarlo a lblNumDise como int
                                         lblNumDise.Text = numeroDiseno.ToString();
+
+                                        Session["NumeroDisenoSession"] = numeroDiseno;
+
+                                        Session["EventoItemCommandEjecutado"] = true;
                                     }
                                     else
                                     {
                                         // No se pudo convertir a int, manejar el error o asignar un valor predeterminado
                                         lblNumDise.Text = "Valor no válido"; // O cualquier otro valor predeterminado
+
+                                        Session["EventoItemCommandEjecutado"] = false;
                                     }
 
-                                    // Cambiar el formato de Fecha_Ingreso
-                                    DateTime fechaIngreso = reader.GetDateTime(reader.GetOrdinal("Fecha_Ingreso"));
-                                    TextIngDis.Text = fechaIngreso.ToString("yyyy-MM-dd");
+                                   
+                                    DateTime Ingreso = reader.GetDateTime(reader.GetOrdinal("Fecha_Ingreso"));
 
+                                  
+                                    string Fecha_Ingreso = Ingreso.ToString("yyyy-MM-ddTHH:mm");
+
+                                   
+                                    TextIngDis.Text = Fecha_Ingreso;
+                                                       
                                     // Cambiar el formato de UltimaActivacion
                                     DateTime ultimaActivacion = reader.GetDateTime(reader.GetOrdinal("UltimaActivacion"));
-                                    TextUltAc.Text = ultimaActivacion.ToString("yyyy-MM-dd");
 
-                                    // Cambiar el formato de Fecha_Programada_Entrega
-                                    DateTime fechaEntrega = reader.GetDateTime(reader.GetOrdinal("Fecha_Programada_Entrega"));
-                                    TextEntrega.Text = fechaEntrega.ToString("yyyy-MM-dd");
+                                    // Formatear la fecha y hora sin segundos en el formato esperado por datetime-local
+                                    string fechaHoraUltimaActivacion = ultimaActivacion.ToString("yyyy-MM-ddTHH:mm");
 
-                                    // Cambiar el formato de FechaDibujoOK
-                                    DateTime fechaDibujoOK = reader.GetDateTime(reader.GetOrdinal("FechaDibujoOK"));
-                                    TextFecOkDib.Text = fechaDibujoOK.ToString("yyyy-MM-dd");
+                                    // Asignar la fecha y hora formateada al TextBox
+                                    TextUltAc.Text = fechaHoraUltimaActivacion;
+
+
+                                   
+                                    DateTime programadaEntrega = reader.GetDateTime(reader.GetOrdinal("Fecha_Programada_Entrega"));
+                                    
+                                    string fechaprogramadaEntrega = programadaEntrega.ToString("yyyy-MM-ddTHH:mm");
+                                    
+                                    TextEntrega.Text = fechaprogramadaEntrega;
+
+
+
+                                    DateTime DibujoOK = reader.GetDateTime(reader.GetOrdinal("FechaDibujoOK"));
+
+                                    string fechaDibujoOK = DibujoOK.ToString("yyyy-MM-ddTHH:mm");
+
+                                    TextEntrega.Text = fechaDibujoOK;                            
+
 
                                     TextZona.Text = GetString(reader, "Zona");
 
@@ -2237,11 +2356,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             {
                                 // ProgramadoVentas es 1, deshabilitar el botón
                                 BtnProgramar.Enabled = false;
+                                GuardarButton.Enabled = false;
+                                BtnEliminar.Enabled = false;
                             }
                             else
                             {
                                 // ProgramadoVentas es 0, habilitar el botón
                                 BtnProgramar.Enabled = true;
+                                GuardarButton.Enabled = true;
+                                BtnEliminar.Enabled = true;
                             }
                         }
 
@@ -2392,7 +2515,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return string.Empty;
         }
 
-
         private void UpdateDataGrids()
         {
             DataGrid1.DataBind();
@@ -2401,8 +2523,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             DataGridRender.DataBind();
             UpdatePanel1.Update();
         }
-
-
 
         protected void DropDownListOptions_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -2624,9 +2744,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 isModalVisible = false;
             }
-        }
-
-
+        } 
 
         protected void DataGridBusDis_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
@@ -2725,10 +2843,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Documentacion.Style["display"] = "none";
         }
 
-
-
         protected void GuardarButton_Click(object sender, EventArgs e)
         {
+
+
             if (FileUpload1.HasFile)
             {
                 HttpPostedFile uploadedFile = FileUpload1.PostedFile;
@@ -2773,7 +2891,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
         private void InsertarEnBaseDeDatos(string folderName, string fileName)
         {
             // Establecer la conexión con la base de datos
@@ -2811,7 +2928,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
         protected void lnkSelectRow_Click(object sender, EventArgs e)
         {
             // Obtén el LinkButton que se hizo clic
@@ -2848,7 +2964,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string fechaRegistro = selectedRow.Cells[4].Text;
             string id_OT = selectedRow.Cells[5].Text;
         }
-
 
         protected void BtnEliminar_Click(object sender, EventArgs e)
         {
@@ -2891,7 +3006,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
         protected void lnkViewFile_Click(object sender, EventArgs e)
         {
             LinkButton lnkViewFile = (LinkButton)sender;
@@ -2916,7 +3030,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
                 
         }
-
 
         //protected void btnUpload_Click(object sender, EventArgs e)
         // {

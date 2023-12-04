@@ -26,47 +26,41 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="p-3 m-2 border" style="height: 28rem;">
-                                <h6 class="text-center">Acabados</h6>
+                                <h6 class="datagrid-header text-center">Acabados</h6>
 
-                                <div class="table-responsive mb-2 gap-2" style="max-height: 20rem; overflow-x: auto;">
+                                <div class="table-responsive mb-2 gap-2" style="height: 20rem; overflow-x: auto;">
                                     <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm"
-                                        ID="DataGrid1" runat="server" AutoGenerateColumns="false" DataSourceID="SqlDataSource1">
+                                        ID="DataGrid1" runat="server" AutoGenerateColumns="false">
 
                                         <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                         <Columns>
                                             <asp:TemplateColumn>
                                                 <ItemTemplate>
-                                                    <asp:LinkButton ID="SelecOt" runat="server" OnClick="lnkSelectRow_Click" CommandName="Select" CommandArgument='<%# Container.ItemIndex %>'
+                                                    <asp:LinkButton ID="SelecOt" OnClick="DespieceAcabados_Click" runat="server" CommandName="Select" CommandArgument='<%# Container.ItemIndex %>'
                                                         Text="<i class='bi bi-pencil-square text-dark'></i>" />
                                                 </ItemTemplate>
                                             </asp:TemplateColumn>
-                                            <asp:BoundColumn HeaderText="Aplica a:" DataField="GrupoObjetoparaAcabado" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                            <asp:BoundColumn HeaderText="Aplica a:" DataField="GrupoObjetoParaAcabado" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                             <asp:BoundColumn HeaderText="Acabado Definitivo" DataField="Descripcion_Acabado" ItemStyle-CssClass="auto-width-column" />
                                             <asp:BoundColumn HeaderText="Detalle Adicional" DataField="Detalle_Adicional" ItemStyle-CssClass="auto-width-column" />
                                             <asp:BoundColumn HeaderText="Acabado de Ventas" DataField="AcabadoVentas" ItemStyle-CssClass="auto-width-column" />
                                             <asp:BoundColumn HeaderText="Entrega" DataField="Entrega" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                              <asp:BoundColumn HeaderText="Entrega" DataField="Entrega" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                              <asp:BoundColumn DataField ="ID_GrupoObjetoParaAcabado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                              <asp:BoundColumn DataField ="Descripcion_Grupo" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                             <asp:BoundColumn DataField ="ID_GrupoAcabado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                              <asp:BoundColumn DataField ="ID_Acabado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                         </Columns>
-                                    </asp:DataGrid>
-                                    <asp:SqlDataSource ID="SqlDataSource1" runat="server"
-                                        ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA%>"
-                                        SelectCommand="SELECT GOA.GrupoObjetoparaAcabado,  AC.Descripcion_Acabado, A.Detalle_Adicional, A.AcabadoVentas, AC.Entrega
-                                FROM tblOTAcabados A
-                                INNER JOIN tblGrupoObjetoParaAcabado GOA ON A.ID_GrupoObjetoparaAcabado = GOA.ID_GrupoObjetoparaAcabado
-                                INNER JOIN tblAcabado AC ON A.ID_Acabado = AC.ID_Acabado
-                                 WHERE Id_OT = @Id_OT">
-                                        <SelectParameters>
-                                            <asp:SessionParameter Name="Id_OT" SessionField="Id_OT" Type="String" />
-                                        </SelectParameters>
-                                    </asp:SqlDataSource>
+                                    </asp:DataGrid>         
                                 </div>
 
                                 <div class="container-fluid  mt-3">
                                     <div class="row justify-content-between">
                                         <div class="col-6">
-                                            <asp:Button ID="Button1" runat="server" Text="Eliminar Acabado" CssClass="btn btn-dark btn-sm" enabled="false"/>
+                                            <asp:Button ID="Button1" runat="server" Text="Eliminar Acabado" CssClass="btn btn-dark btn-sm" Enabled="false" />
                                         </div>
                                         <div class="col-6 text-end">
-                                            <asp:Button ID="Button2" runat="server" Text="Cambiar Acabado" CssClass="btn btn-dark btn-sm" enabled="false"/>
+                                            <asp:Button ID="Button2" runat="server" Text="Cambiar Acabado" CssClass="btn btn-dark btn-sm" Enabled="false" />
                                         </div>
                                     </div>
                                 </div>
@@ -88,50 +82,125 @@
                                                     <h6>Aplicar Acabado a:</h6>
 
                                                     <div class="mb-2 gap-2" style="max-height: 11.5rem; overflow-x: auto;">
+
                                                         <asp:DataGrid CssClass="form-control-sm form-control border-white"
                                                             ID="DataGrid2" runat="server" AutoGenerateColumns="false" DataSourceID="SqlDataSource2"
-                                                            ShowHeader="false">
+                                                            ShowHeader="false" OnItemDataBound="DataGrid1_ItemDataBound">
                                                             <Columns>
+                                                                <asp:TemplateColumn>
+                                                                    <ItemTemplate>
+                                                                        <asp:LinkButton ID="lnkSelectRow" OnClick="lnkSelectRow_Click" runat="server" CommandName="Select" CommandArgument='<%# Container.ItemIndex %>'
+                                                                            Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateColumn>
                                                                 <asp:BoundColumn DataField="GrupoObjetoparaAcabado" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                                <asp:BoundColumn DataField="ID_GrupoObjetoparaAcabado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                             </Columns>
                                                         </asp:DataGrid>
 
-                                                        <asp:SqlDataSource ID="SqlDataSource2" runat="server"
-                                                            ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA%>"
-                                                            SelectCommand="select GrupoObjetoparaAcabado from tblGrupoObjetoParaAcabado"></asp:SqlDataSource>
+                                                        <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                                            SelectCommand="SELECT * FROM tblGrupoObjetoparaAcabado">
+                                                            <SelectParameters>
+                                                            </SelectParameters>
+                                                        </asp:SqlDataSource>
+
+
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-4">
                                                 <div class="p-1 m-1 border" style="height: 14rem;">
-                                                    <h6>Grupo de Acabado:</h6>
-                                                    <asp:Label ID="Label1" runat="server" Text="Label" Visible="false" CssClass="form-control-sm"></asp:Label>
+                                                    <h6>Grupo de Acabado:</h6> 
+                                                    
+                                                     <asp:Label ID="Label1" runat="server" Text="Label" Visible="false" CssClass="form-control-sm"></asp:Label>
+
+                                                    <div class="mb-2 gap-2" style="max-height: 11.5rem; overflow-x: auto;">
+                                                    <asp:DataGrid CssClass="form-control-sm form-control border-white" ID="DataGrid4" runat="server" AutoGenerateColumns="false" ShowHeader="false" DataSourceID="SqlDataSource4" visible="false">
+                                                        <Columns>
+                                                            <asp:TemplateColumn>
+                                                                    <ItemTemplate>
+                                                                        <asp:LinkButton ID="lnkSelectRoww" runat="server" OnClick="lnkSelectRow4_Click" CommandName="Select" CommandArgument='<%# Container.ItemIndex %>'
+                                                                            Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateColumn>
+                                                            <asp:BoundColumn DataField="ID_GrupoObjetoparaAcabado" ItemStyle-CssClass="auto-width-column" Visible="false" />
+                                                            <asp:BoundColumn DataField="ID_GrupoAcabado" ItemStyle-CssClass="auto-width-column" visible="false"/>
+                                                            <asp:BoundColumn DataField="Descripcion_Grupo" ItemStyle-CssClass="auto-width-column" />
+                                                        </Columns>
+                                                    </asp:DataGrid>
+                                                    <asp:SqlDataSource ID="SqlDataSource4" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                                        SelectCommand="SELECT
+                                                                tblGrupoObjetoParaAcabado.ID_GrupoObjetoparaAcabado,
+                                                                tblGrupodeAcabado.ID_GrupoAcabado,
+                                                                tblGrupodeAcabado.Descripcion_Grupo
+                                                            FROM
+                                                                tblGrupodeAcabado
+                                                            INNER JOIN
+                                                                tblGrupoAcab_GrupoObjtAcab ON tblGrupodeAcabado.ID_GrupoAcabado = tblGrupoAcab_GrupoObjtAcab.ID_GrupoAcabado
+                                                            INNER JOIN
+                                                                tblGrupoObjetoParaAcabado ON tblGrupoAcab_GrupoObjtAcab.ID_GrupoObjetoparaAcabado = tblGrupoObjetoParaAcabado.ID_GrupoObjetoparaAcabado
+                                                            WHERE
+                                                                tblGrupoObjetoParaAcabado.ID_GrupoObjetoparaAcabado = '';">
+                                                        <SelectParameters>
+                                                        </SelectParameters>
+                                                    </asp:SqlDataSource>
+                                                          </div>
                                                 </div>
                                             </div>
                                             <div class="col-4">
                                                 <div class="p-1 m-1 border" style="height: 14rem;">
                                                     <h6>Acabado Definitivo:</h6>
-                                                    <textarea id="TextArea1" runat="server" cols="20" rows="2" class="form-control form-control-sm border-white" style="height: 11.5rem;"></textarea>
+                                                    <div class="mb-2 gap-2" style="max-height: 11.5rem; overflow-x: auto;">
+
+                                                        <asp:DataGrid CssClass="form-control-sm form-control border-white"
+                                                            ID="DataGrid3" runat="server" AutoGenerateColumns="false" DataSourceID="SqlDataSource3"
+                                                            ShowHeader="false">
+                                                            <Columns>
+                                                                 <asp:TemplateColumn>
+                                                                    <ItemTemplate>
+                                                                        <asp:LinkButton ID="lnkSelectRoww3" runat="server" OnClick="lnkSelectRow3_Click" CommandName="Select" CommandArgument='<%# Container.ItemIndex %>'
+                                                                            Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateColumn>
+                                                                <asp:BoundColumn DataField="Acab" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                                <asp:BoundColumn DataField="Id_GrupoAcabado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                                 <asp:BoundColumn DataField="ID_Acabado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                                 <asp:BoundColumn DataField="Descripcion_Acabado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                                 <asp:BoundColumn DataField="DeLinea" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                            </Columns>
+                                                        </asp:DataGrid>
+
+                                                        <asp:SqlDataSource ID="SqlDataSource3" runat="server"
+                                                            ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                                            SelectCommand="SELECT *, CONCAT(Descripcion_Acabado, ' (', Entrega, 'D)') AS Acab FROM tblacabado WHERE Id_GrupoAcabado = @ID_GrupoObjetoParaAcabado AND Activo = 1 ORDER BY Descripcion_Acabado ASC">
+                                                            <SelectParameters>
+                                                                <asp:Parameter Name="ID_GrupoObjetoParaAcabado" Type="String" />
+                                                            </SelectParameters>
+                                                        </asp:SqlDataSource>
+
+
+
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="container-fluid">
                                             <div class="row">
-                                                <div class="col-11">                                      
+                                                <div class="col-11">
                                                     <div class="row">
                                                         <div class="col-10">
                                                             <asp:Label ID="Label2" runat="server" Text="Aplicar Acabado a:" CssClass="col-form-label-sm"></asp:Label>
-                                                            <asp:Label ID="Label3" runat="server" Text="" Visible="false" CssClass="fw-bold"></asp:Label>
+                                                            <asp:Label ID="Label3" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
                                                         </div>
-                                                          <div class="col-2">
-                                                            <asp:Label ID="Label9" runat="server" Text="Copiar Acab. del ped" CssClass="fw-bold"></asp:Label>                                                    
+                                                        <div class="col-2">
+                                                            <asp:Label ID="Label9" runat="server" Text="Copiar Acab. del ped" CssClass="fw-bold"></asp:Label>
                                                         </div>
                                                     </div>
 
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <asp:Label ID="Label4" runat="server" Text="Acabado Definitivo:" CssClass="col-form-label-sm"></asp:Label>
-                                                            <asp:Label ID="Label5" runat="server" Text="" Visible="false"></asp:Label>
+                                                            <asp:Label ID="Label5" CssClass="form-control-sm" runat="server" Text="" Visible="false"></asp:Label>
                                                         </div>
                                                     </div>
 
@@ -143,25 +212,25 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-2">
-                                                            <asp:Button ID="Button3" runat="server" Text="Grabar Acabado"  CssClass="btn btn-dark btn-sm" enabled="false"/>
+                                                            <asp:Button ID="Button3" runat="server" Text="Grabar Acabado" CssClass="btn btn-dark btn-sm" Enabled="false" OnClick="BtnGrabar_Click"/>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-1">                                               
+                                                <div class="col-1">
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="input-group input-group-sm gap-2">
-                                                            <asp:Label ID="Label7" runat="server" Text="0" CssClass="border p-3 mt-2 shadow"></asp:Label>
+                                                                <asp:Label ID="Label7" runat="server" Text="0" CssClass="border p-3 mt-2 shadow"></asp:Label>
 
-                                                                 <asp:LinkButton runat="server" ID="button10" Enabled="false">
+                                                                <asp:LinkButton runat="server" ID="button10" Enabled="false">
                                                 <i class="bi bi-file-earmark btn btn-sm border p-3 mt-2 shadow grande"></i> 
-                                            </asp:LinkButton>
+                                                                </asp:LinkButton>
 
-                                                             
-                                                                </div>
+
+                                                            </div>
                                                         </div>
-                                                    </div>                                             
-                                                </div>                                             
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -174,11 +243,33 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Modal -->
+<div id="myModal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p><span id="spanMessage"></span></p>
+  </div>
+</div>
+
             </ContentTemplate>
         </asp:UpdatePanel>
     </form>
 
+    <script type="text/javascript">
+       function scrollDataGrid() {
+           var grid = document.getElementById('<%= DataGrid2.ClientID %>');
+           var rows = grid.getElementsByTagName("tr");
 
+           for (var i = 0; i < rows.length; i++) {
+               if (rows[i].getAttribute("data-selected") === "true") {
+                   rows[i].scrollIntoView();
+                   break;
+               }
+           }
+       }
+   </script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
