@@ -22,7 +22,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ConsultarDatos();
                 DataGrid2.DataBind();
                 LoadEstados();
-                CargarDatosTotales();
+               
 
                 if (Session["CedulaLogeada"] != null)
                 {
@@ -56,8 +56,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     Response.Redirect("/Formularios/Login.aspx");
                 }
                
-
             }
+
+
         }
 
         //POR VENDEDOR
@@ -102,7 +103,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ddlEstadoCotizacion.Items.Insert(0, new ListItem("Selecciona un estado", ""));
         }
 
-
         protected void BtnConsultarPorEstado_Click(object sender, EventArgs e)
         {
             
@@ -123,23 +123,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
            
         }
         
-
-            private void CargarDatosTotales()
-        {
-            // Crear un DataTable para almacenar los datos
-            System.Data.DataTable dt = new System.Data.DataTable();
-            dt.Columns.Add("");
-            dt.Columns.Add("");
-            dt.Columns.Add("");
-
-            // Agregar filas de ejemplo (puedes reemplazar esto con tus datos reales)
-            dt.Rows.Add("", "", "");
-
-            // Asignar el DataTable como fuente de datos del GridView
-            GridViewTotales.DataSource = dt;
-            GridViewTotales.DataBind();
-        }
-
         //TABLA POR VENDEDOR
 
         public void DataGridPorVendedor_PreRender(object sender, EventArgs e)
@@ -502,6 +485,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void bntConsultarUlCont_Click(object sender, EventArgs e)
         {
             ConsultarDatos();
+            BtnGraSeg.Enabled = true;
+            BtnGraSeg.CssClass = "button-disabled";
         }
 
         protected void btnExportarUlCont_Click(object sender, EventArgs e)
@@ -549,9 +534,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-       
-
-        // Manejador del evento OnRowCommand del DataGrid
         protected void DataGrid4_RowCommand(object sender, DataGridCommandEventArgs e)
         {
             // Si tienes algún otro botón o control dentro del DataGrid y deseas realizar acciones específicas al hacer clic en ellos, puedes manejar esos eventos aquí.
@@ -725,6 +707,125 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Ajustar el ancho de las columnas para que los datos se muestren correctamente
             worksheet.Columns.AutoFit();
+        }
+
+        protected void lnkSelectRow_Click(object sender, EventArgs e)
+        {
+            // Obtén el LinkButton que se hizo clic
+            LinkButton lnkSelectRow = (LinkButton)sender;
+
+            // Obtén el índice de fila desde el CommandArgument
+            int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
+
+            // Accede a la fila seleccionada en el DataGrid
+            DataGridItem selectedRow = DataGrid3.Items[rowIndex];
+
+            Session["SelectCotizacion"] = selectedRow.Cells[4].Text;
+
+            // Deselecciona todas las filas previamente seleccionadas
+            foreach (DataGridItem item in DataGrid3.Items)
+            {
+                if (item != selectedRow)
+                {
+                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                }
+            }
+
+            // Aplica la clase CSS a la fila seleccionada
+            selectedRow.CssClass = "selected-row";
+
+            BtnGraSeg.Enabled = true;
+            BtnGraSeg.CssClass = "button-enabled btn-outline-dark btn btn-light text-center";
+
+
+
+            ConsultaBD();
+
+        }
+
+        protected void ConsultaBD()
+        {
+            try
+            {
+                string cotizacion = Session["SelectCotizacion"] as string;
+
+                // Consulta SQL para llenar DataGrid6 con los datos correspondientes
+                string consulta = "SELECT * FROM tblSeguimientoCotizacion WHERE Cotización = @Cotizacion ORDER BY Fecha_Seguimiento DESC";
+
+                // Utilizar un SqlConnection y un SqlCommand para ejecutar la consulta
+                using (SqlConnection connection = new SqlConnection("Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"))
+                {
+                    using (SqlCommand cmd = new SqlCommand(consulta, connection))
+                    {
+                        // Agregar parámetro para @Cotizacion
+                        cmd.Parameters.AddWithValue("@Cotizacion", cotizacion);
+
+                        // Crear un SqlDataAdapter para obtener los datos y llenar un DataTable
+                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                        System.Data.DataTable dt = new System.Data.DataTable();
+                        adapter.Fill(dt);
+
+                        // Asignar el DataTable al DataGrid6
+                        DataGrid6.DataSource = dt;
+                        DataGrid6.DataBind();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejo de la excepción: puedes mostrar un mensaje, registrar el error, etc.
+                // Aquí, solo se imprime el mensaje de la excepción
+                Response.Write("Error: " + ex.Message);
+            }
+        }
+
+        protected void btnGraSeg_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Obtener la Cotización de la sesión
+                string cotizacion = Session["SelectCotizacion"] as string;
+
+                // Tu cadena de conexión a la base de datos
+                string connectionString = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password";
+
+                // Consulta SQL para la inserción
+                string consulta = "INSERT INTO tblSeguimientoCotizacion (Cotización, Fecha_Seguimiento, Observacion) VALUES (@Cotizacion, GETDATE(), @Observacion)";
+
+                // Crear conexión y comando SQL
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(consulta, connection))
+                    {
+                        // Agregar parámetros
+                        command.Parameters.AddWithValue("@Cotizacion", cotizacion);
+                        command.Parameters.Add("@Observacion", SqlDbType.VarChar).Value = string.IsNullOrEmpty(TextDesSeg.Value) ? (object)DBNull.Value : TextDesSeg.Value;
+
+                        // Abrir la conexión y ejecutar el comando
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                }
+
+                // Limpiar el campo de texto Observacion después de la inserción
+                TextDesSeg.Value = string.Empty;
+                ConsultaBD(); // Llama a la función para actualizar la consulta en tu página
+            }
+            catch (Exception ex)
+            {
+                // Manejo de la excepción: puedes mostrar un mensaje, registrar el error, etc.
+                // Aquí, solo se imprime el mensaje de la excepción
+                Response.Write("Error: " + ex.Message);
+            }
+        }
+
+        protected void Consultar_Click(object sender, EventArgs e)
+        {
+            DataGrid3.DataSource = DataGridSeguimiento;
+            DataGrid3.DataBind();
+            BtnGraSeg.Enabled = false;
+            BtnGraSeg.CssClass = "button-disabled btn-outline-dark btn btn-light text-center";
+            DataGrid6.DataBind();
         }
     }
 

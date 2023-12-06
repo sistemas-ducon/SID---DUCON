@@ -391,7 +391,7 @@
 
                         <div class="row">
 
-                            <div class="col-5">
+                            <div class="col-lg-5 col-md-6 col-sm-6 col-xs-12">
 
                                 <div class="input-group input-group-sm mb-2 gap-2">
                                     <asp:Label CssClass="col-form-label-sm" runat="server">F.Seguimiento Entre:</asp:Label>
@@ -402,7 +402,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-5">
+                            <div class="col-lg-5 col-md-6 col-sm-6 col-xs-12">
 
                                 <div class="input-group input-group-sm mb-2 gap-2">
                                     <asp:Label CssClass="col-form-label-sm" runat="server">Asesor:</asp:Label>
@@ -411,17 +411,17 @@
 
                             </div>
 
-                            <div class="col-2">
-                                <asp:Button CssClass="btn-outline-dark  btn btn-light btn-sm" runat="server" Text="Consultar" />
+                            <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
+                                <asp:Button CssClass="btn-outline-dark  btn btn-light btn-sm" runat="server" Text="Consultar" OnClick="Consultar_Click"/>
                             </div>
 
                         </div>
                             </div>
-                        <div class="container-fluid mt-2">
+                        <div class="container mt-2">
                             <div class="row justify-content-center">
-                                <div class="border rounded p-1" style="width:110rem">
+                                <div class="border rounded p-1">
                                     <div class="row">
-                                        <div class="col-2">
+                                        <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
 
                                             <div class="border rounded p-1" style="height: 25rem">
                                                 <table class="table table-bordered form-control-sm">
@@ -441,19 +441,25 @@
                                         </div>
 
 
-                                        <div class="col-10">
+                                        <div class="col-lg-10 col-md-6 col-sm-6 col-xs-12">
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 400px; overflow-x: auto;">
 
-                                                <asp:DataGrid Class="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid3" runat="server" DataSourceID="DataGridSeguimiento" AutoGenerateColumns="false">
+                                                <asp:DataGrid Class="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid3" runat="server" AutoGenerateColumns="false">
                                                      <HeaderStyle Font-Bold="true" CssClass="datagrid-header auto-width-column" />
                                                     <Columns>
-                                                        <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="Cliente" HeaderText="Cliente" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                             <asp:TemplateColumn>
+                                                                    <ItemTemplate>
+                                                                        <asp:LinkButton ID="lnkSelectRoww3" runat="server" OnClick="lnkSelectRow_Click" CommandName="Select" CommandArgument='<%# Container.ItemIndex %>'
+                                                                            Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateColumn>
+                                                        <asp:BoundColumn DataField="AsesorComercial" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="NombreCompañía" HeaderText="Cliente" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Teléfono" HeaderText="Teléfono" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Cotización" HeaderText="Cotizacion" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Fecha_Cotización" HeaderText="F.Cotizacion" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Proximo_Seguimiento" HeaderText="Prox. Segui" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="VCCD" HeaderText="Valor Neto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="ValorNeto" HeaderText="Valor Neto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Obra" HeaderText="Obra" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     </Columns>
                                                 </asp:DataGrid>
@@ -469,31 +475,36 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="container-fluid" style="width:100rem">
+                        
+                       
                         <div class="row">
-                            <div class="col-9">
-                                <div class="container-fluid mt-2">
-                                    <div class="row container">
-                                        <div class="border rounded p-3" style="height: 10rem">
-                                            <asp:GridView runat="server" ID="GridViewTotales" AutoGenerateColumns="false" CssClass="table table-sm table-hover table-responsive form-control-sm">
-                                                <HeaderStyle Font-Bold="false" />
-                                                <Columns>
-                                                    <asp:BoundField DataField="" HeaderText="Cotizacion" />
-                                                    <asp:BoundField DataField="" HeaderText="F.Seguimiento" />
-                                                    <asp:BoundField DataField="" HeaderText="Observacion" />
-                                                </Columns>
-                                            </asp:GridView>
+                            <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12">
+                                <div class="mt-2">
+                                    <div class="row">
+                                        <div class="border rounded p-3" style="height: 15rem">
+                                            <asp:DataGrid Class="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid6" runat="server" AutoGenerateColumns="false">
+                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header auto-width-column" />
+                                                         <Columns>
+                                                             <asp:TemplateColumn>
+                                                                    <ItemTemplate>
+                                                                        <asp:LinkButton ID="lnkSelectRoww3" runat="server" CommandName="Select" CommandArgument='<%# Container.ItemIndex %>'
+                                                                            Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateColumn>
+                                                       <asp:BoundColumn DataField="Cotización" HeaderText="Cotización" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Fecha_Seguimiento" HeaderText="Proximo_Seguimiento" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Observacion" HeaderText="Observacion" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>           
+                                                    </Columns>
+                                                </asp:DataGrid>          
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-3">
-                                <div class="container mt-4">
-                                    <div class="row d-flex justify-content-between">
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">                         
+                                    <div class="row d-flex">
                                         <div class="col-6">
-                                            <asp:Label runat="server" CssClass="col-form-label-sm">Asesor</asp:Label>
+                                            <asp:Label runat="server" CssClass="col-form-label-sm">Estado</asp:Label>
                                             <asp:DropDownList runat="server" ID="DropEstado" CssClass="form-control form-control-sm" Enabled="false"></asp:DropDownList>
                                         </div>
                                         <div class="col-6">
@@ -502,7 +513,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="row d-flex justify-content-between mt-3">
+                                    <div class="row d-flex mt-3">
                                         <div class="col-6">
                                             <asp:Label runat="server" CssClass="col-form-label-sm">Competencia</asp:Label>
                                             <asp:TextBox runat="server" ID="TextBox3" CssClass="form-control form-control-sm" Placeholder="POR DEFINIR" Enabled="false"></asp:TextBox>
@@ -511,30 +522,30 @@
                                             <asp:Button CssClass="btn-outline-dark  btn btn-light" runat="server" Text="Cambiar Estado" Enabled="false"/>
                                         </div>
                                     </div>
-                                </div>
+                               
                             </div>
                         </div>
                             </div>
                         <div class="container">
                         <div class="row">
-                            <div class="col-5">
+                            <div class="col-lg-5 col-md-6 col-sm-6 col-xs-12">
                               <div class="input-group input-group-sm mb-2 gap-2 mt-3">
                                     <asp:Label CssClass="col-form-label-sm" runat="server" Enabled="false">Descripción Seguimiento:</asp:Label>
-                                    <textarea class="form-control" runat="server"></textarea>
+                                    <textarea id="TextDesSeg" class="form-control" runat="server"></textarea>
                                 </div>
                         </div>
-                            <div class="col-3 mt-3">
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 mt-3">
                                 <asp:Label CssClass="col-form-label-sm" runat="server">Prox. Seguimiento</asp:Label>
                                 <asp:TextBox id="TextProxSegui" runat="server" CssClass="form-control form-control-sm" Type="Date" Enabled="false"></asp:TextBox>
                             </div>
-                            <div class="col-2 mt-3">
-                                <asp:Button CssClass="btn-outline-dark btn btn-light text-center" runat="server" Text="Grabar Seguimiento" Enabled="false"/>
+                            <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12 mt-3">
+                                <asp:Button id="BtnGraSeg" CssClass="btn-outline-dark btn btn-light text-center" runat="server" Text="Grabar Seguimiento" OnClick="btnGraSeg_Click" Enabled="false"/>
                             </div>
 
-                            <div class="col-1 mt-3">
+                            <div class="col-lg-1 col-md-6 col-sm-6 col-xs-12 mt-3">
                                 <asp:Label CssClass="col-form-label-sm" runat="server">Cotizacion Ex</asp:Label>
                             </div>
-                             <div class="col-1 mt-3">
+                             <div class="col-lg-1 col-md-6 col-sm-6 col-xs-12 mt-3">
                                 <asp:Label CssClass="col-form-label-sm" runat="server">Cotizacion PDF</asp:Label>
                             </div>
                             </div>
@@ -657,12 +668,13 @@
                                                  <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                 <Columns>
                                                     <asp:BoundColumn DataField="uccNit" HeaderText="Nit" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                    <asp:BoundColumn DataField="uccRazonSocial" HeaderText="Nombre" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="Nombre" HeaderText="Nombre" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     <asp:BoundColumn DataField="uccAsesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     <asp:BoundColumn DataField="uccActivo" HeaderText="Activo" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     <asp:BoundColumn DataField="uccFecha" HeaderText="U.Contacto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     <asp:BoundColumn DataField="uccNombreContacto" HeaderText="Contacto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     <asp:BoundColumn DataField="uccTelefono" HeaderText="Teléfono" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                     <asp:BoundColumn DataField="uccCiudad" HeaderText="Ciudad" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     <asp:BoundColumn DataField="uccCelular" HeaderText="Celular" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     <asp:BoundColumn DataField="uccMail" HeaderText="Mail" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     <asp:BoundColumn DataField="uccRazon" HeaderText="Razón" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
@@ -670,7 +682,24 @@
                                             </asp:DataGrid>
                                             <asp:SqlDataSource runat="server" ID="DataGridUltimoContacto" ConnectionString="<%$
                                    ConnectionStrings:BD_SIDSQL_PRUEBA %>"
-                                                SelectCommand="SELECT [uccNit], [uccRazonSocial], [uccAsesor], [uccActivo], [uccFecha], [uccNombreContacto], [uccTelefono], [uccCelular], [uccMail], [uccRazon] FROM [tblUltiContCome] WHERE ([uccFecha] = @uccFecha)">
+                                                SelectCommand="SELECT 
+    tblUltiContCome.uccNit,
+    tblUltiContCome.uccRazonSocial AS Nombre,
+    tblUltiContCome.uccAsesor,
+    tblUltiContCome.uccActivo,
+    tblUltiContCome.uccFecha,
+    tblUltiContCome.uccNombreContacto,
+    tblUltiContCome.uccTelefono,
+    tblUltiContCome.uccCelular,
+    tblUltiContCome.uccCiudad,
+    tblUltiContCome.uccMail,
+    tblUltiContCome.uccRazon 
+FROM 
+    tblUltiContCome 
+WHERE 
+    tblUltiContCome.uccFecha < CONVERT(date, @uccFecha)
+ORDER BY 
+    tblUltiContCome.uccAsesor, tblUltiContCome.uccFecha">
                                                 <SelectParameters>
                                                     <asp:ControlParameter ControlID="TextUltContComer" PropertyName="Text" Name="uccFecha" Type="DateTime"></asp:ControlParameter>
                                                 </SelectParameters>
@@ -691,6 +720,32 @@
       
 
     </form>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Obtener el DataGrid
+        var dataGrid = document.getElementById('<%= DataGrid6.ClientID %>');
+
+        // Verificar si el DataGrid está vacío
+        if (dataGrid.rows.length <= 1) { // Si hay solo una fila (encabezados), significa que no hay datos
+            MostrarEncabezadosVacios();
+        }
+    });
+
+    function MostrarEncabezadosVacios() {
+        // Obtener el DataGrid
+        var dataGrid = document.getElementById('<%= DataGrid6.ClientID %>');
+
+        // Crear una fila vacía para mostrar los encabezados
+        var headerRow = dataGrid.insertRow();
+
+        // Crear celdas vacías con el mismo número de columnas que el DataGrid
+        for (var i = 0; i < dataGrid.rows[0].cells.length; i++) {
+            var cell = headerRow.insertCell();
+            cell.innerHTML = "Encabezado"; // Aquí puedes poner el texto que desees para los encabezados vacíos
+        }
+    }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 

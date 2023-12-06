@@ -456,13 +456,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.SqlDataSource DataGridSeguimiento;
 
         /// <summary>
-        /// Control GridViewTotales.
+        /// Control DataGrid6.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView GridViewTotales;
+        protected global::System.Web.UI.WebControls.DataGrid DataGrid6;
 
         /// <summary>
         /// Control DropEstado.
@@ -492,6 +492,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.TextBox TextBox3;
 
         /// <summary>
+        /// Control TextDesSeg.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTextArea TextDesSeg;
+
+        /// <summary>
         /// Control TextProxSegui.
         /// </summary>
         /// <remarks>
@@ -499,6 +508,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox TextProxSegui;
+
+        /// <summary>
+        /// Control BtnGraSeg.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnGraSeg;
 
         /// <summary>
         /// Control UpdatePanelTotales.
