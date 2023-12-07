@@ -25,7 +25,7 @@
                         <div class="col-12">
                             <div class="table-responsive mb-2 gap-2" style="max-height: 12rem; overflow-x: auto;">
                                 <h6 class="datagrid-header text-start">Documentacion Detalle</h6>
-                                <asp:DataGrid CssClass="table table-bordered custom-grid table-hover custom-data-grid" ID="DataGridDocumento" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemDataBound="DataGridDocumento_ItemDataBound" OnItemCommand="DataGridDocumentosPE_LinkButton">
+                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGridDocumento" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemDataBound="DataGridDocumento_ItemDataBound" OnItemCommand="DataGridDocumentosPE_LinkButton">
                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                     <Columns>
                                         <asp:TemplateColumn HeaderText="...">
@@ -34,12 +34,12 @@
                                             </ItemTemplate>
                                         </asp:TemplateColumn>
 
-                                        <asp:BoundColumn DataField="Archivo" HeaderText="Archivo" />
-                                        <asp:BoundColumn DataField="Observacion" HeaderText="Observacion" />
-                                        <asp:BoundColumn DataField="TipoDocumento" HeaderText="Tipo Documento" />
-                                        <asp:BoundColumn DataField="Usuario" HeaderText="Usuario" />
-                                        <asp:BoundColumn DataField="FechaRegistro" HeaderText="Fecha" />
-                                        <asp:BoundColumn DataField="MuebleEspecial" HeaderText="Esp" />
+                                        <asp:BoundColumn DataField="Archivo" HeaderText="Archivo" ItemStyle-CssClass="auto-width-column" />
+                                        <asp:BoundColumn DataField="Observacion" HeaderText="Observacion" ItemStyle-CssClass="auto-width-column" />
+                                        <asp:BoundColumn DataField="TipoDocumento" HeaderText="Tipo Documento" ItemStyle-CssClass="auto-width-column" />
+                                        <asp:BoundColumn DataField="Usuario" HeaderText="Usuario" ItemStyle-CssClass="auto-width-column" />
+                                        <asp:BoundColumn DataField="FechaRegistro" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column" />
+                                        <asp:BoundColumn DataField="MuebleEspecial" HeaderText="Esp" ItemStyle-CssClass="auto-width-column" />
                                         <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column" />
                                         <asp:BoundColumn DataField="ID_Documento" Visible="false" ItemStyle-CssClass="auto-width-column" />
                                         <asp:BoundColumn DataField="Id_OT" Visible="false" ItemStyle-CssClass="auto-width-column" />

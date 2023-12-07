@@ -136,7 +136,7 @@
                                     <div class="col-6">
                                         <div class="input-group input-group-sm  mb-2 gap-4 justify-content-center">
                                             <asp:Label ID="lbRender" CssClass="NumeroRender" Text="Render #" runat="server"></asp:Label>
-                                            <asp:Label ID="NumeroRender" CssClass="NumeroRender" Text="Numero" runat="server"></asp:Label>
+                                            <asp:Label ID="NumeroRender" CssClass="NumeroRender" Text="Número" runat="server"></asp:Label>
                                         </div>
                                     </div>
                                 </div>
@@ -551,8 +551,8 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 20rem; overflow-x: auto;">
-                                                <h5 class="datagrid-header text-start">Programacion</h5>
-                                                <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGridRenders" runat="server" DataSourceID="CargarRenders" AutoGenerateColumns="false" OnItemDataBound="DataGridRenders_ItemDataBound" OnItemCommand="DataGridRenders_LinkButton">
+                                                <h5 class="datagrid-header text-start">Programación</h5>
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridRenders" runat="server" DataSourceID="CargarRenders" AutoGenerateColumns="false" OnItemDataBound="DataGridRenders_ItemDataBound" OnItemCommand="DataGridRenders_LinkButton">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                     <Columns>
@@ -741,7 +741,7 @@
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 30rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-center">Render Filtrados</h5>
 
-                                                <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="BuscarRender" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridBuscarRender_ItemDataBound" OnItemCommand="DataGridBuscarRenders_LinkButton">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="BuscarRender" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridBuscarRender_ItemDataBound" OnItemCommand="DataGridBuscarRenders_LinkButton">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header p-2" />
                                                     <Columns>
                                                         <asp:TemplateColumn HeaderText="...">

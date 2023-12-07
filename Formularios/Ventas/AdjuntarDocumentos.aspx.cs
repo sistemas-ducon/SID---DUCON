@@ -164,7 +164,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 int Eps = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "MuebleEspecial"));
 
-                TableCell cell = e.Item.Cells[5];
+                TableCell cell = e.Item.Cells[6];
                 cell.Text = (Eps == 1) ? "Si" : "No";   
 
             }

@@ -222,7 +222,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
 
             string consultaActual = "select ID_Permiso  from tblPermiso_Empleado As A Inner join tblEmpleado AS B on  B.Cedula = A.ID_Empleado" +
-                                    " where B.Login = @Login And A.ID_Permiso = '12'";
+                                    " where B.Cedula = @Cedula And A.ID_Permiso = '12'";
             string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -231,7 +231,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 using (SqlCommand command = new SqlCommand(consultaActual, connection))
                 {
-                    command.Parameters.AddWithValue("@Login", Session["usuariologueado"].ToString());
+                    command.Parameters.AddWithValue("@Cedula", Session["CedulaLogeada"].ToString());
                     SqlDataReader reader = command.ExecuteReader();
 
                     if (reader.HasRows)

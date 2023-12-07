@@ -91,7 +91,7 @@
                                         <div class="col-12">
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 25rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-center">Clientes </h5>
-                                                <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGridCliente" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemCommand="DataGridCliente_ItemCommand" DataSourceID="ListarClientes">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridCliente" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemCommand="DataGridCliente_ItemCommand" DataSourceID="ListarClientes">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header p-2" />
                                                     <Columns>
 
@@ -284,7 +284,7 @@
                                                         <div class="col-6">
                                                             <div class="table-responsive mb-1 gap-2" style="max-height: 20rem; overflow-x: auto;">
                                                                 <h5 class="datagrid-header text-center">Asesores</h5>
-                                                                <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGridCompartirAsesor" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="CargarClientes">
+                                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridCompartirAsesor" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="CargarClientes">
                                                                     <Columns>
                                                                         <asp:TemplateColumn HeaderText="...">
                                                                             <ItemTemplate>
@@ -375,7 +375,7 @@
                                         <div class="col-12">
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 25rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-center">Nombres Contactos Cliente </h5>
-                                                <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGridContacto" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemCommand="DataGridContacto_ItemCommand">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridContacto" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemCommand="DataGridContacto_ItemCommand">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header p-2" />
                                                     <Columns>
 
@@ -532,7 +532,7 @@
                                         <div class="col-12">
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 25rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-center">Cotizaciones </h5>
-                                                <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGridCotizacion" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridCotizacion" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header p-2" />
                                                     <Columns>
 
@@ -567,7 +567,7 @@
                                         <div class="col-12">
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 25rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-center">Visitas </h5>
-                                                <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGridVisita" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridVisita" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header p-2" />
                                                     <Columns>
 
@@ -658,7 +658,7 @@
                                         <div class="col-12">
                                             <div class=" table-responsive mb-2 gap-2" style="max-height: 20rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-center">Clientes </h5>
-                                                <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGridClienteFecha" runat="server" DataSourceID="ClientexFecha" AutoGenerateColumns="false">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridClienteFecha" runat="server" DataSourceID="ClientexFecha" AutoGenerateColumns="false">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                     <Columns>

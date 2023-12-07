@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="../../Recursos/CSS/Ventas/Licitaciones.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <title></title>
+    <title>Licitaciones</title>
 </head>
 <body>
 
@@ -488,7 +488,7 @@
 
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 18rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-center">Licitaciones en Proceso</h5>
-                                                <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" ID="DataGrid1" runat="server" DataSourceID="LicitacionProceso" AutoGenerateColumns="false" OnItemCommand="dataGrid1_ItemCommand">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid1" runat="server" DataSourceID="LicitacionProceso" AutoGenerateColumns="false" OnItemCommand="dataGrid1_ItemCommand">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                     <Columns>
 
@@ -553,7 +553,7 @@
 
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 14rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-left">Causas</h5>
-                                                <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" ID="DataGrid2" runat="server" DataSourceID="CausaLicitacion" AutoGenerateColumns="false" AutoPostBack="true">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid2" runat="server" DataSourceID="CausaLicitacion" AutoGenerateColumns="false" AutoPostBack="true">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                     <Columns>
                                                         <asp:BoundColumn DataField="Causa" HeaderText="Causa" ItemStyle-CssClass="auto-width-column" />

@@ -367,7 +367,7 @@
                                                 <div class="table-responsive mb-2 gap-2" style="max-height: 15rem; overflow-x: auto;">
                                                     <h6 class="datagrid-header text-center">Visita Asesores 
                                                         <asp:Literal runat="server" ID="DateRangeLiteral"></asp:Literal></h6>
-                                                    <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGrid1" runat="server" DataSourceID="VisitaAse" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnPreRender="miDataGrid_PreRender" OnItemCommand="DataGridVisita_LinkButton">
+                                                    <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGrid1" runat="server" DataSourceID="VisitaAse" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnPreRender="miDataGrid_PreRender" OnItemCommand="DataGridVisita_LinkButton">
                                                         <HeaderStyle Font-Bold="true" CssClass="datagrid-header p-2" />
                                                         <Columns>
                                                             <asp:TemplateColumn HeaderText="...">
@@ -540,7 +540,7 @@
                                             <div class="col-6">
                                                 <div class=" table-responsive mb-2 gap-2" style="max-height: 14rem; overflow-x: auto;">
                                                     <h6 class="datagrid-header text-center">Estadistica Asesores:</h6>
-                                                    <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGrid2" runat="server" DataSourceID="EstadisticaAsesores" AutoGenerateColumns="false" OnItemCommand="DataGrid2_linkButton">
+                                                    <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGrid2" runat="server" DataSourceID="EstadisticaAsesores" AutoGenerateColumns="false" OnItemCommand="DataGrid2_linkButton">
                                                         <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                         <Columns>
@@ -606,7 +606,7 @@
                                                             <div class="col-12">
                                                                 <div class=" table table-responsive mb-2 gap-2" style="max-height: 25rem; overflow-x: auto;">
                                                                     <h6 class="datagrid-header text-center">Visitas Asesor en las fechas seleccionadas</h6>
-                                                                    <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ShowHeaderWhenEmpty="true" ID="DataGrid4" runat="server" AutoGenerateColumns="false" DataSourceID="LlenarDetalle">
+                                                                    <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ShowHeaderWhenEmpty="true" ID="DataGrid4" runat="server" AutoGenerateColumns="false" DataSourceID="LlenarDetalle">
                                                                         <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                         <Columns>
 
@@ -653,7 +653,7 @@
                                                             <div class="col-6">
                                                                 <div class=" table-responsive mb-2 gap-2" style="max-height: 13rem; overflow-x: auto;">
                                                                     <h6 class="datagrid-header text-center">Estadisticas Tipo Visitas:</h6>
-                                                                    <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" ID="DataGrid3" runat="server" AutoGenerateColumns="false">
+                                                                    <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid3" runat="server" AutoGenerateColumns="false">
                                                                         <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                         <Columns>
                                                                             <asp:BoundColumn DataField="Id_Causa" HeaderText="Codigo " ItemStyle-CssClass="auto-width-column" />
