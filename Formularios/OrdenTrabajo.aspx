@@ -8,8 +8,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
     <link rel="stylesheet" href="../../Recursos/CSS/OrdenTrabajo.css" />
     <title>Ordenes de Trabajo</title>
 
@@ -25,8 +23,6 @@
     </script>
 
 </head>
-
-
 
 <body>
     <form id="form1" runat="server">
@@ -809,8 +805,6 @@
                         <h5 class="p-0 m-0 mb-1 text-center">Informacion Contable </h5>
 
                         <div class=" Info-Contable">
-
-
                             <div class="Datos-Cliente1">
 
                                 <div class="row">
@@ -1215,7 +1209,7 @@
 
                                     <div class="row pb-2">
                                         <div class="input-group input-group-sm gap-2 ">
-                                            <asp:Button ID="btnPlano" type="button" Text="Plano" class="btn btn-outline-secondary" runat="server"></asp:Button>
+                                            <asp:Button ID="btnPlano" type="button" Text="Plano" class="btn btn-outline-secondary" runat="server" OnClick="Redireccion_Plano1"></asp:Button>
                                             <asp:TextBox ID="txtPlano" type="text" class="form-control  input" runat="server"></asp:TextBox>
                                         </div>
                                     </div>

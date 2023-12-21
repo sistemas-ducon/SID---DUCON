@@ -14,6 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
     <link type="text/css" href="../../Recursos/CSS/FormExtPrin/NitOts.css" rel="stylesheet" />
     <title>Cliente Obra</title>
+     <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
 </head>
 <body>
     <form id="form1" runat="server">
@@ -1033,6 +1034,14 @@
 
         function check() {
             document.getElementById("CheckBox1").classList.remove("disabled");
+        }
+
+        function enviarFormulario() {
+            // Realiza el procesamiento necesario en el formulario 2
+
+            // Actualiza el formulario 1
+            window.opener.location.reload(); // Recarga el formulario padre
+
         }
 
 

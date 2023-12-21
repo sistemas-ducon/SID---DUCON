@@ -42,18 +42,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     DeshabilitarBotones(sender, e);
 
                     listaTextBoxes = new List<TextBox>
-                {
-                    tbPedDepen,tbObra,tbDir,tbContac,tbEmail,tbRecibe,tbTel,tbCel,tbPais,tbHTotal,tbVenta,dtpFechaEntregaDibujoDespiece,dtpFechaEntregaProduccion,dtpEmpaque,dtpRealEmpaque,tbSupervisor,
-                    tbBolsa,tbValorPedido,txtNit,txtNombreEmp,txtcontacto,txtMail,txtDireccion,txtMunicipio,txtTelefono,txtCotizacion,txtValorSugerido,txtVcsd,txtVccd,txtOrdenCompra,txtAsesor,txtComision,
-                    txtDiseño,txtSaldo,txtVenta,txtDcto,txtDctoValor,txtVtte,txtVvia,txtGtotal
+                        {
+                            tbPedDepen,tbObra,tbDir,tbContac,tbEmail,tbRecibe,tbTel,tbCel,tbPais,tbHTotal,tbVenta,dtpFechaEntregaDibujoDespiece,dtpFechaEntregaProduccion,dtpEmpaque,dtpRealEmpaque,tbSupervisor,
+                            tbBolsa,tbValorPedido,txtNit,txtNombreEmp,txtcontacto,txtMail,txtDireccion,txtMunicipio,txtTelefono,txtCotizacion,txtValorSugerido,txtVcsd,txtVccd,txtOrdenCompra,txtAsesor,txtComision,
+                            txtDiseño,txtSaldo,txtVenta,txtDcto,txtDctoValor,txtVtte,txtVvia,txtGtotal
 
-                };
+                        };
 
                     listaDropDownLists = new List<DropDownList>
-                {
-                   ddlZona,dtacboTipoPedido,cboPedidoBase,DtaCboTipoAprobacion,ddlFabrica1,ddlInstala,ddlAsesor,ddlCiudad
+                        {
+                           ddlZona,dtacboTipoPedido,cboPedidoBase,DtaCboTipoAprobacion,ddlFabrica1,ddlInstala,ddlAsesor,ddlCiudad
 
-                };
+                        };
 
                     txObs2.Disabled = true;
                     txObs1.Disabled = true;
@@ -66,10 +66,49 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     btnCotizacion.Enabled = false;
                     btnCotizacion.CssClass = "bi bf  btn btn-outline-secondary";
 
+                    // Validacion para Cargar el Plano  Con variables de Session
+
+                    if (Session["Id_OT2"] != null && Session["pedido2"] != null)
+                    {
+
+                        // Este bloque carga solo el plano ya que el Id_OT2 es igual al texto Nula
+                        if (Session["Id_OT2"].ToString() == "Nula")
+                        {
+                            if (Session["Id_Plano"] != null)
+                            {
+                                Cargar_Plano2(Session["Id_Plano"].ToString());
+                                Session.Remove("Id_Plano");
+                                Session.Remove("Id_OT2");
+                                Session.Remove("pedido2");
+                            }
+
+                        }
+                        // Este bloque consulta la OT con variables de Session de afuera del formulario 
+                        else if (Session["Id_OT2"] != null && Session["pedido2"] != null)
+                        {
+
+                            Cargar_OTs2();
+                            List<int> numeros = ObtenerNumerosDesdeLaBaseDeDatos(Session["Id_OT2"].ToString());
+
+                            ddlNumbers.Items.Clear(); // Limpiar las opciones existentes
+
+                            foreach (int numero in numeros)
+                            {
+                                ddlNumbers.Items.Add(numero.ToString());
+
+                            }
+
+                            ddlNumbers.SelectedValue = Session["pedido2"].ToString();
+                            Session.Remove("Id_OT2");
+                            Session.Remove("pedido2");
+                        }
+
+                    }
+
+                    //Cargando los datos del nit 
+                    CargarVariablesDeSesionContable();
 
                 }
-
-
 
             }
             else
@@ -155,8 +194,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
         }
-
-
 
         protected void NuevaOT_Click(object sender, EventArgs e)
         {
@@ -263,7 +300,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-
         protected void BtnObservaciones_Click(object sender, EventArgs e)
         {
             // Verifica si el LinkButton está habilitado
@@ -282,7 +318,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Ejemplo: Siempre habilitado
             return true;
         }
-
 
         protected void habilitarbotones()
         {
@@ -341,8 +376,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
-
         protected void OtPendientes_Click(object sender, EventArgs e)
         {
             // Verifica si el LinkButton está habilitado
@@ -380,6 +413,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             public string Id_Panel { get; set; }
             public string Tipo { get; internal set; }
             public string Titulo { get; internal set; }
+            public bool RevisadoDibujo { get; set; }
         }
 
         protected void ddlCiudad_DataBound(object sender, EventArgs e)
@@ -469,9 +503,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session["pedido"] = 1;
 
             Cargar_OTs();
-
-
-
             if (!string.IsNullOrEmpty(id))
             {
 
@@ -559,17 +590,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         }
                     }
+            }
 
 
-
-                }
+      
             }
             catch (Exception ex)
             {
                 // Manejo de excepciones
             }
 
-            Cargar_Plano( id, pedido);
+            Cargar_Plano(id, pedido);
             Cargar_Despiece_Plano();
 
             string valorTextBox = tbObra.Text.Trim(); // Obtener el valor del TextBox
@@ -836,6 +867,58 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         //FIN MODIFICACION
 
+
+        public void Cargar_OTs2()
+        {
+            id = Session["Id_OT2"]?.ToString();
+            pedido = Session["pedido2"]?.ToString();
+
+
+            try
+            {
+                using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+                {
+                    sqlconectar.Open();
+
+                    if (TryExecuteOTQuery(id, pedido, sqlconectar, out SqlDataReader leer))
+                    {
+                        if (leer.Read())
+                        {
+
+                            // Extraer datos y asignarlos a controles
+                            AssignDataToControls(leer);
+
+                            EnableButtons();
+
+                            // Obtener datos de cotización y asignarlos a controles
+                            AssignCotizacionData(id, pedido, txtCotizacion.Text, sqlconectar);
+
+
+                        }
+                    }
+
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                // Manejo de excepciones
+            }
+
+            Cargar_Plano(id, pedido);
+            Cargar_Despiece_Plano();
+
+            string valorTextBox = tbObra.Text.Trim(); // Obtener el valor del TextBox
+
+            // Guardar el valor en una variable de sesión
+            Session["ValorDeObra"] = valorTextBox;
+
+            Session["CargarOTsEjecutada"] = true;
+
+
+        }
+
         protected void calcularDescuento()
         {
             // Harley variables
@@ -903,7 +986,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         // Logica de tap de plano 
 
-        public void Cargar_Plano( string id,  string pedido)
+        public void Cargar_Plano(string id, string pedido)
         {
 
             //Conexion a la BD_SIDSQL y traemos el procedimiento almacenado
@@ -927,6 +1010,39 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 txtBolsa.Text = dr["Bolsa"].ToString();
                 txtContactoPlano.Text = dr["Contacto_Cliente"].ToString();
                 txtAsesorPlano.Text = dr["AsesorComercial"].ToString();
+            }
+
+        }
+
+        public void Cargar_Plano2(string plano)
+        {
+            // Realizamos la consulta SQL para obtener los datos necesarios
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = @"SELECT *	FROM tblPlano 	WHERE Plano  =  @Plano	ORDER BY Plano";
+
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Plano", plano);
+                connection.Open();
+                SqlDataReader dr = command.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    txtPlano.Text = dr["Plano"].ToString();
+                    txtCliente.Text = dr["Nombre_Cliente"].ToString();
+                    txtArea.Text = dr["Area"].ToString();
+                    txtAsesorPlano.Text = dr["AsesorComercial"].ToString();
+                    txtDibuja.Text = dr["RealizadoPor"].ToString();
+                    txtBolsa.Text = dr["Bolsa"].ToString();
+                    txtContactoPlano.Text = dr["Contacto_Cliente"].ToString();
+
+                    // Se carga el despiece
+                    Cargar_Despiece_Plano();
+                }
+
+                dr.Close();
+
             }
 
         }
@@ -980,7 +1096,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         Cantidad = r["Cantidad"].ToString(),
                         ValorUnd = r["Precio_Venta"].ToString(),
                         SubTotal = (Convert.ToDecimal(r["Cantidad"]) * Convert.ToDecimal(r["Precio_Venta"])).ToString(),
-                        Id_Panel = r["Id_Panel"].ToString()
+                        Id_Panel = r["Id_Panel"].ToString(),
+                        RevisadoDibujo = Convert.ToBoolean( r["RevisadoDibujo"].ToString())
 
 
 
@@ -1021,14 +1138,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 DatosFiltrados datos = (DatosFiltrados)e.Item.DataItem;
 
-                if (datos.Tipo == "Total" && datos.Titulo == "<b>Totales</b>")
+                if (datos.Tipo == "Total" && datos.Titulo == "<b>Totales</b>" )
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#7aeaff"); // Cambia esto al color que desees
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#7aeaff");
                 }
-                else if (!string.IsNullOrEmpty(datos.ID)) // Asegúrate de ajustar esta verificación según la columna que contenga el ID
+                else if (!string.IsNullOrEmpty(datos.ID ) ) 
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#47ca4b");
-                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
+                    if(datos.RevisadoDibujo == true)
+                    {
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#47ca4b");
+                        e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
+                    }
+                  
                 }
 
             }
@@ -1121,7 +1242,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 SqlCommand command = new SqlCommand("sp_ObtenerAcabadosItemPlano", connection);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.Add("@Plano", SqlDbType.VarChar, 30).Value = txtPlano.Text;
-                command.Parameters.Add("@IdModulo", SqlDbType.VarChar, 30).Value = Idmodulo ;
+                command.Parameters.Add("@IdModulo", SqlDbType.VarChar, 30).Value = Idmodulo;
                 command.Parameters.Add("@IdFamilia", SqlDbType.VarChar, 30).Value = IdFamilia;
 
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
@@ -1341,7 +1462,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
         protected void DataGridModuloObjeto_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
@@ -1358,7 +1478,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
         protected void Reedireccion_ObjetoDespiece(object sender, EventArgs e)
         {
             string url = "FormExtPrin/ObjetoDespiece.aspx";
@@ -1370,9 +1489,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             string url = "FormExtPrin/NitOts.aspx";
             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
-            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);         
         }
 
+        protected void Redireccion_Plano1(object sender, EventArgs e)
+        {
+            string url = "FormExtPrin/Plano1.aspx";
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+        }
 
         // Colsultar Bolsa
         protected void ConsultarBolsa1(object sender, EventArgs e)
@@ -1409,8 +1534,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
         // Consultar Documentacio 
-
-
         protected void chxFiltrarDocumentacion_CheckedChanged(object sender, EventArgs e)
         {
             bool check = chxDocumento.Checked;
@@ -1445,7 +1568,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-        // metodo pendiente par eliminar documentod 
+        // metodo pendiente par eliminar documentos
         protected void EliminarDocumento(object sender, EventArgs e)
         {
             if (DocOt.HasFile)
@@ -1461,9 +1584,76 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
 
+        public void CargarVariablesDeSesionContable()
+        {
+            if (!string.IsNullOrEmpty(Session["IdContactoFactSession"]?.ToString()) && !string.IsNullOrEmpty(Session["IdClienteFactSession"]?.ToString()))
+            {
+                //Cargar los Datos del cliente 
 
-        
+                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
 
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = "SELECT * FROM tblClienteObraContacto INNER JOIN tblClienteObra ON Nit = cocNIT where cocNIT= @ParametroCliente and IdContacto = @ParametroClienteContacto";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@ParametroCliente", (Session["IdClienteFactSession"].ToString()));
+                        command.Parameters.AddWithValue("@ParametroClienteContacto", (Session["IdContactoFactSession"].ToString()));
+
+                        connection.Open();
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                if (!reader.IsDBNull(reader.GetOrdinal("Nit")))
+                                {
+                                    txtNit.Text = reader["Nit"].ToString();
+
+                                }
+                                if (!reader.IsDBNull(reader.GetOrdinal("RazonSocial")))
+                                {
+                                    txtNombreEmp.Text = reader["RazonSocial"].ToString();
+
+                                }
+                                if (!reader.IsDBNull(reader.GetOrdinal("cocNombre")))
+                                {
+                                    txtcontacto.Text = reader["cocNombre"].ToString();
+
+                                }
+                                if (!reader.IsDBNull(reader.GetOrdinal("cocMail")))
+                                {
+                                    txtMail.Text = reader["cocMail"].ToString();
+
+                                }
+                                if (!reader.IsDBNull(reader.GetOrdinal("cocDireccion")))
+                                {
+                                    txtDireccion.Text = reader["cocDireccion"].ToString();
+
+                                }
+                                if (!reader.IsDBNull(reader.GetOrdinal("cocCiudad")))
+                                {
+                                    txtMunicipio.Text = reader["cocCiudad"].ToString();
+
+                                }
+                                if (!reader.IsDBNull(reader.GetOrdinal("cocTelefono")))
+                                {
+                                   txtTelefono.Text = reader["cocTelefono"].ToString();
+
+                                }
+
+                                Session.Remove("IdClienteFactSession");
+                                Session.Remove("IdContactoFactSession");
+
+                            }
+                        }
+                    }
+                }
+
+            }
+
+        }
 
 
     }

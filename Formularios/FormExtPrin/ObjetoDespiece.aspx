@@ -10,6 +10,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="../../Recursos/CSS/FormExtPrin/ObjetoDespiece.css" />
     <title>Objetos</title>
+     <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
 </head>
 <body>
     <form id="form1" runat="server">
@@ -141,7 +142,7 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="table-responsive mb-1" style="max-height: 20rem; overflow-x: auto;">
-                                                <asp:DataGrid CssClass="table table-bordered custom-grid table-hover custom-data-grid form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridObjetos" runat="server">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridObjetos" runat="server">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                     <Columns>
@@ -166,7 +167,7 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="table-responsive mb-1" style="max-height: 20rem; overflow-x: auto;">
-                                                <asp:DataGrid CssClass="table table-bordered custom-grid table-hover custom-data-grid form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDespieceModulo" runat="server" OnItemDataBound="DataGridDespieceModulo_ItemDataBound">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDespieceModulo" runat="server" OnItemDataBound="DataGridDespieceModulo_ItemDataBound">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                     <Columns>
@@ -219,7 +220,7 @@
                                         <div class="col-12">
                                             <div class="table-responsive mb-1" style="max-height: 26rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-center">Despiece y Precios </h5>
-                                                <asp:DataGrid CssClass="table table-bordered custom-grid table-hover custom-data-grid form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDespieceAsesor" runat="server" OnItemDataBound="DataGridDespieceAsesor_ItemDataBound">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDespieceAsesor" runat="server" OnItemDataBound="DataGridDespieceAsesor_ItemDataBound">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                     <Columns>
