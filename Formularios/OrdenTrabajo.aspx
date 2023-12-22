@@ -11,6 +11,17 @@
     <link rel="stylesheet" href="../../Recursos/CSS/OrdenTrabajo.css" />
     <title>Ordenes de Trabajo</title>
 
+    <script>
+        function mostrarDivDocumentacion() {
+            var divDocumentacion = document.getElementById('Documentacion');
+           
+
+            // Si el div está visible, lo oculta; de lo contrario, lo muestra
+            divDocumentacion.style.display = (divDocumentacion.style.display === 'block') ? 'none' : 'block';
+         
+        }
+    </script>
+
 </head>
 
 <body>
@@ -69,6 +80,86 @@
                                 </div>
                             </div>
 
+                            <div class="modal fade" id="modalBolsa" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-xl ">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="tBolsa">Bolsa de la OT: <span id="OtBolsa"></span></h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+
+                                        <div class="modal-body">
+
+                                            <div class="row pb-2 mb-2">
+                                                <div class="col-3 text-start">
+                                                    <input id="Checkbox1" type="checkbox" onclick="mostrarConvenciones();" />
+                                                    <span>Ver Convenciones</span>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row border rounded p-1 m-1" id="filaCovenciones" style="display: none; width: 15rem; height: 7rem">
+                                                <div class="col-12">
+                                                    <div class="input-group input-group-sm mb-1 gap-2">
+                                                        <div class="input-group mt-2 " style="width: 10px; height: 10px; border: 1px; background-color: lawngreen"></div>
+                                                        <label for="lbNoProgamado" class="form-label">100% Pedido</label>
+                                                    </div>
+
+                                                    <div class="input-group input-group-sm mb-1 gap-2">
+                                                        <div class="input-group mt-2 " style="width: 10px; height: 10px; border: 1px; background-color: red"></div>
+                                                        <label for="lbPausado" class="form-label">Bolsa Excedida</label>
+                                                    </div>
+                                                    <div class="input-group input-group-sm mb-1 gap-2">
+                                                        <div class="input-group mt-2" style="width: 10px; height: 10px; border: 1px; background-color: yellow"></div>
+                                                        <label for="lbEspera" class="form-label">Pendientes por pedir</label>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="row justify-content-center mb-3">
+                                                <div class="border rounded p-2">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="table-responsive mb-1 gap-2" style="max-height: 20rem; overflow-x: auto;">
+                                                                <h5 class="datagrid-header text-center">Bolsa</h5>
+                                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridBolsa" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="DataBolsa" OnItemDataBound="DataGridBolsa_ItemDataBound">
+                                                                    <Columns>
+                                                                        <asp:BoundColumn DataField="otbolBolsa" HeaderText="Bolsa" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="otbolGrupoObjeto" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="otbolCantidadCotizada" HeaderText="Cant. Cot" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="otbolCantidadPedida" HeaderText="Cant. Ped" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="Saldo" HeaderText="Saldo" ItemStyle-CssClass="auto-width-column" />
+
+                                                                    </Columns>
+                                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="DataBolsa" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="Select otbolBolsa ,otbolGrupoObjeto,otbolCantidadCotizada,otbolCantidadPedida,otbolCantidadCotizada - otbolCantidadPedida as Saldo from tblOTBolsa where otbolId_OT=@Ot order by otbolBolsa asc, otbolGrupoObjeto asc">
+                                                                    <SelectParameters>
+                                                                        <asp:ControlParameter ControlID="tbOT" PropertyName="Text" Name="Ot"></asp:ControlParameter>
+                                                                    </SelectParameters>
+                                                                </asp:SqlDataSource>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="modal-footer">
+
+                                            <!--espacio del footer del modaa-->
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
                             <!--Nav iconos OTs-->
                             <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
                                 <div class="container-fluid">
@@ -102,7 +193,7 @@
                                                  <i class="bi bi-file-earmark-excel"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Documentación OT" ID="DocumentacionOt">
+                                                <asp:LinkButton runat="server" Text="Documentación OT" ID="DocumentacionOt" OnClientClick="mostrarDivDocumentacion(); return false;">
                                                   <i class="bi bi-paperclip"></i>
                                                 </asp:LinkButton>
 
@@ -110,7 +201,7 @@
                                                      <i class="bi bi-eye"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Imprimir Informacion General de la OT" ID="imprimirOt" OnClick="ImprimirOt_Click">
+                                                <asp:LinkButton runat="server" Text="Imprimir Informacion General de la OT" ID="imprimirOt"  OnClick="ImprimirOt_Click">
                                                      <i class="bi bi-printer"></i>
                                                 </asp:LinkButton>
 
@@ -118,7 +209,7 @@
                                                          <i class="bi bi-printer-fill"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Consultar Bolsa" ID="ConsultarBolsa">
+                                                <asp:LinkButton runat="server" Text="Consultar Bolsa" ID="ConsultarBolsa" OnClick="ConsultarBolsa1">
                                                      <i class="bi bi-coin"></i>
                                                 </asp:LinkButton>
 
@@ -185,6 +276,133 @@
 
                                 </div>
                             </nav>
+
+                            <!--Div de Documentacion pendiente por Definir como se va manejar la logica -->
+                            <div id="Documentacion" runat="server" style="display: none; padding-bottom: 20rem">
+                                <div class="container-fluid">
+
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <asp:CheckBox ID="chxDocumento" runat="server" OnCheckedChanged="chxFiltrarDocumentacion_CheckedChanged" AutoPostBack="true" />
+                                            <asp:Label ID="Label4" runat="server" Text="Documentación completa"></asp:Label>
+                                        </div>
+                                    </div>
+
+                                    <div class="row justify-content-center mb-3">
+                                        <div class="border rounded p-2" style="margin-right: 2rem; margin-left: 2rem">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="table-responsive mb-1 gap-2" style="max-height: 20rem; overflow-x: auto;">
+                                                        <h5 class="datagrid-header text-center">Documentación</h5>
+                                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridDoc" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="DocumentacionFiltrada">
+                                                            <Columns>
+
+                                                                <asp:TemplateColumn HeaderText="...">
+                                                                    <ItemTemplate>
+                                                                        <asp:LinkButton ID="lnkView" runat="server" ToolTip="Seleccionar Documento" CommandName="VerDocumento" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateColumn>
+
+
+                                                                <asp:BoundColumn DataField="Archivo" HeaderText="Archivo" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Observacion" HeaderText="Observacion" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="TipoDocumento" HeaderText="Tipo Documento" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Usuario" HeaderText="Usuario" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="FechaRegistro" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column" />
+
+                                                                <asp:TemplateColumn HeaderText="...">
+                                                                    <ItemTemplate>
+                                                                        <asp:LinkButton ID="lnkView1" ToolTip="VerDocumento" runat="server" CommandName="VerDocumento1" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-eye'></i>" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateColumn>
+                                                            </Columns>
+                                                        </asp:DataGrid>
+                                                        <asp:SqlDataSource runat="server" ID="DocumentosOt" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="Select * from tblDocumentacion where ID_OT= @IdOt">
+                                                            <SelectParameters>
+                                                                <asp:ControlParameter ControlID="tbOT" PropertyName="Text" Name="IdOt"></asp:ControlParameter>
+                                                            </SelectParameters>
+                                                        </asp:SqlDataSource>
+
+                                                        <asp:SqlDataSource runat="server" ID="DocumentacionFiltrada" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="Select * from tblDocumentacion where ID_OT= @IdOt and Pedido = @Pedido">
+                                                            <SelectParameters>
+                                                                <asp:ControlParameter ControlID="tbOT" PropertyName="Text" Name="IdOt"></asp:ControlParameter>
+                                                                <asp:ControlParameter ControlID="ddlNumbers" PropertyName="Text" Name="Pedido"></asp:ControlParameter>
+                                                            </SelectParameters>
+                                                        </asp:SqlDataSource>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row p-1 m-1">
+
+                                        <div class="col-6">
+                                            <div class=" input-group input-group-sm gap-2  ">
+                                                <span id="lbTipoDoc" class=" col-form-label-sm">Tipo Documento</span>
+                                                <select name="ddlTipoDoc" id="ddlTipoDoc" class="form-control form-control-sm">
+                                                    <option value=" ">-- Seleccione --</option>
+                                                    <option value="CONTROL DIBUJO">CONTROL DIBUJO</option>
+                                                    <option value="CONTABLE">CONTABLE</option>
+                                                    <option value="OPERATIVO">OPERATIVO</option>
+                                                    <option value="PRODUCTIVO">PRODUCTIVO</option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-6">
+
+                                            <div class="input-group input-group-sm ">
+                                                <asp:UpdatePanel ID="Archivo" runat="server" UpdateMode="Conditional">
+                                                    <ContentTemplate>
+                                                        <div class="input-group input-group-sm">
+                                                            <asp:FileUpload CssClass="form-control " ID="DocOt" runat="server" />
+                                                        </div>
+                                                    </ContentTemplate>
+                                                    <Triggers>
+                                                        <asp:PostBackTrigger ControlID="AdjuntarDoc" />
+                                                        <asp:PostBackTrigger ControlID="bntElimnarDoc" />
+                                                    </Triggers>
+                                                </asp:UpdatePanel>
+                                                <asp:Button ID="AdjuntarDoc" runat="server" Text="Adjuntar" class="btn btn-outline-primary" OnClick="AdjuntarDocumento" />
+                                                <asp:Button ID="bntElimnarDoc" runat="server" Text="Eliminar" class="aspNetDisabled btn-sm btn-outline-danger" OnClick="EliminarDocumento" />
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row p-1 m-1">
+                                        <div class="col-3">
+                                            <div class=" input-group input-group-sm gap-2  ">
+                                                <asp:Label ID="lbObservacion" Text="Obs" runat="server"></asp:Label>
+                                                <asp:TextBox ID="tbObservacion" type="Text" class="form-control " runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <div class=" input-group input-group-sm gap-2  ">
+                                                <asp:Label ID="lbCategoria" Text="Categoria" runat="server"></asp:Label>
+                                                <asp:TextBox ID="tbCategoria" type="Text" class="form-control " runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <asp:CheckBox ID="chxMespecial" runat="server" />
+                                            <asp:Label ID="lbMespecial" runat="server" Text="M. Especial"></asp:Label>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+
 
                             <div class="row">
 
@@ -448,7 +666,7 @@
                                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                     <div class="table-responsive" style="max-height: 8rem; max-width: auto; overflow-x: auto;">
                                                         <h6 class="datagrid-header text-center">Despacho</h6>
-                                                        <asp:DataGrid CssClass="table table-bordered custom-grid table-hover custom-data-grid form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDespacho" runat="server" DataSourceID="obtenerInfoDespacho" OnItemDataBound="DataGridDespacho_ItemDataBound">
+                                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDespacho" runat="server" DataSourceID="obtenerInfoDespacho" OnItemDataBound="DataGridDespacho_ItemDataBound">
                                                             <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                             <Columns>
@@ -612,8 +830,6 @@
                         <h5 class="p-0 m-0 mb-1 text-center">Informacion Contable </h5>
 
                         <div class=" Info-Contable">
-
-
                             <div class="Datos-Cliente1">
 
                                 <div class="row">
@@ -794,7 +1010,6 @@
                                 </div>
 
                                 <div class="Medio">
-
                                     <div class="Info_M">
                                         <asp:Button ID="btnAsesor1" runat="server" Text="Asesor" class="bi bf" disabled="true" />
                                         <asp:TextBox type="text" class="form-control" runat="server" ID="txtAsesor"></asp:TextBox>
@@ -803,7 +1018,6 @@
                                     <div class="Info_M">
                                         <asp:DropDownList ID="ddlAsesor" class=" form-control form-control-lg" Style="width: 18rem" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlAsesor_SelectedIndexChanged"></asp:DropDownList>
                                     </div>
-
 
                                 </div>
 
@@ -823,7 +1037,7 @@
                                                     <div class="col-12">
                                                         <div class="table-responsive mb-1" style="max-height: 11rem; overflow-x: auto;">
                                                             <h5 class="datagrid-header text-center">Contable</h5>
-                                                            <asp:DataGrid CssClass="table table-bordered custom-grid table-hover custom-data-grid form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGrid" runat="server" DataSourceID="InfoContable">
+                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGrid" runat="server" DataSourceID="InfoContable">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                                 <Columns>
@@ -910,7 +1124,6 @@
                                     <asp:Button ID="btnGTotal" runat="server" Text="G. Total" class="bi bf" disabled="true" />
                                     <asp:TextBox type="text" class="form-control text-end" runat="server" ID="txtGtotal"></asp:TextBox>
                                 </div>
-
 
                             </div>
 
@@ -1021,7 +1234,7 @@
 
                                     <div class="row pb-2">
                                         <div class="input-group input-group-sm gap-2 ">
-                                            <asp:Button ID="btnPlano" type="button" Text="Plano" class="btn btn-outline-secondary" runat="server"></asp:Button>
+                                            <asp:Button ID="btnPlano" type="button" Text="Plano" class="btn btn-outline-secondary" runat="server" OnClick="Redireccion_Plano1"></asp:Button>
                                             <asp:TextBox ID="txtPlano" type="text" class="form-control  input" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
@@ -1088,13 +1301,13 @@
                                                 <div class="col-12">
                                                     <div class="table-responsive mb-1" style="max-height: 7rem; overflow-x: auto;">
                                                         <h5 class="datagrid-header text-center">Acabado objeto</h5>
-                                                        <asp:DataGrid CssClass="table table-bordered custom-grid table-hover custom-data-grid form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridAcabado" runat="server" >
+                                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridAcabado" runat="server">
                                                             <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                             <Columns>
                                                                 <asp:BoundColumn DataField="oadDescripcionAcabado" HeaderText="Acabado" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="oadDescripcion_Insumo" HeaderText="Apliacado a" ItemStyle-CssClass="auto-width-column" />
-                                                               
+
 
                                                             </Columns>
                                                         </asp:DataGrid>
@@ -1117,7 +1330,7 @@
                                                 <div class="col-12">
                                                     <div class="table-responsive mb-1" style="max-height: 29rem; overflow-x: auto;">
                                                         <h5 class="datagrid-header text-center">Despiece</h5>
-                                                        <asp:DataGrid CssClass="table table-bordered custom-grid table-hover custom-data-grid form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDespiecePlano" runat="server" OnItemDataBound="DataGridDespiecePlano_ItemDataBound" OnItemCommand="DataGridDespiecePlano_LinkButton">
+                                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDespiecePlano" runat="server" OnItemDataBound="DataGridDespiecePlano_ItemDataBound" OnItemCommand="DataGridDespiecePlano_LinkButton">
                                                             <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                             <Columns>
@@ -1145,7 +1358,7 @@
                                                                 <asp:BoundColumn DataField="ValorUnd" HeaderText="Valor Und" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="SubTotal" HeaderText="Sub Total" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Id_Panel" HeaderText="" Visible="false" />
-                                                                
+
 
 
                                                             </Columns>
@@ -1172,7 +1385,7 @@
                                             <div class="col-12">
                                                 <div class="table-responsive mb-1" style="max-height: 11rem; overflow-x: auto;">
                                                     <h5 class="datagrid-header text-center">Descripcion Objetos</h5>
-                                                    <asp:DataGrid CssClass="table table-bordered custom-grid table-hover custom-data-grid form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDescripcionObjetos" runat="server" OnItemDataBound="DataGridDescripcionObjeto_ItemDataBound" OnItemCommand="DataGridDescripcionObjeto_LinkButton">
+                                                    <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDescripcionObjetos" runat="server" OnItemDataBound="DataGridDescripcionObjeto_ItemDataBound" OnItemCommand="DataGridDescripcionObjeto_LinkButton">
                                                         <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                         <Columns>
@@ -1192,7 +1405,7 @@
                                                             <asp:BoundColumn DataField="Descripcion_Familia" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="FechaChequeo" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="ID_Familia"  Visible="false" />
+                                                            <asp:BoundColumn DataField="ID_Familia" Visible="false" />
 
                                                         </Columns>
                                                     </asp:DataGrid>
@@ -1397,7 +1610,7 @@
 
                                                     <h5 class="datagrid-header text-center">Objeto</h5>
 
-                                                    <asp:DataGrid CssClass="table table-bordered custom-grid table-hover custom-data-grid form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridObjetos" runat="server" DataSourceID="ObtenerDatosObjetos" OnItemCommand=" DataGridObtenerDatosObjetos_LinkButton" OnItemDataBound="DataGridObtenerDatosObjetos_ItemDataBound">
+                                                    <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridObjetos" runat="server" DataSourceID="ObtenerDatosObjetos" OnItemCommand=" DataGridObtenerDatosObjetos_LinkButton" OnItemDataBound="DataGridObtenerDatosObjetos_ItemDataBound">
                                                         <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                         <Columns>
@@ -1492,16 +1705,16 @@
                                             <div class="col-12">
                                                 <div class="table-responsive mb-1" style="max-height: 11rem; overflow-x: auto;">
                                                     <h5 class="datagrid-header text-center">Modulo del Objeto</h5>
-                                                    <asp:DataGrid CssClass="table table-bordered custom-grid table-hover custom-data-grid form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridModuloObjetos" runat="server">
+                                                    <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridModuloObjetos" runat="server">
                                                         <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                         <Columns>
                                                             <asp:TemplateColumn HeaderText="...">
                                                                 <ItemTemplate>
-                                                                    <asp:LinkButton ID="lnkView2" runat="server" CommandName="VerModulo" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>"  />
+                                                                    <asp:LinkButton ID="lnkView2" runat="server" CommandName="VerModulo" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
                                                                 </ItemTemplate>
                                                             </asp:TemplateColumn>
-                                                             <asp:BoundColumn DataField="Num_Fila" HeaderText="Item" ItemStyle-CssClass="auto-width-column" />
+                                                            <asp:BoundColumn DataField="Num_Fila" HeaderText="Item" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Id_Modulo" HeaderText="Módulo" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Descripcion_TipoModulo" HeaderText="Tipo Módulo" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Descripcion_Modulo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
@@ -1530,7 +1743,7 @@
 
                             </div>
 
-                            </div>
+                        </div>
 
                     </ContentTemplate>
                 </asp:UpdatePanel>
@@ -1587,8 +1800,7 @@
 
                                             </div>
                                     </div>
-                            </nav>
-
+                            </nav>                                  
                         </div>
                     </ContentTemplate>
                 </asp:UpdatePanel>
@@ -1745,6 +1957,34 @@
             });
         });
     </script>
+
+    <script type="text/javascript">
+        function mostrarConvenciones() {
+            var filaConvenciones = document.getElementById('filaCovenciones');
+            // Cambiar el estado de visibilidad
+            if (filaConvenciones.style.display === 'none') {
+                filaConvenciones.style.display = 'block';
+            } else {
+                filaConvenciones.style.display = 'none';
+            }
+
+            actualizarValor();
+
+
+        }
+    </script>
+
+    <script>   
+        function actualizarValor() {
+            // Obtener el valor del TextBox
+            var valorTextBox = document.getElementById('tbOT').value;
+
+            // Actualizar el contenido del span con el valor del TextBox
+            document.getElementById('OtBolsa').innerText = valorTextBox;
+            document.getElementById('OtDocumentacion').innerText = valorTextBox;
+        }
+    </script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 

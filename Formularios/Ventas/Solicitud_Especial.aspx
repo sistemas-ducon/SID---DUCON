@@ -556,7 +556,7 @@
                                         <div class="col-12">
                                             <div class="table-responsive  mb-2 gap-2" style="max-height: 10rem; overflow-x: auto;">
                                                 <h6 class="datagrid-header text-center">Detalle Desarrollo</h6>
-                                                <asp:DataGrid CssClass="table table-bordered custom-grid table-hover custom-data-grid" ID="DataGridDetalleSolicitud" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="DetalleSolicitud" OnItemCommand="DataGridDetalleSolicitud_LinkButton" OnItemDataBound="DataGridDetalleSolicitud_ItemDataBound">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGridDetalleSolicitud" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="DetalleSolicitud" OnItemCommand="DataGridDetalleSolicitud_LinkButton" OnItemDataBound="DataGridDetalleSolicitud_ItemDataBound">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                     <Columns>
                                                         <asp:TemplateColumn HeaderText="...">
@@ -822,7 +822,7 @@
                                         <div class="col-12">
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 12rem; overflow-x: auto;">
                                                 <h6 class="datagrid-header text-start">Desarrollo</h6>
-                                                <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" ID="DataGrid1" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="CargarDesarrollos" OnItemDataBound="DataGridDesarrollo_ItemDataBound" OnItemCommand="DataGridSolicitudPE_LinkButton">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid1" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="CargarDesarrollos" OnItemDataBound="DataGridDesarrollo_ItemDataBound" OnItemCommand="DataGridSolicitudPE_LinkButton">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                     <Columns>
                                                         <asp:TemplateColumn HeaderText="...">
@@ -913,7 +913,7 @@
                                         <div class="col-12">
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 12rem; overflow-x: auto;">
                                                 <h6 class="datagrid-header text-start">Cotizacion</h6>
-                                                <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" ID="DataGrid2" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="CargarCotizaciones" OnItemDataBound="DataGridCotizacion_ItemDataBound" OnItemCommand="DataGridSolicitudPE_LinkButton">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid2" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="CargarCotizaciones" OnItemDataBound="DataGridCotizacion_ItemDataBound" OnItemCommand="DataGridSolicitudPE_LinkButton">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                     <Columns>
                                                         <asp:TemplateColumn HeaderText="...">
@@ -1055,7 +1055,7 @@
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 23rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-center">Solicitudes Filtradas</h5>
 
-                                                <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="BuscarDesarrollo" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridBuscarDesarrollo_ItemDataBound" OnItemCommand="DataGridSolicitudPE_LinkButton">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="BuscarDesarrollo" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridBuscarDesarrollo_ItemDataBound" OnItemCommand="DataGridSolicitudPE_LinkButton">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header p-2" />
                                                     <Columns>
 

@@ -158,6 +158,7 @@
     <Content Include="Formularios\FormExtPrin\ObjetoDespiece.aspx" />
     <Content Include="Formularios\FormExtPrin\ObservacionesOT.aspx" />
     <Content Include="Formularios\FormExtPrin\OTsPendientes.aspx" />
+    <Content Include="Formularios\FormExtPrin\Plano1.aspx" />
     <Content Include="Formularios\OrdenTrabajo.aspx" />
     <Content Include="Formularios\OTs.aspx" />
     <Content Include="Formularios\SuccessMessage.aspx" />
@@ -197,6 +198,7 @@
     <Content Include="Recursos\CSS\FormExtPrin\ObjetoDespiece.css" />
     <Content Include="Recursos\CSS\FormExtPrin\ObservacionesOT.css" />
     <Content Include="Recursos\CSS\FormExtPrin\OtsPendientes.css" />
+    <Content Include="Recursos\CSS\FormExtPrin\Plano1.css" />
     <Content Include="Recursos\CSS\frmPrincipal.css" />
     <Content Include="Recursos\CSS\Inicio.css" />
     <Content Include="Recursos\CSS\login.css" />
@@ -278,6 +280,13 @@
     </Compile>
     <Compile Include="Formularios\FormExtPrin\OTsPendientes.aspx.designer.cs">
       <DependentUpon>OTsPendientes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\FormExtPrin\Plano1.aspx.cs">
+      <DependentUpon>Plano1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\FormExtPrin\Plano1.aspx.designer.cs">
+      <DependentUpon>Plano1.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\OrdenTrabajo.aspx.cs">
       <DependentUpon>OrdenTrabajo.aspx</DependentUpon>
