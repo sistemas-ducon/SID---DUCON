@@ -173,99 +173,99 @@
                                             <div class="contenedor-icono">
 
 
-                                                <asp:LinkButton runat="server" Text="Nueva OT" ID="NuevaOt" OnClick="NuevaOT_Click">
+                                                <asp:LinkButton runat="server" title="Nueva OT" ID="NuevaOt" OnClick="NuevaOT_Click">
                                                       <i class="bi bi-file-earmark"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Copiar Información en una Nueva OT" ID="CopiarOt">
+                                                <asp:LinkButton runat="server" title="Copiar Información en una Nueva OT" ID="CopiarOt">
                                                    <i class="bi bi-files"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Grabar Orden de Trabajo" ID="GrabarOt" OnClick="BtnGrabar_Click">
+                                                <asp:LinkButton runat="server" title="Grabar Orden de Trabajo" ID="GrabarOt" OnClick="BtnGrabar_Click">
                                                   <i class="bi bi-save2"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Modificar Orden de Trabajo" ID="ModificarOt" OnClick="BtnModificar_Click">
+                                                <asp:LinkButton runat="server" title="Modificar Orden de Trabajo" ID="ModificarOt" OnClick="BtnModificar_Click">
                                                    <i class="bi bi-wrench"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Anular o Eliminar un Pedido" ID="AnularPedido">
+                                                <asp:LinkButton runat="server" title="Anular o Eliminar un Pedido" ID="AnularPedido">
                                                  <i class="bi bi-file-earmark-excel"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Documentación OT" ID="DocumentacionOt" OnClientClick="mostrarDivDocumentacion(); return false;">
+                                                <asp:LinkButton runat="server" title="Documentación OT" ID="DocumentacionOt" OnClientClick="mostrarDivDocumentacion(); return false;">
                                                   <i class="bi bi-paperclip"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Observaciones OT" ID="ObservacionesOt" OnClick="BtnObservaciones_Click">
+                                                <asp:LinkButton runat="server" title="Observaciones OT" ID="ObservacionesOt" OnClick="BtnObservaciones_Click">
                                                      <i class="bi bi-eye"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Imprimir Informacion General de la OT" ID="imprimirOt"  OnClick="ImprimirOt_Click">
+                                                <asp:LinkButton runat="server" title="Imprimir Informacion General de la OT" ID="imprimirOt"  OnClick="ImprimirOt_Click">
                                                      <i class="bi bi-printer"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Reimprimir Información Contable" ID="ReimprimirOt">
+                                                <asp:LinkButton runat="server" title="Reimprimir Información Contable" ID="ReimprimirOt">
                                                          <i class="bi bi-printer-fill"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Consultar Bolsa" ID="ConsultarBolsa" OnClick="ConsultarBolsa1">
+                                                <asp:LinkButton runat="server" title="Consultar Bolsa" ID="ConsultarBolsa" OnClick="ConsultarBolsa1">
                                                      <i class="bi bi-coin"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Cancelar" ID="Cancelar" OnClick="Cancelar_Click">
+                                                <asp:LinkButton runat="server" title="Cancelar" ID="Cancelar" OnClick="Cancelar_Click">
                                                  <i class="bi bi-x-lg"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Visualizar OT Pendientes" ID="OtPendientes" OnClick="OtPendientes_Click">
+                                                <asp:LinkButton runat="server" title="Visualizar OT Pendientes" ID="OtPendientes" OnClick="OtPendientes_Click">
                                                      <i class="bi bi-eyeglasses"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Actualizar Pedidos Importados" ID="ActPedImp">
+                                                <asp:LinkButton runat="server" title="Actualizar Pedidos Importados" ID="ActPedImp">
                                                   <i class="bi bi-check-square"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Importar Pedido Asesor" ID="ImpPedAse">
+                                                <asp:LinkButton runat="server" title="Importar Pedido Asesor" ID="ImpPedAse">
                                                      <i class="bi bi-person-lines-fill"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Importar Pedido Sede" ID="ImpPedSed">
+                                                <asp:LinkButton runat="server" title="Importar Pedido Sede" ID="ImpPedSed">
                                                    <i class="bi bi-house-up"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Habilitar Pedido para Ventas" ID="HabilitarPedido">
+                                                <asp:LinkButton runat="server" title="Habilitar Pedido para Ventas" ID="HabilitarPedido">
                                                      <i class="bi bi-receipt-cutoff"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Deshabilitar Orden de Trabajo para Producción" ID="DeshabilitarOt">
+                                                <asp:LinkButton runat="server" title="Deshabilitar Orden de Trabajo para Producción" ID="DeshabilitarOt">
                                                   <i class="bi bi-sign-stop"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Indicador Obra Reactivada" ID="ObraReactivada">
+                                                <asp:LinkButton runat="server" title="Indicador Obra Reactivada" ID="ObraReactivada">
                                                  <i class="bi bi-bar-chart-line"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Registrar Pedido en el Sistema Administrativo" ID="RegPedSisAdm">
+                                                <asp:LinkButton runat="server" title="Registrar Pedido en el Sistema Administrativo" ID="RegPedSisAdm">
                                                  <i class="bi bi-triangle"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Cierra o Abre una OT" ID="CierraOt">
+                                                <asp:LinkButton runat="server" title="Cierra o Abre una OT" ID="CierraOt">
                                                   <i class="bi bi-key"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Simular Pasar Pedido" ID="SimularPedido">
+                                                <asp:LinkButton runat="server" title="Simular Pasar Pedido" ID="SimularPedido">
                                                  <i class="bi bi-code-square"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Exportar Pedido" ID="ExportarPedido">
+                                                <asp:LinkButton runat="server" title="Exportar Pedido" ID="ExportarPedido">
                                                  <i class="bi bi-airplane-engines"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Entrega Perfecta" ID="EntregaPerfecta">
+                                                <asp:LinkButton runat="server" title="Entrega Perfecta" ID="EntregaPerfecta">
                                                   <i class="bi bi-lightning-charge"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Anular Obra" ID="AnularObra">
+                                                <asp:LinkButton runat="server" title="Anular Obra" ID="AnularObra">
                                                  <i class="bi bi-x-square"></i>
                                                 </asp:LinkButton>
 
@@ -1150,76 +1150,79 @@
 
                                             <div class="contenedor-icono">
 
-                                                <a class="icong disabled" href="#" title="Adicionar Objeto al Plano">
-                                                    <i class="ib bi-pc"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Quitar Objeto del Plano">
-                                                    <i class="bi bi-database-check"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Eliminar Objetos del Plano">
-                                                    <i class="bi bi-fire"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Acabados del Plano">
+                                                <asp:LinkButton runat="server" title="Adicionar Objeto al Plano" ID="BtnAdiObjPla">
+                                                     <i class="ib bi-pc"></i>
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-bar-chart-line"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Leer Archivo Despiece Acad">
+                                                <asp:LinkButton runat="server" title="Quitar Objeto del Plano" ID="BtnQuiObjPla">
+                                                  <i class="bi bi-database-check"></i>
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-border-inner"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Cargar Archivo TXT XY">
+                                                <asp:LinkButton runat="server" title="Eliminar Objetos del Plano" ID="BtnEliObjPla">
+                                                  <i class="bi bi-fire"></i>
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-folder-plus"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Plano Bloqueado">
+                                                <asp:LinkButton runat="server" title="Acabados del Plano" ID="BtnAcaPla">
+                                                  <i class="bi bi-bar-chart-line"></i>
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-lock"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Crear o Redefinir Bolsa">
+                                                <asp:LinkButton runat="server"  title="Leer Archivo Despiece Acad" ID="BtnLeeArcDesAca">
+                                                 <i class="bi bi-border-inner"></i>
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-bag-check"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Adicionar/Remover Elementos de la Bolsa">
+                                                <asp:LinkButton runat="server" title="Cargar Archivo TXT XY" ID="BtnCarArcTxtXy">
 
-                                                    <i class="bi bi-bag-plus"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Despiece del Plano">
+                                                  <i class="bi bi-folder-plus"></i>
 
+                                                </asp:LinkButton>
+
+                                                <asp:LinkButton runat="server" title="Plano Bloqueado" ID="BtnPlaBlo">
+                                                     <i class="bi bi-lock"></i>
+                                                </asp:LinkButton>
+
+                                                <asp:LinkButton runat="server" title="Crear o Redefinir Bolsa" ID="BtnCreRefBol">
+                                                      <i class="bi bi-bag-check"></i>
+                                                </asp:LinkButton>
+
+                                                <asp:LinkButton runat="server" title="Adicionar/Remover Elementos de la Bolsa" ID="BtnAdiRemEleBol">
+                                                         <i class="bi bi-bag-plus"></i>
+                                                </asp:LinkButton>
+
+                                                <asp:LinkButton runat="server" title="Despiece del Plano" ID="BtnDesPla">
                                                     <i class="bi bi-disc-fill"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Generar  TXT">
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-filetype-txt"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Guardar TXT">
+                                                <asp:LinkButton runat="server" title="Generar  TXT" ID="BtnGenTxt">
+                                                 <i class="bi bi-filetype-txt"></i>
+                                                </asp:LinkButton>
 
+                                                <asp:LinkButton runat="server" title="Guardar TXT" ID="BtnGuaTxt">
                                                     <i class="bi bi-save2"></i>
-                                                </a>
+                                                </asp:LinkButton>
 
-                                                <a class="icong disabled" href="#" title="Exportar Plano u Orden de Trabajo">
+                                                <asp:LinkButton runat="server" title="Exportar Plano u Orden de Trabajo" ID="BtnExpPlaOrdTra">
+                                                   <i class="bi bi-arrow-up-left-circle"></i>
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-arrow-up-left-circle"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Visualizar/Generar Cotizacion">
-
+                                                <asp:LinkButton runat="server" title="Visualizar/Generar Cotizacion" ID="BtnVisGenCot">
                                                     <i class="bi bi-bag-plus"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Objetos no Existentes">
+                                                </asp:LinkButton>
 
+                                                <asp:LinkButton runat="server" title="Objetos no Existentes" ID="BtnObjNoExi">
                                                     <i class="bi bi-text-indent-left"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Actualizar Precio Prototipo">
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-cash-coin"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Generar Formato Certificado de Origen ">
+                                                <asp:LinkButton runat="server" title="Actualizar Precio Prototipo" ID="BtnActPrePro">
+                                                     <i class="bi bi-cash-coin"></i>
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-clipboard-check"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Importar Plano de Actualizacion de Bloques">
+                                                <asp:LinkButton runat="server" title="Generar Formato Certificado de Origen" ID="BtnGenForCerOrd">
+                                                  <i class="bi bi-clipboard-check"></i>
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-file-arrow-down-fill"></i>
-                                                </a>
+                                                <asp:LinkButton runat="server" title="Importar Plano de Actualizacion de Bloques" ID="BtnImpPlaActBlo">
+                                                 <i class="bi bi-file-arrow-down-fill"></i>
+                                                </asp:LinkButton>
 
                                                 <ul />
                                         </ul>
@@ -1491,56 +1494,49 @@
 
                                             <div class="contenedor-icono">
 
-
-                                                <a class="icong disabled" href="#" title="Nuevo Objeto">
-
+                                                 <asp:LinkButton runat="server" title="Nuevo Objeto" ID="BtnNueObj">
                                                     <i class="bi bi-file-earmark"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="...">
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-printer"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Modificar Objeto">
+                                                <asp:LinkButton runat="server" title="..." ID="Btnnnn">
+                                                  <i class="bi bi-printer"></i>
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-wrench"></i>
-                                                </a>
+                                                <asp:LinkButton runat="server" title="Modificar Objeto" ID="BtnModObj">
+                                                   <i class="bi bi-wrench"></i>
+                                                </asp:LinkButton>
 
-                                                <a class="icong disabled" href="#" title="Consultar Objeto">
+                                                <asp:LinkButton runat="server" title="Consultar Objeto" ID="BtnConObj">
+                                                  <i class="bi bi-file-earmark-ruled"></i>
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-file-earmark-ruled"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Eliminar Objeto">
+                                                <asp:LinkButton runat="server" title="Eliminar Objeto" ID="BtnEliObj">
+                                                   <i class="bi bi-database-x"></i>
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-database-x"></i>
-                                                </a>
+                                                <asp:LinkButton runat="server" title="Buscar Objeto" ID="BtnBusObj">
+                                                  <i class="bi bi-search"></i>
+                                                </asp:LinkButton>
 
-                                                <a class="icong disabled" href="#" title="Buscar Objeto">
-
-                                                    <i class="bi bi-search"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Copiar Objeto">
-
+                                                <asp:LinkButton runat="server" title="Copiar Objeto" ID="BtnCopObj">
                                                     <i class="bi bi-files"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Actualizar Precio">
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-currency-dollar"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Generar Lista de Precios">
+                                                <asp:LinkButton runat="server" title="Actualizar Precio" ID="BtnActPre">
+                                                      <i class="bi bi-currency-dollar"></i>
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-coin"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Ir al Objeto Anterior">
+                                                <asp:LinkButton runat="server" title="Generar Lista de Precios" ID="BtnGenLisPre">
+                                                        <i class="bi bi-coin"></i>
+                                                </asp:LinkButton>
 
+                                                <asp:LinkButton runat="server" title="Ir al Objeto Anterior" ID="BtnIrObjAnt">
                                                     <i class="bi bi-disc"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Chequear">
+                                                </asp:LinkButton>
 
+                                                  <asp:LinkButton runat="server" title="Chequear" ID="BtnChe">
                                                     <i class="bi bi-check-lg"></i>
-                                                </a>
-
-
-
+                                                </asp:LinkButton>
 
 
                                             </div>
@@ -1768,36 +1764,38 @@
                                             <div class="contenedor-icono">
 
 
-                                                <a class="icong disabled" href="#" title="">
-
+                                                 <asp:LinkButton runat="server" title="" ID="LinkButton1">
                                                     <i class="bi bi-file-earmark"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="">
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-file-medical"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="">
+                                                <asp:LinkButton runat="server" title="" ID="LinkButton2">
+                                                  <i class="bi bi-file-earmark"></i>
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-wrench"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="">
+                                                <asp:LinkButton runat="server" title="" ID="LinkButton3">
+                                                   <i class="bi bi-file-medical"></i>
+                                                </asp:LinkButton>
 
+                                                <asp:LinkButton runat="server" title="" ID="LinkButton4">
+                                                   <i class="bi bi-wrench"></i>
+                                                </asp:LinkButton>
+
+                                                <asp:LinkButton runat="server" title="" ID="LinkButton5">
                                                     <i class="bi bi-file-earmark-ruled"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="">
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-database-down"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="">
+                                                <asp:LinkButton runat="server" title="" ID="LinkButton6">
+                                                  <i class="bi bi-database-down"></i>
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-files"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="">
+                                                <asp:LinkButton runat="server" title="" ID="LinkButton7">
+                                                   <i class="bi bi-files"></i>
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-check-lg"></i>
-                                                </a>
-
-
+                                                  <asp:LinkButton runat="server" title="" ID="LinkButton8">
+                                                  <i class="bi bi-check-lg"></i>
+                                                </asp:LinkButton>
+                                 
                                             </div>
                                     </div>
                             </nav>                                  
@@ -1824,35 +1822,33 @@
 
                                             <div class="contenedor-icono">
 
-                                                <a class="icong disabled" href="#" title="Nuevo Insumo">
+                                                  <asp:LinkButton runat="server" title="Nuevo Insumo" ID="LinkButton9">
+                                                   <i class="bi bi-file-earmark"></i>
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-file-earmark"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="...">
+                                                <asp:LinkButton runat="server" title="" ID="LinkButton10">
+                                                  <i class="bi bi-file-earmark-ruled"></i>
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-file-earmark-ruled"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Modificar Insumo">
+                                                <asp:LinkButton runat="server" title="Modificar Insumo" ID="LinkButton11">
+                                                   <i class="bi bi-wrench"></i>
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-wrench"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Eliminar Insumo">
+                                                <asp:LinkButton runat="server" title="Eliminar Insumo" ID="LinkButton12">
+                                                   <i class="bi bi-database-x"></i>
+                                                </asp:LinkButton>
 
-
-                                                    <i class="bi bi-database-x"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Copiar Insumo">
-
+                                                <asp:LinkButton runat="server" title="Copiar Insumo" ID="LinkButton13">
                                                     <i class="bi bi-files"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Buscar Insumo">
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-search"></i>
-                                                </a>
-                                                <a class="icong disabled" href="#" title="Actualizar">
+                                                <asp:LinkButton runat="server" title="Buscar Insumo" ID="LinkButton14">
+                                                   <i class="bi bi-search"></i>
+                                                </asp:LinkButton>
 
-                                                    <i class="bi bi-disc"></i>
-                                                </a>
+                                                <asp:LinkButton runat="server" title="Actualizar" ID="LinkButton15">
+                                                   <i class="bi bi-disc"></i>
+                                                </asp:LinkButton>                                     
 
                                             </div>
                                         </ul>

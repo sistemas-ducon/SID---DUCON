@@ -53,6 +53,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     DeshabilitarBotones(sender, e);
 
+                    BotonesPorDefectoPlano(sender, e);
+
+                    BotonesPorDefectoObjetos(sender, e);
+
+                    BotonesPorDefectoModulos(sender, e);
+
+                    BotonesPorDefectoInsumos(sender, e);
+
                     listaTextBoxes = new List<TextBox>
                 {
                     tbObra,tbDir,tbContac,tbEmail,tbRecibe,tbTel,tbCel,tbPais,tbHTotal,tbVenta,dtpFechaEntregaDibujoDespiece,dtpFechaEntregaProduccion,dtpEmpaque,dtpRealEmpaque,tbSupervisor,
@@ -2535,7 +2543,153 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
 
+        //TAB PLANO
+
+        protected void BotonesPorDefectoPlano(object sender, EventArgs e)
+        {
+            List<System.Web.UI.Control> botones = new List<System.Web.UI.Control>
+            {
+
+                BtnAdiObjPla,
+                BtnQuiObjPla,
+                BtnEliObjPla,
+                BtnAcaPla,
+                BtnLeeArcDesAca,
+                BtnCarArcTxtXy,
+                BtnPlaBlo,
+                BtnCreRefBol,
+                BtnAdiRemEleBol,
+                BtnDesPla,
+                BtnGenTxt,
+                BtnGuaTxt,
+                BtnExpPlaOrdTra,
+                BtnVisGenCot,
+                
+                BtnActPrePro,
+                BtnGenForCerOrd,
+                 
+            };
+
+            string cssClass = "btn btn-sm shadow button-disabled";
+
+            foreach (System.Web.UI.Control boton in botones)
+            {
+                if (boton is System.Web.UI.WebControls.LinkButton)
+                {
+                    System.Web.UI.WebControls.LinkButton linkButton = (System.Web.UI.WebControls.LinkButton)boton;
+                    linkButton.Enabled = false;
+                    linkButton.CssClass = cssClass;
+                }
+            }
+
+            BtnObjNoExi.Enabled = true;
+            BtnObjNoExi.CssClass = "btn btn-sm shadow button-enabled";
+
+            BtnImpPlaActBlo.Enabled = true;
+            BtnImpPlaActBlo.CssClass = "btn btn-sm shadow button-enabled";
+
         }
+
+        protected void BotonesPorDefectoObjetos(object sender, EventArgs e)
+        {
+            List<System.Web.UI.Control> botones = new List<System.Web.UI.Control>
+            {
+
+                BtnNueObj,
+                Btnnnn,
+                BtnModObj,
+                BtnConObj,
+                BtnEliObj,
+                BtnBusObj,
+                BtnCopObj,
+                BtnActPre,  
+                BtnChe,          
+
+            };
+
+            string cssClass = "btn btn-sm shadow button-disabled";
+
+            foreach (System.Web.UI.Control boton in botones)
+            {
+                if (boton is System.Web.UI.WebControls.LinkButton)
+                {
+                    System.Web.UI.WebControls.LinkButton linkButton = (System.Web.UI.WebControls.LinkButton)boton;
+                    linkButton.Enabled = false;
+                    linkButton.CssClass = cssClass;
+                }
+            }
+
+            BtnGenLisPre.Enabled = true;
+            BtnGenLisPre.CssClass = "btn btn-sm shadow button-enabled";
+
+            BtnIrObjAnt.Enabled = true;
+            BtnIrObjAnt.CssClass = "btn btn-sm shadow button-enabled";
+
+        }
+
+        //TAB MODULOS
+        protected void BotonesPorDefectoModulos(object sender, EventArgs e)
+        {
+            List<System.Web.UI.Control> botones = new List<System.Web.UI.Control>
+            {
+
+                LinkButton1,
+                LinkButton2,
+                LinkButton3,
+                LinkButton4,
+                LinkButton5,
+                LinkButton6,
+                LinkButton7,
+                LinkButton8
+
+            };
+
+            string cssClass = "btn btn-sm shadow button-disabled";
+
+            foreach (System.Web.UI.Control boton in botones)
+            {
+                if (boton is System.Web.UI.WebControls.LinkButton)
+                {
+                    System.Web.UI.WebControls.LinkButton linkButton = (System.Web.UI.WebControls.LinkButton)boton;
+                    linkButton.Enabled = false;
+                    linkButton.CssClass = cssClass;
+                }
+            }
+
+
+        }
+
+        //TAB INSUMOS
+
+        protected void BotonesPorDefectoInsumos(object sender, EventArgs e)
+        {
+            List<System.Web.UI.Control> botones = new List<System.Web.UI.Control>
+            {
+                LinkButton9,
+                LinkButton10,
+                LinkButton11,
+                LinkButton12,
+                LinkButton13,
+                LinkButton14,
+                LinkButton15
+            };
+
+            string cssClass = "btn btn-sm shadow button-disabled";
+
+            foreach (System.Web.UI.Control boton in botones)
+            {
+                if (boton is System.Web.UI.WebControls.LinkButton)
+                {
+                    System.Web.UI.WebControls.LinkButton linkButton = (System.Web.UI.WebControls.LinkButton)boton;
+                    linkButton.Enabled = false;
+                    linkButton.CssClass = cssClass;
+                }
+            }
+      
+
+        }
+
+    }
 
 
     }
