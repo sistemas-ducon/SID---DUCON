@@ -8,14 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
     <link rel="stylesheet" href="../../Recursos/CSS/OrdenTrabajo.css" />
     <title>Ordenes de Trabajo</title>
 
 </head>
-
-
 
 <body>
     <form id="form1" runat="server">
@@ -46,7 +42,7 @@
         </nav>
 
         <div class="tab-content">
-
+              
             <div class="tab-pane fade show active" id="OTs-Content">
                 <asp:UpdatePanel ID="PanelOt" runat="server" UpdateMode="Conditional" DefaultButton="btnSubmit">
                     <ContentTemplate>
@@ -94,11 +90,11 @@
                                                    <i class="bi bi-files"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Grabar Orden de Trabajo" ID="GrabarOt">
+                                                <asp:LinkButton runat="server" Text="Grabar Orden de Trabajo" ID="GrabarOt" OnClick="BtnGrabar_Click">
                                                   <i class="bi bi-save2"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" Text="Modificar Orden de Trabajo" ID="ModificarOt">
+                                                <asp:LinkButton runat="server" Text="Modificar Orden de Trabajo" ID="ModificarOt" OnClick="BtnModificar_Click">
                                                    <i class="bi bi-wrench"></i>
                                                 </asp:LinkButton>
 
@@ -192,14 +188,14 @@
 
                             <div class="row">
 
-                                <div class="col-1">
+                                <div class="col-lg-1 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="OT" runat="server" ID="lblOT"></asp:Label>
                                         <asp:TextBox ID="tbOT" runat="server" CssClass="form-control" OnTextChanged="ObtenerInfoOt" AutoPostBack="true"></asp:TextBox>
                                     </div>
                                 </div>
 
-                                <div class="col-1">
+                                <div class="col-lg-1 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Pedido" runat="server" ID="lblPedido"></asp:Label>
                                         <asp:DropDownList class="form-control" ID="ddlNumbers" runat="server" OnSelectedIndexChanged="CambioDePediido" AutoPostBack="true"></asp:DropDownList>
@@ -207,7 +203,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-1">
+                                <div class="col-lg-1 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Zona" runat="server" ID="lbZona"></asp:Label>
                                         <asp:DropDownList class="form-control" ID="ddlZona" runat="server">
@@ -219,40 +215,59 @@
                                     </div>
                                 </div>
 
-                                <div class="col-2">
+                                <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="T.Ped" runat="server" ID="lblTped"></asp:Label>
-                                        <asp:DropDownList ID="dtacboTipoPedido" runat="server" class="form-control" AutoPostBack="True" DataSourceID="TiposDePedidos" DataTextField="Descripcion_TipoPedido" DataValueField="Descripcion_TipoPedido"></asp:DropDownList>
-                                        <asp:SqlDataSource ID="TiposDePedidos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select Descripcion_TipoPedido from tblTipoPedido order by Descripcion_TipoPedido"></asp:SqlDataSource>
+                                        <asp:DropDownList ID="dtacboTipoPedido" runat="server" class="form-control" DataSourceID="TiposDePedidos" DataTextField="Descripcion_TipoPedido" DataValueField="Id_TipoPedido">
+                                           
+                                        </asp:DropDownList>
+                                        <asp:SqlDataSource ID="TiposDePedidos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT Descripcion_TipoPedido, Id_TipoPedido, Activo FROM tblTipoPedido
+                                                                                                                                                                            ORDER BY Descripcion_TipoPedido
+                                                                                                                                                                            "></asp:SqlDataSource>
                                     </div>
                                 </div>
 
-                                <div class="col-1">
+                                <div class="col-lg-1 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Ped.Base" runat="server" ID="lblPedBase"></asp:Label>
                                         <asp:DropDownList ID="cboPedidoBase" runat="server" class="form-control" DataSourceID="PedidoBase" DataTextField="PedidoBase" DataValueField="PedidoBase"></asp:DropDownList>
-                                        <asp:SqlDataSource ID="PedidoBase" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT DISTINCT PedidoBase FROM tblOT WHERE (PedidoBase BETWEEN 1 AND 1000) ORDER BY PedidoBase"></asp:SqlDataSource>
+                                        <asp:SqlDataSource ID="PedidoBase" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="
+                                                                                                                                                                        SELECT DISTINCT PedidoBase 
+                                                                                                                                                                        FROM tblOT 
+                                                                                                                                                                        WHERE (PedidoBase BETWEEN 1 AND 1000) AND PedidoBase <> 0
+                                                                                                                                                                        ORDER BY PedidoBase"></asp:SqlDataSource>
                                     </div>
                                 </div>
 
-                                <div class="col-2">
+                                <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Ped.Deped" runat="server" ID="lblPedDepen"></asp:Label>
-                                        <asp:TextBox ID="tbPedDepen" class="form-control" runat="server"></asp:TextBox>
+                                        <asp:DropDownList ID="tbPedDepen" CssClass="form-control" runat="server" DataSourceID="sqlDataSource1"
+                                            DataTextField="Consecutivo_Pedido" DataValueField="Consecutivo_Pedido">
+                                        </asp:DropDownList>
+                                        <asp:SqlDataSource ID="sqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                            SelectCommand="SELECT Consecutivo_Pedido FROM tblOT WHERE Id_OT = @Id_OT AND PedidoBase = @pedido">
+                                            <SelectParameters>
+                                                <asp:SessionParameter Name="Id_OT" SessionField="Id_OT" Type="String" />
+                                                <asp:SessionParameter Name="pedido" SessionField="pedido" Type="Int32" />
+                                            </SelectParameters>
+                                        </asp:SqlDataSource>
+
                                     </div>
                                 </div>
 
-                                <div class="col-2">
+                                <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Aprob" runat="server" ID="lblAprob"></asp:Label>
-                                        <asp:TextBox ID="tbAprob" type="text" class="form-control" runat="server" Visible="false"></asp:TextBox>
+                                        
                                         <asp:DropDownList ID="DtaCboTipoAprobacion" runat="server" class="form-control" DataSourceID="Aprob" DataTextField="TipoAprobacion" DataValueField="IdTipoAprobacion"></asp:DropDownList>
-                                        <asp:SqlDataSource ID="Aprob" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select * from tblTipoAprobacion order by TipoAprobacion"></asp:SqlDataSource>
+                                        <asp:SqlDataSource ID="Aprob" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="
+                                                                                                                                                                    SELECT * FROM tblTipoAprobacion ORDER BY TipoAprobacion"></asp:SqlDataSource>
 
                                     </div>
                                 </div>
 
-                                <div class="col-2">
+                                <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm justify-content-around">
                                         <asp:LinkButton runat="server" Text="" ID="btnNuevoPedido" OnClick="NuevoPedido">
                                                      <i class="bi bi-files"></i>
@@ -270,28 +285,28 @@
 
                             <div class="row">
 
-                                <div class="col-3">
+                                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Obra" runat="server" ID="lblObra"></asp:Label>
                                         <asp:TextBox ID="tbObra" type="text" class="form-control" runat="server"></asp:TextBox>
                                     </div>
                                 </div>
 
-                                <div class="col-3">
+                                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-4">
                                         <asp:Label class="form-label" Text="Dir" runat="server" ID="lblDir"></asp:Label>
                                         <asp:TextBox ID="tbDir" type="text" class="form-control" runat="server"></asp:TextBox>
                                     </div>
                                 </div>
 
-                                <div class="col-3">
+                                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Contac" runat="server" ID="lblContac"></asp:Label>
                                         <asp:TextBox ID="tbContac" type="text" class="form-control" runat="server"></asp:TextBox>
                                     </div>
                                 </div>
 
-                                <div class="col-3">
+                                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Email" runat="server" ID="lblEmail"></asp:Label>
                                         <asp:TextBox ID="tbEmail" type="email" class="form-control" runat="server"></asp:TextBox>
@@ -302,14 +317,14 @@
 
                             <div class="row">
 
-                                <div class="col-3">
+                                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Recibe" runat="server" ID="lblRecibe"></asp:Label>
                                         <asp:TextBox ID="tbRecibe" type="text" class="form-control" runat="server"></asp:TextBox>
                                     </div>
                                 </div>
 
-                                <div class="col-2">
+                                <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Ciudad" runat="server" ID="lblCiudad"></asp:Label>
                                         <asp:DropDownList class="form-control" ID="ddlCiudad" runat="server" DataTextField="NombreCiudad" DataValueField="NombreCiudad" DataSourceID="CargarCiudad" OnDataBound="ddlCiudad_DataBound"></asp:DropDownList>
@@ -325,33 +340,34 @@
                                     </div>
                                 </div>
 
-                                <div class="col-2">
+                                <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-4">
                                         <asp:Label class="form-label" Text="Tel" runat="server" ID="lblTel"></asp:Label>
                                         <asp:TextBox ID="tbTel" type="tel" class="form-control" runat="server"></asp:TextBox>
                                     </div>
                                 </div>
 
-                                <div class="col-2">
+                                <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Cel" runat="server" ID="lblCel"></asp:Label>
                                         <asp:TextBox ID="tbCel" type="tel" class="form-control" runat="server"></asp:TextBox>
                                     </div>
                                 </div>
 
-                                <div class="col-2">
+                                <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Pais" runat="server" ID="lblPais"></asp:Label>
                                         <asp:TextBox ID="tbPais" type="text" class="form-control" runat="server"></asp:TextBox>
                                     </div>
                                 </div>
 
-                                <div class="col-1">
+                                <div class="col-lg-1 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="H.Total" runat="server" ID="lblHTotal"></asp:Label>
                                         <asp:TextBox ID="tbHTotal" type="number" class="form-control" runat="server"></asp:TextBox>
                                     </div>
                                 </div>
+
                             </div>
 
                         </div>
@@ -360,9 +376,9 @@
 
                             <div class="Obs1">
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <div class=" input-group-sm  mb-2 gap-2">
-                                            <textarea class="form-control form-control-sm" id="txObs1" runat="server" cols="20" rows="10" disabled="disabled"></textarea>
+                                            <textarea class="form-control form-control-sm" id="txObs1" runat="server" cols="20" rows="10"></textarea>
 
                                         </div>
                                     </div>
@@ -374,7 +390,7 @@
                                 <div class="Arriba">
 
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 
                                             <div class="input-group input-group-sm mb-2 gap-2">
                                                 <asp:Label class="form-label" Text="Venta" runat="server" ID="lblVenta"></asp:Label>
@@ -392,14 +408,14 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                             <div class="input-group input-group-sm mb-2 gap-2">
                                                 <label class="form-label" runat="server" id="inputDibujo">Ok.Dibujo</label>
                                                 <asp:TextBox ID="dtpFechaEntregaProduccion" type="date" class="form-control" runat="server"></asp:TextBox>
                                             </div>
                                         </div>
 
-                                        <div class="col-6">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 
                                             <asp:Label ID="LabelOTCerrada" ClientIDMode="Static" runat="server" Text="OT cerrada" BackColor="#DD0000" ForeColor="white" Font-Size="X-Large" Width="350px" Visible="false" CssClass="rounded-label"></asp:Label>
 
@@ -408,14 +424,14 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                             <div class="input-group input-group-sm mb-2 gap-2">
                                                 <label class="form-label" runat="server" id="inputEmpaque">Empaque</label>
-                                                <asp:TextBox ID="dtpEmpaque" type="date" class="form-control" runat="server"></asp:TextBox>
+                                                <asp:TextBox ID="dtpEmpaque" type="date" class="form-control" runat="server" OnTextChanged="ValidarFecha" AutoPostBack="true"></asp:TextBox>
                                             </div>
                                         </div>
 
-                                        <div class="col-6">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                             <div class="input-group input-group-sm mb-2 gap-2">
                                                 <label class="form-label" runat="server" id="inputRealEmp">Real Emp.</label>
                                                 <asp:TextBox ID="dtpRealEmpaque" type="date" class="form-control" runat="server"></asp:TextBox>
@@ -429,7 +445,7 @@
                                     <div class="row justify-content-center">
                                         <div class="border rounded">
                                             <div class="row">
-                                                <div class="col-12">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                     <div class="table-responsive" style="max-height: 8rem; max-width: auto; overflow-x: auto;">
                                                         <h6 class="datagrid-header text-center">Despacho</h6>
                                                         <asp:DataGrid CssClass="table table-bordered custom-grid table-hover custom-data-grid form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDespacho" runat="server" DataSourceID="obtenerInfoDespacho" OnItemDataBound="DataGridDespacho_ItemDataBound">
@@ -485,7 +501,7 @@
 
                             <div class="Obs1">
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <div class=" input-group-sm  mb-2 gap-2">
 
                                             <textarea class="form-control form-control-sm" id="txObs2" runat="server" cols="20" rows="8"></textarea>
@@ -498,7 +514,7 @@
 
                                 <div class="row">
 
-                                    <div class="col-5">
+                                    <div class="col-lg-5 col-md-6 col-sm-12 col-xs-12">
 
                                         <div class="input-group input-group-sm mb-2 gap-2">
                                             <asp:Label class="form-label" Text="Supervisor" runat="server" ID="lblSupervisor"></asp:Label>
@@ -514,14 +530,14 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-5">
+                                    <div class="col-lg-5 col-md-6 col-sm-12 col-xs-12">
                                         <div class="input-group input-group-sm mb-2 gap-4">
                                             <asp:Button class="btn btn-outline-secondary" Text="Plano+" runat="server" type="button" disabled="disabled"></asp:Button>
                                             <asp:Label type="text" class="form-label fw-bold" runat="server" ID="lbPlano" Text="Plano" />
                                         </div>
                                     </div>
 
-                                    <div class="col-7">
+                                    <div class="col-lg-7 col-md-6 col-sm-12 col-xs-12">
                                         <div class="input-group   mb-2 gap-2">
                                             <asp:Label class="form-label text-end" Text="Bolsa" runat="server" ID="lblBolsa"></asp:Label>
                                             <asp:TextBox type="text" class="form-control text-end" runat="server" ID="tbBolsa" />
@@ -532,19 +548,21 @@
 
                                 <div class="row">
 
-                                    <div class="col-4">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                         <div class="input-group input-group-sm mb-2 gap-2">
                                             <asp:Label class="form-label" Text="Fabrica" runat="server" ID="lblFabrica"></asp:Label>
                                             <asp:DropDownList class="form-control" ID="ddlFabrica1" runat="server">
                                                 <asp:ListItem Value=""></asp:ListItem>
-                                                <asp:ListItem Value="Bogota">Bogota</asp:ListItem>
-                                                <asp:ListItem Value="Medellin">Medellin</asp:ListItem>
+                                                <asp:ListItem Value="Bogotá">Bogotá</asp:ListItem>
+                                                <asp:ListItem Value="Medellín">Medellín</asp:ListItem>
+                                                <asp:ListItem Value="BOGOTÁ">Bogotá</asp:ListItem>
+                                                <asp:ListItem Value="MEDELLÍN">Medellín</asp:ListItem>
                                             </asp:DropDownList>
 
                                         </div>
                                     </div>
 
-                                    <div class="col-6">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                         <div class="input-group input-group-sm mb-2 gap-2">
                                             <asp:Label class="form-label" runat="server" ID="lblSaldoOT" BorderColor="#006600" BackColor="Lime" Font-Size="X-Large" Text="Saldo" Width="10em" Height="1.5em" Visible="false"></asp:Label>
                                         </div>
@@ -554,20 +572,22 @@
 
                                 <div class="row">
 
-                                    <div class="col-4">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                         <div class="input-group input-group-sm mb-2 gap-2">
                                             <asp:Label class="form-label" Text="Instala" runat="server" ID="Instala"></asp:Label>
                                             <asp:DropDownList class="form-control" ID="ddlInstala" runat="server">
                                                 <asp:ListItem Value=""></asp:ListItem>
-                                                <asp:ListItem Value="Bogota">Bogota</asp:ListItem>
-                                                <asp:ListItem Value="Medellin">Medellin</asp:ListItem>
+                                                <asp:ListItem Value="Bogotá">Bogotá</asp:ListItem>
+                                                <asp:ListItem Value="Medellín">Medellín</asp:ListItem>
+                                                  <asp:ListItem Value="BOGOTÁ">Bogotá</asp:ListItem>
+                                                <asp:ListItem Value="MEDELLÍN">Medellín</asp:ListItem>
                                             </asp:DropDownList>
                                         </div>
                                     </div>
 
-                                    <div class="col-2">
+                                    <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
                                         <div class="row">
-                                            <div class="col-12 ">
+                                            <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
                                                 <div class="input-group input-group-sm mb-2 gap-2">
                                                     <asp:Label class="form-label" Text="V. Pedido" runat="server" ID="Label1"></asp:Label>
                                                     <asp:Button class="btn btn-outline-secondary" Text="TXT" runat="server" type="button" disabled="disabled"></asp:Button>
@@ -576,7 +596,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-6">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                         <div class="input-group  mb-1 gap-2">
                                             <asp:TextBox ID="tbValorPedido" CssClass="form-control text-end" runat="server"></asp:TextBox>
                                         </div>
@@ -586,6 +606,7 @@
                                 </div>
 
                             </div>
+
                         </div>
 
                         <h5 class="p-0 m-0 mb-1 text-center">Informacion Contable </h5>
@@ -597,7 +618,7 @@
 
                                 <div class="row">
 
-                                    <div class="col-3">
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
 
                                         <div class=" input-group input-group-sm">
                                             <asp:Button ID="Nit" runat="server" Text="Nit  ..." class="bi bf btn btn-secondary" OnClick="Redireccion_Nit" />
@@ -605,7 +626,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-9">
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12">
                                         <div class=" input-group input-group-sm gap-1">
                                             <asp:TextBox type="text" class="form-control" runat="server" ID="txtNit"></asp:TextBox>
                                             <asp:TextBox type="text" class="form-control" runat="server" ID="txtNombreEmp"></asp:TextBox>
@@ -616,7 +637,7 @@
 
                                 <div class="row">
 
-                                    <div class="col-3">
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
 
                                         <div class=" input-group input-group-sm">
                                             <asp:Label class="form-label" Text="Contacto" runat="server" ID="lblContacto"></asp:Label>
@@ -624,7 +645,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-9">
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12">
                                         <div class=" input-group input-group-sm ">
                                             <asp:TextBox type="text" class="form-control" runat="server" ID="txtcontacto"></asp:TextBox>
                                         </div>
@@ -634,7 +655,7 @@
 
                                 <div class="row">
 
-                                    <div class="col-3">
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
 
                                         <div class=" input-group input-group-sm">
                                             <asp:Label class="form-label" Text="Mail" runat="server" ID="lblMail"></asp:Label>
@@ -642,7 +663,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-9">
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12">
                                         <div class=" input-group input-group-sm ">
                                             <asp:TextBox type="text" class="form-control" runat="server" ID="txtMail"></asp:TextBox>
                                         </div>
@@ -652,7 +673,7 @@
 
                                 <div class="row">
 
-                                    <div class="col-3">
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
 
                                         <div class=" input-group input-group-sm">
                                             <asp:Label class="form-label" Text="Dirección" runat="server" ID="lblDireccion"></asp:Label>
@@ -660,7 +681,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-9">
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12">
                                         <div class=" input-group input-group-sm ">
                                             <asp:TextBox type="text" class="form-control" runat="server" ID="txtDireccion"></asp:TextBox>
                                         </div>
@@ -670,7 +691,7 @@
 
                                 <div class="row">
 
-                                    <div class="col-3">
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
 
                                         <div class=" input-group input-group-sm">
                                             <asp:Label class="form-label" Text="Municipio" runat="server" ID="lblMunicipio"></asp:Label>
@@ -678,7 +699,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-9">
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12">
                                         <div class=" input-group input-group-sm ">
                                             <asp:TextBox type="text" class="form-control" runat="server" ID="txtMunicipio"></asp:TextBox>
                                         </div>
@@ -688,7 +709,7 @@
 
                                 <div class="row">
 
-                                    <div class="col-3">
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
 
                                         <div class=" input-group input-group-sm">
                                             <asp:Label class="form-label" Text="Telefono" runat="server" ID="lblTelefono"></asp:Label>
@@ -696,7 +717,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-9">
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12">
                                         <div class=" input-group input-group-sm ">
                                             <asp:TextBox type="text" class="form-control" runat="server" ID="txtTelefono"></asp:TextBox>
                                         </div>
@@ -706,7 +727,7 @@
 
                                 <div class="row">
 
-                                    <div class="col-3">
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
 
                                         <div class=" input-group input-group-sm">
                                             <asp:Label class="form-label" Text="Obs. Contable " runat="server" ID="lblObs"></asp:Label>
@@ -714,7 +735,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-9">
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12">
                                         <div class=" input-group input-group-sm ">
                                             <textarea class="form-control form-control-sm" id="ObservacionCont" runat="server" cols="20" rows="3" high="60px"></textarea>
                                         </div>
@@ -723,7 +744,7 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
 
                                         <div class=" input-group input-group-sm">
                                             <asp:TextBox type="" class="form-control" runat="server" ID="txtMensaje" Visible="false"></asp:TextBox>
@@ -780,7 +801,7 @@
                                     </div>
 
                                     <div class="Info_M">
-                                        <asp:DropDownList ID="ddlAsesor" class=" form-control form-control-lg" Style="width: 18rem" runat="server"></asp:DropDownList>
+                                        <asp:DropDownList ID="ddlAsesor" class=" form-control form-control-lg" Style="width: 18rem" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlAsesor_SelectedIndexChanged"></asp:DropDownList>
                                     </div>
 
 
@@ -1635,6 +1656,57 @@
 
         </div>
 
+          <div class="modal" id="miModalll" tabindex="-1" style="display: none;">
+           <div class="modal-dialog">
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <h5 class="modal-title">Mensaje</h5>
+                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                   </div>
+                   <div class="modal-body">
+                       <p>Falta llenar el campo: <span id="campoFaltante"></span></p>
+                   </div>
+                   <div class="modal-footer">            
+                   </div>
+               </div>
+           </div>
+       </div>
+
+       
+<div id="miModallll" class="modal" tabindex="-1" style="display: none;">
+    <div class="modal-dialog">    
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Fecha de empaque</h5>
+                
+            </div>
+            <div class="modal-body">
+                <p>La fecha debe ser al menos 3 días laborales después de la fecha actual.</p>
+            </div>
+            <div class="modal-footer">
+              
+            </div>
+        </div>
+    </div>
+</div>
+
+  <div class="modal" id="miModalError" tabindex="-1" style="display: none;">
+           <div class="modal-dialog">
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <h5 class="modal-title">Error</h5>
+                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                   </div>
+                   <div class="modal-body">
+                       <p>La cédula del usuario no coincide. No tiene permisos para realizar esta acción.</p>
+                   </div>
+                   <div class="modal-footer">           
+                   </div>
+               </div>
+           </div>
+       </div>
+
+
     </form>
 
     <script type="text/javascript">
@@ -1673,10 +1745,6 @@
             });
         });
     </script>
-
-    
-  
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 

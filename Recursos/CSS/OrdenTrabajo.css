@@ -34,8 +34,6 @@
     cursor: not-allowed; /* Cambia el cursor al estilo "no permitido" */
 }
 
-
-
 .Observacion {
     display: flex;
 }

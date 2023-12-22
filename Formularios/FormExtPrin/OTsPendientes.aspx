@@ -16,7 +16,12 @@
 
     <link type="text/css" href="../../Recursos/CSS/FormExtPrin/OTsPendientes.css" rel="stylesheet" />
 
-    <title><i class="bi bi-gear"></i>Ordenes de Trabajo Pendientes - Departamento de Ventas</title>
+   <title>
+    Ordenes de Trabajo Pendientes - Departamento de Ventas
+    
+    <i class="bi bi-icono-aqui"></i> <!-- Reemplaza "bi-icono-aqui" con la clase del icono que desees -->
+</title>
+
 </head>
 <body>
     <form id="form1" runat="server">

@@ -87,7 +87,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Login
         public void  CedulaUsuarioLogeado()
         {
 
-            string consultaActual = "Select Cedula from tblEmpleado where  Login = @Login";
+            string consultaActual = "Select Cedula, Zona from tblEmpleado where  Login = @Login";
                                   
             string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
 
@@ -101,10 +101,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Login
                     SqlDataReader reader = command.ExecuteReader();
                     if (reader.HasRows)
                     {
+                        reader.Read(); // Mueve el lector al primer registro devuelto.
+
+                        string CedulaLogeada = reader["Cedula"].ToString();
+                        string ZonaLogeada = reader["Zona"].ToString();
+
                         reader.Close();
-                        // Data arrived.
-                        string CedulaLogeada = (string)command.ExecuteScalar();
+
                         Session["CedulaLogeada"] = CedulaLogeada;
+                        Session["ZonaLogeada"] = ZonaLogeada;
                     }
                     
                    

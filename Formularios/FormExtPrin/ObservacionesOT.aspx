@@ -46,16 +46,17 @@
                 </div>
             </nav>
          <div class="tab-content" id="myTabContent">
+
             <div class="tab-pane fade show active" id="Observaciones-content">
                 <asp:UpdatePanel runat="server" ID="UpdatePanel1" UpdateMode="Conditional">
                     <ContentTemplate>
                         <div class="container-fluid">
 
                             <div class="d-flex">
-                                <div class="col-7">
+                                <div class="col-lg-7 col-md-6 col-sm-12 col-xs-12">
                                     <div class="p-3 m-2 border" style="height: 26rem;">
                                         <div class="row">
-                                        <div class="col-12">
+                                        <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
                                             <div class="row justify-content-center">
                                                 <div class="border rounded p-1 special-border" style="height: auto; min-height: 19rem;">
                                                     <%-- DATAGRID--%>
@@ -98,13 +99,13 @@
                                         </div>
                                         </div>
                                         <div class="row mt-2">
-                                            <div class="col-9">
+                                            <div class="col-lg-9 col-md-6 col-sm-12 col-xs-12">
                                                 <div class="input-group input-group-sm gap-2">
                                                     <asp:Label ID="Label1" runat="server" CssClass="col-form-label-sm" Text="T.Obs."></asp:Label>
                                                     <asp:DropDownList ID="DropDownList1" runat="server" CssClass="form-control form-control-sm"></asp:DropDownList>
                                                 </div>
                                             </div>
-                                            <div class="col-3">
+                                            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                                                 <div class="input-group input-group-sm gap-2">
                                                     <asp:Label ID="Label2" runat="server" CssClass="col-form-label-sm" Text="F.Actividad"></asp:Label>
                                                     <asp:TextBox ID="TextBox2" runat="server" CssClass="form-control form-control-sm" type="Date"></asp:TextBox>
@@ -146,7 +147,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-5">
+                                <div class="col-lg-5 col-md-6 col-sm-12 col-xs-12">
                                     <div class="p-3 m-2 border" style="height: 52.5rem;">
 
                                         <div class="border rounded p-1 special-border" style="max-height: 40rem; overflow-x: auto;">
@@ -165,33 +166,33 @@
                                                     ORDER BY Cargo ASC, Nombre ASC"></asp:SqlDataSource>
                                         </div>
                                         <div class="container-fluid">
-                                            <div class="row col-12">
+                                            <div class="row col-lg-12 col-md-6 col-sm-12 col-xs-12">
                                                 <asp:Label ID="Label3" runat="server" Text="Receptores por defecto" CssClass="col-form-label-sm"></asp:Label>
                                             </div>
-                                            <div class="row col-12">
+                                            <div class="row col-lg-12 col-md-6 col-sm-12 col-xs-12">
                                                 <asp:TextBox ID="TextBox3" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
                                             </div>
-                                            <div class="row col-12 container">
-                                                <div class="col-4">
+                                            <div class="row col-lg-12 col-md-6 col-sm-12 col-xs-12 container">
+                                                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                                     <div class="input-group input-group-sm gap-2">
                                                         <asp:Label ID="Label4" runat="server" Text="OT" CssClass="col-form-label-sm gap-2"></asp:Label>
                                                         <asp:TextBox ID="TextBox5" runat="server" CssClass="form-control form-control-sm mt-2"></asp:TextBox>
                                                     </div>
                                                 </div>
-                                                <div class="col-4">
+                                                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                                     <div class="input-group input-group-sm gap-2">
                                                         <asp:Label ID="Label5" runat="server" Text="Pedido" CssClass="col-form-label-sm"></asp:Label>
                                                         <asp:TextBox ID="TextBox4" runat="server" CssClass="form-control form-control-sm mt-2"></asp:TextBox>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row col-12">
+                                            <div class="row col-lg-12 col-md-6 col-sm-12 col-xs-12">
                                                 <div class="input-group input-group-sm gap-2">
                                                     <asp:Label ID="Label6" runat="server" Text="Obra" CssClass="col-form-label-sm"></asp:Label>
                                                     <asp:TextBox ID="TextBox1" runat="server" CssClass="form-control form-control-sm mt-2"></asp:TextBox>
                                                 </div>
                                             </div>
-                                             <div class="row col-12 container">
+                                             <div class="row col-lg-12 col-md-6 col-sm-12 col-xs-12 container">
                                             <%--     <asp:Button ID="Button1" runat="server" Text="Grabar Observacion" CssClass="mt-2 btn-sm btn-outline-dark btn" OnClick="Button1_Click"/>--%>
                                                  </div>
                                         </div>
@@ -209,7 +210,7 @@
                     <ContentTemplate>
 
                         <div class="d-flex">
-                            <div class="col-7">
+                            <div class="col-lg-7 col-md-6 col-sm-12 col-xs-12">
                                 <div class="p-3 m-2 border" style="height: 25rem;">
                                  <h6 class="text-center">Observaciones por Leer</h6>
                                      <div class="table-responsive table-responsive-sm gap-2 border" style="height: 18rem; overflow-x: auto;">
@@ -251,13 +252,13 @@
                                      </div>
                                     <div class="container-fluid mt-2">
                                         <div class="row">
-                                            <div class="col-10">
+                                            <div class="col-lg-10 col-md-6 col-sm-12 col-xs-12">
                                          <div class="input-group input-group-sm gap-2">
                                                              <asp:Label runat="server" class="col-form-label-sm">Obra</asp:Label>
                                                             <asp:TextBox ID="TextBox7" CssClass="form-control form-control-sm" runat="server"></asp:TextBox>                        
                                                         </div>
                                              </div>
-                                            <div class="col-2">
+                                            <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
                                                 <asp:Button ID="Button1" runat="server" Text="Responder" CssClass="btn btn-sm btn-outline-dark" Enabled="false"/>
                                             </div>
                                             </div>
@@ -301,7 +302,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-5">
+                            <div class="col-lg-5 col-md-6 col-sm-12 col-xs-12">
                                 <div class="p-3 m-2 border" style="height: 25rem;">
                                     <h6>Observacion</h6>
                                     <textarea id="TextArea3" runat="server" class="form-control form-control-sm" cols="20" rows="2" style="height: 11rem;"></textarea>
@@ -326,13 +327,13 @@
                                      
                                 </div>
                                 <div class="p-3 m-2 border" style="height: 25rem;">
-                                    <div class="row col-12 container">
+                                    <div class="row col-lg-12 col-md-6 col-sm-12 col-xs-12 container">
                                         <div class="input-group input-group-sm gap-2">
                                             <asp:Label ID="Label7" runat="server" Text="Obra" CssClass="col-form-label-sm"></asp:Label>
                                             <asp:TextBox ID="TextBox6" runat="server" CssClass="form-control form-control-sm mt-2"></asp:TextBox>
                                         </div>
                                     </div>
-                                    <div class="row col-12 container mt-2">
+                                    <div class="row col-lg-12 col-md-6 col-sm-12 col-xs-12 container mt-2">
                                         <h6>Observación</h6>
                                         <textarea id="TextArea2" runat="server" class="form-control form-control-sm" style="height: 17rem;">
                                         </textarea>
@@ -349,13 +350,13 @@
                     <ContentTemplate>
                           <div class="d-flex">
                              
-                            <div class="col-10">
+                            <div class="col-lg-10 col-md-6 col-sm-12 col-xs-12">
                                 <div class="p-3 m-2 border" style="height: 15rem;">
                                     <h3>Título 1</h3>
                                     <p>Contenido del div 1</p>
                                 </div>                            
                             </div>
-                              <div class="col-2">
+                              <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
                                     <div class="p-3 m-2 border" style="height: 15rem;">
                                     <h3>Título 2</h3>
                                     <p>Contenido del div 2</p>
@@ -364,13 +365,13 @@
                         </div>
                          <div class="d-flex">
                                
-                            <div class="col-8">
+                            <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
                                 <div class="p-3 m-2 border" style="height: 20rem;">
                                     <h3>Título 1</h3>
                                     <p>Contenido del div 1</p>
                                 </div>                            
                             </div>
-                              <div class="col-4">
+                              <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                     <div class="p-3 m-2 border" style="height: 20rem;">
                                     <h3>Título 2</h3>
                                     <p>Contenido del div 2</p>
@@ -380,13 +381,13 @@
 
                           <div class="d-flex">
                                
-                            <div class="col-4">
+                            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                 <div class="p-3 m-2 border" style="height: 12rem;">
                                     <h3>Título 1</h3>
                                     <p>Contenido del div 1</p>
                                 </div>                            
                             </div>
-                              <div class="col-4">
+                              <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                     <div class="p-3 m-2 border" style="height: 12rem;">
                                     <h3>Título 2</h3>
                                     <p>Contenido del div 2</p>
@@ -403,7 +404,7 @@
                 <asp:UpdatePanel runat="server" ID="UpdatePanel4" UpdateMode="Conditional">
                     <ContentTemplate>
                             <div class="row">
-                            <div class="col-12">
+                            <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
                                 <div class="p-3 m-2 border" style="height: 40rem;">
                                     <h6 class="text-center">Actividades Pendientes</h6>
                                    <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid7" runat="server" AutoGenerateColumns="false">
@@ -430,13 +431,13 @@
 
                          <div class="d-flex">
                                
-                            <div class="col-6">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <div class="p-3 m-2 border" style="height: 12rem;">
                                     <h6>Observacion</h6>
                                     <textarea id="TextArea7" cols="20" rows="2" class="form-control" style="height: 8rem;"></textarea>
                                 </div>                            
                             </div>
-                              <div class="col-6">
+                              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <div class="p-3 m-2 border" style="height: 12rem;">
                                    <h6>Receptores</h6>
                                     <textarea id="TextArea8" cols="20" rows="2" class="form-control" style="height: 8rem;"></textarea>

@@ -38,7 +38,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 ManejarPedido();
                 EnlazarDataGrid();
                 EnlazarDataGrid4();
+
+               
             }
+
+            Session.Remove("Id_OT");
+            Session.Remove("pedido");
+
         }
 
         private void CargarDropDownList()
@@ -61,9 +67,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         private DataTable ObtenerDatosParaDropDownList()
         {
             DataTable dt = new DataTable();
-
-            // Aquí iría tu lógica para obtener los datos de la base de datos
-            // Reemplaza este bloque con tu lógica real de conexión a la base de datos y ejecución de la consulta SQL
 
             using (SqlConnection con = new SqlConnection("Data Source=172.16.30.3;Initial Catalog=BD_ISIDSQL_PRUEBA;Persist Security Info=True;User ID=pcadmin;Password=password"))
             {
