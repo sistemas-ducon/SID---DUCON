@@ -77,6 +77,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     Nit.CssClass = "bi bf  btn btn-outline-secondary";
                     btnCotizacion.Enabled = false;
                     btnCotizacion.CssClass = "bi bf  btn btn-outline-secondary";
+                    tbPedDepen.DataBind();
+                    tbPedDepen.Items.Insert(0, new ListItem(" "));
+                    cboPedidoBase.DataBind();
+                    cboPedidoBase.Items.Insert(0, new ListItem(" "));
+                    DtaCboTipoAprobacion.DataBind();
+                    DtaCboTipoAprobacion.Items.Insert(0, new ListItem(" "));
+                    dtacboTipoPedido.DataBind();
+                    dtacboTipoPedido.Items.Insert(0, new ListItem(" "));
 
                     // Validacion para Cargar el Plano  Con variables de Session
 
@@ -98,8 +106,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Este bloque consulta la OT con variables de Session de afuera del formulario 
                         else if (Session["Id_OT2"] != null && Session["pedido2"] != null)
                         {
-                    dtacboTipoPedido.DataBind();
-                    dtacboTipoPedido.Items.Insert(0, new ListItem(" "));
+                   
 
                             Cargar_OTs2();
                             List<int> numeros = ObtenerNumerosDesdeLaBaseDeDatos(Session["Id_OT2"].ToString());
@@ -118,17 +125,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         }
 
                     }
-                    tbPedDepen.DataBind();
-                    tbPedDepen.Items.Insert(0, new ListItem(" "));
 
                     //Cargando los datos del nit 
                     CargarVariablesDeSesionContable();
-                    cboPedidoBase.DataBind();
-                    cboPedidoBase.Items.Insert(0, new ListItem(" "));
-
-                    DtaCboTipoAprobacion.DataBind();
-                    DtaCboTipoAprobacion.Items.Insert(0, new ListItem(" "));
-
 
 
                 }
@@ -1176,7 +1175,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             EnableButtons();
 
                             // Obtener datos de cotización y asignarlos a controles
-                            AssignCotizacionData(id, pedido, txtCotizacion.Text, sqlconectar);
+                            AssignCotizacionData(id, pedido, txtCotizacion.Text);
 
 
                         }
@@ -1920,7 +1919,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 }
                                 if (!reader.IsDBNull(reader.GetOrdinal("cocTelefono")))
                                 {
-                                   txtTelefono.Text = reader["cocTelefono"].ToString();
+                                    txtTelefono.Text = reader["cocTelefono"].ToString();
 
                                 }
 
@@ -1931,6 +1930,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         }
                     }
                 }
+            }
+        }
 
         protected void BtnGrabar_Click(object sender, EventArgs e)
         {
@@ -2539,4 +2540,4 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
     }
 
-}
+
