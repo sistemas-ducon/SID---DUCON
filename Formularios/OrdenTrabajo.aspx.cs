@@ -1391,11 +1391,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected bool ValidarPermisoCompartido(string id)
         {
-            string consultaActual = "SELECT\r\nCompartidoCon\r\nFROM tblClienteObra\r\nINNER JOIN tblClienteObraContacto ON tblClienteObra.Nit = tblClienteObraContacto.cocNIT \r\nWHERE tblClienteObraContacto.IdContacto = @IDContacto_Cliente";
+            string consultaActual = "SELECT CompartidoCon FROM tblClienteObra INNER JOIN tblClienteObraContacto ON tblClienteObra.Nit = tblClienteObraContacto.cocNIT WHERE tblClienteObraContacto.IdContacto = @IDContacto_Cliente";
             string cadenaActual = ""; // Aquí almacenaremos la cadena actual de nombres
 
-
             string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -1403,21 +1403,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 using (SqlCommand command = new SqlCommand(consultaActual, connection))
                 {
                     command.Parameters.AddWithValue("@IDContacto_Cliente", id);
-                    cadenaActual = (string)command.ExecuteScalar();
+
+                    // Ejecutar la consulta y manejar el resultado
+                    object result = command.ExecuteScalar();
+
+                    // Verificar si el resultado es DBNull.Value o null
+                    if (result != null && result != DBNull.Value)
+                    {
+                        cadenaActual = result.ToString();
+                    }
                 }
             }
 
-            if (cadenaActual.Contains(Session["usuariologueado"].ToString()))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-
-
+            // Verificar si la cadenaActual contiene el usuario logueado
+            return cadenaActual.Contains(Session["usuariologueado"].ToString());
         }
+
 
         private bool ValidarPermisoInfoContable(SqlDataReader Datos)
         {
