@@ -14,11 +14,11 @@
     <script>
         function mostrarDivDocumentacion() {
             var divDocumentacion = document.getElementById('Documentacion');
-           
+
 
             // Si el div está visible, lo oculta; de lo contrario, lo muestra
             divDocumentacion.style.display = (divDocumentacion.style.display === 'block') ? 'none' : 'block';
-         
+
         }
     </script>
 
@@ -53,7 +53,7 @@
         </nav>
 
         <div class="tab-content">
-              
+
             <div class="tab-pane fade show active" id="OTs-Content">
                 <asp:UpdatePanel ID="PanelOt" runat="server" UpdateMode="Conditional" DefaultButton="btnSubmit">
                     <ContentTemplate>
@@ -156,9 +156,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
 
                             <!--Nav iconos OTs-->
                             <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
@@ -437,7 +434,6 @@
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="T.Ped" runat="server" ID="lblTped"></asp:Label>
                                         <asp:DropDownList ID="dtacboTipoPedido" runat="server" class="form-control" DataSourceID="TiposDePedidos" DataTextField="Descripcion_TipoPedido" DataValueField="Id_TipoPedido">
-                                           
                                         </asp:DropDownList>
                                         <asp:SqlDataSource ID="TiposDePedidos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT Descripcion_TipoPedido, Id_TipoPedido, Activo FROM tblTipoPedido
                                                                                                                                                                             ORDER BY Descripcion_TipoPedido
@@ -449,11 +445,7 @@
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Ped.Base" runat="server" ID="lblPedBase"></asp:Label>
                                         <asp:DropDownList ID="cboPedidoBase" runat="server" class="form-control" DataSourceID="PedidoBase" DataTextField="PedidoBase" DataValueField="PedidoBase"></asp:DropDownList>
-                                        <asp:SqlDataSource ID="PedidoBase" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="
-                                                                                                                                                                        SELECT DISTINCT PedidoBase 
-                                                                                                                                                                        FROM tblOT 
-                                                                                                                                                                        WHERE (PedidoBase BETWEEN 1 AND 1000) AND PedidoBase <> 0
-                                                                                                                                                                        ORDER BY PedidoBase"></asp:SqlDataSource>
+                                        <asp:SqlDataSource ID="PedidoBase" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT DISTINCT PedidoBase FROM tblOT WHERE (PedidoBase BETWEEN 1 AND 1000) AND PedidoBase <> 0 ORDER BY PedidoBase"></asp:SqlDataSource>
                                     </div>
                                 </div>
 
@@ -477,7 +469,7 @@
                                 <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Aprob" runat="server" ID="lblAprob"></asp:Label>
-                                        
+
                                         <asp:DropDownList ID="DtaCboTipoAprobacion" runat="server" class="form-control" DataSourceID="Aprob" DataTextField="TipoAprobacion" DataValueField="IdTipoAprobacion"></asp:DropDownList>
                                         <asp:SqlDataSource ID="Aprob" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="
                                                                                                                                                                     SELECT * FROM tblTipoAprobacion ORDER BY TipoAprobacion"></asp:SqlDataSource>
@@ -546,12 +538,9 @@
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Ciudad" runat="server" ID="lblCiudad"></asp:Label>
                                         <asp:DropDownList class="form-control" ID="ddlCiudad" runat="server" DataTextField="NombreCiudad" DataValueField="NombreCiudad" DataSourceID="CargarCiudad" OnDataBound="ddlCiudad_DataBound"></asp:DropDownList>
-                                        <asp:SqlDataSource runat="server" ID="CargarCiudad" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT 
-                                            CONCAT(tblDepartamentoPais.CodigoDepartamento ,
-                                            tblCiudad.CodigoCiudad)   AS CodCompleto,
-                                            tblCiudad.NombreCiudad+' - '+tblDepartamentoPais.NombreDepartamento As NombreCiudad
-                                            FROM tblDepartamentoPais 
-                                            INNER JOIN tblCiudad
+                                        <asp:SqlDataSource runat="server" ID="CargarCiudad" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT  CONCAT(tblDepartamentoPais.CodigoDepartamento ,tblCiudad.CodigoCiudad)
+                                            AS CodCompleto,tblCiudad.NombreCiudad+' - '+tblDepartamentoPais.NombreDepartamento As NombreCiudad 
+                                            FROM tblDepartamentoPais  INNER JOIN tblCiudad             
                                             ON tblDepartamentoPais.Id_Departamento_Auto = tblCiudad.Id_Departamento 
                                             ORDER BY CONCAT(tblCiudad.NombreCiudad , '-' , tblDepartamentoPais.NombreDepartamento)"></asp:SqlDataSource>
 
@@ -797,7 +786,7 @@
                                                 <asp:ListItem Value=""></asp:ListItem>
                                                 <asp:ListItem Value="Bogotá">Bogotá</asp:ListItem>
                                                 <asp:ListItem Value="Medellín">Medellín</asp:ListItem>
-                                                  <asp:ListItem Value="BOGOTÁ">Bogotá</asp:ListItem>
+                                                <asp:ListItem Value="BOGOTÁ">Bogotá</asp:ListItem>
                                                 <asp:ListItem Value="MEDELLÍN">Medellín</asp:ListItem>
                                             </asp:DropDownList>
                                         </div>
@@ -830,6 +819,7 @@
                         <h5 class="p-0 m-0 mb-1 text-center">Informacion Contable </h5>
 
                         <div class=" Info-Contable">
+
                             <div class="Datos-Cliente1">
 
                                 <div class="row">
@@ -975,8 +965,8 @@
                                 <div class="superior">
 
                                     <div class="Info2">
-                                        <asp:Button ID="btnCotizacion" runat="server" Text="Ver cotización" class="bi bf btn btn-secondary" />
-                                        <asp:TextBox type="text" class="form-control" runat="server" ID="txtCotizacion"></asp:TextBox>
+                                        <asp:Button ID="btnCotizacion" runat="server" Text="Ver cotización" class="bi bf btn btn-secondary" OnClick="btnCotizacion_Click" OnClientClick="return validarCotizacion();" />
+                                        <asp:TextBox type="text" class="form-control" runat="server" ID="txtCotizacion" OnTextChanged="txtCotizacion_TextChanged" AutoPostBack="true"></asp:TextBox>
                                     </div>
 
                                     <div class="Info2">
@@ -1035,7 +1025,7 @@
                                             <div class="border rounded p-2 m-2">
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <div class="table-responsive mb-1" style="max-height: 11rem; overflow-x: auto;">
+                                                        <div class="table-responsive mb-1" style="max-height: 10rem; overflow-x: auto;">
                                                             <h5 class="datagrid-header text-center">Contable</h5>
                                                             <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGrid" runat="server" DataSourceID="InfoContable">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
@@ -1074,7 +1064,7 @@
                                     <div class="derecha">
                                         <div class="derecha1">
                                             <label for="">Tipo de Negociación</label>
-                                            <textarea class="form-control form-control-sm" id="TextTNegociacion" runat="server" cols="25" rows="7"></textarea>
+                                            <textarea class="form-control form-control-sm" id="TextTNegociacion" runat="server" cols="25" rows="6"></textarea>
                                         </div>
                                     </div>
 
@@ -1084,14 +1074,15 @@
 
                             <div class="Datos-Cliente3">
 
-                                <div class="Info1">
-                                    <asp:Button ID="btnComision1" runat="server" Text="D. Comision" class="bi bf" disabled="true" />
-                                    <asp:TextBox type="text" class="form-control text-end  " runat="server" ID="txtComision"></asp:TextBox>
-                                </div>
+
 
                                 <div class="Info1">
                                     <asp:Button ID="btnDiseño" runat="server" Text="Diseño" class="bi bf " disabled="true" />
                                     <asp:TextBox type="text" class="form-control text-end " runat="server" ID="txtDiseño"></asp:TextBox>
+                                </div>
+                                <div class="Info1">
+                                    <asp:Button ID="btnComision1" runat="server" Text="D. Comision" class="bi bf" disabled="true" />
+                                    <asp:TextBox type="text" class="form-control text-end  " runat="server" ID="txtComision"></asp:TextBox>
                                 </div>
 
                                 <div class="Info1">
@@ -1130,6 +1121,10 @@
                         </div>
 
                     </ContentTemplate>
+
+                    <Triggers>
+                        <asp:PostBackTrigger ControlID="btnCotizacion" />
+                    </Triggers>
                 </asp:UpdatePanel>
             </div>
 
@@ -1166,7 +1161,7 @@
                                                   <i class="bi bi-bar-chart-line"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server"  title="Leer Archivo Despiece Acad" ID="BtnLeeArcDesAca">
+                                                <asp:LinkButton runat="server" title="Leer Archivo Despiece Acad" ID="BtnLeeArcDesAca">
                                                  <i class="bi bi-border-inner"></i>
                                                 </asp:LinkButton>
 
@@ -1236,52 +1231,117 @@
                                 <div class="container-fluid descripcion-plano">
 
                                     <div class="row pb-2">
-                                        <div class="input-group input-group-sm gap-2 ">
-                                            <asp:Button ID="btnPlano" type="button" Text="Plano" class="btn btn-outline-secondary" runat="server" OnClick="Redireccion_Plano1"></asp:Button>
-                                            <asp:TextBox ID="txtPlano" type="text" class="form-control  input" runat="server"></asp:TextBox>
+                                        <div class="col-3">
+                                            <div class="input-group input-group-sm gap-2 ">
+                                                <asp:Button ID="btnPlano" type="button" Text="Plano" class="btn btn-outline-secondary" runat="server" OnClick="Redireccion_Plano1"></asp:Button>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col-9">
+                                            <div class="input-group input-group-sm gap-2 ">
+                                                <asp:TextBox ID="txtPlano" type="text" class="form-control  input" runat="server"></asp:TextBox>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div class="row pb-2">
-                                        <div class="input-group input-group-sm gap-2 ">
-                                            <asp:Label ID="lblCliente" class="form-label" Text="Cliente" runat="server"></asp:Label>
-                                            <asp:TextBox ID="txtCliente" type="text" class="form-control input" runat="server"></asp:TextBox>
+
+                                        <div class="col-3">
+                                            <div class="input-group input-group-sm gap-2 ">
+                                                <asp:Label ID="lblCliente" class="form-label" Text="Cliente" runat="server"></asp:Label>
+
+                                            </div>
                                         </div>
+
+                                        <div class="col-9">
+                                            <div class="input-group input-group-sm gap-2 ">
+                                                <asp:TextBox ID="txtCliente" type="text" class="form-control input" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+
                                     </div>
 
                                     <div class="row pb-2">
-                                        <div class="input-group input-group-sm gap-2 ">
-                                            <asp:Label ID="lblArea" class="form-label" Text="Área" runat="server"></asp:Label>
-                                            <asp:TextBox ID="txtArea" type="text" class="form-control input" runat="server"></asp:TextBox>
+
+                                        <div class="col-3">
+                                            <div class="input-group input-group-sm gap-2 ">
+                                                <asp:Label ID="lblArea" class="form-label" Text="Área" runat="server"></asp:Label>
+
+                                            </div>
                                         </div>
+
+                                        <div class="col-9">
+                                            <div class="input-group input-group-sm gap-2 ">
+                                                <asp:TextBox ID="txtArea" type="text" class="form-control input" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+
                                     </div>
 
                                     <div class="row pb-2">
-                                        <div class="input-group input-group-sm gap-2 ">
-                                            <asp:Label ID="Label2" class="form-label" Text="Contacto" runat="server"> </asp:Label>
-                                            <asp:TextBox ID="txtContactoPlano" type="text" class="form-control input" runat="server"></asp:TextBox>
+
+                                        <div class="col-3">
+                                            <div class="input-group input-group-sm gap-2 ">
+                                                <asp:Label ID="Label2" class="form-label" Text="Contacto" runat="server"> </asp:Label>
+
+                                            </div>
                                         </div>
+
+                                        <div class="col-9">
+                                            <div class="input-group input-group-sm gap-2 ">
+                                                <asp:TextBox ID="txtContactoPlano" type="text" class="form-control input" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+
                                     </div>
 
                                     <div class="row pb-2">
-                                        <div class="input-group input-group-sm gap-2 ">
-                                            <asp:Label ID="lblAsesor" class="form-label" Text="Asesor" runat="server"></asp:Label>
-                                            <asp:TextBox ID="txtAsesorPlano" type="text" class="form-control input" runat="server"></asp:TextBox>
+                                        <div class="col-3">
+                                            <div class="input-group input-group-sm gap-2 ">
+                                                <asp:Label ID="lblAsesor" class="form-label" Text="Asesor" runat="server"></asp:Label>
+
+                                            </div>
                                         </div>
+
+                                        <div class="col-9">
+                                            <div class="input-group input-group-sm gap-2 ">
+                                                <asp:TextBox ID="txtAsesorPlano" type="text" class="form-control input" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+
                                     </div>
 
                                     <div class="row pb-2">
-                                        <div class="input-group input-group-sm gap-2 ">
-                                            <asp:Label ID="lblDibuja" class="form-label" Text="Dibuja" runat="server"></asp:Label>
-                                            <asp:TextBox ID="txtDibuja" type="text" class="form-control input" runat="server"></asp:TextBox>
+                                        <div class="col-3">
+                                            <div class="input-group input-group-sm gap-2 ">
+                                                <asp:Label ID="lblDibuja" class="form-label" Text="Dibuja" runat="server"></asp:Label>
+
+                                            </div>
                                         </div>
+
+                                        <div class="col-9">
+                                            <div class="input-group input-group-sm gap-2 ">
+                                                <asp:TextBox ID="txtDibuja" type="text" class="form-control input" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+
                                     </div>
 
                                     <div class="row pb-2">
-                                        <div class="input-group input-group-sm gap-2 ">
-                                            <asp:Label ID="Label3" class="form-label" Text="Bolsa" runat="server"></asp:Label>
-                                            <asp:TextBox ID="txtBolsa" type="text" class="form-control input " runat="server"></asp:TextBox>
+                                        <div class="col-3">
+                                            <div class="input-group input-group-sm gap-2 ">
+                                                <asp:Label ID="Label3" class="form-label" Text="Bolsa" runat="server"></asp:Label>
+
+                                            </div>
                                         </div>
+
+                                        <div class="col-9">
+                                            <div class="input-group input-group-sm gap-2 ">
+                                                <asp:TextBox ID="txtBolsa" type="text" class="form-control input " runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+
                                     </div>
 
                                     <div class="row pb-2">
@@ -1494,7 +1554,7 @@
 
                                             <div class="contenedor-icono">
 
-                                                 <asp:LinkButton runat="server" title="Nuevo Objeto" ID="BtnNueObj">
+                                                <asp:LinkButton runat="server" title="Nuevo Objeto" ID="BtnNueObj">
                                                     <i class="bi bi-file-earmark"></i>
                                                 </asp:LinkButton>
 
@@ -1534,7 +1594,7 @@
                                                     <i class="bi bi-disc"></i>
                                                 </asp:LinkButton>
 
-                                                  <asp:LinkButton runat="server" title="Chequear" ID="BtnChe">
+                                                <asp:LinkButton runat="server" title="Chequear" ID="BtnChe">
                                                     <i class="bi bi-check-lg"></i>
                                                 </asp:LinkButton>
 
@@ -1764,7 +1824,7 @@
                                             <div class="contenedor-icono">
 
 
-                                                 <asp:LinkButton runat="server" title="" ID="LinkButton1">
+                                                <asp:LinkButton runat="server" title="" ID="LinkButton1">
                                                     <i class="bi bi-file-earmark"></i>
                                                 </asp:LinkButton>
 
@@ -1792,13 +1852,13 @@
                                                    <i class="bi bi-files"></i>
                                                 </asp:LinkButton>
 
-                                                  <asp:LinkButton runat="server" title="" ID="LinkButton8">
+                                                <asp:LinkButton runat="server" title="" ID="LinkButton8">
                                                   <i class="bi bi-check-lg"></i>
                                                 </asp:LinkButton>
-                                 
+
                                             </div>
                                     </div>
-                            </nav>                                  
+                            </nav>
                         </div>
                     </ContentTemplate>
                 </asp:UpdatePanel>
@@ -1822,7 +1882,7 @@
 
                                             <div class="contenedor-icono">
 
-                                                  <asp:LinkButton runat="server" title="Nuevo Insumo" ID="LinkButton9">
+                                                <asp:LinkButton runat="server" title="Nuevo Insumo" ID="LinkButton9">
                                                    <i class="bi bi-file-earmark"></i>
                                                 </asp:LinkButton>
 
@@ -1848,7 +1908,7 @@
 
                                                 <asp:LinkButton runat="server" title="Actualizar" ID="LinkButton15">
                                                    <i class="bi bi-disc"></i>
-                                                </asp:LinkButton>                                     
+                                                </asp:LinkButton>
 
                                             </div>
                                         </ul>
@@ -1864,55 +1924,53 @@
 
         </div>
 
-          <div class="modal" id="miModalll" tabindex="-1" style="display: none;">
-           <div class="modal-dialog">
-               <div class="modal-content">
-                   <div class="modal-header">
-                       <h5 class="modal-title">Mensaje</h5>
-                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                   </div>
-                   <div class="modal-body">
-                       <p>Falta llenar el campo: <span id="campoFaltante"></span></p>
-                   </div>
-                   <div class="modal-footer">            
-                   </div>
-               </div>
-           </div>
-       </div>
-
-       
-<div id="miModallll" class="modal" tabindex="-1" style="display: none;">
-    <div class="modal-dialog">    
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Fecha de empaque</h5>
-                
-            </div>
-            <div class="modal-body">
-                <p>La fecha debe ser al menos 3 días laborales después de la fecha actual.</p>
-            </div>
-            <div class="modal-footer">
-              
+        <div class="modal" id="miModalll" tabindex="-1" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Mensaje</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Falta llenar el campo: <span id="campoFaltante"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
-  <div class="modal" id="miModalError" tabindex="-1" style="display: none;">
-           <div class="modal-dialog">
-               <div class="modal-content">
-                   <div class="modal-header">
-                       <h5 class="modal-title">Error</h5>
-                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                   </div>
-                   <div class="modal-body">
-                       <p>La cédula del usuario no coincide. No tiene permisos para realizar esta acción.</p>
-                   </div>
-                   <div class="modal-footer">           
-                   </div>
-               </div>
-           </div>
-       </div>
+        <div id="miModallll" class="modal" tabindex="-1" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Fecha de empaque</h5>
+
+                    </div>
+                    <div class="modal-body">
+                        <p>La fecha debe ser al menos 3 días laborales después de la fecha actual.</p>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="miModalError" tabindex="-1" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Error</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>La cédula del usuario no coincide. No tiene permisos para realizar esta acción.</p>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
     </form>
@@ -1981,6 +2039,17 @@
         }
     </script>
 
+    <script type="text/javascript">
+        function validarCotizacion() {
+            var txtCotizacion = document.getElementById('<%= txtCotizacion.ClientID %>');
+
+            if (txtCotizacion.value.toUpperCase() === "NO TIENE") {
+                alert('Este consecutivo de pedido no tiene cotización.');
+                return false;
+            }
+            return true;
+        }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
