@@ -5,23 +5,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="../Recursos/CSS/Inicio.css" rel="stylesheet" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>SID</title>
 </head>
 <body>
     <form id="Form1" runat="server">
-
+         <asp:ScriptManager runat="server" />
 
         <header style="background-color: #CCCCCC">
 
             <img src="https://www.ducon.com.co/images/logo_ducon.png" style="margin: 2rem" />
 
         </header>
-
-
-
-
+         <asp:UpdatePanel ID="PanelModulo" runat="server">
+                    <ContentTemplate>
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light shadow p-3 mb-5 bg-body form-control-sm">
             <div class="container-fluid rounded-3" style="background-color: #081a2c">  
@@ -135,20 +135,22 @@
 
                                 <li class="nav-item dropend">
                                     <a class="nav-link dropdown-toggle form-control-sm" href="#" id="Ventas" role="button" data-bs-toggle="dropdown" aria-expanded="false">Ventas
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item form-control-sm" href="ventas/Gestion_Comercial.aspx">Gestión comecial</a></li>
-                                        <li><a class="dropdown-item form-control-sm" href="ventas/Licitaciones.aspx">Licitaciones</a></li>
-                                        <li><a class="dropdown-item form-control-sm" href="OrdenTrabajo.aspx">Ordenes de trabajo</a></li>
-                                        <li><a class="dropdown-item form-control-sm" href="ventas/Diseño_Venta.aspx">Programar diseño</a></li>
-                                        <li><a class="dropdown-item form-control-sm" href="ventas/Render_Venta.aspx">Programar render</a></li>
-                                        <li><a class="dropdown-item form-control-sm" href="ventas/Consulta_Cotizacion.aspx">Seguimiento cotizaciones</a></li>
-                                        <li><a class="dropdown-item form-control-sm" href="ventas/Solicitud_Especial.aspx">Solicitud producto especial</a></li>
-                                        <li><a class="dropdown-item form-control-sm" href="ventas/Visita_Asesores.aspx">Visitas asesores</a></li>
+                                    </a>                    
+    
+                                    <ul class="dropdown-menu">                    
+                                        <li><asp:Button ID="Button1" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermisos" CommandName="GestionComercial" Text="Gestion Comercial"/></li>  
+                                        <li><asp:Button ID="Button2" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermisos" CommandName="Licitaciones" Text="Licitaciones"/></li>
+                                        <li><asp:Button ID="lbVentas" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermisos" CommandName="OrdendeTrabajo" Text="Ordenes de Trabajo"/></li>
+                                        <li><asp:Button ID="Button3" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermisos" CommandName="ProgramarDiseno" Text="Programar Diseño"/></li>
+                                        <li><asp:Button ID="Button4" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermisos" CommandName="ProgramarRender" Text="Programar Render"/></li>
+                                        <li><asp:Button ID="Button5" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermisos" CommandName="SeguimientoCotizacion" Text="Seguimiento Cotizacion"/></li>
+                                        <li><asp:Button ID="Button6" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermisos" CommandName="SolicitudProductoEspecial" Text="Solicitud producto especial"/></li>
+                                        <li><asp:Button ID="Button7" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermisos" CommandName="VisitaAsesores" Text="Visita Asesores"/></li> 
                                     </ul>
                                 </li>
                             </ul>
                         </li>
+
 
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle form-control-sm" href="#" id="Personas" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #FFFFFF">Persona
@@ -170,6 +172,8 @@
                             </ul>
                         </li>
                     </ul>
+            
+
                     <hr class="text-white-50" />
                     <asp:Label ID="lblBienvenida" runat="server" ForeColor="White"></asp:Label>
                     <asp:Button class="btn btn-light" type="button" ID="BtnCerrar" runat="server" Text="Cerrar" OnClick="BtnCerrar_Click" BackColor="#081a2c" BorderColor="#081a2c" ForeColor="White" />
@@ -179,20 +183,29 @@
                 </div>
             </div>
         </nav>
+
+         <div class="modal" id="miModalError">
+           <div class="modal-dialog">
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <h5 class="modal-title">Error</h5>
+                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                   </div>
+                   <div class="modal-body">
+                       <p>No tiene permiso para acceder a este modulo</p>
+                   </div>
+                   <div class="modal-footer">           
+                   </div>
+               </div>
+           </div>
+       </div>
+
+                       </ContentTemplate>
+             </asp:UpdatePanel>
+
     </form>
-    <script>
-        // Evitar el cierre del menú al hacer clic dentro del menú
-        document.addEventListener("DOMContentLoaded", function () {
-            var dropdownMenus = document.querySelectorAll('.dropdown-menu');
 
-            dropdownMenus.forEach(function (menu) {
-                menu.addEventListener('click', function (event) {
-                    event.stopPropagation(); // Evitar la propagación del evento de clic
-                });
-            });
-        });
 
-    </script>
 
 
   

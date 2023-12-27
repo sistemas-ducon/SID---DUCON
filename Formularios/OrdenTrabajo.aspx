@@ -10,11 +10,11 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="../../Recursos/CSS/OrdenTrabajo.css" />
     <title>Ordenes de Trabajo</title>
+     <link rel="icon" href="https://ibb.co/grQLPCw" type="image/x-icon" />
 
     <script>
         function mostrarDivDocumentacion() {
-            var divDocumentacion = document.getElementById('Documentacion');
-           
+            var divDocumentacion = document.getElementById('Documentacion');  
 
             // Si el div está visible, lo oculta; de lo contrario, lo muestra
             divDocumentacion.style.display = (divDocumentacion.style.display === 'block') ? 'none' : 'block';
@@ -177,7 +177,7 @@
                                                       <i class="bi bi-file-earmark"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Copiar Información en una Nueva OT" ID="CopiarOt">
+                                                <asp:LinkButton runat="server" title="Copiar Información en una Nueva OT" ID="CopiarOt" OnClick="BtnCopInfNueOT_Click">
                                                    <i class="bi bi-files"></i>
                                                 </asp:LinkButton>
 
@@ -963,7 +963,7 @@
                                     <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
 
                                         <div class=" input-group input-group-sm">
-                                            <asp:TextBox type="" class="form-control" runat="server" ID="txtMensaje" Visible="false"></asp:TextBox>
+                                            <asp:TextBox type="" class="form-control fw-bold text-white rojo" runat="server" ID="txtMensaje" Visible="false"></asp:TextBox>
                                         </div>
                                     </div>
                                 </div>
@@ -1880,8 +1880,24 @@
            </div>
        </div>
 
+           <div class="modal" id="CarteraVencida" tabindex="-1" style="display: none;">
+           <div class="modal-dialog">
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <h5 class="modal-title">CLIENTE CON CARTERA VENCIDA</h5>
+                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                   </div>
+                   <div class="modal-body">
+                       <p><span id="CarteraVencida2"></span></p>
+                   </div>
+                   <div class="modal-footer">            
+                   </div>
+               </div>
+           </div>
+       </div>
+
        
-<div id="miModallll" class="modal" tabindex="-1" style="display: none;">
+          <div id="miModallll" class="modal" tabindex="-1" style="display: none;">
     <div class="modal-dialog">    
         <div class="modal-content">
             <div class="modal-header">
@@ -1898,7 +1914,7 @@
     </div>
 </div>
 
-  <div class="modal" id="miModalError" tabindex="-1" style="display: none;">
+          <div class="modal" id="miModalError" tabindex="-1" style="display: none;">
            <div class="modal-dialog">
                <div class="modal-content">
                    <div class="modal-header">
@@ -1914,6 +1930,40 @@
            </div>
        </div>
 
+
+          <div id="CopiarAcabados" class="modal" tabindex="-1" style="display: none;">
+    <div class="modal-dialog">    
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Copiar Acabados</h5>
+                
+            </div>
+            <div class="modal-body">
+                <p>Desea copiar los acabados de la OT:</p>
+            </div>
+            <div class="modal-footer">
+              <asp:Button runat="server" ID="BtnSi" Text="Si" CssClass="btn shadow" OnClick="BtnSi_Click"/>
+                 <asp:Button runat="server" ID="BtnNo" Text="No" CssClass="btn shadow"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+   <div id="ErrorPermiso" class="modal" tabindex="-1" style="display: none;">
+    <div class="modal-dialog">    
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Error</h5>
+                
+            </div>
+            <div class="modal-body">
+                <p>No tiene permisos para realizar esta accion</p>
+            </div>
+            <div class="modal-footer">        
+            </div>
+        </div>
+    </div>
+</div>
 
     </form>
 
