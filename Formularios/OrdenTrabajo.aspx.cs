@@ -2,16 +2,19 @@
 using DocumentFormat.OpenXml.Office.Word;
 using DocumentFormat.OpenXml.Office2010.Drawing;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Office2013.Drawing.Chart;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.ServiceModel.Channels;
 using System.Text;
 using System.Web;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Windows.Media.TextFormatting;
@@ -36,7 +39,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void Page_Load(object sender, EventArgs e)
         {
-           
+
 
             if (Session["usuariologueado"] != null)
             {
@@ -67,7 +70,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     BotonesPorDefectoInsumos(sender, e);
 
                     listaTextBoxes = new List<TextBox>
-                {
+                         {
                     tbObra,tbDir,tbContac,tbEmail,tbRecibe,tbTel,tbCel,tbPais,tbHTotal,tbVenta,dtpFechaEntregaDibujoDespiece,dtpFechaEntregaProduccion,dtpEmpaque,dtpRealEmpaque,tbSupervisor,
                     tbBolsa,tbValorPedido,txtNit,txtNombreEmp,txtcontacto,txtMail,txtDireccion,txtMunicipio,txtTelefono,txtCotizacion,txtValorSugerido,txtVcsd,txtVccd,txtOrdenCompra,txtAsesor,txtComision,
                     txtDiseño,txtSaldo,txtVenta,txtDcto,txtDctoValor,txtVtte,txtVvia,txtGtotal
@@ -75,7 +78,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         };
 
                     listaDropDownLists = new List<DropDownList>
-                {
+                         {
                    ddlNumbers,ddlZona,dtacboTipoPedido,cboPedidoBase,DtaCboTipoAprobacion,ddlFabrica1,ddlInstala,ddlAsesor,ddlCiudad
 
                         };
@@ -120,7 +123,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Este bloque consulta la OT con variables de Session de afuera del formulario 
                         else if (Session["Id_OT2"] != null && Session["pedido2"] != null)
                         {
-                   
+
 
                             Cargar_OTs2();
                             List<int> numeros = ObtenerNumerosDesdeLaBaseDeDatos(Session["Id_OT2"].ToString());
@@ -140,10 +143,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     }
 
-                   
-
+                    //Cargando los datos del nit 
+                    CargarVariablesDeSesionContable();
 
                 }
+                
 
             }
             else
@@ -151,26 +155,26 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Response.Redirect("Login.aspx");
             }
 
-           
+
 
 
         }
 
         private void ValorPorDefectoTexArea()
         {
-            txObs1.Value = "Tipo de Sujeción: \n\n" + 
-                                 "Perfil Refuerzo Superior: \n\n" + 
-                                 "Tipo y Color de Sillas: \n\n" + 
-                                 "Observaciones Generales: \n\n" + 
-                                 "\nObservación para Producción: \n\n" + 
-                                 "\nObservación para Compras: \n\n" + 
+            txObs1.Value = "Tipo de Sujeción: \n\n" +
+                                 "Perfil Refuerzo Superior: \n\n" +
+                                 "Tipo y Color de Sillas: \n\n" +
+                                 "Observaciones Generales: \n\n" +
+                                 "\nObservación para Producción: \n\n" +
+                                 "\nObservación para Compras: \n\n" +
                                  "\nObservación para Despacho: ";
-            txObs2.Value = "Tipo de Sujeción: \n\n" + 
-                                 "Perfil Refuerzo Superior: \n\n" + 
-                                 "Tipo y Color de Sillas: \n\n" + 
-                                 "Observaciones Generales: \n\n" + 
-                                 "\nObservación para Producción: \n\n" + 
-                                 "\nObservación para Compras: \n\n" + 
+            txObs2.Value = "Tipo de Sujeción: \n\n" +
+                                 "Perfil Refuerzo Superior: \n\n" +
+                                 "Tipo y Color de Sillas: \n\n" +
+                                 "Observaciones Generales: \n\n" +
+                                 "\nObservación para Producción: \n\n" +
+                                 "\nObservación para Compras: \n\n" +
                                  "\nObservación para Despacho: ";
         }
 
@@ -284,7 +288,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 tbOT.CssClass = "form-control";
 
                 tbPedDepen.Enabled = true;
-                tbPedDepen.CssClass = "form-control";      
+                tbPedDepen.CssClass = "form-control";
 
                 DeshabilitarTextBoxes(listaTextBoxes);
 
@@ -310,7 +314,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Nit.CssClass = "btn btn-sm shadow button-disabled";
             }
 
-          
+
 
 
             Session.Remove("BtnModificarEjecutado");
@@ -387,7 +391,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 "dtpFechaEntregaProduccion", "dtpEmpaque", "dtpRealEmpaque", "tbSupervisor",
                 "ddlFabrica1", "ddlInstala", "ObservacionCont", "txtCotizacion", "txtOrdenCompra",
                 "txtAsesor", "TextTNegociacion", "tbBolsa", "ddlAsesor", "txtDcto", "txtVtte",
-                "txtVvia", "txtVenta", "tbValorPedido"
+                "txtVvia", "txtVenta", "tbValorPedido","txtNit","txtNombreEmp","txtcontacto",
+                "txtMail","txtDireccion","txtMunicipio","txtTelefono","txtValorSugerido","txtVcsd",
+                "txtVccd","txtDiseño","txtComision","txtSaldo","txtVenta","txtDcto","txtDctoValor",
+                "txtVtte","txtVvia","txtGtotal"
                 };
 
                 foreach (string elementId in elementIds)
@@ -426,14 +433,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 btnNuevoPedido.CssClass = "btn btn-sm shadow button-disabled fw-bold";
 
                 tbOT.Enabled = false;
-                tbOT.CssClass = "form-control";        
+                tbOT.CssClass = "form-control";
 
                 ddlNumbers.Enabled = false;
                 ddlNumbers.CssClass = "form-control";
 
                 cboPedidoBase.Enabled = false;
 
-                dtacboTipoPedido.Enabled = true;            
+                dtacboTipoPedido.Enabled = true;
 
                 ddlAsesor.Enabled = true;
                 ddlAsesor.CssClass = "form-control";
@@ -452,7 +459,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 dtpEmpaque.Text = fechaMas10Dias.ToString("yyyy-MM-dd");
                 dtpRealEmpaque.Text = fechaMas10Dias.ToString("yyyy-MM-dd");
 
-             
+
             }
 
 
@@ -460,14 +467,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 HabilitarTodosLosTextBoxes();
 
-              
+
                 string zonaLogeada = Session["ZonaLogeada"] as string; // Obtén el valor de la variable de sesión
 
                 // Establece el valor seleccionado en el DropDownList ddlZona
                 ddlZona.SelectedValue = zonaLogeada;
 
 
-               
             }
 
             Nit.Enabled = true;
@@ -498,7 +504,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void ImprimirOt_Click(object sender, EventArgs e)
         {
-          
+
         }
 
         protected void BtnObservaciones_Click(object sender, EventArgs e)
@@ -575,7 +581,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     linkButton.CssClass = cssClass;
                 }
             }
-   
+
         }
 
         protected void OtPendientes_Click(object sender, EventArgs e)
@@ -709,7 +715,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void HabilitarTodosLosTextBoxes()
         {
-           
+
             tbObra.Enabled = true;
             tbDir.Enabled = true;
             tbContac.Enabled = true;
@@ -719,7 +725,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             tbCel.Enabled = true;
             tbPais.Enabled = true;
             tbHTotal.Enabled = true;
-          
+
             dtpEmpaque.Enabled = true;
 
             ddlAsesor.Enabled = true;
@@ -732,11 +738,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ddlNumbers.CssClass = "form-control";
 
             txtCotizacion.Enabled = true;
-         
+
             txtOrdenCompra.Enabled = true;
             txtAsesor.Enabled = true;
-           
-           
+
+
             dtacboTipoPedido.Enabled = true;
             DtaCboTipoAprobacion.Enabled = true;
 
@@ -771,9 +777,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             tbValorPedido.CssClass = "form-control";
             txtNit.CssClass = "form-control";
             txtNombreEmp.CssClass = "form-control";
-    
+
             txtCotizacion.CssClass = "form-control";
-          
+
             txtOrdenCompra.CssClass = "form-control";
             txtAsesor.CssClass = "form-control";
 
@@ -865,32 +871,40 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             id = Session["Id_OT"]?.ToString();
             pedido = Session["pedido"]?.ToString();
 
-            
-                using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+
+            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+            {
+                sqlconectar.Open();
+
+                if (TryExecuteOTQuery(id, pedido, sqlconectar, out SqlDataReader leer))
                 {
-                    sqlconectar.Open();
-
-                    if (TryExecuteOTQuery(id, pedido, sqlconectar, out SqlDataReader leer))
+                    if (leer.Read())
                     {
-                        if (leer.Read())
+
+                        if (ValidarPermisoInfoContable(leer))
                         {
-
-                            // Extraer datos y asignarlos a controles
-                            AssignDataToControls(leer);
-
-                            EnableButtons();
-
-                            // Obtener datos de cotización y asignarlos a controles
-                            AssignCotizacionData(id, pedido, txtCotizacion.Text);
-
+                            string IDCLienteConstacto = leer["IDContacto_Cliente"].ToString();
+                            CargarDatosContables(IDCLienteConstacto);
 
                         }
+                           
+                       
+                        // Extraer datos y asignarlos a controles
+                        AssignDataToControls(leer);
+
+                        EnableButtons();
+
+                        // Obtener datos de cotización y asignarlos a controles
+                        AssignCotizacionData(id, pedido, txtCotizacion.Text);
+
+
                     }
                 }
-            
-         
-          
-            Cargar_Plano( id, pedido);
+            }
+
+
+
+            Cargar_Plano(id, pedido);
             Cargar_Despiece_Plano();
             
 
@@ -899,7 +913,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             tbPedDepen.Enabled = true;
             tbPedDepen.CssClass = "form-control";
 
-            string valorTextBox = tbObra.Text.Trim(); 
+            string valorTextBox = tbObra.Text.Trim();
 
             // Guardar el valor en una variable de sesión
             Session["ValorDeObra"] = valorTextBox;
@@ -942,18 +956,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 LabelOTCerrada.Visible = false;
             }
-            tbOT.Text = leer["Id_OT"].ToString();                     
-            ddlNumbers.Text = leer["Consecutivo_Pedido"].ToString();  
-            ddlZona.Text = leer["Zona"].ToString();                   
-            dtacboTipoPedido.Text = leer["Id_TipoPedido"].ToString(); 
+            tbOT.Text = leer["Id_OT"].ToString();
+            ddlNumbers.Text = leer["Consecutivo_Pedido"].ToString();
+            ddlZona.Text = leer["Zona"].ToString();
+            dtacboTipoPedido.Text = leer["Id_TipoPedido"].ToString();
             cboPedidoBase.SelectedValue = leer["PedidoBase"].ToString();
-            DtaCboTipoAprobacion.Text = leer["TipoAprobacion"].ToString(); 
-            tbObra.Text = leer["Nombre_Obra"].ToString();              
-            tbDir.Text = leer["Dirección"].ToString();                 
-            tbContac.Text = leer["Persona_Receptora"].ToString();        
-            tbEmail.Text = leer["mail_Contacto"].ToString();             
-            tbRecibe.Text = leer["RecibeElPedido"].ToString();           
-            string Ciudad = leer["Ciudad"].ToString() + " - " + leer["Región"].ToString();  
+            DtaCboTipoAprobacion.Text = leer["TipoAprobacion"].ToString();
+            tbObra.Text = leer["Nombre_Obra"].ToString();
+            tbDir.Text = leer["Dirección"].ToString();
+            tbContac.Text = leer["Persona_Receptora"].ToString();
+            tbEmail.Text = leer["mail_Contacto"].ToString();
+            tbRecibe.Text = leer["RecibeElPedido"].ToString();
+            string Ciudad = leer["Ciudad"].ToString() + " - " + leer["Región"].ToString();
             foreach (ListItem item in ddlCiudad.Items)
             {
                 if (item.Text == Ciudad)
@@ -963,21 +977,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     break;
                 }
             }
-            tbTel.Text = leer["TelDomicilio"].ToString();                 
-            tbCel.Text = leer["CelularContacto"].ToString();              
-            tbPais.Text = leer["País"].ToString();                       
-            txObs1.Value = leer["Observacion_Pedido"].ToString();       
-            txObs2.Value = leer["Observacion_Dibujo"].ToString();         
+            tbTel.Text = leer["TelDomicilio"].ToString();
+            tbCel.Text = leer["CelularContacto"].ToString();
+            tbPais.Text = leer["País"].ToString();
+            txObs1.Value = leer["Observacion_Pedido"].ToString();
+            txObs2.Value = leer["Observacion_Dibujo"].ToString();
             DateTime Dato = (DateTime)leer["Fecha_Confirmacion_Venta"];
             DateTime Dato2 = (DateTime)leer["Fecha_Entrega_Produccion"];
             DateTime Dato3 = (DateTime)leer["Fecha_Empaque"];
             DateTime Dato4 = (DateTime)leer["Fecha_Real_Empaque"];
-            tbVenta.Text = Dato.ToString("yyyy-MM-dd");                
-            dtpFechaEntregaDibujoDespiece.Text = Dato.ToString("yyyy-MM-dd");  
-            dtpFechaEntregaProduccion.Text = Dato2.ToString("yyyy-MM-dd");    
-            dtpEmpaque.Text = Dato3.ToString("yyyy-MM-dd");               
-            dtpRealEmpaque.Text = Dato4.ToString("yyyy-MM-dd");            
-            tbSupervisor.Text = leer["Supervisor"].ToString();            
+            tbVenta.Text = Dato.ToString("yyyy-MM-dd");
+            dtpFechaEntregaDibujoDespiece.Text = Dato.ToString("yyyy-MM-dd");
+            dtpFechaEntregaProduccion.Text = Dato2.ToString("yyyy-MM-dd");
+            dtpEmpaque.Text = Dato3.ToString("yyyy-MM-dd");
+            dtpRealEmpaque.Text = Dato4.ToString("yyyy-MM-dd");
+            tbSupervisor.Text = leer["Supervisor"].ToString();
             ddlFabrica1.Text = leer["FabricadoPor"].ToString();
             ddlInstala.Text = leer["InstaladaPor"].ToString();
             ObservacionCont.Value = leer["Observaciones_Contables"].ToString();
@@ -1020,6 +1034,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     SqlDataReader drcot = cotzita.ExecuteReader();
 
                     if (drcot.Read())
+                    
                     {
                         txtValorSugerido.Text = drcot["ValorSugerido"].ToString();
                         txtVcsd.Text = drcot["Valor"].ToString();
@@ -1027,22 +1042,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         txtComision.Text = drcot["DescuentoComision"].ToString();
                         txtDiseño.Text = drcot["Diseño"].ToString();
                         txtSaldo.Text = drcot["Saldo"].ToString();
-                       
+                      
 
-                        if (cotizacion.ToUpper() == "NO TIENE" || string.IsNullOrEmpty(cotizacion))
-                        {
-                            txtValorSugerido.Text = "0";
-                            txtVcsd.Text = "0";
-                            txtVccd.Text = "0";
-                            txtComision.Text = "0";
-                            txtDiseño.Text = "0";
-                            txtSaldo.Text = "0";
-                            txtDctoValor.Text = "0";
-                            txtGtotal.Text = "0";
-                        }
-                        drcot.Close();
+                       
+                     
+                    }
+                    else if (cotizacion.ToUpper() == "NO TIENE" || string.IsNullOrEmpty(cotizacion))
+                    {
+                        txtValorSugerido.Text = "0";
+                        txtVcsd.Text = "0";
+                        txtVccd.Text = "0";
+                        txtComision.Text = "0";
+                        txtDiseño.Text = "0";
+                        txtSaldo.Text = "0";
+                        txtDctoValor.Text = "0";
+                        txtGtotal.Text = "0";
                     }
 
+                    drcot.Close();
                 }
             }
         }
@@ -1171,6 +1188,280 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
         //FIN MODIFICACION
+
+
+        // VER COTIZACION Y CAMBIO COTIZACION 
+        protected void btnCotizacion_Click(object sender, EventArgs e)
+        {
+            if (txtCotizacion.Text.ToUpper() != "NO TIENE")
+            {
+                // Construir la ruta al archivo de Excel
+                string rutaArchivo = @"\\172.16.30.6\Recepcion\Cotizaciones Excel\" + ddlZona.SelectedValue + @"\" + tbVenta.Text.Substring(0, 4) + @"\" + ObtenerNombreMes() + @"\" + txtCotizacion.Text + ".xls";
+
+                try
+                {
+                    if (File.Exists(rutaArchivo))
+                    {
+                        // Establecer las cabeceras para la descarga del archivo
+                        Response.Clear();
+                        Response.ContentType = "application/octet-stream";
+                        Response.AppendHeader("Content-Disposition", "attachment; filename=" + Path.GetFileName(rutaArchivo));
+                        Response.AppendHeader("X-Content-Type-Options", "nosniff");
+                        Response.AppendHeader("X-Frame-Options", "SAMEORIGIN");
+                        Response.AppendHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+
+                        // Escribir el archivo al flujo de respuesta
+                        Response.WriteFile(rutaArchivo);
+
+                        // Enviar todos los encabezados al cliente antes de finalizar la respuesta
+                        Response.Flush();
+                        // Finalizar la respuesta
+                        Response.End();
+
+
+                    }
+                    else
+                    {
+                        string mensajeExito = "La Cotización  " + txtCotizacion.Text.Trim() + " ha sido cambiada o borrada en el servidor.";
+                        string scriptExito = "alert('" + mensajeExito + "');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    string mensajeExito = "Error al intentar abrir el archivo, Por favor intente mas tarde o comuniquese con Sistemas.";
+                    string scriptExito = "alert('" + mensajeExito + "');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
+
+                }
+            }
+
+
+
+        }
+
+        private string ObtenerNombreMes()
+        {
+            int numeroMes = int.Parse(tbVenta.Text.Substring(5, 2));
+            string nombreMes = new DateTime(DateTime.Now.Year, numeroMes, 1).ToString("MMM");
+            return nombreMes.Replace(".", "");
+        }
+
+        protected void txtCotizacion_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCotizacion.Text.ToUpper() != "NO TIENE")
+            {
+                ConsultarCotizacion(txtCotizacion.Text);
+            }
+            else
+            {
+                // Para Cuando la cotizacion es igual a NO TIENE
+                CargarValoresCotizacion();
+            }
+        }
+
+        private void CargarValoresCotizacion()
+        {
+            txtValorSugerido.Text = "0";
+            txtVcsd.Text = "0";
+            txtVccd.Text = "0";
+            txtSaldo.Text = "0";
+            txtDcto.Text = "0";
+            txtVenta.Text = "0";
+            txtDcto.Text = "0";
+            txtDctoValor.Text = "0";
+            txtVtte.Text = "0";
+            txtVvia.Text = "0";
+            txtGtotal.Text = "0";
+            txtComision.Text = "0";
+            txtDiseño.Text = "";
+        }
+
+        private void ConsultarCotizacion(string cotizacion)
+        {
+            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+            {
+                sqlconectar.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT * FROM tblCotización WHERE cotización = @cotizacion", sqlconectar))
+                {
+                    cmd.Parameters.AddWithValue("@cotizacion", cotizacion);
+
+                    SqlDataReader leer = cmd.ExecuteReader();
+
+                    if (leer.Read())
+                    {
+                        // Llenar los TextBox con los valores obtenidos
+                        txtValorSugerido.Text = leer["ValorSugerido"].ToString();
+                        txtVccd.Text = leer["VCCD"].ToString();
+                        txtVcsd.Text = leer["Valor"].ToString();
+                        txtSaldo.Text = leer["Saldo"].ToString();
+                        txtDiseño.Text = leer["Diseño"].ToString();
+
+                        if (Convert.ToBoolean(Session["NuevaOTEjecutada"].ToString()) == true || Convert.ToBoolean(Session["BtnModificarEjecutado"].ToString()) == true)
+                        {
+                            txtVenta.Text = leer["Saldo"].ToString();
+                        }
+                        txtDcto.Text = leer["Descuento"].ToString();
+                        txtComision.Text = leer["DescuentoComision"].ToString();
+
+                        txtVtte.Text = "0";
+                        txtVvia.Text = "0";
+
+                        if (leer["Saldo"].ToString() == leer["Valor"].ToString())
+                        {
+                            txtVtte.Text = leer["ValorTteVia"].ToString(); ;
+                            txtVvia.Text = leer["ValorViatico"].ToString();
+                        }
+
+
+
+                        DateTime fechaCotizacion = Convert.ToDateTime(leer["Fecha_Cotización"].ToString());
+                        if ((DateTime.Now - fechaCotizacion).Days > 30)
+                        {
+                            // Mostrar mensaje de alerta para la fecha
+                            string scriptFechaExcedida = "alert('La cotización digitada excede los 30 días.\\nEl sistema le permite grabar la orden de pedido, pero no deja terminar el pedido (Pasar el pedido a Dibujo y Despiece).');";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "showFechaExcedida", scriptFechaExcedida, true);
+                        }
+
+                        txtDctoValor.Text = (Convert.ToDouble(txtVenta.Text) * Convert.ToDouble(txtDcto.Text)).ToString();
+                        txtGtotal.Text = (Convert.ToDouble(txtVenta.Text) + Convert.ToDouble(txtVtte.Text) + Convert.ToDouble(txtVvia.Text)).ToString();
+
+
+                        if (Convert.ToInt32(leer["Saldo"].ToString()) == 0)
+                        {
+                            txtValorSugerido.Text = "";
+                            txtVccd.Text = "";
+                            txtVcsd.Text = "";
+                            txtSaldo.Text = "";
+                            txtDiseño.Text = "";
+                            txtDcto.Text = "";
+                            txtComision.Text = "";
+                            txtVenta.Text = "";
+                            txtVtte.Text = "";
+                            txtVvia.Text = "";
+                            txtDctoValor.Text = "";
+                            txtGtotal.Text = "";
+                            string scriptSaldoMayorCero = "alert('La cotización digitada, no tiene saldo para un nuevo pedido.');";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "showSaldo", scriptSaldoMayorCero, true);
+                        }
+
+
+                    }
+                    else
+                    {
+                        // Mensaje de Fallo que la cotizacion no existe  ¿ Desea volver a digitar la cotización ?
+                        string scriptSaldoMayorCero = "alert('La cotización digitada no existe. Por favor vuelva a digitar');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showSaldo", scriptSaldoMayorCero, true);
+
+                        txtCotizacion.Text = "";
+                        txtCotizacion.Focus();
+                    }
+                }
+            }
+        }
+
+        protected bool ValidarPermisoInfoContable()
+        {
+            // Obtener la cédula del usuario logueado de la variable de sesión
+            string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
+
+            // Realizar la consulta para verificar los permisos
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string query = "SELECT * FROM tblPermiso_Empleado WHERE ID_Empleado = @CedulaLogueada AND ID_Permiso = '22'";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecer parámetro para evitar SQL Injection
+                    command.Parameters.AddWithValue("@CedulaLogueada", cedulaLogueada);
+
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    bool tienePermisos = reader.HasRows;
+
+                    reader.Close();
+
+                    return tienePermisos;
+                }
+            }
+        }
+
+        protected bool ValidarPermisoCompartido(string id)
+        {
+            string consultaActual = "SELECT\r\nCompartidoCon\r\nFROM tblClienteObra\r\nINNER JOIN tblClienteObraContacto ON tblClienteObra.Nit = tblClienteObraContacto.cocNIT \r\nWHERE tblClienteObraContacto.IdContacto = @IDContacto_Cliente";
+            string cadenaActual = ""; // Aquí almacenaremos la cadena actual de nombres
+
+
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(consultaActual, connection))
+                {
+                    command.Parameters.AddWithValue("@IDContacto_Cliente", id);
+                    cadenaActual = (string)command.ExecuteScalar();
+                }
+            }
+
+            if (cadenaActual.Contains(Session["usuariologueado"].ToString()))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+
+        }
+
+        private bool ValidarPermisoInfoContable(SqlDataReader Datos)
+        {
+
+            if (Session["CedulaLogeada"].ToString() == Datos["Codigo_Asesor"].ToString() || ValidarPermisoInfoContable() || ValidarPermisoCompartido(Datos["IDContacto_Cliente"].ToString()))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+
+        }
+
+        private void CargarDatosContables(string id)
+        {
+            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+            {
+                sqlconectar.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT tblClienteObraContacto.*, tblClienteObra.* FROM tblClienteObra INNER JOIN tblClienteObraContacto ON tblClienteObra.Nit = tblClienteObraContacto.cocNIT WHERE tblClienteObraContacto.IdContacto = @IdContactoCliente", sqlconectar))
+                {
+                    cmd.Parameters.AddWithValue("@IdContactoCliente", id);
+
+                    SqlDataReader leer = cmd.ExecuteReader();
+
+                    if (leer.Read())
+                    {
+                        txtNit.Text = leer["CocNIT"].ToString();
+                        txtNombreEmp.Text = leer["RazonSocial"].ToString() + " " + leer["SegundoApellido"].ToString() + leer["Nombre"].ToString();
+                        txtcontacto.Text = leer["cocNombre"].ToString();
+                        txtMail.Text = leer["cocMail"].ToString();
+                        txtDireccion.Text = leer["cocDireccion"].ToString();
+                        txtMunicipio.Text = leer["cocCiudad"].ToString();
+                        txtTelefono.Text = leer["cocTelefono"].ToString();
+                    }
+                }
+            }
+        }
+
+        // FIN 
+
+
 
         public void Cargar_OTs2()
         {
@@ -1303,7 +1594,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             cmd.Parameters.Add("@Conse", SqlDbType.VarChar, 30).Value = pedido;
             SqlDataReader dr = cmd.ExecuteReader();
             if (dr.Read())
-            {
+            {   
+                lbPlano.Text = dr["Plano"].ToString();
                 txtPlano.Text = dr["Plano"].ToString();
                 txtCliente.Text = dr["Nombre_Cliente"].ToString();
                 txtArea.Text = dr["Area"].ToString();
@@ -1331,6 +1623,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 while (dr.Read())
                 {
+                    lbPlano.Text = dr["Plano"].ToString();
                     txtPlano.Text = dr["Plano"].ToString();
                     txtCliente.Text = dr["Nombre_Cliente"].ToString();
                     txtArea.Text = dr["Area"].ToString();
@@ -1399,7 +1692,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         ValorUnd = r["Precio_Venta"].ToString(),
                         SubTotal = (Convert.ToDecimal(r["Cantidad"]) * Convert.ToDecimal(r["Precio_Venta"])).ToString(),
                         Id_Panel = r["Id_Panel"].ToString(),
-                        RevisadoDibujo = Convert.ToBoolean( r["RevisadoDibujo"].ToString())
+                        RevisadoDibujo = Convert.ToBoolean(r["RevisadoDibujo"].ToString())
 
 
 
@@ -1533,18 +1826,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 DatosFiltrados datos = (DatosFiltrados)e.Item.DataItem;
 
-                if (datos.Tipo == "Total" && datos.Titulo == "<b>Totales</b>" )
+                if (datos.Tipo == "Total" && datos.Titulo == "<b>Totales</b>")
                 {
                     e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#7aeaff");
                 }
-                else if (!string.IsNullOrEmpty(datos.ID ) ) 
+                else if (!string.IsNullOrEmpty(datos.ID))
                 {
-                    if(datos.RevisadoDibujo == true)
+                    if (datos.RevisadoDibujo == true)
                     {
                         e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#47ca4b");
                         e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
                     }
-                  
+
                 }
 
             }
@@ -1882,7 +2175,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             string url = "FormExtPrin/NitOts.aspx";
             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
-            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);         
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
         }
 
         protected void Redireccion_Plano1(object sender, EventArgs e)
@@ -1924,6 +2217,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
+
+        //FIN
 
 
         // Consultar Documentacio 
@@ -2089,9 +2384,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     //try
                     //{
-                        ValidarUsuario();      
-                        Session.Remove("OTinsertada");
-                        Session.Remove("PedidoInsertado");
+                    ValidarUsuario();
+                    Session.Remove("OTinsertada");
+                    Session.Remove("PedidoInsertado");
 
                     //}
                     //catch (Exception ex)
@@ -2109,7 +2404,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalll').modal('show'); $('#campoFaltante').text('" + campoFaltante + "');", true);
             }
-          
+
         }
 
         protected void InsertarOT()
@@ -2130,7 +2425,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     object valorPrincipal = cmdObtenerId_OT.ExecuteScalar();
 
-                  
+
                     // Verificar si se obtuvo un valor
                     if (valorPrincipal != null)
                     {
@@ -2203,7 +2498,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 command.Parameters.AddWithValue("@ValorViatico", txtVvia.Text);
                                 command.Parameters.AddWithValue("@Fecha_Empaque", dtpEmpaque.Text);
                                 command.Parameters.AddWithValue("@Fecha_Real_Empaque", dtpRealEmpaque.Text);
-                                command.Parameters.AddWithValue("@OrdendeCompra", txtOrdenCompra.Text);                 
+                                command.Parameters.AddWithValue("@OrdendeCompra", txtOrdenCompra.Text);
 
                                 int rowsAffected = command.ExecuteNonQuery();
                                 if (rowsAffected > 0)
@@ -2231,7 +2526,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void InsertarConsecutivo()
         {
 
-           
+
             string zonaLogeada = Session["ZonaLogeada"].ToString();
 
             string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
@@ -2314,11 +2609,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             string campoFaltante = string.Empty;
 
-            if (dtacboTipoPedido.SelectedItem == null) 
+            if (dtacboTipoPedido.SelectedItem == null)
             {
                 campoFaltante = "Tipo de Pedido";
             }
-            else if (DtaCboTipoAprobacion.SelectedItem == null) 
+            else if (DtaCboTipoAprobacion.SelectedItem == null)
             {
                 campoFaltante = "Tipo de Aprobacion";
             }
@@ -2340,11 +2635,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else if (string.IsNullOrEmpty(tbPais.Text))
             {
-               campoFaltante = "Pais";
+                campoFaltante = "Pais";
             }
             else if (string.IsNullOrEmpty(tbHTotal.Text))
             {
-               campoFaltante = "H.Total";
+                campoFaltante = "H.Total";
             }
             else if (string.IsNullOrEmpty(tbDir.Text))
             {
@@ -2358,7 +2653,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 campoFaltante = "Email";
             }
-            else if (ddlCiudad.SelectedItem == null) 
+            else if (ddlCiudad.SelectedItem == null)
             {
                 campoFaltante = "Ciudad";
             }
@@ -2376,7 +2671,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else if (string.IsNullOrEmpty(ObservacionCont.InnerText))
             {
-               campoFaltante = "Observacion Contable";
+                campoFaltante = "Observacion Contable";
             }
             else if (string.IsNullOrEmpty(txtCotizacion.Text))
             {
@@ -2386,22 +2681,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 campoFaltante = "Orden de Compra";
             }
-            else if (ddlAsesor.SelectedItem == null) 
+            else if (ddlAsesor.SelectedItem == null)
             {
                 campoFaltante = "Asesor";
             }
             else if (string.IsNullOrEmpty(TextTNegociacion.InnerText))
             {
-               campoFaltante = "Tipo de Negociacion";
+                campoFaltante = "Tipo de Negociacion";
             }
-          
+
             return campoFaltante;
         }
 
         protected void ValidarUsuario()
         {
 
-            
+
             // Obtener la cédula del usuario logueado de la variable de sesión
             string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
 
@@ -2411,14 +2706,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Verificar si las cédulas son iguales
             if (cedulaLogueada == cedulaTextBox)
             {
-                
+
                 ActualizarDatos();
             }
             else
             {
 
                 ValidarPermiso();
-               
+
             }
         }
 
@@ -2446,7 +2741,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         ActualizarDatos();
                     }
                     else
-                    {          
+                    {
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
                     }
 
@@ -2476,7 +2771,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         // Agregar parámetros al procedimiento almacenado
                         command.Parameters.AddWithValue("@Id_OT", tbOT.Text);
-                        command.Parameters.AddWithValue("@Consecutivo_Pedido", ddlNumbers.Text);         
+                        command.Parameters.AddWithValue("@Consecutivo_Pedido", ddlNumbers.Text);
                         command.Parameters.AddWithValue("@Observacion_Pedido", txObs1.Value);
                         command.Parameters.AddWithValue("@Direccion", tbDir.Text);
                         command.Parameters.AddWithValue("@Ciudad", ciudadSeleccionada);
@@ -2524,7 +2819,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
             }
-          
+
         }
 
         protected void BtnModificar_Click(object sender, EventArgs e)
@@ -2536,7 +2831,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             CopiarOt.Enabled = false;
             CopiarOt.CssClass = "btn btn-sm shadow button-disabled";
-        
+
             GrabarOt.Enabled = true;
             GrabarOt.CssClass = "btn btn-sm shadow button-enabled";
 
@@ -2573,7 +2868,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             btnAcabados.Enabled = false;
             btnAcabados.CssClass = "btn btn-sm shadow button-disabled";
 
-            
+
 
             HabilitarTodosLosTextBoxes();
 
@@ -2605,11 +2900,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModallll').modal('show');", true);
 
-                   
+
                 }
                 else
                 {
-                  
+
                 }
             }
             else
@@ -2874,10 +3169,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 BtnGuaTxt,
                 BtnExpPlaOrdTra,
                 BtnVisGenCot,
-                
+
                 BtnActPrePro,
                 BtnGenForCerOrd,
-                 
+
             };
 
             string cssClass = "btn btn-sm shadow button-disabled";
@@ -2912,8 +3207,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 BtnEliObj,
                 BtnBusObj,
                 BtnCopObj,
-                BtnActPre,  
-                BtnChe,          
+                BtnActPre,
+                BtnChe,
 
             };
 
@@ -2995,13 +3290,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     linkButton.CssClass = cssClass;
                 }
             }
-      
+
 
         }
 
     }
 
-
-    }
+}
 
 
