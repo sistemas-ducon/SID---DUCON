@@ -39,14 +39,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
-
+           
             if (Session["usuariologueado"] != null)
             {
                 string usuariologueado = Session["usuariologueado"].ToString();
 
                 if (!IsPostBack)
                 {
+                 
                     tbVenta.Text = DateTime.Now.ToString("yyyy-MM-dd");
                     dtpFechaEntregaDibujoDespiece.Text = DateTime.Now.ToString("yyyy-MM-dd");
                     dtpFechaEntregaProduccion.Text = DateTime.Now.ToString("yyyy-MM-dd");
@@ -144,7 +144,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
 
                     //Cargando los datos del nit 
-                    CargarVariablesDeSesionContable();
+                    //CargarVariablesDeSesionContable();
 
                 }
                 
@@ -154,9 +154,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 Response.Redirect("Login.aspx");
             }
-
-
-
 
         }
 
@@ -440,6 +437,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 cboPedidoBase.Enabled = false;
 
+                tbPedDepen.Enabled = false;
+
                 dtacboTipoPedido.Enabled = true;
 
                 ddlAsesor.Enabled = true;
@@ -459,12 +458,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 dtpEmpaque.Text = fechaMas10Dias.ToString("yyyy-MM-dd");
                 dtpRealEmpaque.Text = fechaMas10Dias.ToString("yyyy-MM-dd");
 
+                tbPedDepen.DataBind();
+                tbPedDepen.Items.Insert(0, new ListItem(" "));
+                cboPedidoBase.DataBind();
+                cboPedidoBase.Items.Insert(0, new ListItem(" "));
+
+                dtacboTipoPedido.DataBind();
+                dtacboTipoPedido.Items.Insert(0, new ListItem(" "));
+
 
             }
 
 
             if (tbOT.Text == "Por Asig.")
             {
+               
+
                 HabilitarTodosLosTextBoxes();
 
 
@@ -936,11 +945,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private void AssignDataToControls(SqlDataReader leer)
         {
-            dtacboTipoPedido.DataBind();
-
             tbPedDepen.DataBind();
-
+          
             cboPedidoBase.DataBind();
+            cboPedidoBase.Items.Insert(0, new ListItem(" "));
+
+            dtacboTipoPedido.DataBind();
+            dtacboTipoPedido.Items.Insert(0, new ListItem(" "));
 
             bool cerrada = leer.GetBoolean(leer.GetOrdinal("Cerrada")); // Variable para OTCerrada
 
@@ -1462,8 +1473,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         // FIN 
 
-
-
         public void Cargar_OTs2()
         {
             id = Session["Id_OT2"]?.ToString();
@@ -1547,7 +1556,43 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void NuevoPedido(object sender, EventArgs e)
         {
+            HabilitarTodosLosTextBoxes();
 
+            ValorPorDefectoTexArea();
+
+            cboPedidoBase.ClearSelection();
+            cboPedidoBase.Items.Clear();
+
+            dtacboTipoPedido.ClearSelection();
+            dtacboTipoPedido.Items.Clear();
+
+            ObservacionCont.InnerText = string.Empty;
+
+            TextTNegociacion.InnerText = string.Empty;
+
+            txtCotizacion.Text = string.Empty;
+
+            NuevaOt.Enabled = false;
+            NuevaOt.CssClass = "btn btn-sm shadow button-disabled";
+
+            GrabarOt.Enabled = true;
+            GrabarOt.CssClass = "btn btn-sm shadow button-enabled";
+
+            ModificarOt.Enabled = false;
+            ModificarOt.CssClass = "btn btn-sm shadow button-disabled";
+
+            AnularPedido.Enabled = false;
+            AnularPedido.CssClass = "btn btn-sm shadow button-disabled";
+
+            imprimirOt.Enabled = false;
+            imprimirOt.CssClass = "btn btn-sm shadow button-disabled";
+
+            Cancelar.Enabled = true;
+            Cancelar.CssClass = "btn btn-sm shadow button-enabled";
+
+            btnNuevoPedido.Enabled = false;
+            btnNuevoPedido.CssClass = "btn btn-sm shadow button-disabled";
+           
         }
 
         //MODIFICADO POR CARLOS PINEDA
@@ -2221,7 +2266,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         //FIN
 
-
         // Consultar Documentacio 
         protected void chxFiltrarDocumentacion_CheckedChanged(object sender, EventArgs e)
         {
@@ -2240,7 +2284,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         }
-
 
         //metodo pendiente para adjuntar documentacion a la Ot
         protected void AdjuntarDocumento(object sender, EventArgs e)
@@ -2271,7 +2314,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
         }
-
 
         public void CargarVariablesDeSesionContable()
         {
@@ -2344,6 +2386,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BtnGrabar_Click(object sender, EventArgs e)
         {
+           
             // Realiza la validación de campos
             string campoFaltante = ValidarCampos();
 
@@ -2360,6 +2403,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         InsertarOT();
                         InsertarConsecutivo();
                         InsertarPlano();
+                        MostrarModal();
 
                         if (Session["CopiarInfOTEjecutada"] != null && (bool)Session["CopiarInfOTEjecutada"])
                         {
@@ -2369,10 +2413,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             Session.Remove("OTinsertada");
                             Session.Remove("PedidoInsertado");
+
+                            Session.Remove("CopiarInfOTEjecutada");
+
                         }
 
+                        Session.Remove("OTinsertada");
+                        Session.Remove("PedidoInsertado");
 
-                      
+                        Session.Remove("CopiarInfOTEjecutada");
+                        Session.Remove("CopiarInfOTEjecutada");
                     }
                     catch (Exception ex)
                     {
@@ -2597,13 +2647,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (rowsAffected > 0)
                 {
-                    // La inserción se realizó con éxito
+                        
                 }
                 else
                 {
                     // Ocurrió un problema al realizar la inserción
                 }
             }
+        }
+
+        protected void MostrarModal()
+        {
+            string idOT = Session["OTinsertada"].ToString();
+            string contenidoModalOT = "la Orden de trabajo: " + idOT + " queda asignada a la Obra: " + tbObra.Text;
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#OTingresada').modal('show'); $('#OTingresada2').text('" + contenidoModalOT + "');", true);
+     
         }
 
         private string ValidarCampos()
@@ -3021,6 +3079,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             TextTNegociacion.InnerText = string.Empty;
 
+            tbPedDepen.Enabled = false;
+           
+
             ValorPorDefectoTexArea();
 
             LabelOTCerrada.Visible = false;
@@ -3143,8 +3204,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
-                // Manejo de casos donde OTinsertada o PedidoInsertado son nulos o vacíos en las sesiones
-                // Puedes agregar manejo de errores o notificar al usuario según tu flujo de la aplicación
+               
             }
         }
 

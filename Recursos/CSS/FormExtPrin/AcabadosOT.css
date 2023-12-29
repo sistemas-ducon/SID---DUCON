@@ -30,3 +30,16 @@
 .no-scroll {
     overflow: hidden;
 }
+
+.button-enabled {
+    background-color: #fff; /* Color de fondo para botones habilitados */
+    color: #212529; /* Color de texto para botones habilitados */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+}
+
+/* Estilo para botones deshabilitados */
+.button-disabled {
+    background-color: #ededed; /* Color de fondo para botones deshabilitados */
+    color: #888; /* Color de texto para botones deshabilitados */
+    cursor: not-allowed; /* Cambia el cursor al estilo "no permitido" */
+}

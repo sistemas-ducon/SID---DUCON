@@ -15,8 +15,6 @@
     <script>
         function mostrarDivDocumentacion() {
             var divDocumentacion = document.getElementById('Documentacion');
-
-
             // Si el div está visible, lo oculta; de lo contrario, lo muestra
             divDocumentacion.style.display = (divDocumentacion.style.display === 'block') ? 'none' : 'block';
 
@@ -480,13 +478,13 @@
 
                                 <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm justify-content-around">
-                                        <asp:LinkButton runat="server" Text="" ID="btnNuevoPedido" OnClick="NuevoPedido">
+                                        <asp:LinkButton runat="server" title="Nuevo Pedido" ID="btnNuevoPedido" OnClick="NuevoPedido">
                                                      <i class="bi bi-files"></i>
                                         </asp:LinkButton>
-                                        <asp:LinkButton runat="server" Text="" ID="btnAcabados" OnClick="Acabados_Click">
+                                        <asp:LinkButton runat="server" title="Acabados" ID="btnAcabados" OnClick="Acabados_Click">
                                                     <i class="bi bi-palette"></i>
                                         </asp:LinkButton>
-                                        <asp:LinkButton runat="server" Text="OK" ID="btnOk" OnClick="Boton_Ok">                                          
+                                        <asp:LinkButton runat="server" title="OK" Text="OK" ID="btnOk" OnClick="Boton_Ok">                                          
                                         </asp:LinkButton>
 
                                     </div>
@@ -1075,8 +1073,6 @@
 
                             <div class="Datos-Cliente3">
 
-
-
                                 <div class="Info1">
                                     <asp:Button ID="btnDiseño" runat="server" Text="Diseño" class="bi bf " disabled="true" />
                                     <asp:TextBox type="text" class="form-control text-end " runat="server" ID="txtDiseño"></asp:TextBox>
@@ -1120,6 +1116,25 @@
                             </div>
 
                         </div>
+
+
+                       <div id="CopiarAcabados" class="modal" tabindex="-1" style="display: none;">
+                    <div class="modal-dialog">    
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Copiar Acabados</h5>
+                
+                            </div>
+                            <div class="modal-body">
+                                <p>Desea copiar los acabados de la OT:</p>
+                            </div>
+                            <div class="modal-footer">
+                              <asp:Button runat="server" ID="BtnSi" Text="Si" CssClass="btn shadow" OnClick="BtnSi_Click"/>
+                                 <asp:Button runat="server" ID="BtnNo" Text="No" CssClass="btn shadow"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                     </ContentTemplate>
 
@@ -1925,7 +1940,7 @@
 
         </div>
 
-        <div class="modal" id="miModalll" tabindex="-1" style="display: none;">
+          <div class="modal" id="miModalll" tabindex="-1" style="display: none;">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -1941,7 +1956,7 @@
             </div>
         </div>
 
-           <div class="modal" id="CarteraVencida" tabindex="-1" style="display: none;">
+          <div class="modal" id="CarteraVencida" tabindex="-1" style="display: none;">
            <div class="modal-dialog">
                <div class="modal-content">
                    <div class="modal-header">
@@ -1992,25 +2007,9 @@
        </div>
 
 
-          <div id="CopiarAcabados" class="modal" tabindex="-1" style="display: none;">
-    <div class="modal-dialog">    
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Copiar Acabados</h5>
-                
-            </div>
-            <div class="modal-body">
-                <p>Desea copiar los acabados de la OT:</p>
-            </div>
-            <div class="modal-footer">
-              <asp:Button runat="server" ID="BtnSi" Text="Si" CssClass="btn shadow" OnClick="BtnSi_Click"/>
-                 <asp:Button runat="server" ID="BtnNo" Text="No" CssClass="btn shadow"/>
-            </div>
-        </div>
-    </div>
-</div>
+         
 
-   <div id="ErrorPermiso" class="modal" tabindex="-1" style="display: none;">
+          <div id="ErrorPermiso" class="modal" tabindex="-1" style="display: none;">
     <div class="modal-dialog">    
         <div class="modal-content">
             <div class="modal-header">
@@ -2024,7 +2023,26 @@
             </div>
         </div>
     </div>
+</div>              
+        
+     <div id="OTingresada" class="modal" tabindex="-1">
+         <div class="modal-dialog modal-dialog-centered">    
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">S_I_Ducon</h5>
+            
+            </div>
+            <div class="modal-body">
+                <p> <span id="OTingresada2"></span></p>
+            </div>
+            <div class="modal-footer">
+             
+            </div>
+        </div>
+    </div>
 </div>
+
+
 
     </form>
 
