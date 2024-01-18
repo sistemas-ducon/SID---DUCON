@@ -10,16 +10,70 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="../../Recursos/CSS/OrdenTrabajo.css" />
     <title>Ordenes de Trabajo</title>
-     <link rel="icon" href="https://ibb.co/grQLPCw" type="image/x-icon" />
+    <link rel="icon" href="https://ibb.co/grQLPCw" type="image/x-icon" />
 
     <script>
         function mostrarDivDocumentacion() {
             var divDocumentacion = document.getElementById('Documentacion');
             // Si el div está visible, lo oculta; de lo contrario, lo muestra
             divDocumentacion.style.display = (divDocumentacion.style.display === 'block') ? 'none' : 'block';
-
         }
     </script>
+
+    <script>
+        function confirmDelete() {
+            var numeroPlano = document.getElementById('<%= txtPlano.ClientID %>').value;
+            var confirmacion = confirm('¿Estás seguro que deseas quitar el objeto seleccionado del plano ' + numeroPlano + '?');
+            return confirmacion;
+        }
+    </script>
+
+    <script>
+        function confirmDelete1() {
+            var numeroPlano = document.getElementById('<%= txtPlano.ClientID %>').value;
+            var confirmacion = confirm('¿Estás seguro de que deseas eliminar todos los objetos del plano ' + numeroPlano + '?');
+            return confirmacion;
+        }
+    </script>
+
+    <script>
+        function mostrarModal() {
+            $('#ModalAcabados').modal('show');
+        }
+
+        function ocultarModal() {
+            $('#ModalAcabados').modal('hide');
+        }
+    </script>
+
+    <script>
+        function mostrarModalArchivo() {
+            $('#ModalArchivo').modal('show');
+        }
+
+        function ocultarModalArchivo() {
+            $('#ModalArchivo').modal('hide');
+        }
+    </script>
+  
+    <script type="text/javascript">
+        function MostrarSpiner() {
+            ocultarModalArchivo();
+            // Muestra el modal de carga
+            $('#loadingModal1').modal('show');
+
+
+
+        }
+        // Función para ocultar el modal
+        function OcultarSpiner() {
+            $('#loadingModal1').modal('hide');
+        }
+
+    </script>
+
+
+
 
 </head>
 
@@ -59,6 +113,7 @@
 
                         <div class="container-fluid">
 
+                            <!--Modal para OT cerrada-->
                             <div class="modal fade" id="myModal" tabindex="-1">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
@@ -79,6 +134,7 @@
                                 </div>
                             </div>
 
+                            <!--Modal Bolsa -->
                             <div class="modal fade" id="modalBolsa" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-xl ">
                                     <div class="modal-content">
@@ -156,6 +212,56 @@
                                 </div>
                             </div>
 
+                            <!--Modal Objetos no existentes  -->
+                            <!-- *******************************************Inicio***************************************************************************** -->
+                            <div class="modal fade" id="modalNoExistentes" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-xl ">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="NoExistentes">Objetos No Existentes:</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+
+                                        <div class="modal-body">
+
+                                            <div class="row justify-content-center mb-3">
+                                                <div class="border rounded p-2">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="table-responsive mb-1 gap-2" style="max-height: 20rem; overflow-x: auto;">
+                                                                <h5 class="datagrid-header text-center">Objetos No Existentes</h5>
+                                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGrid1" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="DataBolsa" OnItemDataBound="DataGridBolsa_ItemDataBound">
+                                                                    <Columns>
+                                                                        <asp:BoundColumn DataField="" HeaderText="Items" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="" HeaderText="Objeto" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="" HeaderText="Ancho" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="" HeaderText="Observación" ItemStyle-CssClass="auto-width-column" />
+
+                                                                    </Columns>
+                                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="ObjNoExistentes"></asp:SqlDataSource>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="modal-footer">
+
+                                            <!--espacio del footer del modaa-->
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- *********************************************Fin******************************************************************************* -->
+
+
                             <!--Nav iconos OTs-->
                             <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
                                 <div class="container-fluid">
@@ -185,7 +291,7 @@
                                                    <i class="bi bi-wrench"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Anular o Eliminar un Pedido" ID="AnularPedido">
+                                                <asp:LinkButton runat="server" title="Anular o Eliminar un Pedido" ID="AnularPedido" >
                                                  <i class="bi bi-file-earmark-excel"></i>
                                                 </asp:LinkButton>
 
@@ -197,7 +303,7 @@
                                                      <i class="bi bi-eye"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Imprimir Informacion General de la OT" ID="imprimirOt"  OnClick="ImprimirOt_Click">
+                                                <asp:LinkButton runat="server" title="Imprimir Informacion General de la OT" ID="imprimirOt" OnClick="ImprimirOt_Click">
                                                      <i class="bi bi-printer"></i>
                                                 </asp:LinkButton>
 
@@ -1117,24 +1223,23 @@
 
                         </div>
 
+                        <div id="CopiarAcabados" class="modal" tabindex="-1" style="display: none;">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Copiar Acabados</h5>
 
-                       <div id="CopiarAcabados" class="modal" tabindex="-1" style="display: none;">
-                    <div class="modal-dialog">    
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Copiar Acabados</h5>
-                
-                            </div>
-                            <div class="modal-body">
-                                <p>Desea copiar los acabados de la OT:</p>
-                            </div>
-                            <div class="modal-footer">
-                              <asp:Button runat="server" ID="BtnSi" Text="Si" CssClass="btn shadow" OnClick="BtnSi_Click"/>
-                                 <asp:Button runat="server" ID="BtnNo" Text="No" CssClass="btn shadow"/>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Desea copiar los acabados de la OT:</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <asp:Button runat="server" ID="BtnSi" Text="Si" CssClass="btn shadow" OnClick="BtnSi_Click"/>
+                                        <asp:Button runat="server" ID="BtnNo" Text="No" CssClass="btn shadow"/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
                     </ContentTemplate>
 
@@ -1149,6 +1254,142 @@
                     <ContentTemplate>
 
                         <div class="container-fluid">
+
+                            <!--Modal para Acabados Tap Plano-->
+                            <div class="modal fade" id="ModalAcabados" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-xl ">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Acabados Plano</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <div class="row justify-content-center mb-3">
+
+                                                <div class="border rounded p-2">
+
+                                                    <div class="row pb-2 mb-2">
+                                                        <div class="col-12">
+                                                            <div class="table-responsive mb-1 gap-2" style="max-height: 12rem; overflow-x: auto;">
+                                                                <h5 class="datagrid-header text-center">Acabados</h5>
+                                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridAcabados1" runat="server" ShowHeaderWhenEmpty="true" AutoGenerateColumns="false" DataSourceID="AcabadosFinales">
+                                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                                    <Columns>
+                                                                        <asp:TemplateColumn HeaderText="...">
+                                                                            <ItemTemplate>
+                                                                                <asp:LinkButton ID="lnkAcabT" ToolTip="VerDocumento" runat="server" CommandName="VerDocumento1" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>" />
+                                                                            </ItemTemplate>
+                                                                        </asp:TemplateColumn>
+                                                                        <asp:BoundColumn DataField="oadDescripcionGrupoObjeto" HeaderText="Apliaca a" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="oadDescripcion_Familia" HeaderText="Familia Módulo" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="oadDescripcion_Insumo" HeaderText="Insumo" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="oadCodInvDes" HeaderText="Codigo Destino" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="oadDescripcionAcabado" HeaderText="Acabado" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="oadAplicacionAcabado" HeaderText="A.A" ItemStyle-CssClass="auto-width-column" />
+
+                                                                    </Columns>
+                                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="AcabadosFinales" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT
+                                                                                    tblOTAcabadoDefinitivo.id_OTAcabadoDefinitivo,
+                                                                                    tblOTAcabadoDefinitivo.oadPLano,
+                                                                                    tblOTAcabadoDefinitivo.oadDescripcionGrupoObjeto,
+                                                                                    tblOTAcabadoDefinitivo.oadID_Familia,
+                                                                                    tblOTAcabadoDefinitivo.oadDescripcion_Familia,
+                                                                                    tblOTAcabadoDefinitivo.oadIDGrupoAcabado,
+                                                                                    tblOTAcabadoDefinitivo.oadDesGrupoAcabado,
+                                                                                    tblOTAcabadoDefinitivo.oadId_Insumo,
+                                                                                    tblOTAcabadoDefinitivo.oadCodInvOri,
+                                                                                    tblOTAcabadoDefinitivo.oadDescripcion_Insumo,
+                                                                                    tblOTAcabadoDefinitivo.oadCodInvDes,
+                                                                                    tblOTAcabadoDefinitivo.oadDescripcionAcabado,
+                                                                                    tblOTAcabadoDefinitivo.oadAplicacionAcabado,
+                                                                                    tblOTAcabadoDefinitivo.oadActivo 
+                                                                                    From tblOTAcabadoDefinitivo 
+                                                                                    WHERE (((tblOTAcabadoDefinitivo.[oadPlano])=@plano))
+                                                                                    order by tblOTAcabadoDefinitivo.oadDescripcion_Familia 
+                                                                                    asc, tblOTAcabadoDefinitivo.oadDescripcionGrupoObjeto 
+                                                                                    asc,tblOTAcabadoDefinitivo.oadAplicacionAcabado asc">
+                                                                    <SelectParameters>
+                                                                        <asp:ControlParameter ControlID="txtPlano" PropertyName="Text" Name="plano"></asp:ControlParameter>
+                                                                    </SelectParameters>
+                                                                </asp:SqlDataSource>
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row justify-content-center mb-3">
+
+                                                <div class="border rounded p-2">
+                                                    <div class="row">
+
+                                                        <div class="col-8">
+                                                            <div class="table-responsive mb-1 gap-2" style="max-height: 12rem; overflow-x: auto;">
+                                                                <h5 class="datagrid-header text-center">Acabado Ventas</h5>
+                                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridAcabadoVentas" runat="server" AutoGenerateColumns="false" DataSourceID="AcabadosVentas" OnItemCommand="DataGridAcabadoVentas_ItemCommand">
+                                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                                    <Columns>
+                                                                        <asp:TemplateColumn HeaderText="...">
+                                                                            <ItemTemplate>
+                                                                                <asp:LinkButton ID="lnkAcabV" ToolTip="VerDocumento" runat="server"
+                                                                                    CommandName="VerDocumento1" CommandArgument='<%# Container.ItemIndex %>'
+                                                                                    Text="<i class='bi bi-pencil-square'></i>"
+                                                                                    OnClientClick="ocultarModal();" />
+                                                                            </ItemTemplate>
+                                                                        </asp:TemplateColumn>
+
+                                                                        <asp:BoundColumn HeaderText="Acabado de Ventas" DataField="AcabadoVentas" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn HeaderText="Entrega" DataField="Entrega" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="Descripcion_Acabado" Visible="false" />
+                                                                        <asp:BoundColumn DataField="Detalle_Adicional" Visible="false" />
+                                                                        <asp:BoundColumn DataField="GrupoObjetoparaAcabado" Visible="false" />
+
+                                                                    </Columns>
+                                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="AcabadosVentas" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT
+                                                                                            tblOTAcabados.*,
+                                                                                            tblGrupoObjetoParaAcabado.*,
+                                                                                            tblAcabado.* 
+                                                                                            FROM tblAcabado 
+                                                                                            INNER JOIN (tblGrupoObjetoParaAcabado 
+                                                                                            INNER JOIN tblOTAcabados 
+                                                                                            ON tblGrupoObjetoParaAcabado.ID_GrupoObjetoparaAcabado = tblOTAcabados.ID_GrupoObjetoparaAcabado) 
+                                                                                            ON tblAcabado.ID_Acabado = tblOTAcabados.ID_Acabado 
+                                                                                            WHERE (((tblOTAcabados.Id_OT)=@Id_Ot) 
+                                                                                            AND ((tblOTAcabados.Consecutivo_Pedido)=@Pedido))">
+                                                                    <SelectParameters>
+                                                                        <asp:ControlParameter ControlID="tbOT" PropertyName="Text" Name="Id_Ot"></asp:ControlParameter>
+                                                                        <asp:ControlParameter ControlID="ddlNumbers" PropertyName="SelectedValue" Name="Pedido"></asp:ControlParameter>
+                                                                    </SelectParameters>
+                                                                </asp:SqlDataSource>
+
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-3 pt-4 mt-4 text-end">
+                                                            <asp:Button ID="btnAgregarAcabado" runat="server" Text="Acabado de Plano" class="btn btn-sm btn-outline-secondary" OnClick="btnAgregarAcabado_Click" OnClientClick="ocultarModal()" />
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+
                             <!--Nav iconos Planos-->
                             <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
                                 <div class="container-fluid">
@@ -1161,33 +1402,31 @@
 
                                             <div class="contenedor-icono">
 
-                                                <asp:LinkButton runat="server" title="Adicionar Objeto al Plano" ID="BtnAdiObjPla">
+                                                <asp:LinkButton runat="server" title="Adicionar Objeto al Plano" ID="BtnAdiObjPla" OnClick="BtnAdiObjPla_Click">
                                                      <i class="ib bi-pc"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Quitar Objeto del Plano" ID="BtnQuiObjPla">
+                                                <asp:LinkButton runat="server" title="Quitar Objeto del Plano" ID="BtnQuiObjPla" OnClick="BtnQuiObjPla_Click" OnClientClick="return confirmDelete();">
                                                   <i class="bi bi-database-check"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Eliminar Objetos del Plano" ID="BtnEliObjPla">
+                                                <asp:LinkButton runat="server" title="Eliminar Objetos del Plano" ID="BtnEliObjPla" OnClick="BtnEliObjPla_Click" OnClientClick="return confirmDelete1();">
                                                   <i class="bi bi-fire"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Acabados del Plano" ID="BtnAcaPla">
+                                                <asp:LinkButton runat="server" title="Acabados del Plano" ID="BtnAcaPla" OnClick="BtnAcaPla_Click">
                                                   <i class="bi bi-bar-chart-line"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Leer Archivo Despiece Acad" ID="BtnLeeArcDesAca">
+                                                <asp:LinkButton runat="server" title="Leer Archivo Despiece Acad" ID="BtnLeeArcDesAca" OnClick="BtnLeeArcDesAca_Click">
                                                  <i class="bi bi-border-inner"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Cargar Archivo TXT XY" ID="BtnCarArcTxtXy">
-
+                                                <asp:LinkButton runat="server" title="Cargar Archivo TXT XY" ID="BtnCarArcTxtXy" OnClick="BtnCarArcTxtXy_Click">
                                                   <i class="bi bi-folder-plus"></i>
-
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Plano Bloqueado" ID="BtnPlaBlo">
+                                                <asp:LinkButton runat="server" title="Plano Bloqueado" ID="BtnPlaBlo" OnClick="BtnPlaBlo_Click">
                                                      <i class="bi bi-lock"></i>
                                                 </asp:LinkButton>
 
@@ -1195,7 +1434,7 @@
                                                       <i class="bi bi-bag-check"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Adicionar/Remover Elementos de la Bolsa" ID="BtnAdiRemEleBol">
+                                                <asp:LinkButton runat="server" title="Adicionar Elementos a la Bolsa (Modificar Bolsa)" ID="BtnAdiRemEleBol">
                                                          <i class="bi bi-bag-plus"></i>
                                                 </asp:LinkButton>
 
@@ -1645,21 +1884,21 @@
                                     <div class="col-3">
                                         <div class="input-group-sm">
                                             <asp:Label class="form-label" Text="Criterio" runat="server" ID="lbCriterio"></asp:Label>
-                                            <asp:TextBox ID="tbCriterio" runat="server" CssClass="form-control"></asp:TextBox>
+                                            <asp:TextBox ID="tbCriterio" runat="server" CssClass="form-control" onkeydown="handleEnterKeyPress(event)"></asp:TextBox>
                                         </div>
                                     </div>
 
                                     <div class="col-1">
                                         <div class="input-group-sm">
                                             <asp:Label class="form-label" Text="Altura" runat="server" ID="lbAltura"></asp:Label>
-                                            <asp:TextBox ID="tbAltura" runat="server" CssClass="form-control"></asp:TextBox>
+                                            <asp:TextBox ID="tbAltura" runat="server" CssClass="form-control" onkeydown="handleEnterKeyPress(event)"></asp:TextBox>
                                         </div>
                                     </div>
 
                                     <div class="col-1">
                                         <div class="input-group-sm">
                                             <asp:Label class="form-label" Text="Ancho" runat="server" ID="lbAncho"></asp:Label>
-                                            <asp:TextBox ID="tbAncho" runat="server" CssClass="form-control"></asp:TextBox>
+                                            <asp:TextBox ID="tbAncho" runat="server" CssClass="form-control" onkeydown="handleEnterKeyPress(event)"></asp:TextBox>
                                         </div>
                                     </div>
 
@@ -1940,7 +2179,7 @@
 
         </div>
 
-          <div class="modal" id="miModalll" tabindex="-1" style="display: none;">
+        <div class="modal" id="miModalll" tabindex="-1" style="display: none;">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -1956,93 +2195,128 @@
             </div>
         </div>
 
-          <div class="modal" id="CarteraVencida" tabindex="-1" style="display: none;">
-           <div class="modal-dialog">
-               <div class="modal-content">
-                   <div class="modal-header">
-                       <h5 class="modal-title">CLIENTE CON CARTERA VENCIDA</h5>
-                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                   </div>
-                   <div class="modal-body">
-                       <p><span id="CarteraVencida2"></span></p>
-                   </div>
-                   <div class="modal-footer">            
-                   </div>
-               </div>
-           </div>
-       </div>
-
-       
-          <div id="miModallll" class="modal" tabindex="-1" style="display: none;">
-    <div class="modal-dialog">    
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Fecha de empaque</h5>
-                
-            </div>
-            <div class="modal-body">
-                <p>La fecha debe ser al menos 3 días laborales después de la fecha actual.</p>
-            </div>
-            <div class="modal-footer">
-              
+        <div class="modal" id="CarteraVencida" tabindex="-1" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">CLIENTE CON CARTERA VENCIDA</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><span id="CarteraVencida2"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
-          <div class="modal" id="miModalError" tabindex="-1" style="display: none;">
-           <div class="modal-dialog">
-               <div class="modal-content">
-                   <div class="modal-header">
-                       <h5 class="modal-title">Error</h5>
-                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                   </div>
-                   <div class="modal-body">
-                       <p>La cédula del usuario no coincide. No tiene permisos para realizar esta acción.</p>
-                   </div>
-                   <div class="modal-footer">           
-                   </div>
-               </div>
-           </div>
-       </div>
+        <div id="miModallll" class="modal" tabindex="-1" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Fecha de empaque</h5>
 
-
-         
-
-          <div id="ErrorPermiso" class="modal" tabindex="-1" style="display: none;">
-    <div class="modal-dialog">    
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Error</h5>
-                
-            </div>
-            <div class="modal-body">
-                <p>No tiene permisos para realizar esta accion</p>
-            </div>
-            <div class="modal-footer">        
+                    </div>
+                    <div class="modal-body">
+                        <p>La fecha debe ser al menos 3 días laborales después de la fecha actual.</p>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>              
-        
-     <div id="OTingresada" class="modal" tabindex="-1">
-         <div class="modal-dialog modal-dialog-centered">    
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">S_I_Ducon</h5>
-            
-            </div>
-            <div class="modal-body">
-                <p> <span id="OTingresada2"></span></p>
-            </div>
-            <div class="modal-footer">
-             
+
+        <div class="modal" id="miModalError" tabindex="-1" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Error</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>La cédula del usuario no coincide. No tiene permisos para realizar esta acción.</p>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
+        <div id="ErrorPermiso" class="modal" tabindex="-1" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Error</h5>
 
+                    </div>
+                    <div class="modal-body">
+                        <p>No tiene permisos para realizar esta accion</p>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="OTingresada" class="modal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">S_I_Ducon</h5>
+
+                    </div>
+                    <div class="modal-body">
+                        <p><span id="OTingresada2"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="ModalArchivo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg ">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="Acad">Leer Archivo Autocad</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <div class="row">
+
+                            <div class="col-8">
+                                <asp:FileUpload CssClass="form-control " ID="LeerAcad" runat="server" />
+                            </div>
+
+                            <div class="col-4 text-center">
+                                <asp:Button ID="btnCargarAcad" runat="server" Text="Cargar" CssClass="btn btn-group-lg btn-outline-secondary" OnClick="btnCargarAcad_Click" OnClientClick="MostrarSpiner();" />
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!--Modal de carga proceso -->
+        <div class="modal fade" id="loadingModal1" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-2">Leyendo Archivo TXT...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </form>
 
@@ -2094,8 +2368,6 @@
             }
 
             actualizarValor();
-
-
         }
     </script>
 
@@ -2121,6 +2393,16 @@
             return true;
         }
     </script>
+
+    <script type="text/javascript">
+        function handleEnterKeyPress(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();  // Evitar que se envíe el formulario
+                document.getElementById('<%= btnBuscarActivos.ClientID %>').click(); // Hacer clic en el botón de búsqueda
+            }
+        }
+    </script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
