@@ -1234,8 +1234,8 @@
                                         <p>Desea copiar los acabados de la OT:</p>
                                     </div>
                                     <div class="modal-footer">
-                                        <asp:Button runat="server" ID="BtnSi" Text="Si" CssClass="btn shadow" OnClick="BtnSi_Click"/>
-                                        <asp:Button runat="server" ID="BtnNo" Text="No" CssClass="btn shadow"/>
+                                        <asp:Button runat="server" ID="BtnSi" Text="Si" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnSi_Click"/>
+                                        <asp:Button runat="server" ID="BtnNo" Text="No" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnNo_Click"/>
                                     </div>
                                 </div>
                             </div>
@@ -2270,6 +2270,7 @@
                         <p><span id="OTingresada2"></span></p>
                     </div>
                     <div class="modal-footer">
+                         <button type="button" data-bs-dismiss="modal" aria-label="Close">OK</button>
                     </div>
                 </div>
             </div>

@@ -273,24 +273,36 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             DataGrid3.Visible = true;
 
-            // Deselecciona todas las filas previamente seleccionadas
-            foreach (DataGridItem item in DataGrid2.Items)
+            foreach (DataGridItem item in DataGrid1.Items)
             {
                 if (item != selectedRow)
                 {
-                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    item.CssClass = "";
                 }
+
+            }
+            selectedRow.CssClass = "selected-row";
+
+            string idGrupoObjeto = selectedRow.Cells[6].Text;
+
+            // Deselecciona todas las filas previamente seleccionadas
+            foreach (DataGridItem item in DataGrid2.Items)
+            {
+                item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                item.Attributes.Remove("data-selected");
             }
 
-            // Aplica la clase CSS a la fila seleccionada
-            selectedRow.CssClass = "selected-row";
-     
-            DataGridItem selectedRowInGrid2 = FindRowInGridByID(DataGrid2, Session["Id_GrupoObjetoParaAcabadoSeleccionado"].ToString());
+            // Encuentra y selecciona la fila deseada
+            DataGridItem selectedRowInGrid2 = FindRowInGridByID(DataGrid2, idGrupoObjeto);
             if (selectedRowInGrid2 != null)
-            {            
+            {
                 selectedRowInGrid2.CssClass = "selected-roww";
-                Label1.CssClass = "selected-roww";    
+                selectedRowInGrid2.Attributes["data-selected"] = "true";
+
+                string script = "<script>scrollDataGrid();</script>";
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollDataGrid", script, false);
             }
+
 
             string detalleAdicional = selectedRow.Cells[3].Text;
 

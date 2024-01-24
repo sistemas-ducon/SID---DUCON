@@ -2515,7 +2515,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         InsertarOT();
                         InsertarConsecutivo();
                         InsertarPlano();
-                        MostrarModal();
+                    
 
                         if (Session["CopiarInfOTEjecutada"] != null && (bool)Session["CopiarInfOTEjecutada"])
                         {
@@ -2523,15 +2523,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         }
                         else
                         {
-                            Session.Remove("OTinsertada");
-                            Session.Remove("PedidoInsertado");
+                           
 
                             Session.Remove("CopiarInfOTEjecutada");
 
                         }
 
-                        Session.Remove("OTinsertada");
-                        Session.Remove("PedidoInsertado");
 
                         Session.Remove("CopiarInfOTEjecutada");
                         Session.Remove("CopiarInfOTEjecutada");
@@ -3278,7 +3275,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
 
-            Session.Remove("OTinsertada");
+        
+        }
+
+        protected void BtnNo_Click(object sender, EventArgs e)
+        {
+             Session.Remove("OTinsertada");
             Session.Remove("PedidoInsertado");
         }
 
@@ -3310,7 +3312,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         int rowsAffected = command.ExecuteNonQuery();
 
-
+                        MostrarModal();
                     }
                 }
             }
@@ -3318,6 +3320,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
 
             }
+
+            Session.Remove("OTinsertada");
+            Session.Remove("PedidoInsertado");
         }
 
 
