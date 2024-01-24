@@ -30,7 +30,7 @@
 
                                 <div class="table-responsive mb-2 gap-2" style="height: 20rem; overflow-x: auto;">
                                     <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm"
-                                        ID="DataGrid1" runat="server" AutoGenerateColumns="false">
+                                        ID="DataGrid1" runat="server" AutoGenerateColumns="false" >
 
                                         <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                         <Columns>
@@ -44,12 +44,12 @@
                                             <asp:BoundColumn HeaderText="Acabado Definitivo" DataField="Descripcion_Acabado" ItemStyle-CssClass="auto-width-column" />
                                             <asp:BoundColumn HeaderText="Detalle Adicional" DataField="Detalle_Adicional" ItemStyle-CssClass="auto-width-column" />
                                             <asp:BoundColumn HeaderText="Acabado de Ventas" DataField="AcabadoVentas" ItemStyle-CssClass="auto-width-column" />
-                                            <asp:BoundColumn HeaderText="Entrega" DataField="Entrega" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                              <asp:BoundColumn HeaderText="Entrega" DataField="Entrega" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                            <asp:BoundColumn HeaderText="Entrega" DataField="Entrega" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>          
                                               <asp:BoundColumn DataField ="ID_GrupoObjetoParaAcabado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                               <asp:BoundColumn DataField ="Descripcion_Grupo" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                              <asp:BoundColumn DataField ="ID_GrupoAcabado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                               <asp:BoundColumn DataField ="ID_Acabado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                             <asp:BoundColumn DataField ="Id_OTAcabados" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                         </Columns>
                                     </asp:DataGrid>         
                                 </div>
@@ -57,7 +57,7 @@
                                 <div class="container-fluid  mt-3">
                                     <div class="row justify-content-between">
                                         <div class="col-6">
-                                            <asp:Button ID="Button1" runat="server" Text="Eliminar Acabado" CssClass="btn btn-dark btn-sm" Enabled="false" />
+                                            <asp:Button ID="Button1" runat="server" Text="Eliminar Acabado" CssClass="btn btn-dark btn-sm" Enabled="false" OnClick="EliminarAcabado_Click"/>
                                         </div>
                                         <div class="col-6 text-end">
                                             <asp:Button ID="Button2" runat="server" Text="Cambiar Acabado" CssClass="btn btn-dark btn-sm" Enabled="false" />
@@ -178,8 +178,6 @@
                                                             </SelectParameters>
                                                         </asp:SqlDataSource>
 
-
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -191,6 +189,7 @@
                                                         <div class="col-10">
                                                             <asp:Label ID="Label2" runat="server" Text="Aplicar Acabado a:" CssClass="col-form-label-sm"></asp:Label>
                                                             <asp:Label ID="Label3" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
+                                                             <asp:Label ID="Label8" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
                                                         </div>
                                                         <div class="col-2">
                                                             <asp:Label ID="Label9" runat="server" Text="Copiar Acab. del ped" CssClass="fw-bold"></asp:Label>
@@ -201,6 +200,7 @@
                                                         <div class="col-12">
                                                             <asp:Label ID="Label4" runat="server" Text="Acabado Definitivo:" CssClass="col-form-label-sm"></asp:Label>
                                                             <asp:Label ID="Label5" CssClass="form-control-sm" runat="server" Text="" Visible="false"></asp:Label>
+                                                             <asp:Label ID="Label10" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
                                                         </div>
                                                     </div>
 
@@ -244,14 +244,82 @@
                     </div>
                 </div>
 
-                <!-- Modal -->
-<div id="myModal" class="modal">
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <p><span id="spanMessage"></span></p>
-  </div>
-</div>
+        <div class="modal" id="miModalll" tabindex="-1" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Acabado de la obra</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Debe seleccionar a que le va aplicar el acabado y el acabado definitivo</span></p>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                <div class="modal" id="miModalError" tabindex="-1" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Error</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Debe seleccionar el acabado que desea eliminar</span></p>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+      <div class="modal" id="DefinirAcabado" tabindex="-1" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Definir Acabado</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Esta seguro de aplicar a:  <span id="valorLabelSpan"></span> ?</span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <asp:Button runat="server" Text="Si" OnClick="BotonSi_Click" data-bs-dismiss="modal" aria-label="Close" />
+                        <asp:Button runat="server" Text="No" data-bs-dismiss="modal" aria-label="Close" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                   <div class="modal" id="EliminarAcabado" tabindex="-1" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Eliminar Acabado</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Esta seguro de Eliminar el acabado: <span id="valorLabelSpanEliminar"></span> ?</span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <asp:Button runat="server" Text="Si" OnClick="BotonSiEliminar_Click" data-bs-dismiss="modal" aria-label="Close" />
+                        <asp:Button runat="server" Text="No" data-bs-dismiss="modal" aria-label="Close" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                                <!-- Modal -->
+                <div id="myModal" class="modal">
+                  <!-- Modal content -->
+                  <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <p><span id="spanMessage"></span></p>
+                  </div>
+                </div>
 
             </ContentTemplate>
         </asp:UpdatePanel>

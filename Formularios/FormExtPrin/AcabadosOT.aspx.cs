@@ -9,26 +9,99 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
 using System.Windows.Forms;
+using System.Reflection.Emit;
 
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 {
     public partial class AcabadosOT : System.Web.UI.Page
     {
-
         protected void Page_Load(object sender, EventArgs e)
-        {
-            DataTable emptyDataTable = new DataTable(); // Crear un DataTable vacío
-            DataGrid1.DataSource = emptyDataTable; // Asignar el DataTable vacío al DataGrid
-            DataGrid1.DataBind();
+        {      
             botonGrabarValidacion();
             CargarDatos();
-            
         }
 
         protected void BtnGrabar_Click(object sender, EventArgs e)
         {
+            // Realiza la validación de campos
+            string campoFaltante = ValidarCampos();
 
+            if (string.IsNullOrEmpty(campoFaltante))
+            {
+                string valorLabel = Label3.Text + " el acabado: " + Label5.Text + "-";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#valorLabelSpan').text('" + valorLabel + "'); $('#DefinirAcabado').modal('show');", true);
+
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalll').modal('show');", true);
+            }
+        }
+
+        protected void BotonSi_Click(object sender, EventArgs e)
+        {
+            string idOT = Session["Id_OT"]?.ToString();
+            string consecutivoPedido = Session["pedido"]?.ToString();
+
+            string valorIDAcabado = Label10.Text;
+
+            string valorIDGrupoParaAcabado = Label8.Text;
+
+            // Obtener el valor del TextBox1 y Label3 + Label5
+            string valorTextBox1 = TextBox1.Text;
+            string valorLabel = Label3.Text + ":" + Label5.Text + "-" + TextBox1.Text;
+
+            // Verificar si algún campo está vacío o nulo
+            
+                // Realizar la inserción en la base de datos
+                string consultaInsert = "INSERT INTO tblOTAcabados (Id_OT, Consecutivo_Pedido, ID_Acabado, ID_GrupoObjetoparaAcabado, Detalle_Adicional, AcabadoVentas) " +
+                                        "VALUES ('" + idOT + "', '" + consecutivoPedido + "', " + valorIDAcabado + ", " + valorIDGrupoParaAcabado + ", '" + valorTextBox1 + "', '" + valorLabel + "');";
+
+                string cadenaConexion = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"; 
+                using (SqlConnection conexion = new SqlConnection(cadenaConexion))
+                {
+                    conexion.Open(); // Abre la conexión a la base de datos
+
+                    // Crea el comando SQL con la consulta de inserción y la conexión
+                    using (SqlCommand comando = new SqlCommand(consultaInsert, conexion))
+                    {                      
+                        int rowsAffected = comando.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {                        
+                            CargarDatos();
+                        }
+                        else
+                        {
+
+                        }
+                                            
+                    }
+
+                    // Cierra la conexión
+                    conexion.Close();
+                }
+
+          
+
+        }
+
+        protected void BotonNo_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private string ValidarCampos()
+        {
+            string campoFaltante = string.Empty;
+
+        
+           if (string.IsNullOrEmpty(Label5.Text))
+            {
+                campoFaltante = "Acabado Definitivo";
+            }  
+
+            return campoFaltante;
         }
         private void botonGrabarValidacion()
         {
@@ -54,11 +127,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         {
                             Button3.Enabled = true;
                             habilitarLinkButton = true;
+
+                            Button1.Enabled = true;
+                           
                         }
                         else
                         {
                             Button3.Enabled = false;
                             habilitarLinkButton = false;
+
+                            Button1.Enabled = false;
                         }
                     }
 
@@ -143,7 +221,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                                     AND O.Consecutivo_Pedido = @ConsecutivoPedido
                                     ORDER BY A.Descripcion_Acabado";
 
-
                 string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -172,75 +249,173 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             {
               
             }
+     
         }
 
         protected void DespieceAcabados_Click(object sender, EventArgs e)
         {
-            try
+            // Obtén el LinkButton que se hizo clic
+            LinkButton lnkSelectRow = (LinkButton)sender;
+
+            // Obtén el índice de fila desde el CommandArgument
+            int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
+
+            // Accede a la fila seleccionada en el DataGrid
+            DataGridItem selectedRow = DataGrid1.Items[rowIndex];
+
+            Session["Id_OTAcabadosSeleccionado"] = selectedRow.Cells[10].Text;
+
+            Session["Id_GrupoObjetoParaAcabadoSeleccionado"] = selectedRow.Cells[6].Text;
+
+            Session["Id_GrupoAcabadoSeleccionado"] = selectedRow.Cells[8].Text;
+
+            SqlDataSource3.SelectParameters["ID_GrupoObjetoParaAcabado"].DefaultValue = Session["Id_GrupoAcabadoSeleccionado"].ToString();
+
+            DataGrid3.Visible = true;
+
+            // Deselecciona todas las filas previamente seleccionadas
+            foreach (DataGridItem item in DataGrid2.Items)
             {
-                LinkButton lnkSelectRow = (LinkButton)sender;
-                int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
-                DataGridItem selectedRow = DataGrid1.Items[rowIndex];
-
-                string idGrupoObjeto = selectedRow.Cells[7].Text;
-
-                SqlDataSource2.SelectParameters.Clear();
-                SqlDataSource2.SelectParameters.Add("ID_GrupoObjetoparaAcabado", idGrupoObjeto);
-                DataGrid2.DataBind();
-
-                foreach (DataGridItem item in DataGrid2.Items)
+                if (item != selectedRow)
                 {
-                    if (item.Cells[2].Text == idGrupoObjeto)
-                    {
-                        item.CssClass = "selected-roww";
-                        item.Attributes["data-selected"] = "true";
+                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                }
+            }
 
-                        string script = "<script>scrollDataGrid();</script>";
-                        ScriptManager.RegisterStartupScript(this, GetType(), "scrollDataGrid", script, false);
+            // Aplica la clase CSS a la fila seleccionada
+            selectedRow.CssClass = "selected-row";
+     
+            DataGridItem selectedRowInGrid2 = FindRowInGridByID(DataGrid2, Session["Id_GrupoObjetoParaAcabadoSeleccionado"].ToString());
+            if (selectedRowInGrid2 != null)
+            {            
+                selectedRowInGrid2.CssClass = "selected-roww";
+                Label1.CssClass = "selected-roww";    
+            }
+
+            string detalleAdicional = selectedRow.Cells[3].Text;
+
+            TextBox1.Text = !string.IsNullOrEmpty(detalleAdicional) && detalleAdicional != "&nbsp;"
+                ? detalleAdicional
+                : string.Empty;
+
+
+            Label1.Text = selectedRow.Cells[7].Text;
+            Label1.Visible = true;
+
+            Label10.Text = selectedRow.Cells[9].Text;
+           
+
+            Label8.Text = selectedRow.Cells[6].Text;
+          
+
+            Label5.Text = selectedRow.Cells[2].Text;
+            Label5.Visible = true;
+
+            Label3.Text = selectedRow.Cells[1].Text;
+            Label3.Visible = true;
+
+          
+
+            DataGrid4.Visible = false;
+
+           
+
+        }
+
+        private DataGridItem FindRowInGridByID(System.Web.UI.WebControls.DataGrid grid, string id)
+        {
+            foreach (DataGridItem item in grid.Items)
+            {
+                if (item.Cells[2].Text == id) // Ajusta el índice según la posición de ID_GrupoObjetoParaAcabado en tu DataGrid
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        protected void EliminarAcabado_Click(object sender, EventArgs e)
+        {
+            // Realiza la validación de campos
+            string campoFaltante = ValidarEli();
+
+            if (string.IsNullOrEmpty(campoFaltante))
+            {
+                string valorLabel = Label5.Text + " - aplicado a: " + Label3.Text;
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#valorLabelSpanEliminar').text('" + valorLabel + "'); $('#EliminarAcabado').modal('show');", true);
+
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
+            }
+
+            
+        }
+
+        private string ValidarEli()
+        {
+            string campoFaltante = string.Empty;
+
+
+            if (string.IsNullOrEmpty(Label5.Text))
+            {
+                campoFaltante = "Acabado Definitivo";
+            }
+
+            return campoFaltante;
+        }
+
+        protected void BotonSiEliminar_Click(object sender, EventArgs e)
+        {
+            // Definir la cadena de conexión
+            string cadenaConexion = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password";
+
+            // Obtener el valor de id_OTAcabados
+            string valor_id_OTAcabados = ObtenerValorId_OTAcabados(); // Ajusta esto según cómo obtienes el valor
+
+            // Construir la consulta DELETE
+            string consultaDelete = "DELETE FROM tblotAcabados WHERE Id_OTAcabados = '" + valor_id_OTAcabados + "';";
+
+            // Crear y abrir la conexión
+            using (SqlConnection conexion = new SqlConnection(cadenaConexion))
+            {
+                conexion.Open();
+
+                // Crear el comando SQL con la consulta DELETE y la conexión
+                using (SqlCommand comando = new SqlCommand(consultaDelete, conexion))
+                {
+                    // Ejecutar la consulta DELETE
+                    int filasAfectadas = comando.ExecuteNonQuery();
+
+                    if (filasAfectadas > 0)
+                    {
+                        CargarDatos();
+                    }
+                    else
+                    {
+                       
                     }
                 }
-
-                foreach (DataGridItem item in DataGrid1.Items)
-                {
-                    if (item != selectedRow)
-                    {
-                        item.CssClass = "";
-                    }
-                }
-
-                selectedRow.CssClass = "selected-row";
-
-                Label1.Text = selectedRow.Cells[8].Text;
-                Label1.Visible = true;
-               
-
-                Label5.Text = selectedRow.Cells[2].Text;
-                Label5.Visible = true;
-
-                Label3.Text = selectedRow.Cells[1].Text;
-                Label3.Visible = true;
-
-                string detalleAdicional = selectedRow.Cells[3].Text;
-
-                // Verificar si el detalle adicional es nulo o "&nbsp;"
-                TextBox1.Text = string.IsNullOrEmpty(detalleAdicional) || detalleAdicional == "&nbsp;"
-                    ? string.Empty
-                    : detalleAdicional;
-
-                string idGrupoAcabado = selectedRow.Cells[9].Text;
-
-                SqlDataSource3.SelectParameters.Clear();
-                SqlDataSource3.SelectParameters.Add("ID_GrupoObjetoParaAcabado", idGrupoAcabado);
-                DataGrid3.DataBind();
             }
-            catch (Exception ex)
+        }
+
+        private string ObtenerValorId_OTAcabados()
+        {
+
+            // Verifica si hay un valor almacenado en la variable de sesión
+            if (Session["Id_OTAcabadosSeleccionado"] != null)
             {
-                // Manejo de la excepción (puedes mostrar un mensaje de error, registrar la excepción, etc.)
-                // Por ejemplo:
-                // Response.Write("Ocurrió un error: " + ex.Message);
-                // o
-                // Logger.Log(ex);
+                // Obtiene el valor almacenado en la variable de sesión
+                return Session["Id_OTAcabadosSeleccionado"].ToString();
             }
+            else
+            {
+                // Si no hay un valor en la variable de sesión, devuelve un valor predeterminado
+                return "";
+            }
+
+
         }
 
         protected void lnkSelectRow_Click(object sender, EventArgs e)
@@ -253,6 +428,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             // Accede a la fila seleccionada en el DataGrid
             DataGridItem selectedRow = DataGrid2.Items[rowIndex];
+     
+
+            Session["Id_GrupoObjetoAcabadoSeleccionado2"] = selectedRow.Cells[2].Text;
 
             // Deselecciona todas las filas previamente seleccionadas
             foreach (DataGridItem item in DataGrid2.Items)
@@ -269,7 +447,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             DataGridItem selectedRowDataGrid2 = DataGrid2.Items[rowIndex];
 
             // Obtén el valor de la columna ID_GrupoObjetoparaAcabado de la fila seleccionada en DataGrid2
-            string idGrupoObjeto = selectedRowDataGrid2.Cells[2].Text; // Asegúrate de que Cells[1] sea el índice correcto
+            string idGrupoObjeto = selectedRowDataGrid2.Cells[2].Text; 
 
             // Modifica dinámicamente la consulta del SqlDataSource4 con el nuevo valor
             SqlDataSource4.SelectCommand = "SELECT tblGrupoObjetoParaAcabado.ID_GrupoObjetoparaAcabado, tblGrupodeAcabado.ID_GrupoAcabado, tblGrupodeAcabado.Descripcion_Grupo " +
@@ -281,8 +459,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             // Actualiza el DataGrid4
             DataGrid4.DataBind();
             DataGrid4.Visible = true;
+            
 
-            System.Web.UI.WebControls.Label Label3 = (System.Web.UI.WebControls.Label)FindControl("Label3");
+           
            
 
             // Establece la visibilidad de los Labels
@@ -290,11 +469,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
          
 
             // Obtén el valor de la columna "GrupoObjetoparaAcabado" de la fila seleccionada en DataGrid2
-            string grupoObjetoSeleccionado = selectedRowDataGrid2.Cells[1].Text; // Asegúrate de que Cells[1] sea el índice correcto
+            string grupoObjetoSeleccionado = selectedRowDataGrid2.Cells[1].Text; 
+            string idgrupoObjetoSeleccionado = selectedRowDataGrid2.Cells[2].Text;
+
+            Label8.Text = idgrupoObjetoSeleccionado;
+           
 
             // Asigna el valor al Label3
             Label3.Text = grupoObjetoSeleccionado;
+            Label3.Visible = true;
 
+            Label1.Visible = false;
+
+         
 
         }
 
@@ -329,6 +516,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             // Actualiza el DataGrid3 con los nuevos datos
             DataGrid3.DataBind();
+            Label5.Visible = false;
+
+            
 
         }
 
@@ -343,6 +533,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             // Accede a la fila seleccionada en el DataGrid
             DataGridItem selectedRow = DataGrid3.Items[rowIndex];
 
+            Session["Id_AcabadoSeleccionado"] = selectedRow.Cells[3].Text;
+
             // Deselecciona todas las filas previamente seleccionadas
             foreach (DataGridItem item in DataGrid3.Items)
             {
@@ -356,19 +548,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             selectedRow.CssClass = "selected-roww";
 
           
-            System.Web.UI.WebControls.Label Label5 = (System.Web.UI.WebControls.Label)FindControl("Label5");
+            
 
             // Establece la visibilidad de los Labels
            
-            Label5.Visible = true;
+          
 
             DataGridItem selectedRowDataGrid3 = DataGrid3.Items[rowIndex];
 
             // Obtén el valor de la columna "GrupoObjetoparaAcabado" de la fila seleccionada en DataGrid2
-            string descripcionAcabado = selectedRowDataGrid3.Cells[4].Text; 
+            string descripcionAcabado = selectedRowDataGrid3.Cells[4].Text;
+            string idAcabado = selectedRowDataGrid3.Cells[3].Text;
+
+            // Asigna el valor al Label3
+            Label10.Text = idAcabado;
+           
 
             // Asigna el valor al Label3
             Label5.Text = descripcionAcabado;
+            Label5.Visible = true;
+
+
 
             //// Obtener el valor de la columna "DeLinea" de la fila seleccionada en DataGrid3
             //string deLinea = selectedRowDataGrid3.Cells[5].Text; // Asegúrate de que Cells[5] sea el índice correcto
@@ -378,16 +578,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             //    // Realizar la consulta a la base de datos
             //    string idAcabado = selectedRowDataGrid3.Cells[3].Text; // Obtener el ID_Acabado de la fila seleccionada
             //    string query = "SELECT * FROM tblAcabado WHERE ID_Acabado = '" + idAcabado + "' AND DeLinea = '0'";
-        
+
             //    bool tuVariableConsulta = true; // Esto es un ejemplo, deberías tener la lógica real para determinar si la consulta fue exitosa
 
             //    if (tuVariableConsulta)
             //    {
             //        // Si la consulta es exitosa, muestra el modal con el mensaje de éxito usando JavaScript/jQuery
             //        ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", "$('#myModal').css('display', 'block');", true);
-                   
+
             //    }
-                
+
             //}
             //else
             //{
