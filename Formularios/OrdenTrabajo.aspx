@@ -61,9 +61,6 @@
             ocultarModalArchivo();
             // Muestra el modal de carga
             $('#loadingModal1').modal('show');
-
-
-
         }
         // Función para ocultar el modal
         function OcultarSpiner() {
@@ -72,8 +69,18 @@
 
     </script>
 
+    <script type="text/javascript">
+           function CargarExcel() {
+               // Muestra el modal de carga
+               $('#loadingModalExcel').modal('show');
 
+           }
+           // Función para ocultar el modal
+           function CerrarCargarExcel() {
+               $('#loadingModalExcel').modal('hide');
+           }
 
+       </script>
 
 </head>
 
@@ -1454,7 +1461,7 @@
                                                    <i class="bi bi-arrow-up-left-circle"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Visualizar/Generar Cotizacion" ID="BtnVisGenCot">
+                                                <asp:LinkButton runat="server" title="Visualizar/Generar Cotizacion" ID="BtnVisGenCot" OnClick="BtnVisGenCot_Click" OnClientClick="CargarExcel();">
                                                     <i class="bi bi-bag-plus"></i>
                                                 </asp:LinkButton>
 
@@ -2314,6 +2321,19 @@
                             <span class="visually-hidden">Cargando...</span>
                         </div>
                         <p class="mt-2">Leyendo Archivo TXT...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <div class="modal fade" id="loadingModalExcel" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-2">Cargando Excel...</p>
                     </div>
                 </div>
             </div>
