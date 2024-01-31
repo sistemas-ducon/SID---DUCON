@@ -920,7 +920,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         HabilitarBotonesPlano();
                         // Obtener datos de cotización y asignarlos a controles
                         AssignCotizacionData(id, pedido, txtCotizacion.Text);
-
+                      
 
                     }
                 }
@@ -1598,7 +1598,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         }
                     }
-
+                  
                 }
 
 
@@ -2390,55 +2390,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         //FIN
 
-        // Consultar Documentacio 
-        protected void chxFiltrarDocumentacion_CheckedChanged(object sender, EventArgs e)
-        {
-            bool check = chxDocumento.Checked;
-
-            if (check)
-            {
-                DataGridDoc.DataSourceID = "DocumentosOt";
-                DataGridDoc.DataBind();
-
-            }
-            else
-            {
-                DataGridDoc.DataSourceID = "DocumentacionFiltrada";
-                DataGridDoc.DataBind();
-            }
-
-        }
-
-        //metodo pendiente para adjuntar documentacion a la Ot
-        protected void AdjuntarDocumento(object sender, EventArgs e)
-        {
-            if (DocOt.HasFile)
-            {
-
-            }
-            else
-            {
-
-            }
-
-
-        }
-
-        // metodo pendiente par eliminar documentos
-        protected void EliminarDocumento(object sender, EventArgs e)
-        {
-            if (DocOt.HasFile)
-            {
-
-            }
-            else
-            {
-
-            }
-
-
-        }
-
+   
         public void CargarVariablesDeSesionContable()
         {
             if (!string.IsNullOrEmpty(Session["IdContactoFactSession"]?.ToString()) && !string.IsNullOrEmpty(Session["IdClienteFactSession"]?.ToString()))
@@ -6132,7 +6084,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        protected void DocumentacionOt_Click(object sender, EventArgs e)
+        {
 
+            Session["Id_OT2"] = tbOT.Text;
+            Session["pedido2"] = ddlNumbers.Text;
+
+            string url = "FormExtPrin/DocumentacionOT.aspx";
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+        }
     }
 
 }

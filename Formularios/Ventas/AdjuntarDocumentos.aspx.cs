@@ -278,9 +278,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
             string mensajePersonalizado = "El documento ha sido eliminado correctamente.";
             string urlRedireccion = "Ventas/AdjuntarDocumentos.aspx";
-            Response.Redirect($"~/Formularios/Ventas/AdjuntarDocumentos.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
 
-         
+
         }
 
     }
