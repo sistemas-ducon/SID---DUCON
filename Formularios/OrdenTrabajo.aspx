@@ -511,7 +511,8 @@
                                 <div class="col-lg-1 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="OT" runat="server" ID="lblOT"></asp:Label>
-                                        <asp:TextBox ID="tbOT" runat="server" CssClass="form-control" OnTextChanged="ObtenerInfoOt" AutoPostBack="true"></asp:TextBox>
+                                        <asp:TextBox ID="tbOT" runat="server" CssClass="form-control" OnTextChanged="ObtenerInfoOt" AutoPostBack="true"></asp:TextBox>               
+
                                     </div>
                                 </div>
 
@@ -538,10 +539,9 @@
                                 <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="T.Ped" runat="server" ID="lblTped"></asp:Label>
-                                        <asp:DropDownList ID="dtacboTipoPedido" runat="server" class="form-control" DataSourceID="TiposDePedidos" DataTextField="Descripcion_TipoPedido" DataValueField="Id_TipoPedido">
+                                        <asp:DropDownList ID="dtacboTipoPedido" runat="server" class="form-control" DataSourceID="TiposDePedidos" DataTextField="Descripcion_TipoPedido" DataValueField="Id_TipoPedido" AutoPostBack="True" OnSelectedIndexChanged="dtacboTipoPedido_SelectedIndexChanged">
                                         </asp:DropDownList>
-                                        <asp:SqlDataSource ID="TiposDePedidos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT Descripcion_TipoPedido, Id_TipoPedido, Activo FROM tblTipoPedido
-                                                                                                                                                                            ORDER BY Descripcion_TipoPedido
+                                        <asp:SqlDataSource ID="TiposDePedidos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT Descripcion_TipoPedido, Id_TipoPedido, EstadisticaVenta FROM tblTipoPedido WHERE Activo = '1' ORDER BY Descripcion_TipoPedido
                                                                                                                                                                             "></asp:SqlDataSource>
                                     </div>
                                 </div>
@@ -549,8 +549,18 @@
                                 <div class="col-lg-1 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Ped.Base" runat="server" ID="lblPedBase"></asp:Label>
-                                        <asp:DropDownList ID="cboPedidoBase" runat="server" class="form-control" DataSourceID="PedidoBase" DataTextField="PedidoBase" DataValueField="PedidoBase"></asp:DropDownList>
-                                        <asp:SqlDataSource ID="PedidoBase" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT DISTINCT PedidoBase FROM tblOT WHERE (PedidoBase BETWEEN 1 AND 1000) AND PedidoBase <> 0 ORDER BY PedidoBase"></asp:SqlDataSource>
+                                        <asp:DropDownList ID="cboPedidoBase" runat="server" class="form-control" DataSourceID="PedidoBase" DataTextField="Consecutivo_Pedido" DataValueField="Consecutivo_Pedido"></asp:DropDownList>
+                                        <asp:SqlDataSource ID="PedidoBase" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT Consecutivo_Pedido, EstadisticaVenta
+                                                                FROM tblTipoPedido
+                                                                INNER JOIN tblOT ON tblTipoPedido.Id_TipoPedido = tblOT.Id_TipoPedido
+                                                                WHERE tblOT.Id_OT = @Id_OT  AND EstadisticaVenta = '1'
+                                                                ORDER BY tblOT.Consecutivo_Pedido DESC;
+                                                                ">
+                                              <SelectParameters>
+                                                <asp:SessionParameter Name="Id_OT" SessionField="Id_OT" Type="String" />                          
+                                            </SelectParameters>
+                                        </asp:SqlDataSource>
+
                                     </div>
                                 </div>
 
@@ -584,11 +594,11 @@
 
                                 <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm justify-content-around">
-                                        <asp:LinkButton runat="server" title="Nuevo Pedido" ID="btnNuevoPedido" OnClick="NuevoPedido">
-                                                     <i class="bi bi-files"></i>
+                                        <asp:LinkButton runat="server" title="Nuevo Pedido" ID="btnNuevoPedido" OnClick="NuevoPedido_Click">
+                                         <i class="bi bi-files"></i>
                                         </asp:LinkButton>
                                         <asp:LinkButton runat="server" title="Acabados" ID="btnAcabados" OnClick="Acabados_Click">
-                                                    <i class="bi bi-palette"></i>
+                                        <i class="bi bi-palette"></i>
                                         </asp:LinkButton>
                                         <asp:LinkButton runat="server" title="OK" Text="OK" ID="btnOk" OnClick="Boton_Ok">                                          
                                         </asp:LinkButton>
@@ -1223,8 +1233,10 @@
 
                         </div>
 
+                      
+
                         <div id="CopiarAcabados" class="modal" tabindex="-1" style="display: none;">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title">Copiar Acabados</h5>
@@ -1234,12 +1246,68 @@
                                         <p>Desea copiar los acabados de la OT:</p>
                                     </div>
                                     <div class="modal-footer">
-                                        <asp:Button runat="server" ID="BtnSi" Text="Si" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnSi_Click"/>
+                                        <asp:Button runat="server" ID="BtnSi" Text="Si" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnSi_Click" AutoPostBack="true"/>
                                         <asp:Button runat="server" ID="BtnNo" Text="No" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnNo_Click"/>
                                     </div>
                                 </div>
                             </div>
                         </div>
+            
+                        
+        <div id="OTingresada" class="modal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">S_I_Ducon</h5>
+
+                    </div>
+                    <div class="modal-body">
+                        <p><span id="OTingresada2"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                         <asp:Button runat="server" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" OnClick="MonstrasrModalAcabados_Click"></asp:Button>          
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+           <div class="modal" id="NuevoPedido" tabindex="-1" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Información General OT</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Desea continuar con la información general de la OT?</span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <asp:Button runat="server" Text="Si" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnSiNuevoPedido_Click" />
+                        <asp:Button runat="server" Text="No" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnNoNuevoPedido_Click" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                        
+           <div class="modal" id="ActualizarCliente" tabindex="-1" style="display: none;">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Grabar Cliente</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Por favor actualizar el registro de clientes.</span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <asp:Button runat="server" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close"/>      
+                    </div>
+                </div>
+            </div>
+        </div>
 
                     </ContentTemplate>
 
@@ -2259,22 +2327,6 @@
             </div>
         </div>
 
-        <div id="OTingresada" class="modal" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">S_I_Ducon</h5>
-
-                    </div>
-                    <div class="modal-body">
-                        <p><span id="OTingresada2"></span></p>
-                    </div>
-                    <div class="modal-footer">
-                         <button type="button" data-bs-dismiss="modal" aria-label="Close">OK</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="modal fade" id="ModalArchivo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg ">
@@ -2318,6 +2370,8 @@
                 </div>
             </div>
         </div>
+
+
 
     </form>
 
