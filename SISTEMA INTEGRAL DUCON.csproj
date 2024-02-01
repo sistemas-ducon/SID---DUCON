@@ -99,6 +99,10 @@
     <Reference Include="NuGet.Versioning, Version=6.7.0.127, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\NuGet.Versioning.6.7.0\lib\net472\NuGet.Versioning.dll</HintPath>
     </Reference>
+    <Reference Include="Office, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>packages\MicrosoftOfficeCore.15.0.0\lib\net35\Office.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IO.Compression" />
@@ -154,6 +158,7 @@
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Formularios\Administrativo\EstadisticasVentas.aspx" />
     <Content Include="Formularios\FormExtPrin\AcabadosOT.aspx" />
+    <Content Include="Formularios\FormExtPrin\DocumentacionOT.aspx" />
     <Content Include="Formularios\FormExtPrin\NitOTs.aspx" />
     <Content Include="Formularios\FormExtPrin\ObjetoDespiece.aspx" />
     <Content Include="Formularios\FormExtPrin\Objetos.aspx" />
@@ -254,6 +259,13 @@
     </Compile>
     <Compile Include="Formularios\FormExtPrin\AcabadosOT.aspx.designer.cs">
       <DependentUpon>AcabadosOT.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\FormExtPrin\DocumentacionOT.aspx.cs">
+      <DependentUpon>DocumentacionOT.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\FormExtPrin\DocumentacionOT.aspx.designer.cs">
+      <DependentUpon>DocumentacionOT.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\FormExtPrin\NitOTs.aspx.cs">
       <DependentUpon>NitOTs.aspx</DependentUpon>

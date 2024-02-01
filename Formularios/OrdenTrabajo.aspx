@@ -10,15 +10,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="../../Recursos/CSS/OrdenTrabajo.css" />
     <title>Ordenes de Trabajo</title>
-    <link rel="icon" href="https://ibb.co/grQLPCw" type="image/x-icon" />
+    <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
 
-    <script>
-        function mostrarDivDocumentacion() {
-            var divDocumentacion = document.getElementById('Documentacion');
-            // Si el div está visible, lo oculta; de lo contrario, lo muestra
-            divDocumentacion.style.display = (divDocumentacion.style.display === 'block') ? 'none' : 'block';
-        }
-    </script>
 
     <script>
         function confirmDelete() {
@@ -55,15 +48,12 @@
             $('#ModalArchivo').modal('hide');
         }
     </script>
-  
+
     <script type="text/javascript">
         function MostrarSpiner() {
             ocultarModalArchivo();
             // Muestra el modal de carga
             $('#loadingModal1').modal('show');
-
-
-
         }
         // Función para ocultar el modal
         function OcultarSpiner() {
@@ -72,8 +62,18 @@
 
     </script>
 
+    <script type="text/javascript">
+        function CargarExcel() {
+            // Muestra el modal de carga
+            $('#loadingModalExcel').modal('show');
 
+        }
+        // Función para ocultar el modal
+        function CerrarCargarExcel() {
+            $('#loadingModalExcel').modal('hide');
+        }
 
+    </script>
 
 </head>
 
@@ -291,11 +291,11 @@
                                                    <i class="bi bi-wrench"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Anular o Eliminar un Pedido" ID="AnularPedido" >
+                                                <asp:LinkButton runat="server" title="Anular o Eliminar un Pedido" ID="AnularPedido">
                                                  <i class="bi bi-file-earmark-excel"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Documentación OT" ID="DocumentacionOt" OnClientClick="mostrarDivDocumentacion(); return false;">
+                                                <asp:LinkButton runat="server" title="Documentación OT" ID="DocumentacionOt" OnClick="DocumentacionOt_Click">
                                                   <i class="bi bi-paperclip"></i>
                                                 </asp:LinkButton>
 
@@ -379,131 +379,6 @@
                                 </div>
                             </nav>
 
-                            <!--Div de Documentacion pendiente por Definir como se va manejar la logica -->
-                            <div id="Documentacion" runat="server" style="display: none; padding-bottom: 20rem">
-                                <div class="container-fluid">
-
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <asp:CheckBox ID="chxDocumento" runat="server" OnCheckedChanged="chxFiltrarDocumentacion_CheckedChanged" AutoPostBack="true" />
-                                            <asp:Label ID="Label4" runat="server" Text="Documentación completa"></asp:Label>
-                                        </div>
-                                    </div>
-
-                                    <div class="row justify-content-center mb-3">
-                                        <div class="border rounded p-2" style="margin-right: 2rem; margin-left: 2rem">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <div class="table-responsive mb-1 gap-2" style="max-height: 20rem; overflow-x: auto;">
-                                                        <h5 class="datagrid-header text-center">Documentación</h5>
-                                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridDoc" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="DocumentacionFiltrada">
-                                                            <Columns>
-
-                                                                <asp:TemplateColumn HeaderText="...">
-                                                                    <ItemTemplate>
-                                                                        <asp:LinkButton ID="lnkView" runat="server" ToolTip="Seleccionar Documento" CommandName="VerDocumento" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>" />
-                                                                    </ItemTemplate>
-                                                                </asp:TemplateColumn>
-
-
-                                                                <asp:BoundColumn DataField="Archivo" HeaderText="Archivo" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn DataField="Observacion" HeaderText="Observacion" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn DataField="TipoDocumento" HeaderText="Tipo Documento" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn DataField="Usuario" HeaderText="Usuario" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn DataField="FechaRegistro" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column" />
-
-                                                                <asp:TemplateColumn HeaderText="...">
-                                                                    <ItemTemplate>
-                                                                        <asp:LinkButton ID="lnkView1" ToolTip="VerDocumento" runat="server" CommandName="VerDocumento1" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-eye'></i>" />
-                                                                    </ItemTemplate>
-                                                                </asp:TemplateColumn>
-                                                            </Columns>
-                                                        </asp:DataGrid>
-                                                        <asp:SqlDataSource runat="server" ID="DocumentosOt" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="Select * from tblDocumentacion where ID_OT= @IdOt">
-                                                            <SelectParameters>
-                                                                <asp:ControlParameter ControlID="tbOT" PropertyName="Text" Name="IdOt"></asp:ControlParameter>
-                                                            </SelectParameters>
-                                                        </asp:SqlDataSource>
-
-                                                        <asp:SqlDataSource runat="server" ID="DocumentacionFiltrada" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="Select * from tblDocumentacion where ID_OT= @IdOt and Pedido = @Pedido">
-                                                            <SelectParameters>
-                                                                <asp:ControlParameter ControlID="tbOT" PropertyName="Text" Name="IdOt"></asp:ControlParameter>
-                                                                <asp:ControlParameter ControlID="ddlNumbers" PropertyName="Text" Name="Pedido"></asp:ControlParameter>
-                                                            </SelectParameters>
-                                                        </asp:SqlDataSource>
-
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row p-1 m-1">
-
-                                        <div class="col-6">
-                                            <div class=" input-group input-group-sm gap-2  ">
-                                                <span id="lbTipoDoc" class=" col-form-label-sm">Tipo Documento</span>
-                                                <select name="ddlTipoDoc" id="ddlTipoDoc" class="form-control form-control-sm">
-                                                    <option value=" ">-- Seleccione --</option>
-                                                    <option value="CONTROL DIBUJO">CONTROL DIBUJO</option>
-                                                    <option value="CONTABLE">CONTABLE</option>
-                                                    <option value="OPERATIVO">OPERATIVO</option>
-                                                    <option value="PRODUCTIVO">PRODUCTIVO</option>
-
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-6">
-
-                                            <div class="input-group input-group-sm ">
-                                                <asp:UpdatePanel ID="Archivo" runat="server" UpdateMode="Conditional">
-                                                    <ContentTemplate>
-                                                        <div class="input-group input-group-sm">
-                                                            <asp:FileUpload CssClass="form-control " ID="DocOt" runat="server" />
-                                                        </div>
-                                                    </ContentTemplate>
-                                                    <Triggers>
-                                                        <asp:PostBackTrigger ControlID="AdjuntarDoc" />
-                                                        <asp:PostBackTrigger ControlID="bntElimnarDoc" />
-                                                    </Triggers>
-                                                </asp:UpdatePanel>
-                                                <asp:Button ID="AdjuntarDoc" runat="server" Text="Adjuntar" class="btn btn-outline-primary" OnClick="AdjuntarDocumento" />
-                                                <asp:Button ID="bntElimnarDoc" runat="server" Text="Eliminar" class="aspNetDisabled btn-sm btn-outline-danger" OnClick="EliminarDocumento" />
-
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="row p-1 m-1">
-                                        <div class="col-3">
-                                            <div class=" input-group input-group-sm gap-2  ">
-                                                <asp:Label ID="lbObservacion" Text="Obs" runat="server"></asp:Label>
-                                                <asp:TextBox ID="tbObservacion" type="Text" class="form-control " runat="server"></asp:TextBox>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-3">
-                                            <div class=" input-group input-group-sm gap-2  ">
-                                                <asp:Label ID="lbCategoria" Text="Categoria" runat="server"></asp:Label>
-                                                <asp:TextBox ID="tbCategoria" type="Text" class="form-control " runat="server"></asp:TextBox>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-3">
-                                            <asp:CheckBox ID="chxMespecial" runat="server" />
-                                            <asp:Label ID="lbMespecial" runat="server" Text="M. Especial"></asp:Label>
-                                        </div>
-
-                                    </div>
-
-
-                                </div>
-
-
-                            </div>
 
 
                             <div class="row">
@@ -1522,7 +1397,7 @@
                                                    <i class="bi bi-arrow-up-left-circle"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Visualizar/Generar Cotizacion" ID="BtnVisGenCot">
+                                                <asp:LinkButton runat="server" title="Visualizar/Generar Cotizacion" ID="BtnVisGenCot" OnClick="BtnVisGenCot_Click" OnClientClick="CargarExcel();">
                                                     <i class="bi bi-bag-plus"></i>
                                                 </asp:LinkButton>
 
@@ -2328,6 +2203,17 @@
         </div>
 
 
+                    </div>
+                    <div class="modal-body">
+                        <p><span id="OTingresada2"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                         <button type="button" data-bs-dismiss="modal" aria-label="Close">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade" id="ModalArchivo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg ">
                 <div class="modal-content">
@@ -2371,7 +2257,18 @@
             </div>
         </div>
 
-
+        <div class="modal fade" id="loadingModalExcel" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-2">Cargando Excel...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </form>
 
@@ -2457,6 +2354,7 @@
             }
         }
     </script>
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
