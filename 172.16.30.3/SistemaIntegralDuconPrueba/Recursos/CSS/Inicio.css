@@ -15,26 +15,11 @@
 
 
 
+
 @keyframes slideup {
     from {
-    
-
-
         transform: translateY(20%);
     }
-
-
-
- 
-}
-
-body {
-    background-image: url('https://i.ibb.co/QCKnsmd/fondonuevosid.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-}
-
-
 
 
     /*.navbar{

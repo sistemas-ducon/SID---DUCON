@@ -1,0 +1,45 @@
+﻿.icong {
+    text-decoration: none; /* Quitar subrayado */
+    color: inherit; /* Heredar el color del texto */
+    cursor: pointer; /* Cambiar el cursor a una mano al pasar por encima */
+}
+
+    .icong:hover {
+        color: inherit;
+    }
+
+.contenedor-icono i {
+    font-size: 24px;
+    margin: 5px;
+}
+
+
+/*Para deshabilitar o habilitar  los iconos*/
+
+a.icong.disabled {
+    pointer-events: none;
+    color: black; /* Cambia el color a negro para enlaces deshabilitados */
+    opacity: 0.5;
+}
+
+a.icong.enabled {
+    pointer-events: auto;
+    color: blue; /* Cambia el color a azul para enlaces habilitados */
+}
+
+.auto-width-column {
+    width: auto;
+    max-width: 200px; /* Puedes ajustar este valor según el ancho máximo deseado */
+    white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
+    overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
+    text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
+}
+
+
+/* Estilo para el encabezado del DataGrid */
+.datagrid-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f2f2f2; /* Ajusta el color de fondo del encabezado según tus preferencias */
+}
