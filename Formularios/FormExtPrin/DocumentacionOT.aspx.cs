@@ -124,7 +124,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
                 string carpetaNombre = Session["Id_OT2"].ToString();
                 string Consecutivo = Session["pedido2"].ToString();
-                string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion"; // Reemplaza con tu ruta base
+                String rutaBase = @"\\SRVFS\PruebaDocumentacion";
+                //string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion"; // Reemplaza con tu ruta base
 
                 string rutaCompleta = Path.Combine(rutaBase, carpetaNombre);
 
@@ -223,7 +224,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
 
             // Eliminamos el documento de la carpeta
-            string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion\" + NombreCarpeta;
+            string rutaBase = @"\\SRVFS\PruebaDocumentacion" + NombreCarpeta;
+           // string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion\" + NombreCarpeta;
             string rutaArchivo = Path.Combine(rutaBase, NombreArchivo);
             try
             {
@@ -330,8 +332,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 string Id_OT = row.Cells[9].Text;
 
                 // Ruta completa del archivo
-                string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\" + Id_OT + "\\" + NombreArchivo;
-
+                string rutaArchivo = @"\\SRVFS\PruebaDocumentacion" + Id_OT + "\\" + NombreArchivo;
+           //     string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\" + Id_OT + "\\" + NombreArchivo;
                 try
                 {
                     // Verificar si el archivo existe antes de intentar abrirlo
@@ -456,7 +458,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 //Contruimos la ruta de la carpeta de Destino 
 
                 // Se debe Cambiar la Ruta para que apunte al servidor 
-                string RutaDestino = @"P:\SISTEMAS\PruebaDocumentacion";
+
+                string RutaDestino = @"\\SRVFS\PruebaDocumentacion";
+              //  string RutaDestino = @"P:\SISTEMAS\PruebaDocumentacion";
                 string carpetaIdOt = Session["Id_OT2"].ToString();
                 string pedido = Session["pedido2"].ToString();
                 string NombreFinalArchivo = carpetaIdOt + "-" + pedido + " " + NombreArchivoCopiar;
