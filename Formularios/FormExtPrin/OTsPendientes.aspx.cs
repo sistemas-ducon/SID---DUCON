@@ -21,9 +21,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             {
                 CargarDatosPorDefecto();
 
-              
-
-                Button2.Enabled = false;
+                RadioButton18.Checked = true;
+           
+            Button2.Enabled = false;
                 Button2.CssClass = "form-control-sm btn-sm btn btn-outline-dark button-disabled";
             }
           
@@ -127,9 +127,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             // Accede a la fila seleccionada en el DataGrid
             DataGridItem selectedRow = DataGrid1.Items[rowIndex];
 
-          
+            // Captura los valores de las columnas Id_OT y Consecutivo_Pedido
+            string idOT = selectedRow.Cells[1].Text; // Índice 1 para la columna "Id_OT"
+            string consecutivoPedido = selectedRow.Cells[2].Text; // Índice 2 para la columna "Consecutivo_Pedido"
 
-          
+            // Asigna los valores a variables de sesión
+            Session["Id_OT2"] = idOT;
+            Session["pedido2"] = consecutivoPedido;
 
             // Deselecciona todas las filas previamente seleccionadas
             foreach (DataGridItem item in DataGrid1.Items)
@@ -143,7 +147,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             // Aplica la clase CSS a la fila seleccionada
             selectedRow.CssClass = "selected-row";
 
-         
+            string mensajePersonalizado = "Cargar la OT selecciona";
+            string urlRedireccion = "OrdenTrabajo.aspx";
+            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
         }
 
         protected void Button3_Click(object sender, EventArgs e)
