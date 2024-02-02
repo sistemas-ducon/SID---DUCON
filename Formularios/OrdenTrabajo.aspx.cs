@@ -158,9 +158,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     }
 
-
                     CargarVariablesDeSesionContable();
-
                    
                 }
 
@@ -216,7 +214,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return estadisticaVenta;
         }
 
-
         private void LlenarCboPedidoBase()
         {
            
@@ -228,8 +225,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (!string.IsNullOrEmpty(idOT))
             {
                 // Realizar la consulta para obtener los valores de PedidoBase y EstadisticaVenta
-                // Puedes utilizar la lógica de acceso a datos que prefieras, por ejemplo, SqlConnection y SqlCommand
-                // Aquí es un ejemplo simplificado
+              
                 using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
                 {
                     connection.Open();
@@ -274,7 +270,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                  "\nObservación para Despacho: ";
         }
 
-        //MODIFICADO POR CARLOS PINEDA
+     
         protected void Cancelar_Click(object sender, EventArgs e)
         {
 
@@ -586,6 +582,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Nit.Enabled = true;
             Nit.CssClass = "btn btn-sm shadow button-enabled";
 
+            TiposDePedidos.SelectCommand = "SELECT Descripcion_TipoPedido, Id_TipoPedido, EstadisticaVenta FROM tblTipoPedido WHERE Activo = '1' AND EstadisticaVenta = '1' ORDER BY Descripcion_TipoPedido";
+
+
+            dtacboTipoPedido.DataBind();
+            dtacboTipoPedido.Items.Insert(0, new ListItem(" "));
+
             Session["NuevaOTEjecutada"] = true;
         }
 
@@ -712,7 +714,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return true;
         }
 
-        //FIN
+      
 
         public class DatosFiltrados
         {
@@ -923,6 +925,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session["pedidoMax"] = perdidoMaximo;
 
             CargarOtInsertada3();
+            if (!string.IsNullOrEmpty(id))
+            {
+
+                string inputData = tbOT.Text;
+                List<int> numeros = ObtenerNumerosDesdeLaBaseDeDatos(inputData);
+
+                ddlNumbers.Items.Clear(); // Limpiar las opciones existentes
+
+                foreach (int numero in numeros)
+                {
+                    ddlNumbers.Items.Add(numero.ToString());
+                }
+
+                ddlNumbers.SelectedValue = perdidoMaximo.ToString();
+
+            }
+        }
+
+        protected void ObtenerInfoOtInsertada()
+        {
+
+            string id = Session["OTinsertada"] as string;
+
+            int perdidoMaximo = CargarPedidoMaximo(id);
+
+            Session["pedidoMax"] = perdidoMaximo;
+
+            CargarOtInsertada();
             if (!string.IsNullOrEmpty(id))
             {
 
@@ -1517,6 +1547,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ObservacionCont.Disabled = true;
             TextTNegociacion.Disabled = true;
 
+            ddlNumbers.Enabled = true;
+
             Nit.Enabled = false;
             Nit.CssClass = "btn btn-sm shadow button-disabled";
         }
@@ -2067,7 +2099,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             catch (Exception ex)
             {
-                // Manejo de excepciones
+               
             }
 
             Cargar_Plano(id, pedido);
@@ -2081,6 +2113,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
             string valorTextBox = tbObra.Text.Trim(); // Obtener el valor del TextBox
+
+            ddlNumbers.Enabled = true;
 
             // Guardar el valor en una variable de sesión
             Session["ValorDeObra"] = valorTextBox;
@@ -3001,6 +3035,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         Session.Remove("CopiarInfOTEjecutada");
 
                         Session.Remove("NuevaOTEjecutada");
+
+
                     }
                     catch (Exception ex)
                     {
@@ -3941,6 +3977,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
+
+            TiposDePedidos.SelectCommand = "SELECT Descripcion_TipoPedido, Id_TipoPedido, EstadisticaVenta FROM tblTipoPedido WHERE Activo = '1' AND EstadisticaVenta = '1' ORDER BY Descripcion_TipoPedido";
+
+         
+            dtacboTipoPedido.DataBind();
+            dtacboTipoPedido.Items.Insert(0, new ListItem(" "));
+
+            txtOrdenCompra.Text = string.Empty;
+
             GrabarOt.Enabled = true;
             GrabarOt.CssClass = "btn btn-sm shadow button-enabled";
 
@@ -3949,6 +3994,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             Nit.Enabled = true;
             Nit.CssClass = "btn btn-sm shadow button-enabled";
+
+
 
 
             HabilitarTodosLosTextBoxes();
@@ -4047,8 +4094,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BtnNo_Click(object sender, EventArgs e)
         {
-                 
-            CargarOtInsertada();
+
+            ObtenerInfoOtInsertada();
 
             Session.Remove("OTinsertada");
             Session.Remove("PedidoInsertado");
@@ -4083,13 +4130,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         int rowsAffected = command.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
-                            
-                            CargarOtInsertada();
+
+                            ObtenerInfoOtInsertada();
                         }
                         else
                         {
-                           
-                            CargarOtInsertada();
+
+                            ObtenerInfoOtInsertada();
                         }                      
                     }
                 }
@@ -4106,8 +4153,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void CargarOtInsertada()
         {
            
-                id = Session["OTinsertada"]?.ToString();
-                pedido = Session["PedidoInsertado"]?.ToString();
+
+            id = Session["OTinsertada"]?.ToString();
+            pedido = Session["pedidoMax"]?.ToString();
 
                 try
                 {
@@ -4117,11 +4165,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         if (TryExecuteOTQuery(id, pedido, sqlconectar, out SqlDataReader leer))
                         {
-                            if (leer.Read())
-                            {
+                        if (leer.Read())
+                        {
 
-                                // Extraer datos y asignarlos a controles
-                                AssignDataToControls(leer);
+                            if (ValidarPermisoInfoContable(leer))
+                            {
+                                string IDCLienteConstacto = leer["IDContacto_Cliente"].ToString();
+                                CargarDatosContables(IDCLienteConstacto);
+
+                                Session["IdContactoFactSession"] = IDCLienteConstacto;
+
+                            }
+
+                            // Extraer datos y asignarlos a controles
+                            AssignDataToControls(leer);
 
                                 EnableButtons2();
 
@@ -4144,7 +4201,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Cargar_Plano(id, pedido);
                 Cargar_Despiece_Plano();
 
-            ddlNumbers.Enabled = true;
+        
+           
 
             tbPedDepen.Enabled = true;
             tbPedDepen.CssClass = "form-control";
