@@ -332,7 +332,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 string Id_OT = row.Cells[9].Text;
 
                 // Ruta completa del archivo
-                string rutaArchivo = @"\\SRVFS\PruebaDocumentacion\" + Id_OT + "\\" + NombreArchivo;
+                  string rutaArchivo = @"\\SRVFS\PruebaDocumentacion\" + Id_OT + "\\" + NombreArchivo;
            //     string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\" + Id_OT + "\\" + NombreArchivo;
                 try
                 {
