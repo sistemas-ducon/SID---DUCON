@@ -218,8 +218,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 // Ruta completa del archivo que deseas abrir
                 
-                string rutaArchivo = @"\\SRVFS\PruebaDocumentacion" + Id_OT + "\\" + NombreArchivo;
-                //    string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\" + Id_OT + "\\" + NombreArchivo;
+                  string rutaArchivo = @"\\SRVFS\PruebaDocumentacion\" + Id_OT + "\\" + NombreArchivo;
+                  // string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\" + Id_OT + "\\" + NombreArchivo;
 
                 try
                 {
@@ -271,7 +271,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             }
 
             // Eliminar el documento de la carpeta
-            string rutaBase = @"\\SRVFS\PruebaDocumentacion" + NombreCarpeta;
+            string rutaBase = @"\\SRVFS\PruebaDocumentacion\" + NombreCarpeta;
             // string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion\" + NombreCarpeta;
             string rutaArchivo = Path.Combine(rutaBase, NombreArchivo);
 
