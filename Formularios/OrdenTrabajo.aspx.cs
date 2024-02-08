@@ -3065,11 +3065,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             MostrarModal();
                         }
                         else
-                        {                           
+                        {
+                            MostrarModal();
+
                             Session.Remove("CopiarInfOTEjecutada");
                         }
+                        
 
-                      
 
 
                         Session.Remove("CopiarInfOTEjecutada");
