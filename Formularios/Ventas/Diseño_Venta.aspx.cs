@@ -19,6 +19,7 @@ using DocumentFormat.OpenXml.Office2010.Drawing;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 using System.Windows.Media.TextFormatting;
 using System.Globalization;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
@@ -174,6 +175,46 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }           
         }
       
+        protected void CargarOT_Click(object sender, EventArgs e)
+        {
+            Session.Remove("lnkClieClicked");
+            Session.Remove("lnkClieeClicked");
+
+            // Obtén el LinkButton que se hizo clic
+            LinkButton lnkSelectRow = (LinkButton)sender;
+
+            // Obtén el índice de fila desde el CommandArgument
+            int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
+
+            // Accede a la fila seleccionada en el DataGrid
+            DataGridItem selectedRow = DataGrid1.Items[rowIndex];
+
+            // Almacena el valor de Id_OT en una variable de sesión
+            Session["Id_OT2"] = selectedRow.Cells[2].Text;
+
+            // Almacena el nombre del archivo en la variable de sesión
+            Session["pedido2"] = selectedRow.Cells[3].Text;
+
+            // Deselecciona todas las filas previamente seleccionadas
+            foreach (DataGridItem item in DataGridDocumento.Items)
+            {
+                if (item != selectedRow)
+                {
+                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                }
+            }
+
+            // Aplica la clase CSS a la fila seleccionada
+            selectedRow.CssClass = "selected-row";
+
+            string mensajePersonalizado = "Se cargara la OT seleccionada";
+            string urlRedireccion = "OrdenTrabajo.aspx";
+            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+         
+
+        }
+
         protected void BtnProgramar_Click(object sender, EventArgs e)
         {
             // Obtener el valor del label lblNumDise
@@ -1141,12 +1182,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Modificar.CssClass = "btn btn-sm shadow button-enabled";
             }
             
-        }
+        } 
 
         protected void lnkClie_Click(object sender, EventArgs e)
         {
+            // Obtén el LinkButton que se hizo clic
+            LinkButton lnkSelectRow = (LinkButton)sender;
 
-          
+            // Obtén el índice de fila desde el CommandArgument
+            int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
+
+            // Accede a la fila seleccionada en el DataGrid
+            DataGridItem selectedRow = DataGrid2.Items[rowIndex];
+
+            // Almacena el nombre del archivo en la variable de sesión
+            Session["NumeroDiseño"] = selectedRow.Cells[2].Text;
+
+            // Deselecciona todas las filas previamente seleccionadas
+            foreach (DataGridItem item in DataGrid2.Items)
+            {
+                if (item != selectedRow)
+                {
+                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                }
+            }
+    
+
+            NuevoDisBit.Enabled = true;
+            NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled";
 
             Grabar.Enabled = false;
             Grabar.CssClass = "btn btn-sm shadow button-disabled";
@@ -1166,17 +1229,72 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             AdicionarElemento.Enabled = true;
             AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled";
 
-          
+            ValidarBotonOk();
 
-            DeshabilitarDivYContenido(miDiv);
-
-            BtnProgramar.Enabled = true;
+            DeshabilitarDivYContenido(miDiv);         
 
             Session["lnkClieClicked"] = true;
+
+          
+        }
+
+        protected void ValidarBotonOk()
+        {
+            // Obtener el número de diseño de la sesión
+            int numeroDiseno = Convert.ToInt32(Session["NumeroDiseño"]);
+
+            string connectionString = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password";
+            string queryString = "SELECT ProgramadoVentas FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseno";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+                command.Parameters.AddWithValue("@NumeroDiseno", numeroDiseno);
+
+                try
+                {
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        // Obtener el valor de la columna ProgramadoVentas
+                        int programadoVentas = Convert.ToInt32(reader["ProgramadoVentas"]);
+
+                        // Ajustar la propiedad Enabled del botón BtnProgramar
+                        BtnProgramar.Enabled = (programadoVentas == 0);
+                    }
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Manejar la excepción
+                    Console.WriteLine(ex.Message);
+                }
+            }
         }
 
         protected void lnkCliee_Click(object sender, EventArgs e)
         {
+            // Obtén el LinkButton que se hizo clic
+            LinkButton lnkSelectRow = (LinkButton)sender;
+
+            // Obtén el índice de fila desde el CommandArgument
+            int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
+
+            // Accede a la fila seleccionada en el DataGrid
+            DataGridItem selectedRow = DataGrid4.Items[rowIndex];
+
+            // Almacena el nombre del archivo en la variable de sesión
+            Session["NumeroDiseño"] = selectedRow.Cells[2].Text;
+
+            // Deselecciona todas las filas previamente seleccionadas
+            foreach (DataGridItem item in DataGrid4.Items)
+            {
+                if (item != selectedRow)
+                {
+                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                }
+            }
+
             Session["lnkClieeClicked"] = true;
 
             Grabar.Enabled = false;
@@ -1197,7 +1315,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             AdicionarElemento.Enabled = true;
             AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled";
 
-            BtnProgramar.Enabled = true;
+            ValidarBotonOk();
 
 
             DeshabilitarDivYContenido(miDiv);
@@ -1206,6 +1324,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             
         }
+
         protected void Nombreasesor()
         {
             if (Session["usuariologueado"] != null)
@@ -2210,7 +2329,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                                     string fechaDibujoOK = DibujoOK.ToString("yyyy-MM-ddTHH:mm");
 
-                                    TextEntrega.Text = fechaDibujoOK;                            
+                                    TextFecOkDib.Text = fechaDibujoOK;                            
 
 
                                     TextZona.Text = GetString(reader, "Zona");
@@ -2675,28 +2794,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void DataGrid1_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
-            //if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-            //{
-            //    System.Web.UI.WebControls.Label lbDibujante = (System.Web.UI.WebControls.Label)e.Item.FindControl("lbDibujante");
-
-            //    if (lbDibujante != null)
-            //    {
-            //        // Verifica si el dibujante ya ha sido mostrado previamente
-            //        if (e.Item.ItemIndex > 0 && lbDibujante.Text == ((System.Web.UI.WebControls.Label)DataGrid1.Items[e.Item.ItemIndex - 1].FindControl("lbDibujante")).Text)
-            //        {
-            //            lbDibujante.Visible = false; // Oculta el Label si el dibujante es igual al anterior
-            //        }
-            //    }
-            //}
-
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
                 DateTime fechaEntrega = Convert.ToDateTime(DataBinder.Eval(e.Item.DataItem, "Fecha_Entrega_Dibujo_Despiece"));
-                DateTime fechaActual = DateTime.Now;
+                DateTime fechaActualMenos5Dias = DateTime.Now.AddDays(-5);
 
-                if (fechaEntrega < fechaActual)
+                // Verificar si la fecha de entrega es sábado o domingo
+                if (fechaEntrega.DayOfWeek == DayOfWeek.Saturday)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868"); 
+                    // Cambiar la fecha de entrega al próximo lunes
+                    fechaEntrega = fechaEntrega.AddDays(2);
+                }
+                else if (fechaEntrega.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    // Cambiar la fecha de entrega al próximo martes
+                    fechaEntrega = fechaEntrega.AddDays(1);
+                }
+
+                // Verificar si la nueva fecha de entrega es menos de 5 días antes de la fecha actual
+                if (fechaEntrega < fechaActualMenos5Dias)
+                {
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868");
                     e.Item.ForeColor = System.Drawing.Color.White;
                 }
                 else
@@ -2704,8 +2822,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#efdd79");
                     e.Item.ForeColor = System.Drawing.Color.White;
                 }
+
+                // Acceder a la celda correspondiente y asignarle el valor de fechaEntrega
+                TableCell cellFechaEntrega = e.Item.Cells[6]; // Cambia el índice si la columna no está en la sexta posición
+                cellFechaEntrega.Text = fechaEntrega.ToString("dd/MM/yyyy hh:mm:ss tt");
+
+                // Obtener la referencia al control Label dentro de la columna de la fecha de entrega
+                System.Web.UI.WebControls.Label labelFechaEntrega = (System.Web.UI.WebControls.Label)e.Item.FindControl("Label1");
+
+                // Verificar si se encontró el control Label
+                if (labelFechaEntrega != null)
+                {
+                    // Calcular la fecha de entrega para el control Label y asignarla como texto
+                    DateTime nuevaFechaEntrega = fechaEntrega.AddDays(2);
+                    labelFechaEntrega.Text = nuevaFechaEntrega.ToString("dd/MM/yyyy hh:mm:ss tt");
+                }
             }
         }
+
 
         protected void CheckBox22_CheckedChanged(object sender, EventArgs e)
         {

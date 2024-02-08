@@ -1396,6 +1396,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         }
                     }
 
+                    Session["ModalMostrado"] = true;
+
                     // Llamar el script que recarga el formulario padre de donde salio la pagina 
                     string script = "<script>enviarFormulario();</script>";
                     ScriptManager.RegisterStartupScript(this, GetType(), "enviarFormulario", script, false);

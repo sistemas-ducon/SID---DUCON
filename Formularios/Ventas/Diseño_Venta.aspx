@@ -161,7 +161,7 @@
                                                     <ItemTemplate>
 
                                                         <asp:LinkButton ID="lnkCliee" runat="server" CommandName="Numero_Diseño"
-                                                            CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square text-white'></i>" OnClick="lnkCliee_Click" />
+                                                            CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square text-white'></i>" OnClick="lnkCliee_Click" OnClientClick="activarTab('BitacoraDesarrollo-content');"/>
                                                     </ItemTemplate>
                                                 </asp:TemplateColumn>
                                                 <asp:TemplateColumn HeaderText="Turno" ItemStyle-CssClass="auto-width-column">
@@ -992,6 +992,14 @@
                                                                 AutoGenerateColumns="false" OnItemDataBound="DataGrid1_ItemDataBound">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                 <Columns>
+
+                                                                      <asp:TemplateColumn ItemStyle-CssClass="auto-width-column">
+                                                                            <ItemTemplate>
+                                                                                <asp:LinkButton ID="BtnCargarOT" runat="server" CommandName="Id_OT"
+                                                                                    CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square text-white'></i>" OnClick="CargarOT_Click" />
+                                                                            </ItemTemplate>
+                                                                        </asp:TemplateColumn>
+
                                                                     <asp:TemplateColumn HeaderText="Turno" ItemStyle-CssClass="auto-width-column">
                                                                         <ItemTemplate>
                                                                             <%# Container.ItemIndex + 1 %>
@@ -1002,7 +1010,7 @@
                                                                     <asp:BoundColumn DataField="Nombre_Obra" HeaderText="Nombre de la Obra" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Nombre_Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Fecha_Entrega_Dibujo_Despiece" HeaderText="F.Ingreso" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                    <asp:TemplateColumn HeaderText="Nueva Columna" ItemStyle-CssClass="auto-width-column">
+                                                                    <asp:TemplateColumn HeaderText="F.Entrega" ItemStyle-CssClass="auto-width-column">
                                                                         <ItemTemplate>
                                                                             <asp:Label ID="Label1" runat="server" Text='<%# Convert.ToDateTime(Eval("Fecha_Entrega_Dibujo_Despiece")).AddDays(2).ToString("dd/MM/yyyy hh:mm:ss tt") %>'></asp:Label>
                                                                         </ItemTemplate>
@@ -1179,7 +1187,7 @@
                                                                             <ItemTemplate>
 
                                                                                 <asp:LinkButton ID="lnkClie" runat="server" CommandName="Numero_Diseño"
-                                                                                    CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square text-white'></i>" OnClick="lnkClie_Click" />
+                                                                                    CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square text-white'></i>" OnClick="lnkClie_Click" OnClientClick="activarTab('BitacoraDesarrollo-content');"/>
                                                                             </ItemTemplate>
                                                                         </asp:TemplateColumn>
 
@@ -1206,7 +1214,7 @@
                                                                     <asp:BoundColumn DataField="Pausado" HeaderText="Pausado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="id_CiudadProyecto" HeaderText="Ciudad" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Cedula" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
-                                                                     <asp:BoundColumn DataField="Urgente" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                                    <asp:BoundColumn DataField="Urgente" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                                 </Columns>
                                                             </asp:DataGrid>
                                                             <asp:SqlDataSource runat="server" ID="DataGridDiseño" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
@@ -1474,9 +1482,17 @@
 
     </form>
 
+    <script>
+      function activarTab(tabId) {
+            // Oculta todas las pestañas
+          $('#myTabs a.Programacion-content').removeClass('active');
+            $('.tab-pane').removeClass('active show');
 
+            // Activa la pestaña deseada
+          $('#myTabs a[href="#Diseño-BitacoraFPV-001-content"]').tab('show');
+        }
 
-
+    </script>
 
     <script type="text/javascript">
         function mostrarTab() {
