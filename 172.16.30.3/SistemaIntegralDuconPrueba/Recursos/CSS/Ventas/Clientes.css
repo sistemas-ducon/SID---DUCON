@@ -1,0 +1,72 @@
+﻿.auto-width-column {
+    width: auto;
+    max-width: 200px; /* Puedes ajustar este valor según el ancho máximo deseado */
+    white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
+    overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
+    text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
+}
+
+/* Estilo para el encabezado del DataGrid */
+.datagrid-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f2f2f2; /* Ajusta el color de fondo del encabezado según tus preferencias */
+}
+
+
+
+.custom-icon {
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: transparent; /* No necesitas fondo si usas una imagen de fondo */
+    background-image: url('https://i.ibb.co/86fR8JK/icons8-microsoft-excel-2019-48.png'); /* Ruta de la imagen */
+    background-size: cover; /* Ajusta el tamaño de la imagen */
+    color: white;
+    text-align: center;
+    border-radius: 50%; /* Hace que sea un círculo */
+    font-size: 16px;
+    line-height: 30px; /* Centrar verticalmente */
+}
+
+
+.custom-icon2 {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    background-color: transparent; /* No necesitas fondo si usas una imagen de fondo */
+    background-image: url('https://i.ibb.co/86fR8JK/icons8-microsoft-excel-2019-48.png'); /* Ruta de la imagen */
+    background-size: cover; /* Ajusta el tamaño de la imagen */
+    color: white;
+    text-align: center;
+    border-radius: 50%; /* Hace que sea un círculo */
+    font-size: 16px;
+    line-height: 30px; /* Centrar verticalmente */
+}
+
+.disabled-tab {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+
+/* Personalizar el estilo del fondo del modal */
+#loadingModal .modal-content {
+    background-color: #f8f9fa;
+    border: none;
+    border-radius: 10px;
+}
+
+/* Personalizar el estilo del texto del modal */
+#loadingModal p {
+    font-size: 16px;
+    color: #333;
+}
+
+/* Personalizar el estilo del spinner */
+#loadingModal .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    color: #007bff; /* Color azul - puedes cambiarlo a tu preferencia */
+}

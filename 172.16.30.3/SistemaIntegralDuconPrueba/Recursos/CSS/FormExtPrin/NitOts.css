@@ -1,0 +1,47 @@
+﻿.auto-width-column {
+    width: auto;
+    max-width: 200px; /* Puedes ajustar este valor según el ancho máximo deseado */
+    white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
+    overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
+    text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
+}
+
+.datagrid-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #F8F8F8F8; /* Ajusta el color de fondo del encabezado según tus preferencias */
+}
+
+
+.modal-content {
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+    border-bottom: none;
+}
+
+.modal-footer {
+    border-top: none;
+}
+
+.modal-header .modal-title {
+    font-weight: 600;
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+/*Para oacultar el FileUpload*/
+.hidden {
+    display: none;
+}
+
+.fila-seleccionada {
+    background-color: black !important; /*Se Cambia el color de la fila Seleccionada  */
+    color: white !important;
+}

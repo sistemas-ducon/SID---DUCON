@@ -1,0 +1,488 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Objetos.aspx.cs" Inherits="SISTEMA_INTEGRAL_DUCON.Formularios.Objetos" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="../../Recursos/CSS/DiseñoYDesarrollo/Objetos.css" rel="stylesheet" />
+    <title>Objetos</title>
+</head>
+
+
+<body>
+
+     <header>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light pt-0">
+
+                <div class="container-fluid" style="background-color: #081a2c">
+
+                    <div class="collapse navbar-collapse" id="navbarScroll">
+
+                        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="Departamento" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #FFFFFF">Departamento</a>
+                                <ul class="dropdown-menu" aria-labelledby="Departamento">
+
+                                    <li class="nav-item dropend">
+                                        <a class="nav-link dropdown-toggle  " href="#" id="Administrativo" role="button" data-bs-toggle="dropdown" aria-expanded="false">Administrativo </a>
+                                        <ul class="dropdown-menu">
+                                            <li class="nav-item dropdown ">
+                                                <a class="nav-link dropdown-toggle " href="#" id="Gerencia" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding-left: 1rem">Gerencia Comercial </a>
+                                                <ul class="dropdown-menu ">
+                                                    <li><a class="dropdown-item" href="#">Actualizar Precios</a></li>
+                                                    <li><a class="dropdown-item" href="#">Estadisticas de Venta</a></li>
+                                                    <li><a class="dropdown-item" href="#">Seguimiento de Cotizaciones</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="nav-item dropend">
+                                        <a class="nav-link dropdown-toggle " href="#" id="Compras" role="button" data-bs-toggle="dropdown" aria-expanded="false">Compras</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">Generar codigo de inventario</a></li>
+                                            <li><a class="dropdown-item" href="#">Solicitud de producto especial</a></li>
+                                            <li><a class="dropdown-item" href="#">Orden de abastecimiento interna</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="nav-item dropend">
+                                        <a class="nav-link dropdown-toggle " href="#" id="Dise_Desa" role="button" data-bs-toggle="dropdown" aria-expanded="false">Diseño | Desarrollo</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">Estadisticas de diseño</a></li>
+                                            <li><a class="dropdown-item" href="#">Estadisticas desarrollo</a></li>
+                                            <li><a class="dropdown-item" href="#">Generar código de inventario</a></li>
+                                            <li><a class="dropdown-item" href="frmPrincipal.aspx">Ordenes de trabajo</a></li>
+                                            <li><a class="dropdown-item" href="#">Bitacora renders</a></li>
+                                            <li><a class="dropdown-item" href="#">Bitacora desarrollo</a></li>
+                                            <li><a class="dropdown-item" href="#">Bitacora diseño</a></li>
+                                            <li><a class="dropdown-item" href="#">Estadisticas desarrollo</a></li>
+                                            <li><a class="dropdown-item" href="#">Estadisticas dibujo</a></li>
+                                            <li><a class="dropdown-item" href="#">Reproceso dibujo</a></li>
+                                            <li><a class="dropdown-item" href="#">Reproceso desarrollo</a></li>
+                                            <li><a class="dropdown-item" href="#">Diseño en el exterior</a></li>
+                                            <li><a class="dropdown-item" href="#">Tabla de diseño</a></li>
+                                            <li><a class="dropdown-item" href="#">Plano</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="nav-item dropend">
+                                        <a class="nav-link dropdown-toggle " href="#" id="Fact_Cart" role="button" data-bs-toggle="dropdown" aria-expanded="false">Facturacion y cartera</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">Cierre de obra</a></li>
+                                            <li><a class="dropdown-item" href="#">Control de obra</a></li>
+                                            <li><a class="dropdown-item" href="#">Despacho de obras</a></li>
+                                            <li><a class="dropdown-item" href="frmPrincipal.aspx">Ordenes de trabajo</a></li>
+                                            <li><a class="dropdown-item" href="#">Programación ordenes de T'S de SID</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="nav-item dropend">
+                                        <a class="nav-link dropdown-toggle " href="#" id="Gest_Cali_Adno" role="button" data-bs-toggle="dropdown" aria-expanded="false">Gestio de calidad adnom</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">Acciones de mejora</a></li>
+                                            <li><a class="dropdown-item" href="#">Entrega perfecta</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="nav-item dropend">
+                                        <a class="nav-link dropdown-toggle " href="#" id="Gest_Cali_Usr" role="button" data-bs-toggle="dropdown" aria-expanded="false">Gestion de calidad usr</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">Accion de mejora</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="nav-item dropend">
+                                        <a class="nav-link dropdown-toggle " href="#" id="Instalacion" role="button" data-bs-toggle="dropdown" aria-expanded="false">Instalacion</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">Cierre de obra</a></li>
+                                            <li><a class="dropdown-item" href="frmPrincipal.aspx">Ordenes de trabajo</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="nav-item dropend">
+                                        <a class="nav-link dropdown-toggle " href="#" id="Recepcion" role="button" data-bs-toggle="dropdown" aria-expanded="false">Recepcion</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">Generar cotización</a></li>
+                                            <li><a class="dropdown-item" href="#">Ingresar cotizacion</a></li>
+                                            <li><a class="dropdown-item" href="#">Tabla de diseños</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="nav-item dropend">
+                                        <a class="nav-link dropdown-toggle " href="#" id="Sistemas" role="button" data-bs-toggle="dropdown" aria-expanded="false">Sistemas</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">Administracion</a></li>
+                                            <li><a class="dropdown-item" href="#">Asignar permiso</a></li>
+                                            <li><a class="dropdown-item" href="#">Configurar sede</a></li>
+                                            <li><a class="dropdown-item" href="#">Ventana principal</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="nav-item dropend">
+                                        <a class="nav-link dropdown-toggle " href="#" id="Ventas" role="button" data-bs-toggle="dropdown" aria-expanded="false">Ventas</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">Gestión comecial</a></li>
+                                            <li><a class="dropdown-item" href="#">Licitaciones</a></li>
+                                            <li><a class="dropdown-item" href="frmPrincipal.aspx">Ordenes de trabajo</a></li>
+                                            <li><a class="dropdown-item" href="#">Programar diseño</a></li>
+                                            <li><a class="dropdown-item" href="#">Programar render</a></li>
+                                            <li><a class="dropdown-item" href="#">Seguimiento cotizaciones</a></li>
+                                            <li><a class="dropdown-item" href="#">Solicitud producto especial</a></li>
+                                            <li><a class="dropdown-item" href="#">Visitas asesores</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+
+                            </li>
+
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="Personas" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #FFFFFF">Personas </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                                    <li><a class="dropdown-item" href="#">Cliente</a></li>
+                                    <li><a class="dropdown-item" href="#">Empleado</a></li>
+
+                                </ul>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="Consultas" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #FFFFFF">Consultas</a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                                    <li><a class="dropdown-item" href="#">Reprocesos</a></li>
+                                    <li><a class="dropdown-item" href="#">Despacho de obra</a></li>
+                                    <li class="nav-item dropend ">
+                                        <a class="nav-link dropdown-toggle " href="#" id="OT" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding-left: 1rem">Ordenes de trabajo </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">Programacion de OT</a></li>
+                                            <li><a class="dropdown-item" href="#">Todas las OT (Manuales /SID)</a></li>
+                                        </ul>
+                                    </li>
+
+                                </ul>
+
+                            </li>
+                        </ul>
+
+                        <asp:Label ID="lblBienvenida" runat="server" ForeColor="White"></asp:Label>
+
+                    </div>
+
+                </div>
+
+            </nav>
+        </header>
+
+    <!--Comienza Panel principal de nombres -->
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+        <div class="container">
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+
+
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="../../Formularios/frmPrincipal.aspx">Ordenes de trabajo</a>
+                    </li>
+                </ul>
+
+
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="Plano.aspx">Plano</a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="Objetos.aspx">Objetos</a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="Modulo.aspx">Módulos</a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="Insumos.aspx">Insumos</a>
+                    </li>
+                </ul>
+
+
+
+
+
+            </div>
+        </div>
+    </nav>
+    <!-- Termina Panel principal de nombres-->
+
+
+    <!--Comienza Panel de iconos-->
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+        <div class="container-fluid">
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#ejemplo2"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="ejemplo2">
+                <ul class="navbar-nav mx-auto">
+
+                    <div class="contenedor-icono">
+
+                        <!--icons planos-->
+                        <a class="text-dark" href="#" title="Nuevo Objeto">
+
+                            <i class="bi bi-file-earmark"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="...">
+
+                            <i class="bi bi-printer"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Modificar Objeto">
+
+                            <i class="bi bi-wrench"></i>
+                        </a>
+
+                        <a class="text-dark" href="#" title="Consultar Objeto">
+
+                            <i class="bi bi-file-earmark-ruled"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Eliminar Objeto">
+
+                            <i class="bi bi-database-x"></i>
+                        </a>
+
+                        <a class="text-dark" href="#" title="Buscar Objeto">
+
+                            <i class="bi bi-search"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Copiar Objeto">
+
+                            <i class="bi bi-files"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Actualizar Precio">
+
+                            <i class="bi bi-currency-dollar"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Generar Lista de Precios">
+
+                            <i class="bi bi-coin"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Ir al Objeto Anterior">
+
+                            <i class="bi bi-disc"></i>
+                        </a>
+                        <a class="text-dark" href="#" title="Chequear">
+
+                            <i class="bi bi-check-lg"></i>
+                        </a>
+
+
+
+
+
+                    </div>
+            </div>
+    </nav>
+    <!--Termina Panel de iconos-->
+
+
+    <div class="container-fluid objeto">
+
+        <form class="control" action="#" runat="server">
+
+            <div class="container-fluid superior">
+
+
+                <div class="item">
+
+                    <asp:RadioButtonList ID="RadioButtonList1" runat="server">
+                        <asp:ListItem Value=" Por Objeto"> Por Objeto</asp:ListItem>
+                        <asp:ListItem>   Por descripcion</asp:ListItem>
+                    </asp:RadioButtonList>
+
+                </div>
+
+
+
+                <div class="item">
+                    <asp:Label ID="lblGrupo" Class="form-label " runat="server" Text="Grupo"></asp:Label>
+                    <asp:DropDownList ID="DblGrupo" class="form-control grupo" runat="server"></asp:DropDownList>
+                </div>
+
+
+                <div class="item">
+                    <asp:Label ID="lblCriterio" Class="form-label" runat="server" Text="Criterio"></asp:Label>
+                    <asp:TextBox ID="txtCriterio" class="form-control criterio" runat="server"></asp:TextBox>
+                </div>
+
+
+
+                <div class="item">
+                    <asp:Label ID="lblAltura" Class="form-label" runat="server" Text="Altura"></asp:Label>
+                    <asp:TextBox ID="txtAltura" class="form-control altura" runat="server"></asp:TextBox>
+                </div>
+
+                <div class="item">
+                    <asp:Label ID="lblAncho" Class="form-label" runat="server" Text="Ancho"></asp:Label>
+                    <asp:TextBox ID="txtAncho" class="form-control ancho" runat="server"></asp:TextBox>
+                </div>
+
+
+                <div class="item">
+
+                    <div class="item1">
+                        <asp:CheckBox ID="chxBloquearActivos" runat="server" />
+                        <asp:Label ID="lblBloquearActivos" Class="form-label" runat="server" Text="Solo Bloquear Activos"></asp:Label>
+                    </div>
+
+                    <asp:Button ID="btnBuscarActivos" Class="btn btn-outline-secondary" runat="server" Text="Buscar Solo Activos" />
+                </div>
+
+
+
+
+
+
+
+                <!--Aqui van todos los div del panel superior 6div  -->
+
+            </div>
+
+            <div class="container-fluid central">
+
+                <div class="item">
+                    <asp:GridView ID="GridView1" runat="server"></asp:GridView>
+                    <table class="table table-bordered border-secondary">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">First</th>
+                                <th scope="col">Last</th>
+                                <th scope="col">Handle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Jacob</td>
+                                <td>Thornton</td>
+                                <td>@fat</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td colspan="2">Larry the Bird</td>
+                                <td>@twitter</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <!--Aqui va el gridview central -->
+
+            </div>
+
+            <div class="container-fluid inferior1">
+                <!--Aqui va un div con unos datos horizaontales -->
+
+                <div class=" itemInf1">
+                    <asp:Label ID="Label1" runat="server" Text="Descripción Objeto"></asp:Label>
+                    <asp:Button ID="Button1" CssClass="btn btn-outline-secondary" runat="server" Text="Despiece" />
+                </div>
+
+                <div class=" itemInf2">
+                    <asp:Label ID="Label2" runat="server" Text="Disp. LA"></asp:Label>
+                    <asp:Label ID="Label3" runat="server" Text="medida en centimetros "></asp:Label>
+                </div>
+
+                <div class=" itemIn2">
+                    <asp:Label ID="Label4" runat="server" Text="Disp. LB"></asp:Label>
+                    <asp:Label ID="Label5" runat="server" Text="Respuesta en centimetros"></asp:Label>
+                </div>
+
+            </div>
+
+            <div class="container-fluid inferior2">
+                <!--Aqui va uno div con el grid inferioi-->
+                <div class="item">
+                    <asp:GridView ID="GridView2" runat="server"></asp:GridView>
+
+                    <table class="table table-bordered border-secondary ">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">First</th>
+                                <th scope="col">Last</th>
+                                <th scope="col">Handle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Jacob</td>
+                                <td>Thornton</td>
+                                <td>@fat</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td colspan="2">Larry the Bird</td>
+                                <td>@twitter</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+        </form>
+
+
+    </div>
+    <!--div principal objeto -->
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+
+</body>
+
+
+</html>
+
+
+

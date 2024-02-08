@@ -1,0 +1,334 @@
+﻿
+.icong {
+    text-decoration: none; /* Quitar subrayado */
+    color: inherit; /* Heredar el color del texto */
+    cursor: pointer; /* Cambiar el cursor a una mano al pasar por encima */
+}
+
+    .icong:hover {
+        color: inherit;
+    }
+
+.contenedor-icono i {
+    font-size: 15px;
+    margin: 5px;
+}
+
+.disabled {
+    opacity: 0.6; /* Cambia la opacidad para indicar que el elemento está deshabilitado */
+    pointer-events: none; /* Evita la interacción con el elemento deshabilitado */
+    cursor: not-allowed; /* Cambia el cursor al icono "no permitido" */
+}
+
+/* Estilo para botones habilitados */
+.button-enabled {
+    background-color: #fff; /* Color de fondo para botones habilitados */
+    color: #212529; /* Color de texto para botones habilitados */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+}
+
+/* Estilo para botones deshabilitados */
+.button-disabled {
+    background-color: #ededed; /* Color de fondo para botones deshabilitados */
+    color: #888; /* Color de texto para botones deshabilitados */
+    cursor: not-allowed; /* Cambia el cursor al estilo "no permitido" */
+}
+
+.Observacion {
+    display: flex;
+}
+
+.Obs1 {
+    width: 50%;
+}
+
+.Der {
+    width: 50%;
+    margin-left: 1.2em;
+}
+
+/* Estilo para el encabezado del DataGrid */
+.datagrid-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f2f2f2; /* Ajusta el color de fondo del encabezado según tus preferencias */
+}
+
+
+
+
+/* Div ptincipal contable */
+.Info-Contable {
+    display: flex;
+    margin: 0 0 0 1.5rem;
+    gap: 0.7rem;
+}
+
+
+/*  informacion contable  */
+.Datos-Cliente1 {
+    width: 25%;
+    gap: 0.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.Info1 {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.3rem;
+    padding-left: 0.5rem;
+    height: 2.5rem;
+}
+
+    .Info1 input {
+        width: 80%;
+        height: 2rem;
+    }
+
+.Info_F {
+    display: flex;
+    padding-left: 0.5rem;
+    height: 2.5rem;
+}
+
+
+    .Info_F input {
+        width: 100%;
+    }
+
+/*Informacion contable centro*/
+.Datos-Cliente2 {
+    width: 53%;
+    display: flex;
+    flex-direction: column;
+}
+
+.superior {
+    display: flex;
+    justify-content: space-between;
+}
+
+.Info2 {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+    .Info2 input {
+        height: 2rem;
+    }
+
+.Medio {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 0.7rem;
+}
+
+
+.Info_M {
+    display: flex;
+}
+
+    .Info_M input {
+        width: 12.5rem;
+        height: 2rem;
+    }
+
+    .Info_M #lbltext12 {
+        width: 25rem;
+        height: 2.5rem;
+    }
+
+    .Info_M select {
+        width: 25rem;
+        height: 2.1rem;
+    }
+
+
+/*div central que contiene el grid contable*/
+.Div_Grid {
+    display: flex;
+    justify-content: space-between;
+}
+
+.izquierda {
+    margin: 2rem 0 0 1rem;
+    width:5%;
+}
+
+.centro {
+    margin: 2rem;
+    width: 70%;
+}
+
+
+.derecha {
+    width: 25%;
+}
+
+.derecha1 {
+    margin: 0.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.Datos-Cliente3 {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    gap: 0.5rem;
+}
+
+    .Datos-Cliente3 .Info1 input {
+        width: 11rem;
+    }
+
+@media (max-width: 1550px) {
+
+
+
+    .Datos-Cliente1 {
+        width: 25%;
+    }
+
+    .Datos-Cliente1 {
+        width: 50%;
+    }
+
+    .Datos-Cliente1 {
+        width: 25%;
+    }
+}
+
+
+
+.bf {
+    background-color: #fff;
+    color: #212529;
+    border: none;
+    border: solid 1px rgba(0,0,0,.2);
+
+}
+
+.auto-width-column {
+    width: auto;
+    max-width: 350px; /* Puedes ajustar este valor según el ancho máximo deseado */
+    white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
+    overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
+    text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
+    height: 1em;
+}
+
+/* Estilo para el encabezado del DataGrid */
+.datagrid-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f2f2f2; /* Ajusta el color de fondo del encabezado según tus preferencias */
+    white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
+}
+
+
+
+.modal-content {
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+    border-bottom: none;
+}
+
+.modal-footer {
+    border-top: none;
+}
+
+.modal-header .modal-title {
+    font-weight: 600;
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.rounded-label {
+    border-radius: 5px; /* Ajusta este valor para cambiar el grado de redondez */
+    padding: 0.1rem; /* Ajusta este valor para cambiar el espacio interno del borde */
+    display: inline-block; /* Esto es importante para permitir el ajuste de ancho y alto */
+}
+
+.rounded-label:hover {
+    opacity: 0.1;
+    display: inline-block; /* Esto es importante para permitir el ajuste de ancho y alto */
+}
+
+
+
+/* CSS del Tap de plano */
+
+/* Panel principal de planos */
+
+.panel-plano {
+    margin: 1rem 0 1rem 0;
+    padding: 0.5rem;
+    width: 100%;
+    padding-top: 0.5rem;
+    display: flex;
+    gap: 2rem;
+}
+
+/* Inputs parte izquier de planos */
+.descripcion-plano {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+/* Div tabla planos */
+.tabla-plano {
+    width: 75%;
+    height: auto;
+   
+}
+
+
+.fila-seleccionada {
+    background-color: black !important; /*Se Cambia el color de la fila Seleccionada  */
+    color: white !important;
+}
+.rojo {
+    background-color: #ff0000;
+}
+
+
+#loadingModal1 .modal-content {
+    background-color: #f8f9fa;
+    border: none;
+    border-radius: 10px;
+}
+
+/* Personalizar el estilo del texto del modal */
+#loadingModal1 p {
+    font-size: 16px;
+    color: #333;
+}
+
+/* Personalizar el estilo del spinner */
+#loadingModal1 .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    color: #007bff; /* Color azul - puedes cambiarlo a tu preferencia */
+}
+
+#loadingModal1 .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    color: #007bff; /* Color azul - puedes cambiarlo a tu preferencia */
+}
+
+

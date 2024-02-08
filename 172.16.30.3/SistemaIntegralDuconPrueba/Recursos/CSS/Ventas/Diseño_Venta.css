@@ -1,0 +1,147 @@
+﻿.destacado {
+    color: black; /* Cambia el color del texto */
+    font-weight: bold; /* Hace el texto más oscuro y sobresaliente */
+    font-size: 28px; /* Puedes ajustar el tamaño de la fuente según tus necesidades */
+    margin-bottom: 10px; /* Agrega margen inferior para destacar el control */
+    font-family: 'Times New Roman'
+}
+
+.labelDestacado {
+    font-size: 20px;
+    color: black;
+    font-weight: bold;
+}
+
+
+.border {
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.special-border {
+    border: 2px solid red;
+    border-radius: 6px;
+    padding: 15px;
+}
+
+.datagrid-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f2f2f2; /* Ajusta el color de fondo del encabezado según tus preferencias */
+}
+
+.auto-width-column {
+    width: auto;
+    max-width: 200px; /* Puedes ajustar este valor según el ancho máximo deseado */
+    white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
+    overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
+    text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */ 
+}
+
+/* Estilo personalizado para el modal */
+/*#modal {
+    text-align: left;*/ /* Alinea el contenido del modal a la izquierda */
+/*}*/
+
+/* Ajusta la posición del modal hacia la derecha */
+/*.modal-dialog {
+    margin: 0;
+    position: absolute;
+    left: 62%;*/ /* Ajusta la posición hacia la derecha */
+    /*top: -160px;
+}*/
+/* Estilos de colores personalizados */
+.bg-success-custom {
+    background-color: #819cba;
+}
+
+.bg-white-custom {
+    background-color: #c86868;
+}
+
+.bg-warning-custom {
+    background-color: #efdd79;
+}
+
+.bg-danger-custom {
+    background-color: #e9a270;
+}
+
+.bg-penAprCot-custom {
+    background-color: #be94b9;
+    
+}
+
+.bg-penCot-custom {
+    background-color: #673f8b;
+}
+.bg-pausados-custom {
+    background-color: #74bec6;
+}
+
+.bg-terminado-custom {
+    background-color: #3d803f;
+}
+/* Ajusta estos estilos según tus necesidades */
+/*.modal-sm {
+    max-width: 50%;*/ /* Tamaño más pequeño */
+/*}*/
+
+.table-container {
+    max-height: 300px; /* Altura máxima */
+    overflow: auto; /* Habilita el scroll si el contenido excede la altura */
+}
+
+.table-wrapper {
+    width: max-content; /* Ancho máximo para permitir el scroll horizontal */
+}
+
+
+
+.contenedor-icono {
+    font-size: 24px;
+    text-decoration-line:none;
+}
+
+.contenedor-icono2 {
+    font-size: 34px;
+   
+}
+
+/* Estilo para enlaces habilitados (color negro) */
+
+
+
+.fila-verde {
+    background-color: #3d803f; /* Cambia el color de fondo a verde */
+    color:aliceblue;
+}
+
+.disabled {
+    opacity: 0.6; /* Cambia la opacidad para indicar que el elemento está deshabilitado */
+    pointer-events: none; /* Evita la interacción con el elemento deshabilitado */
+    cursor: not-allowed; /* Cambia el cursor al icono "no permitido" */
+}
+
+/* Estilo para botones habilitados */
+.button-enabled {
+    background-color: #fff; /* Color de fondo para botones habilitados */
+    color: #212529; /* Color de texto para botones habilitados */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+}
+
+/* Estilo para botones deshabilitados */
+.button-disabled {
+    background-color: #ededed; /* Color de fondo para botones deshabilitados */
+    color: #888; /* Color de texto para botones deshabilitados */
+    cursor: not-allowed; /* Cambia el cursor al estilo "no permitido" */
+}
+
+
+
+.selected-row {
+    background-color: black; /* Cambia el color de fondo a negro o el que desees */
+    color: white;
+}
