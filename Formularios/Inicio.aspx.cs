@@ -39,9 +39,319 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
 
 		}
 
-        protected void ValidarPermisos(object sender, EventArgs e)
+        protected void GerenciaComercial_Click(object sender, EventArgs e)
         {
-            Button btn = (Button)sender;
+            LinkButton btn = (LinkButton)sender;
+
+            string pageURL = string.Empty;
+
+            switch (btn.CommandName)
+            {
+                case "PersonaCliente":
+                    pageURL = "Ventas/Empleado.aspx";
+                    break;
+                default:
+                    // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí
+                    break;
+            }
+
+            string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
+            bool tienePermiso = VerificarPermiso(cedulaLogueada, 12); // Pasar el número de permiso correspondiente
+
+            if (!tienePermiso)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalPendiente').modal('show');", true);
+
+                //ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewTab", "window.open('" + pageURL + "', '_blank');", true);
+            }
+        }
+
+        protected void Compras_Click(object sender, EventArgs e)
+        {
+            LinkButton btn = (LinkButton)sender;
+
+            string pageURL = string.Empty;
+
+            switch (btn.CommandName)
+            {
+                case "PersonaCliente":
+                    pageURL = "Ventas/Empleado.aspx";
+                    break;
+                default:
+                    // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí
+                    break;
+            }
+
+            string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
+            bool tienePermiso = VerificarPermiso(cedulaLogueada, 5); // Pasar el número de permiso correspondiente
+
+            if (!tienePermiso)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalPendiente').modal('show');", true);
+
+                //ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewTab", "window.open('" + pageURL + "', '_blank');", true);
+            }
+        }
+
+        protected void Diseno_Click(object sender, EventArgs e)
+        {
+            LinkButton btn = (LinkButton)sender;
+
+            string pageURL = string.Empty;
+
+            switch (btn.CommandName)
+            {
+                case "PersonaCliente":
+                    pageURL = "Ventas/Empleado.aspx";
+                    break;
+                default:
+                    // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí
+                    break;
+            }
+
+            string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
+            bool tienePermiso = VerificarPermiso(cedulaLogueada, 2); // Pasar el número de permiso correspondiente
+
+            if (!tienePermiso)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalPendiente').modal('show');", true);
+
+                //ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewTab", "window.open('" + pageURL + "', '_blank');", true);
+            }
+        }
+
+        protected void DisenoExterior_Click(object sender, EventArgs e)
+        {
+            LinkButton btn = (LinkButton)sender;
+
+            string pageURL = string.Empty;
+
+            switch (btn.CommandName)
+            {
+                case "PersonaCliente":
+                    pageURL = "Ventas/Empleado.aspx";
+                    break;
+                default:
+                    // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí
+                    break;
+            }
+
+            string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
+            bool tienePermiso = VerificarPermiso(cedulaLogueada, 16); // Pasar el número de permiso correspondiente
+
+            if (!tienePermiso)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalPendiente').modal('show');", true);
+
+                //ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewTab", "window.open('" + pageURL + "', '_blank');", true);
+            }
+        }
+
+        protected void FacturacionCartera_Click(object sender, EventArgs e)
+        {
+            LinkButton btn = (LinkButton)sender;
+
+            string pageURL = string.Empty;
+
+            switch (btn.CommandName)
+            {
+                case "PersonaCliente":
+                    pageURL = "Ventas/Empleado.aspx";
+                    break;
+                default:
+                    // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí
+                    break;
+            }
+
+            string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
+            bool tienePermiso = VerificarPermiso(cedulaLogueada, 11); // Pasar el número de permiso correspondiente
+
+            if (!tienePermiso)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalPendiente').modal('show');", true);
+
+                //ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewTab", "window.open('" + pageURL + "', '_blank');", true);
+            }
+        }
+
+        protected void GestionCalidadAdnom_Click(object sender, EventArgs e)
+        {
+            LinkButton btn = (LinkButton)sender;
+
+            string pageURL = string.Empty;
+
+            switch (btn.CommandName)
+            {
+                case "PersonaCliente":
+                    pageURL = "Ventas/Empleado.aspx";
+                    break;
+                default:
+                    // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí
+                    break;
+            }
+
+            string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
+            bool tienePermiso = VerificarPermiso(cedulaLogueada, 20); // Pasar el número de permiso correspondiente
+
+            if (!tienePermiso)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalPendiente').modal('show');", true);
+
+                //ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewTab", "window.open('" + pageURL + "', '_blank');", true);
+            }
+        }
+
+        protected void Instalacion_Click(object sender, EventArgs e)
+        {
+            LinkButton btn = (LinkButton)sender;
+
+            string pageURL = string.Empty;
+
+            switch (btn.CommandName)
+            {
+                case "PersonaCliente":
+                    pageURL = "Ventas/Empleado.aspx";
+                    break;
+                default:
+                    // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí
+                    break;
+            }
+
+            string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
+            bool tienePermiso = VerificarPermiso(cedulaLogueada, 15); // Pasar el número de permiso correspondiente
+
+            if (!tienePermiso)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalPendiente').modal('show');", true);
+
+                //ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewTab", "window.open('" + pageURL + "', '_blank');", true);
+            }
+        }
+
+        protected void Recepcion_Click(object sender, EventArgs e)
+        {
+            LinkButton btn = (LinkButton)sender;
+
+            string pageURL = string.Empty;
+
+            switch (btn.CommandName)
+            {
+                case "PersonaCliente":
+                    pageURL = "Ventas/Empleado.aspx";
+                    break;
+                default:
+                    // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí
+                    break;
+            }
+
+            string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
+            bool tienePermiso = VerificarPermiso(cedulaLogueada, 15); // Pasar el número de permiso correspondiente
+
+            if (!tienePermiso)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalPendiente').modal('show');", true);
+
+                //ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewTab", "window.open('" + pageURL + "', '_blank');", true);
+            }
+        }
+
+        protected void Sistemas_Click(object sender, EventArgs e)
+        {
+            LinkButton btn = (LinkButton)sender;
+
+            string pageURL = string.Empty;
+
+            switch (btn.CommandName)
+            {
+                case "PersonaCliente":
+                    pageURL = "Ventas/Empleado.aspx";
+                    break;
+                default:
+                    // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí
+                    break;
+            }
+
+            string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
+            bool tienePermiso = VerificarPermiso(cedulaLogueada, 14); // Pasar el número de permiso correspondiente
+
+            if (!tienePermiso)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalPendiente').modal('show');", true);
+
+                //ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewTab", "window.open('" + pageURL + "', '_blank');", true);
+            }
+        }
+
+        protected void Reprocesos_Click(object sender, EventArgs e)
+        {
+            LinkButton btn = (LinkButton)sender;
+
+            string pageURL = string.Empty;
+
+            switch (btn.CommandName)
+            {
+                case "PersonaCliente":
+                    pageURL = "Ventas/Empleado.aspx";
+                    break;
+                default:
+                    // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí
+                    break;
+            }
+
+            string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
+            bool tienePermiso = VerificarPermiso(cedulaLogueada, 42); // Pasar el número de permiso correspondiente
+
+            if (!tienePermiso)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalPendiente').modal('show');", true);
+
+                //ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewTab", "window.open('" + pageURL + "', '_blank');", true);
+            }
+        }
+
+        protected void ValidarPermiso_Ventas(object sender, EventArgs e)
+        {
+            LinkButton btn = (LinkButton)sender;
 
             string pageURL = string.Empty;
 
@@ -50,13 +360,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
                 case "GestionComercial":
                     pageURL = "Ventas/Gestion_Comercial.aspx";
                     break;
+
                 case "Licitaciones":
                     pageURL = "Ventas/Licitaciones.aspx";
                     break;
 
                 case "OrdendeTrabajo":
                     pageURL = "OrdenTrabajo.aspx";
-                    break;      
+                    break;
 
                 case "ProgramarDiseno":
                     pageURL = "Ventas/Diseño_Venta.aspx";
@@ -84,35 +395,97 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
             }
 
             string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
-            bool tienePermiso = VerificarPermiso(cedulaLogueada);
+            bool tienePermiso = VerificarPermiso(cedulaLogueada, 1); // Pasar el número de permiso correspondiente
 
-            if (tienePermiso)
-            {
-                Response.Redirect(pageURL);
-            }
-            else
+            if (!tienePermiso)
             {
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
             }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewTab", "window.open('" + pageURL + "', '_blank');", true);
+            }
         }
 
-        private bool VerificarPermiso(string cedulaLogueada)
+        protected void ValidarPermisoCliente_Click(object sender, EventArgs e)
+        {
+            LinkButton btn = (LinkButton)sender;
+
+            string pageURL = string.Empty;
+
+            switch (btn.CommandName)
+            {
+                case "PersonaCliente":
+                    pageURL = "Ventas/Clientes.aspx";
+                    break;
+                default:
+                    // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí
+                    break;
+            }
+
+            string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
+            bool tienePermiso = VerificarPermiso(cedulaLogueada, 6); // Pasar el número de permiso correspondiente
+
+            if (!tienePermiso)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewTab", "window.open('" + pageURL + "', '_blank');", true);
+            }
+        }
+
+        protected void ValidarPermisoEmpleado_Click(object sender, EventArgs e)
+        {
+            LinkButton btn = (LinkButton)sender;
+
+            string pageURL = string.Empty;
+
+            switch (btn.CommandName)
+            {
+                case "PersonaCliente":
+                    pageURL = "Ventas/Empleado.aspx";
+                    break;
+                default:
+                    // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí
+                    break;
+            }
+
+            string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
+            bool tienePermiso = VerificarPermiso(cedulaLogueada, 9); // Pasar el número de permiso correspondiente
+
+            if (!tienePermiso)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalPendiente').modal('show');", true);
+
+                //ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewTab", "window.open('" + pageURL + "', '_blank');", true);
+            }
+        }
+
+        private bool VerificarPermiso(string cedulaLogueada, int idPermiso)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
 
-            // Aquí debes ajustar tu consulta SQL para verificar los permisos
-            string query = $"SELECT COUNT(*) FROM tblPermiso_Empleado WHERE ID_Empleado = '{cedulaLogueada}' AND ID_Permiso = 1";
+            // Aquí se debe ajustar la consulta SQL para incluir el parámetro del ID del permiso
+            string query = $"SELECT COUNT(*) FROM tblPermiso_Empleado WHERE ID_Empleado = '{cedulaLogueada}' AND ID_Permiso = @Permiso";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
+                    command.Parameters.AddWithValue("@Permiso", idPermiso); // Agregar el parámetro del ID del permiso
                     connection.Open();
                     int count = (int)command.ExecuteScalar(); // Ejecutar la consulta y obtener el resultado
                     return count > 0; // Devolver verdadero si se encuentra algún registro que cumpla la condición
                 }
             }
         }
+
 
 
     }

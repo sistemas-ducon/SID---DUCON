@@ -610,6 +610,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
 
+            txtAsesor.Enabled = false;
+
+
             Nit.Enabled = false;
             Nit.CssClass = "btn btn-sm shadow button-disabled";
 
@@ -3058,23 +3061,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     {
                         InsertarOT();
                         InsertarConsecutivo();
-                        InsertarPlano();             
-                        
-                        if (Session["CopiarInfOTEjecutada"] != null && (bool)Session["CopiarInfOTEjecutada"])
-                        {
-                            MostrarModal();
-                        }
-                        else
-                        {
-                            MostrarModal();
-
-                            Session.Remove("CopiarInfOTEjecutada");
-                        }
-                        
-
-
-
-                        Session.Remove("CopiarInfOTEjecutada");
+                        InsertarPlano();
+                        MostrarModal();                   
 
                         Session.Remove("NuevaOTEjecutada");
 
@@ -3618,7 +3606,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void MonstrasrModalAcabados_Click(object sender, EventArgs e)
         {
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#CopiarAcabados').modal('show');", true);
+            if (Session["CopiarInfOTEjecutada"] != null && (bool)Session["CopiarInfOTEjecutada"])
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#CopiarAcabados').modal('show');", true);
+          
+            }
+            else
+            {
+                string mensajePersonalizado = "Se guardaron los datos exitosamente";
+                string urlRedireccion = "OrdenTrabajo.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+            }
+
+            Session.Remove("CopiarInfOTEjecutada");
+
         }
 
         private string ValidarCampos()
@@ -4155,7 +4157,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void BtnNo_Click(object sender, EventArgs e)
         {
 
-            string mensajePersonalizado = "Cargar OT";
+            string mensajePersonalizado = "Se guardaron los datos exitosamente";
             string urlRedireccion = "OrdenTrabajo.aspx";
             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
 
