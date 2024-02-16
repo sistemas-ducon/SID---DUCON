@@ -712,7 +712,7 @@
 
                             <%-- Desarrollo--%>
 
-                            <h4 style="border-radius: 0.5rem; height: 2.5rem" class="text-center pb-2 mb-2" title="Listado de Ordenes de Trabajo (OT) Correspondiente a Desarrollo">OTs Desarrollo</h4>
+                            <h4 style="border-radius: 0.5rem; height: 2.5rem" class="text-center pb-2 mb-2" title="Listado de Ordenes de Trabajo (OT) Correspondiente a Desarrollo">Desarrollo</h4>
                             <asp:TextBox ID="tbNombreAsesor" type="text" class="form-control form-control-sm" CssClass="hidden-textBox" runat="server"></asp:TextBox>
 
                             <div class="row">

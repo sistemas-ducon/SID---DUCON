@@ -17,20 +17,30 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         private List<TextBox> listaTextBoxes;
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+
+            if (Session["usuariologueado"] != null)
             {
-                BotonesIniciales();
-                listaTextBoxes = new List<TextBox>
+                if (!IsPostBack)
                 {
-                   tbAlturaD,tbAnchoD
+                    BotonesIniciales();
+                    listaTextBoxes = new List<TextBox>
+                    {
+                       tbAlturaD,tbAnchoD
 
-                };
-                DeshabilitarTextBoxes(listaTextBoxes);
+                    };
+                    DeshabilitarTextBoxes(listaTextBoxes);
 
-                Adicionar.Enabled = false;
-                Adicionar.CssClass = "bi bf btn btn-lg btn-outline-secondary";
+                    Adicionar.Enabled = false;
+                    Adicionar.CssClass = "bi bf btn btn-lg btn-outline-secondary";
 
+                }
             }
+            else
+            {
+                Response.Redirect("~/Formularios/Login.aspx");
+            }
+
+
         }
 
         protected void BotonesIniciales()
@@ -172,7 +182,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             string mensajeError = "El objeto a sido añadido al plano, pero el valor del objeto seleccionado no ha sido actualizado.";
                             ScriptManager.RegisterStartupScript(this, GetType(), "showError", "alert('" + mensajeError + "');", true); ;
                         }
-                       
+
                     }
 
                 }
@@ -183,15 +193,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     ScriptManager.RegisterStartupScript(this, GetType(), "showError", "alert('" + mensajeError + "');", true);
                 }
 
-
                 Id_Objeto_Hid.Value = string.Empty;
                 Nombre_Objeto_Hid.Value = string.Empty;
                 Ancho_Objeto_Hid.Value = string.Empty;
-
-                // Llamar el script que recarga el formulario padre de donde salio la pagina 
-                string script = "<script>enviarFormulario();</script>";
-                ScriptManager.RegisterStartupScript(this, GetType(), "enviarFormulario", script, false);
-
 
             }
             else
@@ -318,7 +322,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         command.ExecuteNonQuery();
                         return true;
                     }
-              
+
                 }
             }
             catch (Exception ex)

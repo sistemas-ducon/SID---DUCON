@@ -12,37 +12,22 @@
     <title>Ordenes de Trabajo</title>
     <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
 
-    <script>
-        function confirmDelete() {
-            var numeroPlano = document.getElementById('<%= txtPlano.ClientID %>').value;
-            var confirmacion = confirm('¿Estás seguro que deseas quitar el objeto seleccionado del plano ' + numeroPlano + '?');
-            return confirmacion;
-        }
-    </script>
 
     <script>
-        function confirmDelete1() {
-            var numeroPlano = document.getElementById('<%= txtPlano.ClientID %>').value;
-            var confirmacion = confirm('¿Estás seguro de que deseas eliminar todos los objetos del plano ' + numeroPlano + '?');
-            return confirmacion;
-        }
-    </script>
-
-    <script>
+        // Mostrar y Ocultar  acabados plano
         function mostrarModal() {
             $('#ModalAcabados').modal('show');
         }
-
         function ocultarModal() {
             $('#ModalAcabados').modal('hide');
         }
     </script>
 
     <script>
+        // Mostrar y ocultar  modal para cargar archivo y leer  TXT
         function mostrarModalArchivo() {
             $('#ModalArchivo').modal('show');
         }
-
         function ocultarModalArchivo() {
             $('#ModalArchivo').modal('hide');
         }
@@ -63,16 +48,66 @@
 
     <script type="text/javascript">
         function CargarExcel() {
-            // Muestra el modal de carga
+            // Muestra el modal de carga Excel
             $('#loadingModalExcel').modal('show');
 
         }
-        // Función para ocultar el modal
+        // Función para ocultar el modal Excel
         function CerrarCargarExcel() {
             $('#loadingModalExcel').modal('hide');
         }
 
     </script>
+
+    <script type="text/javascript">
+        function CargarOK() {
+            // Muestra el modal de carga Boton Ok
+            $('#OkCargando').modal('show');
+            iniciarCambios();
+        }
+        // Función para ocultar el modal Boton Ok
+        function CerrarCargarOK() {
+            $('#OkCargando').modal('hide');
+        }
+
+    </script>
+
+    <script>
+      // Para camabiar los mensajes en el modal de espera
+        var mensajesEspera = [
+            "Cargando...",
+            "Validando Información de la O.T",
+            "Por favor, espere..."
+           
+        ];       
+        var indiceMensaje = 0;
+
+        // Función para cambiar el mensaje cada 2 segundos
+        function cambiarMensaje() {
+            // Obtener el elemento del mensaje
+            var mensajeElemento = document.getElementById("mensajeCargando");
+
+            // Cambiar el texto del mensaje al siguiente mensaje en el arreglo
+            mensajeElemento.textContent = mensajesEspera[indiceMensaje];
+
+            // Incrementar el índice para el siguiente mensaje
+            indiceMensaje++;
+
+            // Si alcanzamos el final del arreglo, reiniciamos el índice
+            if (indiceMensaje >= mensajesEspera.length) {
+                indiceMensaje = 0;
+            }
+        }
+
+        // Función para iniciar el cambio de mensajes
+        function iniciarCambios() {
+            // Llamar a la función cambiarMensaje cada 2 segundos
+            setInterval(cambiarMensaje, 3000);
+        }
+
+
+    </script>
+
 
 </head>
 
@@ -211,8 +246,7 @@
                                 </div>
                             </div>
 
-                            <!--Modal Objetos no existentes  -->
-                            <!-- *******************************************Inicio***************************************************************************** -->
+                            <!--Modal Objetos no existentes pendiente implementacion -->                           
                             <div class="modal fade" id="modalNoExistentes" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-xl ">
                                     <div class="modal-content">
@@ -257,9 +291,7 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- *********************************************Fin******************************************************************************* -->
-
+          
 
                             <!--Nav iconos OTs-->
                             <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
@@ -378,14 +410,12 @@
                                 </div>
                             </nav>
 
-
-
                             <div class="row">
 
                                 <div class="col-lg-1 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="OT" runat="server" ID="lblOT"></asp:Label>
-                                        <asp:TextBox ID="tbOT" runat="server" CssClass="form-control" OnTextChanged="ObtenerInfoOt" AutoPostBack="true"></asp:TextBox>               
+                                        <asp:TextBox ID="tbOT" runat="server" CssClass="form-control" OnTextChanged="ObtenerInfoOt" AutoPostBack="true"></asp:TextBox>
 
                                     </div>
                                 </div>
@@ -429,8 +459,8 @@
                                                                 WHERE tblOT.Id_OT = @Id_OT 
                                                                 ORDER BY tblOT.Consecutivo_Pedido DESC;
                                                                 ">
-                                              <SelectParameters>
-                                                <asp:SessionParameter Name="Id_OT" SessionField="Id_OT" Type="String" />                          
+                                            <SelectParameters>
+                                                <asp:SessionParameter Name="Id_OT" SessionField="Id_OT" Type="String" />
                                             </SelectParameters>
                                         </asp:SqlDataSource>
 
@@ -473,8 +503,7 @@
                                         <asp:LinkButton runat="server" title="Acabados" ID="btnAcabados" OnClick="Acabados_Click">
                                         <i class="bi bi-palette"></i>
                                         </asp:LinkButton>
-                                        <asp:LinkButton runat="server" title="OK" Text="OK" ID="btnOk" OnClick="Boton_Ok">                                          
-                                        </asp:LinkButton>
+                                        <asp:LinkButton runat="server" title="OK" Text="OK" ID="btnOk" OnClick="Boton_Ok1"></asp:LinkButton>
 
                                     </div>
                                 </div>
@@ -1024,15 +1053,16 @@
                                                                     <asp:BoundColumn DataField="Precio_Venta" HeaderText="V. Venta" ItemStyle-CssClass="auto-width-column" />
                                                                     <asp:BoundColumn DataField="ValorPedido" HeaderText="Valor Pedido" ItemStyle-CssClass="auto-width-column" />
                                                                     <asp:BoundColumn DataField="PedidoBase" HeaderText="Ref" ItemStyle-CssClass="auto-width-column" />
-                                                                    <asp:BoundColumn DataField="ValorBolsa" HeaderText="Total Ref" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="" HeaderText="Total Ref" ItemStyle-CssClass="auto-width-column" />
                                                                     <asp:BoundColumn DataField="" HeaderText="Saldo" ItemStyle-CssClass="auto-width-column" />
 
                                                                 </Columns>
                                                             </asp:DataGrid><asp:SqlDataSource runat="server" ID="InfoContable" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
-                                                                SelectCommand="SELECT Consecutivo_Pedido,Descripcion_TipoPedido,Precio_Venta,ValorPedido,PedidoBase,ValorBolsa 
-                                                                               FROM tblTipoPedido AS TP	INNER JOIN tblTipoAprobacion AS TA	INNER JOIN tblOT As OT
-                                                                               ON TA.IdTipoAprobacion = OT.TipoAprobacion ON TP.Id_TipoPedido = OT.Id_TipoPedido
-                                                                               WHERE OT.Id_OT = @Id_OT ORDER BY Consecutivo_Pedido DESC ">
+                                                                SelectCommand="SELECT Consecutivo_Pedido,Descripcion_TipoPedido,Precio_Venta,
+                                                                                ValorBolsa,ValorPedido,Precio_Venta - Descuento * Precio_Venta/100 AS Subtotal,
+                                                                                PedidoBase, tblTipoPedido.*,Terminada_Facturacion,Fecha_Factura,Descuento,EstadisticaVenta
+                                                                                FROM tblTipoPedido INNER JOIN tblOT ON tblTipoPedido.Id_TipoPedido = tblOT.Id_TipoPedido 
+                                                                                WHERE (((tblOT.Id_OT)=@Id_OT)) ORDER BY tblOT.Consecutivo_Pedido DESC ">
                                                                 <SelectParameters>
                                                                     <asp:ControlParameter ControlID="tbOT" PropertyName="Text" Name="Id_OT"></asp:ControlParameter>
                                                                 </SelectParameters>
@@ -1102,8 +1132,34 @@
                                     <asp:TextBox type="text" class="form-control text-end" runat="server" ID="txtGtotal"></asp:TextBox>
                                 </div>
                             </div>
+
                         </div>
-             
+
+                         <!--Modal Confirmacion Boton OK-->
+                        <div id="BotonOk" class="modal" tabindex="-1" style="display: none;">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-center">Terminar OT</h5>
+
+                                    </div>
+                                    <div class="modal-body border rounded">
+                                        <div class="container-fluid">
+                                            <h6>Esta seguro de Terminar la Orden de Trabajo: <span id="OTBotonOk"></span>Pedido  <span id="PedBotonOk"></span></h6>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                            <asp:Button runat="server" ID="btnOK_Si" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-outline-success" OnClick="Boton_Ok" AutoPostBack="true" Style="width: 5rem;" OnClientClick="CargarOK();" />
+                                            <asp:Button runat="server" ID="btnOK_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div id="CopiarAcabados" class="modal" tabindex="-1" style="display: none;">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -1121,23 +1177,6 @@
                                 </div>
                             </div>
                         </div>
-    
-                      <div class="modal" id="miModalll" tabindex="-1" style="display: none;">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Mensaje</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Falta llenar el campo: <span id="campoFaltante"></span></p>
-                                </div>
-                                <div class="modal-footer">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
 
                         <div id="OTingresada" class="modal" tabindex="-1">
                             <div class="modal-dialog modal-dialog-centered">
@@ -1155,44 +1194,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-                        <div id="ValidarAsesor" class="modal" tabindex="-1">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Asesor del Pedido</h5>
-
-                                    </div>
-                                    <div class="modal-body">
-                                        <p><span id="ValidarAsesor1"></span></p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button runat="server" data-bs-dismiss="modal" aria-label="Close">Aceptar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div id="OTModificada" class="modal" tabindex="-1">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">S_I_Ducon</h5>
-
-                                    </div>
-                                    <div class="modal-body">
-                                        <p><span id="OTModificada1"></span></p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <asp:Button runat="server" Text="Sí" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnSiModificar_Click"></asp:Button>
-                                        <asp:Button runat="server" Text="No" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnNoModificar_Click"></asp:Button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
 
                         <div class="modal" id="NuevoPedido" tabindex="-1" style="display: none;">
                             <div class="modal-dialog">
@@ -1212,7 +1213,6 @@
                             </div>
                         </div>
 
-
                         <div class="modal" id="ActualizarCliente" tabindex="-1" style="display: none;">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -1221,29 +1221,10 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <p>Por favor actualizar el registro de clientes.</p>
+                                        <p>Por favor actualizar el registro de clientes.</span></p>
                                     </div>
                                     <div class="modal-footer">
-                                        <asp:Button runat="server" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="modal fade" id="LlenarNIT" data-backdrop="static" data-bs-keyboard="false">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content p-4 shadow">
-                                    <div class="modal-header bg-light">
-                                        <h5 class="modal-title">NIT</h5>
-
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Debes de llenar el NIT</p>
-                                        <p>Al darle aceptar se redireccionará al NIT</p>
-                                    </div>
-
-                                    <div class="modal-footer">
-                                        <asp:Button runat="server" Text="Aceptar" OnClick="Redireccion_Nit_Click" CssClass="btn btn-sm btn-outline-dark" />
+                                        <asp:Button runat="server" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close"/>
                                     </div>
                                 </div>
                             </div>
@@ -1398,6 +1379,56 @@
                                 </div>
                             </div>
 
+                            <!--Modal Eliminar todos los objetos del plano -->
+                            <div id="EliminarObjetos" class="modal" tabindex="-1" style="display: none;">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-danger text-white">
+                                            <h5 class="modal-title text-center">Eliminar Objetos</h5>
+
+                                        </div>
+                                        <div class="modal-body border rounded">
+                                            <div class="container-fluid">
+                                                <h6>Esta seguro que desea eliminar los objetos del Plnao <span id="planoEliminar"></span></h6>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                                <asp:Button runat="server" ID="eliminarObjeto" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-outline-danger" Style="width: 5rem;" OnClick="BtnEliObjPla_Click" />
+                                                <asp:Button runat="server" ID="CerrarEliminar" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Modal Eliminar un objeto del plano -->
+                            <div id="EliminarObjeto" class="modal" tabindex="-1" style="display: none;">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-danger text-white">
+                                            <h5 class="modal-title text-center">Eliminar Objeto</h5>
+
+                                        </div>
+                                        <div class="modal-body border rounded">
+                                            <div class="container-fluid">
+                                                <h6>Esta seguro que desea eliminar el objetos  <span runat="server" id="ObjetoEliminar"></span>de ancho <span runat="server" id="anchoEliminar"></span>del plano ? </h6>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                                <asp:Button runat="server" ID="quitarObjeto" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-outline-danger" Style="width: 5rem;" OnClick="BtnQuiObjPla_Click" />
+                                                <asp:Button runat="server" ID="CerrarQ" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!--Nav iconos Planos-->
                             <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
                                 <div class="container-fluid">
@@ -1414,11 +1445,11 @@
                                                      <i class="ib bi-pc"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Quitar Objeto del Plano" ID="BtnQuiObjPla" OnClick="BtnQuiObjPla_Click" OnClientClick="return confirmDelete();">
+                                                <asp:LinkButton runat="server" title="Quitar Objeto del Plano" ID="BtnQuiObjPla" OnClick="QuitarObjeto_Click">
                                                   <i class="bi bi-database-check"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Eliminar Objetos del Plano" ID="BtnEliObjPla" OnClick="BtnEliObjPla_Click" OnClientClick="return confirmDelete1();">
+                                                <asp:LinkButton runat="server" title="Eliminar Objetos del Plano" ID="BtnEliObjPla" OnClick="EliminarObjetos_Click">
                                                   <i class="bi bi-fire"></i>
                                                 </asp:LinkButton>
 
@@ -2236,7 +2267,8 @@
                 </div>
             </div>
         </div>
-               
+        
+        <!--Modal para cargar archivo para leer ACAD txt -->
         <div class="modal fade" id="ModalArchivo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg ">
                 <div class="modal-content">
@@ -2266,7 +2298,7 @@
             </div>
         </div>
 
-        <!--Modal de carga proceso -->
+        <!--Modal de carga proceso Archivo TXT -->
         <div class="modal fade" id="loadingModal1" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -2280,6 +2312,7 @@
             </div>
         </div>
 
+         <!--Modal de carga para excel -->
         <div class="modal fade" id="loadingModalExcel" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -2293,19 +2326,21 @@
             </div>
         </div>
 
-
-          <div class="modal" id="CarteraVencida" tabindex="-1" style="display: none;">
-            <div class="modal-dialog modal-dialog-centered">
+         <!--Modal de carga para el proceso de Boton OK-->
+        <div class="modal fade" id="OkCargando" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered ">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Cartera vencida</h5>
-                       
+                    <div class="modal-header pb-1 mb-1 bg-primary text-white">
+                        <!-- Clase bg-primary para el fondo azul y text-white para el texto blanco -->
+                        <h6 class="modal-title text-center">Terminando Orden de Trabajo</h6>
                     </div>
-                    <div class="modal-body">
-                        <p><span id="CarteraVencida2"></span></p>
+                    <div class="modal-body text-center border rounded p-2 m-2">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-2 fw-bold" id="mensajeCargando">....</p>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-outline-success" data-bs-dismiss="modal" aria-label="Close">Aceptar</button>   
+                    <div class="modal-footer pt-1 mt-1">
                     </div>
                 </div>
             </div>
@@ -2369,7 +2404,7 @@
 
     <script>   
         function actualizarValor() {
-            // Obtener el valor del TextBox
+            // Obtener el valor del TextBox tbOT
             var valorTextBox = document.getElementById('tbOT').value;
 
             // Actualizar el contenido del span con el valor del TextBox
@@ -2399,6 +2434,27 @@
         }
     </script>
 
+    <script>   
+        function actualizarValorBotonOk() {
+            // Obtener el valor del TextBox
+            var OT = document.getElementById('tbOT').value;
+            var Ped = document.getElementById('ddlNumbers').value;
+            // Actualizar el contenido del span con el valor del TextBox
+            document.getElementById('OTBotonOk').innerText = OT;
+            document.getElementById('PedBotonOk').innerText = Ped;
+        }
+    </script>
+
+    <script>   
+        function actualizarPlanoEliminar() {
+            // Obtener el valor del TextBox
+            var plano = document.getElementById('txtPlano').value;
+
+            // Actualizar el contenido del span con el valor del TextBox
+            document.getElementById('planoEliminar').innerText = plano;
+
+        }
+    </script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
