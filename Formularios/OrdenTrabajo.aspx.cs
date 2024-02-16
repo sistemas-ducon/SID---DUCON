@@ -2939,7 +2939,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
         protected void Redireccion_Nit(object sender, EventArgs e)
-        {     
+        {
+            Session["Id_OT2"] = tbOT.Text;
+            Session["pedido2"] = ddlNumbers.SelectedItem.Text;
+
             string url = "FormExtPrin/NitOts.aspx";
             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
             ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
@@ -8821,7 +8824,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             if (datosCliente.Rows.Count > 0)
             {
-                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBA"].ConnectionString;
+                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
 
                 using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
                 {
@@ -8858,8 +8861,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         cmdUpdate.Parameters.AddWithValue("@cocTelefono", cocTelefono);
                         cmdUpdate.Parameters.AddWithValue("@cocCelular", cocCelular);
                         cmdUpdate.Parameters.AddWithValue("@cocMail", cocMail);
-                        cmdUpdate.Parameters.AddWithValue("@cocFechaCreacion", cocFechaCreacion);
-                        cmdUpdate.Parameters.AddWithValue("@cocUltimaActualizacion", cocUltimaActualizacion);
+                        cmdUpdate.Parameters.AddWithValue("@cocFechaCreacion", string.IsNullOrEmpty(cocFechaCreacion) ? (object)DBNull.Value : Convert.ToDateTime(cocFechaCreacion));
+                        cmdUpdate.Parameters.AddWithValue("@cocUltimaActualizacion", Convert.ToDateTime(cocUltimaActualizacion));
 
                         // Ejecutar la actualización
                         cmdUpdate.ExecuteNonQuery();

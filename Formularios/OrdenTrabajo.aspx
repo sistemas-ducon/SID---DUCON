@@ -73,13 +73,13 @@
     </script>
 
     <script>
-      // Para camabiar los mensajes en el modal de espera
+        // Para camabiar los mensajes en el modal de espera
         var mensajesEspera = [
             "Cargando...",
             "Validando Información de la O.T",
             "Por favor, espere..."
-           
-        ];       
+
+        ];
         var indiceMensaje = 0;
 
         // Función para cambiar el mensaje cada 2 segundos
@@ -246,7 +246,7 @@
                                 </div>
                             </div>
 
-                            <!--Modal Objetos no existentes pendiente implementacion -->                           
+                            <!--Modal Objetos no existentes pendiente implementacion -->
                             <div class="modal fade" id="modalNoExistentes" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-xl ">
                                     <div class="modal-content">
@@ -291,7 +291,7 @@
                                     </div>
                                 </div>
                             </div>
-          
+
 
                             <!--Nav iconos OTs-->
                             <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
@@ -1135,7 +1135,7 @@
 
                         </div>
 
-                         <!--Modal Confirmacion Boton OK-->
+                        <!--Modal Confirmacion Boton OK-->
                         <div id="BotonOk" class="modal" tabindex="-1" style="display: none;">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -1171,8 +1171,8 @@
                                         <p>Desea copiar los acabados de la OT:</p>
                                     </div>
                                     <div class="modal-footer">
-                                        <asp:Button runat="server" ID="BtnSi" Text="Si" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnSi_Click" AutoPostBack="true"/>
-                                        <asp:Button runat="server" ID="BtnNo" Text="No" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnNo_Click"/>
+                                        <asp:Button runat="server" ID="BtnSi" Text="Si" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnSi_Click" AutoPostBack="true" />
+                                        <asp:Button runat="server" ID="BtnNo" Text="No" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnNo_Click" />
                                     </div>
                                 </div>
                             </div>
@@ -1224,7 +1224,41 @@
                                         <p>Por favor actualizar el registro de clientes.</span></p>
                                     </div>
                                     <div class="modal-footer">
-                                        <asp:Button runat="server" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close"/>
+                                        <asp:Button runat="server" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                           <div class="fundido modal" id="LlenarNIT" data-backdrop="static" data-bs-keyboard="false">
+ <div class="modal-dialog modal-dialog-centrado">
+                                <div class="modal-content p-4 shadow">
+                                    <div class="modal-header bg-light">
+                                        <h5 class="modal-title">NIT</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Debes de llenar el NIT</p>
+                                        <p>Al darle aceptar se redireccionará al NIT</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <asp:Button runat="server" Text="Aceptar" OnClick="Redireccion_Nit_Click" CssClass="btn btn-sm btn-outline-dark" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                           <div id="OTModificada" class="modal" tabindex="-1">
+ <div class="modal-dialog modal-dialog-centrado">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">S_I_Ducon</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><span id="OTModificada1"></span></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <asp:Button runat="server" Text="Sí" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnSiModificar_Click"></asp:Button>
+                                        <asp:Button runat="server" Text="No" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnNoModificar_Click"></asp:Button>
                                     </div>
                                 </div>
                             </div>
@@ -2218,7 +2252,7 @@
 
         </div>
 
-        
+
 
         <div id="miModallll" class="modal" tabindex="-1" style="display: none;">
             <div class="modal-dialog modal-dialog-centered">
@@ -2267,7 +2301,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!--Modal para cargar archivo para leer ACAD txt -->
         <div class="modal fade" id="ModalArchivo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg ">
@@ -2312,7 +2346,7 @@
             </div>
         </div>
 
-         <!--Modal de carga para excel -->
+        <!--Modal de carga para excel -->
         <div class="modal fade" id="loadingModalExcel" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -2326,7 +2360,7 @@
             </div>
         </div>
 
-         <!--Modal de carga para el proceso de Boton OK-->
+        <!--Modal de carga para el proceso de Boton OK-->
         <div class="modal fade" id="OkCargando" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered ">
                 <div class="modal-content">
@@ -2346,7 +2380,8 @@
             </div>
         </div>
 
-        
+     
+
 
 
     </form>
