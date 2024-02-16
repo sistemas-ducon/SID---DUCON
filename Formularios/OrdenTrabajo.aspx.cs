@@ -2589,7 +2589,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 //se usa Para darle un color a la fila seleccionada  
                 e.Item.CssClass = "fila-seleccionada";
-
                 string ID = row.Cells[2].Text;
                 string Descri = row.Cells[9].Text;
                 string Ancho = row.Cells[5].Text;
@@ -5762,9 +5761,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
 
             }
-        }
-
-       
+        }      
         // Metodos para cuando el plano es una Bolsa 
         private bool PedidoFacturable(string IdOT, string pedido)
         {

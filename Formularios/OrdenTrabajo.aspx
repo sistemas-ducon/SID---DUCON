@@ -168,7 +168,7 @@
                                 </div>
                             </div>
 
-                            <!--Modal Bolsa  -->
+                            <!--Modal Bolsa -->
                             <div class="modal fade" id="modalBolsa" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-xl ">
                                     <div class="modal-content">
@@ -1044,7 +1044,7 @@
                                                     <div class="col-12">
                                                         <div class="table-responsive mb-1" style="max-height: 10rem; overflow-x: auto;">
                                                             <h5 class="datagrid-header text-center">Contable</h5>
-                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGrid" runat="server" DataSourceID="InfoContable" >
+                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGrid" runat="server" DataSourceID="InfoContable">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                                 <Columns>
