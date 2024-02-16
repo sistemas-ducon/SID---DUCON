@@ -42,12 +42,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private List<TextBox> listaTextBoxes;
         private List<DropDownList> listaDropDownLists;
 
+        //Variable para Calcular Fecha Empaque 
+        private int DiasMinimoparaProduccion = 0;
+        private int DiasPorDefectoParaProduccion = 0;
+        private int DiasHabiles = 0;
+        private DateTime FechaEmpaque;
         private List<int> ID_Acabados = new List<int>();
         private List<int> ID_GruposObjetoparaAcabados = new List<int>();
         private List<string> Detalles_Adicionales = new List<string>();
         private List<string> AcabadosVentas = new List<string>();
 
-     
+
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -58,7 +63,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (!IsPostBack)
                 {
-                   
+
 
                     tbVenta.Text = DateTime.Now.ToString("yyyy-MM-dd");
                     dtpFechaEntregaDibujoDespiece.Text = DateTime.Now.ToString("yyyy-MM-dd");
@@ -171,7 +176,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }            
 
                     CargarVariablesDeSesionContable();
-                   
+
                 }
 
 
@@ -231,7 +236,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private void LlenarCboPedidoBase()
         {
-           
+
 
             // Obtener el valor de la variable de sesión "Id_OT"
             string idOT = Session["Id_OT"]?.ToString();
@@ -240,7 +245,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (!string.IsNullOrEmpty(idOT))
             {
                 // Realizar la consulta para obtener los valores de PedidoBase y EstadisticaVenta
-              
+
                 using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
                 {
                     connection.Open();
@@ -765,7 +770,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             public string profundidad { get; set; }
             public string ajusteCub { get; set; }
 
-          
+
 
         }
 
@@ -1022,7 +1027,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     Object nombre = command.ExecuteScalar();
 
-                    if (nombre != null && nombre != DBNull.Value) 
+                    if (nombre != null && nombre != DBNull.Value)
                     {
                         numero = Convert.ToInt32(nombre);
                     }
@@ -1152,7 +1157,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private void AssignDataToControls(SqlDataReader leer)
         {
-          
+
 
             cboPedidoBase.DataBind();
             cboPedidoBase.Items.Insert(0, new ListItem(" "));
@@ -1160,7 +1165,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             dtacboTipoPedido.DataBind();
             dtacboTipoPedido.Items.Insert(0, new ListItem(" "));
 
-           
+
 
             bool cerrada = leer.GetBoolean(leer.GetOrdinal("Cerrada")); // Variable para OTCerrada
 
@@ -1178,10 +1183,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             tbOT.Text = leer["Id_OT"].ToString();
 
-           ListItem item2 = ddlNumbers.Items.FindByValue(leer["Consecutivo_Pedido"].ToString());
-           if (item2 != null)
+            ListItem item2 = ddlNumbers.Items.FindByValue(leer["Consecutivo_Pedido"].ToString());
+            if (item2 != null)
             {
-               ddlNumbers.SelectedValue = item2.Value;
+                ddlNumbers.SelectedValue = item2.Value;
             }
 
             //pedido = leer["Consecutivo_Pedido"].ToString();
@@ -1200,7 +1205,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 if (item.Text == Ciudad)
                 {
-                    ddlCiudad.ClearSelection();       
+                    ddlCiudad.ClearSelection();
                     item.Selected = true;
                     break;
                 }
@@ -1238,7 +1243,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             btnCotizacion.Enabled = true;
 
-          
+
 
             calcularDescuento();
             calcularGranTotal();
@@ -1655,8 +1660,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             ddlNumbers.Enabled = true;
 
-           
-           
+
+
 
             Nit.Enabled = false;
             Nit.CssClass = "btn btn-sm shadow button-disabled";
@@ -1851,9 +1856,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
             {
+                BtnAdiObjPla.Enabled = true;
+                BtnAdiObjPla.CssClass = "btn btn-sm shadow button-enabled";
+
+                BtnEliObjPla.Enabled = true;
+                BtnEliObjPla.CssClass = "btn btn-sm shadow button-enabled";
 
                 BtnVisGenCot.Enabled = true;
                 BtnVisGenCot.CssClass = "btn btn-sm shadow button-enabled";
+
+                BtnPlaBlo.Enabled = true;
+                BtnPlaBlo.CssClass = "btn btn-sm shadow button-enabled";
+
+
+                BtnAcaPla.Enabled = true;
+                BtnAcaPla.CssClass = "btn btn-sm shadow button-enabled ";
             }
 
 
@@ -1993,8 +2010,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             ScriptManager.RegisterStartupScript(this, GetType(), "showFechaExcedida", scriptFechaExcedida, true);
                         }
 
-                        txtDctoValor.Text = (Convert.ToDouble(txtVenta.Text) * Convert.ToDouble(txtDcto.Text)).ToString();
-                        txtGtotal.Text = (Convert.ToDouble(txtVenta.Text) + Convert.ToDouble(txtVtte.Text) + Convert.ToDouble(txtVvia.Text)).ToString();
+                        double Valorventa = Convert.ToDouble(txtVenta.Text);
+                        double Descuento = Convert.ToDouble(txtDcto.Text);
+                        double ValorDescuento = Valorventa * Descuento / 100;
+
+                        txtDctoValor.Text = Convert.ToString(ValorDescuento);
+                        txtGtotal.Text = (Valorventa - ValorDescuento + Convert.ToDouble(txtVtte.Text) + Convert.ToDouble(txtVvia.Text)).ToString();
 
 
                         if (Convert.ToInt32(leer["Saldo"].ToString()) == 0)
@@ -2116,7 +2137,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private void CargarDatosContables(string id)
         {
-           
+
 
             using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
             {
@@ -2125,7 +2146,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     cmd.Parameters.AddWithValue("@IdContactoCliente", id);
 
-                    
+
 
                     SqlDataReader leer = cmd.ExecuteReader();
 
@@ -2142,7 +2163,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
-            
+
         }
 
         // FIN 
@@ -2183,14 +2204,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         }
                     }
-                  
+
                 }
 
 
             }
             catch (Exception ex)
             {
-               
+
             }
 
             Cargar_Plano(id, pedido);
@@ -2312,7 +2333,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             Session["NuevoPedido"] = true;
 
-           
+
         }
 
         protected void BtnSiNuevoPedido_Click(object sender, EventArgs e)
@@ -2347,11 +2368,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Devuelve true si está habilitado y false si no lo está.
             // Ejemplo: Siempre habilitado
             return true;
-        }
-
-        protected void Boton_Ok(object sender, EventArgs e)
-        {
-
         }
 
         //FIN
@@ -2571,8 +2587,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
 
-                //se usa Para darle un color a la fila seleccionada  anderson
+                //se usa Para darle un color a la fila seleccionada  
                 e.Item.CssClass = "fila-seleccionada";
+
                 string ID = row.Cells[2].Text;
                 string Descri = row.Cells[9].Text;
                 string Ancho = row.Cells[5].Text;
@@ -2594,6 +2611,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 BtnQuiObjPla.Enabled = true;
                 BtnQuiObjPla.CssClass = "btn btn-sm shadow button-enabled";
 
+             
+                ObjetoEliminar.InnerText = Descri;
+                anchoEliminar.InnerText = Ancho;
             }
         }
 
@@ -2975,7 +2995,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         //FIN
 
-   
+        //REDIRECCION A DOCUMENTACION ORDENES DE TRABAJO 
+        protected void DocumentacionOt_Click(object sender, EventArgs e)
+        {
+
+            Session["Id_OT2"] = tbOT.Text;
+            Session["pedido2"] = ddlNumbers.Text;
+
+            string url = "FormExtPrin/DocumentacionOT.aspx";
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+        }
+
+
         public void CargarVariablesDeSesionContable()
         {
             if (!string.IsNullOrEmpty(Session["IdContactoFactSession"]?.ToString()) && !string.IsNullOrEmpty(Session["IdClienteFactSession"]?.ToString()))
@@ -3036,7 +3068,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 }
 
                                 Session.Remove("IdClienteFactSession");
-                                
+
 
                             }
                         }
@@ -3148,7 +3180,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             // Verificar si el valor es menor a 13
                             if (mesesDesdeUltimaVenta < 13)
                             {
-                               
+
                                 InsertarNuevoPedido();
                                 InsertarPlanoPedido();
 
@@ -3163,7 +3195,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
-              //MODAL VACIO
+                //MODAL VACIO
             }
         }
 
@@ -3222,9 +3254,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void InsertarNuevoPedido()
         {
-            
+
             string IDCLienteConstactoSession = Session["IdContactoFactSession"] as string;
-           
+
 
             string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
 
@@ -3240,7 +3272,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     string regionSeleccionada = valoresDDL[1].Trim();
 
                     int nuevoConsecutivo = ObtenerConsecutivoPedido();
-                  
+
 
                     string idOTn = tbOT.Text;
 
@@ -3255,7 +3287,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Asignar el valor generado para @Id_OT
                         command.Parameters.AddWithValue("@Id_OT", idOTn);
                         command.Parameters.AddWithValue("@Consecutivo_Pedido", nuevoConsecutivo);
-                       
+
 
                         command.Parameters.AddWithValue("@Observacion_Pedido", txObs1.Value);
                         command.Parameters.AddWithValue("@Direccion", tbDir.Text);
@@ -3299,7 +3331,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@DescuentoparaComision", txtComision.Text);
                         command.Parameters.AddWithValue("@ValorTteVia", txtVtte.Text);
 
-                       
+
 
                         command.Parameters.AddWithValue("@PedidoBase", pedidoBaseValue);
 
@@ -3315,7 +3347,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             Session["Id_OT3"] = idOTn;
                             Session["pedido3"] = nuevoConsecutivo;
 
-                            
+
 
                         }
                         else
@@ -3708,11 +3740,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 campoFaltante = "Tipo de Negociacion";
             }
 
-           else if (cboPedidoBase.Enabled)
+            else if (cboPedidoBase.Enabled)
             {
                 if (!System.Text.RegularExpressions.Regex.IsMatch(cboPedidoBase.SelectedValue, @"\d"))
                 {
-                    campoFaltante = "Pedido Base"; 
+                    campoFaltante = "Pedido Base";
                 }
             }
             else if (!System.Text.RegularExpressions.Regex.IsMatch(ddlCiudad.SelectedValue, @"\D"))
@@ -4042,7 +4074,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             TiposDePedidos.SelectCommand = "SELECT Descripcion_TipoPedido, Id_TipoPedido, EstadisticaVenta FROM tblTipoPedido WHERE Activo = '1' AND EstadisticaVenta = '1' ORDER BY Descripcion_TipoPedido";
 
-         
+
             dtacboTipoPedido.DataBind();
             dtacboTipoPedido.Items.Insert(0, new ListItem(" "));
 
@@ -4151,7 +4183,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             else
             {
 
-            }        
+            }
         }
 
         protected void BtnNo_Click(object sender, EventArgs e)
@@ -4284,9 +4316,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             AnularPedido.Enabled = true;
             AnularPedido.CssClass = "btn btn-sm shadow button-enabled";
-       
+
             ObservacionesOt.Enabled = true;
-            ObservacionesOt.CssClass = "btn btn-sm shadow button-enabled";     
+            ObservacionesOt.CssClass = "btn btn-sm shadow button-enabled";
 
             ConsultarBolsa.Enabled = true;
             ConsultarBolsa.CssClass = "btn btn-sm shadow button-enabled";
@@ -4303,7 +4335,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Cancelar.Enabled = false;
             Cancelar.CssClass = "btn btn-sm shadow button-disabled";
 
-        
+
 
         }
 
@@ -4450,7 +4482,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         // Plano  
 
-        //***** Iinicio Boton Adicionar redireccion a Objetos Pendiente  Implementacion  *****
+        //***** ADICIONAR  OBJETOS AL PLANO *****
         protected void BtnAdiObjPla_Click(object sender, EventArgs e)
         {
             // Se valida  que el plano este o no bloqueado
@@ -4519,10 +4551,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         }
+      
 
-        //***** Fin Boton Adicionar redireccion a Objetos Pendiente  Implementacion  *****
 
-        //***** Iinicio Boton Quitar Objetos del plano Pendiente  Implementacion  *****
+        //***** QUITAR UN OBJETO DEL PLANO  *****
+        protected void QuitarObjeto_Click(object sender, EventArgs e)
+        {
+            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#EliminarObjeto').modal('show');", true);
+        }
         protected void BtnQuiObjPla_Click(object sender, EventArgs e)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
@@ -4674,10 +4710,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 return false;
             }
         }
+      
 
-        //***** Fin  Boton Quitar Objetos del plano Pendiente  Implementacion  *****
 
-        //***** Iinicio Eliminar Objeto del plano Pendiente  Implementacion  *****     
+        //*****ELIMINAR TODOS LOS OBJETOS DEL PLANO  *****
+       
+        protected void EliminarObjetos_Click(object sender, EventArgs e)
+        {
+            ScriptManager.RegisterStartupScript(this, GetType(), "actualizarPlanoEliminar", "actualizarPlanoEliminar();", true);
+            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#EliminarObjetos').modal('show');", true);
+        }
         protected void BtnEliObjPla_Click(object sender, EventArgs e)
         {
             // Se valida  que el plano este o no bloqueado
@@ -4789,11 +4831,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 return false;
             }
         }
+      
 
-        //***** Fin Eliminar Objeto del plano Pendiente  Implementacion  *****
 
-
-        //***** Iinicio Boton Acabados  Pendiente  Implementacion  ******
+        //***** MOSTRAR ACABADOS DEL PLANO   ******
         protected void BtnAcaPla_Click(object sender, EventArgs e)
         {
 
@@ -4931,8 +4972,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         } // Campo se podria Cargar en el login
+        
 
-        //***** Fin  Boton Acabados  Pendiente  Implementacion  ******
 
         //*****  Incio Boton Leer Autocad Pendiente Implementacion ******
         protected void BtnLeeArcDesAca_Click(object sender, EventArgs e)
@@ -5723,6 +5764,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+       
         // Metodos para cuando el plano es una Bolsa 
         private bool PedidoFacturable(string IdOT, string pedido)
         {
@@ -5957,7 +5999,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
 
-        //*****  Inicio Boton Bloquear Desbloquear Plano  Pendiente Implementacion ******
+        //***** DESBLOQUEAR O BLOQUEAR UN PLANO******
         protected void BtnPlaBlo_Click(object sender, EventArgs e)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
@@ -6079,7 +6121,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-        //*****  Fin Boton Bloquear Desbloquear Plano  Pendiente Implementacion ******
+        // DESCARGAR LA COTIZACION EN EL TAP DE PLANO 
         protected void BtnVisGenCot_Click(object sender, EventArgs e)
         {
             try
@@ -6100,7 +6142,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Creamos una nueva        Hoja Cotizacion 
                 var worksheet = (Excel.Worksheet)workbook.ActiveSheet;
                 worksheet.Name = "Cotizacion";
-           
+
                 // Altura de la Fila 1
                 worksheet.Rows[1].RowHeight = 60;
 
@@ -6366,7 +6408,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                     else if (datosFiltrados.Tipo == "Total")
                     {
-                        var totalTitleRange = worksheet.Range[$"B{rowIndex}:E{rowIndex}"];                     
+                        var totalTitleRange = worksheet.Range[$"B{rowIndex}:E{rowIndex}"];
                         var totalSubtotalRange = worksheet.Range[$"F{rowIndex}"];
 
                         totalTitleRange.Merge(); // Combinar celdas para el título
@@ -6401,7 +6443,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         rowIndex++;
                     }
                     else
-                    {                    
+                    {
                         // Validar si existe una imagen en la ruta especificada
                         string imagePath = Path.Combine(@"\\172.16.30.6\Dibujo\DUCON\ONLINE\Dropbox\BLOQUES\IMAGENES", $"{datosFiltrados.Id_Panel}.jpg");
 
@@ -6428,7 +6470,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             cellDescripcion.Font.Size = 11;
                         }
 
-                        
+
 
                         var cellRange = worksheet.Range[$"B{rowIndex}:F{rowIndex}"];
                         cellRange.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
@@ -6490,7 +6532,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ValorCub.Font.Name = "Arial";
                 ValorCub.Font.Size = 11;
                 ValorCub.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
-               
+
                 // Hoja Cotizacion Detallada
                 var worksheet2 = (Excel.Worksheet)workbook.Sheets.Add();
                 worksheet2.Name = "Cotizacion Detallada";
@@ -6634,7 +6676,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 CellB5P3.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
                 CellB5P3.EntireRow.Font.Color = System.Drawing.Color.Black;
 
-              
+
                 string[] tiempoDeEntrega = {
                     "Para proyectos de hasta 100 puestos de trabajo, con diseño y",
                     "acabados de línea, DUCON S.A.S normalmente, se tomará 21 días para despachar;",
@@ -6659,7 +6701,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 CellB18P3.Font.Bold = true;
                 CellB18P3.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
                 CellB18P3.EntireRow.Font.Color = System.Drawing.Color.Black;
-               
+
                 string[] instalacion = {
                         "El valor de la instalación ya está incluido en la cotización, obras",
                         "fuera del área metropolitana de Medellín y Bogotá podrán tener recargo por concepto de",
@@ -6718,7 +6760,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     "Para  garantizar el funcionamiento adecuado del producto  recomendamos",
                     "que la instalación cableado estructurado  voz  y  datos, se realice por un experto.",
                     "obedeciendo indicaciones mínimas del personal de instalación DUCON"
-              
+
                 };
                 AgregarTextoDesdeArray(worksheet3, Nota1, "B48", 12, false);
 
@@ -6896,7 +6938,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 CellB112P3.Font.Bold = true;
                 CellB112P3.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
                 CellB112P3.EntireRow.Font.Color = System.Drawing.Color.Black;
-               
+
                 string[] devoluciones = {
                     "Una vez aprobados planos y especificaciones no se aceptan ",
                     "devoluciones. Casos especiales serán analizados para su devolución y se reconocerá ",
@@ -6966,8 +7008,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 int processId = excelApp.Hwnd;
                 // Finalizar el proceso Excel
                 System.Diagnostics.Process.GetProcessById(processId).Kill();
-               
-             
+
+
 
             }
             catch (Exception ex)
@@ -6977,7 +7019,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
         }
-
         static void AdjustMargins(Excel.PageSetup pageSetup)
         {
             // Ajustar los márgenes según tus necesidades
@@ -6988,7 +7029,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             pageSetup.BottomMargin = 0.5;
 
         }
-
         public List<DatosFiltrados> CargarDatosExcel()
         {
             List<DatosFiltrados> datosFiltradosList = new List<DatosFiltrados>();
@@ -7037,7 +7077,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             return datosFiltradosList;
         }
-
         private Dictionary<string, string> ObtenerDescripcionesPlano(string plano)
         {
             Dictionary<string, string> descripciones = new Dictionary<string, string>();
@@ -7072,7 +7111,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             return descripciones;
         }
-
         protected void AgregarTextoDesdeArray(Excel.Worksheet worksheet, string[] textoArray, string celdaInicio, int fontSize = 12, bool bold = false)
         {
             int fila = int.Parse(celdaInicio.Substring(1));  // Extraemos el número de fila de la celda de inicio
@@ -7098,18 +7136,3797 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-        protected void DocumentacionOt_Click(object sender, EventArgs e)
+     
+
+        // INICIO LOGICA DEL BOTON OK
+
+        protected void Boton_Ok1(object sender, EventArgs e)
         {
+            ScriptManager.RegisterStartupScript(this, GetType(), "actualizarValorBotonOk", "actualizarValorBotonOk();", true);
+            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#BotonOk').modal('show');", true);
 
             Session["Id_OT2"] = tbOT.Text;
-            Session["pedido2"] = ddlNumbers.Text;
+            Session["pedido2"] = ddlNumbers.SelectedItem.Text;
 
-            string url = "FormExtPrin/DocumentacionOT.aspx";
-            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
-            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
         }
-    }
+        protected void Boton_Ok(object sender, EventArgs e)
+        {
 
+            string departamento = Session["Departamento"].ToString();
+
+            switch (departamento.ToUpper())
+            {
+                //Para el departamento de Ventas e Instalación 
+                case "VENTAS":
+                case "Instalación":
+
+                    //Validar que la cotización sea dieferente de NO TIENE
+                    string cotizacion = txtCotizacion.Text; // Asegúrate de reemplazar 'tuTextBox' con el nombre correcto de tu TextBox.
+
+                    if (cotizacion.ToUpper() != "NO TIENE")
+                    {
+                        string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString; // Reemplaza con tu cadena de conexión.
+
+                        using (SqlConnection connection = new SqlConnection(connectionString))
+                        {
+                            connection.Open();
+
+                            string sSql = "SELECT * FROM tblCotización WHERE cotización = @cotizacion";
+                            using (SqlCommand command = new SqlCommand(sSql, connection))
+                            {
+                                command.Parameters.AddWithValue("@cotizacion", cotizacion);
+
+                                using (SqlDataReader reader = command.ExecuteReader())
+                                {
+                                    // Valimadamos que la cotizacion exista luego
+                                    if (reader.Read())
+                                    {
+
+                                        // Consultamos el saldo de la  cotizacion y validamos que el saldo  no puede ser menor que el precio de venta 
+                                        if (Convert.ToDecimal(reader["Saldo"].ToString()) < Convert.ToDecimal(txtVenta.Text))
+                                        {
+                                            
+                                            string mensajePersonalizado = "La cotización digitada no tiene saldo suficiente para el pedido.";
+                                            string urlRedireccion = "OrdenTrabajo.aspx";
+                                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+                                        }
+                                        //Validamos que la fecha de la cotizacion no puede exceder los 30 dias 
+                                        DateTime fechaCotizacion = Convert.ToDateTime(reader["Fecha_Cotización"]);
+                                        if ((DateTime.Now - fechaCotizacion).Days > 30)
+                                        {
+                                                                                    
+                                            // Error al realizar las inserciones al ISID
+                                            string mensajePersonalizado = "La fecha de la cotización digitada excede los 30 días. Para terminar el Pedido, debe actualizar la cotización.";
+                                            string urlRedireccion = "OrdenTrabajo.aspx";
+                                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                                        }
+                                    }
+                                    else
+                                    {
+                                       
+                                        // Error al realizar las inserciones al ISID
+                                        string mensajePersonalizado = "La cotización digitada no existe. Para terminar el Pedido, debe modificar este campo.";
+                                        string urlRedireccion = "OrdenTrabajo.aspx";
+                                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Consultamos el tipo de pedido y  si es pedidio facturable
+                    if (ValidarPedidoFacturable(dtacboTipoPedido.SelectedValue))
+                    {
+                        //Validamos que el precio ser mayor que cero 
+                        if (Convert.ToDouble(txtVenta.Text) <= 0)
+                        {
+                            // Mensaje SI EL PEDIDO ES FACTURABLE, EL VALOR VENTA DEBE SER MAYOR A CERO                       
+                            string mensajePersonalizado = "El tipo de pedido es facturable, el valor venta debe ser superior a Cero(0).";
+                            string urlRedireccion = "OrdenTrabajo.aspx";
+                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                        }
+                    }
+                    else
+                    {
+                        // Validamos que el precio de venta sea igual cero 
+                        if (Convert.ToDouble(txtVenta.Text) != 0)
+                        {
+                            // Mensaje SI EL PEDIDO NO ES FACTURABLE, EL VALOR VENTA DEBE SER CERO
+                            string mensajePersonalizado = "El tipo de pedido no es facturable, el valor venta debe ser Cero(0).";
+                            string urlRedireccion = "OrdenTrabajo.aspx";
+                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+                        }
+
+                    }
+
+                    // Se verifica que la informacion del cliente este actualizada 
+                    if (VerificarActualizacionCliente(txtNit.Text))
+                    {
+
+                        string mensajePersonalizado = "No puede pasar un pedido, si la información del cliente no esta actualizada";
+                        string urlRedireccion = "OrdenTrabajo.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    }
+
+                    // Se verifica que la informacion del contacto este actualizada 
+                    if (VerificarActualizacionContacto(txtNit.Text, Session["IdContactoFactSession"].ToString()))
+                    {
+
+                        string mensajePersonalizado = "No puede pasar un pedido, si la información del contacto del cliente no esta actualizada";
+                        string urlRedireccion = "OrdenTrabajo.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    }
+
+
+                    // Se realiza la validacon de TotalObraMas (Pendiente hasta validar que es la variable TotalObraMas) !!!Verificar 
+                    // Este campo es importante para validar que el saldo de ese pedido no sea negativo 
+
+
+                    // SE VERIFICA SI LA FECHA DE EMPAQUE CUMPLE CON LOS TIEMPO MINIMOS
+                    if (!ValidarFechaEmpaque())
+                    {
+                       
+                        string mensajePersonalizado = "La fecha de empaque debe estar " + +DiasMinimoparaProduccion + " días hábiles por encima de la fecha actual.";
+                        string urlRedireccion = "OrdenTrabajo.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+
+                    }
+
+
+                    //Valida si RequiereDespice 
+                    bool valid = ValidarDespiece(dtacboTipoPedido.SelectedValue);
+
+                    if (!valid)
+                    {
+                        //No requiere despiece
+
+                        ActualizarTerminadoVenta(FechaEmpaque, 1);
+                        ActualizarCotizacion();
+                        EliminarReporteOT();
+                        CrearReporteOt();
+                        EliminarReportePlano();
+                        InsertarReportePLano();
+                        EliminarPlanoPanelCot();
+                        InsertarPLanoPanelCot();
+                        EliminarReporteDespiece();
+                        InsertarReporteDespiece();
+
+                        //SE REGISTRA EL PEDIDO EN EL ISID      
+                        if (PasarPedidoISID(true))
+                        {
+
+                            //SE CREA PLANO PARA LA BOLSA
+                            ValidarBolsaPlano();
+
+
+                            // Error al realizar las inserciones al ISID
+                            string mensajePersonalizado = "El pedido fue registrado directamente al ISID y habilitado para producción.";
+                            string urlRedireccion = "OrdenTrabajo.aspx";
+                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+
+                        }
+                        else
+                        {
+                            //Registro exitoso en el ISID 
+                            string scriptContCliNoAct = "alert('NO. NO fue satisfactorio el registro del pedido en el ISID, favor terminar nuevamente el pedido.');";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "showFacturable", scriptContCliNoAct, true);
+                            return;
+                        }
+
+
+
+                    }
+                    else
+                    {
+                        //Requiere Despiece 
+                        ActualizarTerminadoVenta(FechaEmpaque, 0);
+                        ActualizarCotizacion();
+                        EliminarReporteOT();
+                        CrearReporteOt();
+
+
+                        // SE CONSULTAN LOS ACABADOS QUE TIENE EL PEDIDO DEFINIDOS POR VENTAS
+                        DataTable AcabadoVentas = ConsultarAcabadosSID();
+                        string acabado = "";
+                        if (AcabadoVentas.Rows.Count > 0)
+                        {
+                            foreach (DataRow row in AcabadoVentas.Rows)
+                            {
+                                acabado = acabado + row["GrupoObjetoparaAcabado"].ToString() + ": " + row["AcabadoVentas"].ToString() + "\n";
+                            }
+                        }
+                        acabado = acabado + "\n" + txObs2.InnerText;
+                        ActualizarReporteOT_Acabado_SID(acabado);
+
+
+                        //SE CREA LA BOLSA A PARTIR DEL DISEÑO DE LA COTIZACION
+                        DataTable TipoPedido = ObtenerTipoPedidoSID();
+                        bool EstadisticaVenta = Convert.ToBoolean(TipoPedido.Rows[0]["EstadisticaVenta"].ToString());
+
+                        if (EstadisticaVenta && txtDiseño.Text != "")
+                        {
+                            DataTable ResumenPedido = ConsultarResumePedidoSID();
+                            ActualizarOtBolsaSID();
+
+                            foreach (DataRow row in ResumenPedido.Rows)
+                            {
+                                string id_GrupoObjeto = row["id_GrupoObjeto"].ToString();
+                                string Descripcion_Grupo = row["Descripcion_Grupo"].ToString();
+                                string Cantidad = row["Cantidad"].ToString();
+                                string SubTotal = row["SubTotal"].ToString();
+                                string GOBloqueaPedido = row["GOBloqueaPedido"].ToString();
+
+                                DataTable InfoBolsa = ConsultarBolsaOT_SID(id_GrupoObjeto);
+
+                                if (InfoBolsa.Rows.Count < 0)
+                                {
+                                    CrearBolsaObjeto(id_GrupoObjeto, Descripcion_Grupo, Cantidad, SubTotal, GOBloqueaPedido);
+                                }
+                                else
+                                {
+                                    ActualizarBolsaObjeto(id_GrupoObjeto, Cantidad, SubTotal);
+                                }
+
+
+                            }
+
+
+                        }
+
+
+                        //SE REGISTRA EL PEDIDO EN EL ISID
+                        if (PasarPedidoISID(false))
+                        {
+
+                            string mensajePersonalizado = "El pedido fue registrado directamente al ISID para el chequeo financiero.";
+                            string urlRedireccion = "OrdenTrabajo.aspx";
+                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+
+                        }
+                        else
+                        {
+                            //Registro exitoso en el ISID 
+                            string scriptContCliNoAct = "alert('NO. NO fue satisfactorio el registro del pedido en el ISID, favor terminar nuevamente el pedido.');";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "showFacturable", scriptContCliNoAct, true);
+                        }
+
+
+
+                    }
+
+                    break;
+
+                case "Diseño":
+                case "COMPRAS":
+                    // Aqui va la parte del boton Ok para el área de diseño  y compras                  
+                    break;
+
+                default:
+                    // Aqui va alguna exepcion que pueda pasar con la variable departamento 
+                    break;
+            }
+
+        }
+
+        //Valiacion de pedido facturable 
+        private bool ValidarPedidoFacturable(string idPedido)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "SELECT EstadisticaVenta FROM tblTipoPedido WHERE Id_TipoPedido = @idPedido";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+
+                    cmd.Parameters.AddWithValue("@idPedido", idPedido);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Si se encuentra el pedido y la columna EstadisticaVenta es verdadera, retorna true
+                        return reader.Read() && reader.GetBoolean(0);
+                    }
+                }
+            }
+        }
+
+        //Validacion de fecha acutalizacion cliente 
+        private bool VerificarActualizacionCliente(string nit)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "SELECT UltimaActualizacion FROM tblClienteObra WHERE Nit = @nit";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+
+                    cmd.Parameters.AddWithValue("@nit", nit);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            // Verificar si la fecha de última actualización ha pasado más de un año  y un mes
+                            DateTime ultimaActualizacion = reader.GetDateTime(0);
+                            TimeSpan diferencia = DateTime.Now - ultimaActualizacion;
+                            int diasTranscurridos = diferencia.Days;
+
+                            // Si han pasado más de 395 días, se considera que ha pasado más de un año y un mes
+                            return diasTranscurridos > 365;
+                        }
+                    }
+                }
+            }
+
+            // Si no se encontró la información, se considera que ha pasado más de un año y un mes 
+            return true;
+        }
+
+        //Validacion de fecha acutalizacion contacto cliente 
+        private bool VerificarActualizacionContacto(string nit, string idcontacto)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "select cocUltimaActualizacion from tblClienteObraContacto where  cocNIT = @nit and  IdContacto = @idContacto";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+
+                    cmd.Parameters.AddWithValue("@nit", nit);
+                    cmd.Parameters.AddWithValue("@idContacto", idcontacto);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            // Verificar si la fecha de última actualización ha pasado más de un año  y un mes
+                            DateTime ultimaActualizacion = reader.GetDateTime(0);
+                            TimeSpan diferencia = DateTime.Now - ultimaActualizacion;
+                            int diasTranscurridos = diferencia.Days;
+
+                            return diasTranscurridos > 395;
+                        }
+                    }
+                }
+            }
+
+            // Si no se encontró la información, se considera que ha pasado más de un año y un mes 
+            return true;
+        }
+
+        //Validacion fecha de empaque 
+        private bool ValidarFechaEmpaque()
+        {
+            //Se consultan los dias minimos para produccion 
+            ConsultarDiasMinProduccion();
+
+            // Este metodo se ejecuta pero el valor no se usa !!!!Verificar 
+            ConsultarDiasPorDefectoProduccion();
+
+            FechaEmpaque = Convert.ToDateTime(dtpEmpaque.Text);
+
+            // validar de donde sale el valor de Val(chkDefinirAcabados.Tag) para asignar DiasPorDefectoparaProduccion = Val(chkDefinirAcabados.Tag) !!!Veficar 
+
+            ConsultarDiasHabiles(DateTime.Now, FechaEmpaque);
+
+            if (DiasHabiles <= DiasMinimoparaProduccion)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+
+        }
+
+        // Consultar Fecha de produccion minima, defecto  y dias habiles 
+        private void ConsultarDiasMinProduccion()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "SELECT mail FROM tblUsosVarios WHERE ObjetivoMail = 'DiasMinimoparaProduccion'";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            // Intentar convertir el valor a entero
+                            if (int.TryParse(reader["mail"].ToString(), out DiasMinimoparaProduccion))
+                            {
+                                // Conversión exitosa
+                            }
+                            else
+                            {
+
+                                DiasMinimoparaProduccion = 3;
+                            }
+                        }
+                        else
+                        {
+                            // Valor predeterminado si no se encuentra el valor en la base de datos
+                            DiasMinimoparaProduccion = 3;
+                        }
+                    }
+                }
+            }
+        }
+        private void ConsultarDiasPorDefectoProduccion()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "SELECT mail FROM tblUsosVarios WHERE ObjetivoMail = 'DiasPorDefectoparaProduccion'";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            // Intentar convertir el valor a entero
+                            if (int.TryParse(reader["mail"].ToString(), out DiasPorDefectoParaProduccion))
+                            {
+                            }
+                            else
+                            {
+                                DiasPorDefectoParaProduccion = 10;
+                            }
+                        }
+                        else
+                        {
+                            // Valor predeterminado si no se encuentra el valor en la base de datos
+                            DiasPorDefectoParaProduccion = 10;
+                        }
+                    }
+                }
+            }
+        }
+        private void ConsultarDiasHabiles(DateTime fechaInicial, DateTime fechaFinal)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand("DUC_DIASHABILES", connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    // Parámetros del procedimiento almacenado
+                    cmd.Parameters.Add("@FechaInicial", SqlDbType.Date).Value = fechaInicial;
+                    cmd.Parameters.Add("@FechaFinal", SqlDbType.Date).Value = fechaFinal;
+
+                    connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            // Obtén los valores devueltos por el procedimiento almacenado                        
+                            DiasHabiles = reader.GetInt32(reader.GetOrdinal("DiasHabiles"));
+                        }
+                    }
+                }
+            }
+        }
+
+        //Validacion si rquiere o no despiece 
+        private bool ValidarDespiece(string idPedido)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "SELECT RequiereDespiece FROM tblTipoPedido WHERE Id_TipoPedido = @idPedido";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+
+                    cmd.Parameters.AddWithValue("@idPedido", idPedido);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Si se encuentra el pedido y la columna EstadisticaVenta es verdadera, retorna true
+                        return reader.Read() && reader.GetBoolean(0);
+                    }
+                }
+            }
+        }
+
+        // SE REALIZAN LOS BORRADOS , ACTUALIZACION E INSERCIONES DE LOS REPORTES EN EL SID 
+        private void ActualizarTerminadoVenta(DateTime FechaEmpaque, int TerminadoDiseño)
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "UPDATE tblOT SET Terminado_Ventas=1,Terminado_Diseño= @TerminadoDiseño, Fecha_Entrega_Dibujo_Despiece= GETDATE()," +
+                              "Fecha_Entrega_Produccion= GETDATE(),Fecha_Despacho_Produccion= @FechaEmpaque, ResumenObra= @ResumenPlano " +
+                              "WHERE tblOT.Id_OT= @IdOT AND Consecutivo_Pedido= @pedido ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@FechaEmpaque", FechaEmpaque);
+                    cmd.Parameters.AddWithValue("@TerminadoDiseño", TerminadoDiseño);
+                    cmd.Parameters.AddWithValue("@ResumenPlano", txResumen.InnerText);
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+        private void ActualizarCotizacion()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "UPDATE tblCotización SET Estado=2, Fecha_Respuesta = @FechaConfirVenta, Saldo = Saldo - @PrecioVenta," +
+                              " Id_OT= @IdOT, Pedido = @pedido WHERE Cotización = @cotizacion  ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@FechaConfirVenta", dtpFechaEntregaDibujoDespiece.Text);
+                    cmd.Parameters.AddWithValue("@PrecioVenta", txtVenta.Text);
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+                    cmd.Parameters.AddWithValue("@cotizacion", txtCotizacion.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+        private void EliminarReporteOT()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "DELETE  FROM tblReporteOT WHERE Id_OT= @IdOT AND Consecutivo_Pedido= @pedido";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+        private void CrearReporteOt()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Nombre del procedimiento almacenado
+                string storedProcedureName = "ctaReporteOT";
+
+                using (SqlCommand cmd = new SqlCommand(storedProcedureName, connection))
+                {
+                    connection.Open();
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    // Parámetros del procedimiento almacenado
+                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@PED", ddlNumbers.SelectedItem.Text);
+
+                    // Ejecutar el procedimiento almacenado
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        private void EliminarReportePlano()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "DELETE  FROM tblreportePlano WHERE Id_OT= @IdOT AND Consecutivo_Pedido= @pedido";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+        private void InsertarReportePLano()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "INSERT INTO tblreportePlano ( Plano, Id_OT, COnsecutivo_Pedido, Area, Dibujante )" +
+                              " SELECT tblPlano.Plano, tblPlano.Id_OT, tblPlano.COnsecutivo_Pedido, tblPlano.Area, tblPlano.RealizadoPor From tblPlano" +
+                              " WHERE tblPlano.Id_OT = @IdOT AND tblPlano.COnsecutivo_Pedido = @pedido ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+        private void EliminarPlanoPanelCot()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "DELETE  FROM tblPlano_Panel_Cotizacion WHERE Id_Plano = @plano ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
+
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+        private void InsertarPLanoPanelCot()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "INSERT INTO tblPlano_Panel_Cotizacion ( Id_Plano, Id_PanelNum, Cantidad, Observaciones ) " +
+                              "SELECT tblPlano_Panel.Id_Plano, tblPlano_Panel.Id_PanelNum, tblPlano_Panel.Cantidad, tblPlano_Panel.Observaciones " +
+                              "FROM tblPlano_Panel WHERE (((tblPlano_Panel.Id_Plano) = @plano )) ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
+
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+        private void EliminarReporteDespiece()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "DELETE  FROM tblReporteDespiece WHERE Id_Plano = @plano OR OT = @IdOT AND PEDIDO = @pedido ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+        private void InsertarReporteDespiece()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "INSERT INTO tblReporteDespiece ( OT, Pedido, Id_Plano, Id_Panel, Ancho_Panel, Descripcion_Panel, Cantidad," +
+                              "Descripcion_Grupo, Id_Numerico, Altura, Profundidad, Descripcion_Linea, Precio_Venta, Cotizar )" +
+                              "SELECT tblPlano.Id_OT, tblPlano.COnsecutivo_Pedido, tblPlano.Plano, tblPanel.Id_Panel, tblPanel.Ancho," +
+                              "tblPanel.Descripcion_Panel, tblPlano_Panel.Cantidad, tblGrupoObjeto.Descripcion_Grupo, tblPanel.Id_Numerico," +
+                              "tblPanel.Altura, tblPanel.Profundidad, tblLinea.Descripcion_Linea, tblPanel.Precio_Venta, tblGrupoObjeto.Cotizar " +
+                              "FROM tblPlano INNER JOIN ((tblLinea INNER JOIN (tblGrupoObjeto INNER JOIN tblPanel ON tblGrupoObjeto.ID_GrupoObjeto = tblPanel.Id_GrupoObjeto)" +
+                              "ON tblLinea.Id_Linea = tblPanel.Id_Linea) INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum)" +
+                              "ON tblPlano.Plano = tblPlano_Panel.Id_Plano WHERE (((tblPlano.Plano)= @plano )) ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
+
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+
+        // VALIDAR Y CREAR PLANO PARA UNA BOLSA 
+        private void ValidarBolsaPlano()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString; // Reemplaza con tu cadena de conexión.
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string sSql = "Select * from tblPLano where plano= 'BSA'+'@IdOT-@pedido'";
+                using (SqlCommand command = new SqlCommand(sSql, connection))
+                {
+                    command.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    command.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        // Valimadamos que la cotizacion exista luego
+                        if (!reader.Read())
+                        {
+                            CrearBolsaPlano();
+                        }
+                        else
+                        {
+
+                        }
+                    }
+
+                }
+
+            }
+        }
+        private void CrearBolsaPlano()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "Insert into tblPlano(Plano,Nombre_Cliente,Contacto_Cliente,Fecha_Entrega_Bitacora,Fecha_Termino_Diseño,area," +
+                             " Historial,AsesorComercial,RealizadoPor)  Values (@plano,@NombreCliente,@receptor,GETDATE(),GETDATE(), @NombreObra,'',@asesor,@realizadoPor) ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@plano", "BSA" + tbOT.Text + "-" + ddlNumbers.SelectedItem.Text); // Validar cuando se crea una bolsa ya que en el sid llega vacio en consecutivo 
+                    cmd.Parameters.AddWithValue("@NombreCliente", txtCliente.Text);
+                    cmd.Parameters.AddWithValue("@receptor", tbRecibe.Text);
+                    cmd.Parameters.AddWithValue("@NombreObra", tbObra.Text);
+                    cmd.Parameters.AddWithValue("@asesor", Session["usuariologueado"].ToString());
+                    cmd.Parameters.AddWithValue("@realizadoPor", Session["usuariologueado"].ToString());
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+
+        // SE PASA EL PEDIDIO AL ISID
+        private bool PasarPedidoISID(bool OKDibujo)
+        {
+            int ID_CONTACTO;
+            bool PararProduccion = false;
+            bool PararDespacho = false;
+            string OrientacionPedido;
+
+            bool PasarPedidoIsid = false;
+
+            //SE CONSULTA EL TIPO DE PEDIDO Y SI NO EXISTE EN EL ISID SE AGREGA 
+            DataTable TipoPedido = ObtenerTipoPedidoSID();
+            ConsultarInsertarTipoPedidoEnISID(TipoPedido);
+
+            //SE EXPORTA EL CLIENTE Y EL CONTACTO DE LA OBRA
+            DataTable datosCliente = ObtenerDatoClienteSID();
+            ConsultarClienteISID(datosCliente);
+
+            //REGISTRAR CONTACTO CLIENTE
+            if (!ExistenciaContacto(datosCliente))
+            {
+                InsertarContactoClienteISID(datosCliente);
+            }
+            else
+            {
+                // Validar Fecha contacto y si es menor actualizar contacto 
+                if (!UltimaActualizacionContactoCliente(datosCliente))
+                {
+                    ActualizarContactoClienteISID(datosCliente);
+                }
+            }
+
+            // Se usará para adicionar el pedido o actualizarlo 
+            ID_CONTACTO = ConsultarIDContacto(datosCliente);
+
+
+            //SE EXPORTA EL ASESOR DE LA OBRA A LA BD DEL ISID
+            DataTable DatoAsesor = ObtenerAsesorComercialSID();
+            ConsultarAsesorISID(DatoAsesor);
+
+
+            // CONSULTANDO LA INF DEL PEDIDO EN EL SID 
+            DataTable InfoPedidoSID = ObtenerInfoPedidoSID();
+
+            //SE CONSULTA SI EL PEDIDO BASE DEL PEDIDO INGRESADO ESTA DETENIDO YA SEA POR PRODUCCION O POR DESPACHO, EL PEDIDO NUEVO ENTRARA CON LAS MISMAS CONDICIONES
+
+            DataTable PedDetProduDesp = ObtenerPedDetProduDespISID(InfoPedidoSID);
+            if (PedDetProduDesp.Rows.Count < 0)
+            {
+                PararProduccion = Convert.ToBoolean(PedDetProduDesp.Rows[0]["PararProduccion"].ToString());
+                PararDespacho = Convert.ToBoolean(PedDetProduDesp.Rows[0]["PararDespacho"].ToString());
+            }
+
+            //SE REEMPLAZA EL PEDIDO SI EXISTE EN LA BD DEL ISID
+
+            if (!ExistenciaPedidoISID())
+            {
+                InsertarPedidoISID(InfoPedidoSID, OKDibujo, ID_CONTACTO, PararProduccion, PararDespacho);
+            }
+            else
+            {
+                ActualizarPedidoISID(InfoPedidoSID, OKDibujo, ID_CONTACTO, PararProduccion, PararDespacho);
+            }
+
+            //SI EL PEDIDO ESTA CONFIGURADO PARA INGRESAR UNA OBSERVACION POR DEFECTO
+
+            int idObservacion = Convert.ToInt32(TipoPedido.Rows[0]["TipPedidObsAuto"].ToString());
+
+            DataTable InfoObservacion = ConsultarObservacionAuto(idObservacion);
+
+            if (InfoObservacion.Rows.Count > 0)
+            {
+                InsertarObservacionAutoISID(InfoObservacion, InfoPedidoSID);
+            }
+
+            //SE EXPORTA LA DOCUMENTACION DE LA OT
+            ExportarDocumentacionOT();
+
+            //DEPENDIENDO LA ORIENTACION DEL TIPO PEDIDO SE PROGRAMA LA OBRA POR DEFECTO A LOS PROCESOS BASES
+            EliminarProgramacion();
+            OrientacionPedido = TipoPedido.Rows[0]["orientacion"].ToString();
+
+            switch (OrientacionPedido.ToUpper())
+            {
+                case "COMERCIAL":
+                    DataTable PrograamacionProducccion = ObtenerProgProduccion();
+
+                    if (PrograamacionProducccion.Rows.Count <= 0)
+                    {
+                        RealizarProgramacionPedidoISID(InfoPedidoSID);
+                    }
+                    else
+                    {
+                        DateTime FechaInicioProceso = DateTime.Now;
+                        DateTime FechaFinProceso = DateTime.Now;
+                        int Turno = 0;
+
+                        // Ahora procesamos cada fila de la tabla y realizamos la lógica requerida
+                        foreach (DataRow row in PrograamacionProducccion.Rows)
+                        {
+
+                            bool EntregaAlFinal = Convert.ToBoolean(row["EntregaAlFinal"]);
+
+                            if (!EntregaAlFinal)
+                            {
+                                // Si no se entrega al final, se establece la fecha de inicio como la fecha actual
+                                FechaInicioProceso = DateTime.Now;
+                                FechaFinProceso = DateTime.Now.Add(TimeSpan.FromDays(Convert.ToInt32(row["TiempoRespuesta"])));
+                            }
+                            else
+                            {
+                                // Si se entrega al final, se calculan las fechas en función de la fecha de despacho de producción
+                                DateTime FechaDespachoProduccion = Convert.ToDateTime(InfoPedidoSID.Rows[0]["Fecha_Despacho_Produccion"].ToString());
+                                FechaInicioProceso = FechaDespachoProduccion.Subtract(TimeSpan.FromDays(Convert.ToInt32(row["TiempoRespuesta"])));
+                                FechaFinProceso = FechaDespachoProduccion.AddDays(-1);
+                            }
+
+
+                            string responsable = row["Responsable"].ToString();
+                            string Descripcion_Proceso = row["Descripcion_Proceso"].ToString();
+                            string Id_Area = row["Id_Area"].ToString();
+                            string EntregaAlFinal1 = row["EntregaAlFinal"].ToString();
+
+
+                            RealizarProgramacionPedidoISID2(InfoPedidoSID, FechaFinProceso, FechaInicioProceso, Turno, responsable, Descripcion_Proceso, Id_Area, EntregaAlFinal1, "Proceso Base");
+                        }
+
+
+
+                    }
+
+                    break;
+
+                case "OAI":
+                    DataTable PrograamacionProducccionOAI = ObtenerProgProduccionOAI();
+
+                    if (PrograamacionProducccionOAI.Rows.Count <= 0)
+                    {
+                        RealizarProgramacionPedidoISID(InfoPedidoSID);
+                    }
+                    else
+                    {
+                        DateTime FechaInicioProceso = DateTime.Now;
+                        DateTime FechaFinProceso = DateTime.Now;
+                        int Turno = 0;
+
+                        // Ahora procesamos cada fila de la tabla y realizamos la lógica requerida
+                        foreach (DataRow row in PrograamacionProducccionOAI.Rows)
+                        {
+
+                            bool EntregaAlFinal = Convert.ToBoolean(row["EntregaAlFinal"]);
+
+                            if (!EntregaAlFinal)
+                            {
+                                // Si no se entrega al final, se establece la fecha de inicio como la fecha actual
+                                FechaInicioProceso = DateTime.Now;
+                                FechaFinProceso = DateTime.Now.Add(TimeSpan.FromDays(Convert.ToInt32(row["TiempoRespuesta"])));
+                            }
+                            else
+                            {
+                                // Si se entrega al final, se calculan las fechas en función de la fecha de despacho de producción
+                                DateTime FechaDespachoProduccion = Convert.ToDateTime(InfoPedidoSID.Rows[0]["Fecha_Despacho_Produccion"].ToString());
+                                FechaInicioProceso = FechaDespachoProduccion.Subtract(TimeSpan.FromDays(Convert.ToInt32(row["TiempoRespuesta"])));
+                                FechaFinProceso = FechaDespachoProduccion.AddDays(-1);
+                            }
+
+                            bool ObjetivoEspecifico = Convert.ToBoolean(row["ObjetivoEspecifico"]);
+                            string responsable = row["Responsable"].ToString();
+                            string Descripcion_Proceso = row["Descripcion_Proceso"].ToString();
+                            string Descripcion_Area2 = row["Descripcion_Area2"].ToString();
+                            string Id_Area = row["Id_Area"].ToString();
+                            string EntregaAlFinal1 = row["EntregaAlFinal"].ToString();
+                            bool ProgramacionUnica = Convert.ToBoolean(row["ProgramacionUnica"].ToString());
+
+                            if (!ObjetivoEspecifico)
+                            {
+
+                                RealizarProgramacionPedidoISID2(InfoPedidoSID, FechaFinProceso, FechaInicioProceso, Turno, responsable, Descripcion_Proceso, Id_Area, EntregaAlFinal1, "TODO");
+                            }
+                            else
+                            {
+                                string DescripcionProceso = row["Descripcion_Proceso"].ToString();
+                                DataTable ProductosXProceso = ObtenerProductosXProcesoSID(InfoPedidoSID, DescripcionProceso);
+
+                                if (ProductosXProceso.Rows.Count > 0)
+                                {
+                                    if (ProgramacionUnica)
+                                    {
+                                        //SE INSERTA UNA SOLA PROGRAMACION PARA TODOS LOS PRODUCTOS A ENTREGAR
+                                        RealizarProgramacionPedidoISID2(InfoPedidoSID, FechaFinProceso, FechaInicioProceso, Turno, responsable, Descripcion_Proceso, Id_Area, EntregaAlFinal1, "TODO");
+                                    }
+                                    else
+                                    {
+                                        foreach (DataRow row1 in ProductosXProceso.Rows)
+                                        {
+                                            string producto = row["DescripcionFull"].ToString();
+                                            string DescripcionFull = row["DescripcionFull"].ToString();
+                                            int cantidad = Convert.ToInt32(row["cantidad"].ToString());
+
+                                            if (!ExistenciaProductoISID(InfoPedidoSID, Id_Area, producto))
+                                            {
+                                                //SE INSERTA LA PROGRAMACION DEL PROCESO SEGUN LOS PRODUCTOS 
+                                                RealizarProgramacionPedidoxProductoISID(InfoPedidoSID, FechaFinProceso, FechaInicioProceso, Turno, responsable, Descripcion_Proceso, Descripcion_Area2, Id_Area, EntregaAlFinal1, DescripcionFull, cantidad);
+
+                                            }
+                                            else
+                                            {
+                                                // SE ACTUALIZA LA PROGRAMACION 
+                                                AcutualizarProgramacionPedidoxProductoISID(InfoPedidoSID, FechaFinProceso, Turno, responsable, Id_Area, DescripcionFull, cantidad);
+                                            }
+
+
+                                        }
+                                    }
+
+                                }
+
+                            }
+                        }
+                    }
+
+                    break;
+                default:
+
+                    break;
+            }
+
+            // SI TRUE OK DIBUJO CONTROLADOR  
+
+            if (OKDibujo)
+            {
+                // SE EXPORTA EL PLANO A LA BD DEL ISID
+
+                //Se consulta reporte plano en el SID
+                DataTable ReportePlanoSID = ConsultarReportePlanoSID();
+                string plano = ReportePlanoSID.Rows[0]["Plano"].ToString();
+
+                //Se consulta reporte plano en el ISID
+                DataTable ReportePlanoISID = ConsultarReportePlanoISID(plano);
+
+                //Se elimina el reporte plano en el ISID
+                EliminarReportePlanoISID(plano);
+
+                if (ReportePlanoISID.Rows.Count <= 0)
+                {
+                    InsertarReportePlanoISID(ReportePlanoSID);
+                }
+                else
+                {
+                    string IdOt = tbOT.Text;
+                    string pedido = ddlNumbers.SelectedItem.Text;
+                    string mensaje = "No se puede registrar la Obra, ya que el plano: " + plano + " pertenece a la OT: " + IdOt + "-" + pedido;
+                    string scriptNoReportePlanoISID = "alert('" + mensaje + "');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showNoReportePlanoISID", scriptNoReportePlanoISID, true);
+                }
+
+                //EXPORTANDO EL DESPIECE DEL PLANO A LA BD DEL ISID
+
+                //Se consulta reporte Despiece en el ISID
+                DataTable ReporteDespieceSID = ConsultarReporteDespiceSID();
+
+                //Se elimina el reporte Despiece en el ISID
+                EliminarReporteDespieceISID();
+
+                if(ReporteDespieceSID.Rows.Count > 0)
+                {
+                    // Construimos el codigo Sag que de momento no se esta utilizando en el codigo ????                 
+                    string paraEnsamble = ObtenerParaEnsamble();
+                    string Codigo = ReporteDespieceSID.Rows[0]["Id_Numerico"].ToString();
+                    string Cod_Sag = "ES" + paraEnsamble + Codigo;
+
+                    InsertarDatosReporteDespieceISID(ReporteDespieceSID);
+                }
+
+                //ENVIAMOS LOS ACABADOS
+
+                //Borramos los acabados si los hay del ISID y luego enviamos los actuales 
+                EliminarAcabadosISID();
+
+                DataTable Acabados = ConsultarAcabadosSID();
+
+                if (Acabados.Rows.Count > 0)
+                {
+                    InsertarAcabadosISID(Acabados);
+
+                }
+
+                //EXPORTAMOS MEDIDAS DE CORTE A LA BD DEL ISID
+
+                //Consultamos las medidas de corte  en el SID
+                DataTable MedidasCorte = ConsultarReporteMedidasSID();
+
+                //Eliminamos medidas de corte en el ISID
+                EliminarMedidasCorteISID();
+
+                if (MedidasCorte.Rows.Count > 0)
+                {
+                    InsertarMedidasCorteISID(MedidasCorte);
+                }
+
+                //EXPORTAR MEDIDAS FINALES DEL MODULO 
+
+                //obtenemos la familia modulo despacho troja
+                string FamiliaModuloDespachoTroja = "";
+                FamiliaModuloDespachoTroja = ObtenerFamiliaModuloDespachoTroja().ToUpper();
+
+                // Consultamos  el reporte modulo medida final edl ISID
+                DataTable MedidaFinal = ConsultarMedidaFinal();
+
+                //Eliminar medida final ISID 
+                EliminarMedidaFinalISID();
+
+                if (MedidaFinal.Rows.Count > 0)
+                {
+
+                    InsertarMedidaFinalISID(MedidaFinal, FamiliaModuloDespachoTroja);
+                }
+
+                // EXPORTAR MANO DE OBRA 
+
+                //Consultar  reporte mano obra SID
+                DataTable ManoObra = ConsultarManoObraSID();
+
+                // Eliminar reporte mano obra ISID
+                EliminarReporteManoObraISID();
+
+                if (ManoObra.Rows.Count > 0)
+                {
+                    InsertarReporteManoObraISID(ManoObra);
+                }
+
+                // EXPORTAR LISTADO PARA EMPAQUE
+
+                //Consultar  Empaque SID
+                DataTable Empaque = ConsultarEmpaqueSID();
+
+                // Eliminar reporte mano obra ISID
+                EliminarEmpaqueISID();
+
+                if (Empaque.Rows.Count > 0)
+                {
+                    string plano1 = Empaque.Rows[0]["Plano"].ToString();
+                    InsertarEmpaqueISID(plano1);
+                    InsertarEmpaque2ISID(Empaque);
+                }
+
+
+            }
+
+
+            PasarPedidoIsid = true;
+
+
+            //retorno para confirmar el proceso de pasar el pedido al ISID
+            return PasarPedidoIsid;
+        }
+
+
+        //EXPORTAR TIPO DE PEDIDO AL ISID
+        private DataTable ObtenerTipoPedidoSID()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT tblTipoPedido.* FROM tblTipoPedido INNER JOIN tblOT ON tblTipoPedido.Id_TipoPedido = tblOT.Id_TipoPedido" +
+                              " WHERE tblOT.Id_OT = @IdOT AND tblOT.Consecutivo_Pedido = @Pedido";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+        private void ConsultarInsertarTipoPedidoEnISID(DataTable tipoPedidoDataTable)
+        {
+            if (tipoPedidoDataTable.Rows.Count > 0)
+            {
+                string idTipoPedido = tipoPedidoDataTable.Rows[0]["Id_TipoPedido"].ToString();
+
+                // Verificar si el IdTipoPedido ya existe en la otra base de datos (ISID)
+                if (!ExisteTipoPedidoEnISID(idTipoPedido))
+                {
+                    // Si no existe, realizar la inserción
+                    InsertarTipoPedidoEnISID(tipoPedidoDataTable);
+                }
+
+            }
+        }
+        private bool ExisteTipoPedidoEnISID(string idTipoPedido)
+        {
+            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+            {
+                connectionISID.Open();
+
+                string sSql = "SELECT COUNT(*) FROM tblTipoPedido WHERE Id_TipoPedido = @Id_TipoPedido";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionISID))
+                {
+                    cmd.Parameters.AddWithValue("@Id_TipoPedido", idTipoPedido);
+
+                    object result = cmd.ExecuteScalar();
+
+                    // Verificar si el resultado es null o no
+                    if (result != null)
+                    {
+                        int rowCount = Convert.ToInt32(result);
+                        // Si rowCount es mayor que cero, el tipoPedido existe en ISID
+                        return rowCount > 0;
+                    }
+                    else
+                    {
+                        // Si no se encontraron filas, retornamos false
+                        return false;
+                    }
+
+                }
+            }
+        }
+        private void InsertarTipoPedidoEnISID(DataTable tipoPedidoDataTable)
+        {
+            if (tipoPedidoDataTable.Rows.Count > 0)
+            {
+                string idTipoPedido = tipoPedidoDataTable.Rows[0]["Id_TipoPedido"].ToString();
+                string descripcionTipoPedido = tipoPedidoDataTable.Rows[0]["Descripcion_TipoPedido"].ToString();
+                string estadisticaVenta = tipoPedidoDataTable.Rows[0]["EstadisticaVenta"].ToString();
+                string tipPedidObsAuto = tipoPedidoDataTable.Rows[0]["TipPedidObsAuto"].ToString();
+
+                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+                using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+                {
+                    connectionISID.Open();
+
+                    string sSql = "INSERT INTO tblTipoPedido (Id_TipoPedido, Descripcion_TipoPedido, EstadisticaVenta, TipPedidObsAuto) " +
+                                  "VALUES (@Id_TipoPedido, @Descripcion_TipoPedido, @EstadisticaVenta, @TipPedidObsAuto)";
+
+                    using (SqlCommand cmdInsert = new SqlCommand(sSql, connectionISID))
+                    {
+                        cmdInsert.Parameters.AddWithValue("@Id_TipoPedido", idTipoPedido);
+                        cmdInsert.Parameters.AddWithValue("@Descripcion_TipoPedido", descripcionTipoPedido);
+                        cmdInsert.Parameters.AddWithValue("@EstadisticaVenta", estadisticaVenta);
+                        cmdInsert.Parameters.AddWithValue("@TipPedidObsAuto", tipPedidObsAuto);
+
+                        cmdInsert.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+
+
+        //EXPORTAR O ACTUALIZAR  CLIENTE  AL ISID
+        private DataTable ObtenerDatoClienteSID()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT tblClienteObraContacto.*, tblClienteObra.*, tblOT.Consecutivo_Pedido " +
+                              "FROM tblClienteObra INNER JOIN (tblClienteObraContacto INNER JOIN tblOT " +
+                              "ON tblClienteObraContacto.IdContacto = tblOT.IDContacto_Cliente) ON tblClienteObra.Nit = tblClienteObraContacto.cocNIT " +
+                              "WHERE tblOT.Id_OT= @IdOT  AND tblOT.Consecutivo_Pedido = @pedido";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable 
+            return dataTable;
+        }
+        private void ConsultarClienteISID(DataTable datosCliente)
+        {
+            if (datosCliente.Rows.Count > 0)
+            {
+                string Nit = datosCliente.Rows[0]["Nit"].ToString();
+                string UltimaActualizacionSID = datosCliente.Rows[0]["UltimaActualizacion"].ToString();
+                if (!ExistenciaClienteISID(Nit))
+                {
+                    // Si no existe, realizar la inserción
+                    InsertarClienteEnISID(datosCliente);
+                }
+                else
+                {
+                    if (!UltimaActualizacionCliente(datosCliente))
+                    {
+                        ActualizarClienteEnISID(datosCliente);
+                    }
+
+                }
+
+
+            }
+        }
+        private bool ExistenciaClienteISID(string Nit)
+        {
+            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+            {
+                connectionISID.Open();
+
+                string sSql = "SELECT COUNT(*) FROM tblClienteObra WHERE Nit = @Nit";
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionISID))
+                {
+                    cmd.Parameters.AddWithValue("@Nit", Nit);
+
+                    object result = cmd.ExecuteScalar();
+
+                    // Verificar si el resultado es null o no
+                    if (result != null)
+                    {
+                        int rowCount = Convert.ToInt32(result);
+                        // Si rowCount es mayor que cero, el cliente existe en ISID
+                        return rowCount > 0;
+                    }
+                    else
+                    {
+                        // Si no se encontraron filas, retornamos false
+                        return false;
+                    }
+                }
+            }
+        }
+        private void InsertarClienteEnISID(DataTable datosCliente)
+        {
+            if (datosCliente.Rows.Count > 0)
+            {
+                string Naturaleza = datosCliente.Rows[0]["Naturaleza"].ToString();
+                string Tipo_Documento = datosCliente.Rows[0]["Tipo_Documento"].ToString();
+                string Nit = datosCliente.Rows[0]["Nit"].ToString();
+                string Actividad = datosCliente.Rows[0]["Actividad"].ToString();
+                string Tipo_cliente = datosCliente.Rows[0]["Tipo_cliente"].ToString();
+                string RazonSocial = datosCliente.Rows[0]["RazonSocial"].ToString();
+                string SegundoApellido = datosCliente.Rows[0]["SegundoApellido"].ToString();
+                string Nombre = datosCliente.Rows[0]["Nombre"].ToString();
+                string Direccion = datosCliente.Rows[0]["Direccion"].ToString();
+                string Ciudad = datosCliente.Rows[0]["Ciudad"].ToString();
+                string Telefono = datosCliente.Rows[0]["Telefono"].ToString();
+                string Fax = datosCliente.Rows[0]["Fax"].ToString();
+                string Forma_Pago = datosCliente.Rows[0]["Forma_Pago"].ToString();
+                string Zona = datosCliente.Rows[0]["Zona"].ToString();
+                string AgenteRetenedor = datosCliente.Rows[0]["AgenteRetenedor"].ToString();
+                string GranContribuyente = datosCliente.Rows[0]["GranContribuyente"].ToString();
+                string AutoRetenedor = datosCliente.Rows[0]["AutoRetenedor"].ToString();
+                string ExentodeRetencion = datosCliente.Rows[0]["ExentodeRetencion"].ToString();
+                string DeclaranteRenta = datosCliente.Rows[0]["DeclaranteRenta"].ToString();
+                string RetenedorICA = datosCliente.Rows[0]["RetenedorICA"].ToString();
+                string RegimenIVA = datosCliente.Rows[0]["RegimenIVA"].ToString();
+                string UltimaActualizacion = datosCliente.Rows[0]["UltimaActualizacion"].ToString();
+                string FechaCreacion = datosCliente.Rows[0]["FechaCreacion"].ToString();
+                string ArchivoRUT = datosCliente.Rows[0]["ArchivoRUT"].ToString();
+                string Responsable = datosCliente.Rows[0]["Responsable"].ToString();
+                string ArchivoRegistro = datosCliente.Rows[0]["ArchivoRegistro"].ToString();
+                string Sector = datosCliente.Rows[0]["sector"].ToString();
+
+                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+                using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+                {
+                    connectionISID.Open();
+
+                    string sSql = "INSERT INTO tblClienteObra (Naturaleza, Tipo_Documento, Nit, Actividad,Tipo_cliente,RazonSocial,SegundoApellido,Nombre," +
+                                  "Direccion,Ciudad,Telefono,Fax,Forma_Pago,Zona,AgenteRetenedor,GranContribuyente,AutoRetenedor,ExentodeRetencion,DeclaranteRenta," +
+                                  "RetenedorICA,RegimenIVA,UltimaActualizacion,FechaCreacion,ArchivoRUT,Responsable,ArchivoRegistro,Sector) " +
+                                  "VALUES (@Naturaleza, @Tipo_Documento, @Nit, @Actividad,@Tipo_cliente,@RazonSocial,@SegundoApellido,@Nombre," +
+                                  "@Direccion,@Ciudad,@Telefono,@Fax,@Forma_Pago,@Zona,@AgenteRetenedor,@GranContribuyente,@AutoRetenedor,@ExentodeRetencion,@DeclaranteRenta," +
+                                  "@RetenedorICA,@RegimenIVA,@UltimaActualizacion,@FechaCreacion,@ArchivoRUT,@Responsable,@ArchivoRegistro,@Sector)";
+
+
+                    using (SqlCommand cmdInsert = new SqlCommand(sSql, connectionISID))
+                    {
+                        cmdInsert.Parameters.AddWithValue("@Naturaleza", Naturaleza);
+                        cmdInsert.Parameters.AddWithValue("@Tipo_Documento", Tipo_Documento);
+                        cmdInsert.Parameters.AddWithValue("@Nit", Nit);
+                        cmdInsert.Parameters.AddWithValue("@Actividad", Actividad);
+                        cmdInsert.Parameters.AddWithValue("@Tipo_cliente", Tipo_cliente);
+                        cmdInsert.Parameters.AddWithValue("@RazonSocial", RazonSocial);
+                        cmdInsert.Parameters.AddWithValue("@SegundoApellido", SegundoApellido);
+                        cmdInsert.Parameters.AddWithValue("@Nombre", Nombre);
+                        cmdInsert.Parameters.AddWithValue("@Direccion", Direccion);
+                        cmdInsert.Parameters.AddWithValue("@Ciudad", Ciudad);
+                        cmdInsert.Parameters.AddWithValue("@Telefono", Telefono);
+                        cmdInsert.Parameters.AddWithValue("@Fax", Fax);
+                        cmdInsert.Parameters.AddWithValue("@Forma_Pago", Forma_Pago);
+                        cmdInsert.Parameters.AddWithValue("@Zona", Zona);
+                        cmdInsert.Parameters.AddWithValue("@AgenteRetenedor", AgenteRetenedor);
+                        cmdInsert.Parameters.AddWithValue("@GranContribuyente", GranContribuyente);
+                        cmdInsert.Parameters.AddWithValue("@AutoRetenedor", AutoRetenedor);
+                        cmdInsert.Parameters.AddWithValue("@ExentodeRetencion", ExentodeRetencion);
+                        cmdInsert.Parameters.AddWithValue("@DeclaranteRenta", DeclaranteRenta);
+                        cmdInsert.Parameters.AddWithValue("@RetenedorICA", RetenedorICA);
+                        cmdInsert.Parameters.AddWithValue("@RegimenIVA", RegimenIVA);
+                        cmdInsert.Parameters.AddWithValue("@UltimaActualizacion", Convert.ToDateTime(UltimaActualizacion));
+                        cmdInsert.Parameters.AddWithValue("@FechaCreacion", Convert.ToDateTime(FechaCreacion));
+                        cmdInsert.Parameters.AddWithValue("@ArchivoRUT", ArchivoRUT);
+                        cmdInsert.Parameters.AddWithValue("@Responsable", Responsable);
+                        cmdInsert.Parameters.AddWithValue("@ArchivoRegistro", ArchivoRegistro);
+                        cmdInsert.Parameters.AddWithValue("@Sector", Sector);
+
+                        cmdInsert.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+        private bool UltimaActualizacionCliente(DataTable datoClienteSID)
+        {
+            string Nit = datoClienteSID.Rows[0]["Nit"].ToString();
+            DateTime FechaActSID = Convert.ToDateTime(datoClienteSID.Rows[0]["UltimaActualizacion"]);
+
+            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+            {
+                connectionISID.Open();
+
+                string sSql = "SELECT UltimaActualizacion FROM tblClienteObra WHERE Nit = @Nit";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionISID))
+                {
+                    cmd.Parameters.AddWithValue("@Nit", Nit);
+
+
+                    DateTime fechaBaseDatosISID;
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            fechaBaseDatosISID = reader.GetDateTime(0);
+                        }
+                        else
+                        {
+                            // No se encontró ningún registro para el NIT dado, retornamos false
+                            return false;
+                        }
+                    }
+
+                    // Comparamos las fechas y retornar el resultado booleano
+                    return fechaBaseDatosISID < FechaActSID;
+                }
+            }
+        }
+        private void ActualizarClienteEnISID(DataTable datosCliente)
+        {
+            if (datosCliente.Rows.Count > 0)
+            {
+                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+                using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+                {
+                    connectionISID.Open();
+
+                    string sSql = "UPDATE tblClienteObra SET Naturaleza = @Naturaleza, Tipo_Documento = @Tipo_Documento, Actividad = @Actividad, " +
+                                  "Tipo_cliente = @Tipo_cliente, RazonSocial = @RazonSocial, SegundoApellido = @SegundoApellido, Nombre = @Nombre, " +
+                                  "Direccion = @Direccion, Ciudad = @Ciudad, Telefono = @Telefono, Fax = @Fax, Forma_Pago = @Forma_Pago, " +
+                                  "Zona = @Zona, AgenteRetenedor = @AgenteRetenedor, GranContribuyente = @GranContribuyente, AutoRetenedor = @AutoRetenedor, " +
+                                  "ExentodeRetencion = @ExentodeRetencion, DeclaranteRenta = @DeclaranteRenta, RetenedorICA = @RetenedorICA, " +
+                                  "RegimenIVA = @RegimenIVA, UltimaActualizacion = @UltimaActualizacion, FechaCreacion = @FechaCreacion, " +
+                                  "ArchivoRUT = @ArchivoRUT, Responsable = @Responsable, ArchivoRegistro = @ArchivoRegistro, Sector = @Sector " +
+                                  "WHERE Nit = @Nit";
+
+                    using (SqlCommand cmdUpdate = new SqlCommand(sSql, connectionISID))
+                    {
+                        // Obtener los valores de los parámetros del cliente
+                        string Nit = datosCliente.Rows[0]["Nit"].ToString();
+                        string Naturaleza = datosCliente.Rows[0]["Naturaleza"].ToString();
+                        string Tipo_Documento = datosCliente.Rows[0]["Tipo_Documento"].ToString();
+                        string Actividad = datosCliente.Rows[0]["Actividad"].ToString();
+                        string Tipo_cliente = datosCliente.Rows[0]["Tipo_cliente"].ToString();
+                        string RazonSocial = datosCliente.Rows[0]["RazonSocial"].ToString();
+                        string SegundoApellido = datosCliente.Rows[0]["SegundoApellido"].ToString();
+                        string Nombre = datosCliente.Rows[0]["Nombre"].ToString();
+                        string Direccion = datosCliente.Rows[0]["Direccion"].ToString();
+                        string Ciudad = datosCliente.Rows[0]["Ciudad"].ToString();
+                        string Telefono = datosCliente.Rows[0]["Telefono"].ToString();
+                        string Fax = datosCliente.Rows[0]["Fax"].ToString();
+                        string Forma_Pago = datosCliente.Rows[0]["Forma_Pago"].ToString();
+                        string Zona = datosCliente.Rows[0]["Zona"].ToString();
+                        string AgenteRetenedor = datosCliente.Rows[0]["AgenteRetenedor"].ToString();
+                        string GranContribuyente = datosCliente.Rows[0]["GranContribuyente"].ToString();
+                        string AutoRetenedor = datosCliente.Rows[0]["AutoRetenedor"].ToString();
+                        string ExentodeRetencion = datosCliente.Rows[0]["ExentodeRetencion"].ToString();
+                        string DeclaranteRenta = datosCliente.Rows[0]["DeclaranteRenta"].ToString();
+                        string RetenedorICA = datosCliente.Rows[0]["RetenedorICA"].ToString();
+                        string RegimenIVA = datosCliente.Rows[0]["RegimenIVA"].ToString();
+                        string UltimaActualizacion = datosCliente.Rows[0]["UltimaActualizacion"].ToString();
+                        string FechaCreacion = datosCliente.Rows[0]["FechaCreacion"].ToString();
+                        string ArchivoRUT = datosCliente.Rows[0]["ArchivoRUT"].ToString();
+                        string Responsable = datosCliente.Rows[0]["Responsable"].ToString();
+                        string ArchivoRegistro = datosCliente.Rows[0]["ArchivoRegistro"].ToString();
+                        string Sector = datosCliente.Rows[0]["Sector"].ToString();
+
+                        // Asignar los valores de los parámetros
+                        cmdUpdate.Parameters.AddWithValue("@Naturaleza", Naturaleza);
+                        cmdUpdate.Parameters.AddWithValue("@Tipo_Documento", Tipo_Documento);
+                        cmdUpdate.Parameters.AddWithValue("@Actividad", Actividad);
+                        cmdUpdate.Parameters.AddWithValue("@Tipo_cliente", Tipo_cliente);
+                        cmdUpdate.Parameters.AddWithValue("@RazonSocial", RazonSocial);
+                        cmdUpdate.Parameters.AddWithValue("@SegundoApellido", SegundoApellido);
+                        cmdUpdate.Parameters.AddWithValue("@Nombre", Nombre);
+                        cmdUpdate.Parameters.AddWithValue("@Direccion", Direccion);
+                        cmdUpdate.Parameters.AddWithValue("@Ciudad", Ciudad);
+                        cmdUpdate.Parameters.AddWithValue("@Telefono", Telefono);
+                        cmdUpdate.Parameters.AddWithValue("@Fax", Fax);
+                        cmdUpdate.Parameters.AddWithValue("@Forma_Pago", Forma_Pago);
+                        cmdUpdate.Parameters.AddWithValue("@Zona", Zona);
+                        cmdUpdate.Parameters.AddWithValue("@AgenteRetenedor", AgenteRetenedor);
+                        cmdUpdate.Parameters.AddWithValue("@GranContribuyente", GranContribuyente);
+                        cmdUpdate.Parameters.AddWithValue("@AutoRetenedor", AutoRetenedor);
+                        cmdUpdate.Parameters.AddWithValue("@ExentodeRetencion", ExentodeRetencion);
+                        cmdUpdate.Parameters.AddWithValue("@DeclaranteRenta", DeclaranteRenta);
+                        cmdUpdate.Parameters.AddWithValue("@RetenedorICA", RetenedorICA);
+                        cmdUpdate.Parameters.AddWithValue("@RegimenIVA", RegimenIVA);
+                        cmdUpdate.Parameters.AddWithValue("@UltimaActualizacion", Convert.ToDateTime(UltimaActualizacion));
+                        cmdUpdate.Parameters.AddWithValue("@FechaCreacion", Convert.ToDateTime(FechaCreacion));
+                        cmdUpdate.Parameters.AddWithValue("@ArchivoRUT", ArchivoRUT);
+                        cmdUpdate.Parameters.AddWithValue("@Responsable", Responsable);
+                        cmdUpdate.Parameters.AddWithValue("@ArchivoRegistro", ArchivoRegistro);
+                        cmdUpdate.Parameters.AddWithValue("@Sector", Sector);
+                        cmdUpdate.Parameters.AddWithValue("@Nit", Nit);
+
+                        // Ejecutar la actualización
+                        cmdUpdate.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+
+        //EXPORTAR O ACTUALIZAR  CONTACTO AL ISID
+        private bool ExistenciaContacto(DataTable DatoCliente)
+        {
+            string Nit = DatoCliente.Rows[0]["Nit"].ToString();
+            string consecutivo = DatoCliente.Rows[0]["cocConsecutivoContacto"].ToString();
+
+            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+            {
+                connectionISID.Open();
+
+                string sSql = "SELECT tblClienteObraContacto.* FROM tblClienteObraContacto where cocNit= @Nit AND cocConsecutivoContacto= @consecutivo ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionISID))
+                {
+                    cmd.Parameters.AddWithValue("@Nit", Nit);
+                    cmd.Parameters.AddWithValue("@consecutivo", consecutivo);
+                    object result = cmd.ExecuteScalar();
+
+                    // Verificar si el resultado es null o no
+                    if (result != null)
+                    {
+                        int rowCount = Convert.ToInt32(result);
+                        // Si rowCount es mayor que cero, el Contacto existe en ISID
+                        return rowCount > 0;
+                    }
+                    else
+                    {
+                        // Si no se encontraron filas, retornamos false
+                        return false;
+                    }
+                }
+            }
+        }
+        private void InsertarContactoClienteISID(DataTable datosCliente)
+        {
+            if (datosCliente.Rows.Count > 0)
+            {
+                string cocNIT = datosCliente.Rows[0]["cocNIT"].ToString();
+                string cocConsecutivoContacto = datosCliente.Rows[0]["cocConsecutivoContacto"].ToString();
+                string cocSede = datosCliente.Rows[0]["cocSede"].ToString();
+                string cocDireccion = datosCliente.Rows[0]["cocDireccion"].ToString();
+                string cocCiudad = datosCliente.Rows[0]["cocCiudad"].ToString();
+                string cocNombre = datosCliente.Rows[0]["cocNombre"].ToString();
+                string cocTelefono = datosCliente.Rows[0]["cocTelefono"].ToString();
+                string cocCelular = datosCliente.Rows[0]["cocCelular"].ToString();
+                string cocMail = datosCliente.Rows[0]["cocMail"].ToString();
+                string cocFechaCreacion = datosCliente.Rows[0]["cocFechaCreacion"].ToString();
+                string cocUltimaActualizacion = datosCliente.Rows[0]["cocUltimaActualizacion"].ToString();
+
+
+                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+                using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+                {
+                    connectionISID.Open();
+
+                    string sSql = "INSERT INTO tblClienteObraContacto (cocNIT, cocConsecutivoContacto, cocSede, cocDireccion,cocCiudad,cocNombre,cocTelefono," +
+                                  "cocCelular,cocMail,cocFechaCreacion,cocUltimaActualizacion) " +
+                                  "VALUES (@cocNIT, @cocConsecutivoContacto, @cocSede, @cocDireccion,@cocCiudad,@cocNombre,@cocTelefono,@cocCelular,@cocMail," +
+                                  "@cocFechaCreacion,@cocUltimaActualizacion)";
+
+
+                    using (SqlCommand cmdInsert = new SqlCommand(sSql, connectionISID))
+                    {
+                        cmdInsert.Parameters.AddWithValue("@cocNIT", cocNIT);
+                        cmdInsert.Parameters.AddWithValue("@cocConsecutivoContacto", cocConsecutivoContacto);
+                        cmdInsert.Parameters.AddWithValue("@cocSede", cocSede);
+                        cmdInsert.Parameters.AddWithValue("@cocDireccion", cocDireccion);
+                        cmdInsert.Parameters.AddWithValue("@cocCiudad", cocCiudad);
+                        cmdInsert.Parameters.AddWithValue("@cocNombre", cocNombre);
+                        cmdInsert.Parameters.AddWithValue("@cocTelefono", cocTelefono);
+                        cmdInsert.Parameters.AddWithValue("@cocCelular", cocCelular);
+                        cmdInsert.Parameters.AddWithValue("@cocMail", cocMail);
+                        cmdInsert.Parameters.AddWithValue("@cocFechaCreacion", Convert.ToDateTime(cocFechaCreacion));
+                        cmdInsert.Parameters.AddWithValue("@cocUltimaActualizacion", Convert.ToDateTime(cocUltimaActualizacion));
+
+
+                        cmdInsert.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+        private bool UltimaActualizacionContactoCliente(DataTable datoClienteSID)
+        {
+            string Nit = datoClienteSID.Rows[0]["Nit"].ToString();
+            string consecutivo = datoClienteSID.Rows[0]["cocConsecutivoContacto"].ToString();
+            DateTime FechaActSID = Convert.ToDateTime(datoClienteSID.Rows[0]["UltimaActualizacion"].ToString());
+
+            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+            {
+                connectionISID.Open();
+
+                string sSql = "SELECT cocUltimaActualizacion FROM tblClienteObraContacto where cocNit= @Nit AND cocConsecutivoContacto= @consecutivo";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionISID))
+                {
+                    cmd.Parameters.AddWithValue("@Nit", Nit);
+                    cmd.Parameters.AddWithValue("@consecutivo", consecutivo);
+
+                    DateTime fechaBaseDatosISID;
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            fechaBaseDatosISID = reader.GetDateTime(0);
+                        }
+                        else
+                        {
+                            // No se encontró ningún registro para el NIT dado, retornamos false
+                            return false;
+                        }
+                    }
+
+                    // Comparamos las fechas y retornar el resultado booleano
+                    return fechaBaseDatosISID < FechaActSID;
+                }
+            }
+        }
+        private void ActualizarContactoClienteISID(DataTable datosCliente)
+        {
+            if (datosCliente.Rows.Count > 0)
+            {
+                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBA"].ConnectionString;
+
+                using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+                {
+                    connectionISID.Open();
+
+                    string sSql = "UPDATE tblClienteObraContacto SET cocNIT = @cocNIT, cocConsecutivoContacto= @cocConsecutivoContacto," +
+                                  "cocSede = @cocSede, cocDireccion = @cocDireccion,cocCiudad = @cocCiudad, cocNombre = @cocNombre, cocTelefono = @cocTelefono, " +
+                                  "cocCelular = @cocCelular, cocMail = @cocMail, cocFechaCreacion = @cocFechaCreacion, " +
+                                  "cocUltimaActualizacion = @cocUltimaActualizacion WHERE cocNIT = @cocNIT AND " +
+                                  "cocConsecutivoContacto = @cocConsecutivoContacto";
+
+                    using (SqlCommand cmdUpdate = new SqlCommand(sSql, connectionISID))
+                    {
+
+                        string cocNIT = datosCliente.Rows[0]["cocNIT"].ToString();
+                        string cocConsecutivoContacto = datosCliente.Rows[0]["cocConsecutivoContacto"].ToString();
+                        string cocSede = datosCliente.Rows[0]["cocSede"].ToString();
+                        string cocDireccion = datosCliente.Rows[0]["cocDireccion"].ToString();
+                        string cocCiudad = datosCliente.Rows[0]["cocCiudad"].ToString();
+                        string cocNombre = datosCliente.Rows[0]["cocNombre"].ToString();
+                        string cocTelefono = datosCliente.Rows[0]["cocTelefono"].ToString();
+                        string cocCelular = datosCliente.Rows[0]["cocCelular"].ToString();
+                        string cocMail = datosCliente.Rows[0]["cocMail"].ToString();
+                        string cocFechaCreacion = datosCliente.Rows[0]["cocFechaCreacion"].ToString();
+                        string cocUltimaActualizacion = datosCliente.Rows[0]["cocUltimaActualizacion"].ToString();
+
+                        // Asignar los valores de los parámetros
+                        cmdUpdate.Parameters.AddWithValue("@cocNIT", cocNIT);
+                        cmdUpdate.Parameters.AddWithValue("@cocConsecutivoContacto", cocConsecutivoContacto);
+                        cmdUpdate.Parameters.AddWithValue("@cocSede", cocSede);
+                        cmdUpdate.Parameters.AddWithValue("@cocDireccion", cocDireccion);
+                        cmdUpdate.Parameters.AddWithValue("@cocCiudad", cocCiudad);
+                        cmdUpdate.Parameters.AddWithValue("@cocNombre", cocNombre);
+                        cmdUpdate.Parameters.AddWithValue("@cocTelefono", cocTelefono);
+                        cmdUpdate.Parameters.AddWithValue("@cocCelular", cocCelular);
+                        cmdUpdate.Parameters.AddWithValue("@cocMail", cocMail);
+                        cmdUpdate.Parameters.AddWithValue("@cocFechaCreacion", cocFechaCreacion);
+                        cmdUpdate.Parameters.AddWithValue("@cocUltimaActualizacion", cocUltimaActualizacion);
+
+                        // Ejecutar la actualización
+                        cmdUpdate.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+        private int ConsultarIDContacto(DataTable datoClienteSID)
+        {
+            string Nit = datoClienteSID.Rows[0]["Nit"].ToString();
+            string consecutivo = datoClienteSID.Rows[0]["cocConsecutivoContacto"].ToString();
+            int IDContacto = 0; // Inicializamos como 0, podría ser otro valor predeterminado si es apropiado
+
+            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+            {
+                connectionISID.Open();
+
+                string sSql = "SELECT IdContacto FROM tblClienteObraContacto WHERE cocNit = @Nit AND cocConsecutivoContacto = @consecutivo";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionISID))
+                {
+                    cmd.Parameters.AddWithValue("@Nit", Nit);
+                    cmd.Parameters.AddWithValue("@consecutivo", consecutivo);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            IDContacto = reader.GetInt32(0);
+                        }
+                    }
+
+                    return IDContacto;
+                }
+            }
+        }
+
+
+        // INSERTAR ASESOR SI NO EXISTE  AL ISID
+        private DataTable ObtenerAsesorComercialSID()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT tblAsesorComercial.* FROM tblOT INNER JOIN tblAsesorComercial ON tblOT.Codigo_Asesor = tblAsesorComercial.CodigoAsesor" +
+                              " WHERE (((tblOT.Id_OT)= @IdOT ) AND ((tblOT.Consecutivo_Pedido)= @Pedido )) ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable que puede contener cero o más filas de resultados
+            return dataTable;
+        }
+        private void ConsultarAsesorISID(DataTable DatoAsesor)
+        {
+            if (DatoAsesor.Rows.Count > 0)
+            {
+                string Cedula = DatoAsesor.Rows[0]["Cedula"].ToString();
+
+                // Verificar si el IdTipoPedido ya existe en la otra base de datos (ISID)
+                if (!ExisteAsesorEnISID(Cedula))
+                {
+                    // Si no existe, realizar la inserción
+                    InsertarAsesorEnISID(DatoAsesor);
+                }
+
+            }
+        }
+        private bool ExisteAsesorEnISID(string Cedula)
+        {
+            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+            {
+                connectionISID.Open();
+
+                string sSql = "SELECT * FROM tblAsesorComercial where Cedula=  @Cedula";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionISID))
+                {
+                    cmd.Parameters.AddWithValue("@Cedula", Cedula);
+
+                    object result = cmd.ExecuteScalar();
+
+                    // Verificar si el resultado es null o no
+                    if (result != null)
+                    {
+                        int rowCount = Convert.ToInt32(result);
+                        // Si rowCount es mayor que cero, el Asesor ya existe en ISID
+                        return rowCount > 0;
+                    }
+                    else
+                    {
+                        // Si no se encontraron filas, retornamos false
+                        return false;
+                    }
+                }
+            }
+        }
+        private void InsertarAsesorEnISID(DataTable DatoAsesor)
+        {
+            if (DatoAsesor.Rows.Count > 0)
+            {
+                string Cedula = DatoAsesor.Rows[0]["Cedula"].ToString();
+                string Apellidos = DatoAsesor.Rows[0]["Apellidos"].ToString();
+                string Nombre = DatoAsesor.Rows[0]["Nombre"].ToString();
+                string Direccion = DatoAsesor.Rows[0]["Dirección"].ToString();
+                string Ciudad = DatoAsesor.Rows[0]["Ciudad"].ToString();
+                string TelDomicilio = DatoAsesor.Rows[0]["TelDomicilio"].ToString();
+                string codigoasesor = DatoAsesor.Rows[0]["codigoasesor"].ToString();
+                string mail = DatoAsesor.Rows[0]["mail"].ToString();
+                string Activo = DatoAsesor.Rows[0]["Activo"].ToString();
+                string Zona = DatoAsesor.Rows[0]["Zona"].ToString();
+
+                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+                using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+                {
+                    connectionISID.Open();
+
+                    string sSql = "INSERT INTO tblAsesorComercial (Cedula, Apellidos, Nombre, Dirección,Ciudad,TelDomicilio,CodigoAsesor,mail,Activo,Zona) " +
+                                  "VALUES (@Cedula, @Apellidos,@Nombre, @Direccion, @Ciudad,@TelDomicilio,@codigoasesor,@mail,@Activo,@Zona)";
+
+                    using (SqlCommand cmdInsert = new SqlCommand(sSql, connectionISID))
+                    {
+                        cmdInsert.Parameters.AddWithValue("@Cedula", Cedula);
+                        cmdInsert.Parameters.AddWithValue("@Apellidos", Apellidos);
+                        cmdInsert.Parameters.AddWithValue("@Nombre", Nombre);
+                        cmdInsert.Parameters.AddWithValue("@Direccion", Direccion);
+                        cmdInsert.Parameters.AddWithValue("@Ciudad", Ciudad);
+                        cmdInsert.Parameters.AddWithValue("@TelDomicilio", TelDomicilio);
+                        cmdInsert.Parameters.AddWithValue("@codigoasesor", codigoasesor);
+                        cmdInsert.Parameters.AddWithValue("@mail", mail);
+                        cmdInsert.Parameters.AddWithValue("@Activo", Activo);
+                        cmdInsert.Parameters.AddWithValue("@Zona", Zona);
+
+                        cmdInsert.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+
+        //Obtener los datos de pedido de la tabla reportes 
+        private DataTable ObtenerInfoPedidoSID()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT * FROM tblreporteOT WHERE Id_OT= @IdOT AND Consecutivo_Pedido = @Pedido ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable que puede contener cero o más filas de resultados
+            return dataTable;
+        }
+
+
+        //Obtener  pedido si esta  detenido por produccion o despacho
+        private DataTable ObtenerPedDetProduDespISID(DataTable infoPed)
+        {
+
+            string pedidoBase = infoPed.Rows[0]["PedidoBase"].ToString();
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT  * FROM tblreporteOT WHERE  Id_OT= @IdOT AND Consecutivo_Pedido= @pedidoBase AND (PararProduccion=1 or PararDespacho=1)";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@pedidoBase", pedidoBase);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable que puede contener cero o más filas de resultados
+            return dataTable;
+        }
+
+
+        //Reemplazr pedido en ISID 
+        private bool ExistenciaPedidoISID()
+        {
+            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+            {
+                connectionISID.Open();
+
+                string sSql = "SELECT COUNT(*) FROM tblReporteOT WHERE Id_OT= @IdOT AND Consecutivo_Pedido = @pedido ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionISID))
+                {
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+                    object result = cmd.ExecuteScalar();
+
+                    // Verificar si el resultado es null o no
+                    if (result != null)
+                    {
+                        int rowCount = Convert.ToInt32(result);
+                        // Si rowCount es mayor que cero, el pedido existe en ISID
+                        return rowCount > 0;
+                    }
+                    else
+                    {
+                        // Si no se encontraron filas, retornamos false
+                        return false;
+                    }
+
+                }
+            }
+        }
+        private void InsertarPedidoISID(DataTable InfoPedidoSID, bool OKDibujo, int ID_CONTACTO, bool PararProduccion, bool PararDespacho)
+        {
+            if (InfoPedidoSID.Rows.Count > 0)
+            {
+                string IdOT = InfoPedidoSID.Rows[0]["Id_OT"].ToString();
+                string Consecutivo_Pedido = InfoPedidoSID.Rows[0]["Consecutivo_Pedido"].ToString();
+                string Nombre_Obra = InfoPedidoSID.Rows[0]["Nombre_Obra"].ToString();
+                string Observacion_Pedido = InfoPedidoSID.Rows[0]["Observacion_Pedido"].ToString();
+                string Dirección = InfoPedidoSID.Rows[0]["Dirección"].ToString();
+                string Ciudad = InfoPedidoSID.Rows[0]["Ciudad"].ToString();
+                string Región = InfoPedidoSID.Rows[0]["Región"].ToString();
+                string País = InfoPedidoSID.Rows[0]["País"].ToString();
+                string TelDomicilio = InfoPedidoSID.Rows[0]["TelDomicilio"].ToString();
+                string Fecha_Confirmacion_Venta = InfoPedidoSID.Rows[0]["Fecha_Confirmacion_Venta"].ToString();
+                string Fecha_Entrega_Dibujo_Despiece = InfoPedidoSID.Rows[0]["Fecha_Entrega_Dibujo_Despiece"].ToString();
+                string Fecha_Entrega_Produccion = InfoPedidoSID.Rows[0]["Fecha_Entrega_Produccion"].ToString();
+                string Fecha_Despacho_Produccion = InfoPedidoSID.Rows[0]["Fecha_Despacho_Produccion"].ToString();
+                string Fecha_Real_Despacho_Produccion = InfoPedidoSID.Rows[0]["Fecha_Real_Despacho_Produccion"].ToString();
+                string Fecha_Instalacion = InfoPedidoSID.Rows[0]["Fecha_Instalacion"].ToString();
+                string Persona_Receptora = InfoPedidoSID.Rows[0]["Persona_Receptora"].ToString();
+                string Codigo_Asesor = InfoPedidoSID.Rows[0]["Codigo_Asesor"].ToString();
+                string Zona = InfoPedidoSID.Rows[0]["Zona"].ToString();
+                string Descuento = InfoPedidoSID.Rows[0]["Descuento"].ToString();
+                string Precio_Venta = InfoPedidoSID.Rows[0]["Precio_Venta"].ToString();
+                string Forma_Pago = InfoPedidoSID.Rows[0]["Forma_Pago"].ToString();
+                string cotizacion = InfoPedidoSID.Rows[0]["cotizacion"].ToString();
+                string Observaciones_Contables = InfoPedidoSID.Rows[0]["Observaciones_Contables"].ToString();
+                string Mail_Contacto = InfoPedidoSID.Rows[0]["Mail_Contacto"].ToString();
+                string OC_Sag = InfoPedidoSID.Rows[0]["OC_Sag"].ToString();
+                string OF_Sag = InfoPedidoSID.Rows[0]["OF_Sag"].ToString();
+                string Id_OT_Secundario = InfoPedidoSID.Rows[0]["Id_OT_Secundario"].ToString();
+                string Id_TipoPedido = InfoPedidoSID.Rows[0]["Id_TipoPedido"].ToString();
+                string RecibeElPedido = InfoPedidoSID.Rows[0]["RecibeElPedido"].ToString();
+                string ResumenObra = InfoPedidoSID.Rows[0]["ResumenObra"].ToString();
+                string Aplica_Empaque = InfoPedidoSID.Rows[0]["Aplica_Empaque"].ToString();
+                string Supervisor = InfoPedidoSID.Rows[0]["Supervisor"].ToString();
+                string Reactivada = InfoPedidoSID.Rows[0]["Reactivada"].ToString();
+                string chequeada = InfoPedidoSID.Rows[0]["chequeada"].ToString();
+                string FabricadoPor = InfoPedidoSID.Rows[0]["FabricadoPor"].ToString();
+                string InstaladaPor = InfoPedidoSID.Rows[0]["InstaladaPor"].ToString();
+                string ValorPedido = InfoPedidoSID.Rows[0]["ValorPedido"].ToString();
+                string Observacion_Pedido1 = InfoPedidoSID.Rows[0]["Observacion_Pedido"].ToString();
+                string CelularContacto = InfoPedidoSID.Rows[0]["CelularContacto"].ToString();
+                string DescuentoparaComision = InfoPedidoSID.Rows[0]["DescuentoparaComision"].ToString();
+                string ValorTteVia = InfoPedidoSID.Rows[0]["ValorTteVia"].ToString();
+                string ValorBolsa = InfoPedidoSID.Rows[0]["ValorBolsa"].ToString();
+                string Pedidobase = InfoPedidoSID.Rows[0]["Pedidobase"].ToString();
+                string ValorViatico = InfoPedidoSID.Rows[0]["ValorViatico"].ToString();
+                string Fecha_Empaque = InfoPedidoSID.Rows[0]["Fecha_Empaque"].ToString();
+                string Fecha_Empaque_Venta = InfoPedidoSID.Rows[0]["Fecha_Empaque_Venta"].ToString();
+                string OrdendeCompra = InfoPedidoSID.Rows[0]["OrdendeCompra"].ToString();
+
+
+                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+                using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+                {
+                    connectionISID.Open();
+
+                    string sSql = "INSERT INTO tblReporteOT (Id_OT,Consecutivo_Pedido,Nombre_Obra,Observacion_Pedido,Dirección,Ciudad,Región,país,TelDomicilio," +
+                                  "Fecha_Confirmacion_Venta,Fecha_Entrega_Dibujo_Despiece,Fecha_Entrega_Produccion,Fecha_Despacho_Produccion,Fecha_Real_Despacho_Produccion," +
+                                  "Fecha_Instalacion,Fecha_Terminada_Empaque,Fecha_Terminada_Despacho,Fecha_Despacho_Terceros,Fecha_Factura,Persona_Receptora,Terminado_Diseño," +
+                                  "Terminado_Ventas,Terminada_Instalacion,Terminada_Facturacion,Terminada_Empaque,IDContacto_Cliente,Codigo_Asesor,Zona,Descuento,Precio_Venta," +
+                                  " Forma_Pago, Cotizacion, Observaciones_Contables, Plano, bitacora, ordencompra, chkCotizacion, Chequeo_Medidas, Tipo_Sujecion," +
+                                  " Perfil_Refuerzo_Superior, Espesor_Tipo_Superficies, Color_Tipo_PVC, Datos_PasaCables, Bajantes_Electricos, Datos_Troquel, Mail_Contacto," +
+                                  " OC_Sag, OF_Sag, Acta_Entrega, Id_OT_Secundario, Id_TipoPedido, Cerrada, Anulada, RecibeElPedido, NoFactura, ResumenObra, Aplica_Empaque," +
+                                  " Fecha_Cierre, Fecha_Final_Instalacion, Fecha_Anulada, Supervisor, Fecha_Terminada_Almacen, Reactivada, chequeada, FabricadoPor," +
+                                  " InstaladaPor, Observacion_Ventas,ValorPedido,CelularContacto,DescuentoparaComision,ValorTteVia, ValorBolsa, PararProduccion," +
+                                  " PararDespacho,PedidoBase, ValorViatico, Fecha_Empaque, Fecha_Empaque_Venta,Fecha_Habilitada_paraProducir,OrdendeCompra) " +
+
+                                  "VALUES (@Id_OT, @Consecutivo_Pedido, @Nombre_Obra, @Observacion_Pedido, @Dirección, @Ciudad, @Región, @País, @TelDomicilio," +
+                                  "@Fecha_Confirmacion_Venta, @Fecha_Entrega_Dibujo_Despiece, @Fecha_Entrega_Produccion,@Fecha_Despacho_Produccion, @Fecha_Real_Despacho_Produccion," +
+                                  "@Fecha_Instalacion,Null, Null, Null, Null, @Persona_Receptora, @OKDibujo, 1, 0, 0, 0, @ID_CONTACTO, @Codigo_Asesor, @Zona, @Descuento, @Precio_Venta," +
+                                  "@Forma_Pago, @cotizacion, @Observaciones_Contables, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, @Mail_Contacto, @OC_Sag, @OF_Sag, 0, @Id_OT_Secundario," +
+                                  "@Id_TipoPedido, 0, 0 , @RecibeElPedido, 0, @ResumenObra,@Aplica_Empaque, Null, Null, Null, @Supervisor, Null, @Reactivada, @chequeada, @FabricadoPor, @InstaladaPor," +
+                                  "@Observacion_Pedido1, @ValorPedido, @CelularContacto, @DescuentoparaComision, @ValorTteVia, @ValorBolsa, @PararProduccion, @PararDespacho, @Pedidobase," +
+                                  "@ValorViatico, @Fecha_Empaque, @Fecha_Empaque_Venta, @Fecha_Entrega_Produccion ,@OrdendeCompra )";
+
+                    using (SqlCommand cmdInsert = new SqlCommand(sSql, connectionISID))
+                    {
+                        cmdInsert.Parameters.AddWithValue("@Id_OT", IdOT);
+                        cmdInsert.Parameters.AddWithValue("@Consecutivo_Pedido", Consecutivo_Pedido);
+                        cmdInsert.Parameters.AddWithValue("@Nombre_Obra", Nombre_Obra);
+                        cmdInsert.Parameters.AddWithValue("@Observacion_Pedido", Observacion_Pedido);
+                        cmdInsert.Parameters.AddWithValue("@Dirección", Dirección);
+                        cmdInsert.Parameters.AddWithValue("@Ciudad", Ciudad);
+                        cmdInsert.Parameters.AddWithValue("@Región", Región);
+                        cmdInsert.Parameters.AddWithValue("@País", País);
+                        cmdInsert.Parameters.AddWithValue("@TelDomicilio", TelDomicilio);
+                        cmdInsert.Parameters.AddWithValue("@Fecha_Confirmacion_Venta", Convert.ToDateTime(Fecha_Confirmacion_Venta));
+                        cmdInsert.Parameters.AddWithValue("@Fecha_Entrega_Dibujo_Despiece", Convert.ToDateTime(Fecha_Entrega_Dibujo_Despiece));
+                        cmdInsert.Parameters.AddWithValue("@Fecha_Entrega_Produccion", Convert.ToDateTime(Fecha_Entrega_Produccion));
+                        cmdInsert.Parameters.AddWithValue("@Fecha_Despacho_Produccion", Convert.ToDateTime(Fecha_Despacho_Produccion));
+                        cmdInsert.Parameters.AddWithValue("@Fecha_Real_Despacho_Produccion", Convert.ToDateTime(Fecha_Real_Despacho_Produccion));
+                        cmdInsert.Parameters.AddWithValue("@Fecha_Instalacion", Convert.ToDateTime(Fecha_Instalacion));
+                        cmdInsert.Parameters.AddWithValue("@Persona_Receptora", Persona_Receptora);
+                        cmdInsert.Parameters.AddWithValue("@OKDibujo", OKDibujo);
+                        cmdInsert.Parameters.AddWithValue("@ID_CONTACTO", ID_CONTACTO);
+                        cmdInsert.Parameters.AddWithValue("@Codigo_Asesor", Codigo_Asesor);
+                        cmdInsert.Parameters.AddWithValue("@Zona", Zona);
+                        cmdInsert.Parameters.AddWithValue("@Descuento", Descuento);
+                        cmdInsert.Parameters.AddWithValue("@Precio_Venta", Precio_Venta);
+                        cmdInsert.Parameters.AddWithValue("@Forma_Pago", Forma_Pago);
+                        cmdInsert.Parameters.AddWithValue("@cotizacion", cotizacion);
+                        cmdInsert.Parameters.AddWithValue("@Observaciones_Contables", Observaciones_Contables);
+                        cmdInsert.Parameters.AddWithValue("@Mail_Contacto", Mail_Contacto);
+                        cmdInsert.Parameters.AddWithValue("@OC_Sag", OC_Sag);
+                        cmdInsert.Parameters.AddWithValue("@OF_Sag", OF_Sag);
+                        cmdInsert.Parameters.AddWithValue("@Id_OT_Secundario", Id_OT_Secundario);
+                        cmdInsert.Parameters.AddWithValue("@Id_TipoPedido", Id_TipoPedido);
+                        cmdInsert.Parameters.AddWithValue("@RecibeElPedido", RecibeElPedido);
+                        cmdInsert.Parameters.AddWithValue("@ResumenObra", ResumenObra);
+                        cmdInsert.Parameters.AddWithValue("@Aplica_Empaque", Aplica_Empaque);
+                        cmdInsert.Parameters.AddWithValue("@Supervisor", Supervisor);
+                        cmdInsert.Parameters.AddWithValue("@Reactivada", Reactivada);
+                        cmdInsert.Parameters.AddWithValue("@chequeada", chequeada);
+                        cmdInsert.Parameters.AddWithValue("@FabricadoPor", FabricadoPor);
+                        cmdInsert.Parameters.AddWithValue("@InstaladaPor", InstaladaPor);
+                        cmdInsert.Parameters.AddWithValue("@Observacion_Pedido1", Observacion_Pedido1);
+                        cmdInsert.Parameters.AddWithValue("@ValorPedido", ValorPedido);
+                        cmdInsert.Parameters.AddWithValue("@CelularContacto", CelularContacto);
+                        cmdInsert.Parameters.AddWithValue("@DescuentoparaComision", DescuentoparaComision);
+                        cmdInsert.Parameters.AddWithValue("@ValorTteVia", ValorTteVia);
+                        cmdInsert.Parameters.AddWithValue("@ValorBolsa", ValorBolsa);
+                        cmdInsert.Parameters.AddWithValue("@PararProduccion", PararProduccion);
+                        cmdInsert.Parameters.AddWithValue("@PararDespacho", PararDespacho);
+                        cmdInsert.Parameters.AddWithValue("@Pedidobase", Pedidobase);
+                        cmdInsert.Parameters.AddWithValue("@ValorViatico", ValorViatico);
+                        cmdInsert.Parameters.AddWithValue("@Fecha_Empaque", Convert.ToDateTime(Fecha_Empaque));
+                        cmdInsert.Parameters.AddWithValue("@Fecha_Empaque_Venta", Convert.ToDateTime(Fecha_Empaque_Venta));
+                        cmdInsert.Parameters.AddWithValue("@OrdendeCompra", OrdendeCompra);
+                        cmdInsert.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+        private void ActualizarPedidoISID(DataTable InfoPedidoSID, bool OKDibujo, int ID_CONTACTO, bool PararProduccion, bool PararDespacho)
+        {
+            if (InfoPedidoSID.Rows.Count > 0)
+            {
+                string IdOT = InfoPedidoSID.Rows[0]["Id_OT"].ToString();
+                string Consecutivo_Pedido = InfoPedidoSID.Rows[0]["Consecutivo_Pedido"].ToString();
+                string Nombre_Obra = InfoPedidoSID.Rows[0]["Nombre_Obra"].ToString();
+                string Observacion_Pedido = InfoPedidoSID.Rows[0]["Observacion_Pedido"].ToString();
+                string Dirección = InfoPedidoSID.Rows[0]["Dirección"].ToString();
+                string Ciudad = InfoPedidoSID.Rows[0]["Ciudad"].ToString();
+                string Región = InfoPedidoSID.Rows[0]["Región"].ToString();
+                string País = InfoPedidoSID.Rows[0]["País"].ToString();
+                string TelDomicilio = InfoPedidoSID.Rows[0]["TelDomicilio"].ToString();
+                string Fecha_Confirmacion_Venta = InfoPedidoSID.Rows[0]["Fecha_Confirmacion_Venta"].ToString();
+                string Fecha_Entrega_Dibujo_Despiece = InfoPedidoSID.Rows[0]["Fecha_Entrega_Dibujo_Despiece"].ToString();
+                string Fecha_Entrega_Produccion = InfoPedidoSID.Rows[0]["Fecha_Entrega_Produccion"].ToString();
+                string Fecha_Despacho_Produccion = InfoPedidoSID.Rows[0]["Fecha_Despacho_Produccion"].ToString();
+                string Fecha_Real_Despacho_Produccion = InfoPedidoSID.Rows[0]["Fecha_Real_Despacho_Produccion"].ToString();
+                string Fecha_Instalacion = InfoPedidoSID.Rows[0]["Fecha_Instalacion"].ToString();
+                string Persona_Receptora = InfoPedidoSID.Rows[0]["Persona_Receptora"].ToString();
+                string Codigo_Asesor = InfoPedidoSID.Rows[0]["Codigo_Asesor"].ToString();
+                string Zona = InfoPedidoSID.Rows[0]["Zona"].ToString();
+                string Descuento = InfoPedidoSID.Rows[0]["Descuento"].ToString();
+                string Precio_Venta = InfoPedidoSID.Rows[0]["Precio_Venta"].ToString();
+                string Forma_Pago = InfoPedidoSID.Rows[0]["Forma_Pago"].ToString();
+                string cotizacion = InfoPedidoSID.Rows[0]["cotizacion"].ToString();
+                string Observaciones_Contables = InfoPedidoSID.Rows[0]["Observaciones_Contables"].ToString();
+                string Mail_Contacto = InfoPedidoSID.Rows[0]["Mail_Contacto"].ToString();
+                string OC_Sag = InfoPedidoSID.Rows[0]["OC_Sag"].ToString();
+                string OF_Sag = InfoPedidoSID.Rows[0]["OF_Sag"].ToString();
+                string Id_OT_Secundario = InfoPedidoSID.Rows[0]["Id_OT_Secundario"].ToString();
+                string Id_TipoPedido = InfoPedidoSID.Rows[0]["Id_TipoPedido"].ToString();
+                string RecibeElPedido = InfoPedidoSID.Rows[0]["RecibeElPedido"].ToString();
+                string ResumenObra = InfoPedidoSID.Rows[0]["ResumenObra"].ToString();
+                string Aplica_Empaque = InfoPedidoSID.Rows[0]["Aplica_Empaque"].ToString();
+                string Supervisor = InfoPedidoSID.Rows[0]["Supervisor"].ToString();
+                string Reactivada = InfoPedidoSID.Rows[0]["Reactivada"].ToString();
+                string FabricadoPor = InfoPedidoSID.Rows[0]["FabricadoPor"].ToString();
+                string ValorPedido = InfoPedidoSID.Rows[0]["ValorPedido"].ToString();
+                string Observacion_Pedido1 = InfoPedidoSID.Rows[0]["Observacion_Pedido"].ToString();
+                string CelularContacto = InfoPedidoSID.Rows[0]["CelularContacto"].ToString();
+                string DescuentoparaComision = InfoPedidoSID.Rows[0]["DescuentoparaComision"].ToString();
+                string ValorTteVia = InfoPedidoSID.Rows[0]["ValorTteVia"].ToString();
+                string ValorBolsa = InfoPedidoSID.Rows[0]["ValorBolsa"].ToString();
+                string Pedidobase = InfoPedidoSID.Rows[0]["Pedidobase"].ToString();
+                string ValorViatico = InfoPedidoSID.Rows[0]["ValorViatico"].ToString();
+                string Fecha_Empaque = InfoPedidoSID.Rows[0]["Fecha_Empaque"].ToString();
+                string Fecha_Empaque_Venta = InfoPedidoSID.Rows[0]["Fecha_Empaque_Venta"].ToString();
+                string Fecha_Entrega_Produccion1 = InfoPedidoSID.Rows[0]["Fecha_Entrega_Produccion"].ToString();
+                string OrdendeCompra = InfoPedidoSID.Rows[0]["OrdendeCompra"].ToString();
+
+                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+                using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+                {
+                    connectionISID.Open();
+
+                    string sSql = "UPDATE tblReporteOT SET Nombre_Obra = @Nombre_Obra, Observacion_Pedido = @Observacion_Pedido, Dirección = @Dirección, Ciudad = @Ciudad, Región = @Región," +
+                                  "país = @País, TelDomicilio = @TelDomicilio, Fecha_Confirmacion_Venta= @Fecha_Confirmacion_Venta, Fecha_Entrega_Dibujo_Despiece= @Fecha_Entrega_Dibujo_Despiece," +
+                                  "Fecha_Entrega_Produccion = @Fecha_Entrega_Produccion, Fecha_Despacho_Produccion= @Fecha_Despacho_Produccion, Fecha_Real_Despacho_Produccion= @Fecha_Real_Despacho_Produccion," +
+                                  "Fecha_Instalacion = @Fecha_Instalacion, Persona_Receptora= @Persona_Receptora, Terminado_Diseño =  @OKDibujo, IDContacto_Cliente = @ID_CONTACTO, Codigo_Asesor = @Codigo_Asesor," +
+                                  "Zona = @Zona, Descuento= @Descuento, Precio_Venta= @Precio_Venta, Forma_Pago = @Forma_Pago, Cotizacion = @cotizacion, Observaciones_Contables = @Observaciones_Contables," +
+                                  "Mail_Contacto= @Mail_Contacto, OC_Sag = @OC_Sag, OF_Sag= @OF_Sag, Acta_Entrega=0, Id_OT_Secundario = @Id_OT_Secundario, Id_TipoPedido = @Id_TipoPedido, ValorBolsa = @ValorBolsa," +
+                                  "RecibeElPedido = @RecibeElPedido, ResumenObra = @ResumenObra, Aplica_Empaque = @Aplica_Empaque, Supervisor = @Supervisor, Reactivada= @Reactivada, FabricadoPor= @FabricadoPor," +
+                                  "Observacion_Ventas= @Observacion_Pedido1, ValorPedido = @ValorPedido, ValorViatico = @ValorViatico, CelularContacto = @CelularContacto, DescuentoparaComision = @DescuentoparaComision," +
+                                  " ValorTteVia = @ValorTteVia, PararProduccion= @PararProduccion, PararDespacho = @PararDespacho, PedidoBase= @Pedidobase, Fecha_Empaque= @Fecha_Empaque," +
+                                  "Fecha_Empaque_Venta= @Fecha_Empaque_Venta, Fecha_Habilitada_paraProducir= @Fecha_Entrega_Produccion1, OrdendeCompra = @OrdendeCompra " +
+                                  " WHERE Id_OT = @Id_OT AND Consecutivo_Pedido = @Consecutivo_Pedido ";
+
+                    using (SqlCommand cmdUpdate = new SqlCommand(sSql, connectionISID))
+                    {
+                        cmdUpdate.Parameters.AddWithValue("@Id_OT", IdOT);
+                        cmdUpdate.Parameters.AddWithValue("@Consecutivo_Pedido", Consecutivo_Pedido);
+                        cmdUpdate.Parameters.AddWithValue("@Nombre_Obra", Nombre_Obra);
+                        cmdUpdate.Parameters.AddWithValue("@Observacion_Pedido", Observacion_Pedido);
+                        cmdUpdate.Parameters.AddWithValue("@Dirección", Dirección);
+                        cmdUpdate.Parameters.AddWithValue("@Ciudad", Ciudad);
+                        cmdUpdate.Parameters.AddWithValue("@Región", Región);
+                        cmdUpdate.Parameters.AddWithValue("@País", País);
+                        cmdUpdate.Parameters.AddWithValue("@TelDomicilio", TelDomicilio);
+                        cmdUpdate.Parameters.AddWithValue("@Fecha_Confirmacion_Venta", Convert.ToDateTime(Fecha_Confirmacion_Venta));
+                        cmdUpdate.Parameters.AddWithValue("@Fecha_Entrega_Dibujo_Despiece", Convert.ToDateTime(Fecha_Entrega_Dibujo_Despiece));
+                        cmdUpdate.Parameters.AddWithValue("@Fecha_Entrega_Produccion", Convert.ToDateTime(Fecha_Entrega_Produccion));
+                        cmdUpdate.Parameters.AddWithValue("@Fecha_Despacho_Produccion", Convert.ToDateTime(Fecha_Despacho_Produccion));
+                        cmdUpdate.Parameters.AddWithValue("@Fecha_Real_Despacho_Produccion", Convert.ToDateTime(Fecha_Real_Despacho_Produccion));
+                        cmdUpdate.Parameters.AddWithValue("@Fecha_Instalacion", Convert.ToDateTime(Fecha_Instalacion));
+                        cmdUpdate.Parameters.AddWithValue("@Persona_Receptora", Persona_Receptora);
+                        cmdUpdate.Parameters.AddWithValue("@OKDibujo", OKDibujo);
+                        cmdUpdate.Parameters.AddWithValue("@ID_CONTACTO", ID_CONTACTO);
+                        cmdUpdate.Parameters.AddWithValue("@Codigo_Asesor", Codigo_Asesor);
+                        cmdUpdate.Parameters.AddWithValue("@Zona", Zona);
+                        cmdUpdate.Parameters.AddWithValue("@Descuento", Descuento);
+                        cmdUpdate.Parameters.AddWithValue("@Precio_Venta", Precio_Venta);
+                        cmdUpdate.Parameters.AddWithValue("@Forma_Pago", Forma_Pago);
+                        cmdUpdate.Parameters.AddWithValue("@cotizacion", cotizacion);
+                        cmdUpdate.Parameters.AddWithValue("@Observaciones_Contables", Observaciones_Contables);
+                        cmdUpdate.Parameters.AddWithValue("@Mail_Contacto", Mail_Contacto);
+                        cmdUpdate.Parameters.AddWithValue("@OC_Sag", OC_Sag);
+                        cmdUpdate.Parameters.AddWithValue("@OF_Sag", OF_Sag);
+                        cmdUpdate.Parameters.AddWithValue("@Id_OT_Secundario", Id_OT_Secundario);
+                        cmdUpdate.Parameters.AddWithValue("@Id_TipoPedido", Id_TipoPedido);
+                        cmdUpdate.Parameters.AddWithValue("@ValorBolsa", ValorBolsa);
+                        cmdUpdate.Parameters.AddWithValue("@RecibeElPedido", RecibeElPedido);
+                        cmdUpdate.Parameters.AddWithValue("@ResumenObra", ResumenObra);
+                        cmdUpdate.Parameters.AddWithValue("@Aplica_Empaque", Aplica_Empaque);
+                        cmdUpdate.Parameters.AddWithValue("@Supervisor", Supervisor);
+                        cmdUpdate.Parameters.AddWithValue("@Reactivada", Reactivada);
+                        cmdUpdate.Parameters.AddWithValue("@FabricadoPor", FabricadoPor);
+                        cmdUpdate.Parameters.AddWithValue("@Observacion_Pedido1", Observacion_Pedido1);
+                        cmdUpdate.Parameters.AddWithValue("@ValorPedido", ValorPedido);
+                        cmdUpdate.Parameters.AddWithValue("@ValorViatico", ValorViatico);
+                        cmdUpdate.Parameters.AddWithValue("@CelularContacto", CelularContacto);
+                        cmdUpdate.Parameters.AddWithValue("@DescuentoparaComision", DescuentoparaComision);
+                        cmdUpdate.Parameters.AddWithValue("@ValorTteVia", ValorTteVia);
+                        cmdUpdate.Parameters.AddWithValue("@PararProduccion", PararProduccion);
+                        cmdUpdate.Parameters.AddWithValue("@PararDespacho", PararDespacho);
+                        cmdUpdate.Parameters.AddWithValue("@Pedidobase", Pedidobase);
+                        cmdUpdate.Parameters.AddWithValue("@Fecha_Empaque", Convert.ToDateTime(Fecha_Empaque));
+                        cmdUpdate.Parameters.AddWithValue("@Fecha_Empaque_Venta", Convert.ToDateTime(Fecha_Empaque_Venta));
+                        cmdUpdate.Parameters.AddWithValue("@Fecha_Entrega_Produccion1", Convert.ToDateTime(Fecha_Entrega_Produccion1));
+                        cmdUpdate.Parameters.AddWithValue("@OrdendeCompra", OrdendeCompra);
+
+
+
+                        cmdUpdate.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+
+        // Consultar Observacion por Defecto 
+        private DataTable ConsultarObservacionAuto(int idObservacion)
+
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT * From tblTipoObservacion where ID_TipoObservacion = @idObservacion";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@idObservacion", idObservacion);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable 
+            return dataTable;
+        }
+        private void InsertarObservacionAutoISID(DataTable datoObservacion, DataTable datoPedido)
+        {
+            if (datoObservacion.Rows.Count > 0)
+            {
+                string Id_OT = datoPedido.Rows[0]["Id_OT"].ToString();
+                string Consecutivo_Pedido = datoPedido.Rows[0]["Consecutivo_Pedido"].ToString();
+                string Nombre_Obra = datoPedido.Rows[0]["Nombre_Obra"].ToString();
+                string ID_TipoObservacion = datoObservacion.Rows[0]["ID_TipoObservacion"].ToString();
+                string Codigo_Asesor = datoPedido.Rows[0]["Codigo_Asesor"].ToString();
+                string DestinatarioPorDefecto = datoObservacion.Rows[0]["DestinatarioPorDefecto"].ToString();
+
+
+                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+                using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+                {
+                    connectionISID.Open();
+
+                    string sSql = "INSERT INTO tblOtObservacion (Id_OT,Consecutivo_Pedido,Nombre_Obra,Observacion,FechaObservacion,Emisor,Nombre_Emisor,ID_TipoObservacion," +
+                                  "FechaAnteriorDespacho,FechaNuevaDespacho,ID_Programacion,CedulaAsesor, FechaActividad, Destinatarios) " +
+                                  "VALUES (@Id_OT,@Consecutivo_Pedido, @Nombre_Obra, @Observacion, Getdate(), @Cedula, @NombreUsuario, @ID_TipoObservacion,Getdate(), Getdate(), 0, @Codigo_Asesor, Getdate() + 8, @DestinatarioPorDefecto  )";
+
+
+                    using (SqlCommand cmdInsert = new SqlCommand(sSql, connectionISID))
+                    {
+                        cmdInsert.Parameters.AddWithValue("@Id_OT", Id_OT);
+                        cmdInsert.Parameters.AddWithValue("@Consecutivo_Pedido", Consecutivo_Pedido);
+                        cmdInsert.Parameters.AddWithValue("@Nombre_Obra", Nombre_Obra);
+                        cmdInsert.Parameters.AddWithValue("@Observacion", "Recoger material en prestamo (Observación generada automáticamente por el sistema)");
+                        cmdInsert.Parameters.AddWithValue("@Cedula", Session["CedulaLogeada"].ToString());
+                        cmdInsert.Parameters.AddWithValue("@NombreUsuario", Session["usuariologueado"].ToString());
+                        cmdInsert.Parameters.AddWithValue("@ID_TipoObservacion", ID_TipoObservacion);
+                        cmdInsert.Parameters.AddWithValue("@Codigo_Asesor", Codigo_Asesor);
+                        cmdInsert.Parameters.AddWithValue("@DestinatarioPorDefecto", DestinatarioPorDefecto);
+
+                        cmdInsert.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+
+        // EXPORTAR DOCUMENTACION ISID
+
+        public void ExportarDocumentacionOT()
+        {
+            DataTable documentacionOT = ConsultarDocumentacionOT_SID();
+            if (documentacionOT != null && documentacionOT.Rows.Count > 0)
+            {
+                BorrarDocumentacionOT_ISID();
+                InsertarDocumentacionOT_ISID(documentacionOT);
+            }
+        }
+        public DataTable ConsultarDocumentacionOT_SID()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+                string sSql = "SELECT * FROM tblDocumentacion WHERE ID_OT = @Id_OT AND Pedido = @Pedido";
+                using (SqlCommand cmdSelect = new SqlCommand(sSql, connectionSID))
+                {
+                    cmdSelect.Parameters.AddWithValue("@Id_OT", tbOT.Text);
+                    cmdSelect.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmdSelect))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            return dataTable;
+        }
+        public void BorrarDocumentacionOT_ISID()
+        {
+            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+            {
+                connectionISID.Open();
+                string sSql = "DELETE FROM tblDocumentacionOT WHERE ID_OT = @Id_OT AND Pedido = @Pedido";
+                using (SqlCommand cmdDelete = new SqlCommand(sSql, connectionISID))
+                {
+                    cmdDelete.Parameters.AddWithValue("@Id_OT", tbOT.Text);
+                    cmdDelete.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+                    cmdDelete.ExecuteNonQuery();
+                }
+            }
+        }
+        public void InsertarDocumentacionOT_ISID(DataTable documentacionOT)
+        {
+            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+            {
+                connectionISID.Open();
+                string sSql = "INSERT INTO tblDocumentacionOT (Id_OT, Pedido, Archivo, Observacion, Tipodocumento, usuario, FechaRegistro, Categoria, cantidad, MuebleEspecial) " +
+                              "VALUES (@Id_OT, @Pedido, @Archivo, @Observacion, @TipoDocumento, @Usuario, @FechaRegistro, @Categoria, @Cantidad, @MuebleEspecial)";
+                using (SqlCommand cmdInsert = new SqlCommand(sSql, connectionISID))
+                {
+                    foreach (DataRow row in documentacionOT.Rows)
+                    {
+                        cmdInsert.Parameters.Clear();
+                        cmdInsert.Parameters.AddWithValue("@Id_OT", row["Id_OT"].ToString());
+                        cmdInsert.Parameters.AddWithValue("@Pedido", row["Pedido"]);
+                        cmdInsert.Parameters.AddWithValue("@Archivo", row["Archivo"].ToString());
+                        cmdInsert.Parameters.AddWithValue("@Observacion", row["Observacion"].ToString());
+                        cmdInsert.Parameters.AddWithValue("@TipoDocumento", row["TipoDocumento"].ToString());
+                        cmdInsert.Parameters.AddWithValue("@Usuario", row["Usuario"].ToString());
+                        cmdInsert.Parameters.AddWithValue("@FechaRegistro", Convert.ToDateTime(row["FechaRegistro"]));
+                        cmdInsert.Parameters.AddWithValue("@Categoria", row["Categoria"].ToString());
+                        cmdInsert.Parameters.AddWithValue("@Cantidad", row["Cantidad"]);
+                        cmdInsert.Parameters.AddWithValue("@MuebleEspecial", Convert.ToBoolean(row["MuebleEspecial"]));
+                        cmdInsert.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+        //DEPENDIENDO LA ORIENTACION DEL TIPO PEDIDO SE PROGRAMA LA OBRA POR DEFECTO A LOS PROCESOS BASES
+        // ELiminar Programacion de Areas 
+        public void EliminarProgramacion()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            string query = "DELETE tblProgramacion FROM tblProcesoProduccion INNER JOIN tblProgramacion ON tblProcesoProduccion.Id_Area = tblProgramacion.id_Proceso " +
+                           "WHERE (tblProgramacion.OT = @IdOT) AND (tblProgramacion.Pedido = @pedido) AND (tblProcesoProduccion.Base = 1)";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Agregar parámetros
+                    command.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    command.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+                    // Abrir conexión y ejecutar el comando
+                    connection.Open();
+                    int rowsAffected = command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+
+        }
+
+        // Consultar Programación Proceso de producción e Insertar dependiendo de la orientacion COMERCIAL o OAI
+
+        //COMERCIAL y OAI
+        private DataTable ObtenerProgProduccion()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT * FROM  tblProcesoProduccion WHERE  Base=1 AND Activo=1";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+        private void RealizarProgramacionPedidoISID(DataTable datoPedido)
+        {
+            if (datoPedido.Rows.Count > 0)
+            {
+                string Id_OT = datoPedido.Rows[0]["Id_OT"].ToString();
+                string Consecutivo_Pedido = datoPedido.Rows[0]["Consecutivo_Pedido"].ToString();
+                string Nombre_Obra = datoPedido.Rows[0]["Nombre_Obra"].ToString();
+                string Fecha_Despacho_Produccion = datoPedido.Rows[0]["Fecha_Despacho_Produccion"].ToString();
+                string Ciudad = datoPedido.Rows[0]["Ciudad"].ToString();
+                string TelDomicilio = datoPedido.Rows[0]["TelDomicilio"].ToString();
+                string codigoasesor = datoPedido.Rows[0]["codigoasesor"].ToString();
+                string mail = datoPedido.Rows[0]["mail"].ToString();
+                string Activo = datoPedido.Rows[0]["Activo"].ToString();
+                string Zona = datoPedido.Rows[0]["Zona"].ToString();
+
+                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+                using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+                {
+                    connectionISID.Open();
+
+                    string sSql = "INSERT INTO tblProgramacion (OT,Pedido,Responsable,Nombre_Obra,FechaProgramacionProceso,FechaFinalProceso,Terminada," +
+                                  "FechaRealFinalProceso,Descripcion_Proceso,Impresa,FechaImpresionReporte,ProcesoBase,EntregaAlFinal) " +
+                                  "VALUES (@Id_OT, @Consecutivo_Pedido,800014574, @Nombre_Obra,GETDATE(), @Fecha_Despacho_Produccion, 0, GETDATE(), Por Definir, 0, GETDATE(), 1, 0)";
+
+                    using (SqlCommand cmdInsert = new SqlCommand(sSql, connectionISID))
+                    {
+                        cmdInsert.Parameters.AddWithValue("@Id_OT", Id_OT);
+                        cmdInsert.Parameters.AddWithValue("@Consecutivo_Pedido", Consecutivo_Pedido);
+                        cmdInsert.Parameters.AddWithValue("@Nombre_Obra", Nombre_Obra);
+                        cmdInsert.Parameters.AddWithValue("@Fecha_Despacho_Produccion", Fecha_Despacho_Produccion);
+                        cmdInsert.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+        private void RealizarProgramacionPedidoISID2(DataTable datoPedido, DateTime FechaFinProc, DateTime FechaInicioProceso, int turno, string responsable, string Descripcion_Proceso, string Id_Area, string EntregaAlFinal, string procesar)
+        {
+            if (datoPedido.Rows.Count > 0)
+            {
+                string Id_OT = datoPedido.Rows[0]["Id_OT"].ToString();
+                string Consecutivo_Pedido = datoPedido.Rows[0]["Consecutivo_Pedido"].ToString();
+                string Nombre_Obra = datoPedido.Rows[0]["Nombre_Obra"].ToString();
+
+
+
+
+                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+                using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+                {
+                    connectionISID.Open();
+
+                    string sSql = "INSERT INTO tblProgramacion (OT,Pedido,Nombre_Obra,Responsable,FechaProgramacionProceso,FechaFinalProceso,Descripcion_Proceso,FechaRealFinalProceso,liquidado,turno," +
+                                  "FechaOriginalFinalProceso,Procesar,Cantidad,ProcesoBase,FechaInicioProceso,id_Proceso,EntregaAlFinal) " +
+                                  " VALUES (@Id_OT, @Consecutivo_Pedido, @Nombre_Obra, @responsable, GETDATE(), @FechaFinProceso, @Descripcion_Proceso,@FechaRealFinalProceso, 0, @turno," +
+                                  " @FechaOriginalFinalProceso, @procesar, 1, 1, @FechaInicioProceso, @id_Proceso, @EntregaAlFinal )";
+
+                    using (SqlCommand cmdInsert = new SqlCommand(sSql, connectionISID))
+                    {
+                        cmdInsert.Parameters.AddWithValue("@Id_OT", Id_OT);
+                        cmdInsert.Parameters.AddWithValue("@Consecutivo_Pedido", Consecutivo_Pedido);
+                        cmdInsert.Parameters.AddWithValue("@Nombre_Obra", Nombre_Obra);
+                        cmdInsert.Parameters.AddWithValue("@responsable", responsable);
+                        cmdInsert.Parameters.AddWithValue("@FechaFinProceso", FechaFinProc);
+                        cmdInsert.Parameters.AddWithValue("@Descripcion_Proceso", Descripcion_Proceso);
+                        cmdInsert.Parameters.AddWithValue("@FechaRealFinalProceso", FechaFinProc);
+                        cmdInsert.Parameters.AddWithValue("@turno", turno);
+                        cmdInsert.Parameters.AddWithValue("@FechaOriginalFinalProceso", FechaFinProc);
+                        cmdInsert.Parameters.AddWithValue("@procesar", procesar);
+                        cmdInsert.Parameters.AddWithValue("@FechaInicioProceso", FechaInicioProceso);
+                        cmdInsert.Parameters.AddWithValue("@id_Proceso", Id_Area);
+                        cmdInsert.Parameters.AddWithValue("@EntregaAlFinal", EntregaAlFinal);
+
+
+                        cmdInsert.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+        private DataTable ObtenerProgProduccionOAI()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT * FROM tblProcesoProduccion WHERE (ORIENTACION='OAI' OR ORIENTACION='TODO') AND Activo=1";
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+        private DataTable ObtenerProductosXProcesoSID(DataTable datoPedido, string Descripcion_Proceso)
+        {
+            DataTable dataTable = new DataTable();
+
+            string Id_OT = datoPedido.Rows[0]["Id_OT"].ToString();
+            string pedido = datoPedido.Rows[0]["Consecutivo_Pedido"].ToString();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT  Concat(Descripción , '-' , DescripcionPieza) AS DescripcionFull,Ancho, Altura, sum(Cant) as Cant, Und,'@Descripcion_Proceso' AS AreaProduccion,Id_Inventario " +
+                              "FROM tblReporteMedidasdeCorte WHERE (Reportar = 1) AND OT= @IdOT AND PEDIDO= @pedido AND AreaProduccion LIKE '%@Descripcion_Proceso%' " +
+                              "group by concat(Descripción , '-' , DescripcionPieza),Ancho,Altura,Und,Id_Inventario ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+
+                    cmd.Parameters.AddWithValue("@Id_OT", Id_OT);
+                    cmd.Parameters.AddWithValue("@pedido", pedido);
+                    cmd.Parameters.AddWithValue("@Descripcion_Proceso", Descripcion_Proceso);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+        private bool ExistenciaProductoISID(DataTable datoPedido, string idArea, string producto)
+        {
+            string IdOT = datoPedido.Rows[0]["IdOT"].ToString();
+            string pedido = datoPedido.Rows[0]["Consecutivo_Pedido"].ToString();
+
+            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+            {
+                connectionISID.Open();
+
+                string sSql = "SELECT COUNT(*) FROM tblProgramacion where OT= @IdOT AND pedido= @pedido AND id_proceso = @IdArea AND Procesar= @producto ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionISID))
+                {
+                    cmd.Parameters.AddWithValue("@IdOT", IdOT);
+                    cmd.Parameters.AddWithValue("@pedido", pedido);
+                    cmd.Parameters.AddWithValue("@IdArea", idArea);
+                    cmd.Parameters.AddWithValue("@producto", producto);
+
+
+                    object result = cmd.ExecuteScalar();
+
+                    // Verificar si el resultado es null o no
+                    if (result != null)
+                    {
+                        int rowCount = Convert.ToInt32(result);
+                        // Si rowCount es mayor que cero, el pedido existe en ISID
+                        return rowCount > 0;
+                    }
+                    else
+                    {
+                        // Si no se encontraron filas, retornamos false
+                        return false;
+                    }
+
+                }
+            }
+        }
+        private void RealizarProgramacionPedidoxProductoISID(DataTable datoPedido, DateTime FechaFinProc, DateTime FechaInicioProceso, int turno, string responsable, string Descripcion_Proceso, string Descripcion_Area2, string Id_Area, string EntregaAlFinal, string DescripcionFull, int cantidad)
+        {
+            if (datoPedido.Rows.Count > 0)
+            {
+                string Id_OT = datoPedido.Rows[0]["Id_OT"].ToString();
+                string Consecutivo_Pedido = datoPedido.Rows[0]["Consecutivo_Pedido"].ToString();
+                string Nombre_Obra = datoPedido.Rows[0]["Nombre_Obra"].ToString();
+
+
+
+
+                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+                using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+                {
+                    connectionISID.Open();
+
+                    string sSql = "INSERT INTO tblProgramacion (OT,Pedido,Nombre_Obra,Responsable,FechaProgramacionProceso,FechaFinalProceso,Descripcion_Proceso,FechaRealFinalProceso,FechaImpresionReporte," +
+                                  "liquidado,ManodeObra,turno,FechaOriginalFinalProceso,Procesar,Cantidad,FechaInicioProceso,id_Proceso,EntregaAlFinal) " +
+                                  " VALUES (@Id_OT, @Consecutivo_Pedido, @Nombre_Obra, @responsable, GETDATE(), @FechaFinProceso, @Descripcion_Proceso,@FechaRealFinalProceso, GETDATE(), 0," +
+                                  " @Descripcion_Area2, @turno, @FechaOriginalFinalProceso, @procesar, @cantidad, @FechaFin, @id_Proceso, @EntregaAlFinal )";
+
+                    using (SqlCommand cmdInsert = new SqlCommand(sSql, connectionISID))
+                    {
+                        cmdInsert.Parameters.AddWithValue("@Id_OT", Id_OT);
+                        cmdInsert.Parameters.AddWithValue("@Consecutivo_Pedido", Consecutivo_Pedido);
+                        cmdInsert.Parameters.AddWithValue("@Nombre_Obra", Nombre_Obra);
+                        cmdInsert.Parameters.AddWithValue("@responsable", responsable);
+                        cmdInsert.Parameters.AddWithValue("@FechaFinProceso", FechaFinProc);
+                        cmdInsert.Parameters.AddWithValue("@Descripcion_Proceso", Descripcion_Proceso);
+                        cmdInsert.Parameters.AddWithValue("@FechaRealFinalProceso", FechaFinProc);
+                        cmdInsert.Parameters.AddWithValue("@Descripcion_Area2", Descripcion_Area2);
+                        cmdInsert.Parameters.AddWithValue("@turno", turno);
+                        cmdInsert.Parameters.AddWithValue("@FechaOriginalFinalProceso", FechaFinProc);
+                        cmdInsert.Parameters.AddWithValue("@procesar", DescripcionFull);
+                        cmdInsert.Parameters.AddWithValue("@cantidad", cantidad);
+                        cmdInsert.Parameters.AddWithValue("@FechaFin", FechaFinProc);
+                        cmdInsert.Parameters.AddWithValue("@id_Proceso", Id_Area);
+                        cmdInsert.Parameters.AddWithValue("@EntregaAlFinal", EntregaAlFinal);
+
+
+                        cmdInsert.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+        private void AcutualizarProgramacionPedidoxProductoISID(DataTable datoPedido, DateTime FechaFinProc, int turno, string responsable, string Id_Area, string DescripcionFull, int cantidad)
+        {
+            if (datoPedido.Rows.Count > 0)
+            {
+                string Id_OT = datoPedido.Rows[0]["Id_OT"].ToString();
+                string Consecutivo_Pedido = datoPedido.Rows[0]["Consecutivo_Pedido"].ToString();
+
+                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+                using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+                {
+                    connectionISID.Open();
+
+                    string sSql = "UPDATE tblProgramacion SET Cantidad= @cantidad, FechaProgramacionProceso = GETDATE(), FechaFinalProceso = @FechaFinProceso, " +
+                                  "Impresa=0, Terminada=0, turno= @turno, Responsable= @responsable  " +
+                                  "WHERE OT= @Id_OT AND pedido= @Consecutivo_Pedido AND id_proceso= @id_Proceso, and Procesar= @procesar";
+
+                    using (SqlCommand cmdInsert = new SqlCommand(sSql, connectionISID))
+                    {
+                        cmdInsert.Parameters.AddWithValue("@cantidad", cantidad);
+                        cmdInsert.Parameters.AddWithValue("@FechaFinProceso", FechaFinProc);
+                        cmdInsert.Parameters.AddWithValue("@turno", turno);
+                        cmdInsert.Parameters.AddWithValue("@responsable", responsable);
+                        cmdInsert.Parameters.AddWithValue("@Id_OT", Id_OT);
+                        cmdInsert.Parameters.AddWithValue("@Consecutivo_Pedido", Consecutivo_Pedido);
+                        cmdInsert.Parameters.AddWithValue("@id_Proceso", Id_Area);
+                        cmdInsert.Parameters.AddWithValue("@procesar", DescripcionFull);
+
+                        cmdInsert.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+
+        // ******* INICIO OK DIBUJO CONTROLADOR  *******
+
+
+        //EXPORTAR PLANO A LA BD ISID
+        private DataTable ConsultarReportePlanoSID()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT  * FROM tblReportePlano WHERE Id_OT= @IdOT AND Consecutivo_Pedido = @Pedido ";
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+        private DataTable ConsultarReportePlanoISID(string plano)
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT * FROM tblReportePlano WHERE Plano = @plano ";
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@plano", plano);
+
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+        private void EliminarReportePlanoISID(string plano)
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "DELETE  FROM tblReportePlano WHERE Plano = @plano";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+
+                    cmd.Parameters.AddWithValue("@plano", plano);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+        private void InsertarReportePlanoISID(DataTable datoReportePlano)
+        {
+            if (datoReportePlano.Rows.Count > 0)
+            {
+                string plano = datoReportePlano.Rows[0]["Plano"].ToString();
+                string Id_OT = datoReportePlano.Rows[0]["Id_OT"].ToString();
+                string Consecutivo_Pedido = datoReportePlano.Rows[0]["Consecutivo_Pedido"].ToString();
+                string Area = datoReportePlano.Rows[0]["Area"].ToString();
+                string Id_Dibujante = datoReportePlano.Rows[0]["Id_Dibujante"].ToString();
+                string Dibujante = datoReportePlano.Rows[0]["Dibujante"].ToString();
+
+
+
+                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+                using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+                {
+                    connectionISID.Open();
+
+                    string sSql = "INSERT INTO tblReportePlano (Plano, Id_OT, Consecutivo_Pedido, Area, Id_Dibujante, Dibujante) " +
+                                  "VALUES (@plano, @Id_OT, @Consecutivo_Pedido, @Area, @Id_Dibujante, @Dibujante)";
+
+                    using (SqlCommand cmdInsert = new SqlCommand(sSql, connectionISID))
+                    {
+                        cmdInsert.Parameters.AddWithValue("@plano", plano);
+                        cmdInsert.Parameters.AddWithValue("@Id_OT", Id_OT);
+                        cmdInsert.Parameters.AddWithValue("@Consecutivo_Pedido", Consecutivo_Pedido);
+                        cmdInsert.Parameters.AddWithValue("@Area", Area);
+                        cmdInsert.Parameters.AddWithValue("@Id_Dibujante", Id_Dibujante);
+                        cmdInsert.Parameters.AddWithValue("@Dibujante", Dibujante);
+                        cmdInsert.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+        // EXPORTAMOS DESPIECE AL ISID 
+        private DataTable ConsultarReporteDespiceSID()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT  * FROM tblReporteDespiece WHERE OT= @IdOT AND Pedido = @Pedido ";
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+        private void EliminarReporteDespieceISID()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "DELETE  FROM tblReporteDespiece WHERE  OT= @IdOT AND Pedido = @pedido";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+        public string ObtenerParaEnsamble()
+        {
+            string paraEnsamble = "";
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT ParaEnsamble FROM tblSede WHERE Activada = 1";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    try
+                    {
+                        connection.Open();
+                        paraEnsamble = Convert.ToString(command.ExecuteScalar());
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejar la excepción según tus necesidades
+                        Console.WriteLine("Error al ejecutar la consulta: " + ex.Message);
+                    }
+                }
+            }
+
+            return paraEnsamble;
+        }
+        public void InsertarDatosReporteDespieceISID(DataTable datoDespiece)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            foreach (DataRow row in datoDespiece.Rows)
+            {
+                string OT = row["OT"].ToString();
+                Int16 pedido = Convert.ToInt16(row["Pedido"]);
+                string idPlano = row["Id_Plano"].ToString();
+                string idPanel = row["Id_Panel"].ToString();
+                double anchoPanel = Convert.ToDouble(row["Ancho_Panel"]);
+                int cantidad = Convert.ToInt32(row["Cantidad"]);
+                int idNumerico = Convert.ToInt32(row["Id_Numerico"]);
+                double altura = Convert.ToDouble(row["Altura"]);
+                double profundidad = Convert.ToDouble(row["Profundidad"]);
+                string descripcionPanel = row["Descripcion_Panel"].ToString();
+                string descripcionGrupo = row["Descripcion_Grupo"].ToString();
+                string descripcionLinea = row["Descripcion_Linea"].ToString();
+                int precioVenta = Convert.ToInt32(row["Precio_Venta"]);
+                bool cotizar = Convert.ToBoolean(row["Cotizar"]);
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = "INSERT INTO tblReporteDespiece (OT,Pedido,Id_Plano,Id_Panel,Ancho_Panel,Cantidad,Id_Numerico,Altura,Profundidad," +
+                                   "Descripcion_Panel,Descripcion_Grupo,Descripcion_Linea,Precio_Venta,Cotizar)" +
+                                   " VALUES (@OT, @Pedido, @Id_Plano, @Id_Panel, @Ancho_Panel, @Cantidad, @Id_Numerico, @Altura, @Profundidad," +
+                                   " @Descripcion_Panel, @Descripcion_Grupo, @Descripcion_Linea, @Precio_Venta, @Cotizar)";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@OT", OT);
+                        command.Parameters.AddWithValue("@Pedido", pedido);
+                        command.Parameters.AddWithValue("@Id_Plano", idPlano);
+                        command.Parameters.AddWithValue("@Id_Panel", idPanel);
+                        command.Parameters.AddWithValue("@Ancho_Panel", anchoPanel);
+                        command.Parameters.AddWithValue("@Cantidad", cantidad);
+                        command.Parameters.AddWithValue("@Id_Numerico", idNumerico);
+                        command.Parameters.AddWithValue("@Altura", altura);
+                        command.Parameters.AddWithValue("@Profundidad", profundidad);
+                        command.Parameters.AddWithValue("@Descripcion_Panel", descripcionPanel);
+                        command.Parameters.AddWithValue("@Descripcion_Grupo", descripcionGrupo);
+                        command.Parameters.AddWithValue("@Descripcion_Linea", descripcionLinea);
+                        command.Parameters.AddWithValue("@Precio_Venta", precioVenta);
+                        command.Parameters.AddWithValue("@Cotizar", cotizar);
+
+                        try
+                        {
+                            connection.Open();
+                            command.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Error al insertar datos: " + ex.Message);
+                        }
+                    }
+                }
+            }
+        }
+
+        // ENVIAMOS LOS ACABADOS
+        private void EliminarAcabadosISID()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "DELETE  FROM tblReporteOT_Acabado WHERE  OT= @IdOT AND Pedido = @pedido";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+        private DataTable ConsultarAcabadosSID()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT tblOTAcabados.*, tblGrupoObjetoParaAcabado.*, tblAcabado.* FROM tblAcabado " +
+                              "INNER JOIN (tblGrupoObjetoParaAcabado " +
+                              "INNER JOIN tblOTAcabados ON tblGrupoObjetoParaAcabado.ID_GrupoObjetoparaAcabado = tblOTAcabados.ID_GrupoObjetoparaAcabado) " +
+                              "ON tblAcabado.ID_Acabado = tblOTAcabados.ID_Acabado " +
+                              "WHERE (((tblOTAcabados.Id_OT)= @IdOT) AND ((tblOTAcabados.Consecutivo_Pedido)= @Pedido)) ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+        public void InsertarAcabadosISID(DataTable datoAcabados)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            foreach (DataRow row in datoAcabados.Rows)
+            {
+                string Id_Acabado = row["Id_Acabado"].ToString();
+                string GruposSag = row["GruposSag"].ToString();
+                string idPanel = row["ColorGrupoSag"].ToString();
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = @"INSERT INTO tblReporteOT_Acabado (OT,Pedido,Id_Acabado,GrupoSag,FechaActual,Cod_Color)
+                                   VALUES (@OT, @Pedido, @Id_Acabado, @GruposSag, GETDATE(), @ColorGrupoSag)";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@OT", tbOT.ToString());
+                        command.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+                        command.Parameters.AddWithValue("@Id_Acabado", Id_Acabado);
+                        command.Parameters.AddWithValue("@GruposSag", GruposSag);
+
+                        try
+                        {
+                            connection.Open();
+                            command.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Error al insertar datos: " + ex.Message);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        //EXPORTAMOS MEDIDAS DE CORTE A LA BD DEL ISID
+        private DataTable ConsultarReporteMedidasSID()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT  * FROM tblReporteMedidasdeCorte WHERE OT= @IdOT AND Pedido = @Pedido Order By Orden asc ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+        private void EliminarMedidasCorteISID()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "DELETE  FROM tblReporteMedidasdeCorte WHERE  OT= @IdOT AND Pedido = @pedido";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+        public void InsertarMedidasCorteISID(DataTable datoMedidas)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            foreach (DataRow row in datoMedidas.Rows)
+            {
+                string Plano = row["Plano"].ToString();
+                string Item_Modulo = row["Item_Modulo"].ToString();
+                string Descripción = row["Descripción"].ToString();
+                string Ancho = row["Ancho"].ToString();
+                string Altura = row["Altura"].ToString();
+                string Cant = row["Cant"].ToString();
+                string UND = row["UND"].ToString();
+                string Reportar = row["Reportar"].ToString();
+                string AreaProduccion = row["AreaProduccion"].ToString();
+                string Reportar_Despacho = row["Reportar_Despacho"].ToString();
+                string Reporte = row["Reporte"].ToString();
+                string Orden = row["Orden"].ToString();
+                string Id_Inventario = row["Id_Inventario"].ToString();
+                string ValorUND = row["ValorUND"].ToString();
+                string Factor_Desperdicio = row["Factor_Desperdicio"].ToString();
+                string CantidadMaterial = row["CantidadMaterial"].ToString();
+                string DescripcionPieza = row["DescripcionPieza"].ToString();
+                string TipoInsumo = row["TipoInsumo"].ToString();
+                string ID_FamiliaModulo = row["ID_FamiliaModulo"].ToString();
+                string PesoKG = row["PesoKG"].ToString();
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = @"INSERT INTO tblReporteMedidasdeCorte (OT,Pedido,Plano,Item_Modulo,Descripción,Ancho,Altura,Cant,UND,Reportar,AreaProduccion,Reportar_Despacho,
+                                   Reporte,Orden,Id_Inventario,ValorUND,Factor_Desperdicio,CantidadMaterial,DescripcionPieza,TipoInsumo,ID_FamiliaModulo,PesoKg) 
+                                   VALUES (@OT, @Pedido, @Plano, @Item_Modulo, Descripción, @Ancho, @Altura, @Cant, @UND, @Reportar, @AreaProduccion, @Reportar_Despacho,Reporte, 
+                                   @Orden, @Id_Inventario, @ValorUND, @Factor_Desperdicio, @CantidadMaterial, @DescripcionPieza, @TipoInsumo, @ID_FamiliaModulo, @PesoKG)";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@OT", tbOT.Text);
+                        command.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+                        command.Parameters.AddWithValue("@Plano", Plano);
+                        command.Parameters.AddWithValue("@Item_Modulo", Item_Modulo);
+                        command.Parameters.AddWithValue("@Descripción", Descripción);
+                        command.Parameters.AddWithValue("@Ancho", Ancho);
+                        command.Parameters.AddWithValue("@Altura", Altura);
+                        command.Parameters.AddWithValue("@Cant", Cant);
+                        command.Parameters.AddWithValue("@UND", UND);
+                        command.Parameters.AddWithValue("@Reportar", Convert.ToBoolean(Reportar));
+                        command.Parameters.AddWithValue("@AreaProduccion", AreaProduccion);
+                        command.Parameters.AddWithValue("@Reportar_Despacho", Convert.ToBoolean(Reportar_Despacho));
+                        command.Parameters.AddWithValue("@Reporte", Reporte);
+                        command.Parameters.AddWithValue("@Orden", Orden);
+                        command.Parameters.AddWithValue("@Id_Inventario", Id_Inventario);
+                        command.Parameters.AddWithValue("@ValorUND", ValorUND);
+                        command.Parameters.AddWithValue("@Factor_Desperdicio", Factor_Desperdicio);
+                        command.Parameters.AddWithValue("@CantidadMaterial", CantidadMaterial);
+                        command.Parameters.AddWithValue("@DescripcionPieza", DescripcionPieza);
+                        command.Parameters.AddWithValue("@TipoInsumo", TipoInsumo);
+                        command.Parameters.AddWithValue("@ID_FamiliaModulo", ID_FamiliaModulo);
+                        command.Parameters.AddWithValue("@PesoKG", PesoKG);
+
+
+
+                        try
+                        {
+                            connection.Open();
+                            command.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Error al insertar datos: " + ex.Message);
+                        }
+                    }
+                }
+            }
+        }
+
+        //EXPORTAE MEDIDAS FINALES 
+        public string ObtenerFamiliaModuloDespachoTroja()
+        {
+            string FamiliaModuloDespachoTroja = "";
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT mail FROM tblUsosVarios WHERE ObjetivoMail = 'FamiliaModuloDespachoTroja'";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    try
+                    {
+                        connection.Open();
+
+                        // Ejecutar el comando y obtener el resultado
+                        FamiliaModuloDespachoTroja = Convert.ToString(command.ExecuteScalar());
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejar la excepción según tus necesidades
+                        Console.WriteLine("Error al ejecutar la consulta: " + ex.Message);
+                    }
+                }
+            }
+
+            return FamiliaModuloDespachoTroja;
+        }
+        private DataTable ConsultarMedidaFinal()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT  * FROM tblReporteModuloMedidaFinal WHERE OT= @IdOT AND Pedido = @Pedido Order By Orden asc ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+        private void EliminarMedidaFinalISID()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "DELETE  FROM tblReporteModuloMedidaFinal WHERE  OT= @IdOT AND Pedido = @pedido";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+        public void InsertarMedidaFinalISID(DataTable datoMedidaFinal, string FamiliaModuloDespachoTroja)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            foreach (DataRow row in datoMedidaFinal.Rows)
+            {
+                string OT = row["OT"].ToString();
+                string Pedido = row["Pedido"].ToString();
+                string Plano = row["Plano"].ToString();
+                string Item_Modulo = row["Item_Modulo"].ToString();
+                string Descripción = row["Descripción"].ToString();
+                string Ancho = row["Ancho"].ToString();
+                string Altura = row["Altura"].ToString();
+                string Cant = row["Cant"].ToString();
+                string Familia_Modulo = row["Familia_Modulo"].ToString();
+                string UND = row["UND"].ToString();
+                string ValorUnidad = row["ValorUnidad"].ToString();
+                string AreaProduccion = row["AreaProduccion"].ToString();
+                string SubTotal = row["SubTotal"].ToString();
+                string Reporte = row["Reporte"].ToString();
+                string Orden = row["Orden"].ToString();
+                string ID_FamiliaModulo = row["ID_FamiliaModulo"].ToString();
+
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = @"INSERT INTO tblReporteModuloMedidaFinal (OT,Pedido,Plano,Item_Modulo,Descripción,Ancho, 
+                                   Altura,Cant,Familia_Modulo,UND , ValorUnidad, AreaProduccion, SubTotal, Reporte,Orden,ID_FamiliaModulo)
+                                   VALUES (@OT, @Pedido, @Plano, @Item_Modulo, Descripción, @Ancho, @Altura, @Cant, @Familia_Modulo, @UND, @ValorUnidad, @AreaProduccion, @SubTotal,Reporte, 
+                                   @Orden, @ID_FamiliaModulo)";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@OT", OT);
+                        command.Parameters.AddWithValue("@Pedido", Pedido);
+                        command.Parameters.AddWithValue("@Plano", Plano);
+                        command.Parameters.AddWithValue("@Item_Modulo", Item_Modulo);
+                        command.Parameters.AddWithValue("@Descripción", Descripción);
+                        command.Parameters.AddWithValue("@Ancho", Ancho);
+                        command.Parameters.AddWithValue("@Altura", Altura);
+                        command.Parameters.AddWithValue("@Cant", Cant);
+                        command.Parameters.AddWithValue("@Familia_Modulo", Familia_Modulo);
+                        command.Parameters.AddWithValue("@UND", UND);
+                        command.Parameters.AddWithValue("@ValorUnidad", ValorUnidad);
+                        command.Parameters.AddWithValue("@AreaProduccion", AreaProduccion);
+                        command.Parameters.AddWithValue("@SubTotal", SubTotal);
+                        command.Parameters.AddWithValue("@Reporte", Reporte);
+                        command.Parameters.AddWithValue("@Orden", Orden);
+                        command.Parameters.AddWithValue("@ID_FamiliaModulo", ID_FamiliaModulo);
+
+
+                        try
+                        {
+                            connection.Open();
+                            command.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Error al insertar datos: " + ex.Message);
+                        }
+                    }
+
+                }
+                 
+                if (FamiliaModuloDespachoTroja.Contains(Familia_Modulo))
+                {
+
+                    InsertarEmpaqueXModuloISID(datoMedidaFinal);
+                }
+
+            }
+        }
+        public void InsertarEmpaqueXModuloISID(DataTable datoMedidas)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            foreach (DataRow row in datoMedidas.Rows)
+            {
+                string OT = row["OT"].ToString();
+                string Pedido = row["Pedido"].ToString();
+                string Plano = row["Plano"].ToString();
+                string Item_Modulo = row["Item_Modulo"].ToString();
+                string Descripción = row["Descripción"].ToString();
+                string Ancho = row["Ancho"].ToString();
+                string Altura = row["Altura"].ToString();
+                string Cant = row["Cant"].ToString();
+                string Familia_Modulo = row["Familia_Modulo"].ToString();
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = "INSERT INTO tblEmpaquexModulo (OT,Pedido,Plano,Item_Modulo,Descripción,Ancho,Altura,Cant,Familia_Modulo) " +
+                                   "VALUES (@OT, @Pedido, @Plano, @Item_Modulo, @Descripción, @Ancho, @Altura, @Familia_Modulo )";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@OT", OT);
+                        command.Parameters.AddWithValue("@Pedido", Pedido);
+                        command.Parameters.AddWithValue("@Plano", Plano);
+                        command.Parameters.AddWithValue("@Item_Modulo", Item_Modulo);
+                        command.Parameters.AddWithValue("@Descripción", Descripción);
+                        command.Parameters.AddWithValue("@Ancho", Ancho);
+                        command.Parameters.AddWithValue("@Altura", Altura);
+                        command.Parameters.AddWithValue("@Cant", Cant);
+                        command.Parameters.AddWithValue("@Familia_Modulo", Familia_Modulo);
+
+
+                        try
+                        {
+                            connection.Open();
+                            command.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Error al insertar datos: " + ex.Message);
+                        }
+                    }
+                }
+            }
+        }
+
+        // EXPORTAR MANO DE OBRA 
+        private DataTable ConsultarManoObraSID()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT  * FROM tblReporteManodeObra WHERE OT= @IdOT AND Pedido = @Pedido Order By Orden asc ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+        private void EliminarReporteManoObraISID()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "DELETE  FROM tblReporteManodeObra WHERE  OT= @IdOT AND Pedido = @pedido";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+        public void InsertarReporteManoObraISID(DataTable datoManoObra)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            foreach (DataRow row in datoManoObra.Rows)
+            {
+                string OT = row["OT"].ToString();
+                string Pedido = row["Pedido"].ToString();
+                string Plano = row["Plano"].ToString();
+                string Descripción = row["Descripción"].ToString();
+                string Ancho = row["Ancho"].ToString();
+                string Altura = row["Altura"].ToString();
+                string Cant = row["Cant"].ToString();
+                string Familia_Modulo = row["Familia_Modulo"].ToString();
+                string UND = row["UND"].ToString();
+                string ValorUnidad = row["ValorUnidad"].ToString();
+                string AreaProduccion = row["AreaProduccion"].ToString();
+                string SubTotal = row["SubTotal"].ToString();
+                string Reporte = row["Reporte"].ToString();
+                string Orden = row["Orden"].ToString();
+
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = "INSERT INTO tblReporteManodeObra (OT,Pedido,Plano,Descripción,Ancho,Altura," +
+                                   "Cant,Familia_Modulo,UND,ValorUnidad,AreaProduccion,SubTotal,Reporte ,Orden) " +
+                                   "VALUES (@OT, @Pedido, @Plano, @Descripción, @Ancho, @Altura," +
+                                   " @Familia_Modulo, @UND, @ValorUnidad, @AreaProduccion, @SubTotal, @Reporte, @Orden )";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@OT", OT);
+                        command.Parameters.AddWithValue("@Pedido", Pedido);
+                        command.Parameters.AddWithValue("@Plano", Plano);
+                        command.Parameters.AddWithValue("@Descripción", Descripción.Substring(0, 50));
+                        command.Parameters.AddWithValue("@Ancho", Ancho);
+                        command.Parameters.AddWithValue("@Altura", Altura);
+                        command.Parameters.AddWithValue("@Cant", Cant);
+                        command.Parameters.AddWithValue("@Familia_Modulo", Familia_Modulo);
+                        command.Parameters.AddWithValue("@UND", UND);
+                        command.Parameters.AddWithValue("@ValorUnidad", ValorUnidad);
+                        command.Parameters.AddWithValue("@AreaProduccion", AreaProduccion);
+                        command.Parameters.AddWithValue("@SubTotal", SubTotal);
+                        command.Parameters.AddWithValue("@Reporte", Reporte);
+                        command.Parameters.AddWithValue("@Orden", Orden);
+                        try
+                        {
+                            connection.Open();
+                            command.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Error al insertar datos: " + ex.Message);
+                        }
+                    }
+                }
+            }
+        }
+
+        // EXPORTAR LISTADO PARA EMPAQUE 
+        private DataTable ConsultarEmpaqueSID()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT  * FROM tblempaque WHERE Id_OT= @IdOT AND Pedido = @Pedido ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+        private void EliminarEmpaqueISID()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "DELETE  FROM tblEmpaque WHERE  ID_OT= @IdOT AND Pedido = @pedido";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+        public void InsertarEmpaqueISID(string plano)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "INSERT INTO tblEmpaque (ID_OT,Pedido,Plano,Objeto,Ancho,Altura,Profundidad,Descripción_Objeto,Cantidad_Solicitada, " +
+                               "Cantidad_Empacada,Paquete_Inicial,Paquete_Final,Fecha_De_Empaque,Procedencia,Descripcion_Grupo,UndXPaquete,EmpAutomatico) " +
+                               "VALUES (@OT, @Pedido, @Plano,'BOLSA PARA BASURA',0,0,0,'BOLSA PARA BASURA',1,0,0,0,null,'SID','MENUDA',0,0)";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@OT", tbOT.Text);
+                    command.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+                    command.Parameters.AddWithValue("@Plano", plano);
+                    try
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error al insertar datos: " + ex.Message);
+                    }
+                }
+            }
+        }
+        public void InsertarEmpaque2ISID(DataTable datoEmpaque)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+
+            foreach (DataRow row in datoEmpaque.Rows)
+            {
+
+                string Plano = row["Plano"].ToString();
+                string Descripción = row["Descripción"].ToString();
+                string Objeto = row["Objeto"].ToString();
+                string Ancho = row["Ancho"].ToString();
+                string Altura = row["Altura"].ToString();
+                string Profundidad = row["Profundidad"].ToString();
+                string Descripción_Objeto = row["Descripción_Objeto"].ToString();
+                string Cantidad_Solicitada = row["Cantidad_Solicitada"].ToString();
+                string Procedencia = row["Procedencia"].ToString();
+                string Descripcion_Grupo = row["Descripcion_Grupo"].ToString();
+                string UndxPaquete = row["UndxPaquete"].ToString();
+                string EmpAutomatico = row["EmpAutomatico"].ToString();
+                string DescripcionPieza = row["DescripcionPieza"].ToString();
+                string Precio_Venta = row["Precio_Venta"].ToString();
+                string PesoKG = row["PesoKG"].ToString();
+
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = "INSERT INTO tblEmpaque (ID_OT,Pedido,Plano,Objeto,Ancho,Altura,Profundidad,Descripción_Objeto,Cantidad_Solicitada,Cantidad_Empacada," +
+                                   "Paquete_Inicial,Paquete_Final,Fecha_De_Empaque,Procedencia,Descripcion_Grupo,UndXPaquete,EmpAutomatico,DescripcionPieza,Precio_Venta,PesoKg) " +
+                                   "VALUES (@OT, @Pedido, @Plano, @Objeto, @Ancho, @Altura, @Profundidad, @Descripción_Objeto, @Cantidad_Solicitada, 0, 0, 0, NULL," +
+                                   " @Procedencia, @Descripcion_Grupo, @UndxPaquete, @EmpAutomatico, @DescripcionPieza, @Precio_Venta, @PesoKG )";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@OT", tbOT.Text);
+                        command.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+                        command.Parameters.AddWithValue("@Plano", Plano);
+                        command.Parameters.AddWithValue("@Objeto", Objeto); ;
+                        command.Parameters.AddWithValue("@Ancho", Ancho);
+                        command.Parameters.AddWithValue("@Altura", Altura);
+                        command.Parameters.AddWithValue("@Profundidad", Profundidad);
+                        command.Parameters.AddWithValue("@Descripción_Objeto", Descripción_Objeto);
+                        command.Parameters.AddWithValue("@Cantidad_Solicitada", Cantidad_Solicitada);
+                        command.Parameters.AddWithValue("@Procedencia", Procedencia);
+                        command.Parameters.AddWithValue("@Descripcion_Grupo", Descripcion_Grupo);
+                        command.Parameters.AddWithValue("@UndxPaquete", UndxPaquete);
+                        command.Parameters.AddWithValue("@EmpAutomatico", Convert.ToBoolean(EmpAutomatico));
+                        command.Parameters.AddWithValue("@DescripcionPieza", DescripcionPieza);
+                        command.Parameters.AddWithValue("@Precio_Venta", Precio_Venta);
+                        command.Parameters.AddWithValue("@PesoKG", PesoKG);
+
+                        try
+                        {
+                            connection.Open();
+                            command.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Error al insertar datos: " + ex.Message);
+                        }
+                    }
+                }
+            }
+        }
+
+        //******* FIN OK DIBUJO CONTROLADOR  *******
+
+
+
+        // SE CONSULTAN LOS ACABADOS DE VENTAS      
+        private void ActualizarReporteOT_Acabado_SID(string acabado)
+        {
+
+            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+            {
+                connectionISID.Open();
+
+                string sSql = "UPDATE tblReporteOT SET Observacion_Pedido= @acabado WHERE Id_OT= @Id_OT AND Consecutivo_Pedido= @pedido ";
+
+                using (SqlCommand cmdUpdate = new SqlCommand(sSql, connectionISID))
+                {
+
+                    // Asignar los valores de los parámetros
+                    cmdUpdate.Parameters.AddWithValue("@acabado", acabado);
+                    cmdUpdate.Parameters.AddWithValue("@Id_OT", tbOT.Text);
+                    cmdUpdate.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+
+                    // Ejecutar la actualización
+                    cmdUpdate.ExecuteNonQuery();
+                }
+            }
+
+        }
+
+
+        //CREAR BOLSA A PARTIR DEL DISEÑO DE LA COTIZACION 
+        private DataTable ConsultarResumePedidoSID()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT tblGrupoObjeto.ID_GrupoObjeto," +
+                    "tblGrupoObjeto.Descripcion_Grupo,Sum(tblPlano_Panel.Cantidad) AS Cantidad," +
+                    "Sum(tblPlano_Panel.Cantidad*tblPlano_Panel.Precio_Venta) AS SubTotal," +
+                    "tblGrupoObjeto.GOBloqueaPedido " +
+                    "FROM (tblPlano INNER JOIN ((tblGrupoObjeto INNER JOIN tblPanel ON tblGrupoObjeto.ID_GrupoObjeto = tblPanel.Id_GrupoObjeto) " +
+                    "INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum) ON tblPlano.Plano = tblPlano_Panel.Id_Plano) " +
+                    "INNER JOIN tblPlanoDiseño ON tblPlano.Plano = tblPlanoDiseño.Plano " +
+                    "GROUP BY tblGrupoObjeto.ID_GrupoObjeto, tblGrupoObjeto.Descripcion_Grupo," +
+                    "tblGrupoObjeto.GOBloqueaPedido, tblPlanoDiseño.Numero_Diseño, tblGrupoObjeto.Cotizar " +
+                    "HAVING (((tblPlanoDiseño.Numero_Diseño)=@diseño) AND ((tblGrupoObjeto.Cotizar)=1))";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@diseño", txtDiseño.Text);
+
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable que puede contener cero o más filas de resultados
+            return dataTable;
+        }
+        private void ActualizarOtBolsaSID()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "update tblOTBolsa set otbolCantidadCotizada=0, otbolValorCotizado=0 where OTBolBolsa= @bolsa ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@bolsa", "BSA" + tbOT.Text + "-" + ddlNumbers.SelectedItem.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+        private DataTable ConsultarBolsaOT_SID(string id_GrupoObjeto)
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT * FROM tblOTBolsa WHERE OTBolBolsa= @bolsa AND otbolIDGrupoObjeto= @id_GrupoObjeto ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@bolsa", "BSA" + tbOT.Text + "-" + ddlNumbers.SelectedItem.Text);
+                    cmd.Parameters.AddWithValue("@id_GrupoObjeto", id_GrupoObjeto);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable que puede contener cero o más filas de resultados
+            return dataTable;
+        }
+        private void CrearBolsaObjeto(string id_GrupoObjeto, string Descripcion_Grupo, string Cantidad, string SubTotal, string GOBloqueaPedido)
+        {
+
+            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+            {
+                connectionISID.Open();
+
+                string sSql = "INSERT INTO tblOtBolsa (otbolBolsa,otbolId_OT,otbolPedido,otbolIDGrupoObjeto," +
+                              "otbolGrupoObjeto,otbolCantidadCotizada,otbolValorCotizado,otbolCantidadPedida,otbolBloqueaPedido) " +
+                              "VALUES (@bolsa, @OT, @pedido, @id_GrupoObjeto, @Descripcion_Grupo, @Cantidad, @SubTotal, 0, @GOBloqueaPedido) ";
+
+
+                using (SqlCommand cmdInsert = new SqlCommand(sSql, connectionISID))
+                {
+                    cmdInsert.Parameters.AddWithValue("@bolsa","BSA"+tbOT.Text +"-"+ddlNumbers.SelectedItem.Text);
+                    cmdInsert.Parameters.AddWithValue("@OT", tbOT.Text);
+                    cmdInsert.Parameters.AddWithValue("@pedido", pedido);
+             
+                    cmdInsert.Parameters.AddWithValue("@id_GrupoObjeto", id_GrupoObjeto);
+                    cmdInsert.Parameters.AddWithValue("@Descripcion_Grupo", Descripcion_Grupo);
+                    cmdInsert.Parameters.AddWithValue("@Cantidad", Cantidad);
+                    cmdInsert.Parameters.AddWithValue("@SubTotal", SubTotal);
+                    cmdInsert.Parameters.AddWithValue("@GOBloqueaPedido",Convert.ToBoolean( GOBloqueaPedido));
+
+                
+
+                    cmdInsert.ExecuteNonQuery();
+                }
+            }
+
+        }
+        private void ActualizarBolsaObjeto(string id_GrupoObjeto, string Cantidad, string SubTotal)
+        {
+
+            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+
+            using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+            {
+                connectionISID.Open();
+
+                string sSql = "UPDATE tblOTBolsa SET otbolCantidadCotizada= @Cantidad, @otbolValorCotizado= @SubTotal " +
+                    "WHERE OTBolBolsa= @bolsa and otbolIDGrupoObjeto= @id_GrupoObjeto ";
+
+
+                using (SqlCommand cmdUpdate = new SqlCommand(sSql, connectionISID))
+                {
+
+                    cmdUpdate.Parameters.AddWithValue("@Cantidad", Cantidad);
+                    cmdUpdate.Parameters.AddWithValue("@SubTotal", SubTotal);
+                    cmdUpdate.Parameters.AddWithValue("@bolsa", "BSA" + tbOT.Text + "-" + ddlNumbers.SelectedItem.Text);
+                    cmdUpdate.Parameters.AddWithValue("@id_GrupoObjeto", id_GrupoObjeto);
+                   
+                    cmdUpdate.ExecuteNonQuery();
+                }
+            }
+
+        }
+
+        // FIN  LOGICA DEL BOTON OK
+
+
+    }
 }
+
+
+
 
 

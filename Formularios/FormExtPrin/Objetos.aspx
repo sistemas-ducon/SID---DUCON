@@ -234,15 +234,22 @@
                             </div>
 
                             <div class="row pt-4 mt-4 justify-content-center ">
-                                <div class="col-4">
+                                <div class="col-2">
                                 </div>
                                 <div class="col-4 ">
-                                    <div class=" input-group ">
-                                        <asp:Button ID="Adicionar" runat="server" Text="Adicionar" class="bi bf btn btn-lg btn-outline-secondary " OnClick="Adicionar_Click" OnClientClick="return ValidarFormularioCantidad();" />
+                                    <div class=" input-group input-group-sm ">
+                                        <asp:Button ID="Adicionar" runat="server" Text="Adicionar" class="bi bf btn btn-outline-secondary " OnClick="Adicionar_Click" OnClientClick="return ValidarFormularioCantidad();" />
                                     </div>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-2">
+                                    <div class=" input-group input-group-sm ">
+                                        <asp:Button ID="Cerrar" runat="server" Text="Cerrar" class="bi bf btn  btn-outline-secondary" OnClientClick="enviarFormulario();" />
+                                    </div>
+
                                 </div>
+
+                                <div class="col-2"></div>
+
                             </div>
 
 
@@ -256,12 +263,12 @@
         </asp:UpdatePanel>
 
     </form>
-
+    
 
     <script>
         function enviarFormulario() {
             // Realiza el procesamiento necesario en el formulario 2
-
+            window.close();
             // Actualiza el formulario 1
             window.opener.location.reload(); // Recarga el formulario padre
 
