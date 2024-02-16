@@ -58,7 +58,7 @@
                             <span class="navbar-toggler-icon form-control-sm"></span>
                         </button>
 
-                        <div class="collapse navbar-collapse" id="navbarScroll">
+                        <div class="collapse navbar-collapse navbar-expand" id="navbarScroll">
                             <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle text-white" href="#" id="Departamento" role="button" data-bs-toggle="dropdown" aria-expanded="false">Departamento
@@ -275,7 +275,7 @@
                     </div>
                 </div>
 
-         <div class="modal" id="miModalPendiente">
+           <div class="modal" id="miModalPendiente">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
