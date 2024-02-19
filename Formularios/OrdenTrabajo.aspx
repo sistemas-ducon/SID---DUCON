@@ -445,7 +445,7 @@
                                         <asp:Label class="form-label" Text="T.Ped" runat="server" ID="lblTped"></asp:Label>
                                         <asp:DropDownList ID="dtacboTipoPedido" runat="server" class="form-control" DataSourceID="TiposDePedidos" DataTextField="Descripcion_TipoPedido" DataValueField="Id_TipoPedido" AutoPostBack="True" OnSelectedIndexChanged="dtacboTipoPedido_SelectedIndexChanged">
                                         </asp:DropDownList>
-                                        <asp:SqlDataSource ID="TiposDePedidos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT Descripcion_TipoPedido, Id_TipoPedido, EstadisticaVenta FROM tblTipoPedido WHERE Activo = '1' ORDER BY Descripcion_TipoPedido "></asp:SqlDataSource>
+                                        <asp:SqlDataSource ID="TiposDePedidos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT Descripcion_TipoPedido, Id_TipoPedido, EstadisticaVenta FROM tblTipoPedido WHERE Activo = '1' AND orientacion =  'COMERCIAL' ORDER BY Descripcion_TipoPedido "></asp:SqlDataSource>
                                     </div>
                                 </div>
 
@@ -456,7 +456,7 @@
                                         <asp:SqlDataSource ID="PedidoBase" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT Consecutivo_Pedido, EstadisticaVenta
                                                                 FROM tblTipoPedido
                                                                 INNER JOIN tblOT ON tblTipoPedido.Id_TipoPedido = tblOT.Id_TipoPedido
-                                                                WHERE tblOT.Id_OT = @Id_OT 
+                                                                WHERE tblOT.Id_OT = @Id_OT AND EstadisticaVenta = '1'
                                                                 ORDER BY tblOT.Consecutivo_Pedido DESC;
                                                                 ">
                                             <SelectParameters>
@@ -1163,32 +1163,48 @@
                         <div id="CopiarAcabados" class="modal" tabindex="-1" style="display: none;">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Copiar Acabados</h5>
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Copiar Acabados</h5>
 
                                     </div>
-                                    <div class="modal-body">
+                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
                                         <p>Desea copiar los acabados de la OT:</p>
                                     </div>
-                                    <div class="modal-footer">
-                                        <asp:Button runat="server" ID="BtnSi" Text="Si" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnSi_Click" AutoPostBack="true" />
-                                        <asp:Button runat="server" ID="BtnNo" Text="No" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnNo_Click" />
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                                        <asp:Button runat="server" ID="BtnSi" Text="Si" class="btn btn-sm btn-outline-success" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnSi_Click" AutoPostBack="true" />
+                                        <asp:Button runat="server" ID="BtnNo" Text="No" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnNo_Click" />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+                         <div class="modal" id="miModalll" tabindex="-1" style="display: none;" >
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header bg-dark">
+                                    <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Campo Faltante</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                                    <p>Falta llenar el campo: <span id="campoFaltante"></span></p>
+                                </div>
+                                <div class="modal-footer">
+                                </div>
+                            </div>
+                        </div>
+                             </div>
+
                         <div id="OTingresada" class="modal" tabindex="-1">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">S_I_Ducon</h5>
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">S_I_Ducon</h5>
 
                                     </div>
-                                    <div class="modal-body">
+                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
                                         <p><span id="OTingresada2"></span></p>
                                     </div>
-                                    <div class="modal-footer">
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
                                         <asp:Button runat="server" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" OnClick="MonstrasrModalAcabados_Click"></asp:Button>
                                     </div>
                                 </div>
@@ -1196,18 +1212,18 @@
                         </div>
 
                         <div class="modal" id="NuevoPedido" tabindex="-1" style="display: none;">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Información General OT</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Información General OT</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <div class="modal-body">
+                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
                                         <p>Desea continuar con la información general de la OT?</span></p>
                                     </div>
-                                    <div class="modal-footer">
-                                        <asp:Button runat="server" Text="Si" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnSiNuevoPedido_Click" />
-                                        <asp:Button runat="server" Text="No" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnNoNuevoPedido_Click" />
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                                        <asp:Button runat="server" Text="Si" class="btn btn-sm btn-outline-success" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnSiNuevoPedido_Click" />
+                                        <asp:Button runat="server" Text="No" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnNoNuevoPedido_Click" />
                                     </div>
                                 </div>
                             </div>
@@ -1216,49 +1232,66 @@
                         <div class="modal" id="ActualizarCliente" tabindex="-1" style="display: none;">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Grabar Cliente</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Grabar Cliente</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <div class="modal-body">
+                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
                                         <p>Por favor actualizar el registro de clientes.</span></p>
                                     </div>
-                                    <div class="modal-footer">
-                                        <asp:Button runat="server" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" />
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                                        <asp:Button runat="server" class="btn btn-sm btn-outline-dark" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                           <div class="fundido modal" id="LlenarNIT" data-backdrop="static" data-bs-keyboard="false">
- <div class="modal-dialog modal-dialog-centrado">
-                                <div class="modal-content p-4 shadow">
-                                    <div class="modal-header bg-light">
-                                        <h5 class="modal-title">NIT</h5>
+                         <div class="modal fade" id="LlenarNIT" data-backdrop="static" data-bs-keyboard="false">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">NIT</h5>
                                     </div>
-                                    <div class="modal-body">
-                                        <p>Debes de llenar el NIT</p>
-                                        <p>Al darle aceptar se redireccionará al NIT</p>
+                                    <div class="modal-body form-control-sm">
+                                        <p>Debes de llenar el NIT <br />
+                                        Al darle aceptar se redireccionará al NIT</p>
                                     </div>
-                                    <div class="modal-footer">
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
                                         <asp:Button runat="server" Text="Aceptar" OnClick="Redireccion_Nit_Click" CssClass="btn btn-sm btn-outline-dark" />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                           <div id="OTModificada" class="modal" tabindex="-1">
- <div class="modal-dialog modal-dialog-centrado">
+                        <div id="ValidarAsesor" class="modal" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">S_I_Ducon</h5>
+                                        <h5 class="modal-title">Asesor del Pedido</h5>
                                     </div>
                                     <div class="modal-body">
+                                        <p><span id="ValidarAsesor1"></span></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button runat="server" data-bs-dismiss="modal" aria-label="Close">Aceptar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div id="OTModificada" class="modal" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">S_I_Ducon</h5>
+                                    </div>
+                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
                                         <p><span id="OTModificada1"></span></p>
                                     </div>
                                     <div class="modal-footer">
-                                        <asp:Button runat="server" Text="Sí" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnSiModificar_Click"></asp:Button>
-                                        <asp:Button runat="server" Text="No" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnNoModificar_Click"></asp:Button>
+                                        <asp:Button runat="server" Text="Sí" class="btn btn-sm btn-outline-success" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnSiModificar_Click"></asp:Button>
+                                        <asp:Button runat="server" Text="No" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnNoModificar_Click"></asp:Button>
                                     </div>
                                 </div>
                             </div>
@@ -2252,7 +2285,22 @@
 
         </div>
 
-
+        
+        <div class="modal" id="CarteraVencida" tabindex="-1" style="display: none;">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">CLIENTE CON CARTERA VENCIDA</h5>
+                        <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                        <p><span id="CarteraVencida2"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div id="miModallll" class="modal" tabindex="-1" style="display: none;">
             <div class="modal-dialog modal-dialog-centered">
@@ -2380,7 +2428,7 @@
             </div>
         </div>
 
-     
+
 
 
 

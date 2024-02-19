@@ -26,7 +26,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
     public partial class Diseño_Venta : System.Web.UI.Page
     {
+       
+        private string CadenaConexionSID = "BD_SIDSQL";
 
+        private string CadenaConexionISID = "BD_ISIDSQL";
+
+        private string CadenaConexionSSF = "BD_SSF";
 
         private bool isModalVisible = false;
         protected void Page_Load(object sender, EventArgs e)
@@ -251,7 +256,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
             // Realizar la actualización en la base de datos
-            string connectionString = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password";
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -1281,7 +1286,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Obtener el número de diseño de la sesión
                 int numeroDiseno = Convert.ToInt32(Session["NumeroDiseño"]);
 
-                string connectionString = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password";
+                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
                 string queryString = "SELECT ProgramadoVentas FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseno";
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -1317,7 +1322,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Obtener el número de diseño de la sesión
                 int numeroDiseno = Convert.ToInt32(Session["NumeroDiseño2"]);
 
-                string connectionString = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password";
+                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
                 string queryString = "SELECT ProgramadoVentas FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseno";
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -1495,7 +1500,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string usuariologueado = Session["usuariologueado"].ToString();
 
                 // Realizar la conexión a la base de datos y la consulta para obtener el nombre y apellido del usuario
-                string connectionString = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password";
+                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -1567,7 +1572,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Deshabilitar el botón "NuevoDisBit"
             NuevoDisBit.Enabled = false;
-            Grabar.CssClass = "btn btn-sm shadow button-disabled";
+            NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
 
             TextCliente.Enabled = false;
             TextCliente.CssClass = "form-control form-control-sm";
@@ -1593,7 +1598,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Deshabilitar el botón "NuevoDisBit"
             NuevoDisBit.Enabled = false;
-            Grabar.CssClass = "btn btn-sm shadow button-disabled";
+            NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
 
             DeshabilitarDivYContenidoMitad(miDiv);
         }
@@ -2550,7 +2555,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Ejecutar el SqlDataSource
                 SqldatasourceTxt.DataBind();
 
-                string connectionString = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password";
+                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -2774,7 +2779,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Ejecutar el SqlDataSource
                 SqldatasourceTxt.DataBind();
 
-                string connectionString = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password";
+                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -3391,8 +3396,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private void InsertarEnBaseDeDatos(string folderName, string fileName)
         {
-            // Establecer la conexión con la base de datos
-            using (SqlConnection con = new SqlConnection("Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"))
+            // Establecer la conexión con la base de datos          
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
             {
                 con.Open();
 

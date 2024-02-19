@@ -93,7 +93,7 @@
                                                         <div class="input-group input-group-sm gap-1">
                                                             <asp:Label runat="server" ID="Label4" class="col-form-label-sm">F.Busqueda</asp:Label>
                                                             <asp:SqlDataSource ID="SqlDataSource1" runat="server"
-                                                                ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                                                ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
                                                                 SelectCommand="SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'tblOT' AND COLUMN_NAME IN ('Fecha_Real_Despacho_Produccion', 'Fecha_Entrega_Produccion', 'Fecha_Entrega_Dibujo_Despiece', 'Fecha_Terminada_Despacho', 'Fecha_Terminada_Empaque', 'Fecha_Instalacion', 'Fecha_Final_Instalacion')"></asp:SqlDataSource>
 
                                                             <asp:DropDownList ID="DropDownList1" runat="server" DataSourceID="SqlDataSource1" DataTextField="COLUMN_NAME" DataValueField="COLUMN_NAME" CssClass="form-control-sm form-control">
@@ -179,7 +179,7 @@
                                                             </Columns>
                                                         </asp:DataGrid>
                                                         <asp:SqlDataSource ID="SqlDataSource2" runat="server"
-                                                            ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                                            ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
                                                             SelectCommand="sp_OTsPendientesVPD"
                                                             SelectCommandType="StoredProcedure"></asp:SqlDataSource>
 

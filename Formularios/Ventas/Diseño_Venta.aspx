@@ -587,7 +587,7 @@
                                                         <asp:DropDownList ID="DropDownList1" runat="server" CssClass="form-control form-control-sm" Enabled="false" DataSourceID="SqlDataSource2" DataTextField="NombreCompleto" DataValueField="Cedula">
                                                         </asp:DropDownList>
 
-                                                        <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"
+                                                        <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
                                                             SelectCommand="SELECT Cedula, Nombre + ' ' + Apellidos AS NombreCompleto FROM tblAsesorComercial WHERE Activo = '1' ORDER BY nombre ASC;"></asp:SqlDataSource>
 
 
@@ -623,7 +623,7 @@
                                                                 <asp:DropDownList ID="TextCiuPro" runat="server" DataSourceID="sqlDataSourceCiudades"
                                                                     DataTextField="CiudadDepartamento" DataValueField="id_Ciudad_Aut" />
 
-                                                                <asp:SqlDataSource ID="sqlDataSourceCiudades" runat="server" ConnectionString="Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"
+                                                                <asp:SqlDataSource ID="sqlDataSourceCiudades" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
                                                                     SelectCommand="SELECT tblCiudad.id_Ciudad_Aut, tblCiudad.NombreCiudad + ' - ' + tblDepartamentoPais.NombreDepartamento AS CiudadDepartamento
                                                                         FROM tblCiudad
                                                                         INNER JOIN tblCostoTransporte ON tblCiudad.id_Ciudad_Aut = tblCostoTransporte.tte_ID_Ciudad

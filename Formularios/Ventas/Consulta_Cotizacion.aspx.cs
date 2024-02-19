@@ -8,11 +8,17 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Excel = Microsoft.Office.Interop.Excel;
 using Microsoft.Office.Interop.Excel;
+using System.Configuration;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
     public partial class Consulta_Cotizacion : System.Web.UI.Page
     {
+        private string CadenaConexionSID = "BD_SIDSQL";
+
+        private string CadenaConexionISID = "BD_ISIDSQL";
+
+        private string CadenaConexionSSF = "BD_SSF";
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -29,7 +35,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     string usuariologueado = Session["CedulaLogeada"].ToString();
 
                     // Realizar la conexión a la base de datos y la consulta para obtener el nombre y apellido del usuario
-                    string connectionString = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password";
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
                         connection.Open();
@@ -81,7 +88,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void LoadEstados()
         {
 
-            string connectionString = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             string query = "SELECT Descripción_Estado FROM tblEstado_Cotización";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -753,7 +760,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string consulta = "SELECT * FROM tblSeguimientoCotizacion WHERE Cotización = @Cotizacion ORDER BY Fecha_Seguimiento DESC";
 
                 // Utilizar un SqlConnection y un SqlCommand para ejecutar la consulta
-                using (SqlConnection connection = new SqlConnection("Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"))
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
                 {
                     using (SqlCommand cmd = new SqlCommand(consulta, connection))
                     {
@@ -787,7 +794,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string cotizacion = Session["SelectCotizacion"] as string;
 
                 // Tu cadena de conexión a la base de datos
-                string connectionString = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password";
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                 // Consulta SQL para la inserción
                 string consulta = "INSERT INTO tblSeguimientoCotizacion (Cotización, Fecha_Seguimiento, Observacion) VALUES (@Cotizacion, GETDATE(), @Observacion)";

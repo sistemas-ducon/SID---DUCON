@@ -119,7 +119,7 @@
                                                         <asp:BoundColumn DataField="Plano" HeaderText="Plano" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     </Columns>
                                                 </asp:DataGrid>
-                                                <asp:SqlDataSource runat="server" ID="DataGridConsultaCotizaciones" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                                <asp:SqlDataSource runat="server" ID="DataGridConsultaCotizaciones" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
                                                     SelectCommand="cta_Cotizaciones_Por_Vendedor" SelectCommandType="StoredProcedure">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="TextAsesor" PropertyName="Text" Name="NombreAsesor" Type="String"></asp:ControlParameter>
@@ -291,7 +291,7 @@
                                                 <asp:BoundColumn DataField="Fecha_Respuesta" HeaderText="F.Respuesta" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                             </Columns>
                                         </asp:DataGrid>                                      
-                                        <asp:SqlDataSource runat="server" ID="DataGridPorEstado" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="cta_Cotizaciones_Por_Estado" SelectCommandType="StoredProcedure">
+                                        <asp:SqlDataSource runat="server" ID="DataGridPorEstado" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="cta_Cotizaciones_Por_Estado" SelectCommandType="StoredProcedure">
                                             <SelectParameters>
                                                 <asp:ControlParameter ControlID="TextAsesortab2" PropertyName="Text" Name="NombreAsesor" Type="String"></asp:ControlParameter>
                                                 <asp:ControlParameter ControlID="TextCotizacionEntreInicio2" PropertyName="Text" DbType="Date" Name="FechaInicio"></asp:ControlParameter>
@@ -463,7 +463,7 @@
                                                         <asp:BoundColumn DataField="Obra" HeaderText="Obra" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     </Columns>
                                                 </asp:DataGrid>
-                                                <asp:SqlDataSource runat="server" ID="DataGridSeguimiento" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="sp_Cotizaciones_Seguimiento" SelectCommandType="StoredProcedure">
+                                                <asp:SqlDataSource runat="server" ID="DataGridSeguimiento" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="sp_Cotizaciones_Seguimiento" SelectCommandType="StoredProcedure">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="TextAsesorSeguimiento" PropertyName="Text" Name="NombreAsesor" Type="String"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="IdDateInicial" PropertyName="Text" DbType="Date" Name="FechaInicio"></asp:ControlParameter>
@@ -681,7 +681,7 @@
                                                 </Columns>
                                             </asp:DataGrid>
                                             <asp:SqlDataSource runat="server" ID="DataGridUltimoContacto" ConnectionString="<%$
-                                   ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                   ConnectionStrings:BD_SIDSQL %>"
                                                 SelectCommand="SELECT 
     tblUltiContCome.uccNit,
     tblUltiContCome.uccRazonSocial AS Nombre,

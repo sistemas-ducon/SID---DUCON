@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Configuration;
 using System.Linq;
 using System.Net.Mail;
 using System.Net;
@@ -20,6 +21,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
     {
         private string id;
         private string pedido;
+
+        private string CadenaConexionSID = "BD_SIDSQL";
+
+        private string CadenaConexionISID = "BD_ISIDSQL";
+
+        private string CadenaConexionSSF = "BD_SSF";
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -68,7 +75,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         {
             DataTable dt = new DataTable();
 
-            using (SqlConnection con = new SqlConnection("Data Source=172.16.30.3;Initial Catalog=BD_ISIDSQL_PRUEBA;Persist Security Info=True;User ID=pcadmin;Password=password"))
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 string query = "SELECT tblTipoObservacion.id_TipoObservacion, CONCAT_WS('-', tblTipoObservacion.Aplicacion, tblTipoObservacion.Descripcion) AS TipoObservacion " +
                                "FROM tblTipoObservacion " +
@@ -95,7 +102,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(pedido))
             {
                 // Realizar la conexión y la consulta a la base de datos
-                string connectionString = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"; // Reemplaza con tu cadena de conexión
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -309,7 +316,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         // Método para realizar la actualización en la base de datos
         private void UpdateDatabase(string idObservacion, string cedulaLogeada)
         {
-            string connectionString = "Data Source=172.16.30.3;Initial Catalog=BD_ISIDSQL_PRUEBA;Persist Security Info=True;User ID=pcadmin;Password=password"; // Reemplaza con tu cadena de conexión
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -345,8 +352,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             // Realizar la consulta SQL utilizando el idObservacion obtenido
             string query = "SELECT  CASE WHEN Leida = 1 THEN 'SI' ELSE 'NO' END AS LeidaText,* FROM tblOTObservacion_Receptor WHERE id_Observacion = '" + idObservacion + "'";
 
-     
-            SqlDataAdapter adapter = new SqlDataAdapter(query, "Data Source=172.16.30.3;Initial Catalog=BD_ISIDSQL_PRUEBA;Persist Security Info=True;User ID=pcadmin;Password=password");
+              string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+            SqlDataAdapter adapter = new SqlDataAdapter(query, connectionString);
             DataSet dataSet = new DataSet();
             adapter.Fill(dataSet);
 

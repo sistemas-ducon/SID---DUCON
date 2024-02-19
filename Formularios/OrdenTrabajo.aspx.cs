@@ -188,9 +188,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-       
-
-
         protected void dtacboTipoPedido_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -204,6 +201,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (!estadisticaVenta)
             {
                 LlenarCboPedidoBase();
+
+                // Establecer el texto del TextBox
+                txtCotizacion.Text = "NO TIENE";
+                txtOrdenCompra.Text = "NA";
+                cbxComisionCompart.Enabled = false;
+
+                // Invocar manualmente el evento OnTextChanged
+                EventArgs args = new EventArgs();
+                txtCotizacion_TextChanged(txtCotizacion, args);
+            }
+            else
+            {
+                txtCotizacion.Text = "";
+                txtOrdenCompra.Text = "";
+                cbxComisionCompart.Enabled = true;
             }
 
             cboPedidoBase.DataBind();
@@ -450,7 +462,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             Session.Remove("ModalMostrado");
 
-        }
+        } 
 
         protected void NuevaOTDespuesDeCargarNIT()
         {
@@ -776,7 +788,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void ddlCiudad_DataBound(object sender, EventArgs e)
         {
-            // Agregar el primer  elemento de los datagrid como "Seleccione"
+            
             ddlCiudad.Items.Insert(0, new ListItem(" ", ""));
         }
 
@@ -1201,6 +1213,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             tbEmail.Text = leer["mail_Contacto"].ToString();
             tbRecibe.Text = leer["RecibeElPedido"].ToString();
             string Ciudad = leer["Ciudad"].ToString() + " - " + leer["Región"].ToString();
+            ddlCiudad.DataBind(); // Forzar el enlace de datos
             foreach (ListItem item in ddlCiudad.Items)
             {
                 if (item.Text == Ciudad)
@@ -2216,6 +2229,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             Cargar_Plano(id, pedido);
             Cargar_Despiece_Plano();
+
+           
 
             if (Session["NuevoPedido"] != null && (bool)Session["NuevoPedido"])
             {

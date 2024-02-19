@@ -15,6 +15,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 {
     public partial class OTsPendientes : System.Web.UI.Page
     {
+        private string CadenaConexionSID = "BD_SIDSQL";
+
+        private string CadenaConexionISID = "BD_ISIDSQL";
+
+        private string CadenaConexionSSF = "BD_SSF";
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -32,7 +38,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         private void CargarDatosPorDefecto()
         {
             // Nombre de la conexión a la base de datos
-            string connectionString = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"; // Reemplaza esto con tu cadena de conexión
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -77,7 +83,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             bool radioButton2Marcado = RadioButton2.Checked;
 
             // Nombre de la conexión a la base de datos
-            string connectionString = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"; // Reemplaza esto con tu cadena de conexión
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {

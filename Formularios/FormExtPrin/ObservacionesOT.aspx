@@ -83,7 +83,7 @@
                                                                 <asp:BoundColumn DataField="Id_Observacion" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                             </Columns>
                                                         </asp:DataGrid>
-                                                        <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL_PRUEBAConnectionString%>"
+                                                        <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL%>"
                                                             SelectCommand="SELECT O.Id_OT, O.Consecutivo_Pedido, O.FechaObservacion, O.Nombre_Emisor, T.Aplicacion, T.Descripcion, O.Observacion, O.Id_Observacion
                                                                FROM tblOTObservacion AS O
                                                                INNER JOIN tblTipoObservacion AS T ON O.ID_TipoObservacion = T.ID_TipoObservacion
@@ -129,7 +129,7 @@
                                                         <asp:BoundColumn DataField="FechaLectura" HeaderText="F.Lectura" ItemStyle-CssClass="auto-width-column" />
                                                     </Columns>
                                                 </asp:DataGrid>
-                                                <asp:SqlDataSource ID="SqlDataSource3" runat="server" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL_PRUEBAConnectionString %>"
+                                                <asp:SqlDataSource ID="SqlDataSource3" runat="server" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL %>"
                                                       SelectCommand="SELECT Nombre_Receptor, 
                                                       CASE 
                                                         WHEN Leida = 1 THEN 'SI'
@@ -159,7 +159,7 @@
                                                 </Columns>
                                             </asp:DataGrid>
 
-                                            <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL_PRUEBAConnectionString%>"
+                                            <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL%>"
                                                 SelectCommand="SELECT Cedula, Nombre + ' ' + Apellidos AS NombreCompleto, Cargo
                                                     FROM tblEmpleado
                                                     WHERE Activo = 1 AND ReceptorObservaciones = 1
@@ -234,7 +234,7 @@
                                                      <asp:BoundColumn DataField="Nombre_Obra" ItemStyle-CssClass="auto-width-column" visible="false"/>
                                                 </Columns>
                                            </asp:DataGrid>
-                                         <asp:SqlDataSource ID="SqlDataSource5" runat="server" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL_PRUEBAConnectionString %>"
+                                         <asp:SqlDataSource ID="SqlDataSource5" runat="server" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL %>"
                                              SelectCommand="SELECT   tblOTObservacion_Receptor.Nombre_Receptor, tblOTObservacion.*, CASE 
                                                         WHEN tblOTObservacion_Receptor.Leida = 1 THEN 'SI'
                                                         ELSE 'NO'
@@ -288,7 +288,7 @@
                                                 <asp:BoundColumn DataField="Observacion" ItemStyle-CssClass="auto-width-column" Visible="false" />
                                             </Columns>
                                         </asp:DataGrid>
-                                        <asp:SqlDataSource ID="SqlDataSource4" runat="server" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL_PRUEBAConnectionString %>"
+                                        <asp:SqlDataSource ID="SqlDataSource4" runat="server" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL %>"
                                             SelectCommand="SELECT CASE WHEN tblOTObservacion_Receptor.Leida = 1 THEN 'SI'
                                                         ELSE 'NO'
                                                       END AS LeidaTexto, tblOTObservacion_Receptor.*, tblOTObservacion.*

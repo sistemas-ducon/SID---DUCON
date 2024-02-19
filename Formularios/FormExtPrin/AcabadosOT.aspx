@@ -98,7 +98,7 @@
                                                             </Columns>
                                                         </asp:DataGrid>
 
-                                                        <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                                        <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
                                                             SelectCommand="SELECT * FROM tblGrupoObjetoparaAcabado">
                                                             <SelectParameters>
                                                             </SelectParameters>
@@ -128,7 +128,7 @@
                                                             <asp:BoundColumn DataField="Descripcion_Grupo" ItemStyle-CssClass="auto-width-column" />
                                                         </Columns>
                                                     </asp:DataGrid>
-                                                    <asp:SqlDataSource ID="SqlDataSource4" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                                    <asp:SqlDataSource ID="SqlDataSource4" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
                                                         SelectCommand="SELECT
                                                                 tblGrupoObjetoParaAcabado.ID_GrupoObjetoparaAcabado,
                                                                 tblGrupodeAcabado.ID_GrupoAcabado,
@@ -171,7 +171,7 @@
                                                         </asp:DataGrid>
 
                                                         <asp:SqlDataSource ID="SqlDataSource3" runat="server"
-                                                            ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                                            ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
                                                             SelectCommand="SELECT *, CONCAT(Descripcion_Acabado, ' (', Entrega, 'D)') AS Acab FROM tblacabado WHERE Id_GrupoAcabado = @ID_GrupoObjetoParaAcabado AND Activo = 1 ORDER BY Descripcion_Acabado ASC">
                                                             <SelectParameters>
                                                                 <asp:Parameter Name="ID_GrupoObjetoParaAcabado" Type="String" />

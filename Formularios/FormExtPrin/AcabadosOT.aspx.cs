@@ -16,6 +16,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 {
     public partial class AcabadosOT : System.Web.UI.Page
     {
+        private string CadenaConexionSID = "BD_SIDSQL";
+
+        private string CadenaConexionISID = "BD_ISIDSQL";
+
+        private string CadenaConexionSSF = "BD_SSF";
+
         protected void Page_Load(object sender, EventArgs e)
         {      
             botonGrabarValidacion();
@@ -58,8 +64,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 string consultaInsert = "INSERT INTO tblOTAcabados (Id_OT, Consecutivo_Pedido, ID_Acabado, ID_GrupoObjetoparaAcabado, Detalle_Adicional, AcabadoVentas) " +
                                         "VALUES ('" + idOT + "', '" + consecutivoPedido + "', " + valorIDAcabado + ", " + valorIDGrupoParaAcabado + ", '" + valorTextBox1 + "', '" + valorLabel + "');";
 
-                string cadenaConexion = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"; 
-                using (SqlConnection conexion = new SqlConnection(cadenaConexion))
+            string cadenaConexion = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection conexion = new SqlConnection(cadenaConexion))
                 {
                     conexion.Open(); // Abre la conexión a la base de datos
 
@@ -170,7 +176,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             try
             {
-               string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+               string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                 // Consulta SQL para verificar la condición en la base de datos
                 string consultaSQL = "SELECT COUNT(*) FROM tblOT " +
@@ -221,7 +227,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                                     AND O.Consecutivo_Pedido = @ConsecutivoPedido
                                     ORDER BY A.Descripcion_Acabado";
 
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -381,7 +387,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected void BotonSiEliminar_Click(object sender, EventArgs e)
         {
             // Definir la cadena de conexión
-            string cadenaConexion = "Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password";
+            string cadenaConexion = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             // Obtener el valor de id_OTAcabados
             string valor_id_OTAcabados = ObtenerValorId_OTAcabados(); // Ajusta esto según cómo obtienes el valor
