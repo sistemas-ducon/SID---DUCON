@@ -75,7 +75,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         {
             DataTable dt = new DataTable();
 
-            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString))
             {
                 string query = "SELECT tblTipoObservacion.id_TipoObservacion, CONCAT_WS('-', tblTipoObservacion.Aplicacion, tblTipoObservacion.Descripcion) AS TipoObservacion " +
                                "FROM tblTipoObservacion " +

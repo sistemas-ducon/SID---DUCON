@@ -186,7 +186,7 @@
                                                 <asp:BoundColumn DataField="Cedula" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                             </Columns>
                                         </asp:DataGrid>
-                                        <asp:SqlDataSource runat="server" ID="SqlDataSourceFecha" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                        <asp:SqlDataSource runat="server" ID="SqlDataSourceFecha" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
                                             SelectCommand="SELECT A.CotizaciónOK, A.ProgramadoVentas, A.PasarACotizar, A.TerminadoDibujo, A.Pausado, A.Numero_Diseño, A.Nombre_Diseño,  A.Asesor, A.Fecha_Ingreso, A.Fecha_Programada_Entrega, A.UltimaActivacion, A.Cliente, B.Cedula FROM tblDiseño A INNER JOIN tblAsesorComercial B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor WHERE A.Fecha_Ingreso BETWEEN @FechaInicio AND @FechaFin AND B.Cedula = @Cedula">
                                             <SelectParameters>
                                                 <asp:ControlParameter Name="FechaInicio" ControlID="TextFechDeIng" PropertyName="Text" />
@@ -195,7 +195,7 @@
                                             </SelectParameters>
                                         </asp:SqlDataSource>
 
-                                        <asp:SqlDataSource runat="server" ID="SqlDataSourceNumeroDis" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                        <asp:SqlDataSource runat="server" ID="SqlDataSourceNumeroDis" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
                                             SelectCommand="SELECT A.CotizaciónOK, A.ProgramadoVentas, A.PasarACotizar, A.TerminadoDibujo, A.Pausado, A.Numero_Diseño, A.Nombre_Diseño,  A.Asesor, A.Fecha_Ingreso, A.Fecha_Programada_Entrega, A.UltimaActivacion, A.Cliente, B.Cedula FROM tblDiseño A INNER JOIN tblAsesorComercial B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor WHERE A.Numero_Diseño = @NumeroDis AND B.Cedula = @Cedula">
                                             <SelectParameters>
                                                 <asp:ControlParameter Name="NumeroDis" ControlID="TextBox3" PropertyName="Text" />
@@ -203,7 +203,7 @@
                                             </SelectParameters>
                                         </asp:SqlDataSource>
 
-                                        <asp:SqlDataSource runat="server" ID="SqlDataSourceNombreDiseño" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                        <asp:SqlDataSource runat="server" ID="SqlDataSourceNombreDiseño" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
                                             SelectCommand="SELECT A.CotizaciónOK, A.ProgramadoVentas, A.PasarACotizar, A.TerminadoDibujo, A.Pausado, A.Numero_Diseño, A.Nombre_Diseño, A.Asesor, A.Fecha_Ingreso, A.Fecha_Programada_Entrega, A.UltimaActivacion, A.Cliente, B.Cedula FROM tblDiseño A INNER JOIN tblAsesorComercial B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor WHERE A.Nombre_Diseño LIKE '%' + @NombreDiseño + '%' AND B.Cedula = @Cedula">
                                             <SelectParameters>
                                                 <asp:ControlParameter Name="NombreDiseño" ControlID="TextBox5" PropertyName="Text" />
@@ -211,7 +211,7 @@
                                             </SelectParameters>
                                         </asp:SqlDataSource>
 
-                                        <asp:SqlDataSource runat="server" ID="SqlDataSourceCliente" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                        <asp:SqlDataSource runat="server" ID="SqlDataSourceCliente" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
                                             SelectCommand="SELECT A.CotizaciónOK, A.ProgramadoVentas, A.PasarACotizar, A.TerminadoDibujo, A.Pausado, A.Numero_Diseño, A.Nombre_Diseño,  A.Asesor, A.Fecha_Ingreso, A.Fecha_Programada_Entrega, A.UltimaActivacion, A.Cliente, B.Cedula FROM tblDiseño A INNER JOIN tblAsesorComercial B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor WHERE A.Cliente LIKE '%' + @Cliente + '%' AND B.Cedula = @Cedula">
                                             <SelectParameters>
                                                 <asp:ControlParameter Name="Cliente" ControlID="TextBox4" PropertyName="Text" />
@@ -384,7 +384,7 @@
                                                                 </asp:DataGrid>
 
                                                                 <asp:SqlDataSource ID="SqlDataSource3" runat="server"
-                                                                    ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                                                    ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
                                                                     SelectCommand="SELECT TOP 0 Archivo, Observacion, Usuario, FechaRegistro, Id_OT FROM tblDocumentacion"></asp:SqlDataSource>
 
                                                             </div>
@@ -587,7 +587,7 @@
                                                         <asp:DropDownList ID="DropDownList1" runat="server" CssClass="form-control form-control-sm" Enabled="false" DataSourceID="SqlDataSource2" DataTextField="NombreCompleto" DataValueField="Cedula">
                                                         </asp:DropDownList>
 
-                                                        <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                                        <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
                                                             SelectCommand="SELECT Cedula, Nombre + ' ' + Apellidos AS NombreCompleto FROM tblAsesorComercial WHERE Activo = '1' ORDER BY nombre ASC;"></asp:SqlDataSource>
 
 
@@ -623,7 +623,7 @@
                                                                 <asp:DropDownList ID="TextCiuPro" runat="server" DataSourceID="sqlDataSourceCiudades"
                                                                     DataTextField="CiudadDepartamento" DataValueField="id_Ciudad_Aut" />
 
-                                                                <asp:SqlDataSource ID="sqlDataSourceCiudades" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                                                <asp:SqlDataSource ID="sqlDataSourceCiudades" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
                                                                     SelectCommand="SELECT tblCiudad.id_Ciudad_Aut, tblCiudad.NombreCiudad + ' - ' + tblDepartamentoPais.NombreDepartamento AS CiudadDepartamento
                                                                         FROM tblCiudad
                                                                         INNER JOIN tblCostoTransporte ON tblCiudad.id_Ciudad_Aut = tblCostoTransporte.tte_ID_Ciudad
@@ -940,7 +940,7 @@
                                                                 </Columns>
                                                                 <ItemStyle CssClass="fila-verde" />
                                                             </asp:DataGrid>
-                                                            <asp:SqlDataSource runat="server" ID="SqldatasourceTxt" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                                            <asp:SqlDataSource runat="server" ID="SqldatasourceTxt" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
                                                                 SelectCommand="SELECT pd.[id_PlanoDiseno], pd.[Plano], p.[RealizadoPor], p.[Area], pd.[SubTotalZona], pd.[Cantidad], pd.[SubTotalZona], pd.[Opcion], pd.[Observacion], pd.[Composicion], pd.[FechalecturaDespiece]
                                                                    FROM [tblPlanoDiseño] pd
                                                                    INNER JOIN [tblPlano] p ON pd.[Plano] = p.[Plano]
@@ -1038,7 +1038,7 @@
                                                                     <asp:BoundColumn DataField="Cedula" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                                 </Columns>
                                                             </asp:DataGrid>
-                                                            <asp:SqlDataSource runat="server" ID="SqlDataSource1" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                                            <asp:SqlDataSource runat="server" ID="SqlDataSource1" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
                                                                 SelectCommand="sp_ProBitacoraOTs" SelectCommandType="StoredProcedure">
                                                                 <SelectParameters>
 
@@ -1161,7 +1161,7 @@
                                                                                 </Columns>
                                                                             </asp:DataGrid>
 
-                                                                            <asp:SqlDataSource runat="server" ID="SqlDataSource4" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                                                            <asp:SqlDataSource runat="server" ID="SqlDataSource4" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
                                                                                 SelectCommand="sp_ResumenDibujante" SelectCommandType="StoredProcedure"></asp:SqlDataSource>
                                                                         </div>
                                                                     </div>
@@ -1229,7 +1229,7 @@
                                                                     <asp:BoundColumn DataField="Urgente" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                                 </Columns>
                                                             </asp:DataGrid>
-                                                            <asp:SqlDataSource runat="server" ID="DataGridDiseño" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                                            <asp:SqlDataSource runat="server" ID="DataGridDiseño" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
                                                                 SelectCommand="sp_ProBitacoraDise" SelectCommandType="StoredProcedure">
                                                                 <SelectParameters>
 
@@ -1303,7 +1303,7 @@
                                                                     <asp:BoundColumn DataField="SC_Ubicacion" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>              
                                                                 </Columns>
                                                             </asp:DataGrid>
-                                                            <asp:SqlDataSource runat="server" ID="DataGridDiseñosPorFecha" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="sp_ProBitacoraShowCase" SelectCommandType="StoredProcedure">
+                                                            <asp:SqlDataSource runat="server" ID="DataGridDiseñosPorFecha" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="sp_ProBitacoraShowCase" SelectCommandType="StoredProcedure">
                                                                 <SelectParameters>
 
                                                                     <asp:SessionParameter Name="NombreUsuario" SessionField="usuariologueado" Type="String" DefaultValue="ValorPorDefecto" />
@@ -1366,7 +1366,7 @@
                                                                 </Columns>
                                                                
                                                             </asp:DataGrid>
-                                                            <asp:SqlDataSource runat="server" ID="DataGridRenderPorFechaYAsesor" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="sp_ProBitacoraRender" SelectCommandType="StoredProcedure">
+                                                            <asp:SqlDataSource runat="server" ID="DataGridRenderPorFechaYAsesor" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="sp_ProBitacoraRender" SelectCommandType="StoredProcedure">
                                                                 <SelectParameters>
 
                                                                     <asp:SessionParameter Name="Cedula" SessionField="CedulaLogeada" Type="String" DefaultValue="ValorPorDefecto" />

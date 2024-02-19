@@ -256,7 +256,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
             // Realizar la actualización en la base de datos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -529,7 +529,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (!string.IsNullOrEmpty(IdCLiente) && !string.IsNullOrEmpty(IdContaco))
                 {
-                    string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
@@ -1286,7 +1286,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Obtener el número de diseño de la sesión
                 int numeroDiseno = Convert.ToInt32(Session["NumeroDiseño"]);
 
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                 string queryString = "SELECT ProgramadoVentas FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseno";
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -1322,7 +1322,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Obtener el número de diseño de la sesión
                 int numeroDiseno = Convert.ToInt32(Session["NumeroDiseño2"]);
 
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                 string queryString = "SELECT ProgramadoVentas FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseno";
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -1500,7 +1500,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string usuariologueado = Session["usuariologueado"].ToString();
 
                 // Realizar la conexión a la base de datos y la consulta para obtener el nombre y apellido del usuario
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -2132,7 +2132,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         }
                         else
                         {                       
-                            string mensajePersonalizado = "No se afecto ninguna fila";
+                            string mensajePersonalizado = "El Diseño ya fue aprobado para Dibujo y Despiece, este departamento lo debe habilitar para ser modificado";
                             string urlRedireccion = "Ventas/Diseño_Venta.aspx";
                             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                         }
@@ -2175,7 +2175,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private bool RealizarInsercion()
         {
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 connection.Open();
 
@@ -2309,7 +2309,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string numeroDiseño = lblNumDise.Text;
 
             // Crear la conexión a la base de datos
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 // Abrir la conexión
                 connection.Open();
@@ -2555,7 +2555,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Ejecutar el SqlDataSource
                 SqldatasourceTxt.DataBind();
 
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -2779,7 +2779,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Ejecutar el SqlDataSource
                 SqldatasourceTxt.DataBind();
 
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -3397,7 +3397,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void InsertarEnBaseDeDatos(string folderName, string fileName)
         {
             // Establecer la conexión con la base de datos          
-            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 con.Open();
 
@@ -3481,7 +3481,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Ruta completa del archivo a eliminar
                 string filePathToDelete = Path.Combine(@"\\SRVFS\PruebaDocumentacion\", idOTToDelete, archivoToDelete);
 
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
