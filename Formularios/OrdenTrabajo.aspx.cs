@@ -42,15 +42,26 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private List<TextBox> listaTextBoxes;
         private List<DropDownList> listaDropDownLists;
 
+        private string CadenaConexionSID = "BD_SIDSQL";
+        private string CadenaConexionISID = "BD_ISIDSQL";
+        private string CadenaConexionSSF = "BD_SSF";
+
         //Variable para Calcular Fecha Empaque 
         private int DiasMinimoparaProduccion = 0;
         private int DiasPorDefectoParaProduccion = 0;
         private int DiasHabiles = 0;
+
+        public double TotalObraMas = 0;
+        public double TotalObraMenos = 0;
+        public double TotalSaldo;
+
         private DateTime FechaEmpaque;
         private List<int> ID_Acabados = new List<int>();
         private List<int> ID_GruposObjetoparaAcabados = new List<int>();
         private List<string> Detalles_Adicionales = new List<string>();
         private List<string> AcabadosVentas = new List<string>();
+
+
 
 
 
@@ -173,7 +184,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     {
                         // Si 'MostrarModal' es false o null, establecer 'ModalMostrado' en null
                         Session["ModalMostrado"] = null;
-                    }            
+                    }
 
                     CargarVariablesDeSesionContable();
 
@@ -187,6 +198,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         }
+
+
+
 
         protected void dtacboTipoPedido_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -229,7 +243,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Realizar la consulta para obtener el valor de EstadisticaVenta según el Id_TipoPedido
             // Puedes utilizar la lógica de acceso a datos que prefieras, por ejemplo, SqlConnection y SqlCommand
             // Aquí es un ejemplo simplificado
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 connection.Open();
                 using (SqlCommand command = new SqlCommand("SELECT EstadisticaVenta FROM tblTipoPedido WHERE Id_TipoPedido = @Id_TipoPedido", connection))
@@ -258,7 +272,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 // Realizar la consulta para obtener los valores de PedidoBase y EstadisticaVenta
 
-                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
                 {
                     connection.Open();
                     using (SqlCommand command = new SqlCommand("SELECT Consecutivo_Pedido, EstadisticaVenta FROM tblTipoPedido INNER JOIN tblOT ON tblTipoPedido.Id_TipoPedido = tblOT.Id_TipoPedido WHERE tblOT.Id_OT = @Id_OT AND EstadisticaVenta = '1' ORDER BY tblOT.Consecutivo_Pedido DESC", connection))
@@ -300,7 +314,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                  "\nObservación para Compras: \n\n" +
                                  "\nObservación para Despacho: ";
         }
- 
+
         protected void Cancelar_Click(object sender, EventArgs e)
         {
 
@@ -446,18 +460,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
         protected void NuevaOT_Click(object sender, EventArgs e)
-        {         
+        {
             if (Session["ModalMostrado"] == null)
             {
                 // Mostrar el modal solo si no se ha mostrado antes
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#LlenarNIT').modal('show');", true);
-              
+
             }
             else
             {
                 // Si la variable de sesión indica que el modal ya se ha mostrado, ejecutar el método
                 NuevaOTDespuesDeCargarNIT();
-       
+
             }
 
             Session.Remove("ModalMostrado");
@@ -801,7 +815,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private void CargarAsesoresEnDropDownList()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -1025,7 +1039,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             int numero = 0;
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -1055,7 +1069,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             List<int> numeros = new List<int>();
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -1100,7 +1114,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             pedido = Session["pedido"]?.ToString();
 
 
-            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 sqlconectar.Open();
 
@@ -1117,7 +1131,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             Session["IdContactoFactSession"] = IDCLienteConstacto;
 
                         }
-                       
+
 
 
                         // Extraer datos y asignarlos a controles
@@ -1129,7 +1143,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Obtener datos de cotización y asignarlos a controles
                         AssignCotizacionData(id, pedido, txtCotizacion.Text);
 
-                       
+
                     }
                 }
             }
@@ -1138,7 +1152,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             Cargar_Plano(id, pedido);
             Cargar_Despiece_Plano();
-      
+
             CarteraVencida();
 
             ddlNumbers.Enabled = true;
@@ -1260,6 +1274,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             calcularDescuento();
             calcularGranTotal();
+            CalcularSaldo();
 
             sqlDataSource1.DataBind();
             tbPedDepen.DataBind();
@@ -1271,7 +1286,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private void AssignCotizacionData(string id, string pedido, string cotizacion)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -1317,7 +1332,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private bool EstaCerrada(string id, string pedido)
         {
-            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 sqlconectar.Open();
                 using (SqlCommand cmd = new SqlCommand("select * from tblOT where Id_OT = @Id and Consecutivo_Pedido = @Con and Cerrada = '0'", sqlconectar))
@@ -1343,7 +1358,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             bool estaCerrada = EstaCerrada(id, pedido);
 
             // Realice la consulta
-            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 sqlconectar.Open();
                 using (SqlCommand cmd = new SqlCommand("select * from tblOT where Id_OT = @Id and Consecutivo_Pedido = @Con and Terminado_Ventas = @C", sqlconectar))
@@ -1443,7 +1458,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             bool estaCerrada = EstaCerrada(id, pedido);
 
             // Realice la consulta
-            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 sqlconectar.Open();
                 using (SqlCommand cmd = new SqlCommand("select * from tblOT where Id_OT = @Id and Consecutivo_Pedido = @Con and Terminado_Ventas = @C", sqlconectar))
@@ -1543,7 +1558,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             bool estaCerrada = EstaCerrada(id, pedido);
 
             // Realice la consulta
-            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 sqlconectar.Open();
                 using (SqlCommand cmd = new SqlCommand("select * from tblOT where Id_OT = @Id and Consecutivo_Pedido = @Con and Terminado_Ventas = @C", sqlconectar))
@@ -1686,7 +1701,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             string cedula = txtAsesor.Text.Trim(); // Obtener el valor del TextBox txtAsesor
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             string consulta = "SELECT Activo FROM tblAsesorComercial WHERE Cedula = @Cedula ORDER BY Apellidos";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -1703,13 +1718,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     int activo = Convert.ToInt32(resultado);
 
                     if (activo == 0)
-                    {                     
+                    {
                         string contenidoModalValAse = "El asesor con Codigo: " + cedula + " de este pedido esta inactivo, o fue borrado del sistema ";
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ValidarAsesor').modal('show'); $('#ValidarAsesor1').text('" + contenidoModalValAse + "');", true);
                     }
                     else if (activo == 1)
                     {
-                      
+
                     }
                     else
                     {
@@ -1719,7 +1734,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 else
                 {
                     // Mostrar mensaje de error porque no se encontró ningún registro
-                   
+
                 }
             }
         }
@@ -1737,7 +1752,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                               "AND edvsignodocu = 1 " +
                               "ORDER BY edvfechvenc DESC";
 
-            string connectionString = ConfigurationManager.ConnectionStrings["SSF_PRUEBAS"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSSF].ConnectionString;
 
             // Crear una lista para almacenar los resultados
             List<CustomObject> listaResultados = new List<CustomObject>();
@@ -1979,7 +1994,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private void ConsultarCotizacion(string cotizacion)
         {
-            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 sqlconectar.Open();
                 using (SqlCommand cmd = new SqlCommand("SELECT * FROM tblCotización WHERE cotización = @cotizacion", sqlconectar))
@@ -2073,7 +2088,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
 
             // Realizar la consulta para verificar los permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             string query = "SELECT * FROM tblPermiso_Empleado WHERE ID_Empleado = @CedulaLogueada AND ID_Permiso = '22'";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -2100,7 +2115,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string consultaActual = "SELECT CompartidoCon FROM tblClienteObra INNER JOIN tblClienteObraContacto ON tblClienteObra.Nit = tblClienteObraContacto.cocNIT WHERE tblClienteObraContacto.IdContacto = @IDContacto_Cliente";
             string cadenaActual = ""; // Aquí almacenaremos la cadena actual de nombres
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -2152,7 +2167,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
 
 
-            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 sqlconectar.Open();
                 using (SqlCommand cmd = new SqlCommand("SELECT tblClienteObraContacto.*, tblClienteObra.* FROM tblClienteObra INNER JOIN tblClienteObraContacto ON tblClienteObra.Nit = tblClienteObraContacto.cocNIT WHERE tblClienteObraContacto.IdContacto = @IdContactoCliente", sqlconectar))
@@ -2187,9 +2202,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             pedido = Session["pedido2"]?.ToString();
 
 
+            Session["Id_OT"] = Session["Id_OT2"]?.ToString();
+            Session["pedido"] = Session["pedido2"]?.ToString();
+
             try
             {
-                using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+                using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
                 {
                     sqlconectar.Open();
 
@@ -2342,6 +2360,82 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             txtGtotal.Text = string.Format("{0:N0}", double.Parse(ValorGranTotal.ToString()));
         }
 
+        protected void CalcularSaldo()
+        {
+            DataTable InfoOT = ConsultarInformacionPedidoSaldo();
+
+            foreach (DataRow Row in InfoOT.Rows)
+            {
+                bool AfectaBola = Convert.ToBoolean(Row["AfectaBolsa"].ToString());
+                double ValorBolsa = double.Parse(Row["ValorBolsa"].ToString());
+                double ValorPedido = double.Parse(Row["ValorPedido"].ToString());
+
+                if (AfectaBola)
+                {
+                    TotalObraMas += ValorBolsa;
+                    TotalObraMenos += ValorPedido;
+                }
+
+            }
+
+            lblSaldoOT.Text = (TotalObraMas - TotalObraMenos).ToString("#,##0");
+            decimal saldo = decimal.Parse(lblSaldoOT.Text.Replace(",", ""));
+
+            // Asignar el color de fondo dependiendo del valor del saldo
+            if (saldo < 0)
+            {
+                lblSaldoOT.BackColor = System.Drawing.Color.Red;
+            }
+            else
+            {
+                lblSaldoOT.BackColor = System.Drawing.Color.Lime;
+            }
+
+            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "COMPRAS")
+            {
+                lblSaldoOT.Visible = true;
+                lbsaldo.Visible = true;
+            }
+
+
+
+        }
+
+        private DataTable ConsultarInformacionPedidoSaldo()
+        {
+
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT tblOT.Consecutivo_Pedido,tblTipoPedido.*,tblOT.Terminada_Facturacion,tblOT.Fecha_Factura,tblOT.Precio_Venta," +
+                              "tblOT.ValorPedido,tblOT.ValorBolsa,tblOT.Descuento,tblOT.Precio_Venta-tblOT.Descuento*tblOT.Precio_Venta/100 AS Subtotal," +
+                              "tblTipoPedido.EstadisticaVenta,tblOT.PedidoBase" +
+                              " FROM tblTipoPedido " +
+                              "INNER JOIN tblOT ON tblTipoPedido.Id_TipoPedido = tblOT.Id_TipoPedido " +
+                              "WHERE (((tblOT.Id_OT)=@Id_OT)) ORDER BY tblOT.Consecutivo_Pedido DESC";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@Id_OT", tbOT.Text);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+
+            // Retorna la DataTable
+            return dataTable;
+
+        }
+
         protected void NuevoPedido_Click(object sender, EventArgs e)
         {
             ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#NuevoPedido').modal('show');", true);
@@ -2393,7 +2487,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
 
             //Conexion a la BD_SIDSQL y traemos el procedimiento almacenado
-            string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string cn = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             SqlConnection sqlconectar = new SqlConnection(cn);
             SqlCommand cmd = new SqlCommand("CtaPlano_OT", sqlconectar)
             {
@@ -2421,7 +2515,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         public void Cargar_Plano2(string plano)
         {
             // Realizamos la consulta SQL para obtener los datos necesarios
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = @"SELECT *	FROM tblPlano 	WHERE Plano  =  @Plano	ORDER BY Plano";
@@ -2454,7 +2548,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         public void Cargar_Despiece_Plano()
         {
-            string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string cn = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(cn))
             {
 
@@ -2536,10 +2630,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 DataGridDespiecePlano.DataBind();
             }
         }
-
-
-       
-
 
 
         // Clase personalizada para almacenar los resultados
@@ -2625,7 +2715,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 BtnQuiObjPla.Enabled = true;
                 BtnQuiObjPla.CssClass = "btn btn-sm shadow button-enabled";
 
-             
+
                 ObjetoEliminar.InnerText = Descri;
                 anchoEliminar.InnerText = Ancho;
             }
@@ -2634,7 +2724,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         // Se Debe Modificar el procedimienato almacenado
         public void LlenarDataGridObjeto(string idPanelNum)
         {
-            string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string cn = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(cn))
             {
                 SqlCommand command = new SqlCommand("Sp_ObtenerDatosModulo", connection);
@@ -2653,7 +2743,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         public void LlenarDataGridModuloObjeto(string idPanelNum)
         {
-            string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string cn = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(cn))
             {
                 SqlCommand command = new SqlCommand("sp_ObtenerDatosModulo1", connection);
@@ -2672,7 +2762,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         public void LlennarDatagridAcabado(string Idmodulo, string IdFamilia)
         {
-            string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string cn = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(cn))
             {
                 SqlCommand command = new SqlCommand("sp_ObtenerAcabadosItemPlano", connection);
@@ -3031,7 +3121,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 //Cargar los Datos del cliente 
 
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -3111,7 +3201,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         InsertarOT();
                         InsertarConsecutivo();
                         InsertarPlano();
-                        MostrarModal();                   
+                        MostrarModal();
 
                         Session.Remove("NuevaOTEjecutada");
 
@@ -3126,13 +3216,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Verificar si se ha ejecutado el evento BtnModificar_Click
                 else if (Session["BtnModificarEjecutado"] != null && (bool)Session["BtnModificarEjecutado"])
                 {
-                    MostrarModalModificar();            
+                    MostrarModalModificar();
 
                     Session.Remove("BtnModificarEjecutado");
-                    
+
                 }
 
-                else if(Session["NuevoPedido"] != null && (bool)Session["NuevoPedido"])
+                else if (Session["NuevoPedido"] != null && (bool)Session["NuevoPedido"])
                 {
 
                     ValidarMesesDesdeUltimaVenta();
@@ -3154,13 +3244,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
         protected void BtnSiModificar_Click(object sender, EventArgs e)
-        {       
+        {
             ValidarUsuario();
         }
 
         protected void BtnNoModificar_Click(object sender, EventArgs e)
         {
-            
+
         }
         protected void ValidarMesesDesdeUltimaVenta()
         {
@@ -3171,7 +3261,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (!string.IsNullOrEmpty(nit))
             {
                 // Utilizar un bloque using para garantizar la liberación de recursos
-                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
                 {
                     connection.Open();
 
@@ -3222,7 +3312,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string pedido = Session["pedido3"].ToString();
             string nombreUsuario = Session["usuariologueado"].ToString();
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -3275,7 +3365,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string IDCLienteConstactoSession = Session["IdContactoFactSession"] as string;
 
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -3415,7 +3505,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             int nuevoConsecutivo = 0;
 
             // Utilizar un bloque using para garantizar la liberación de recursos
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 connection.Open();
 
@@ -3444,7 +3534,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             string IDCLienteConstactoSession = Session["IdContactoFactSession"] as string;
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -3561,7 +3651,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             string zonaLogeada = Session["ZonaLogeada"].ToString();
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -3590,7 +3680,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string pedido = Session["Pedido2"].ToString();
             string nombreUsuario = Session["usuariologueado"].ToString();
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -3647,7 +3737,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void MostrarModalModificar()
         {
-           
+
             string contenidoModalOT = "Esta seguro de modificar la Orden de trabajo " + tbOT.Text;
             ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#OTModificada').modal('show'); $('#OTModificada1').text('" + contenidoModalOT + "');", true);
 
@@ -3658,7 +3748,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (Session["CopiarInfOTEjecutada"] != null && (bool)Session["CopiarInfOTEjecutada"])
             {
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#CopiarAcabados').modal('show');", true);
-          
+
             }
             else
             {
@@ -3803,7 +3893,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
 
             // Realizar la consulta para verificar los permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             string query = "SELECT * FROM tblPermiso_Empleado WHERE ID_Empleado = @CedulaLogueada AND ID_Permiso = '22'";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -3834,7 +3924,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             string IDCLienteConstactoSession = Session["IdContactoFactSession"] as string;
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -3899,7 +3989,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         }
                         else
                         {
-                           
+
                         }
                     }
                 }
@@ -4026,7 +4116,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             List<DateTime> diasNoLaborales = new List<DateTime>();
 
             // Conectarse a la base de datos y obtener los días festivos posteriores a la fecha actual
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -4166,7 +4256,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(pedido))
             {
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     string query = "SELECT ID_Acabado, ID_GrupoObjetoparaAcabado, Detalle_Adicional, AcabadoVentas " +
@@ -4220,7 +4310,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (!string.IsNullOrEmpty(OTinsertada) && !string.IsNullOrEmpty(PedidoInsertado))
             {
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -4253,7 +4343,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             string mensajePersonalizado = "No fue posible realizar copiar los acabados";
                             string urlRedireccion = "OrdenTrabajo.aspx";
                             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-                        }                      
+                        }
                     }
                 }
             }
@@ -4262,7 +4352,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
 
-           
+
         }
 
 
@@ -4273,7 +4363,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             pedido = Session["pedidoMax"]?.ToString();
             try
             {
-                using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+                using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
                 {
                     sqlconectar.Open();
 
@@ -4503,7 +4593,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void BtnAdiObjPla_Click(object sender, EventArgs e)
         {
             // Se valida  que el plano este o no bloqueado
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -4568,7 +4658,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         }
-      
+
 
 
         //***** QUITAR UN OBJETO DEL PLANO  *****
@@ -4578,7 +4668,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         protected void BtnQuiObjPla_Click(object sender, EventArgs e)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -4663,7 +4753,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         private bool ConsultarTerminadoVenta(string IdOt, string pedido)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             try
             {
@@ -4701,7 +4791,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         private bool QuitarObjetoPlano(string plano, string idObjeto)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             try
             {
@@ -4727,11 +4817,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 return false;
             }
         }
-      
+
 
 
         //*****ELIMINAR TODOS LOS OBJETOS DEL PLANO  *****
-       
+
         protected void EliminarObjetos_Click(object sender, EventArgs e)
         {
             ScriptManager.RegisterStartupScript(this, GetType(), "actualizarPlanoEliminar", "actualizarPlanoEliminar();", true);
@@ -4740,7 +4830,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void BtnEliObjPla_Click(object sender, EventArgs e)
         {
             // Se valida  que el plano este o no bloqueado
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -4822,7 +4912,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         private bool EliminarObjetosPlano(string plano)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             try
             {
@@ -4848,7 +4938,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 return false;
             }
         }
-      
+
 
 
         //***** MOSTRAR ACABADOS DEL PLANO   ******
@@ -4925,7 +5015,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string consultaActual = "INSERT INTO tblOTAcabadoDefinitivo (oadPLano,oadAplicacionAcabado,oadDescripcionAcabado,oadDescripcionGrupoObjeto)" +
                 " VALUES (@plano,@AA, @DescripcionAcabado,@DescripcionGrupo)";
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -4965,7 +5055,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             string consultaActual = "SELECT B.Descripcion FROM tblEmpleado As A INNER join tblDepartamento As B on B.ID_Departamento = A.Dependencia WHERE  Cedula = @Cedula";
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -4989,7 +5079,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         } // Campo se podria Cargar en el login
-        
+
 
 
         //*****  Incio Boton Leer Autocad Pendiente Implementacion ******
@@ -5002,7 +5092,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Consultamos que el plano no este bloqueado o ya este ligado a un pedido o afecta alguna bolsa 
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -5349,7 +5439,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private bool ValidarPLanoBolsa()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "SELECT tblOTBolsa.otbolBolsa, tblOTBolsa.otbolCantidadPedida FROM tblOTBolsa WHERE tblOTBolsa.otbolBolsa = @plano AND tblOTBolsa.otbolCantidadPedida > 0";
@@ -5372,7 +5462,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private bool PermisoModfiicarBolsa()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "SELECT * FROM tblPermiso_Empleado WHERE ID_Empleado = '" + Session["CedulaLogeada"].ToString() + "' AND ID_Permiso = 39";
@@ -5403,7 +5493,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void BorrarPenelesDelPlano()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "Delete  from tblPlano_Panel where ID_Plano= @plano";
@@ -5418,7 +5508,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private DataTable AnchosViejos()
         {
             DataTable dataTable = new DataTable();
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -5433,7 +5523,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private DataTable ConsultarObjeto(string id)
         {
             DataTable dataTable = new DataTable();
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -5461,7 +5551,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             double profundidad = Convert.ToDouble(panel.Rows[0]["profundidad"].ToString());
             double Cubicaje = Math.Round((ancho * altura * profundidad) / 1000000, 5);
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             string sSql = "INSERT INTO tblPanel " +
                           "(Id_Panel, Ancho, Descripcion_Panel, Id_GrupoObjeto, Altura, " +
                           "Id_linea, Divisiones, Holgura, Escalable, profundidad, CubicajeM3, " +
@@ -5500,7 +5590,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         private int Consultar_Id_Numerico(string objeto, float ancho)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             string sSql = "SELECT Id_Numerico FROM tblPanel WHERE Id_Panel = @Id_Panel AND Ancho = @Ancho";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -5533,7 +5623,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         private void ConsultarDatosModuloPanel(int IdNumerico, string objeto)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             string sSql = "Select * from tblPanel_Modulo where Id_PanelNum = @Id_Numerico";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -5574,7 +5664,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private DataTable Consultarmodulo(string id)
         {
             DataTable dataTable = new DataTable();
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -5598,7 +5688,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         private void AgregarModuloPanel(int id, DataTable modulo)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             string sSql = "INSERT INTO tblPanel_Modulo(Id_PanelNum,Id_Modulo,Ubicacion_Modulo,Lado,Cantidad,Observaciones,PanModResponsable,FechaConfiguracion) VALUES" +
                 "(@Id_Numerico, @ID_Modulo, @Ubicacion_Modulo,@Lado,@Cantidad,@Observaciones,@PanModResponsable,@FechaConfiguracion )";
 
@@ -5629,7 +5719,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             precioVenta = 0;
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -5665,7 +5755,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private double ConsultarAnchosViejos(string objeto, double ancho)
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -5697,7 +5787,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         private int ObjetoIncluidoPlano(string plano, int idObjeto)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 int cantidad = 0;
@@ -5722,7 +5812,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void ActualizarFechaLecturaDespiece(string plano)
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "Update tblPlano set PlaFechalecturaDespiece=Getdate() where Plano= @plano";
@@ -5740,7 +5830,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void ActualizarCantidad(int idNumerico, int cantidad)
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "Update tblPLano_Panel set Cantidad= @cantidad where Id_Plano= @plano and Id_PanelNum = @idNumerico ";
@@ -5760,7 +5850,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void InsertarObjetoPlano(int idNumerico, int cantidad, string observaciones, int precioventa)
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "INSERT INTO tblPlano_Panel(Id_Plano,Id_Panelnum,Cantidad,Observaciones,Precio_Venta)" +
@@ -5779,12 +5869,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
 
             }
-        }      
+        }
         // Metodos para cuando el plano es una Bolsa 
         private bool PedidoFacturable(string IdOT, string pedido)
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -5819,7 +5909,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private DataTable ResumenPedido(string plano)
         {
             DataTable dataTable = new DataTable();
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -5849,7 +5939,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void ActulizarTblOTBolsa(string plano)
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -5868,7 +5958,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private bool ConsultarBolsaMetodo(string plano, string id_GrupoObjeto)
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -5900,7 +5990,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         private void InsertarTblOtBolsa(string plano, string IdOt, string pedido, DataRow fila)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             string sSql = "INSERT INTO tblOtBolsa(otbolBolsa,otbolId_OT,otbolPedido,otbolIDGrupoObjeto,otbolGrupoObjeto,otbolCantidadCotizada,otbolValorCotizado,otbolCantidadPedida,otbolBloqueaPedido) " +
                 "VALUES (@plano,@IdOT,@pedido,@id_GrupoObjeto,@Descripcion_Grupo,@Cantidad,@SubTotal,@CantidadPedida,@GOBloqueaPedido)";
 
@@ -5927,7 +6017,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         private void ActualizarTblOtBolsa(string plano, DataRow fila)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             string sSql = "update tblOTBolsa set otbolCantidadCotizada= @Cantidad, otbolValorCotizado = @SubTotal WHERE OTBolBolsa= @plano AND otbolIDGrupoObjeto= @id_GrupoObjeto  ";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -5953,7 +6043,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void BtnCarArcTxtXy_Click(object sender, EventArgs e)
         {
             // Se valida que el plano este o no bloqueado
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -6017,7 +6107,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         //***** DESBLOQUEAR O BLOQUEAR UN PLANO******
         protected void BtnPlaBlo_Click(object sender, EventArgs e)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -6083,7 +6173,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private bool UsuarioTienePermiso()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -6120,7 +6210,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         private void ActualizarEstadoBloqueado(int nuevoEstado)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -6273,7 +6363,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 int rowIndex = 14;
 
                 // Encabezados  de la tabal del despiece del plano 
-                string[] encabezados = { "DESCRIPCIÓN", "Ancho (Cms)", "CANT     ", "Valor Und    ", "Total        ", "Imagen             ","","", "Cubicaje", "Peso" };
+                string[] encabezados = { "DESCRIPCIÓN", "Ancho (Cms)", "CANT     ", "Valor Und    ", "Total        ", "Imagen             ", "", "", "Cubicaje", "Peso" };
 
                 foreach (string encabezado in encabezados)
                 {
@@ -6515,13 +6605,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         SubTotal.VerticalAlignment = Excel.XlVAlign.xlVAlignTop;
 
                         var peso = (Excel.Range)worksheet.Cells[rowIndex, 11];
-                        peso.Value = Convert.ToDouble( datosFiltrados.peso ) * Convert.ToDouble( datosFiltrados.Cantidad);
+                        peso.Value = Convert.ToDouble(datosFiltrados.peso) * Convert.ToDouble(datosFiltrados.Cantidad);
                         peso.Font.Name = "Century Gothic";
                         peso.Font.Size = 11;
 
                         var Cubicaje = (Excel.Range)worksheet.Cells[rowIndex, 10];
-                        double valorCub = (Convert.ToDouble(datosFiltrados.Cantidad) * (Convert.ToDouble( datosFiltrados.Ancho) * Convert.ToDouble(datosFiltrados.Altura) * Convert.ToDouble(datosFiltrados.profundidad))/1000000);
-                        Cubicaje.Value = valorCub ;
+                        double valorCub = (Convert.ToDouble(datosFiltrados.Cantidad) * (Convert.ToDouble(datosFiltrados.Ancho) * Convert.ToDouble(datosFiltrados.Altura) * Convert.ToDouble(datosFiltrados.profundidad)) / 1000000);
+                        Cubicaje.Value = valorCub;
                         Cubicaje.Font.Name = "Century Gothic";
                         Cubicaje.Font.Size = 11;
 
@@ -6676,7 +6766,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 var CellB3P3 = worksheet3.Range["B3"];
                 CellB3P3.Value = "CONDICIONES GENERALES DE VENTA:";
-                CellB3P3.Font.Name= "Century Gothic";
+                CellB3P3.Font.Name = "Century Gothic";
                 CellB3P3.Font.Size = 11;
                 CellB3P3.Font.Bold = true;
                 CellB3P3.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
@@ -6706,7 +6796,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     "incrementarse según disponibilidad de proveedor."
                 };
 
-                AgregarTextoDesdeArray(worksheet3, tiempoDeEntrega, "B6", 12,false);
+                AgregarTextoDesdeArray(worksheet3, tiempoDeEntrega, "B6", 12, false);
 
                 // INSTALACIÓN
                 var CellB18P3 = worksheet3.Range["B18"];
@@ -6752,7 +6842,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     "proveer de un lugar con condiciones de higiene y seguridad  adecuadas para ",
                     "el  producto."
                 };
-                AgregarTextoDesdeArray(worksheet3, observacionesGenerales, "B30", 12,false);
+                AgregarTextoDesdeArray(worksheet3, observacionesGenerales, "B30", 12, false);
 
                 //  NOTAS
                 string[] NotaImportante = {
@@ -6967,7 +7057,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
                 //Firma Gerencial 
-                var CellB1121P3 = worksheet3.Range["B121" ,"B122"];
+                var CellB1121P3 = worksheet3.Range["B121", "B122"];
                 CellB1121P3.Merge();
                 CellB1121P3.Value = "Ejecutivo de Proyectos";
                 CellB1121P3.Font.Size = 11;
@@ -7047,7 +7137,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         public List<DatosFiltrados> CargarDatosExcel()
         {
             List<DatosFiltrados> datosFiltradosList = new List<DatosFiltrados>();
-            string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string cn = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(cn))
             {
@@ -7096,7 +7186,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             Dictionary<string, string> descripciones = new Dictionary<string, string>();
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             string sSql = "SELECT Distinct tblGrupoObjeto.Descripcion_Grupo,tblGrupoObjeto.GODescripcionTecnica " +
                           "FROM tblPlano " +
                           "INNER JOIN tblGrupoObjeto " +
@@ -7151,7 +7241,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-     
+
 
         // INICIO LOGICA DEL BOTON OK
 
@@ -7180,7 +7270,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     if (cotizacion.ToUpper() != "NO TIENE")
                     {
-                        string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString; // Reemplaza con tu cadena de conexión.
+                        string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString; // Reemplaza con tu cadena de conexión.
 
                         using (SqlConnection connection = new SqlConnection(connectionString))
                         {
@@ -7200,7 +7290,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                         // Consultamos el saldo de la  cotizacion y validamos que el saldo  no puede ser menor que el precio de venta 
                                         if (Convert.ToDecimal(reader["Saldo"].ToString()) < Convert.ToDecimal(txtVenta.Text))
                                         {
-                                            
+
                                             string mensajePersonalizado = "La cotización digitada no tiene saldo suficiente para el pedido.";
                                             string urlRedireccion = "OrdenTrabajo.aspx";
                                             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
@@ -7210,7 +7300,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                         DateTime fechaCotizacion = Convert.ToDateTime(reader["Fecha_Cotización"]);
                                         if ((DateTime.Now - fechaCotizacion).Days > 30)
                                         {
-                                                                                    
+
                                             // Error al realizar las inserciones al ISID
                                             string mensajePersonalizado = "La fecha de la cotización digitada excede los 30 días. Para terminar el Pedido, debe actualizar la cotización.";
                                             string urlRedireccion = "OrdenTrabajo.aspx";
@@ -7219,7 +7309,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     }
                                     else
                                     {
-                                       
+
                                         // Error al realizar las inserciones al ISID
                                         string mensajePersonalizado = "La cotización digitada no existe. Para terminar el Pedido, debe modificar este campo.";
                                         string urlRedireccion = "OrdenTrabajo.aspx";
@@ -7283,7 +7373,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     // SE VERIFICA SI LA FECHA DE EMPAQUE CUMPLE CON LOS TIEMPO MINIMOS
                     if (!ValidarFechaEmpaque())
                     {
-                       
+
                         string mensajePersonalizado = "La fecha de empaque debe estar " + +DiasMinimoparaProduccion + " días hábiles por encima de la fecha actual.";
                         string urlRedireccion = "OrdenTrabajo.aspx";
                         Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
@@ -7432,7 +7522,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         //Valiacion de pedido facturable 
         private bool ValidarPedidoFacturable(string idPedido)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -7456,7 +7546,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         //Validacion de fecha acutalizacion cliente 
         private bool VerificarActualizacionCliente(string nit)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -7491,7 +7581,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         //Validacion de fecha acutalizacion contacto cliente 
         private bool VerificarActualizacionContacto(string nit, string idcontacto)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -7552,7 +7642,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         // Consultar Fecha de produccion minima, defecto  y dias habiles 
         private void ConsultarDiasMinProduccion()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -7588,7 +7678,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         private void ConsultarDiasPorDefectoProduccion()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -7622,7 +7712,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         private void ConsultarDiasHabiles(DateTime fechaInicial, DateTime fechaFinal)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -7651,7 +7741,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         //Validacion si rquiere o no despiece 
         private bool ValidarDespiece(string idPedido)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -7676,7 +7766,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void ActualizarTerminadoVenta(DateTime FechaEmpaque, int TerminadoDiseño)
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "UPDATE tblOT SET Terminado_Ventas=1,Terminado_Diseño= @TerminadoDiseño, Fecha_Entrega_Dibujo_Despiece= GETDATE()," +
@@ -7701,7 +7791,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void ActualizarCotizacion()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "UPDATE tblCotización SET Estado=2, Fecha_Respuesta = @FechaConfirVenta, Saldo = Saldo - @PrecioVenta," +
@@ -7725,7 +7815,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void EliminarReporteOT()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "DELETE  FROM tblReporteOT WHERE Id_OT= @IdOT AND Consecutivo_Pedido= @pedido";
@@ -7745,7 +7835,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void CrearReporteOt()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -7769,7 +7859,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void EliminarReportePlano()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "DELETE  FROM tblreportePlano WHERE Id_OT= @IdOT AND Consecutivo_Pedido= @pedido";
@@ -7789,7 +7879,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void InsertarReportePLano()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "INSERT INTO tblreportePlano ( Plano, Id_OT, COnsecutivo_Pedido, Area, Dibujante )" +
@@ -7811,7 +7901,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void EliminarPlanoPanelCot()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "DELETE  FROM tblPlano_Panel_Cotizacion WHERE Id_Plano = @plano ";
@@ -7831,7 +7921,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void InsertarPLanoPanelCot()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "INSERT INTO tblPlano_Panel_Cotizacion ( Id_Plano, Id_PanelNum, Cantidad, Observaciones ) " +
@@ -7853,7 +7943,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void EliminarReporteDespiece()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "DELETE  FROM tblReporteDespiece WHERE Id_Plano = @plano OR OT = @IdOT AND PEDIDO = @pedido ";
@@ -7874,7 +7964,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void InsertarReporteDespiece()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "INSERT INTO tblReporteDespiece ( OT, Pedido, Id_Plano, Id_Panel, Ancho_Panel, Descripcion_Panel, Cantidad," +
@@ -7903,7 +7993,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         // VALIDAR Y CREAR PLANO PARA UNA BOLSA 
         private void ValidarBolsaPlano()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString; // Reemplaza con tu cadena de conexión.
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString; // Reemplaza con tu cadena de conexión.
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -7935,7 +8025,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void CrearBolsaPlano()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "Insert into tblPlano(Plano,Nombre_Cliente,Contacto_Cliente,Fecha_Entrega_Bitacora,Fecha_Termino_Diseño,area," +
@@ -8222,7 +8312,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 //Se elimina el reporte Despiece en el ISID
                 EliminarReporteDespieceISID();
 
-                if(ReporteDespieceSID.Rows.Count > 0)
+                if (ReporteDespieceSID.Rows.Count > 0)
                 {
                     // Construimos el codigo Sag que de momento no se esta utilizando en el codigo ????                 
                     string paraEnsamble = ObtenerParaEnsamble();
@@ -8321,7 +8411,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DataTable dataTable = new DataTable();
 
-            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
             {
@@ -8362,7 +8452,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         private bool ExisteTipoPedidoEnISID(string idTipoPedido)
         {
-            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
             {
@@ -8401,7 +8491,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string estadisticaVenta = tipoPedidoDataTable.Rows[0]["EstadisticaVenta"].ToString();
                 string tipPedidObsAuto = tipoPedidoDataTable.Rows[0]["TipPedidObsAuto"].ToString();
 
-                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+                string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
                 using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
                 {
@@ -8430,7 +8520,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DataTable dataTable = new DataTable();
 
-            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
             {
@@ -8481,7 +8571,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         private bool ExistenciaClienteISID(string Nit)
         {
-            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
             using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
             {
                 connectionISID.Open();
@@ -8540,7 +8630,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string ArchivoRegistro = datosCliente.Rows[0]["ArchivoRegistro"].ToString();
                 string Sector = datosCliente.Rows[0]["sector"].ToString();
 
-                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+                string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
                 using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
                 {
@@ -8594,7 +8684,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string Nit = datoClienteSID.Rows[0]["Nit"].ToString();
             DateTime FechaActSID = Convert.ToDateTime(datoClienteSID.Rows[0]["UltimaActualizacion"]);
 
-            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
             {
@@ -8630,7 +8720,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             if (datosCliente.Rows.Count > 0)
             {
-                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+                string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
                 using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
                 {
@@ -8719,7 +8809,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string Nit = DatoCliente.Rows[0]["Nit"].ToString();
             string consecutivo = DatoCliente.Rows[0]["cocConsecutivoContacto"].ToString();
 
-            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
             {
@@ -8765,7 +8855,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string cocUltimaActualizacion = datosCliente.Rows[0]["cocUltimaActualizacion"].ToString();
 
 
-                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+                string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
                 using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
                 {
@@ -8803,7 +8893,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string consecutivo = datoClienteSID.Rows[0]["cocConsecutivoContacto"].ToString();
             DateTime FechaActSID = Convert.ToDateTime(datoClienteSID.Rows[0]["UltimaActualizacion"].ToString());
 
-            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
             {
@@ -8839,7 +8929,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             if (datosCliente.Rows.Count > 0)
             {
-                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+                string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
                 using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
                 {
@@ -8891,7 +8981,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string consecutivo = datoClienteSID.Rows[0]["cocConsecutivoContacto"].ToString();
             int IDContacto = 0; // Inicializamos como 0, podría ser otro valor predeterminado si es apropiado
 
-            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
             {
@@ -8923,7 +9013,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DataTable dataTable = new DataTable();
 
-            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
             {
@@ -8964,7 +9054,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         private bool ExisteAsesorEnISID(string Cedula)
         {
-            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
             {
@@ -9008,7 +9098,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string Activo = DatoAsesor.Rows[0]["Activo"].ToString();
                 string Zona = DatoAsesor.Rows[0]["Zona"].ToString();
 
-                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+                string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
                 using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
                 {
@@ -9042,7 +9132,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DataTable dataTable = new DataTable();
 
-            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
             {
@@ -9074,7 +9164,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string pedidoBase = infoPed.Rows[0]["PedidoBase"].ToString();
             DataTable dataTable = new DataTable();
 
-            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
             {
@@ -9102,7 +9192,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         //Reemplazr pedido en ISID 
         private bool ExistenciaPedidoISID()
         {
-            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
             {
@@ -9186,7 +9276,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string OrdendeCompra = InfoPedidoSID.Rows[0]["OrdendeCompra"].ToString();
 
 
-                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+                string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
                 using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
                 {
@@ -9320,7 +9410,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string Fecha_Entrega_Produccion1 = InfoPedidoSID.Rows[0]["Fecha_Entrega_Produccion"].ToString();
                 string OrdendeCompra = InfoPedidoSID.Rows[0]["OrdendeCompra"].ToString();
 
-                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+                string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
                 using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
                 {
@@ -9406,7 +9496,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DataTable dataTable = new DataTable();
 
-            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
             {
@@ -9440,7 +9530,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string DestinatarioPorDefecto = datoObservacion.Rows[0]["DestinatarioPorDefecto"].ToString();
 
 
-                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+                string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
                 using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
                 {
@@ -9485,7 +9575,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DataTable dataTable = new DataTable();
 
-            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
             {
                 connectionSID.Open();
@@ -9505,7 +9595,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         public void BorrarDocumentacionOT_ISID()
         {
-            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
             using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
             {
                 connectionISID.Open();
@@ -9520,7 +9610,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         public void InsertarDocumentacionOT_ISID(DataTable documentacionOT)
         {
-            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
             using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
             {
                 connectionISID.Open();
@@ -9551,7 +9641,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         // ELiminar Programacion de Areas 
         public void EliminarProgramacion()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             string query = "DELETE tblProgramacion FROM tblProcesoProduccion INNER JOIN tblProgramacion ON tblProcesoProduccion.Id_Area = tblProgramacion.id_Proceso " +
                            "WHERE (tblProgramacion.OT = @IdOT) AND (tblProgramacion.Pedido = @pedido) AND (tblProcesoProduccion.Base = 1)";
@@ -9580,7 +9670,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DataTable dataTable = new DataTable();
 
-            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
             {
@@ -9615,7 +9705,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string Activo = datoPedido.Rows[0]["Activo"].ToString();
                 string Zona = datoPedido.Rows[0]["Zona"].ToString();
 
-                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+                string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
                 using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
                 {
@@ -9647,7 +9737,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
 
-                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+                string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
                 using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
                 {
@@ -9685,7 +9775,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DataTable dataTable = new DataTable();
 
-            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
             {
@@ -9711,7 +9801,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string Id_OT = datoPedido.Rows[0]["Id_OT"].ToString();
             string pedido = datoPedido.Rows[0]["Consecutivo_Pedido"].ToString();
 
-            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
             {
                 connectionSID.Open();
@@ -9742,7 +9832,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string IdOT = datoPedido.Rows[0]["IdOT"].ToString();
             string pedido = datoPedido.Rows[0]["Consecutivo_Pedido"].ToString();
 
-            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
             using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
             {
                 connectionISID.Open();
@@ -9786,7 +9876,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
 
-                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+                string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
                 using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
                 {
@@ -9828,7 +9918,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string Id_OT = datoPedido.Rows[0]["Id_OT"].ToString();
                 string Consecutivo_Pedido = datoPedido.Rows[0]["Consecutivo_Pedido"].ToString();
 
-                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+                string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
                 using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
                 {
@@ -9864,7 +9954,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DataTable dataTable = new DataTable();
 
-            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
             {
@@ -9890,7 +9980,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DataTable dataTable = new DataTable();
 
-            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
             {
@@ -9915,7 +10005,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void EliminarReportePlanoISID(string plano)
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "DELETE  FROM tblReportePlano WHERE Plano = @plano";
@@ -9945,7 +10035,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
 
-                string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+                string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
                 using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
                 {
@@ -9973,7 +10063,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DataTable dataTable = new DataTable();
 
-            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
             {
@@ -9998,7 +10088,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void EliminarReporteDespieceISID()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "DELETE  FROM tblReporteDespiece WHERE  OT= @IdOT AND Pedido = @pedido";
@@ -10019,7 +10109,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         public string ObtenerParaEnsamble()
         {
             string paraEnsamble = "";
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -10043,7 +10133,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         public void InsertarDatosReporteDespieceISID(DataTable datoDespiece)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             foreach (DataRow row in datoDespiece.Rows)
             {
@@ -10104,7 +10194,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void EliminarAcabadosISID()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "DELETE  FROM tblReporteOT_Acabado WHERE  OT= @IdOT AND Pedido = @pedido";
@@ -10126,7 +10216,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DataTable dataTable = new DataTable();
 
-            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
             {
@@ -10155,7 +10245,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         public void InsertarAcabadosISID(DataTable datoAcabados)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             foreach (DataRow row in datoAcabados.Rows)
             {
@@ -10195,7 +10285,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DataTable dataTable = new DataTable();
 
-            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
             {
@@ -10221,7 +10311,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void EliminarMedidasCorteISID()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "DELETE  FROM tblReporteMedidasdeCorte WHERE  OT= @IdOT AND Pedido = @pedido";
@@ -10241,7 +10331,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         public void InsertarMedidasCorteISID(DataTable datoMedidas)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             foreach (DataRow row in datoMedidas.Rows)
             {
@@ -10318,7 +10408,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         public string ObtenerFamiliaModuloDespachoTroja()
         {
             string FamiliaModuloDespachoTroja = "";
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -10347,7 +10437,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DataTable dataTable = new DataTable();
 
-            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
             {
@@ -10373,7 +10463,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void EliminarMedidaFinalISID()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "DELETE  FROM tblReporteModuloMedidaFinal WHERE  OT= @IdOT AND Pedido = @pedido";
@@ -10393,7 +10483,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         public void InsertarMedidaFinalISID(DataTable datoMedidaFinal, string FamiliaModuloDespachoTroja)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             foreach (DataRow row in datoMedidaFinal.Rows)
             {
@@ -10454,7 +10544,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
 
                 }
-                 
+
                 if (FamiliaModuloDespachoTroja.Contains(Familia_Modulo))
                 {
 
@@ -10465,7 +10555,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         public void InsertarEmpaqueXModuloISID(DataTable datoMedidas)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             foreach (DataRow row in datoMedidas.Rows)
             {
@@ -10516,7 +10606,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DataTable dataTable = new DataTable();
 
-            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
             {
@@ -10542,7 +10632,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void EliminarReporteManoObraISID()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "DELETE  FROM tblReporteManodeObra WHERE  OT= @IdOT AND Pedido = @pedido";
@@ -10562,7 +10652,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         public void InsertarReporteManoObraISID(DataTable datoManoObra)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             foreach (DataRow row in datoManoObra.Rows)
             {
@@ -10624,7 +10714,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DataTable dataTable = new DataTable();
 
-            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
             {
@@ -10650,7 +10740,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void EliminarEmpaqueISID()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "DELETE  FROM tblEmpaque WHERE  ID_OT= @IdOT AND Pedido = @pedido";
@@ -10670,7 +10760,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         public void InsertarEmpaqueISID(string plano)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -10697,7 +10787,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         public void InsertarEmpaque2ISID(DataTable datoEmpaque)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_ISIDSQL_PRUEBAConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             foreach (DataRow row in datoEmpaque.Rows)
             {
@@ -10767,7 +10857,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void ActualizarReporteOT_Acabado_SID(string acabado)
         {
 
-            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
             {
@@ -10797,7 +10887,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DataTable dataTable = new DataTable();
 
-            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
             {
@@ -10832,7 +10922,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void ActualizarOtBolsaSID()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "update tblOTBolsa set otbolCantidadCotizada=0, otbolValorCotizado=0 where OTBolBolsa= @bolsa ";
@@ -10852,7 +10942,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DataTable dataTable = new DataTable();
 
-            string connectionStringSID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
             {
@@ -10878,7 +10968,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void CrearBolsaObjeto(string id_GrupoObjeto, string Descripcion_Grupo, string Cantidad, string SubTotal, string GOBloqueaPedido)
         {
 
-            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
             {
@@ -10891,17 +10981,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 using (SqlCommand cmdInsert = new SqlCommand(sSql, connectionISID))
                 {
-                    cmdInsert.Parameters.AddWithValue("@bolsa","BSA"+tbOT.Text +"-"+ddlNumbers.SelectedItem.Text);
+                    cmdInsert.Parameters.AddWithValue("@bolsa", "BSA" + tbOT.Text + "-" + ddlNumbers.SelectedItem.Text);
                     cmdInsert.Parameters.AddWithValue("@OT", tbOT.Text);
                     cmdInsert.Parameters.AddWithValue("@pedido", pedido);
-             
+
                     cmdInsert.Parameters.AddWithValue("@id_GrupoObjeto", id_GrupoObjeto);
                     cmdInsert.Parameters.AddWithValue("@Descripcion_Grupo", Descripcion_Grupo);
                     cmdInsert.Parameters.AddWithValue("@Cantidad", Cantidad);
                     cmdInsert.Parameters.AddWithValue("@SubTotal", SubTotal);
-                    cmdInsert.Parameters.AddWithValue("@GOBloqueaPedido",Convert.ToBoolean( GOBloqueaPedido));
+                    cmdInsert.Parameters.AddWithValue("@GOBloqueaPedido", Convert.ToBoolean(GOBloqueaPedido));
 
-                
+
 
                     cmdInsert.ExecuteNonQuery();
                 }
@@ -10911,7 +11001,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void ActualizarBolsaObjeto(string id_GrupoObjeto, string Cantidad, string SubTotal)
         {
 
-            string connectionStringISID = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
             {
@@ -10928,7 +11018,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     cmdUpdate.Parameters.AddWithValue("@SubTotal", SubTotal);
                     cmdUpdate.Parameters.AddWithValue("@bolsa", "BSA" + tbOT.Text + "-" + ddlNumbers.SelectedItem.Text);
                     cmdUpdate.Parameters.AddWithValue("@id_GrupoObjeto", id_GrupoObjeto);
-                   
+
                     cmdUpdate.ExecuteNonQuery();
                 }
             }
@@ -10936,6 +11026,45 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
         // FIN  LOGICA DEL BOTON OK
+
+
+        protected void DataGrid_RowDataBound(object sender, DataGridItemEventArgs e)
+        {
+            // Inicializar el diccionario fuera del bloque if para que esté disponible en todo el método
+            Dictionary<string, decimal> sumasPorPedidoBase = new Dictionary<string, decimal>();
+
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                // Acceder a los datos del objeto de datos asociado a la fila actual
+                DataRowView rowView = (DataRowView)e.Item.DataItem;
+                DataRow row = rowView.Row;
+
+                // Verificar si el registro afecta la bolsa y tiene un pedido base
+                bool afectaBolsa = Convert.ToBoolean(row["AfectaBolsa"]);
+                string pedidoBase = row["PedidoBase"].ToString();
+                string consecutivoPedido = row["Consecutivo_Pedido"].ToString();
+
+                if (afectaBolsa && pedidoBase == consecutivoPedido)
+                {
+                    // Obtener el valor de ValorPedido para esta fila
+                    decimal valorPedido = Convert.ToDecimal(row["ValorPedido"]);
+
+                    // Verificar si ya existe una suma para este PedidoBase en el diccionario
+                    if (!sumasPorPedidoBase.ContainsKey(pedidoBase))
+                    {
+                        // Si no existe, inicializar la suma para este PedidoBase en 0
+                        sumasPorPedidoBase[pedidoBase] = 0m;
+                    }
+
+                    // Sumar el valor de ValorPedido al total para este PedidoBase
+                    sumasPorPedidoBase[pedidoBase] += valorPedido;
+
+                    // Asignar el total de ValorPedido para este PedidoBase al campo ValorPedido en la fila actual
+                    e.Item.Cells[6].Text = sumasPorPedidoBase[pedidoBase].ToString("C");
+                }
+            }
+        }
+
 
 
     }

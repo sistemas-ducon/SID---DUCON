@@ -15,6 +15,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         private List<TextBox> listaTextBoxes;
         private List<DropDownList> listaDropDownLists;
 
+        private string CadenaConexionSID = "BD_SIDSQL";
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -55,7 +56,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         // Controles Botones, Texbox, Dropdownlist, CheckBo...
         private void CargarAsesoresEnDropDownList()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -433,7 +434,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         private bool UsuarioTienePermiso()
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -470,7 +471,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         }
         private void ActualizarEstadoBloqueado(int nuevoEstado)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -517,7 +518,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             if (GuardarPlano == "Insertar")
             {
 
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -599,7 +600,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             }
             else if (GuardarPlano == "Actualizar")
             {
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -702,7 +703,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         {
             // se debe validar si el plano esta bloqueado 
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -750,7 +751,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected void Bloqueado_Click(object sender, EventArgs e)
         {
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -834,7 +835,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected void EliminarPlano_Click(Object sender, EventArgs e)
         {
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {

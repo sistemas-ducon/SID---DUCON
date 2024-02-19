@@ -105,7 +105,7 @@
                                 <div class="col-3">
                                     <div class="input-group input-group-sm  mb-2 gap-2 ">
 
-                                        <asp:DropDownList class="form-control" ID="ddlAsesor" runat="server" disabled="disabled" DataTextField="Asesor" DataValueField="Asesor" DataSourceID="CargarAsesor" OnDataBound="ddlAsesores_DataBound"></asp:DropDownList><asp:SqlDataSource runat="server" ID="CargarAsesor" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select Apellidos + ' ' + nombre as Asesor  from tblAsesorComercial where activo = 1 order by Apellidos + ' ' + nombre asc"></asp:SqlDataSource>
+                                        <asp:DropDownList class="form-control" ID="ddlAsesor" runat="server" disabled="disabled" DataTextField="Asesor" DataValueField="Asesor" DataSourceID="CargarAsesor" OnDataBound="ddlAsesores_DataBound"></asp:DropDownList><asp:SqlDataSource runat="server" ID="CargarAsesor" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="select Apellidos + ' ' + nombre as Asesor  from tblAsesorComercial where activo = 1 order by Apellidos + ' ' + nombre asc"></asp:SqlDataSource>
 
                                     </div>
                                 </div>
@@ -217,7 +217,7 @@
 
                                 <div class="col-2">
                                     <div class="input-group input-group-sm  mb-2 gap-2 ">
-                                        <asp:DropDownList class="form-control" ID="ddlEstado" runat="server" disabled="false" DataTextField="Estado" DataValueField="Estado" DataSourceID="EstadoLic" OnDataBound="ddlEstado_DataBound"></asp:DropDownList><asp:SqlDataSource runat="server" ID="EstadoLic" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select EstadoLicitacion As Estado, Id_EstadoLicitacion As IdLicitacion from tblEstadoLicitacion where activa = 1 order by id_EstadoLicitacion asc"></asp:SqlDataSource>
+                                        <asp:DropDownList class="form-control" ID="ddlEstado" runat="server" disabled="false" DataTextField="Estado" DataValueField="Estado" DataSourceID="EstadoLic" OnDataBound="ddlEstado_DataBound"></asp:DropDownList><asp:SqlDataSource runat="server" ID="EstadoLic" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="select EstadoLicitacion As Estado, Id_EstadoLicitacion As IdLicitacion from tblEstadoLicitacion where activa = 1 order by id_EstadoLicitacion asc"></asp:SqlDataSource>
                                     </div>
                                 </div>
 
@@ -258,7 +258,7 @@
                                 <div class="col-3">
                                     <div class="input-group input-group-sm  mb-2 gap-2 ">
 
-                                        <asp:DropDownList class="form-control" ID="ddlProceso" runat="server" disabled="false" DataTextField="proceso" DataValueField="proceso" DataSourceID="ProcesoLic" OnDataBound="ddlProceso_DataBound"></asp:DropDownList><asp:SqlDataSource runat="server" ID="ProcesoLic" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select DescripcionProceso As proceso, Id_ProcesoLicitacion As IdProceso from tblProcesoLicitacion where Activa =1 order by id_ProcesoLicitacion asc "></asp:SqlDataSource>
+                                        <asp:DropDownList class="form-control" ID="ddlProceso" runat="server" disabled="false" DataTextField="proceso" DataValueField="proceso" DataSourceID="ProcesoLic" OnDataBound="ddlProceso_DataBound"></asp:DropDownList><asp:SqlDataSource runat="server" ID="ProcesoLic" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="select DescripcionProceso As proceso, Id_ProcesoLicitacion As IdProceso from tblProcesoLicitacion where Activa =1 order by id_ProcesoLicitacion asc "></asp:SqlDataSource>
 
                                     </div>
                                 </div>
@@ -306,7 +306,7 @@
                                 <div class="col-5">
                                     <div class="input-group input-group-sm  mb-2 gap-2 ">
                                         <label class="form-label" text="" runat="server" id="Label2">Ciudad</label>
-                                        <asp:DropDownList class="form-control" ID="ddlCiudad" runat="server" disabled="false" DataTextField="NombreCiudad" DataValueField="NombreCiudad" DataSourceID="CargarCiudad" OnDataBound="ddlCiudad_DataBound"></asp:DropDownList><asp:SqlDataSource runat="server" ID="CargarCiudad" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT 
+                                        <asp:DropDownList class="form-control" ID="ddlCiudad" runat="server" disabled="false" DataTextField="NombreCiudad" DataValueField="NombreCiudad" DataSourceID="CargarCiudad" OnDataBound="ddlCiudad_DataBound"></asp:DropDownList><asp:SqlDataSource runat="server" ID="CargarCiudad" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT 
                                             CONCAT(tblDepartamentoPais.CodigoDepartamento ,
                                             tblCiudad.CodigoCiudad)   AS CodCompleto,
                                             tblCiudad.NombreCiudad +'/'+tblDepartamentoPais.NombreDepartamento As NombreCiudad
@@ -421,7 +421,7 @@
                                 <div class="col-3">
                                     <div class="input-group input-group-sm  mb-2 gap-2 ">
 
-                                        <asp:DropDownList class="form-control" ID="ddlCausa" runat="server" disabled="false" DataTextField="NombreCausa" DataValueField="NombreCausa" DataSourceID="Causas" OnDataBound="ddlCausa_DataBound"></asp:DropDownList><asp:SqlDataSource runat="server" ID="Causas" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select CausaEstadoLicitacion As NombreCausa, Id_CausaEstadoLicitacion IdCausa   from tblCausaEstadoLicitacion where activa = 1 order by CausaEstadoLicitacion asc"></asp:SqlDataSource>
+                                        <asp:DropDownList class="form-control" ID="ddlCausa" runat="server" disabled="false" DataTextField="NombreCausa" DataValueField="NombreCausa" DataSourceID="Causas" OnDataBound="ddlCausa_DataBound"></asp:DropDownList><asp:SqlDataSource runat="server" ID="Causas" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="select CausaEstadoLicitacion As NombreCausa, Id_CausaEstadoLicitacion IdCausa   from tblCausaEstadoLicitacion where activa = 1 order by CausaEstadoLicitacion asc"></asp:SqlDataSource>
 
 
                                     </div>
@@ -465,7 +465,7 @@
                                     <div class="input-group input-group-sm  input-group-sm mb-2 gap-2">
                                         <label class="form-label" runat="server" id="lbEstado1">Estado</label>
                                         <asp:DropDownList class="form-control" ID="ddlEstado1" runat="server" DataTextField="Estado" DataValueField="Estado" DataSourceID="Estados"  OnDataBound="ddlEstado1_DataBound"></asp:DropDownList>
-                                        <asp:SqlDataSource runat="server" ID="Estados" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand=" select EstadoLicitacion As Estado, Id_EstadoLicitacion As IdLicitacion from tblEstadoLicitacion where activa = 1 order by id_EstadoLicitacion asc"></asp:SqlDataSource>
+                                        <asp:SqlDataSource runat="server" ID="Estados" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand=" select EstadoLicitacion As Estado, Id_EstadoLicitacion As IdLicitacion from tblEstadoLicitacion where activa = 1 order by id_EstadoLicitacion asc"></asp:SqlDataSource>
                                     </div>
                                 </div>
                                 <div class="col-1 ">
@@ -527,14 +527,14 @@
                                                 </asp:DataGrid>
                                             </div>
 
-                                            <asp:SqlDataSource runat="server" ID="LicitacionProceso" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="Sp_LicitacionProceso" SelectCommandType="StoredProcedure">
+                                            <asp:SqlDataSource runat="server" ID="LicitacionProceso" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="Sp_LicitacionProceso" SelectCommandType="StoredProcedure">
                                                 <SelectParameters>
                                                     <asp:ControlParameter ControlID="ddlEstado1" PropertyName="SelectedValue" Name="estadoLicitacion" Type="String"></asp:ControlParameter>
                                                     <asp:ControlParameter ControlID="tbFechaClau" PropertyName="Text" DbType="Date" Name="fechaInicio"></asp:ControlParameter>
                                                     <asp:ControlParameter ControlID="tbFechaClau1" PropertyName="Text" DbType="Date" Name="fechaFin"></asp:ControlParameter>
                                                 </SelectParameters>
                                             </asp:SqlDataSource>
-                                            <asp:SqlDataSource ID="LicitacionProceso2" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="Sp_LicitacionProceso2" SelectCommandType="StoredProcedure">
+                                            <asp:SqlDataSource ID="LicitacionProceso2" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="Sp_LicitacionProceso2" SelectCommandType="StoredProcedure">
                                                 <SelectParameters>
                                                     <asp:ControlParameter ControlID="tbLicitacion1" PropertyName="Text" Name="CodLicitacion" Type="String"></asp:ControlParameter>
                                                 </SelectParameters>
@@ -563,7 +563,7 @@
 
 
                                                     </Columns>
-                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="CausaLicitacion" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="sp_CausasLicitacion" SelectCommandType="StoredProcedure">
+                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="CausaLicitacion" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="sp_CausasLicitacion" SelectCommandType="StoredProcedure">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="ddlEstado1" PropertyName="SelectedValue" Name="EstadoLicitacion" Type="String"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="tbFechaClau" PropertyName="Text" DbType="Date" Name="FechaInicio"></asp:ControlParameter>

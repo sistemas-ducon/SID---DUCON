@@ -14,6 +14,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
     public partial class Objetos : System.Web.UI.Page
     {
 
+        private string CadenaConexionSID = "BD_SIDSQL";
+
         private List<TextBox> listaTextBoxes;
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -210,7 +212,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         private bool ValidarObjetoExistPlano(string plano, string idObjeto)
         {
             // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -245,7 +247,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             precioVenta = 0;
             peso = 0;
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -299,7 +301,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
         private bool InsertarObjetoEnPlano(string IdObjeto, string cantidad, string precioVenta, string observaciones)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             try
             {

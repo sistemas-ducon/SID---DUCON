@@ -11,6 +11,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
 {
     public partial class Inicio : System.Web.UI.Page
     {
+        private string CadenaConexionSID = "BD_SIDSQL";
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["usuariologueado"] != null)
@@ -469,7 +470,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
 
         private bool VerificarPermiso(string cedulaLogueada, int idPermiso)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             // Aquí se debe ajustar la consulta SQL para incluir el parámetro del ID del permiso
             string query = $"SELECT COUNT(*) FROM tblPermiso_Empleado WHERE ID_Empleado = '{cedulaLogueada}' AND ID_Permiso = @Permiso";

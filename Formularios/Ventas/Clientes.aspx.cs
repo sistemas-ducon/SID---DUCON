@@ -27,6 +27,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             public string Nombre { get; set; }
         }
 
+        private string CadenaConexionSID = "BD_SIDSQL";
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["usuariologueado"] != null)
@@ -59,7 +61,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
             string consultaActual = "select ID_Permiso  from tblPermiso_Empleado As A Inner join tblEmpleado AS B on  B.Cedula = A.ID_Empleado" +
                                     " where B.Login = @Login And A.ID_Permiso = '22'";
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -553,7 +555,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             // Bloque para realizar la insercion de un nuevo Cliente 
             if (guardarCliente)
             {
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -628,7 +630,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                      " Teléfono='" + tbTelefono.Text.Trim() + "', IdProcedencia='" + ddlprocedencia.SelectedValue + "', Dirección='" + tbDireccion.Text.Trim() + "'," +
                      " asesor=" + Session["AsesorDiseño"] + " WHERE Id_Cliente='" + Session["Id_ClienteBD"] + "'";
 
-                    string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
                         connection.Open();
@@ -668,7 +670,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     " Teléfono='" + tbTelefono.Text.Trim() + "', IdProcedencia='" + ddlprocedencia.SelectedValue + "', Dirección='" + tbDireccion.Text.Trim() + "'," +
                     " asesor=" + Session["AsesorDiseño"] + " WHERE Id_Cliente='" + Session["Id_ClienteBD"] + "'";
 
-                    string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
                         connection.Open();
@@ -711,7 +713,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
             string sSql = "Select * from tblCotización where Cliente= '" + tbNit.Text + "'";
 
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 connection.Open();
 
@@ -749,7 +751,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             // Logica para eliminar Cliente 
             string sSqlEliminar = "Delete from tblCliente Where Id_Cliente = '" + tbNit.Text + "'";
 
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString))
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 connection.Open();
 
@@ -805,7 +807,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         private void LlenarDataGridContacto(string idCliente)
         {
             // Realiza la conexión a la base de datos y ejecuta la consulta SQL con el parámetro
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -835,7 +837,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         {
 
             // Realiza la conexión a la base de datos y ejecuta la consulta SQL con el parámetro
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -868,7 +870,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         {
 
             // Realiza la conexión a la base de datos y ejecuta la consulta SQL con el parámetro
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -922,7 +924,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 string cadenaActual = ""; // Aquí almacenaremos la cadena actual de nombres
 
 
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -1011,7 +1013,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 string consultaActual = "SELECT CompartidoCon FROM tblCliente WHERE Id_Cliente = @Cedula";
                 string cadenaActual = ""; // Aquí almacenaremos la cadena actual de nombres
 
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -1255,7 +1257,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 if (estado == true)
                 {
-                    string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
@@ -1286,7 +1288,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 }
                 else
                 {
-                    string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {

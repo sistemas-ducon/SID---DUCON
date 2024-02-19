@@ -63,13 +63,13 @@
                                                 </asp:TemplateColumn>
                                             </Columns>
                                         </asp:DataGrid>
-                                        <asp:SqlDataSource runat="server" ID="DocumentosOt" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="Select * from tblDocumentacion where ID_OT= @IdOt">
+                                        <asp:SqlDataSource runat="server" ID="DocumentosOt" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="Select * from tblDocumentacion where ID_OT= @IdOt">
                                             <SelectParameters>
                                                 <asp:Parameter Name="IdOt" Type="string" />
                                             </SelectParameters>
                                         </asp:SqlDataSource>
 
-                                        <asp:SqlDataSource runat="server" ID="DocumentacionFiltrada" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="Select * from tblDocumentacion where ID_OT= @IdOt and Pedido = @Pedido">
+                                        <asp:SqlDataSource runat="server" ID="DocumentacionFiltrada" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="Select * from tblDocumentacion where ID_OT= @IdOt and Pedido = @Pedido">
                                             <SelectParameters>
                                                 <asp:Parameter Name="IdOt" Type="String" />
                                                 <asp:Parameter Name="Pedido" Type="String" />
@@ -171,7 +171,7 @@
                                                         <asp:BoundColumn DataField="TipoDocumento" HeaderText="Tipo Archivo" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="" HeaderText="Subido" ItemStyle-CssClass="auto-width-column" />
                                                     </Columns>
-                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="DocEspeciales" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="Select Archivo, TipoDocumento from tbldocumentacion where Id_OT like '%PE' + @solicitud +'-%' And TipoDocumento <> 'BOSQUEJO'">
+                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="DocEspeciales" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="Select Archivo, TipoDocumento from tbldocumentacion where Id_OT like '%PE' + @solicitud +'-%' And TipoDocumento <> 'BOSQUEJO'">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="tbSolicitud" PropertyName="Text" Name="solicitud"></asp:ControlParameter>
                                                     </SelectParameters>

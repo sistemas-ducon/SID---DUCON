@@ -26,6 +26,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         private double TotaImpr;
         private double TotalMO;
         private double TotalVenta;
+
+        private string CadenaConexionSID = "BD_SIDSQL";
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -78,7 +80,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             string consultaActual = "select ID_Permiso  from tblPermiso_Empleado As A Inner join tblEmpleado AS B on  B.Cedula = A.ID_Empleado" +
                                     " where B.Login = @Login And A.ID_Permiso = '2'";
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -124,7 +126,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             if (IdPanelNum != null)
             {
-                string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string cn = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                 DataTable DatosModulo = new DataTable();
 
                 using (SqlConnection connection = new SqlConnection(cn))
@@ -168,7 +170,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             if (IdModulo != null)
             {
-                string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string cn = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                 DataTable DatosModulo1 = new DataTable();
 
                 using (SqlConnection connection = new SqlConnection(cn))
@@ -234,7 +236,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             // Se Cargan los Factores de imprevisto y MODucon 
             if (IdPanelNum != null)
             {
-                string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string cn = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                 DataTable Factores = new DataTable();
                 using (SqlConnection connection = new SqlConnection(cn))
                 {
@@ -262,7 +264,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             // Se carga el dataridDespieceAsesor y se realizan los totales 
             if (IdModulo != null && IdPanelNum != null)
             {
-                string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string cn = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                 DataTable DatosModulo1 = new DataTable();
 
                 using (SqlConnection connection = new SqlConnection(cn))

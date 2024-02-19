@@ -14,6 +14,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Login
 {
     public partial class Login : System.Web.UI.Page
     {
+        private string CadenaConexionSID = "BD_SIDSQL";
         protected void Page_Load(object sender, EventArgs e)
 		{
 			
@@ -23,7 +24,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Login
 		protected void btbIngresar_Click(object sender, EventArgs e)
 		{
 			//Conexion a la BD_SIDSQL y traemos el procedimiento almacenado
-			string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+			string cn = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 			SqlConnection sqlconectar = new SqlConnection(cn);
 			SqlCommand cmd = new SqlCommand("ctaIngreso_SIDucon", sqlconectar)
 			{
@@ -65,7 +66,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Login
         {
             string nombreEmpleado = string.Empty;
 
-            string cn = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string cn = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection sqlconectar = new SqlConnection(cn))
             {
                 SqlCommand cmd = new SqlCommand("SELECT CONCAT(Nombre, ' ', Apellidos) AS Nombre FROM tblEmpleado WHERE Login = @Login AND Password = @Password", sqlconectar);
@@ -89,7 +90,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Login
 
             string consultaActual = "Select Cedula, Zona from tblEmpleado where  Login = @Login";
                                   
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {

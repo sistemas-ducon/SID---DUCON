@@ -303,7 +303,7 @@
                                     <div class="input-group input-group-sm  mb-2 gap-4">
                                         <asp:Label ID="lbCiudad" class="col-form-label-sm" Text="Ciudad" runat="server"></asp:Label>
                                         <asp:DropDownList class="form-control" ID="ddlCiudad" runat="server" DataTextField="NombreCiudad" DataValueField="NombreCiudad" DataSourceID="CargarCiudad" OnDataBound="ddlCiudad_DataBound"></asp:DropDownList>
-                                        <asp:SqlDataSource runat="server" ID="CargarCiudad" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT 
+                                        <asp:SqlDataSource runat="server" ID="CargarCiudad" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT 
                                             CONCAT(tblDepartamentoPais.CodigoDepartamento ,
                                             tblCiudad.CodigoCiudad)   AS CodCompleto,
                                             tblCiudad.NombreCiudad+' - '+tblDepartamentoPais.NombreDepartamento As NombreCiudad
@@ -597,7 +597,7 @@
 
                                                     </Columns>
                                                 </asp:DataGrid>
-                                                <asp:SqlDataSource ID="DetalleSolicitud" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand=" Select *
+                                                <asp:SqlDataSource ID="DetalleSolicitud" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand=" Select *
                                                               , concat(Ancho , 'x' , Alto , 'x' , Profundidad) as Dimension  from tblSoliciDiseEspeDeta  where  ID_Solicitud= @IdSolicitud">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="lbNumeroSolicitud" PropertyName="Text" Name="IdSolicitud"></asp:ControlParameter>
@@ -720,7 +720,7 @@
                                     <div class="input-group  input-group-sm  mb-2 gap-4">
                                         <asp:Label ID="lbZona" class="form-label" Text="Zona" runat="server"></asp:Label>
                                         <asp:DropDownList class="form-control" ID="ddlZona" runat="server" DataSourceID="Zona" DataTextField="Zona" DataValueField="Zona" OnSelectedIndexChanged="CambioZona" AutoPostBack="true" OnDataBound="ddlZona_DataBound"></asp:DropDownList>
-                                        <asp:SqlDataSource runat="server" ID="Zona" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="
+                                        <asp:SqlDataSource runat="server" ID="Zona" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="
                                         select Zona from tblRender group by Zona"></asp:SqlDataSource>
 
                                     </div>
@@ -860,13 +860,13 @@
 
                                                     </Columns>
                                                 </asp:DataGrid>
-                                                <asp:SqlDataSource runat="server" ID="Desarrollo" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="spObtenerSolicitudesDiseEspe" SelectCommandType="StoredProcedure">
+                                                <asp:SqlDataSource runat="server" ID="Desarrollo" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="spObtenerSolicitudesDiseEspe" SelectCommandType="StoredProcedure">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="ddlZona" PropertyName="SelectedValue" Name="Zona" Type="String"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="tbNombreAsesor" PropertyName="Text" Name="Asesor" Type="String"></asp:ControlParameter>
                                                     </SelectParameters>
                                                 </asp:SqlDataSource>
-                                                <asp:SqlDataSource ID="CargarDesarrollos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="   SELECT *
+                                                <asp:SqlDataSource ID="CargarDesarrollos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="   SELECT *
                                                         FROM tblSoliciDiseEspe  WHERE Terminado = 0  AND TipoSolicitud ='DESARROLLO' AND Asesor =@Asesor ORDER BY Fecha_Ingreso ASC;">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="tbNombreAsesor" PropertyName="Text" Name="Asesor"></asp:ControlParameter>
@@ -951,13 +951,13 @@
                                                         <asp:BoundColumn DataField="SeguimientoPausa" Visible="false" ItemStyle-CssClass="auto-width-column" />
                                                     </Columns>
                                                 </asp:DataGrid>
-                                                <asp:SqlDataSource runat="server" ID="Cotizaciones" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="spObtenerSolicitudCotizaciones" SelectCommandType="StoredProcedure">
+                                                <asp:SqlDataSource runat="server" ID="Cotizaciones" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="spObtenerSolicitudCotizaciones" SelectCommandType="StoredProcedure">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="ddlZona" PropertyName="SelectedValue" Name="Zona" Type="String"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="tbNombreAsesor" PropertyName="Text" Name="Asesor" Type="String"></asp:ControlParameter>
                                                     </SelectParameters>
                                                 </asp:SqlDataSource>
-                                                <asp:SqlDataSource ID="CargarCotizaciones" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="   SELECT *
+                                                <asp:SqlDataSource ID="CargarCotizaciones" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="   SELECT *
                                                         FROM tblSoliciDiseEspe  WHERE Terminado = 0  AND TipoSolicitud ='COTIZACIÓN' AND Asesor =@Asesor ORDER BY Fecha_Ingreso ASC;">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="tbNombreAsesor" PropertyName="Text" Name="Asesor"></asp:ControlParameter>
@@ -1096,7 +1096,7 @@
                                                     </Columns>
 
                                                 </asp:DataGrid>
-                                                <asp:SqlDataSource ID="SolicXFecha" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand=" SELECT *
+                                                <asp:SqlDataSource ID="SolicXFecha" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand=" SELECT *
                                                                              FROM tblSoliciDiseEspe WHERE Asesor = @Asesor AND Fecha_Ingreso between @FechaIni and @FechaFin  ORDER BY Fecha_Ingreso ASC;">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="tbNombreAsesor" PropertyName="Text" Name="Asesor"></asp:ControlParameter>
@@ -1105,7 +1105,7 @@
                                                     </SelectParameters>
                                                 </asp:SqlDataSource>
 
-                                                <asp:SqlDataSource ID="SolicXProyecto" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand=" SELECT * 
+                                                <asp:SqlDataSource ID="SolicXProyecto" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand=" SELECT * 
                                                                        FROM tblSoliciDiseEspe  WHERE Asesor = @Asesor AND  Proyecto  LIKE '%' + @Proyecto + '%' AND Fecha_Ingreso between @FechaIni and @FechaFin ORDER BY Fecha_Ingreso ASC;">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="tbNombreAsesor" PropertyName="Text" Name="Asesor"></asp:ControlParameter>
@@ -1115,7 +1115,7 @@
                                                     </SelectParameters>
                                                 </asp:SqlDataSource>
 
-                                                <asp:SqlDataSource ID="SolicitudXID" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand=" SELECT * 
+                                                <asp:SqlDataSource ID="SolicitudXID" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand=" SELECT * 
                                                                        FROM tblSoliciDiseEspe  WHERE Asesor = @Asesor AND  ID_Solicitud  LIKE '%' + @Solicitud + '%' AND Fecha_Ingreso between @FechaIni and @FechaFin ORDER BY Fecha_Ingreso ASC;">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="tbNombreAsesor" PropertyName="Text" Name="Asesor"></asp:ControlParameter>
@@ -1125,7 +1125,7 @@
                                                     </SelectParameters>
                                                 </asp:SqlDataSource>
 
-                                                <asp:SqlDataSource ID="solicitudXCliente" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand=" SELECT * 
+                                                <asp:SqlDataSource ID="solicitudXCliente" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand=" SELECT * 
                                                                    FROM tblSoliciDiseEspe  WHERE Asesor = @Asesor AND  Cliente  LIKE '%' + @Cliente + '%' AND Fecha_Ingreso between @FechaIni and @FechaFin ORDER BY Fecha_Ingreso ASC;">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="tbNombreAsesor" PropertyName="Text" Name="Asesor"></asp:ControlParameter>

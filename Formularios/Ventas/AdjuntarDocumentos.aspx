@@ -55,7 +55,7 @@
 
                                     </Columns>
                                 </asp:DataGrid>
-                                <asp:SqlDataSource ID="Documentos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT * FROM tblDocumentacion WHERE Id_OT = @Documentacion">
+                                <asp:SqlDataSource ID="Documentos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT * FROM tblDocumentacion WHERE Id_OT = @Documentacion">
                                     <SelectParameters>
                                         <asp:Parameter Name="Documentacion" Type="String" />
                                     </SelectParameters>

@@ -18,6 +18,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 {
     public partial class AdjuntarDocumentos : System.Web.UI.Page
     {
+        private string CadenaConexionSID = "BD_SIDSQL";
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["Id_Detalle"] != null)
@@ -114,7 +115,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     // Realizar esta Insercion 
 
 
-                    string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
@@ -254,7 +255,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             string NombreArchivo = Session["NombreArchivo"].ToString();
             string NombreCarpeta = Session["NombreCarpeta"].ToString();
             // Eliminar el documento de la base de datos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
