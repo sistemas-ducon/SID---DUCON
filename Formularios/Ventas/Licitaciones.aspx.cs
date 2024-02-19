@@ -17,7 +17,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
     public partial class Licitaciones : System.Web.UI.Page
     {
-       
+        private string CadenaConexionSID = "BD_SIDSQL";
         protected void Page_Load(object sender, EventArgs e)
         {
           

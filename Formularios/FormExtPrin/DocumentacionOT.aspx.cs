@@ -15,6 +15,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 {
     public partial class DocumentacionOT : System.Web.UI.Page
     {
+        private string CadenaConexionSID = "BD_SIDSQL";     
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -69,7 +70,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         private bool ValidarOTCerrada()
         {
             // Realizar la consulta para verificar los permisos
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             string query = "select Terminado_Ventas from tblOT where Id_OT = @idOt and Consecutivo_Pedido = @pedido";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -156,7 +157,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
                     // Realizaos la Insercion 
 
-                    string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
@@ -230,7 +231,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             try
             {
                 // Eliminar el documento de la base de datos
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -479,7 +480,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     {
                         File.Copy(RutaCompletaCopia, RutaCompletaDestinoArchivo, true);
 
-                        string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                        string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                         using (SqlConnection connection = new SqlConnection(connectionString))
                         {

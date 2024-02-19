@@ -29,6 +29,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private bool isModalVisible = false;
         string mensaje = "";
+
+        private string CadenaConexionSID = "BD_SIDSQL";
         protected void Page_Load(object sender, EventArgs e)
         {
             //Evaluar los permisos del usuarioa y que departamento Pertenece 
@@ -182,7 +184,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private void CargarAsesoresEnDropDownList()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -209,7 +211,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             string consultaActual = "SELECT B.Descripcion FROM tblEmpleado As A INNER join tblDepartamento As B on B.ID_Departamento = A.Dependencia WHERE  Cedula = @Cedula";
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -579,7 +581,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 //insercion 
 
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                 DateTime fechaIngreso;
                 if (!DateTime.TryParse(tbIngresoServidor.Text, out fechaIngreso))
                 {
@@ -727,7 +729,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             else if (Session["InsertUpdateRender"].ToString() == "Actualizar")
             {
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
 
                 DateTime fechaIngreso;
@@ -1167,7 +1169,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         FechaEntrega = FechaEntrega.AddDays(1);
 
                     }
-                    string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                     // Calcula el día siguiente a la fecha de entrega
                     DateTime DiaSiguiente = FechaEntrega.AddDays(1);

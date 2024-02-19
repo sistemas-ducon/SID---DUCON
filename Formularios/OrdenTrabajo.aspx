@@ -223,7 +223,7 @@
                                                                         <asp:BoundColumn DataField="Saldo" HeaderText="Saldo" ItemStyle-CssClass="auto-width-column" />
 
                                                                     </Columns>
-                                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="DataBolsa" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="Select otbolBolsa ,otbolGrupoObjeto,otbolCantidadCotizada,otbolCantidadPedida,otbolCantidadCotizada - otbolCantidadPedida as Saldo from tblOTBolsa where otbolId_OT=@Ot order by otbolBolsa asc, otbolGrupoObjeto asc">
+                                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="DataBolsa" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="Select otbolBolsa ,otbolGrupoObjeto,otbolCantidadCotizada,otbolCantidadPedida,otbolCantidadCotizada - otbolCantidadPedida as Saldo from tblOTBolsa where otbolId_OT=@Ot order by otbolBolsa asc, otbolGrupoObjeto asc">
                                                                     <SelectParameters>
                                                                         <asp:ControlParameter ControlID="tbOT" PropertyName="Text" Name="Ot"></asp:ControlParameter>
                                                                     </SelectParameters>
@@ -445,7 +445,7 @@
                                         <asp:Label class="form-label" Text="T.Ped" runat="server" ID="lblTped"></asp:Label>
                                         <asp:DropDownList ID="dtacboTipoPedido" runat="server" class="form-control" DataSourceID="TiposDePedidos" DataTextField="Descripcion_TipoPedido" DataValueField="Id_TipoPedido" AutoPostBack="True" OnSelectedIndexChanged="dtacboTipoPedido_SelectedIndexChanged">
                                         </asp:DropDownList>
-                                        <asp:SqlDataSource ID="TiposDePedidos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT Descripcion_TipoPedido, Id_TipoPedido, EstadisticaVenta FROM tblTipoPedido WHERE Activo = '1' ORDER BY Descripcion_TipoPedido "></asp:SqlDataSource>
+                                        <asp:SqlDataSource ID="TiposDePedidos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT Descripcion_TipoPedido, Id_TipoPedido, EstadisticaVenta FROM tblTipoPedido WHERE Activo = '1' ORDER BY Descripcion_TipoPedido "></asp:SqlDataSource>
                                     </div>
                                 </div>
 
@@ -453,7 +453,7 @@
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Ped.Base" runat="server" ID="lblPedBase"></asp:Label>
                                         <asp:DropDownList ID="cboPedidoBase" runat="server" class="form-control" DataSourceID="PedidoBase" DataTextField="Consecutivo_Pedido" DataValueField="Consecutivo_Pedido"></asp:DropDownList>
-                                        <asp:SqlDataSource ID="PedidoBase" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT Consecutivo_Pedido, EstadisticaVenta
+                                        <asp:SqlDataSource ID="PedidoBase" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT Consecutivo_Pedido, EstadisticaVenta
                                                                 FROM tblTipoPedido
                                                                 INNER JOIN tblOT ON tblTipoPedido.Id_TipoPedido = tblOT.Id_TipoPedido
                                                                 WHERE tblOT.Id_OT = @Id_OT 
@@ -473,7 +473,7 @@
                                         <asp:DropDownList ID="tbPedDepen" CssClass="form-control" runat="server" DataSourceID="sqlDataSource1"
                                             DataTextField="Consecutivo_Pedido" DataValueField="Consecutivo_Pedido">
                                         </asp:DropDownList>
-                                        <asp:SqlDataSource ID="sqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                        <asp:SqlDataSource ID="sqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
                                             SelectCommand="SELECT Consecutivo_Pedido FROM tblOT WHERE Id_OT = @Id_OT AND PedidoBase = @pedido">
                                             <SelectParameters>
                                                 <asp:SessionParameter Name="Id_OT" SessionField="Id_OT" Type="String" />
@@ -489,7 +489,7 @@
                                         <asp:Label class="form-label" Text="Aprob" runat="server" ID="lblAprob"></asp:Label>
 
                                         <asp:DropDownList ID="DtaCboTipoAprobacion" runat="server" class="form-control" DataSourceID="Aprob" DataTextField="TipoAprobacion" DataValueField="IdTipoAprobacion"></asp:DropDownList>
-                                        <asp:SqlDataSource ID="Aprob" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="
+                                        <asp:SqlDataSource ID="Aprob" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="
                                                                                                                                                                     SELECT * FROM tblTipoAprobacion ORDER BY TipoAprobacion"></asp:SqlDataSource>
 
                                     </div>
@@ -555,7 +555,7 @@
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Ciudad" runat="server" ID="lblCiudad"></asp:Label>
                                         <asp:DropDownList class="form-control" ID="ddlCiudad" runat="server" DataTextField="NombreCiudad" DataValueField="NombreCiudad" DataSourceID="CargarCiudad" OnDataBound="ddlCiudad_DataBound"></asp:DropDownList>
-                                        <asp:SqlDataSource runat="server" ID="CargarCiudad" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT  CONCAT(tblDepartamentoPais.CodigoDepartamento ,tblCiudad.CodigoCiudad)
+                                        <asp:SqlDataSource runat="server" ID="CargarCiudad" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT  CONCAT(tblDepartamentoPais.CodigoDepartamento ,tblCiudad.CodigoCiudad)
                                             AS CodCompleto,tblCiudad.NombreCiudad+' - '+tblDepartamentoPais.NombreDepartamento As NombreCiudad 
                                             FROM tblDepartamentoPais  INNER JOIN tblCiudad             
                                             ON tblDepartamentoPais.Id_Departamento_Auto = tblCiudad.Id_Departamento 
@@ -641,7 +641,7 @@
 
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 
-                                            <asp:Label ID="LabelOTCerrada" ClientIDMode="Static" runat="server" Text="OT cerrada" BackColor="#DD0000" ForeColor="white" Font-Size="X-Large" Width="350px" Visible="false" CssClass="rounded-label"></asp:Label>
+                                            <asp:Label ID="LabelOTCerrada" ClientIDMode="Static" runat="server" Text="OT cerrada" BackColor="#DD0000" ForeColor="white" Font-Size="X-Large" Width="16.9em" Visible="false" CssClass="rounded-label"></asp:Label>
 
                                         </div>
 
@@ -697,7 +697,7 @@
 
                                                         </asp:DataGrid>
 
-                                                        <asp:SqlDataSource runat="server" ID="obtenerInfoDespacho" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL_PRUEBAConnectionString %>" SelectCommand="sp_ObtenerInformacionDespacho" SelectCommandType="StoredProcedure">
+                                                        <asp:SqlDataSource runat="server" ID="obtenerInfoDespacho" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL %>" SelectCommand="sp_ObtenerInformacionDespacho" SelectCommandType="StoredProcedure">
                                                             <SelectParameters>
                                                                 <asp:ControlParameter ControlID="tbOT" PropertyName="Text" Name="Id_OT" Type="String"></asp:ControlParameter>
                                                                 <asp:ControlParameter ControlID="ddlNumbers" PropertyName="SelectedValue" Name="Pedido" Type="Int32"></asp:ControlParameter>
@@ -786,9 +786,12 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                        <div class="input-group input-group-sm mb-2 gap-2">
-                                            <asp:Label class="form-label" runat="server" ID="lblSaldoOT" BorderColor="#006600" BackColor="Lime" Font-Size="X-Large" Text="Saldo" Width="10em" Height="1.5em" Visible="false"></asp:Label>
+                                    <div class="col-lg-1"></div>
+
+                                    <div class="col-lg-7 col-md-6 col-sm-12 col-xs-12 text-end fw-bold">
+                                        <div class="d-flex mb-2 gap-2">
+                                            <asp:Label class="form-label" runat="server" ID="lbsaldo" Text="Saldo:" Visible="false"></asp:Label>
+                                            <asp:Label class="form-label" runat="server" ID="lblSaldoOT" BorderColor="#006600" BackColor="Lime" Font-Size="X-Large" Width="20em" Height="1.5em" Visible="false"></asp:Label>
                                         </div>
                                     </div>
 
@@ -1044,7 +1047,7 @@
                                                     <div class="col-12">
                                                         <div class="table-responsive mb-1" style="max-height: 10rem; overflow-x: auto;">
                                                             <h5 class="datagrid-header text-center">Contable</h5>
-                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGrid" runat="server" DataSourceID="InfoContable">
+                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGrid" runat="server" DataSourceID="InfoContable" >
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                                 <Columns>
@@ -1057,7 +1060,7 @@
                                                                     <asp:BoundColumn DataField="" HeaderText="Saldo" ItemStyle-CssClass="auto-width-column" />
 
                                                                 </Columns>
-                                                            </asp:DataGrid><asp:SqlDataSource runat="server" ID="InfoContable" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>"
+                                                            </asp:DataGrid><asp:SqlDataSource runat="server" ID="InfoContable" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
                                                                 SelectCommand="SELECT Consecutivo_Pedido,Descripcion_TipoPedido,Precio_Venta,
                                                                                 ValorBolsa,ValorPedido,Precio_Venta - Descuento * Precio_Venta/100 AS Subtotal,
                                                                                 PedidoBase, tblTipoPedido.*,Terminada_Facturacion,Fecha_Factura,Descuento,EstadisticaVenta
@@ -1230,8 +1233,8 @@
                             </div>
                         </div>
 
-                           <div class="fundido modal" id="LlenarNIT" data-backdrop="static" data-bs-keyboard="false">
- <div class="modal-dialog modal-dialog-centrado">
+                        <div class="fundido modal" id="LlenarNIT" data-backdrop="static" data-bs-keyboard="false">
+                            <div class="modal-dialog modal-dialog-centrado">
                                 <div class="modal-content p-4 shadow">
                                     <div class="modal-header bg-light">
                                         <h5 class="modal-title">NIT</h5>
@@ -1247,8 +1250,8 @@
                             </div>
                         </div>
 
-                           <div id="OTModificada" class="modal" tabindex="-1">
- <div class="modal-dialog modal-dialog-centrado">
+                        <div id="OTModificada" class="modal" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centrado">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title">S_I_Ducon</h5>
@@ -1312,7 +1315,7 @@
                                                                         <asp:BoundColumn DataField="oadAplicacionAcabado" HeaderText="A.A" ItemStyle-CssClass="auto-width-column" />
 
                                                                     </Columns>
-                                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="AcabadosFinales" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT
+                                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="AcabadosFinales" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT
                                                                                     tblOTAcabadoDefinitivo.id_OTAcabadoDefinitivo,
                                                                                     tblOTAcabadoDefinitivo.oadPLano,
                                                                                     tblOTAcabadoDefinitivo.oadDescripcionGrupoObjeto,
@@ -1375,7 +1378,7 @@
                                                                         <asp:BoundColumn DataField="GrupoObjetoparaAcabado" Visible="false" />
 
                                                                     </Columns>
-                                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="AcabadosVentas" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT
+                                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="AcabadosVentas" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT
                                                                                             tblOTAcabados.*,
                                                                                             tblGrupoObjetoParaAcabado.*,
                                                                                             tblAcabado.* 
@@ -1949,7 +1952,7 @@
                                         <div class="input-group-sm">
                                             <asp:Label class="form-label" Text="Grupo" runat="server" ID="lbGrupo"></asp:Label>
                                             <asp:DropDownList class="form-control" ID="ddlGrupo" runat="server" DataTextField="Descripcion" DataValueField="Descripcion" DataSourceID="GrupoObjetos" OnDataBound="ddlGrupoObjeto_DataBound"></asp:DropDownList>
-                                            <asp:SqlDataSource runat="server" ID="GrupoObjetos" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select  ID_GrupoObjeto AS Valor,Descripcion_Grupo AS Descripcion from tblGrupoObjeto  order by Descripcion_Grupo "></asp:SqlDataSource>
+                                            <asp:SqlDataSource runat="server" ID="GrupoObjetos" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="select  ID_GrupoObjeto AS Valor,Descripcion_Grupo AS Descripcion from tblGrupoObjeto  order by Descripcion_Grupo "></asp:SqlDataSource>
 
                                         </div>
                                     </div>
@@ -2031,7 +2034,7 @@
 
                                                     </asp:DataGrid>
 
-                                                    <asp:SqlDataSource ID="ObtenerDatosObjetos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommandType="StoredProcedure">
+                                                    <asp:SqlDataSource ID="ObtenerDatosObjetos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommandType="StoredProcedure">
                                                         <SelectParameters>
                                                             <asp:ControlParameter Name="Altura" ControlID="tbAltura" PropertyName="Text" DefaultValue="%" Type="String" />
                                                             <asp:ControlParameter Name="Ancho" ControlID="tbAncho" PropertyName="Text" DefaultValue="%" Type="String" />
@@ -2380,7 +2383,7 @@
             </div>
         </div>
 
-     
+
 
 
 

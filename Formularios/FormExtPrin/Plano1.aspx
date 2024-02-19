@@ -137,7 +137,7 @@
                                                 <asp:BoundColumn DataField="RealizadoPor" Visible="false" />
                                                 <asp:BoundColumn DataField="Tipologia" Visible="false" />
                                             </Columns>
-                                        </asp:DataGrid><asp:SqlDataSource runat="server" ID="CargarPlano" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT TOP 300 * FROM tblPlano WHERE Plano  LIKE '%' + @Plano + '%' AND Nombre_Cliente  LIKE '%' + @Cliente+ '%'ORDER BY Plano">
+                                        </asp:DataGrid><asp:SqlDataSource runat="server" ID="CargarPlano" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT TOP 300 * FROM tblPlano WHERE Plano  LIKE '%' + @Plano + '%' AND Nombre_Cliente  LIKE '%' + @Cliente+ '%'ORDER BY Plano">
                                             <SelectParameters>
                                                 <asp:ControlParameter ControlID="tbPlano" PropertyName="Text" Name="Plano" DefaultValue="%"></asp:ControlParameter>
                                                 <asp:ControlParameter ControlID="tbCliente" PropertyName="Text" DefaultValue="%" Name="Cliente"></asp:ControlParameter>

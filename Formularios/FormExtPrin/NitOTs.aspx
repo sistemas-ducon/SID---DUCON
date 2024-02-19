@@ -87,7 +87,7 @@
 
                                                                 </Columns>
                                                             </asp:DataGrid>
-                                                            <asp:SqlDataSource ID="CargarClientes" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="Select  concat(Nombre , ' ' , Apellidos) as Asesor from tblAsesorComercial where Activo=1 order by concat(Nombre , ' ' , Apellidos)"></asp:SqlDataSource>
+                                                            <asp:SqlDataSource ID="CargarClientes" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="Select  concat(Nombre , ' ' , Apellidos) as Asesor from tblAsesorComercial where Activo=1 order by concat(Nombre , ' ' , Apellidos)"></asp:SqlDataSource>
 
                                                         </div>
                                                     </div>
@@ -188,7 +188,7 @@
 
 
                                                     </Columns>
-                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="ClientesFacturacion" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="
+                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="ClientesFacturacion" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="
                                                                      SELECT Top 300  tblClienteObra.* 
                                                                      From tblClienteObra 
                                                                      WHERE (((tblClienteObra.RazonSocial) Like '%'+ @NITCliente +'%'  
@@ -224,7 +224,7 @@
                                                         <asp:BoundColumn DataField="Fecha_Confirmacion_Venta" HeaderText="Ul. Venta" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="Cedula" HeaderText="Cedula" ItemStyle-CssClass="auto-width-column" />
                                                     </Columns>
-                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="UltimasVentas" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT
+                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="UltimasVentas" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT
                                                                 tblAsesorComercial.Nombre+' '+tblAsesorComercial.Apellidos AS Asesor,
                                                                 tblOT.Id_OT,
                                                                 tblOT.Consecutivo_Pedido,
@@ -691,7 +691,7 @@
                                                         <asp:BoundColumn DataField="cocCiudad" HeaderText="Mail" Visible="false" />
 
                                                     </Columns>
-                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="ContacoCliente" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT * FROM tblClienteObraContacto where cocNIT= @NIT">
+                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="ContacoCliente" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT * FROM tblClienteObraContacto where cocNIT= @NIT">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="tbNumero" PropertyName="Text" Name="NIT"></asp:ControlParameter>
                                                     </SelectParameters>

@@ -115,15 +115,15 @@
 
                                                     </Columns>
                                                 </asp:DataGrid>
-                                                <asp:SqlDataSource runat="server" ID="ListarClientes" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="sp_ObtenerClientes1" SelectCommandType="StoredProcedure"></asp:SqlDataSource>
+                                                <asp:SqlDataSource runat="server" ID="ListarClientes" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="sp_ObtenerClientes1" SelectCommandType="StoredProcedure"></asp:SqlDataSource>
 
-                                                <asp:SqlDataSource ID="ListarClientesXNit" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="sp_ClientesConFiltro" SelectCommandType="StoredProcedure">
+                                                <asp:SqlDataSource ID="ListarClientesXNit" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="sp_ClientesConFiltro" SelectCommandType="StoredProcedure">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="tbNitBuscar" PropertyName="Text" Name="IdCliente" Type="String"></asp:ControlParameter>
                                                     </SelectParameters>
                                                 </asp:SqlDataSource>
 
-                                                <asp:SqlDataSource ID="ListarClientesXNombre" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="sp_ClientesXNombre" SelectCommandType="StoredProcedure">
+                                                <asp:SqlDataSource ID="ListarClientesXNombre" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="sp_ClientesXNombre" SelectCommandType="StoredProcedure">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="tbNombreBuscar" PropertyName="Text" Name="NombreCompania" Type="String"></asp:ControlParameter>
                                                     </SelectParameters>
@@ -165,7 +165,7 @@
                                     <div class="input-group input-group-sm  mb-2 gap-2 ">
                                         <asp:Label class="form-label" Text="Procedencia" runat="server" ID="lbProcedencia"></asp:Label>
                                         <asp:DropDownList class="form-control" ID="ddlprocedencia" runat="server" DataTextField="Procedencia" DataValueField="IdProcedencia" DataSourceID="CargarProcedencias" OnDataBound="ddlProcedencia_DataBound"></asp:DropDownList>
-                                        <asp:SqlDataSource runat="server" ID="CargarProcedencias" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select * from tblProcedenciaCliente"></asp:SqlDataSource>
+                                        <asp:SqlDataSource runat="server" ID="CargarProcedencias" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="select * from tblProcedenciaCliente"></asp:SqlDataSource>
                                     </div>
                                 </div>
 
@@ -182,7 +182,7 @@
                                 <div class="col-3">
                                     <div class="input-group input-group-sm  mb-2 gap-2 ">
                                         <asp:Label class="form-label" Text="Ciudad" runat="server" ID="lbCiudad"></asp:Label>
-                                        <asp:DropDownList class="form-control" ID="ddlCiudaX" runat="server" DataTextField="NombreCiudad" DataValueField="NombreCiudad" DataSourceID="CargarCiudades" OnDataBound="ddlCiudadX_DataBound"></asp:DropDownList><asp:SqlDataSource runat="server" ID="CargarCiudades" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT 
+                                        <asp:DropDownList class="form-control" ID="ddlCiudaX" runat="server" DataTextField="NombreCiudad" DataValueField="NombreCiudad" DataSourceID="CargarCiudades" OnDataBound="ddlCiudadX_DataBound"></asp:DropDownList><asp:SqlDataSource runat="server" ID="CargarCiudades" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT 
                                             CONCAT(tblDepartamentoPais.CodigoDepartamento ,
                                             tblCiudad.CodigoCiudad)   AS CodCompleto,
                                             tblCiudad.NombreCiudad +'/'+tblDepartamentoPais.NombreDepartamento As NombreCiudad
@@ -299,7 +299,7 @@
                                                                         <asp:BoundColumn DataField="Cedula" HeaderText="Cedula" ItemStyle-CssClass="auto-width-column" />
                                                                     </Columns>
                                                                 </asp:DataGrid>
-                                                                <asp:SqlDataSource ID="CargarClientes" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT Cedula, CONCAT(Nombre, ' ', Apellidos) AS NombreCompleto FROM tblAsesorComercial WHERE activo = 1 order by Nombre"></asp:SqlDataSource>
+                                                                <asp:SqlDataSource ID="CargarClientes" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT Cedula, CONCAT(Nombre, ' ', Apellidos) AS NombreCompleto FROM tblAsesorComercial WHERE activo = 1 order by Nombre"></asp:SqlDataSource>
                                                             </div>
                                                         </div>
 
@@ -678,7 +678,7 @@
                                                         <asp:BoundColumn DataField="NombreAsesor" HeaderText="Asesor Comercial" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="Zona" HeaderText="Zona" ItemStyle-CssClass="auto-width-column" />
                                                     </Columns>
-                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="ClientexFecha" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="sp_ClientesNuevoXFecha" SelectCommandType="StoredProcedure">
+                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="ClientexFecha" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="sp_ClientesNuevoXFecha" SelectCommandType="StoredProcedure">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="FechaI" PropertyName="Text" DbType="Date" Name="FechaIncial"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="FechaF" PropertyName="Text" DbType="Date" Name="FechaFinal"></asp:ControlParameter>

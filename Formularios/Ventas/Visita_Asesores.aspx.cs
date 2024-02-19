@@ -35,6 +35,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private object filePath;
        int permisoAcceso ;
 
+        private string CadenaConexionSID = "BD_SIDSQL";
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -89,7 +90,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (!string.IsNullOrEmpty(IdCLiente) && !string.IsNullOrEmpty(IdContaco))
                 {
-                    string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
@@ -223,7 +224,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             string consultaActual = "select ID_Permiso  from tblPermiso_Empleado As A Inner join tblEmpleado AS B on  B.Cedula = A.ID_Empleado" +
                                     " where B.Cedula = @Cedula And A.ID_Permiso = '12'";
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -254,7 +255,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private void CargarAsesoresEnDropDownList()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -412,7 +413,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
 
             // Realizamos la consulta SQL para obtener los datos necesarios
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = @"SELECT 
@@ -1110,7 +1111,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if( Session["InsertUpdateVisita"].ToString() == "Insertar")
             {
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -1173,7 +1174,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             else if(Session["InsertUpdateVisita"].ToString() == "Actualizar")
             {
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {

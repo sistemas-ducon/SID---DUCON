@@ -252,7 +252,7 @@
                                 <div class="col-4">
                                     <div class="input-group input-group-sm  mb-2 gap-2 ">
                                         <asp:Label class="form-label" Text="Visitas Por" runat="server" ID="lbVisitasPor"></asp:Label>
-                                        <asp:DropDownList class="form-control" ID="ddlVisitasPor" runat="server" disabled="false" DataTextField="NombreCausa" DataValueField="Id_Causa" DataSourceID="CausaVisita"></asp:DropDownList><asp:SqlDataSource runat="server" ID="CausaVisita" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select * from tblCausaVisita"></asp:SqlDataSource>
+                                        <asp:DropDownList class="form-control" ID="ddlVisitasPor" runat="server" disabled="false" DataTextField="NombreCausa" DataValueField="Id_Causa" DataSourceID="CausaVisita"></asp:DropDownList><asp:SqlDataSource runat="server" ID="CausaVisita" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="select * from tblCausaVisita"></asp:SqlDataSource>
                                     </div>
                                 </div>
 
@@ -392,7 +392,7 @@
                                                     </asp:DataGrid>
                                                 </div>
 
-                                                <asp:SqlDataSource runat="server" ID="VisitaAse" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="sp_GetVisitasAsesor" SelectCommandType="StoredProcedure">
+                                                <asp:SqlDataSource runat="server" ID="VisitaAse" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="sp_GetVisitasAsesor" SelectCommandType="StoredProcedure">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="ddlAsesor" PropertyName="SelectedValue" Name="Asesor" Type="String"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="fecha1" PropertyName="Text" Name="FechaInicio" Type="DateTime"></asp:ControlParameter>
@@ -556,7 +556,7 @@
 
                                                         </Columns>
                                                     </asp:DataGrid>
-                                                    <asp:SqlDataSource runat="server" ID="EstadisticaAsesores" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="ObtenerDatosAsesoresConVisitas" SelectCommandType="StoredProcedure">
+                                                    <asp:SqlDataSource runat="server" ID="EstadisticaAsesores" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="ObtenerDatosAsesoresConVisitas" SelectCommandType="StoredProcedure">
                                                         <SelectParameters>
                                                             <asp:ControlParameter ControlID="fecha5" PropertyName="Text" Name="FechaInicio" Type="DateTime"></asp:ControlParameter>
                                                             <asp:ControlParameter ControlID="fecha6" PropertyName="Text" Name="FechaFin" Type="DateTime"></asp:ControlParameter>
@@ -620,7 +620,7 @@
                                                                             <asp:BoundColumn DataField="FechaVisita" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column" />
 
                                                                         </Columns>
-                                                                    </asp:DataGrid><asp:SqlDataSource runat="server" ID="LlenarDetalle" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="sp_GetVisitasAsesor" SelectCommandType="StoredProcedure">
+                                                                    </asp:DataGrid><asp:SqlDataSource runat="server" ID="LlenarDetalle" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="sp_GetVisitasAsesor" SelectCommandType="StoredProcedure">
                                                                         <SelectParameters>
                                                                             <asp:Parameter Name="Asesor" Type="String" />
                                                                             <asp:Parameter Name="FechaInicio" Type="DateTime" />

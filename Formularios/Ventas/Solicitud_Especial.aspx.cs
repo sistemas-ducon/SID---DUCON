@@ -27,6 +27,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private bool terminadoVentas;
         public bool VariableSolicitudSesion;
 
+        private string CadenaConexionSID = "BD_SIDSQL";
+
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -260,7 +262,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (!string.IsNullOrEmpty(IdCLiente) && !string.IsNullOrEmpty(IdContaco))
                 {
-                    string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
@@ -335,7 +337,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private void CargarAsesoresEnDropDownList()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -377,7 +379,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             string consultaActual = "Select Nombre +' '+ Apellidos, Zona from tblEmpleado where  Cedula = @Cedula";
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -408,7 +410,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             string consultaActual = "Select  Zona from tblEmpleado where  Cedula = @Cedula";
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -438,7 +440,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             string consultaActual = "SELECT B.Descripcion FROM tblEmpleado As A INNER join tblDepartamento As B on B.ID_Departamento = A.Dependencia WHERE  Cedula = @Cedula";
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -1266,7 +1268,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 // Validar Campos de cliente 
 
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -1368,7 +1370,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 //CalcularFechaEntregaSolicitudEspecial() de momento se envia fecha del primer dia del año  !!!!IMPORTANTE !!!!
 
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -1599,7 +1601,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 case "VENTAS":
 
 
-                    string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
                         connection.Open();
@@ -1805,7 +1807,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             DateTime FechaEntrega = UltimaActivacionSolicitud.AddDays(5);
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             // Calcula el día siguiente a la fecha de entrega
             DateTime DiaSiguiente = FechaEntrega.AddDays(1);
@@ -1981,7 +1983,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             string consultaActual = "Select * from tblDocumentacion where ID_OT='PE" + lbNumeroSolicitud.Text + "-" + Session["Id_Detalle"].ToString() + "'";
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -2043,7 +2045,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (Session["InsertUpdateDetalle"].ToString() == "Insertar")
             {
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -2140,7 +2142,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 //CalcularFechaEntregaSolicitudEspecial() de momento se envia fecha del primer dia del año  !!!!IMPORTANTE !!!!
 
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {

@@ -472,7 +472,7 @@
                                         <div class=" input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbZona2" class="form-label" Text="Zona" runat="server"></asp:Label>
                                             <asp:DropDownList class="form-control" ID="ddlZona2" runat="server" OnSelectedIndexChanged="RenderPorZonaX" AutoPostBack="true" DataTextField="Zona" DataValueField="Zona" DataSourceID="Zonas" OnDataBound="ddlZona2_DataBound">
-                                            </asp:DropDownList><asp:SqlDataSource runat="server" ID="Zonas" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select Zona from tblRender group by Zona"></asp:SqlDataSource>
+                                            </asp:DropDownList><asp:SqlDataSource runat="server" ID="Zonas" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="select Zona from tblRender group by Zona"></asp:SqlDataSource>
                                         </div>
                                     </div>
 
@@ -652,8 +652,8 @@
                                                     </Columns>
                                                 </asp:DataGrid>
 
-                                                <asp:SqlDataSource runat="server" ID="CargarRenders" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT   ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno, Cliente +'-'+ Nombre_Render AS Nombre,    * FROM    tblRender WHERE     TerminadoRender = 0  "></asp:SqlDataSource>
-                                                <asp:SqlDataSource ID="RenderPorZona" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,Cliente +'-'+ Nombre_Render AS Nombre, * from tblRender where Zona=@Parametro and TerminadoRender = 0 ">
+                                                <asp:SqlDataSource runat="server" ID="CargarRenders" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT   ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno, Cliente +'-'+ Nombre_Render AS Nombre,    * FROM    tblRender WHERE     TerminadoRender = 0  "></asp:SqlDataSource>
+                                                <asp:SqlDataSource ID="RenderPorZona" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="select  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,Cliente +'-'+ Nombre_Render AS Nombre, * from tblRender where Zona=@Parametro and TerminadoRender = 0 ">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="ddlZona2" PropertyName="SelectedValue" Name="Parametro"></asp:ControlParameter>
                                                     </SelectParameters>
@@ -842,14 +842,14 @@
 
                                                 </asp:DataGrid>
 
-                                                <asp:SqlDataSource ID="RenderFecha" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,Cliente +'-'+ Nombre_Render AS Nombre,  * from tblRender where Fecha_Ingreso between  @FechaIni and  @FechaFin ORDER BY  Fecha_Ingreso DESC  ">
+                                                <asp:SqlDataSource ID="RenderFecha" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="select ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,Cliente +'-'+ Nombre_Render AS Nombre,  * from tblRender where Fecha_Ingreso between  @FechaIni and  @FechaFin ORDER BY  Fecha_Ingreso DESC  ">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="FechaIni" PropertyName="Text" Name="FechaIni"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="FechaFin" PropertyName="Text" Name="FechaFin"></asp:ControlParameter>
                                                     </SelectParameters>
                                                 </asp:SqlDataSource>
 
-                                                <asp:SqlDataSource ID="RenderCliente" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,Cliente +'-'+ Nombre_Render AS Nombre,   * FROM tblRender WHERE Cliente LIKE '%' + @NombreCliente + '%' AND Fecha_Ingreso between  @FechaIni and  @FechaFin ORDER BY  Fecha_Ingreso DESC ">
+                                                <asp:SqlDataSource ID="RenderCliente" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,Cliente +'-'+ Nombre_Render AS Nombre,   * FROM tblRender WHERE Cliente LIKE '%' + @NombreCliente + '%' AND Fecha_Ingreso between  @FechaIni and  @FechaFin ORDER BY  Fecha_Ingreso DESC ">
                                                     <SelectParameters>
                                                          <asp:ControlParameter ControlID="FechaIni" PropertyName="Text" Name="FechaIni"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="FechaFin" PropertyName="Text" Name="FechaFin"></asp:ControlParameter>
@@ -857,14 +857,14 @@
                                                     </SelectParameters>
                                                 </asp:SqlDataSource>
 
-                                                <asp:SqlDataSource ID="RenderNombreRender" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="SELECT  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,Cliente +'-'+ Nombre_Render AS Nombre,  * FROM tblRender WHERE Nombre_Render LIKE '%' + @NombreRender + '%' AND Fecha_Ingreso between  @FechaIni and  @FechaFin ORDER BY  Fecha_Ingreso DESC ">
+                                                <asp:SqlDataSource ID="RenderNombreRender" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,Cliente +'-'+ Nombre_Render AS Nombre,  * FROM tblRender WHERE Nombre_Render LIKE '%' + @NombreRender + '%' AND Fecha_Ingreso between  @FechaIni and  @FechaFin ORDER BY  Fecha_Ingreso DESC ">
                                                     <SelectParameters>
                                                           <asp:ControlParameter ControlID="FechaIni" PropertyName="Text" Name="FechaIni"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="FechaFin" PropertyName="Text" Name="FechaFin"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="tbProyectoX" PropertyName="Text" Name="NombreRender"></asp:ControlParameter>
                                                     </SelectParameters>
                                                 </asp:SqlDataSource>
-                                                <asp:SqlDataSource ID="RenderXIdRender" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL_PRUEBA %>" SelectCommand="select  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,Cliente +'-'+ Nombre_Render AS Nombre,  * from tblRender where Id_Render = @IdRender AND Fecha_Ingreso between  @FechaIni and  @FechaFin ORDER BY  Fecha_Ingreso DESC ">
+                                                <asp:SqlDataSource ID="RenderXIdRender" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="select  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,Cliente +'-'+ Nombre_Render AS Nombre,  * from tblRender where Id_Render = @IdRender AND Fecha_Ingreso between  @FechaIni and  @FechaFin ORDER BY  Fecha_Ingreso DESC ">
                                                     <SelectParameters>
                                                          <asp:ControlParameter ControlID="FechaIni" PropertyName="Text" Name="FechaIni"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="FechaFin" PropertyName="Text" Name="FechaFin"></asp:ControlParameter>
