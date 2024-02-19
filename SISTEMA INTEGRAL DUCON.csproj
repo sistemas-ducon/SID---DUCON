@@ -166,21 +166,14 @@
     <Content Include="Formularios\FormExtPrin\OTsPendientes.aspx" />
     <Content Include="Formularios\FormExtPrin\Plano1.aspx" />
     <Content Include="Formularios\OrdenTrabajo.aspx" />
-    <Content Include="Formularios\OTs.aspx" />
     <Content Include="Formularios\SuccessMessage.aspx" />
     <Content Include="Formularios\Ventas\AdjuntarDocumentos.aspx" />
     <Content Include="Formularios\Ventas\Clientes.aspx" />
     <Content Include="Formularios\Ventas\Consulta_Cotizacion.aspx" />
     <Content Include="Formularios\Ventas\Diseño_Venta.aspx" />
     <Content Include="Formularios\Ventas\Gestion_Comercial.aspx" />
-    <Content Include="Formularios\DiseñoYDesarrollo\Insumos.aspx" />
-    <Content Include="Formularios\DiseñoYDesarrollo\Insumos_Consultar.aspx" />
     <Content Include="Formularios\Ventas\Licitaciones.aspx" />
-    <Content Include="Formularios\DiseñoYDesarrollo\Modulo.aspx" />
-    <Content Include="Formularios\DiseñoYDesarrollo\Objetos.aspx" />
-    <Content Include="Formularios\DiseñoYDesarrollo\Plano.aspx" />
     <Content Include="Formularios\Inicio.aspx" />
-    <Content Include="Formularios\frmPrincipal.aspx" />
     <Content Include="Formularios\Ventas\Render_Venta.aspx" />
     <Content Include="Formularios\Ventas\Solicitud_Especial.aspx" />
     <Content Include="Formularios\Ventas\Visita_Asesores.aspx" />
@@ -195,10 +188,6 @@
       <LastGenOutput>ModeloBDSID.cs</LastGenOutput>
     </Content>
     <Content Include="Recursos\CSS\Administrativo\EstadisticaVenta.css" />
-    <Content Include="Recursos\CSS\DiseñoYDesarrollo\Insumos.css" />
-    <Content Include="Recursos\CSS\DiseñoYDesarrollo\modulo.css" />
-    <Content Include="Recursos\CSS\DiseñoYDesarrollo\Objetos.css" />
-    <Content Include="Recursos\CSS\DiseñoYDesarrollo\Plano.css" />
     <Content Include="Recursos\CSS\FormExtPrin\AcabadosOT.css" />
     <Content Include="Recursos\CSS\FormExtPrin\NitOts.css" />
     <Content Include="Recursos\CSS\FormExtPrin\ObjetoDespiece.css" />
@@ -206,7 +195,6 @@
     <Content Include="Recursos\CSS\FormExtPrin\ObservacionesOT.css" />
     <Content Include="Recursos\CSS\FormExtPrin\OtsPendientes.css" />
     <Content Include="Recursos\CSS\FormExtPrin\Plano1.css" />
-    <Content Include="Recursos\CSS\frmPrincipal.css" />
     <Content Include="Recursos\CSS\Inicio.css" />
     <Content Include="Recursos\CSS\login.css" />
     <Content Include="Formularios\Login.aspx" />
@@ -316,13 +304,6 @@
     <Compile Include="Formularios\OrdenTrabajo.aspx.designer.cs">
       <DependentUpon>OrdenTrabajo.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Formularios\OTs.aspx.cs">
-      <DependentUpon>OTs.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Formularios\OTs.aspx.designer.cs">
-      <DependentUpon>OTs.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Formularios\SuccessMessage.aspx.cs">
       <DependentUpon>SuccessMessage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -365,47 +346,12 @@
     <Compile Include="Formularios\Ventas\Gestion_Comercial.aspx.designer.cs">
       <DependentUpon>Gestion_Comercial.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Formularios\DiseñoYDesarrollo\Insumos.aspx.cs">
-      <DependentUpon>Insumos.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Formularios\DiseñoYDesarrollo\Insumos.aspx.designer.cs">
-      <DependentUpon>Insumos.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Formularios\DiseñoYDesarrollo\Insumos_Consultar.aspx.cs">
-      <DependentUpon>Insumos_Consultar.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Formularios\DiseñoYDesarrollo\Insumos_Consultar.aspx.designer.cs">
-      <DependentUpon>Insumos_Consultar.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Formularios\Ventas\Licitaciones.aspx.cs">
       <DependentUpon>Licitaciones.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Formularios\Ventas\Licitaciones.aspx.designer.cs">
       <DependentUpon>Licitaciones.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Formularios\DiseñoYDesarrollo\Modulo.aspx.cs">
-      <DependentUpon>Modulo.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Formularios\DiseñoYDesarrollo\Modulo.aspx.designer.cs">
-      <DependentUpon>Modulo.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Formularios\DiseñoYDesarrollo\Objetos.aspx.cs">
-      <DependentUpon>Objetos.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Formularios\DiseñoYDesarrollo\Objetos.aspx.designer.cs">
-      <DependentUpon>Objetos.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Formularios\DiseñoYDesarrollo\Plano.aspx.cs">
-      <DependentUpon>Plano.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Formularios\DiseñoYDesarrollo\Plano.aspx.designer.cs">
-      <DependentUpon>Plano.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\Inicio.aspx.cs">
       <DependentUpon>Inicio.aspx</DependentUpon>
@@ -420,13 +366,6 @@
     </Compile>
     <Compile Include="Formularios\Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Formularios\frmPrincipal.aspx.cs">
-      <DependentUpon>frmPrincipal.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Formularios\frmPrincipal.aspx.designer.cs">
-      <DependentUpon>frmPrincipal.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\Ventas\Render_Venta.aspx.cs">
       <DependentUpon>Render_Venta.aspx</DependentUpon>
@@ -509,7 +448,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Formularios\DiseñoYDesarrollo\" />
     <Folder Include="JavaScript\" />
+    <Folder Include="Recursos\CSS\DiseñoYDesarrollo\" />
     <Folder Include="Recursos\IMG\" />
   </ItemGroup>
   <ItemGroup>
