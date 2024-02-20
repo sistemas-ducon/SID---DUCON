@@ -121,19 +121,19 @@
 
 
                     <li class="nav-item">
-                        <a class="nav-link text-dark active" id="OTs-tab" data-bs-toggle="tab" href="#OTs-Content">Ordenes Trabajo</a>
+                        <a class="nav-link text-dark active" id="OTs-tab" data-bs-toggle="tab" href="#OTs-Content"> <i class="bi bi-person-fill-gear"></i> Ordenes Trabajo</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="Plano-tab" data-bs-toggle="tab" href="#Plano-Content">Plano</a>
+                        <a class="nav-link text-dark" id="Plano-tab" data-bs-toggle="tab" href="#Plano-Content"> <i class="bi bi-file-image-fill"> </i> Plano</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark " id="Objeto-tab" data-bs-toggle="tab" href="#Objeto-Content">Objetos</a>
+                        <a class="nav-link text-dark " id="Objeto-tab" data-bs-toggle="tab" href="#Objeto-Content"> <i class="bi bi-box-fill"></i> Objetos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="Modulo-tab" data-bs-toggle="tab" href="#Modulo-Content">Modulos</a>
+                        <a class="nav-link text-dark" id="Modulo-tab" data-bs-toggle="tab" href="#Modulo-Content"> <i class="bi bi-inboxes-fill"></i> Modulos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark " id="Insumo-tab" data-bs-toggle="tab" href="#Insumo-Content">Insumos</a>
+                        <a class="nav-link text-dark " id="Insumo-tab" data-bs-toggle="tab" href="#Insumo-Content"><i class="bi bi-grid-3x3-gap-fill"></i> Insumos</a>
                     </li>
                 </ul>
             </div>
