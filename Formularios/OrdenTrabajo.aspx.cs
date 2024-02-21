@@ -7102,16 +7102,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 worksheet.Columns.AutoFit();
 
                 //Esta ruta del archivo se debe validar ya que son archivos temporales de descarga 
-                //string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\COTIZACION\CotizacionDespiece"+tbOT.Text+ "-"+ ddlNumbers.SelectedItem.Text +".xls";
-
-                string carpetaUsuario = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                string rutaDescargas = Path.Combine(carpetaUsuario, "Downloads");
-                string nombreArchivo = "CotizacionDespiece.xls"; // Nombre por defecto del archivo
-                string rutaCompleta = Path.Combine(rutaDescargas, nombreArchivo);
+                string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\COTIZACION\CotizacionDespiece"+tbOT.Text+ "-"+ ddlNumbers.SelectedItem.Text +".xls";
 
 
-
-                workbook.SaveAs(rutaCompleta);
+                workbook.SaveAs(rutaArchivo);
                 excelApp.Quit();
                 
 
@@ -7130,11 +7124,32 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Marshal.ReleaseComObject(excelApp);
 
 
-                // Pendiente validar que los excel no queden abiertos ne segundo plano 
-                // Obtener el ID del proceso Excel
-                int processId = excelApp.Hwnd;
-                // Finalizar el proceso Excel
-                System.Diagnostics.Process.GetProcessById(processId).Kill();
+                if (File.Exists(rutaArchivo))
+                {
+                    // Establecer las cabeceras para la descarga del archivo
+                    Response.Clear();
+                    Response.ContentType = "application/octet-stream";
+                    Response.AppendHeader("Content-Disposition", "attachment; filename=" + Path.GetFileName(rutaArchivo));
+                    Response.AppendHeader("X-Content-Type-Options", "nosniff");
+                    Response.AppendHeader("X-Frame-Options", "SAMEORIGIN");
+                    Response.AppendHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+
+                    // Escribir el archivo al flujo de respuesta
+                    Response.WriteFile(rutaArchivo);
+
+                    // Enviar todos los encabezados al cliente antes de finalizar la respuesta
+                    Response.Flush();
+                    // Finalizar la respuesta
+                    Response.End();
+
+
+                }
+                else
+                {
+                    string mensajeExito = "La Cotización  " + txtCotizacion.Text.Trim() + " ha sido cambiada o borrada en el servidor.";
+                    string scriptExito = "alert('" + mensajeExito + "');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
+                }
 
 
 
@@ -7259,6 +7274,30 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 cellRange.Font.Name = "Century Gothic";
                 cellRange.EntireRow.Font.Color = System.Drawing.Color.Black;
                 cellRange.WrapText = true;
+            }
+        }
+
+        protected void EliminarExcel(object sender, EventArgs e)
+        {
+            //Esta ruta del archivo se debe validar ya que son archivos temporales de descarga 
+            string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\COTIZACION\CotizacionDespiece" + tbOT.Text + "-" + ddlNumbers.SelectedItem.Text + ".xls";
+
+            Session["Id_OT2"] = tbOT.Text;
+            Session["pedido2"] = ddlNumbers.SelectedItem.Text;
+
+            if (File.Exists(rutaArchivo))
+            {
+
+                File.Delete(rutaArchivo );
+                string mensajePersonalizado = "Descarga Exitosa";
+                string urlRedireccion = "OrdenTrabajo.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            }
+            else
+            {
+                string mensajeExito = "Si no pudiste descargar el archivo intentalo nuevamente.";
+                string scriptExito = "alert('" + mensajeExito + "');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
             }
         }
 
