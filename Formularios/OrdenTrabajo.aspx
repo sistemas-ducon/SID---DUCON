@@ -54,7 +54,7 @@
         }
         // Función para ocultar el modal Excel
         function CerrarCargarExcel() {
-            $('#loadingModalExcel').modal('hide');
+            $('#loadingModalExcel').modal('hide');         
         }
 
     </script>
@@ -108,7 +108,7 @@
 
     </script>
 
-
+   
 </head>
 
 <body>
@@ -305,7 +305,7 @@
                                         <ul class="navbar-nav mx-auto contenedor-icono">
                                             <div class="contenedor-icono">
 
-
+                                                                                              
                                                 <asp:LinkButton runat="server" title="Nueva OT" ID="NuevaOt" OnClick="NuevaOT_Click">
                                                       <i class="bi bi-file-earmark"></i>
                                                 </asp:LinkButton>
@@ -813,7 +813,7 @@
                                     </div>
 
                                     <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
-                                        <div class="row">
+                                        <div class="row"> 
                                             <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
                                                 <div class="input-group input-group-sm mb-2 gap-2">
                                                     <asp:Label class="form-label" Text="V. Pedido" runat="server" ID="Label1"></asp:Label>
@@ -1047,13 +1047,14 @@
                                                     <div class="col-12">
                                                         <div class="table-responsive mb-1" style="max-height: 10rem; overflow-x: auto;">
                                                             <h5 class="datagrid-header text-center">Contable</h5>
-                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGrid" runat="server" DataSourceID="InfoContable" >
+                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGrid" runat="server" DataSourceID="InfoContable" OnItemDataBound="DataGrid_RowDataBound">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                                 <Columns>
                                                                     <asp:BoundColumn DataField="Consecutivo_Pedido" HeaderText="Pedido" />
                                                                     <asp:BoundColumn DataField="Descripcion_TipoPedido" HeaderText="Tipo Pedido" ItemStyle-CssClass="auto-width-column" />
                                                                     <asp:BoundColumn DataField="Precio_Venta" HeaderText="V. Venta" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="ValorBolsa" HeaderText="V. Bolsa" ItemStyle-CssClass="auto-width-column" Visible="false" />
                                                                     <asp:BoundColumn DataField="ValorPedido" HeaderText="Valor Pedido" ItemStyle-CssClass="auto-width-column" />
                                                                     <asp:BoundColumn DataField="PedidoBase" HeaderText="Ref" ItemStyle-CssClass="auto-width-column" />
                                                                     <asp:BoundColumn DataField="" HeaderText="Total Ref" ItemStyle-CssClass="auto-width-column" />
@@ -1181,21 +1182,21 @@
                             </div>
                         </div>
 
-                         <div class="modal" id="miModalll" tabindex="-1" style="display: none;" >
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header bg-dark">
-                                    <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Campo Faltante</h5>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
-                                    <p>Falta llenar el campo: <span id="campoFaltante"></span></p>
-                                </div>
-                                <div class="modal-footer">
+                        <div class="modal" id="miModalll" tabindex="-1" style="display: none;" >
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Campo Faltante</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                                        <p>Falta llenar el campo: <span id="campoFaltante"></span></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                             </div>
 
                         <div id="OTingresada" class="modal" tabindex="-1">
                             <div class="modal-dialog modal-dialog-centered">
@@ -1249,15 +1250,17 @@
                             </div>
                         </div>
 
-                         <div class="modal fade" id="LlenarNIT" data-backdrop="static" data-bs-keyboard="false">
+                        <div class="modal fade" id="LlenarNIT" data-backdrop="static" data-bs-keyboard="false">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-dark">
                                         <h5 class="modal-title d-flex align-items-center justify-content-center text-white">NIT</h5>
                                     </div>
                                     <div class="modal-body form-control-sm">
-                                        <p>Debes de llenar el NIT <br />
-                                        Al darle aceptar se redireccionará al NIT</p>
+                                        <p>
+                                            Debes de llenar el NIT <br />
+                                            Al darle aceptar se redireccionará al NIT
+                                        </p>
                                     </div>
                                     <div class="modal-footer  d-flex align-items-center justify-content-center">
                                         <asp:Button runat="server" Text="Aceptar" OnClick="Redireccion_Nit_Click" CssClass="btn btn-sm btn-outline-dark" />
@@ -1302,7 +1305,7 @@
                     </ContentTemplate>
 
                     <Triggers>
-                        <asp:PostBackTrigger ControlID="btnCotizacion" />
+                        <asp:PostBackTrigger ControlID="btnCotizacion" />                   
                     </Triggers>
                 </asp:UpdatePanel>
             </div>
@@ -1894,6 +1897,9 @@
                         </div>
 
                     </ContentTemplate>
+                    <Triggers>
+                        <asp:PostBackTrigger ControlID="BtnVisGenCot"  />
+                    </Triggers>
                 </asp:UpdatePanel>
 
             </div>
@@ -2287,7 +2293,7 @@
 
         </div>
 
-        
+
         <div class="modal" id="CarteraVencida" tabindex="-1" style="display: none;">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -2404,7 +2410,7 @@
                         <div class="spinner-border" role="status">
                             <span class="visually-hidden">Cargando...</span>
                         </div>
-                        <p class="mt-2">Cargando Excel...</p>
+                        <p class="mt-2">Descargando Excel...</p>
                     </div>
                 </div>
             </div>
@@ -2429,9 +2435,6 @@
                 </div>
             </div>
         </div>
-
-
-
 
 
     </form>
@@ -2540,7 +2543,6 @@
 
         }
     </script>
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
