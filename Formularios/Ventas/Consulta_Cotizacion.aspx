@@ -15,6 +15,31 @@
      <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
     <link href="../../Recursos/CSS/Ventas/Consulta_Cotizacion.css" rel="stylesheet" />
     <title>Consultas de Cotizaciones</title>
+
+      <script type="text/javascript">
+        function CargarExcel() {
+            // Muestra el modal de carga Excel
+            $('#loadingModalExcel').modal('show');
+
+            document.getElementById('<%= Eliminar.ClientID %>').disabled = true;
+        
+        // Habilita el botón después de 10 segundos, asumiendo que la descarga ha terminado
+        setTimeout(function() {
+            document.getElementById('<%= Eliminar.ClientID %>').disabled = false;
+        }, 10000); // Ajusta el tiempo según sea necesario
+
+        }
+        // Función para ocultar el modal Excel
+        function CerrarCargarExcel() {
+            $('#loadingModalExcel').modal('hide');
+          }
+
+
+
+      </script>
+
+   
+
 </head>
 <body>
     <form id="form1" runat="server">
@@ -210,7 +235,7 @@
                                     </table>
                                 </div>
                                      <div class="d-flex justify-content-end align-items-center mt-3">
-                                      <asp:ImageButton ID="ImageButton1" runat="server" OnClick="LinkButton_Click"
+                                      <asp:ImageButton ID="btnCotizacion" runat="server" OnClick="LinkButton_Click" OnClientClick="CargarExcel();"
                                           ImageUrl="https://i.ibb.co/86fR8JK/icons8-microsoft-excel-2019-48.png" AlternateText="Excel Icon" />
                                          </div>
                                 </div>
@@ -218,6 +243,9 @@
                         </div>
                         
                     </ContentTemplate>
+                      <Triggers>
+                        <asp:PostBackTrigger ControlID="btnCotizacion" />
+                    </Triggers>
                 </asp:UpdatePanel>
 
 
@@ -717,7 +745,27 @@ ORDER BY
             </div>
 
         </div>
-      
+
+        <div class="modal fade" id="loadingModalExcel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Descargar Excel</h5>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-2">Cargando Excel...</p>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                            <asp:Button runat="server" ID="Eliminar" Text="Descarga Completada" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-outline-success" OnClick="EliminarDoc_Click" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </form>
 

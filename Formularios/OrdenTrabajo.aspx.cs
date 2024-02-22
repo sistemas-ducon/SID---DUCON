@@ -236,6 +236,31 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             cboPedidoBase.Items.Insert(0, new ListItem(" "));
         }
 
+        protected void cbxComisionCompart_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbxComisionCompart.Checked)
+            {
+                if (!txtVenta.Enabled && !txtDcto.Enabled) // Si ambos TextBox están deshabilitados
+                {
+                    txtVenta.Enabled = true;
+                    txtDcto.Enabled = true;
+                }
+                else // Si alguno o ambos TextBox ya están habilitados, deshabilitarlos
+                {
+                    txtVenta.Enabled = false;
+                    txtDcto.Enabled = false;
+                    cbxComisionCompart.Checked = false; // Deseleccionar el CheckBox
+                }
+            }
+            else
+            {
+                txtVenta.Enabled = false;
+                txtDcto.Enabled = false;
+            }
+        }
+
+
+
         private bool ObtenerEstadisticaVenta(string idTipoPedido)
         {
             bool estadisticaVenta = false; // Valor predeterminado
@@ -653,6 +678,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             dtacboTipoPedido.DataBind();
             dtacboTipoPedido.Items.Insert(0, new ListItem(" "));
 
+            cbxComisionCompart.Enabled = true;
+
             Session["NuevaOTEjecutada"] = true;
         }
 
@@ -889,6 +916,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             ObservacionCont.Disabled = true;
             TextTNegociacion.Disabled = true;
+
+            cbxComisionCompart.Enabled = false;
         }
 
         protected void HabilitarTodosLosTextBoxes()
@@ -3351,6 +3380,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 if (rowsAffected > 0)
                 {
                     ObtenerInfoOt3();
+              
+                    string contenidoModalOT = "Se agrego el pedido " + pedido + " A la Orden de trabajo " + idOT;
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#PedidoIngresado').modal('show'); $('#PedidoIngresado2').text('" + contenidoModalOT + "');", true);
                 }
                 else
                 {
@@ -4053,6 +4085,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             Nit.Enabled = true;
 
+            cbxComisionCompart.Enabled = true;
         }
 
         protected void ValidarFecha(object sender, EventArgs e)

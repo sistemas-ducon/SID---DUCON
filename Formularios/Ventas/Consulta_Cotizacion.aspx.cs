@@ -9,6 +9,9 @@ using System.Web.UI.WebControls;
 using Excel = Microsoft.Office.Interop.Excel;
 using Microsoft.Office.Interop.Excel;
 using System.Configuration;
+using DocumentFormat.OpenXml.Drawing.Charts;
+
+using System.IO;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
@@ -62,8 +65,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     Response.Redirect("/Formularios/Login.aspx");
                 }
-               
-            }
+
+                }
 
 
         }
@@ -691,10 +694,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             Range totalRow = worksheet.Rows[8];
             totalRow.Font.Bold = true;
-
-            // Mostrar la aplicación de Excel
-            excelApp.Visible = true;
-
+    
             Range headerRow = worksheet.Rows[5];
             headerRow.Font.Bold = true;
            
@@ -714,7 +714,66 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Ajustar el ancho de las columnas para que los datos se muestren correctamente
             worksheet.Columns.AutoFit();
+
+            string nombreArchivo = GenerarNombreArchivo();
+
+            // Guardar el libro de Excel en el disco
+            string filePath = (@"\\172.16.30.6\PruebaDocumentacion\COTIZACION\" + nombreArchivo) ;
+            workbook.SaveAs(filePath);
+  
+            // Cerrar y liberar recursos
+            workbook.Close();
+            excelApp.Quit();
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(worksheet);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(workbook);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);
+
+            // Descargar el archivo Excel
+            Response.Clear();
+            Response.ContentType = "application/octet-stream";
+            Response.AppendHeader("Content-Disposition", "attachment; filename=" + nombreArchivo);
+            Response.TransmitFile(filePath);
+            Response.End();
+
         }
+
+
+
+        protected void EliminarDoc_Click(object sender, EventArgs e)
+        {
+            // Asumiendo que tienes una forma de obtener o generar el mismo nombre de archivo.
+            // Si nombreArchivo se genera en base a algún input del usuario o una variable,
+            // asegúrate de reconstruirlo de la misma manera aquí.
+            string nombreArchivo = GenerarNombreArchivo(); // Asume que esta función genera el nombre del archivo basado en la lógica que ya tienes.
+
+            string filePath = @"\\172.16.30.6\PruebaDocumentacion\COTIZACION\" + nombreArchivo;
+
+            // Verifica si el archivo existe antes de intentar eliminarlo.
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+                // Opcionalmente, puedes notificar al usuario que el archivo fue eliminado.
+                // Por ejemplo: lblMensaje.Text = "Archivo eliminado con éxito.";
+            }
+            else
+            {
+                // Opcionalmente, notifica al usuario que el archivo no se encontró.
+                // Por ejemplo: lblMensaje.Text = "El archivo no existe.";
+            }
+        }
+
+        
+        private string GenerarNombreArchivo()
+        {
+            // Aquí iría la lógica para generar el nombre del archivo, asegúrate de que
+            // sea la misma lógica utilizada en LinkButton_Click para garantizar que
+            // el nombre del archivo sea el correcto.
+            // Ejemplo simple basado en tu código actual:
+            string asesorComercial = TextAsesor.Text; // Asume que TextAsesor es accesible aquí.
+            string nombreArchivo = asesorComercial + "CotVen" + ".xls";
+            return nombreArchivo;
+        }
+
 
         protected void lnkSelectRow_Click(object sender, EventArgs e)
         {

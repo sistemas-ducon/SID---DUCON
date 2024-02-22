@@ -61,21 +61,22 @@
                         <div class="collapse navbar-collapse navbar-expand" id="navbarScroll">
                             <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle text-white" href="#" id="Departamento" role="button" data-bs-toggle="dropdown" aria-expanded="false">Departamento
-                                        <i class="bi bi-building-fill"></i> <%--Icono Departamento --%>
+                                   
+                                    <a class="nav-link dropdown-toggle text-white" href="#" id="Departamento" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                      <%--Icono Departamento --%>   <i class="bi bi-building-fill"></i> Departamento                           
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="Departamento">
                                         <li class="nav-item dropend">
-                                            <a class="nav-link dropdown-toggle form-control-sm" href="#" id="Administrativo" role="button" data-bs-toggle="dropdown" aria-expanded="false">Administrativo <i class="bi bi-people-fill"></i>  <%-- Administrativo--%>
+                                            <a class="nav-link dropdown-toggle form-control-sm" href="#" id="Administrativo" role="button" data-bs-toggle="dropdown" aria-expanded="false"> <i class="bi bi-people-fill"></i>  <%-- Administrativo--%> Administrativo
                                             </a>
                                             <ul class="dropdown-menu">
 
                                                 <li class="nav-item dropend">
-                                                    <a class="nav-link dropdown-toggle form-control-sm" href="#" id="GerenciaComercial" role="button" data-bs-toggle="dropdown" aria-expanded="false">Gerencia Comercial
+                                                    <a class="nav-link dropdown-toggle form-control-sm" href="#" id="GerenciaComercial" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-people-fill"></i> Gerencia Comercial
                                                     </a>
                                                     <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
                                                         <li>
-                                                            <asp:LinkButton ID="Linkbutton7" runat="server" CssClass="dropdown-item form-control-sm" OnClick="GerenciaComercial_Click" CommandName="ActualizarPrecios" Text="Actualizar Precios" /></li>
+                                                            <asp:LinkButton ID="Linkbutton7" runat="server" CssClass="dropdown-item form-control-sm" OnClick="GerenciaComercial_Click" CommandName="ActualizarPrecios"> <i class="bi bi-people-fill"></i> Actualizar Precios</asp:LinkButton> </li>
                                                         <li>
                                                             <asp:LinkButton ID="Linkbutton8" runat="server" CssClass="dropdown-item form-control-sm" OnClick="GerenciaComercial_Click" CommandName="EstadisticaVentas" Text="Estadistica Ventas" /></li>
                                                         <li>
@@ -224,7 +225,7 @@
                                   
 
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle form-control-sm" href="#" id="Personas" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #FFFFFF" >Persona  <i class="bi bi-person-fill-check"></i> <%-- Icono Persona--%>
+                                    <a class="nav-link dropdown-toggle form-control-sm" href="#" id="Personas" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #FFFFFF" > <i class="bi bi-person-fill-check"></i> <%-- Icono Persona--%> Persona 
                                     </a>
                                      
                                     <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
@@ -238,7 +239,7 @@
 
 
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle form-control-sm" href="#" id="Consultas" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #FFFFFF">Consultas <i class="bi bi-question-square-fill"></i>  <%-- Icono Consultas--%>
+                                    <a class="nav-link dropdown-toggle form-control-sm" href="#" id="Consultas" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #FFFFFF"><i class="bi bi-question-square-fill"></i>  <%-- Icono Consultas--%> Consultas
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
                                         <li><asp:linkbutton ID="Linkbutton3" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Reprocesos_Click"  CommandName="Reprocesos" Text="Reprocesos"/></li>

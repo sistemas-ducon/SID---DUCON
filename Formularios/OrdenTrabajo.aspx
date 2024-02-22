@@ -445,7 +445,7 @@
                                         <asp:Label class="form-label" Text="T.Ped" runat="server" ID="lblTped"></asp:Label>
                                         <asp:DropDownList ID="dtacboTipoPedido" runat="server" class="form-control" DataSourceID="TiposDePedidos" DataTextField="Descripcion_TipoPedido" DataValueField="Id_TipoPedido" AutoPostBack="True" OnSelectedIndexChanged="dtacboTipoPedido_SelectedIndexChanged">
                                         </asp:DropDownList>
-                                        <asp:SqlDataSource ID="TiposDePedidos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT Descripcion_TipoPedido, Id_TipoPedido, EstadisticaVenta FROM tblTipoPedido WHERE Activo = '1' ORDER BY Descripcion_TipoPedido "></asp:SqlDataSource>
+                                        <asp:SqlDataSource ID="TiposDePedidos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT Descripcion_TipoPedido, Id_TipoPedido, EstadisticaVenta FROM tblTipoPedido WHERE Activo = '1' AND orientacion =  'COMERCIAL' ORDER BY Descripcion_TipoPedido"></asp:SqlDataSource>
                                     </div>
                                 </div>
 
@@ -1015,7 +1015,7 @@
 
                                     <div class="Info_M2">
                                         <asp:Label ID="lblComisionCompart" class="form-label" Text="Comisión Compartida" runat="server"></asp:Label>
-                                        <asp:CheckBox class="" ID="cbxComisionCompart" runat="server" />
+                                        <asp:CheckBox class="" ID="cbxComisionCompart" runat="server" AutoPostBack="true" OnCheckedChanged="cbxComisionCompart_CheckedChanged"/>
                                     </div>
                                 </div>
 
@@ -1214,6 +1214,23 @@
                             </div>
                         </div>
 
+                         <div id="PedidoIngresado" class="modal" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">S_I_Ducon</h5>
+
+                                    </div>
+                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                                        <p><span id="PedidoIngresado2"></span></p>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                                        <asp:Button runat="server" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close"></asp:Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="modal" id="NuevoPedido" tabindex="-1" style="display: none;">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -1266,11 +1283,11 @@
                             </div>
                         </div>
 
-                        <div class="fundido modal" id="LlenarNIT" data-backdrop="static" data-bs-keyboard="false">
-                            <div class="modal-dialog modal-dialog-centrado">
+                        <div class="fundido modal" id="ValidarAsesor" data-backdrop="static" data-bs-keyboard="false">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content p-4 shadow">
                                     <div class="modal-header bg-light">
-                                        <h5 class="modal-title">NIT</h5>
+                                        <h5 class="modal-title">Validar Asesor</h5>
                                     </div>
                                     <div class="modal-body">
                                         <p><span id="ValidarAsesor1"></span></p>
@@ -1283,7 +1300,7 @@
                         </div>
 
                         <div id="OTModificada" class="modal" tabindex="-1">
-                            <div class="modal-dialog modal-dialog-centrado">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-dark">
                                         <h5 class="modal-title d-flex align-items-center justify-content-center text-white">S_I_Ducon</h5>
