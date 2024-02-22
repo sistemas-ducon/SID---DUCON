@@ -50,11 +50,16 @@
         function CargarExcel() {
             // Muestra el modal de carga Excel
             $('#loadingModalExcel').modal('show');
+            iniciarCambiosExcel();
+            setTimeout(function() {
+           document.getElementById("btnTerminarDescarga").disabled = false;
+           }, 10000); // 10 segundos
+
 
         }
         // Función para ocultar el modal Excel
         function CerrarCargarExcel() {
-            $('#loadingModalExcel').modal('hide');
+            $('#loadingModalExcel').modal('hide');         
         }
 
     </script>
@@ -108,7 +113,41 @@
 
     </script>
 
+    <script>
+        // Para camabiar los mensajes en el modal de espera
+        var mensajesEspera = [
+            "Por favor, espere mientras el archivo se descarga....",
+            "No haga clic fuera de este mensaje..",
+            "Al finalizar la descarga, presione 'Terminar Descarga'..."
 
+        ];
+        var indiceMensaje = 0;
+
+        // Función para cambiar el mensaje cada 2 segundos
+        function cambiarMensaje() {
+            // Obtener el elemento del mensaje
+            var mensajeElemento = document.getElementById("mensajeCargando1");
+
+            // Cambiar el texto del mensaje al siguiente mensaje en el arreglo
+            mensajeElemento.textContent = mensajesEspera[indiceMensaje];
+
+            // Incrementar el índice para el siguiente mensaje
+            indiceMensaje++;
+
+            // Si alcanzamos el final del arreglo, reiniciamos el índice
+            if (indiceMensaje >= mensajesEspera.length) {
+                indiceMensaje = 0;
+            }
+        }
+
+        // Función para iniciar el cambio de mensajes
+        function iniciarCambiosExcel() {
+            // Llamar a la función cambiarMensaje cada 2 segundos
+            setInterval(cambiarMensaje, 3000);
+        }
+
+
+    </script>
 </head>
 
 <body>
@@ -121,19 +160,19 @@
 
 
                     <li class="nav-item">
-                        <a class="nav-link text-dark active" id="OTs-tab" data-bs-toggle="tab" href="#OTs-Content">Ordenes Trabajo</a>
+                        <a class="nav-link text-dark active" id="OTs-tab" data-bs-toggle="tab" href="#OTs-Content"><i class="bi bi-person-fill-gear"></i>Ordenes Trabajo</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="Plano-tab" data-bs-toggle="tab" href="#Plano-Content">Plano</a>
+                        <a class="nav-link text-dark" id="Plano-tab" data-bs-toggle="tab" href="#Plano-Content"><i class="bi bi-file-image-fill"></i>Plano</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark " id="Objeto-tab" data-bs-toggle="tab" href="#Objeto-Content">Objetos</a>
+                        <a class="nav-link text-dark " id="Objeto-tab" data-bs-toggle="tab" href="#Objeto-Content"><i class="bi bi-box-fill"></i>Objetos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="Modulo-tab" data-bs-toggle="tab" href="#Modulo-Content">Modulos</a>
+                        <a class="nav-link text-dark" id="Modulo-tab" data-bs-toggle="tab" href="#Modulo-Content"><i class="bi bi-inboxes-fill"></i>Modulos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark " id="Insumo-tab" data-bs-toggle="tab" href="#Insumo-Content">Insumos</a>
+                        <a class="nav-link text-dark " id="Insumo-tab" data-bs-toggle="tab" href="#Insumo-Content"><i class="bi bi-grid-3x3-gap-fill"></i>Insumos</a>
                     </li>
                 </ul>
             </div>
@@ -1047,13 +1086,14 @@
                                                     <div class="col-12">
                                                         <div class="table-responsive mb-1" style="max-height: 10rem; overflow-x: auto;">
                                                             <h5 class="datagrid-header text-center">Contable</h5>
-                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGrid" runat="server" DataSourceID="InfoContable" >
+                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGrid" runat="server" DataSourceID="InfoContable" OnItemDataBound="DataGrid_RowDataBound">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                                 <Columns>
                                                                     <asp:BoundColumn DataField="Consecutivo_Pedido" HeaderText="Pedido" />
                                                                     <asp:BoundColumn DataField="Descripcion_TipoPedido" HeaderText="Tipo Pedido" ItemStyle-CssClass="auto-width-column" />
                                                                     <asp:BoundColumn DataField="Precio_Venta" HeaderText="V. Venta" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="ValorBolsa" HeaderText="V. Bolsa" ItemStyle-CssClass="auto-width-column" Visible="false" />
                                                                     <asp:BoundColumn DataField="ValorPedido" HeaderText="Valor Pedido" ItemStyle-CssClass="auto-width-column" />
                                                                     <asp:BoundColumn DataField="PedidoBase" HeaderText="Ref" ItemStyle-CssClass="auto-width-column" />
                                                                     <asp:BoundColumn DataField="" HeaderText="Total Ref" ItemStyle-CssClass="auto-width-column" />
@@ -1181,21 +1221,21 @@
                             </div>
                         </div>
 
-                         <div class="modal" id="miModalll" tabindex="-1" style="display: none;" >
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header bg-dark">
-                                    <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Campo Faltante</h5>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
-                                    <p>Falta llenar el campo: <span id="campoFaltante"></span></p>
-                                </div>
-                                <div class="modal-footer">
+                        <div class="modal" id="miModalll" tabindex="-1" style="display: none;" >
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Campo Faltante</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                                        <p>Falta llenar el campo: <span id="campoFaltante"></span></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                             </div>
 
                         <div id="OTingresada" class="modal" tabindex="-1">
                             <div class="modal-dialog modal-dialog-centered">
@@ -1266,15 +1306,17 @@
                             </div>
                         </div>
 
-                         <div class="modal fade" id="LlenarNIT" data-backdrop="static" data-bs-keyboard="false">
+                        <div class="modal fade" id="LlenarNIT" data-backdrop="static" data-bs-keyboard="false">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-dark">
                                         <h5 class="modal-title d-flex align-items-center justify-content-center text-white">NIT</h5>
                                     </div>
                                     <div class="modal-body form-control-sm">
-                                        <p>Debes de llenar el NIT <br />
-                                        Al darle aceptar se redireccionará al NIT</p>
+                                        <p>
+                                            Debes de llenar el NIT <br />
+                                            Al darle aceptar se redireccionará al NIT
+                                        </p>
                                     </div>
                                     <div class="modal-footer  d-flex align-items-center justify-content-center">
                                         <asp:Button runat="server" Text="Aceptar" OnClick="Redireccion_Nit_Click" CssClass="btn btn-sm btn-outline-dark" />
@@ -1510,6 +1552,30 @@
                                                 <asp:Button runat="server" ID="CerrarQ" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
                                             </div>
 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Modal de carga para excel -->
+                            <div class="modal fade" id="loadingModalExcel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header bg-dark text-white">
+                                            <h5 class="modal-title text-center">Descargando Archivo</h5>
+                                        </div>
+
+                                        <div class="modal-body text-center">
+                                            <div class="spinner-border" role="status">
+                                                <span class="visually-hidden">Cargando...</span>
+                                            </div>
+                                            <p class="mt-2 fw-bold" id="mensajeCargando1">Descargando Excel...</p>
+
+                                        </div>
+
+                                        <div class="modal-footer justify-content-center">
+                                            <asp:Button ID="btnTerminarDescarga" class="btn btn-primary" runat="server" disabled="disabled" Text="Terminar Descarga" OnClick="EliminarExcel" />
                                         </div>
                                     </div>
                                 </div>
@@ -1911,6 +1977,9 @@
                         </div>
 
                     </ContentTemplate>
+                    <Triggers>
+                        <asp:PostBackTrigger ControlID="BtnVisGenCot"  />
+                    </Triggers>
                 </asp:UpdatePanel>
 
             </div>
@@ -2304,7 +2373,7 @@
 
         </div>
 
-        
+
         <div class="modal" id="CarteraVencida" tabindex="-1" style="display: none;">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -2413,19 +2482,7 @@
             </div>
         </div>
 
-        <!--Modal de carga para excel -->
-        <div class="modal fade" id="loadingModalExcel" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body text-center">
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Cargando...</span>
-                        </div>
-                        <p class="mt-2">Cargando Excel...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+
 
         <!--Modal de carga para el proceso de Boton OK-->
         <div class="modal fade" id="OkCargando" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
@@ -2446,9 +2503,6 @@
                 </div>
             </div>
         </div>
-
-
-
 
 
     </form>
@@ -2557,7 +2611,6 @@
 
         }
     </script>
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 

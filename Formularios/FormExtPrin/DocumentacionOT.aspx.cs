@@ -125,7 +125,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
                 string carpetaNombre = Session["Id_OT2"].ToString();
                 string Consecutivo = Session["pedido2"].ToString();
-                String rutaBase = @"\\SRVFS\PruebaDocumentacion";
+                String rutaBase = @"\\Srvfs\s_i_ducon$\Documentacion de Obras";
                 //string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion"; // Reemplaza con tu ruta base
 
                 string rutaCompleta = Path.Combine(rutaBase, carpetaNombre);
@@ -225,7 +225,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
 
             // Eliminamos el documento de la carpeta
-            string rutaBase = @"\\SRVFS\PruebaDocumentacion" + NombreCarpeta;
+            string rutaBase = @"\\Srvfs\s_i_ducon$\Documentacion de Obras\" + NombreCarpeta;
            // string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion\" + NombreCarpeta;
             string rutaArchivo = Path.Combine(rutaBase, NombreArchivo);
             try
@@ -333,7 +333,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 string Id_OT = row.Cells[9].Text;
 
                 // Ruta completa del archivo
-                  string rutaArchivo = @"\\SRVFS\PruebaDocumentacion\" + Id_OT + "\\" + NombreArchivo;
+                  string rutaArchivo = @"\\Srvfs\s_i_ducon$\Documentacion de Obras\" + Id_OT + "\\" + NombreArchivo;
            //     string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\" + Id_OT + "\\" + NombreArchivo;
                 try
                 {
@@ -448,7 +448,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             if (Session["NomArchOT"] != null)
             {
                 // Construimos la ruta del archivo de origen 
-                string RutaPE = @"\\172.16.30.6\s_I_ducon$\Documentacion PE";
+                string RutaPE = @"\\Srvfs\s_i_ducon$\Documentacion PE";
                 string NombreArchivoCopiar = Session["NomArchOT"].ToString();
                 string CarpetaOrigen;
                 // Obtener caracteres hasta el primer guion
@@ -460,7 +460,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
                 // Se debe Cambiar la Ruta para que apunte al servidor 
 
-                string RutaDestino = @"\\SRVFS\PruebaDocumentacion";
+                string RutaDestino = @"\\Srvfs\s_i_ducon$\Documentacion de Obras";
               //  string RutaDestino = @"P:\SISTEMAS\PruebaDocumentacion";
                 string carpetaIdOt = Session["Id_OT2"].ToString();
                 string pedido = Session["pedido2"].ToString();

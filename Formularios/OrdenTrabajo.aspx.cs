@@ -501,7 +501,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             Session.Remove("ModalMostrado");
 
-        } 
+        }
 
         protected void NuevaOTDespuesDeCargarNIT()
         {
@@ -829,7 +829,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void ddlCiudad_DataBound(object sender, EventArgs e)
         {
-            
+
             ddlCiudad.Items.Insert(0, new ListItem(" ", ""));
         }
 
@@ -1927,7 +1927,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
                 BtnAcaPla.Enabled = true;
-                BtnAcaPla.CssClass = "btn btn-sm shadow button-enabled ";
+                BtnAcaPla.CssClass = "btn btn-sm shadow button-enabled ";        
             }
 
 
@@ -2277,7 +2277,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Cargar_Plano(id, pedido);
             Cargar_Despiece_Plano();
 
-           
+
 
             if (Session["NuevoPedido"] != null && (bool)Session["NuevoPedido"])
             {
@@ -2408,12 +2408,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
             lblSaldoOT.Text = (TotalObraMas - TotalObraMenos).ToString("#,##0");
-            decimal saldo = decimal.Parse(lblSaldoOT.Text.Replace(",", ""));
+            double saldo = double.Parse(lblSaldoOT.Text.Replace(",", ""));
 
             // Asignar el color de fondo dependiendo del valor del saldo
             if (saldo < 0)
             {
                 lblSaldoOT.BackColor = System.Drawing.Color.Red;
+
+                if (TotalObraMas > 0)
+                {
+                    if (Math.Abs(saldo) * 100 / TotalObraMas >= 25)
+                    {
+                        string mensajeError = "El saldo esta en  un "+ Math.Abs(saldo) + " % en contra";
+                        string scriptError = "alert('" + mensajeError + "');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showError", scriptError, true);
+                    }
+                }
+
             }
             else
             {
@@ -7122,9 +7133,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 AdjustMargins(worksheet2.PageSetup);
                 AdjustMargins(worksheet3.PageSetup);
                 worksheet.Columns.AutoFit();
-                // Mostrar la aplicación de Excel
-                excelApp.Visible = true;
 
+                //Esta ruta del archivo se debe validar ya que son archivos temporales de descarga 
+                string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\COTIZACION\CotizacionDespiece"+tbOT.Text+ "-"+ ddlNumbers.SelectedItem.Text +".xls";
+
+
+                workbook.SaveAs(rutaArchivo);
+                excelApp.Quit();
+                
 
 
                 string script = @"CerrarCargarExcel();";
@@ -7141,11 +7157,32 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Marshal.ReleaseComObject(excelApp);
 
 
-                // Pendiente validar que los excel no queden abiertos ne segundo plano 
-                // Obtener el ID del proceso Excel
-                int processId = excelApp.Hwnd;
-                // Finalizar el proceso Excel
-                System.Diagnostics.Process.GetProcessById(processId).Kill();
+                if (File.Exists(rutaArchivo))
+                {
+                    // Establecer las cabeceras para la descarga del archivo
+                    Response.Clear();
+                    Response.ContentType = "application/octet-stream";
+                    Response.AppendHeader("Content-Disposition", "attachment; filename=" + Path.GetFileName(rutaArchivo));
+                    Response.AppendHeader("X-Content-Type-Options", "nosniff");
+                    Response.AppendHeader("X-Frame-Options", "SAMEORIGIN");
+                    Response.AppendHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+
+                    // Escribir el archivo al flujo de respuesta
+                    Response.WriteFile(rutaArchivo);
+
+                    // Enviar todos los encabezados al cliente antes de finalizar la respuesta
+                    Response.Flush();
+                    // Finalizar la respuesta
+                    Response.End();
+
+
+                }
+                else
+                {
+                    string mensajeExito = "La Cotización  " + txtCotizacion.Text.Trim() + " ha sido cambiada o borrada en el servidor.";
+                    string scriptExito = "alert('" + mensajeExito + "');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
+                }
 
 
 
@@ -7155,8 +7192,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Console.WriteLine("Error al exportar a Excel: " + ex.Message);
             }
 
-
-        }
+        }     
         static void AdjustMargins(Excel.PageSetup pageSetup)
         {
             // Ajustar los márgenes según tus necesidades
@@ -7271,6 +7307,30 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 cellRange.Font.Name = "Century Gothic";
                 cellRange.EntireRow.Font.Color = System.Drawing.Color.Black;
                 cellRange.WrapText = true;
+            }
+        }
+
+        protected void EliminarExcel(object sender, EventArgs e)
+        {
+            //Esta ruta del archivo se debe validar ya que son archivos temporales de descarga 
+            string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\COTIZACION\CotizacionDespiece" + tbOT.Text + "-" + ddlNumbers.SelectedItem.Text + ".xls";
+
+            Session["Id_OT2"] = tbOT.Text;
+            Session["pedido2"] = ddlNumbers.SelectedItem.Text;
+
+            if (File.Exists(rutaArchivo))
+            {
+
+                File.Delete(rutaArchivo );
+                string mensajePersonalizado = "Descarga Exitosa";
+                string urlRedireccion = "OrdenTrabajo.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            }
+            else
+            {
+                string mensajeExito = "Si no pudiste descargar el archivo intentalo nuevamente.";
+                string scriptExito = "alert('" + mensajeExito + "');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
             }
         }
 
@@ -7401,7 +7461,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     // Se realiza la validacon de TotalObraMas (Pendiente hasta validar que es la variable TotalObraMas) !!!Verificar 
                     // Este campo es importante para validar que el saldo de ese pedido no sea negativo 
+                    DataTable InfoOT = ConsultarInformacionPedidoSaldo();
+                    bool afectaBolsa = ConsultaAfectaBolsa();
+                 
 
+                    CalcularSaldo2(InfoOT);
+
+                    if ((TotalObraMas > 0 && Convert.ToDouble(lblSaldoOT.Text) < 0) && afectaBolsa == true )
+                    {
+                        if((Math.Abs(Convert.ToDouble(lblSaldoOT.Text)* 100 / TotalObraMas) > 3))
+                        {
+                            string mensajeError = "El pedido tiene un saldo:  " + Math.Abs(Convert.ToDouble(lblSaldoOT.Text)) + " % en contra no se puede pasar el pedido";
+                            string scriptError = "alert('" + mensajeError + "');";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "showError", scriptError, true);
+                            return;
+                        }
+                    }
 
                     // SE VERIFICA SI LA FECHA DE EMPAQUE CUMPLE CON LOS TIEMPO MINIMOS
                     if (!ValidarFechaEmpaque())
@@ -7644,6 +7719,55 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Si no se encontró la información, se considera que ha pasado más de un año y un mes 
             return true;
+        }
+
+        private bool ConsultaAfectaBolsa()
+        {
+            bool afectaBolsa = false;
+
+            string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+            {
+                connectionISID.Open();
+
+                string sSql = "SELECT SUM (tblOT.ValorPedido) FROM tblTipoPedido INNER JOIN tblOT ON tblTipoPedido.Id_TipoPedido = tblOT.Id_TipoPedido " +
+                              "WHERE (((tblOT.Id_OT)= @OT)) and Consecutivo_Pedido= @pedido";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionISID))
+                {
+                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+
+                    object result = cmd.ExecuteScalar();
+
+                    // Verificar si el resultado no es nulo y convertirlo a double
+                    if (result != null && result != DBNull.Value)
+                    {
+                        afectaBolsa = Convert.ToBoolean(result);
+                    }
+                }
+
+                return afectaBolsa;
+            }
+        }
+        protected void CalcularSaldo2(DataTable InfoOT)
+        {
+            
+            foreach (DataRow Row in InfoOT.Rows)
+            {
+                bool AfectaBola = Convert.ToBoolean(Row["AfectaBolsa"].ToString());
+                double ValorBolsa = double.Parse(Row["ValorBolsa"].ToString());
+                double ValorPedido = double.Parse(Row["ValorPedido"].ToString());
+
+                if (AfectaBola)
+                {
+                    TotalObraMas += ValorBolsa;
+                    TotalObraMenos += ValorPedido;
+                }
+
+            }
         }
 
         //Validacion fecha de empaque 
@@ -11060,47 +11184,66 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         // FIN  LOGICA DEL BOTON OK
 
-
+        //DataGrid Informacion contable 
         protected void DataGrid_RowDataBound(object sender, DataGridItemEventArgs e)
         {
-            // Inicializar el diccionario fuera del bloque if para que esté disponible en todo el método
-            Dictionary<string, decimal> sumasPorPedidoBase = new Dictionary<string, decimal>();
-
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-                // Acceder a los datos del objeto de datos asociado a la fila actual
-                DataRowView rowView = (DataRowView)e.Item.DataItem;
-                DataRow row = rowView.Row;
+                // Accede a los datos de la fila actual
+                DataRowView drv = (DataRowView)e.Item.DataItem;
+                string pedidoB = drv["PedidoBase"].ToString();
+                string consecutivoPedido = drv["Consecutivo_Pedido"].ToString();
+                bool afectaBolsa = Convert.ToBoolean(drv["AfectaBolsa"]);
 
-                // Verificar si el registro afecta la bolsa y tiene un pedido base
-                bool afectaBolsa = Convert.ToBoolean(row["AfectaBolsa"]);
-                string pedidoBase = row["PedidoBase"].ToString();
-                string consecutivoPedido = row["Consecutivo_Pedido"].ToString();
-
-                if (afectaBolsa && pedidoBase == consecutivoPedido)
+                if (afectaBolsa)
                 {
-                    // Obtener el valor de ValorPedido para esta fila
-                    decimal valorPedido = Convert.ToDecimal(row["ValorPedido"]);
-
-                    // Verificar si ya existe una suma para este PedidoBase en el diccionario
-                    if (!sumasPorPedidoBase.ContainsKey(pedidoBase))
+                    // Se consulta la suma del ValorPedido X pedido Base
+                    double sumaValorPedido = ConsultarValorPedido(pedidoB);
+                   
+                    // Verificamos si el pedidoBase igual al consecutivo pedido y asigamos los valores  
+                    if (pedidoB == consecutivoPedido)
                     {
-                        // Si no existe, inicializar la suma para este PedidoBase en 0
-                        sumasPorPedidoBase[pedidoBase] = 0m;
+                        e.Item.Cells[6].Text = sumaValorPedido.ToString(); 
+                        e.Item.Cells[7].Text = (Convert.ToInt32(e.Item.Cells[3].Text) - Convert.ToInt32(e.Item.Cells[6].Text)).ToString(); 
+
                     }
-
-                    // Sumar el valor de ValorPedido al total para este PedidoBase
-                    sumasPorPedidoBase[pedidoBase] += valorPedido;
-
-                    // Asignar el total de ValorPedido para este PedidoBase al campo ValorPedido en la fila actual
-                    e.Item.Cells[6].Text = sumasPorPedidoBase[pedidoBase].ToString("C");
                 }
             }
         }
+        private double ConsultarValorPedido(string pedidoBase)
+        {
+            double valorPedido = 0;
+
+            string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connectionISID = new SqlConnection(connectionStringISID))
+            {
+                connectionISID.Open();
+
+                string sSql = "SELECT SUM (tblOT.ValorPedido) FROM tblTipoPedido INNER JOIN tblOT ON tblTipoPedido.Id_TipoPedido = tblOT.Id_TipoPedido " +
+                              "WHERE (((tblOT.Id_OT)= @OT)) and PedidoBase = @pedidoBase and AfectaBolsa = 1";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionISID))
+                {
+                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@pedidoBase", pedidoBase);
 
 
+                    object result = cmd.ExecuteScalar();
+
+                    // Verificar si el resultado no es nulo y convertirlo a double
+                    if (result != null && result != DBNull.Value)
+                    {
+                        valorPedido = Convert.ToDouble(result);
+                    }
+                }
+
+                return valorPedido;
+            }
+        }
 
     }
+
 }
 
 
