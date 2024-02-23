@@ -14,7 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
     <link type="text/css" href="../../Recursos/CSS/FormExtPrin/NitOts.css" rel="stylesheet" />
     <title>Cliente Obra</title>
-     <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
+    <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
 </head>
 <body>
     <form id="form1" runat="server">
@@ -810,11 +810,16 @@
                             </div>
 
 
-                           
+
 
                         </div>
 
                     </ContentTemplate>
+                    <Triggers>
+                        <asp:PostBackTrigger ControlID="btnVerRut" />
+                        <asp:PostBackTrigger ControlID="btnVerRegCli" />
+                    </Triggers>
+
                 </asp:UpdatePanel>
             </div>
 

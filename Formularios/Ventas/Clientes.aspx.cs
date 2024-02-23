@@ -100,6 +100,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGridCliente.Items[rowIndex];
 
+                foreach (DataGridItem item in DataGridCliente.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+
+                //se usa Para darle un color a la fila seleccionada  anderson
+                e.Item.CssClass = "fila-seleccionada";
 
 
                 string Nit = row.Cells[1].Text;
@@ -1074,7 +1085,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 DataGridItem row = DataGridContacto.Items[rowIndex];
 
                 // capturamos los campos de la fila del datagrid 
+                foreach (DataGridItem item in DataGridContacto.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
 
+
+                //se usa Para darle un color a la fila seleccionada  anderson
+                e.Item.CssClass = "fila-seleccionada";
 
                 string NombreContacto = row.Cells[1].Text;
                 string Telefono = row.Cells[2].Text;

@@ -19,10 +19,14 @@
         <asp:UpdatePanel ID="Panel_DocOt" runat="server" UpdateMode="Conditional" DefaultButton="btnSubmit">
             <ContentTemplate>
 
-                <div class=" container pb-2 mb-2  pt-1 mt-1 ">
+                <div class=" container pb-3 mb-3  pt-1 mt-1 ">
+
+                    <div class="row text-center pt-2 mt-2">
+                        <h4>Documentos Orden de Trabajo</h4>
+                    </div>
 
                     <!--Fila checkBox-->
-                    <div class="row p-2 mt-2 ">
+                    <div class="row p-2 mt-2  text-end">
                         <div class="col-12">
                             <asp:CheckBox ID="chxDocumento" runat="server" OnCheckedChanged="chxDocumento_CheckedChanged" AutoPostBack="true" />
                             <asp:Label ID="Label4" runat="server" Text="Documentación completa"></asp:Label>
@@ -86,7 +90,7 @@
 
                     <div class="row  pb-1 mb-1">
 
-                        <div class="col-3">
+                        <div class="col-5">
                             <div class=" input-group input-group-sm gap-2  ">
                                 <asp:Label ID="Label1" class=" col-form-label-sm" Text="Tipo Documento" runat="server"></asp:Label>
                                 <asp:DropDownList class="form-control form-control-sm" ID="ddlTipoDoc" runat="server">
@@ -99,7 +103,7 @@
                             </div>
                         </div>
 
-                        <div class="col-3"></div>
+                        <div class="col-1"></div>
 
                         <div class="col-6">
                             <div class="input-group input-group-sm ">
@@ -146,7 +150,11 @@
 
                 </div>
 
-                <div class="container">
+                <div class="container pt-1 mt-1">
+
+                      <div class="row text-center pt-2 mt-2">
+                        <h4>Documentación Solicitudes Especiales</h4>
+                    </div>
 
                     <div class="row ">
 
@@ -200,7 +208,7 @@
 
                                 <div class="col-2">
                                     <div class="input-group-sm pt-4">
-                                        <asp:Button ID="btnSubirAdjuntar" type="button" Text="Cargar" class="btn btn-outline-secondary" runat="server" OnClick="btnSubirAdjuntar_Click" OnClientClick="return ValidarCantidad();"></asp:Button>
+                                        <asp:Button ID="btnSubirAdjuntar" type="button" Text="Adjuntar Especial" class="btn btn-outline-secondary" runat="server" OnClick="btnSubirAdjuntar_Click" OnClientClick="return ValidarCantidad();"></asp:Button>
                                     </div>
                                 </div>
                             </div>
@@ -215,6 +223,7 @@
             <Triggers>
                 <asp:PostBackTrigger ControlID="btnAdjuntar" />
                 <asp:PostBackTrigger ControlID="bntElimnar" />
+                <asp:PostBackTrigger ControlID="DataGridDoc" />
             </Triggers>
         </asp:UpdatePanel>
 
@@ -272,7 +281,7 @@
     </script>
 
 
-
+   
 
 
 
