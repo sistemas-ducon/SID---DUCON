@@ -7135,7 +7135,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 worksheet.Columns.AutoFit();
 
                 //Esta ruta del archivo se debe validar ya que son archivos temporales de descarga 
-                string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\COTIZACION\CotizacionDespiece"+tbOT.Text+ "-"+ ddlNumbers.SelectedItem.Text +".xls";
+                string rutaArchivo = @"\\SRVFS\PruebaDocumentacion\COTIZACION\CotizacionDespiece" + tbOT.Text+ "-"+ ddlNumbers.SelectedItem.Text +".xls";
 
 
                 workbook.SaveAs(rutaArchivo);
@@ -7313,7 +7313,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void EliminarExcel(object sender, EventArgs e)
         {
             //Esta ruta del archivo se debe validar ya que son archivos temporales de descarga 
-            string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\COTIZACION\CotizacionDespiece" + tbOT.Text + "-" + ddlNumbers.SelectedItem.Text + ".xls";
+            string rutaArchivo = @"\\SRVFS\PruebaDocumentacion\COTIZACION\CotizacionDespiece" + tbOT.Text + "-" + ddlNumbers.SelectedItem.Text + ".xls";
 
             Session["Id_OT2"] = tbOT.Text;
             Session["pedido2"] = ddlNumbers.SelectedItem.Text;

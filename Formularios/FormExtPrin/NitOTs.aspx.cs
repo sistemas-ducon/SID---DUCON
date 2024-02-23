@@ -1036,8 +1036,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             if (InsertarClienteEnBaseDeDatos())
                             {
                                 // Se invoca el Metodo para guardar archivos en el servidor 
-                                GuardarArchivosEnCarpetaServidor("RUT", @"P:\SISTEMAS\PruebaDocumentacion", btnActRut);
-                                GuardarArchivosEnCarpetaServidor("RegistroClientes", @"P:\SISTEMAS\PruebaDocumentacion", btnActRegCli);
+                                GuardarArchivosEnCarpetaServidor("RUT", @"\\Srvfs\s_i_ducon$\RUT", btnActRut);
+                                //  GuardarArchivosEnCarpetaServidor("RUT", @"P:\SISTEMAS\PruebaDocumentacion", btnActRut);
+
+                                GuardarArchivosEnCarpetaServidor("RegistroClientes", @"\\Srvfs\s_i_ducon$\Registro Clientes", btnActRegCli);
+                                //   GuardarArchivosEnCarpetaServidor("RegistroClientes", @"P:\SISTEMAS\PruebaDocumentacion", btnActRegCli);
 
                                 string mensajePersonalizado = "Cliente creado exitosamente.";
                                 string urlRedireccion = "FormExtPrin/NitOTs.aspx";
