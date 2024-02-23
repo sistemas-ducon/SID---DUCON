@@ -130,6 +130,8 @@
     background-color: #fff; /* Color de fondo para botones habilitados */
     color: #212529; /* Color de texto para botones habilitados */
     cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    border-bottom: 2px solid #ccc; /* Borde en la parte inferior */
+    border-right: 2px solid #ccc; /* Borde en el lado derecho */
 }
 
 /* Estilo para botones deshabilitados */
@@ -137,6 +139,8 @@
     background-color: #ededed; /* Color de fondo para botones deshabilitados */
     color: #888; /* Color de texto para botones deshabilitados */
     cursor: not-allowed; /* Cambia el cursor al estilo "no permitido" */
+    border-bottom: 2px solid #ccc; /* Borde en la parte inferior */
+    border-right: 2px solid #ccc; /* Borde en el lado derecho */
 }
 
 
@@ -144,4 +148,15 @@
 .selected-row {
     background-color: black; /* Cambia el color de fondo a negro o el que desees */
     color: white;
+}
+
+.linkButtonNormal {
+    /* Estilos normales del botón */
+}
+
+.linkButtonClicked {
+    border-top: 2px solid #ccc; /* Borde en la parte superior */
+    border-left: 2px solid #ccc; /* Borde en el lado izquierdo */
+    border-bottom: none; /* Elimina el borde inferior */
+    border-right: none; /* Elimina el borde derecho */
 }

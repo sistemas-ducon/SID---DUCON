@@ -300,11 +300,9 @@
                                                <i class="bi bi-wrench"></i>
                                             </asp:LinkButton>
 
-                                            <asp:LinkButton runat="server" ID="DocBitacora" Enabled="false" Onclick="DocBitacora_Click">
+                                            <asp:LinkButton runat="server" ID="DocBitacora"  Enabled="false" Onclick="DocBitacora_Click">
                                             <i class="bi bi-send-plus"></i>
                                             </asp:LinkButton>
-
-
 
                                             <asp:LinkButton runat="server" ID="RegresarDiseño" Enabled="false">
                                                   <i class="bi bi-box-arrow-in-left"></i>
@@ -438,6 +436,7 @@
                                 <Triggers>
                                     <asp:PostBackTrigger ControlID="GuardarButton" />
                                     <asp:PostBackTrigger ControlID="BtnEliminar" />
+                                    <asp:PostBackTrigger ControlID="DataGridDocumento" />
                                 </Triggers>
                             </asp:UpdatePanel>
                         </div>
@@ -906,7 +905,7 @@
 
                                                     <div class="col-md-10 col-12">
                                                         <div class="input-group input-group-sm gap-2">
-                                                            <asp:TextBox ID="TextFec" runat="server" CssClass="form-control-sm form-control" type="date"></asp:TextBox>
+                                                            <asp:TextBox ID="TextFec" runat="server" CssClass="form-control-sm form-control" type="date" OnTextChanged="ValidarFecha" AutoPostBack="true"></asp:TextBox>
                                                             <asp:TextBox ID="TextFech" runat="server" CssClass="form-control-sm form-control" type="datetime"></asp:TextBox>
 
                                                         </div>
@@ -980,6 +979,20 @@
 
 
                         </div>
+
+                           <div id="FechaSC" class="modal" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">S_I_Ducon</h5>
+                                    </div>
+                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                                        <p><span id="FechaSC2"></span></p>
+                                    </div>                
+                                </div>
+                            </div>
+                        </div>
+
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </div>

@@ -34,6 +34,9 @@ body {
     background-repeat: no-repeat;
 }
 
+.dropdown.disabled:hover {
+    display: none;
+}
 
 
 

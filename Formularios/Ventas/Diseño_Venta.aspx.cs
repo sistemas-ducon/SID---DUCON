@@ -143,6 +143,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Session.Remove("Documentacion");
                 Session.Remove("lnkClieClicked");
                 Session.Remove("lnkClieeClicked");
+                Session.Remove("NuevoDisBitEjecutado");
+                Session.Remove("ModificarEjecutado");
 
 
 
@@ -2090,9 +2092,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void btnInsertar_Click(object sender, EventArgs e)
         {
+           
+
             // Verifica si "NuevoDisBit" se ejecutó previamente
             bool nuevoDisBitEjecutado = Session["NuevoDisBitEjecutado"] != null && (bool)Session["NuevoDisBitEjecutado"];
 
+          
             // Realiza la validación de campos
             string campoFaltante = ValidarCampos();
 
@@ -2146,8 +2151,41 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalll').modal('show'); $('#campoFaltante').text('" + campoFaltante + "');", true);
             }
 
-          
+        
+
+
+    }
+
+        protected void ValidarFecha(object sender, EventArgs e)
+        {
+            DateTime fechaTextBox;
+            if (!DateTime.TryParse(TextFec.Text, out fechaTextBox))
+            {
+                // Manejo de error si el valor en TextFec no es una fecha válida
+                return;
+            }
+
+            DateTime fechaEntrega;
+            if (!DateTime.TryParse(TextEntrega.Text, out fechaEntrega))
+            {
+                // Manejo de error si el valor en TextEntrega no es una fecha válida
+                return;
+            }
+
+            // Obtener solo la parte de la fecha (sin la parte de la hora)
+            fechaTextBox = fechaTextBox.Date;
+            fechaEntrega = fechaEntrega.Date;
+
+            if (fechaTextBox < fechaEntrega)
+            {
+                DateTime now = DateTime.Now;
+                TextFec.Text = now.ToString("yyyy-MM-dd");
+
+                string contenidoModalOT = "La programación del Show Case no puede ser menor a la fecha de entrega del diseño " + TextEntrega.Text;
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#FechaSC').modal('show'); $('#FechaSC2').text('" + contenidoModalOT + "');", true);
+            }
         }
+
 
         private int ObtenerMaximoNumeroDiseño(SqlConnection connection)
         {
@@ -2269,6 +2307,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@SC_Accesorios", CheckBox20.Checked);
                         command.Parameters.AddWithValue("@SC_Tiemporeal", CheckBox21.Checked);
                         command.Parameters.AddWithValue("@SC_Fecha", TextFec.Text);
+                        command.Parameters.AddWithValue("@SC_Hora", TextFech.Text);
                         command.Parameters.AddWithValue("@SC_Ubicacion", TextUbi.Text);
 
                         command.Parameters.AddWithValue("@Numero_Diseño", numerodiseño);
@@ -2430,6 +2469,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@SC_Accesorios", CheckBox20.Checked);
                         command.Parameters.AddWithValue("@SC_Tiemporeal", CheckBox21.Checked);
                         command.Parameters.AddWithValue("@SC_Fecha", TextFec.Text);
+                        command.Parameters.AddWithValue("@SC_Hora", TextFech.Text);
                         command.Parameters.AddWithValue("@SC_Ubicacion", TextUbi.Text);
                         // Ejecutar el procedimiento almacenado
                         int rowsAffected = command.ExecuteNonQuery();
@@ -3309,7 +3349,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
         protected void DocBitacora_Click(object sender, EventArgs e)
-        {
+        {      
             ToggleDivsVisibility();
             ConfigureSqlDataSource();
             DataGridDocumento.DataBind();
@@ -3328,9 +3368,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 miDiv.Style["display"] = "none";
                 Documentacion.Style["display"] = "block";
+
+                DocBitacora.CssClass = "btn btn-sm button-enabled shadow linkButtonClicked";
             }
             else
             {
+                DocBitacora.CssClass = "btn btn-sm button-enabled shadow";
+
                 miDiv.Style["display"] = "block";
                 Documentacion.Style["display"] = "none";
             }
@@ -3534,13 +3578,29 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Construye la ruta completa al archivo
             string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\" + archivo;
 
-            try
+            if (File.Exists(rutaArchivo))
             {
-                System.Diagnostics.Process.Start(rutaArchivo);
+                // Establecer las cabeceras para la descarga del archivo
+                Response.Clear();
+                Response.ContentType = "application/octet-stream";
+                Response.AppendHeader("Content-Disposition", "attachment; filename=" + Path.GetFileName(rutaArchivo));
+                Response.AppendHeader("X-Content-Type-Options", "nosniff");
+                Response.AppendHeader("X-Frame-Options", "SAMEORIGIN");
+                Response.AppendHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+
+                // Escribir el archivo al flujo de respuesta
+                Response.WriteFile(rutaArchivo);
+
+                // Enviar todos los encabezados al cliente antes de finalizar la respuesta
+                Response.Flush();
+                // Finalizar la respuesta
+                Response.End();
+
+
             }
-            catch (Exception ex)
+            else
             {
-                litModalScript.Text = "<script type='text/javascript'>$(document).ready(function () { $('#miModalErrorAdj').modal('show'); });</script>";
+              
             }
         }
 
