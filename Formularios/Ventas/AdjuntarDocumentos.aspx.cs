@@ -43,11 +43,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     }
 
                     // Obtener las variables de sesión
-                    string variableSesion1 = (string)Session["Id_Solicitud"];
-                    string variableSesion2 = (string)Session["Id_Detalle"];
+                    string variableSesion1Soli = (string)Session["Id_Solicitud"];
+                    string variableSesion2Detalle = (string)Session["Id_Detalle"];
 
-                    // Asignar el valor del parámetro en el SqlDataSource
-                    Documentos.SelectParameters["Documentacion"].DefaultValue = "PE" + variableSesion1 + "-" + variableSesion2;
+                    // Asignar el valor del parámetro en el SqlDataSource para cargar la documentacion
+                    Documentos.SelectParameters["Documentacion"].DefaultValue = "PE" + variableSesion1Soli +"-"+ variableSesion2Detalle;
 
                     // Cargar los datos en el DataGrid
                     DataGridDocumento.DataSourceID = "Documentos";
@@ -76,7 +76,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (FileUpload1.HasFile)
             {
 
-                string carpetaNombre = "PE" + Session["Id_Solicitud"].ToString() + "-" + Session["Id_Detalle"].ToString(); // Reemplaza con el nombre de la carpeta deseada
+                string carpetaNombre = "PE" + Session["Id_Solicitud"].ToString(); // Reemplaza con el nombre de la carpeta deseada
                 string rutaBase = @"\\Srvfs\s_i_ducon$\Documentacion PE"; // Reemplaza con tu ruta base
              //   string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion"; // Reemplaza con tu ruta base
 
@@ -102,7 +102,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 // Nombre de archivo que deseas utilizar
                 string nombreArchivo = FileUpload1.FileName; // Reemplaza con el nombre que quieras
-                string NombreArchivoCarpeta =carpetaNombre +"-"+ FileUpload1.FileName;
+                string NombreArchivoCarpeta =carpetaNombre +"-" + Session["Id_Detalle"].ToString() + " " + FileUpload1.FileName ;
                 // Ruta completa para guardar el archivo
                 string rutaArchivo = Path.Combine(rutaCompleta,NombreArchivoCarpeta);
 
@@ -127,8 +127,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         using (SqlCommand command = new SqlCommand(query, connection))
                         {
 
-                            command.Parameters.AddWithValue("@Id_OT", carpetaNombre);
-                            command.Parameters.AddWithValue("@Archivo", carpetaNombre + "-" + nombreArchivo);
+                            command.Parameters.AddWithValue("@Id_OT", carpetaNombre + "-" + Session["Id_Detalle"].ToString());
+                            command.Parameters.AddWithValue("@Archivo", carpetaNombre + "-"  + Session["Id_Detalle"].ToString() +" " + nombreArchivo);
                             command.Parameters.AddWithValue("@TipoDocumento", ddlTipoDoc.SelectedItem.Text);
                             command.Parameters.AddWithValue("@usuario", Session["NombreAsesor"].ToString());
                             command.Parameters.AddWithValue("@FechaRegistro", DateTime.Now);
@@ -187,7 +187,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 Session["Id_Documento"] = Id_documento;
                 Session["NombreArchivo"] =  NombreArchivo;
-                Session["NombreCarpeta"] = Id_OT;
+                Session["NombreCarpeta"] = "PE" +Session["Id_Solicitud"].ToString();
 
                 Button bntElimnar = FindControl("bntElimnar") as Button;
                 if (bntElimnar != null)
@@ -210,16 +210,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 string Id_documento = row.Cells[8].Text;
                 string NombreArchivo = row.Cells[1].Text;
-                string Id_OT = row.Cells[9].Text;
+               
 
                 Session["Id_Documento"] = Id_documento;
                 Session["NombreArchivo"] = NombreArchivo;
-                Session["NombreCarpeta"] = Id_OT;
-                string NombreCarpetaArchivo = Id_OT;
+                Session["NombreCarpeta"] ="PE"+ Session["Id_Solicitud"].ToString();
+               
 
                 // Ruta completa del archivo que deseas abrir
                 
-                  string rutaArchivo = @"\\Srvfs\s_i_ducon$\Documentacion PE\" + Id_OT + "\\" + NombreArchivo;
+                  string rutaArchivo = @"\\Srvfs\s_i_ducon$\Documentacion PE\"+  Session["NombreCarpeta"].ToString() + "\\" + NombreArchivo;
                   // string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\" + Id_OT + "\\" + NombreArchivo;
 
                 if (File.Exists(rutaArchivo))

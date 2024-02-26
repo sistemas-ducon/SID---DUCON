@@ -2025,7 +2025,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     SqlDataReader reader = command.ExecuteReader();
                     if (reader.HasRows)
                     {
+                        Session["ProductoSession"] = txDescProduc.InnerText;
+                        Session["ProveedorVentaSession"] = tbProveedor.Text;
+                        Session["AnchoSession"] = tbAncho.Text;
+                        Session["AlturaSession"] = tbAltura.Text;
+                        Session["ProfundidadSession"] = tbProfundidad.Text;
+                        Session["MaterialSession"] = tbMaterial.Text;
+                        Session["CantidadSession"] = tbCantidad.Text;
+                        Session["EspGeneralSession"] = txEspGen.InnerText;
 
+                        // Variables de Session de la solicitud 
+                        Session["FecIngrSolSession"] = tbFechaIngresoServidor.Text;
+                        Session["FecEntregaSolSession"] = tbFechaEntregaServidor.Text;
+                        Session["FechaRespuestaSession"] = tbFechaRespuestaServidor.Text;
+                        Session["DirigidoSession"] = ddlDirigido.SelectedItem.Text;
+                        Session["TipoSession"] = ddlTipo.SelectedItem.Text;
+                        Session["SolOrigenSession"] = tbSolicitudOrigen.Text;
+                        Session["ProyectoSolSession"] = tbProyecto.Text;
+                        Session["CiudadSession"] = ddlCiudad.Text;
+                        Session["ViaticoSession"] = chxViaticos.Checked;
+                        Session["CotizacionSession"] = tbCotizacionEsp.Text;
+                        Session["ClienteSolSession"] = tbClienteServidor.Text;
+                        Session["ContactoSolSession"] = tbContactoServidor.Text;
+                        Session["TelSeolSession"] = tbTelefonoServidor.Text;
+                        Session["CelularSolSession"] = tbCelularServidor.Text;
+                        Session["Mailsolsession"] = tbMailServidor.Text;
+                        Session["DirecccionSolSession"] = tbDireccionServidor.Text;
+                        Session["AsesorSolSession"] = ddlAsesor.SelectedItem.Text;
+                        Session["numeroSolicitudSession"] = lbNumeroSolicitud.Text;
 
                         string mensajePersonalizado = "Antes de eliminar un detalle, debe eliminar la documentación relacionada";
                         string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
@@ -2076,7 +2103,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 Session["Mailsolsession"] = tbMailServidor.Text;
                                 Session["DirecccionSolSession"] = tbDireccionServidor.Text;
                                 Session["AsesorSolSession"] = ddlAsesor.SelectedItem.Text;
-                                Session["numeroSolicitudSession"] = lbNumeroSolicitud.Text; ;
+                                Session["numeroSolicitudSession"] = lbNumeroSolicitud.Text; 
 
                                
 
