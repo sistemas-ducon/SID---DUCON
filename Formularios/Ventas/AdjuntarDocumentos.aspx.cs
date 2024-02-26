@@ -77,7 +77,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             {
 
                 string carpetaNombre = "PE" + Session["Id_Solicitud"].ToString() + "-" + Session["Id_Detalle"].ToString(); // Reemplaza con el nombre de la carpeta deseada
-                string rutaBase = @"\\Srvfs\s_i_ducon$\Documentacion Bitacora"; // Reemplaza con tu ruta base
+                string rutaBase = @"\\Srvfs\s_i_ducon$\Documentacion PE"; // Reemplaza con tu ruta base
              //   string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion"; // Reemplaza con tu ruta base
 
                 string rutaCompleta = Path.Combine(rutaBase, carpetaNombre);
@@ -219,7 +219,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 // Ruta completa del archivo que deseas abrir
                 
-                  string rutaArchivo = @"\\Srvfs\s_i_ducon$\Documentacion Bitacora\" + Id_OT + "\\" + NombreArchivo;
+                  string rutaArchivo = @"\\Srvfs\s_i_ducon$\Documentacion PE\" + Id_OT + "\\" + NombreArchivo;
                   // string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\" + Id_OT + "\\" + NombreArchivo;
 
                 if (File.Exists(rutaArchivo))
@@ -286,7 +286,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             }
 
             // Eliminar el documento de la carpeta
-            string rutaBase = @"\\Srvfs\s_i_ducon$\Documentacion Bitacora\" + NombreCarpeta;
+            string rutaBase = @"\\Srvfs\s_i_ducon$\Documentacion PE\" + NombreCarpeta;
             // string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion\" + NombreCarpeta;
             string rutaArchivo = Path.Combine(rutaBase, NombreArchivo);
 
