@@ -753,7 +753,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             string ArchivoRutServidor = Session["ArchivoRutSession"].ToString();
 
             // Ruta completa del archivo que deseas abrir
-            string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\RUT\" + ArchivoRutServidor;
+            string rutaArchivo = @"\\172.16.30.6\s_i_ducon$\RUT\" + ArchivoRutServidor;
+
+            //string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\RUT\" + ArchivoRutServidor;
 
             try
             {
@@ -802,7 +804,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             string ArchivoRegistroServidor = Session["ArchivoRegSession"].ToString(); ;
 
             // Ruta completa del archivo que deseas abrir
-            string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\RegistroClientes\" + ArchivoRegistroServidor;
+            string rutaArchivo = @"\\172.16.30.6\s_i_ducon$\Registro Clientes\" + ArchivoRegistroServidor;
 
             try
             {

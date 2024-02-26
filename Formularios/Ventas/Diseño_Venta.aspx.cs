@@ -3403,8 +3403,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Concatenar "DS" con el texto de lblNumDise para obtener el nombre de la carpeta
                 string folderName = "DS" + lblText;
 
-                // Combinar la ruta de guardado con el nombre de la carpeta
-                string savePath = Path.Combine(@"\\SRVFS\PruebaDocumentacion", folderName);
+                // Combinar la ruta de guardado con el nombre de la carpeta \\Srvfs\s_i_ducon$\Documentacion Bitacora
+                string savePath = Path.Combine(@"\\Srvfs\s_i_ducon$\Documentacion Bitacora", folderName);
+
+                //string savePath = Path.Combine(@"\\SRVFS\PruebaDocumentacion", folderName);
 
                 // Verificar si la carpeta no existe y crearla si es necesario
                 if (!Directory.Exists(savePath))
@@ -3523,7 +3525,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string archivoToDelete = Session["SelectedFileName"] as string;
 
                 // Ruta completa del archivo a eliminar
-                string filePathToDelete = Path.Combine(@"\\SRVFS\PruebaDocumentacion\", idOTToDelete, archivoToDelete);
+                string filePathToDelete = Path.Combine(@"\\Srvfs\s_i_ducon$\Documentacion Bitacora", idOTToDelete, archivoToDelete);
 
                 string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
@@ -3576,7 +3578,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string archivo = selectedRow.Cells[1].Text;
 
             // Construye la ruta completa al archivo
-            string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\" + archivo;
+            string rutaArchivo = @"\\Srvfs\s_i_ducon$\Documentacion Bitacora\" + archivo;
 
             if (File.Exists(rutaArchivo))
             {
