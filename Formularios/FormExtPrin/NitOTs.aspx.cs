@@ -1435,11 +1435,36 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         }
                     }
 
-                    Session["ModalMostrado"] = true;
 
-                    // Llamar el script que recarga el formulario padre de donde salio la pagina 
-                    string script = "<script>enviarFormulario();</script>";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "enviarFormulario", script, false);
+                    // Se compara si el click es en la misma fila con el id del plano 
+                    if (row.Cells[1].Text == Session["IdContactoFactSession1"]?.ToString())
+                    {
+                        // Incrementar la variable de sesión "ClickCount" en el servidor
+                        int clickCount = Convert.ToInt32(Session["ClickCount2"]) + 1;
+                        Session["ClickCount2"] = clickCount;
+
+                        // se valida si es el segundo click en la misma fila 
+                        if (clickCount == 2)
+                        {
+                            Session["ModalMostrado"] = true;
+                            // Llamar el script que recarga el formulario padre de donde salio la pagina 
+                            string script = "<script>enviarFormulario();</script>";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "enviarFormulario", script, false);
+
+                            // Reiniciar la variable de sesión "ClickCount" a 0 para la próxima interacción                        
+                            Session.Remove("IdContactoFactSession1");
+                            Session.Remove("ClickCount2");
+                            
+                        }
+
+                    }
+                    else
+                    {
+                        // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
+                        Session["ClickCount2"] = 1;
+                        Session["IdContactoFactSession1"] = row.Cells[1].Text;
+                    
+                    }
 
                 }
             }

@@ -1122,10 +1122,37 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 tbId_ContactoCliente.Text = campos[4];
                 Session["ID_ContactoBD"] = campos[4];
 
+                // Se compara si el click es en la misma fila con el id del plano 
+                if (row.Cells[4].Text == Session["ID_ContactoBD1"]?.ToString())
+                {
+                    // Incrementar la variable de sesión "ClickCount" en el servidor
+                    int clickCount = Convert.ToInt32(Session["ClickCount3"]) + 1;
+                    Session["ClickCount3"] = clickCount;
+
+                    // se valida si es el segundo click en la misma fila 
+                    if (clickCount == 2)
+                    {
+                        
+                        // Llamar el script que recarga el formulario padre de donde salio la pagina 
+                        string script = "<script>enviarFormulario();</script>";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "enviarFormulario", script, false);
+
+                        // Reiniciar la variable de sesión "ClickCount" a 0 para la próxima interacción                        
+                        Session.Remove("ID_ContactoBD1");
+                        Session.Remove("ClickCount3");
+
+                    }
+
+                }
+                else
+                {
+                    // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
+                    Session["ClickCount3"] = 1;
+                    Session["ID_ContactoBD1"] = row.Cells[4].Text;
+
+                }
+
             }
-
-
-
 
             // Habilita el botón "Modificar"
             Button btnModificar = FindControl("btnModificarContacto") as Button;
@@ -1134,9 +1161,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 btnModificar.Enabled = true;
             }
 
-
-            string script = "<script>enviarFormulario();</script>";
-            ScriptManager.RegisterStartupScript(this, GetType(), "enviarFormulario", script, false);
 
         }
 

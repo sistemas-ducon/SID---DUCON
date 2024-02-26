@@ -177,8 +177,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     // Verificar si la variable de sesión 'MostrarModal' tiene contenido y es true
                     if (Session["ModalMostrado"] != null && (bool)Session["ModalMostrado"] == true)
                     {
-                        // Si 'MostrarModal' es true, establecer 'ModalMostrado' en true
-                        Session["ModalMostrado"] = true;
+                        NuevaOTDespuesDeCargarNIT();
+                        Session.Remove("ModalMostrado");
                     }
                     else
                     {
@@ -492,14 +492,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#LlenarNIT').modal('show');", true);
 
             }
-            else
-            {
-                // Si la variable de sesión indica que el modal ya se ha mostrado, ejecutar el método
-                NuevaOTDespuesDeCargarNIT();
-
-            }
-
-            Session.Remove("ModalMostrado");
 
         }
 
@@ -3046,7 +3038,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
 
                         // Reiniciar la variable de sesión "ClickCount" a 0 para la próxima interacción
-                        Session["ClickCount1"] = 0;
+                        Session.Remove("ClickCount1");
+                        Session.Remove("Id_PanelNum_Session1");
                     }
 
                 }
