@@ -222,28 +222,42 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                   string rutaArchivo = @"\\Srvfs\s_i_ducon$\Documentacion Bitacora\" + Id_OT + "\\" + NombreArchivo;
                   // string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\" + Id_OT + "\\" + NombreArchivo;
 
-                try
+                if (File.Exists(rutaArchivo))
                 {
-                    // Verificar si el archivo existe antes de intentar abrirlo
-                    if (System.IO.File.Exists(rutaArchivo))
-                    {
-                        Process.Start(rutaArchivo); // Abre el archivo con la aplicación predeterminada
-                        Response.Redirect("~/Formularios/Ventas/AdjuntarDocumentos.aspx");
-                    }
-                    else
-                    {
-                        string mensajePersonalizado = "El archivo que estás tratando de abrir no se encuentra en la carpeta. Por favor, comunícate con el administrador para obtener asistencia.";
-                        string urlRedireccion = "Ventas/AdjuntarDocumentos.aspx";
-                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    // Establecer las cabeceras para la descarga del archivo
+                    Response.Clear();
+                    Response.ContentType = "application/octet-stream";
+                    Response.AppendHeader("Content-Disposition", "attachment; filename=" + Path.GetFileName(rutaArchivo));
+                    Response.AppendHeader("X-Content-Type-Options", "nosniff");
+                    Response.AppendHeader("X-Frame-Options", "SAMEORIGIN");
+                    Response.AppendHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
 
-                    
-                    }
+                    // Escribir el archivo al flujo de respuesta
+                    Response.WriteFile(rutaArchivo);
+
+                    // Enviar todos los encabezados al cliente antes de finalizar la respuesta
+                    Response.Flush();
+                    // Finalizar la respuesta
+                    Response.End();
+
+
                 }
-                catch (Exception ex)
+                else
                 {
-
-                    mensaje.InnerText = "Se ha producido un error al intentar abrir el archivo. " + ex.Message;
+                    string mensajeExito = "El documennto ha sido cambiado o borrado en el servidor.";
+                    string scriptExito = "alert('" + mensajeExito + "');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
                 }
+
+
+
+
+
+
+
+
+
+
             }
 
         }

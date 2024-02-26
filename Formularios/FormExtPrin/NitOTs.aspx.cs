@@ -757,17 +757,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             try
             {
-                // Verificar si el archivo existe antes de intentar abrirlo
-                if (System.IO.File.Exists(rutaArchivo))
+
+                if (File.Exists(rutaArchivo))
                 {
-                    Process.Start(rutaArchivo); // Abre el archivo con la aplicación predeterminada
+                    // Establecer las cabeceras para la descarga del archivo
+                    Response.Clear();
+                    Response.ContentType = "application/octet-stream";
+                    Response.AppendHeader("Content-Disposition", "attachment; filename=" + Path.GetFileName(rutaArchivo));
+                    Response.AppendHeader("X-Content-Type-Options", "nosniff");
+                    Response.AppendHeader("X-Frame-Options", "SAMEORIGIN");
+                    Response.AppendHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+
+                    // Escribir el archivo al flujo de respuesta
+                    Response.WriteFile(rutaArchivo);
+
+                    // Enviar todos los encabezados al cliente antes de finalizar la respuesta
+                    Response.Flush();
+                    // Finalizar la respuesta
+                    Response.End();
+
 
                 }
                 else
                 {
-                    ScriptManager.RegisterStartupScript(this, GetType(), "showError", "alert('Este cliente no cuenta con RUT en el servidor .');", true);
-
+                    string mensajeExito = "'Este cliente no cuenta con RUT en el servidor.";
+                    string scriptExito = "alert('" + mensajeExito + "');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
                 }
+
             }
             catch (Exception ex)
             {
@@ -789,18 +806,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             try
             {
-                // Verificar si el archivo existe antes de intentar abrirlo
-                if (System.IO.File.Exists(rutaArchivo))
+                if (File.Exists(rutaArchivo))
                 {
-                    Process.Start(rutaArchivo); // Abre el archivo con la aplicación predeterminada
+                    // Establecer las cabeceras para la descarga del archivo
+                    Response.Clear();
+                    Response.ContentType = "application/octet-stream";
+                    Response.AppendHeader("Content-Disposition", "attachment; filename=" + Path.GetFileName(rutaArchivo));
+                    Response.AppendHeader("X-Content-Type-Options", "nosniff");
+                    Response.AppendHeader("X-Frame-Options", "SAMEORIGIN");
+                    Response.AppendHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+
+                    // Escribir el archivo al flujo de respuesta
+                    Response.WriteFile(rutaArchivo);
+
+                    // Enviar todos los encabezados al cliente antes de finalizar la respuesta
+                    Response.Flush();
+                    // Finalizar la respuesta
+                    Response.End();
+
 
                 }
                 else
                 {
-
-                    ScriptManager.RegisterStartupScript(this, GetType(), "showError", "alert('Este cliente no cuenta con Registro en el servidor .');", true);
-
+                    string mensajeExito = "'Este cliente no cuenta con Registro en el servidor.";
+                    string scriptExito = "alert('" + mensajeExito + "');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
                 }
+
+
             }
             catch (Exception ex)
             {

@@ -335,28 +335,43 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 // Ruta completa del archivo
                   string rutaArchivo = @"\\Srvfs\s_i_ducon$\Documentacion de Obras\" + Id_OT + "\\" + NombreArchivo;
            //     string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\" + Id_OT + "\\" + NombreArchivo;
-                try
+             
+
+                if (File.Exists(rutaArchivo))
                 {
-                    // Verificar si el archivo existe antes de intentar abrirlo
-                    if (System.IO.File.Exists(rutaArchivo))
-                    {
-                        Process.Start(rutaArchivo);
-                        Response.Redirect("~/Formularios/FormExtPrin/DocumentacionOT.aspx");
-                    }
-                    else
-                    {
-                        string mensajePersonalizado = "El archivo que estás tratando de abrir no se encuentra en la carpeta. Por favor, comunícate con el administrador para obtener asistencia.";
-                        string urlRedireccion = "FormExtPrin/DocumentacionOT.aspx";
-                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    // Establecer las cabeceras para la descarga del archivo
+                    Response.Clear();
+                    Response.ContentType = "application/octet-stream";
+                    Response.AppendHeader("Content-Disposition", "attachment; filename=" + Path.GetFileName(rutaArchivo));
+                    Response.AppendHeader("X-Content-Type-Options", "nosniff");
+                    Response.AppendHeader("X-Frame-Options", "SAMEORIGIN");
+                    Response.AppendHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+
+                    // Escribir el archivo al flujo de respuesta
+                    Response.WriteFile(rutaArchivo);
+
+                    // Enviar todos los encabezados al cliente antes de finalizar la respuesta
+                    Response.Flush();
+                    // Finalizar la respuesta
+                    Response.End();
 
 
-                    }
                 }
-                catch (Exception ex)
+                else
                 {
-
-                    ErrorValidacionDoc.InnerText = "Se ha producido un error al intentar abrir el archivo. " + ex.Message;
+                    string mensajeExito = "El documennto ha sido cambiado o borrado en el servidor.";
+                    string scriptExito = "alert('" + mensajeExito + "');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
                 }
+
+
+
+
+
+
+
+
+
             }
         }
 
@@ -402,6 +417,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     btnSubirAdjuntar.Enabled = true;
                     btnAdjuntar.Enabled = false;
                     btnAdjuntar.CssClass = "btn btn-outline-primary";
+                    btnAdjuntar.Visible = false;
+
+                    DoctOT.Enabled = false;
                 }
 
 
@@ -437,6 +455,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         item.Selected = true;
                     }
                 }
+
+                btnSubirAdjuntar.CssClass = "btn btn-outline-primary";
+                btnSubirAdjuntar.Text = "Adjuntar";
 
 
             }

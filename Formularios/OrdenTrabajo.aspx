@@ -680,7 +680,7 @@
 
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 
-                                            <asp:Label ID="LabelOTCerrada" ClientIDMode="Static" runat="server" Text="OT cerrada" BackColor="#DD0000" ForeColor="white" Font-Size="X-Large" Width="16.9em" Visible="false" CssClass="rounded-label"></asp:Label>
+                                            <asp:Label ID="LabelOTCerrada" ClientIDMode="Static" runat="server" Text="OT cerrada" BackColor="#DD0000" ForeColor="white" Font-Size="X-Large" Width="14.9em" Visible="false" CssClass="rounded-label"></asp:Label>
 
                                         </div>
 

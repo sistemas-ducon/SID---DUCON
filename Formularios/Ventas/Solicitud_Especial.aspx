@@ -124,6 +124,13 @@
             return result; // Devolver el resultado de la confirmación
         }
 
+        function ActivarBotonDetalle() {
+            //habilitar enlaces de Detalle
+            document.getElementById("NuevoDetalle").classList.add("enabled");
+            document.getElementById("ImportarDetalle").classList.add("enabled");
+            document.getElementById("ModificarSolicitud").classList.add("enabled");
+        }
+
     </script>
 
 
@@ -1751,11 +1758,7 @@
         }
 
 
-        function ActivarBotonDetalle() {
-            //habilitar enlaces de Detalle
-            document.getElementById("NuevoDetalle").classList.add("enabled");
-            document.getElementById("ImportarDetalle").classList.add("enabled");
-        }
+        
 
         function ActivarBotonDetalle1() {
             var boton2 = document.getElementById("<%= btnProgramarSolicitud.ClientID %>");
