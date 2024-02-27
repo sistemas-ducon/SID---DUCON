@@ -166,6 +166,7 @@
     <Content Include="Formularios\FormExtPrin\OTsPendientes.aspx" />
     <Content Include="Formularios\FormExtPrin\Plano1.aspx" />
     <Content Include="Formularios\OrdenTrabajo.aspx" />
+    <Content Include="Formularios\PruebaExcel.aspx" />
     <Content Include="Formularios\SuccessMessage.aspx" />
     <Content Include="Formularios\Ventas\AdjuntarDocumentos.aspx" />
     <Content Include="Formularios\Ventas\Clientes.aspx" />
@@ -178,6 +179,7 @@
     <Content Include="Formularios\Ventas\Render_Venta.aspx" />
     <Content Include="Formularios\Ventas\Solicitud_Especial.aspx" />
     <Content Include="Formularios\Ventas\Visita_Asesores.aspx" />
+    <Content Include="Global.asax" />
     <Content Include="ModeloBDSID.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ModeloBDSID.Context.cs</LastGenOutput>
@@ -306,6 +308,13 @@
     <Compile Include="Formularios\OrdenTrabajo.aspx.designer.cs">
       <DependentUpon>OrdenTrabajo.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Formularios\PruebaExcel.aspx.cs">
+      <DependentUpon>PruebaExcel.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\PruebaExcel.aspx.designer.cs">
+      <DependentUpon>PruebaExcel.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Formularios\SuccessMessage.aspx.cs">
       <DependentUpon>SuccessMessage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -396,6 +405,9 @@
     </Compile>
     <Compile Include="Formularios\Ventas\Visita_Asesores.aspx.designer.cs">
       <DependentUpon>Visita_Asesores.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="ModeloBDSID.Context.cs">
       <AutoGen>True</AutoGen>
