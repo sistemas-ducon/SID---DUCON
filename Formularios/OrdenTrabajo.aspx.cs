@@ -3802,11 +3802,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             string campoFaltante = string.Empty;
 
-            if (dtacboTipoPedido.SelectedItem == null)
+            if (dtacboTipoPedido.SelectedItem.Value == " ")
             {
                 campoFaltante = "Tipo de pedido";
             }
-            else if (DtaCboTipoAprobacion.SelectedItem == null)
+            else if (DtaCboTipoAprobacion.SelectedItem.Value == " ")
             {
                 campoFaltante = "Tipo de aprobacion";
             }
