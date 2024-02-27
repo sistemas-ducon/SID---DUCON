@@ -7669,7 +7669,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             int diasTranscurridos = diferencia.Days;
 
                             // Si han pasado más de 395 días, se considera que ha pasado más de un año y un mes
-                            return diasTranscurridos > 365;
+                            return diasTranscurridos > 3960;
                         }
                     }
                 }
