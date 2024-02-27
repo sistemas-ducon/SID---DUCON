@@ -203,23 +203,23 @@
                                             <ul class="dropdown-menu">
                                               
                                                 <li>
-                                                    <asp:linkbutton ID="LinkGestionComercial" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="GestionComercial"><i class="bi bi-cash-coin"></i> Gestion Comercial</asp:linkbutton>
+                                                    <asp:linkbutton ID="LinkGestionComercial" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="GestionComercial"> <i class="bi bi-receipt-cutoff"> </i> Gestion Comercial</asp:linkbutton>
 
                                                 </li> 
                                                 <li>
-                                                    <asp:linkbutton ID="LinkLicitaciones" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="Licitaciones"><i class="bi bi-cash-coin"></i> Licitaciones</asp:linkbutton></li>
+                                                    <asp:linkbutton ID="LinkLicitaciones" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="Licitaciones"> <i class="bi bi-bank2"></i> Licitaciones</asp:linkbutton></li>
                                                 <li>
-                                                    <asp:linkbutton ID="LinkOrdenTrabajo" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="OrdendeTrabajo"><i class="bi bi-cash-coin"></i> Ordenes de Trabajo</asp:linkbutton></li>
+                                                    <asp:linkbutton ID="LinkOrdenTrabajo" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="OrdendeTrabajo"> <i class="bi bi-person-fill-gear"></i> Ordenes de Trabajo</asp:linkbutton></li>
                                                 <li>
-                                                    <asp:linkbutton ID="LinkProgramarDiseno" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="ProgramarDiseno"><i class="bi bi-cash-coin"></i> Programar Diseño</asp:linkbutton></li>
+                                                    <asp:linkbutton ID="LinkProgramarDiseno" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="ProgramarDiseno"><i class="bi bi-file-earmark-image-fill"></i> Programar Diseño</asp:linkbutton></li>
                                                 <li>
-                                                    <asp:linkbutton ID="LinkProgramarRender" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="ProgramarRender"><i class="bi bi-cash-coin"></i> Programar Render </asp:linkbutton></li>
+                                                    <asp:linkbutton ID="LinkProgramarRender" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="ProgramarRender"> <i class="bi bi-badge-3d-fill"></i> Programar Render </asp:linkbutton></li>
                                                 <li>
-                                                    <asp:linkbutton ID="LinkSeguimientoCotizacion" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="SeguimientoCotizacion"><i class="bi bi-cash-coin"></i> Seguimiento Cotizacion</asp:linkbutton></li>
+                                                    <asp:linkbutton ID="LinkSeguimientoCotizacion" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="SeguimientoCotizacion"><i class="bi bi-file-earmark-spreadsheet-fill"></i> Seguimiento Cotizacion</asp:linkbutton></li>
                                                 <li>
-                                                    <asp:linkbutton ID="LinkSolicitudProductoEspecial" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="SolicitudProductoEspecial"><i class="bi bi-cash-coin"></i> Solicitud producto especial</asp:linkbutton></li>
+                                                    <asp:linkbutton ID="LinkSolicitudProductoEspecial" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="SolicitudProductoEspecial"><i class="bi bi-window-plus"></i>Solicitud producto especial</asp:linkbutton></li>
                                                 <li>
-                                                    <asp:linkbutton ID="LinkVisitaAsesores" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="VisitaAsesores"><i class="bi bi-cash-coin"></i> Visita Asesores</asp:linkbutton></li>
+                                                    <asp:linkbutton ID="LinkVisitaAsesores" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="VisitaAsesores"><i class="bi bi-people-fill"></i> Visita Asesores</asp:linkbutton></li>
                                             </ul>
                                         </li>
                                     </ul>

@@ -782,9 +782,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 }
                 else
                 {
-                    string mensajeExito = "'Este cliente no cuenta con RUT en el servidor.";
-                    string scriptExito = "alert('" + mensajeExito + "');";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
+                    string mensajePersonalizado = "Este cliente no cuenta con RUT en el servidor.";
+                    string urlRedireccion = "FormExtPrin/NitOTs.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                   
                 }
 
             }
@@ -830,9 +831,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 }
                 else
                 {
-                    string mensajeExito = "'Este cliente no cuenta con Registro en el servidor.";
-                    string scriptExito = "alert('" + mensajeExito + "');";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
+                    string mensajePersonalizado = "Este cliente no cuenta con Registro en el servidor.";
+                    string urlRedireccion = "FormExtPrin/NitOTs.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                  
                 }
 
 
@@ -970,7 +972,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         {
             try
             {
-                string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion";
+                string rutaBase = @"\\172.16.30.6\s_i_ducon$";
                 string rutaCompletaCarpeta = Path.Combine(rutaBase, carpeta);
 
                 if (Directory.Exists(rutaCompletaCarpeta))
@@ -1071,10 +1073,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             if (InsertarClienteEnBaseDeDatos())
                             {
                                 // Se invoca el Metodo para guardar archivos en el servidor 
-                                GuardarArchivosEnCarpetaServidor("RUT", @"\\172.16.30.6\s_i_ducon$\RUT", btnActRut);
+                                GuardarArchivosEnCarpetaServidor("RUT", @"\\172.16.30.6\s_i_ducon$", btnActRut);
                                  //GuardarArchivosEnCarpetaServidor("RUT", @"P:\SISTEMAS\PruebaDocumentacion", btnActRut);
 
-                                GuardarArchivosEnCarpetaServidor("RegistroClientes", @"\\172.16.30.6\s_i_ducon$\Registro Clientes", btnActRegCli);
+                                GuardarArchivosEnCarpetaServidor("Registro Clientes", @"\\172.16.30.6\s_i_ducon$", btnActRegCli);
                                   //GuardarArchivosEnCarpetaServidor("RegistroClientes", @"P:\SISTEMAS\PruebaDocumentacion", btnActRegCli);
 
                                 string mensajePersonalizado = "Cliente creado exitosamente.";
@@ -1119,8 +1121,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             {
 
                                 // Se invoca el Metodo para guardar archivos en el servidor 
-                                GuardarArchivosEnCarpetaServidor("RUT", @"P:\SISTEMAS\PruebaDocumentacion", btnActRut);
-                                GuardarArchivosEnCarpetaServidor("RegistroClientes", @"P:\SISTEMAS\PruebaDocumentacion", btnActRegCli);
+                                GuardarArchivosEnCarpetaServidor("RUT", @"\\172.16.30.6\s_i_ducon$", btnActRut);
+                                GuardarArchivosEnCarpetaServidor("Registro Clientes", @"\\172.16.30.6\s_i_ducon$", btnActRegCli);
 
                                 // Puedes mostrar un mensaje de éxito u otra información si es necesario
                                 string mensajePersonalizado = "Cliente actualizado exitosamente.";
