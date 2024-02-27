@@ -561,7 +561,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextZona;
+        protected global::System.Web.UI.WebControls.DropDownList TextZona;
 
         /// <summary>
         /// Control lblCon.
@@ -696,7 +696,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextPre;
+        protected global::System.Web.UI.WebControls.DropDownList TextPre;
 
         /// <summary>
         /// Control lblCel.

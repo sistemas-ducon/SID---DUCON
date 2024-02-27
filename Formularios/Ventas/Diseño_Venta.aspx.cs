@@ -85,7 +85,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 DeshabilitarDivYContenido(miDiv);
                 CheckBox22.Checked = isModalVisible;              
                 elementosllenosalcargarlapagina();
-                CargarClienteYContacto();
+               
 
                 if (Session["NumeroDiseño2"] != null && !string.IsNullOrEmpty(Session["NumeroDiseño2"].ToString()))
                 {
@@ -136,6 +136,40 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     // Manejar el caso cuando Session["NumeroDiseño"] es null o vacío
                 }
 
+                if (Session["Id_ClienteBD"] != null && !string.IsNullOrEmpty(Session["Id_ClienteBD"].ToString()))
+                {
+                    string script = @"
+            <script type='text/javascript'>
+                window.onload = function () {
+                    // Obtener el elemento del tab deseado
+                    var tab = document.getElementById('Diseño-BitacoraFPV-001-tab');
+                    
+                    // Hacer clic en el tab deseado
+                    tab.click();
+                    
+                    // Ocultar el tab actual si es necesario
+                    var activeTab = document.querySelector('.nav-item .active');
+                    if (activeTab) {
+                        activeTab.classList.remove('active');
+                    }
+                    
+                    // Agregar la clase 'active' al tab deseado
+                    tab.classList.add('active');
+                };
+            </script>";
+
+                    // Registrar el script en el cliente
+                    Page.ClientScript.RegisterStartupScript(this.GetType(), "SwitchToDesiredTab", script);
+
+                    NuevoLimpiar();
+                }
+                else
+                {
+
+                }
+
+                CargarClienteYContacto();
+
                 // Eliminar la variable de sesión "NumeroDiseño" después de usarla
                 Session.Remove("NumeroDiseño2");
                 Session.Remove("SelectedIdOT");
@@ -143,8 +177,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Session.Remove("Documentacion");
                 Session.Remove("lnkClieClicked");
                 Session.Remove("lnkClieeClicked");
-                Session.Remove("NuevoDisBitEjecutado");
-                Session.Remove("ModificarEjecutado");
+          
 
 
 
@@ -1054,58 +1087,84 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 // Mostrar el modal si se hizo clic en lnkClie o lnkCliee
                 ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modall').modal('show');", true);
-                Session["NuevoDisBitEjecutado"] = true;
+                
 
             }
             else
             {
-                // Deshabilitar el botón "NuevoDisBit"
-                NuevoDisBit.Enabled = false;
-
-                Modificar.Enabled = false;
-
-                // Aplicar clases CSS para botones deshabilitados
-                NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
-                Modificar.CssClass = "btn btn-sm shadow button-disabled";
-
-                // Habilitar el botón "Grabar"
-                Grabar.Enabled = true;
-                Grabar.CssClass = "btn btn-sm shadow button-enabled";
-
-                // Deshabilitar el botón "ActualizarDiseno"
-                ActualizarDiseno.Enabled = false;
-                ActualizarDiseno.CssClass = "btn btn-sm shadow button-disabled";
-
-
-                // Habilitar el div y su contenido
-                HabilitarDivYContenido(miDiv);
-
-                TextIngDis.Enabled = false;
-                TextUltAc.Enabled = false;
-                TextEntrega.Enabled = false;
-                TextFecOkDib.Enabled = false;
-
-               
-
-                // Cambiar el color del Label lblCotizar
-                lblCotizar.CssClass = "col-form-label-sm text-danger";
-                lblCotizar.Font.Bold = true;
-
-                Cancelar.Enabled = true;
-                // Deshabilita los TextBox
-                TextFec.Enabled = false;
-                TextFech.Enabled = false;
-
-                lblNumDise.Text = "Por Definir";
-
-                TextCliente.Enabled = false;
-                TextCliente.CssClass = "form-control form-control-sm";
+                NuevoLimpiar();
 
             }
-            
-           
 
-           
+            Session["NuevoDisBitEjecutado"] = true;
+
+
+        }
+
+        protected void NuevoLimpiar()
+        {
+            // Deshabilitar el botón "NuevoDisBit"
+            NuevoDisBit.Enabled = false;
+
+            Modificar.Enabled = false;
+
+            // Aplicar clases CSS para botones deshabilitados
+            NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
+            Modificar.CssClass = "btn btn-sm shadow button-disabled";
+
+            // Habilitar el botón "Grabar"
+            Grabar.Enabled = true;
+            Grabar.CssClass = "btn btn-sm shadow button-enabled";
+
+            // Deshabilitar el botón "ActualizarDiseno"
+            ActualizarDiseno.Enabled = false;
+            ActualizarDiseno.CssClass = "btn btn-sm shadow button-disabled";
+
+
+            // Habilitar el div y su contenido
+            HabilitarDivYContenido(miDiv);
+
+            TextIngDis.Enabled = false;
+            TextUltAc.Enabled = false;
+            TextEntrega.Enabled = false;
+            TextFecOkDib.Enabled = false;
+
+
+
+            // Cambiar el color del Label lblCotizar
+            lblCotizar.CssClass = "col-form-label-sm text-danger";
+            lblCotizar.Font.Bold = true;
+
+            Cancelar.Enabled = true;
+            // Deshabilita los TextBox
+            TextFec.Enabled = false;
+            TextFech.Enabled = false;
+
+            lblNumDise.Text = "Por Definir";
+
+            TextCliente.Enabled = false;
+            TextCliente.CssClass = "form-control form-control-sm";
+
+            if (Session["ZonaLogeada"] != null)
+            {
+                string zonaLogeada = Session["ZonaLogeada"].ToString();
+                TextZona.SelectedValue = zonaLogeada;
+            }
+            else
+            {
+                //NO SE ENCONTRO LA VIABLE DE SESSION ZONALOGEADA
+            }
+            if (Session["CedulaLogeada"] != null)
+            {
+                string usuariologeado = Session["CedulaLogeada"].ToString();
+                DropDownList1.SelectedValue = usuariologeado;
+            }
+            else
+            {
+                //NO SE ENCONTRO LA VIABLE DE SESSION ZONALOGEADA
+            }
+
+
         }
 
         protected void CheckBox21_CheckedChanged(object sender, EventArgs e)
@@ -2107,20 +2166,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     // Realiza la inserción
                     if (RealizarInsercion())
-                    {                     
+                    {
+                        Session.Remove("NuevoDisBitEjecutado");
+
                         string mensajePersonalizado = "Las Fechas: Ingreso del diseño, Ultima Activación y Entrega, se ajustaran cuando programe el diseño";
                         string urlRedireccion = "Ventas/Diseño_Venta.aspx";
                         Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                     }
                     else
                     {
-                       
+                        Session.Remove("NuevoDisBitEjecutado");
+
                         string mensajePersonalizado = "No se afecto ninguna fila";
                         string urlRedireccion = "Ventas/Diseño_Venta.aspx";
                         Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                     }
 
-                    Session.Remove("NuevoDisBitEjecutado");
+                   
                 }
                 else
                 {
@@ -2129,19 +2191,29 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     {
                         // Realiza la actualización
                         if (RealizarActualizacion())
-                        {                       
+                        {
+                            Session.Remove("ModificarEjecutado");
+
                             string mensajePersonalizado = "Las Fechas: Ingreso del diseño, Ultima Activación y Entrega, se ajustaran cuando programe el diseño";
                             string urlRedireccion = "Ventas/Diseño_Venta.aspx";
                             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-         
+
+                           
+
                         }
                         else
-                        {                       
+                        {
+                            Session.Remove("ModificarEjecutado");
+
                             string mensajePersonalizado = "El Diseño ya fue aprobado para Dibujo y Despiece, este departamento lo debe habilitar para ser modificado";
                             string urlRedireccion = "Ventas/Diseño_Venta.aspx";
                             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                         }
-                        Session.Remove("ModificarEjecutado");
+                       
+                    }
+                    else
+                    {
+
                     }
                 }
             }

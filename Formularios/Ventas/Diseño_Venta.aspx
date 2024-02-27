@@ -538,7 +538,11 @@
                                                     </div>
                                                     <div class="col-md-2 col-6">
                                                         <asp:Label runat="server" ID="lblZon" class="col-form-label-sm">Zona</asp:Label>
-                                                        <asp:TextBox ID="TextZona" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                           <asp:DropDownList ID="TextZona" runat="server" CssClass="form-control-sm form-control">
+                                                            <asp:ListItem Text="" Value="" />
+                                                            <asp:ListItem Text="01" Value="01" />
+                                                            <asp:ListItem Text="02" Value="02" />
+                                                        </asp:DropDownList>                         
                                                     </div>
                                                 </div>
                                                 <div class="row d-flex justify-content-between mt-1">
@@ -592,7 +596,18 @@
                                                     </div>
                                                     <div class="col-md-6 col-12">
                                                         <asp:Label runat="server" ID="lblPre" class="col-form-label-sm">Pre</asp:Label>
-                                                        <asp:TextBox ID="TextPre" runat="server" CssClass="form-control"></asp:TextBox>
+                                                      
+                                                            <asp:DropDownList ID="TextPre" runat="server" CssClass="form-control-sm form-control">
+                                                            <asp:ListItem Text="" Value="" />
+                                                            <asp:ListItem Text="Completa detallada" Value="Completa detallada" />
+                                                            <asp:ListItem Text="Completa por prototipo" Value="Completa por prototipo" />
+                                                                 <asp:ListItem Text="Zona detallada" Value="Zona detallada" />
+                                                                 <asp:ListItem Text="Zona por Prototipo" Value="Zona por Prototipo" />
+                                                                 <asp:ListItem Text="Piso detallado" Value="Piso detallado" />
+                                                                 <asp:ListItem Text="Piso por prototipo" Value="Piso por prototipo" />
+                                                                 <asp:ListItem Text="Piso por zona detallada" Value="Completa por prototipo" />
+                                                                 <asp:ListItem Text="En observaciones de Ventas" Value="En observaciones de Ventas" />                               
+                                                        </asp:DropDownList>        
 
 
 
