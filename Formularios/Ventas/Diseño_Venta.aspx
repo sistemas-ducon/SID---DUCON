@@ -338,7 +338,7 @@
                         </div>
 
                         <%-- ADJUNTAR DOCUMENTACION--%>
-                        <div id="Documentacion" runat="server" style="display: none">
+                  <%--      <div id="Documentacion" runat="server" style="display: none">
                             <asp:UpdatePanel ID="updatePanel" runat="server" UpdateMode="Conditional">
                                 <ContentTemplate>
                                     <div class="container">
@@ -397,7 +397,6 @@
                                                 <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
                                                     <div class="input-group input-group-sm ">
                                                         <asp:FileUpload ID="FileUpload1" runat="server" CssClass="form-control" />
-
                                                         <asp:Button ID="GuardarButton" runat="server" Text="Guardar" OnClick="GuardarButton_Click"/>
                                                         <asp:Button ID="BtnEliminar" runat="server" Text="Eliminar" OnClick="BtnEliminar_Click" />
 
@@ -439,7 +438,7 @@
                                     <asp:PostBackTrigger ControlID="DataGridDocumento" />
                                 </Triggers>
                             </asp:UpdatePanel>
-                        </div>
+                        </div>--%>
 
                         <div id="miDiv" runat="server" data-div="miDiv" style="display: block">
                             <%--  1/4--%>

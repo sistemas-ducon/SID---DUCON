@@ -73,8 +73,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 LinkButton2.Enabled = false;
                 LinkButton2.CssClass = "btn btn-sm button-disabled";
 
-                ConfigureSqlDataSource();
-                UpdateDivsVisibility();
+               
+              
 
                 ApplyButtonStyles();      
                 DropDownList1.DataBind();
@@ -96,9 +96,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         ProcesarNumeroDiseño2(null);
                         AccionesAlCargarDiseño();
 
-                        ToggleDivsVisibility();
-                        ConfigureSqlDataSource();
-                        DataGridDocumento.DataBind();
+                     
+                        
+                               
                     }
                     else
                     {
@@ -203,7 +203,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session["pedido2"] = selectedRow.Cells[3].Text;
 
             // Deselecciona todas las filas previamente seleccionadas
-            foreach (DataGridItem item in DataGridDocumento.Items)
+            foreach (DataGridItem item in DataGrid1.Items)
             {
                 if (item != selectedRow)
                 {
@@ -2622,22 +2622,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         if (programadoVentas)
                         {
                             // ProgramadoVentas es 1, deshabilitar los botones
-                            BtnProgramar.Enabled = false;
-                            GuardarButton.Enabled = false;
-                            GuardarButton.CssClass = "btn btn-sm button-disabled";
-                            BtnEliminar.Enabled = false;
-                            BtnEliminar.CssClass = "btn btn-sm button-disabled";
+                            BtnProgramar.Enabled = false;              
            
                         }
                         else
                         {
                             // ProgramadoVentas es 0, habilitar los botones
-                            BtnProgramar.Enabled = true;
-                            GuardarButton.Enabled = true;
-                            GuardarButton.CssClass = "btn btn-sm btn-outline-dark button-enabled";
-                            BtnEliminar.Enabled = true;
-                            BtnEliminar.CssClass = "btn btn-sm btn-outline-dark button-enabled";
-                  
+                            BtnProgramar.Enabled = true;                            
 
                         }
                     }
@@ -2847,19 +2838,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             // ProgramadoVentas es 1, deshabilitar los botones
                             BtnProgramar.Enabled = false;
-                            GuardarButton.Enabled = false;
-                            GuardarButton.CssClass = "btn btn-sm button-disabled";
-                            BtnEliminar.Enabled = false;
-                            BtnEliminar.CssClass = "btn btn-sm button-disabled";
+                           
                         }
                         else
                         {
                             // ProgramadoVentas es 0, habilitar los botones
                             BtnProgramar.Enabled = true;
-                            GuardarButton.Enabled = true;
-                            GuardarButton.CssClass = "btn btn-sm btn-outline-dark button-enabled";
-                            BtnEliminar.Enabled = true;
-                            BtnEliminar.CssClass = "btn btn-sm btn-outline-dark button-enabled";
+                          
                         }
                     }
 
@@ -3349,261 +3334,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
         protected void DocBitacora_Click(object sender, EventArgs e)
-        {      
-            ToggleDivsVisibility();
-            ConfigureSqlDataSource();
-            DataGridDocumento.DataBind();
-        }
-
-        private void ConfigureSqlDataSource()
-        {
-            string numDise = "DS" + lblNumDise.Text; // Asegúrate de que lblNumDise esté disponible
-            string query = $"SELECT Archivo, Observacion, Usuario, FechaRegistro, Id_OT FROM tblDocumentacion WHERE Id_OT = '{numDise}'";
-            SqlDataSource3.SelectCommand = query;
-        }
-
-        private void ToggleDivsVisibility()
-        {
-            if (miDiv.Style["display"] == "block")
-            {
-                miDiv.Style["display"] = "none";
-                Documentacion.Style["display"] = "block";
-
-                DocBitacora.CssClass = "btn btn-sm button-enabled shadow linkButtonClicked";
-            }
-            else
-            {
-                DocBitacora.CssClass = "btn btn-sm button-enabled shadow";
-
-                miDiv.Style["display"] = "block";
-                Documentacion.Style["display"] = "none";
-            }
-        }
-
-        private void UpdateDivsVisibility()
-        {
-            miDiv.Style["display"] = "block";
-            Documentacion.Style["display"] = "none";
-        }
-
-        protected void GuardarButton_Click(object sender, EventArgs e)
-        {
-
-
-            if (FileUpload1.HasFile)
-            {
-                HttpPostedFile uploadedFile = FileUpload1.PostedFile;
-
-                // Obtener el nombre del archivo
-                string fileName = Path.GetFileName(uploadedFile.FileName);
-
-                // Obtener el texto de lblNumDise
-                string lblText = lblNumDise.Text;
-
-                // Concatenar "DS" con el texto de lblNumDise para obtener el nombre de la carpeta
-                string folderName = "DS" + lblText;
-
-                // Combinar la ruta de guardado con el nombre de la carpeta \\Srvfs\s_i_ducon$\Documentacion Bitacora
-                string savePath = Path.Combine(@"\\Srvfs\s_i_ducon$\Documentacion Bitacora", folderName);
-
-                //string savePath = Path.Combine(@"\\SRVFS\PruebaDocumentacion", folderName);
-
-                // Verificar si la carpeta no existe y crearla si es necesario
-                if (!Directory.Exists(savePath))
-                {
-                    Directory.CreateDirectory(savePath);
-                }
-
-                string filePath = Path.Combine(savePath, fileName);
-
-                // Guardar el archivo
-                uploadedFile.SaveAs(filePath);
-
-                InsertarEnBaseDeDatos(folderName, fileName);
-          
-                ToggleDivsVisibility();
-
-                Session["NumeroDiseño2"] = lblText;
-
-                Session["Documentacion"] = true;
-
-                string mensajePersonalizado = "El documento se ha guardado exitosamente.";
-                string urlRedireccion = "Ventas/Diseño_Venta.aspx";
-                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-
-            }
-            else
-            {
-                string mensajePersonalizado = "Seleccione el archivo que desea adjuntar";
-                string urlRedireccion = "Ventas/Diseño_Venta.aspx";
-                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-            }
-        }
-
-        private void InsertarEnBaseDeDatos(string folderName, string fileName)
-        {
-            // Establecer la conexión con la base de datos          
-            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
-            {
-                con.Open();
-
-                // Crear la consulta SQL para insertar en la tabla 'tblDocumentacion'
-                string query = "INSERT INTO tblDocumentacion (Id_OT, Pedido, Archivo, Observacion, TipoDocumento, Usuario, FechaRegistro) VALUES (@Id_OT, @Pedido, @Archivo, @Observacion, @TipoDocumento, @Usuario, @FechaRegistro)";
-
-                using (SqlCommand cmd = new SqlCommand(query, con))
-                {
-                    // Establecer los parámetros de la consulta
-                    cmd.Parameters.AddWithValue("@Id_OT", folderName);
-                    cmd.Parameters.AddWithValue("@Pedido", 0);
-                    cmd.Parameters.AddWithValue("@Archivo", fileName);
-                    cmd.Parameters.AddWithValue("@Observacion", TextArea1.Value); // Obtener el valor del textarea
-                    cmd.Parameters.AddWithValue("@TipoDocumento", "BITACORA");
-                    cmd.Parameters.AddWithValue("@Usuario", DropDownList1.SelectedValue); // Obtener el valor del DropDownList
-                    cmd.Parameters.AddWithValue("@FechaRegistro", DateTime.Now);
-
-                    // Ejecutar la consulta
-                    int rowsAffected = cmd.ExecuteNonQuery();
-
-                    // Comprobar si se actualizó al menos una fila
-                    if (rowsAffected > 0)
-                    {
-
-                    }
-                    else
-                    {
-
-                    }
-                }
-            }
-        }
-
-        protected void lnkSelectRow_Click(object sender, EventArgs e)
-        {
-            // Obtén el LinkButton que se hizo clic
-            LinkButton lnkSelectRow = (LinkButton)sender;
-
-            // Obtén el índice de fila desde el CommandArgument
-            int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
-
-            // Accede a la fila seleccionada en el DataGrid
-            DataGridItem selectedRow = DataGridDocumento.Items[rowIndex];
-
-            // Almacena el valor de Id_OT en una variable de sesión
-            Session["SelectedIdOT"] = selectedRow.Cells[5].Text;
-
-            // Almacena el nombre del archivo en la variable de sesión
-            Session["SelectedFileName"] = selectedRow.Cells[1].Text;
-
-           
-            // Deselecciona todas las filas previamente seleccionadas
-            foreach (DataGridItem item in DataGridDocumento.Items)
-            {
-                if (item != selectedRow)
-                {
-                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
-                }
-            }
-
-            // Aplica la clase CSS a la fila seleccionada
-            selectedRow.CssClass = "selected-row";
-
-            // Puedes acceder a los datos de la fila si es necesario
-            string archivo = selectedRow.Cells[1].Text;
-            string observacion = selectedRow.Cells[2].Text;
-            string usuario = selectedRow.Cells[3].Text;
-            string fechaRegistro = selectedRow.Cells[4].Text;
-            string id_OT = selectedRow.Cells[5].Text;
-        }
-
-        protected void BtnEliminar_Click(object sender, EventArgs e)
         {
             string lblText = lblNumDise.Text;
-            string idOTToDelete = Session["SelectedIdOT"] as string;
 
-            if (!string.IsNullOrEmpty(idOTToDelete))
-            {
-                string archivoToDelete = Session["SelectedFileName"] as string;
+            Session["NumeroDiseño"] = lblText;
 
-                // Ruta completa del archivo a eliminar
-                string filePathToDelete = Path.Combine(@"\\Srvfs\s_i_ducon$\Documentacion Bitacora", idOTToDelete, archivoToDelete);
+            //DocBitacora.CssClass = "btn btn-sm shadow button-enabled linkButtonClicked";
 
-                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    string deleteQuery = "DELETE FROM tbldocumentacion WHERE Id_OT = @IdOT AND Archivo = @Archivo";
-
-                    using (SqlCommand command = new SqlCommand(deleteQuery, connection))
-                    {
-                        command.Parameters.AddWithValue("@IdOT", idOTToDelete);
-                        command.Parameters.AddWithValue("@Archivo", archivoToDelete);
-                        int rowsAffected = command.ExecuteNonQuery();
-
-                        // Eliminar el archivo del sistema de archivos
-                        if (File.Exists(filePathToDelete))
-                        {
-                            File.Delete(filePathToDelete);
-                        }                          
-
-                        ToggleDivsVisibility();
-
-                        Session["NumeroDiseño"] = lblText;
-
-                        if (rowsAffected > 0)
-                        {
-                            string mensajePersonalizado = "El documento se ha eliminado exitosamente.";
-                            string urlRedireccion = "Ventas/Diseño_Venta.aspx"; // Cambia esto por la URL correcta
-                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-                        }
-                        else
-                        {
-                            string mensajePersonalizado = "Seleccione el elemento que desea eliminar";
-                            string urlRedireccion = "Ventas/Diseño_Venta.aspx";
-                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-                        }
-                    }
-                }
-
-                // Vuelve a enlazar los datos en el DataGridDocumento después de la eliminación
-                DataGridDocumento.DataBind();
-            }
-        }
-
-        protected void lnkViewFile_Click(object sender, EventArgs e)
-        {
-            LinkButton lnkViewFile = (LinkButton)sender;
-            int rowIndex = Convert.ToInt32(lnkViewFile.CommandArgument);
-            DataGridItem selectedRow = DataGridDocumento.Items[rowIndex];
-            string archivo = selectedRow.Cells[1].Text;
-
-            // Construye la ruta completa al archivo
-            string rutaArchivo = @"\\Srvfs\s_i_ducon$\Documentacion Bitacora\" + archivo;
-
-            if (File.Exists(rutaArchivo))
-            {
-                // Establecer las cabeceras para la descarga del archivo
-                Response.Clear();
-                Response.ContentType = "application/octet-stream";
-                Response.AppendHeader("Content-Disposition", "attachment; filename=" + Path.GetFileName(rutaArchivo));
-                Response.AppendHeader("X-Content-Type-Options", "nosniff");
-                Response.AppendHeader("X-Frame-Options", "SAMEORIGIN");
-                Response.AppendHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
-
-                // Escribir el archivo al flujo de respuesta
-                Response.WriteFile(rutaArchivo);
-
-                // Enviar todos los encabezados al cliente antes de finalizar la respuesta
-                Response.Flush();
-                // Finalizar la respuesta
-                Response.End();
-
-
-            }
-            else
-            {
-              
-            }
+            string url = "DocumentacionDise.aspx";
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
         }
 
         protected void lnkSelectRowRender_Click(object sender, EventArgs e)
@@ -3611,276 +3351,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 
         }
 
-        //protected void btnUpload_Click(object sender, EventArgs e)
-        // {
-        //    if (FileUpload1.HasFile)
-        //    {
-
-
-        //        string fileName = FileUpload1.FileName;
-
-        //        // Obtener el texto de lblNumDise
-        //        string lblText = lblNumDise.Text;
-
-        //        // Concatenar "DS" con el texto de lblNumDise para obtener el nombre de la carpeta
-        //        string folderName = "DS" + lblText;
-
-        //        // Combina la ruta de guardado con el nombre de la carpeta
-        //        string savePath = Path.Combine(@"P:\SISTEMAS\PruebaDocumentacion", folderName);
-
-        //        // Verifica si la carpeta no existe y créala si es necesario
-        //        if (!Directory.Exists(savePath))
-        //        {
-        //            Directory.CreateDirectory(savePath);
-        //        }
-
-        //        string filePath = Path.Combine(savePath, fileName);
-
-        //        FileUpload1.SaveAs(filePath);
-
-        //        InsertarEnBaseDeDatos(folderName, fileName);
-
-        //        // Puedes guardar la ruta del archivo en tu base de datos si es necesario
-        //        // GuardarRutaEnBaseDeDatos(filePath);
-
-        //        // Actualiza el TextBox con el nombre del archivo seleccionado
-        //        TextBox2.Text = fileName;
-
-        //               // Muestra un mensaje de éxito o realiza otras acciones necesarias
-        //              lblMessage.Text = "Archivo subido exitosamente.";
-
-        //                  // Actualiza el UpdatePanel para reflejar los cambios en la página
-
-        //   }
-        //                        else
-        //                        {
-        //                            lblMessage.Text = "Por favor, selecciona un archivo para subir.";
-        //                        }
-
-
-
-
-        //}
-
-
-        //private void InsertarEnBaseDeDatos(string folderName, string fileName)
-        //{
-        //    // Establecer la conexión con la base de datos
-        //    using (SqlConnection con = new SqlConnection("Data Source=172.16.30.3;Initial Catalog=BD_SIDSQL_PRUEBA;User ID=pcadmin;Password=password"))
-        //    {
-        //        con.Open();
-
-        //        // Crear la consulta SQL para insertar en la tabla 'tblDocumentacion'
-        //        string query = "INSERT INTO tblDocumentacion (Id_OT, Pedido, Archivo, Observacion, TipoDocumento, Usuario, FechaRegistro) VALUES (@Id_OT, @Pedido, @Archivo, @Observacion, @TipoDocumento, @Usuario, @FechaRegistro)";
-
-        //        using (SqlCommand cmd = new SqlCommand(query, con))
-        //        {
-        //            // Establecer los parámetros de la consulta
-        //            cmd.Parameters.AddWithValue("@Id_OT", folderName);
-        //            cmd.Parameters.AddWithValue("@Pedido", 0);
-        //            cmd.Parameters.AddWithValue("@Archivo", fileName);
-        //            cmd.Parameters.AddWithValue("@Observacion", Textarea1.Value); // Obtener el valor del textarea
-        //            cmd.Parameters.AddWithValue("@TipoDocumento", "BITACORA");
-        //            cmd.Parameters.AddWithValue("@Usuario", DropDownList1.SelectedValue); // Obtener el valor del DropDownList
-        //            cmd.Parameters.AddWithValue("@FechaRegistro", DateTime.Now);
-
-        //            // Ejecutar la consulta
-        //            int rowsAffected = cmd.ExecuteNonQuery();
-
-        //            // Comprobar si se actualizó al menos una fila
-        //            if (rowsAffected > 0)
-        //            {
-
-
-        //            }
-        //            else
-        //            {
-
-
-        //            }
-        //        }
-        //    }
-
-
-        //}
-
-        //protected void btnUploadd_Click(object sender, EventArgs e)
-        //{
-        //    Documentacion.Visible = !Documentacion.Visible;
-        //    miDiv.Visible = !miDiv.Visible;
-
-        //    // Obtener el valor del Label
-        //    string numDise = "DS" + lblNumDise.Text;
-
-        //    // Construir la consulta SQL con el valor del Label en el WHERE
-        //    string consultaSql = $"SELECT Archivo, Observacion, Usuario, FechaRegistro, Id_OT FROM tblDocumentacion WHERE Id_OT = '{numDise}'";
-
-        //    // Actualizar el comando SQL del SqlDataSource con la nueva consulta
-        //    SqlDataSource3.SelectCommand = consultaSql;
-
-        //    // Actualizar el DataGrid
-        //    DataGridDocumento.DataBind();
-
-
-        //}
-
-        ////SELECCIONA
-        //protected void lnkSelectRow_Click(object sender, EventArgs e)
-        //{
-
-
-        //    // Obtén el LinkButton que se hizo clic
-        //    LinkButton lnkSelectRow = (LinkButton)sender;
-
-        //    // Obtén el índice de fila desde el CommandArgument
-        //    int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
-
-        //    // Accede a la fila seleccionada en el DataGrid
-        //    DataGridItem selectedRow = DataGridDocumento.Items[rowIndex];
-
-        //    // Almacena el valor de Id_OT en una variable de sesión
-        //    Session["SelectedIdOT"] = selectedRow.Cells[5].Text;
-
-        //    // Almacena el nombre del archivo en la variable de sesión
-        //    Session["SelectedFileName"] = selectedRow.Cells[1].Text;
-
-        //    // Deselecciona todas las filas previamente seleccionadas
-        //    foreach (DataGridItem item in DataGridDocumento.Items)
-        //    {
-        //        if (item != selectedRow)
-        //        {
-        //            item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
-        //        }
-        //    }
-
-        //    // Aplica la clase CSS a la fila seleccionada
-        //    selectedRow.CssClass = "selected-row";
-
-        //    // Puedes acceder a los datos de la fila si es necesario
-        //    string archivo = selectedRow.Cells[1].Text;
-        //    string observacion = selectedRow.Cells[2].Text;
-        //    string usuario = selectedRow.Cells[3].Text;
-        //    string fechaRegistro = selectedRow.Cells[4].Text;
-        //    string id_OT = selectedRow.Cells[5].Text;
-
-        //}
-
-        ////VER
-        //protected void lnkViewFile_Click(object sender, EventArgs e)
-        //{
-        //    LinkButton lnkViewFile = (LinkButton)sender;
-        //    int rowIndex = Convert.ToInt32(lnkViewFile.CommandArgument);
-        //    DataGridItem selectedRow = DataGridDocumento.Items[rowIndex];
-        //    string archivo = selectedRow.Cells[1].Text;
-
-        //    // Construye la ruta completa al archivo
-        //    string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\" + archivo;
-
-
-        //    try
-        //   {
-        //        System.Diagnostics.Process.Start(rutaArchivo);
-        //   }
-        //    catch (Exception ex)
-        //   {
-        //        // Maneja cualquier excepción que pueda ocurrir al abrir el archivo
-        //       // Puedes registrar el error o mostrar un mensaje al usuario si es necesario
-        //    }
-        //}
-
-        ////ELIMINAR
-        //protected void LinkButton3_Click(object sender, EventArgs e)
-        //{
-        //    // Recupera el valor de Id_OT de la variable de sesión
-        //    string idOTToDelete = Session["SelectedIdOT"] as string;
-
-        //    if (!string.IsNullOrEmpty(idOTToDelete))
-        //    {
-
-        //        // Recupera el valor de "Archivo" de la variable de sesión
-        //        string archivoToDelete = Session["SelectedFileName"] as string;
-
-        //        // Conexión a la base de datos y consulta DELETE
-        //        string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL_PRUEBA"].ConnectionString;
-        //        using (SqlConnection connection = new SqlConnection(connectionString))
-        //        {
-        //            connection.Open();
-        //            string deleteQuery = "DELETE FROM tbldocumentacion WHERE Id_OT = @IdOT AND Archivo = @Archivo";
-        //            using (SqlCommand command = new SqlCommand(deleteQuery, connection))
-        //            {
-        //                command.Parameters.AddWithValue("@IdOT", idOTToDelete);
-        //                command.Parameters.AddWithValue("@Archivo", archivoToDelete);
-        //                command.ExecuteNonQuery();
-        //            }
-        //        }
-
-
-        //        DataGridDocumento.DataBind();
-        //    }
-        //}
-
-
-        //protected void SelectRow_Click(object sender, EventArgs e)
-        //{       
-        //}
-
-        //protected void Unnamed_Click(object sender, EventArgs e)
-        //{
-        //    lblNumDise.Text = "Por definir";
-        //}
-
-        //protected void Button3_Click(object sender, EventArgs e)
-        //{
-        //    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalDoc').modal('show');", true);
-        //}
-
-        //protected void Unnamed_Click1(object sender, EventArgs e)
-        //{
-        //    if (FileUpload1.HasFile)
-        //    {
-        //        string fileName = FileUpload1.FileName;
-
-        //        // Obtener el texto de lblNumDise
-        //        string lblText = lblNumDise.Text;
-
-        //        // Concatenar "DS" con el texto de lblNumDise para obtener el nombre de la carpeta
-        //        string folderName = "DS" + lblText;
-
-        //        // Combina la ruta de guardado con el nombre de la carpeta
-        //        string savePath = Path.Combine(@"P:\SISTEMAS\PruebaDocumentacion", folderName);
-
-        //        // Verifica si la carpeta no existe y créala si es necesario
-        //        if (!Directory.Exists(savePath))
-        //        {
-        //            Directory.CreateDirectory(savePath);
-        //        }
-
-        //        string filePath = Path.Combine(savePath, fileName);
-
-        //        FileUpload1.SaveAs(filePath);
-
-        //        InsertarEnBaseDeDatos(folderName, fileName);
-
-        //        // Actualiza el TextBox con el nombre del archivo seleccionado
-        //        TextBox2.Text = fileName;
-
-        //        // Muestra un mensaje de éxito o realiza otras acciones necesarias
-        //        lblMessage.Text = "Archivo subido exitosamente.";
-
-        //        // Actualiza solo el contenido del UpdatePanel3
-        //        UpdatePanel3.Update();
-
-        //    }
-        //    else
-        //    {
-        //        lblMessage.Text = "Por favor, selecciona un archivo para subir.";
-        //    }
-        //}
-
-        //protected void Unnamed_Click2(object sender, EventArgs e)
-        //{
-
-        //}
+       
     }
 
 

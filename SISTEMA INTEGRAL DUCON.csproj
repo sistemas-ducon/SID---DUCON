@@ -171,6 +171,7 @@
     <Content Include="Formularios\Ventas\Clientes.aspx" />
     <Content Include="Formularios\Ventas\Consulta_Cotizacion.aspx" />
     <Content Include="Formularios\Ventas\Diseño_Venta.aspx" />
+    <Content Include="Formularios\Ventas\DocumentacionDise.aspx" />
     <Content Include="Formularios\Ventas\Gestion_Comercial.aspx" />
     <Content Include="Formularios\Ventas\Licitaciones.aspx" />
     <Content Include="Formularios\Inicio.aspx" />
@@ -203,6 +204,7 @@
     <Content Include="Recursos\CSS\Ventas\Clientes.css" />
     <Content Include="Recursos\CSS\Ventas\Consulta_Cotizacion.css" />
     <Content Include="Recursos\CSS\Ventas\Diseño_Venta.css" />
+    <Content Include="Recursos\CSS\Ventas\DocumentacionDise.css" />
     <Content Include="Recursos\CSS\Ventas\Gestion_Comercial.css" />
     <Content Include="Recursos\CSS\Ventas\Licitaciones.css" />
     <Content Include="Recursos\CSS\Ventas\Render_Venta.css" />
@@ -338,6 +340,13 @@
     </Compile>
     <Compile Include="Formularios\Ventas\Diseño_Venta.aspx.designer.cs">
       <DependentUpon>Diseño_Venta.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\Ventas\DocumentacionDise.aspx.cs">
+      <DependentUpon>DocumentacionDise.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\Ventas\DocumentacionDise.aspx.designer.cs">
+      <DependentUpon>DocumentacionDise.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\Ventas\Gestion_Comercial.aspx.cs">
       <DependentUpon>Gestion_Comercial.aspx</DependentUpon>
