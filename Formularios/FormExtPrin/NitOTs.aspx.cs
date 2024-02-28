@@ -802,7 +802,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected void VerRegistro(object sender, EventArgs e)
         {
 
-            string ArchivoRegistroServidor = Session["ArchivoRegSession"].ToString(); ;
+            string ArchivoRegistroServidor ="R" + Session["ArchivoRegSession"].ToString(); ;
 
             // Ruta completa del archivo que deseas abrir
             string rutaArchivo = @"\\172.16.30.6\s_i_ducon$\Registro Clientes\" + ArchivoRegistroServidor;
@@ -947,14 +947,33 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 }
             }
 
-            // Obtener la extensión del archivo original
-            string extensionArchivo = Path.GetExtension(archivo.FileName);
+            string extensionArchivo = "";
+            string nuevoNombreArchivo = "";
+            string rutaCompletaArchivo = "";
 
-            // Construir el nuevo nombre del archivo con la nueva extensión
-            string nuevoNombreArchivo = tbNumero.Text + extensionArchivo;
+            if (carpeta.ToUpper() == "RUT")
+            {
+                // Obtener la extensión del archivo original
+                 extensionArchivo = Path.GetExtension(archivo.FileName);
 
-            // Combinar la ruta completa de la carpeta con el nuevo nombre del archivo
-            string rutaCompletaArchivo = Path.Combine(rutaCompletaCarpeta, nuevoNombreArchivo);
+                // Construir el nuevo nombre del archivo con la nueva extensión
+                 nuevoNombreArchivo = tbNumero.Text + extensionArchivo;
+
+                // Combinar la ruta completa de la carpeta con el nuevo nombre del archivo
+                 rutaCompletaArchivo = Path.Combine(rutaCompletaCarpeta, nuevoNombreArchivo);
+            }
+            else
+            {
+                // Obtener la extensión del archivo original
+                 extensionArchivo = Path.GetExtension(archivo.FileName);
+
+                // Construir el nuevo nombre del archivo con la nueva extensión
+                 nuevoNombreArchivo = "R" + tbNumero.Text + extensionArchivo;
+
+                // Combinar la ruta completa de la carpeta con el nuevo nombre del archivo
+                 rutaCompletaArchivo = Path.Combine(rutaCompletaCarpeta, nuevoNombreArchivo);
+            }
+            
 
             try
             {
@@ -974,6 +993,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             {
                 string rutaBase = @"\\172.16.30.6\s_i_ducon$";
                 string rutaCompletaCarpeta = Path.Combine(rutaBase, carpeta);
+                if(carpeta.ToUpper() == "REGISTRO CLIENTES")
+                {
+                    nombreArchivo = "R" + nombreArchivo;
+                }
 
                 if (Directory.Exists(rutaCompletaCarpeta))
                 {
@@ -1114,7 +1137,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                                 if (fila["ArchivoRegistro"] != null)
                                 {
                                     string nombreReg = fila["ArchivoRegistro"].ToString();
-                                    EliminarArchivoDelServidor("RegistroClientes", nombreReg);
+                                    EliminarArchivoDelServidor("Registro Clientes", nombreReg);
                                 }
                             }
                             if (ActualizarClienteEnBaseDeDatos())
@@ -1134,10 +1157,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
                             }
                         }
-                        else
-                        {
-
-                        }
+                   
                     }
 
                 }

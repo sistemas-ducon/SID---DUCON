@@ -39,7 +39,7 @@
                                 <div class="col-12">
                                     <div class="table-responsive mb-1 gap-2" style="max-height: 20rem; overflow-x: auto;">
                                         <h5 class="datagrid-header text-center">Documentación</h5>
-                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridDoc" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="DocumentacionFiltrada" OnItemCommand="DataGridDoc_ItemCommand">
+                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridDoc" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="DocumentacionFiltrada" OnItemCommand="DataGridDoc_ItemCommand" OnItemDataBound="DataGridDoc_ItemDataBound">
                                             <Columns>
 
                                                 <asp:TemplateColumn HeaderText="...">
@@ -88,12 +88,21 @@
                         </div>
                     </div>
 
+                    <div class="row text-center pb-1 mb-1">
+                        <div class="col-6">
+                        </div>
+                        <div class="col-6">
+                            <asp:Label CssClass=" alert-success" ID="mensaje" runat="server" Text="" Visible="false"></asp:Label>
+                        </div>
+
+                    </div>
+
                     <div class="row  pb-1 mb-1">
 
                         <div class="col-5">
                             <div class=" input-group input-group-sm gap-2  ">
                                 <asp:Label ID="Label1" class=" col-form-label-sm" Text="Tipo Documento" runat="server"></asp:Label>
-                                <asp:DropDownList class="form-control form-control-sm" ID="ddlTipoDoc" runat="server">
+                                <asp:DropDownList class="form-control form-control-sm" ID="ddlTipoDoc" runat="server" onchange="ddlTipoDocChanged()">
                                     <asp:ListItem Value="">-- Seleccione --</asp:ListItem>
                                     <asp:ListItem Value="CONTROL DIBUJO">CONTROL DIBUJO</asp:ListItem>
                                     <asp:ListItem Value="CONTABLE">CONTABLE</asp:ListItem>
@@ -103,11 +112,13 @@
                             </div>
                         </div>
 
-                        <div class="col-1"></div>
+                        <div class="col-1">
+                        </div>
 
                         <div class="col-6">
                             <div class="input-group input-group-sm ">
                                 <asp:FileUpload CssClass="form-control" ID="DoctOT" runat="server" />
+                                <asp:Button ID="ValidarEspecial" CssClass="btn btn-outline-success" runat="server" Text="ValidarEspecial" OnClick="ValidarEspecial_Click" />
                                 <asp:Button ID="btnAdjuntar" CssClass="btn btn-outline-primary" runat="server" Text="Adjuntar" OnClick="btnAdjuntar_Click" OnClientClick="return ValidarAdjuntar();" />
                                 <asp:Button ID="bntElimnar" CssClass="btn btn-outline-danger" runat="server" Text="Elimnar" OnClick="bntElimnar_Click" OnClientClick="return ValidarEliminacion(event);" />
                             </div>
@@ -152,7 +163,7 @@
 
                 <div class="container pt-1 mt-1">
 
-                      <div class="row text-center pt-2 mt-2">
+                    <div class="row text-center pt-2 mt-2">
                         <h4>Documentación Solicitudes Especiales</h4>
                     </div>
 
@@ -206,8 +217,8 @@
                                     </div>
                                 </div>
 
-                                <div class="col-2">
-                                    <div class="input-group-sm pt-4">
+                                <div class="col-4">
+                                    <div class="input-group input-group-sm pt-4">                                       
                                         <asp:Button ID="btnSubirAdjuntar" type="button" Text="Adjuntar Especial" class="btn btn-outline-secondary" runat="server" OnClick="btnSubirAdjuntar_Click" OnClientClick="return ValidarCantidad();"></asp:Button>
                                     </div>
                                 </div>
@@ -224,11 +235,11 @@
                 <asp:PostBackTrigger ControlID="btnAdjuntar" />
                 <asp:PostBackTrigger ControlID="bntElimnar" />
                 <asp:PostBackTrigger ControlID="DataGridDoc" />
+                <asp:PostBackTrigger ControlID="ValidarEspecial" />
             </Triggers>
+
         </asp:UpdatePanel>
-
     </form>
-
 
     <script>
         function ValidarCantidad() {
@@ -280,11 +291,18 @@
 
     </script>
 
+    <script type="text/javascript">
+        function ddlTipoDocChanged() {
+            var ddlTipoDoc = document.getElementById('<%= ddlTipoDoc.ClientID %>');
+            var validarEspecial = document.getElementById('<%= ValidarEspecial.ClientID %>');
 
-   
-
-
-
+            if (ddlTipoDoc.value !== '') {
+                validarEspecial.style.display = 'none';
+            } else {
+                validarEspecial.style.display = 'block';
+            }
+        }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 

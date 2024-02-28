@@ -1,5 +1,8 @@
 ﻿using AjaxControlToolkit;
 using DocumentFormat.OpenXml.Office.Word;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.Office.Interop.Excel;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -11,11 +14,16 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
+using NPOI.HSSF.UserModel; // Para archivos .xls (Excel 97-2003)
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using Button = System.Web.UI.WebControls.Button;
+
 namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 {
     public partial class DocumentacionOT : System.Web.UI.Page
     {
-        private string CadenaConexionSID = "BD_SIDSQL";     
+        private string CadenaConexionSID = "BD_SIDSQL";
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -60,6 +68,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 chxMespecial.Enabled = false;
                 tbCantidad.Enabled = false;
                 tbCantidad.CssClass = "form-control ";
+
+                if (Session["ControlEspecial"]?.ToString() == "Especial")
+                {
+                    ListItem newItem = new ListItem("DLLO.ESPECIAL");
+                    ddlTipoDoc.Items.Add(newItem);
+                    ddlTipoDoc.ClearSelection();
+                    newItem.Selected = true;
+                    ddlTipoDoc.Enabled = false;
+                    ddlTipoDoc.CssClass = "form-control form-control-sm";
+                    chxMespecial.Checked = true;
+
+                    tbCantidad.Enabled = true;
+
+                    tbCategoria.Text = Session["Categoría"].ToString();
+                    tbObservacion.Text = Session["Observacion"].ToString();
+                    ValidarEspecial.Visible = false;
+
+                    chxMespecial.Checked = true;
+
+                    mensaje.Visible = true;
+                    mensaje.Text = "Por favor cargue nuevamente el mismo  archivo y presione adjuntar";
+
+                    Session.Remove("ControlEspecial");
+                    Session.Remove("Categoría");
+                    Session.Remove("Observacion");
+                }
+
+
 
             }
             else
@@ -164,7 +200,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         connection.Open();
 
                         string query = "INSERT INTO tblDocumentacion (Id_OT, Pedido, Archivo, Observacion, TipoDocumento,usuario,FechaRegistro,MuebleEspecial,Cantidad ) " +
-                                       "VALUES (@Id_OT, @Pedido, @Archivo, @Observacion, @TipoDocumento, @usuario,@FechaRegistro , 0, 0)";
+                                       "VALUES (@Id_OT, @Pedido, @Archivo, @Observacion, @TipoDocumento, @usuario,@FechaRegistro , @muebleEspecial, @cantidad)";
 
                         using (SqlCommand command = new SqlCommand(query, connection))
                         {
@@ -176,6 +212,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             command.Parameters.AddWithValue("@TipoDocumento", ddlTipoDoc.SelectedItem.Text);
                             command.Parameters.AddWithValue("@usuario", Session["usuariologueado"].ToString());
                             command.Parameters.AddWithValue("@FechaRegistro", DateTime.Now);
+                            command.Parameters.AddWithValue("@cantidad", tbCantidad.Text);
+                            command.Parameters.AddWithValue("@muebleEspecial", chxMespecial.Checked);
+
 
 
                             int rowsAffected = command.ExecuteNonQuery();
@@ -226,7 +265,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             // Eliminamos el documento de la carpeta
             string rutaBase = @"\\Srvfs\s_i_ducon$\Documentacion de Obras\" + NombreCarpeta;
-           // string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion\" + NombreCarpeta;
+            // string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion\" + NombreCarpeta;
             string rutaArchivo = Path.Combine(rutaBase, NombreArchivo);
             try
             {
@@ -256,9 +295,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado4)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion4)}");
             }
 
-        
 
-          
+
+
             try
             {
                 if (File.Exists(rutaArchivo))
@@ -333,9 +372,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 string Id_OT = row.Cells[9].Text;
 
                 // Ruta completa del archivo
-                  string rutaArchivo = @"\\Srvfs\s_i_ducon$\Documentacion de Obras\" + Id_OT + "\\" + NombreArchivo;
-           //     string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\" + Id_OT + "\\" + NombreArchivo;
-             
+                string rutaArchivo = @"\\Srvfs\s_i_ducon$\Documentacion de Obras\" + Id_OT + "\\" + NombreArchivo;
+                //     string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\" + Id_OT + "\\" + NombreArchivo;
+
 
                 if (File.Exists(rutaArchivo))
                 {
@@ -416,6 +455,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 {
                     btnSubirAdjuntar.Enabled = true;
                     btnAdjuntar.Enabled = false;
+                    ValidarEspecial.Visible = false;
+                    bntElimnar.Visible = false;
                     btnAdjuntar.CssClass = "btn btn-outline-primary";
                     btnAdjuntar.Visible = false;
 
@@ -444,6 +485,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         tbCantidad.Enabled = true;
 
                     }
+                   
                 }
                 else
                 {
@@ -451,6 +493,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     ListItem item = ddlTipoDoc.Items.FindByText(tipoDoc);
                     if (item != null)
                     {
+                        ddlTipoDoc.Items.Remove("DLLO.ESPECIAL");
                         ddlTipoDoc.ClearSelection();
                         item.Selected = true;
                     }
@@ -458,6 +501,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
                 btnSubirAdjuntar.CssClass = "btn btn-outline-primary";
                 btnSubirAdjuntar.Text = "Adjuntar";
+
 
 
             }
@@ -482,7 +526,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 // Se debe Cambiar la Ruta para que apunte al servidor 
 
                 string RutaDestino = @"\\Srvfs\s_i_ducon$\Documentacion de Obras";
-              //  string RutaDestino = @"P:\SISTEMAS\PruebaDocumentacion";
+                //  string RutaDestino = @"P:\SISTEMAS\PruebaDocumentacion";
                 string carpetaIdOt = Session["Id_OT2"].ToString();
                 string pedido = Session["pedido2"].ToString();
                 string NombreFinalArchivo = carpetaIdOt + "-" + pedido + " " + NombreArchivoCopiar;
@@ -500,7 +544,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     else
                     {
                         File.Copy(RutaCompletaCopia, RutaCompletaDestinoArchivo, true);
-
+                        // Establecer la fecha de modificación del archivo copiado
+                      
                         string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                         using (SqlConnection connection = new SqlConnection(connectionString))
@@ -561,6 +606,94 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             Session.Remove("NomArchOT");
         }
 
-       
+        protected void ValidarEspecial_Click(object sender, EventArgs e)
+        {
+            if (DoctOT.HasFile)
+            {
+                HttpPostedFile file = DoctOT.PostedFile;
+                string extension = Path.GetExtension(DoctOT.FileName);
+
+                // Crear una copia temporal del archivo en la carpeta temporal del sistema
+                string archivoTemporal = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + extension);
+                DoctOT.SaveAs(archivoTemporal);
+
+                // Leer el contenido del archivo Excel
+                using (FileStream fs = new FileStream(archivoTemporal, FileMode.Open, FileAccess.Read))
+                {
+                    IWorkbook workbook = null;
+
+                    // Determinar el tipo de archivo Excel (XLS o XLSX)
+                    if (extension.Equals(".xls"))
+                    {
+                        // Para archivos .xls (Excel 97-2003)
+                        workbook = new HSSFWorkbook(fs);
+                    }
+                    else if (extension.Equals(".xlsx"))
+                    {
+                        // Para archivos .xlsx (Excel 2007 y posteriores)
+                        workbook = new XSSFWorkbook(fs);
+                    }
+
+                    // Obtener el primer worksheet
+                    ISheet sheet = workbook.GetSheetAt(0);
+
+                    // Leer el texto de las celdas necesarias
+                    string CeldaA1 = sheet.GetRow(0)?.GetCell(0)?.ToString();
+                    string CeldaA2 = sheet.GetRow(1)?.GetCell(0)?.ToString();
+                    string CeldaB2 = sheet.GetRow(1)?.GetCell(1)?.ToString();
+                    string CeldaC2 = sheet.GetRow(1)?.GetCell(2)?.ToString();
+                    string CeldaD2 = sheet.GetRow(1)?.GetCell(3)?.ToString();
+                    string CeldaE2 = sheet.GetRow(1)?.GetCell(4)?.ToString();
+                    string CeldaA4 = sheet.GetRow(0)?.GetCell(4)?.ToString();
+
+                    // Verificar si el contenido es el esperado
+                    if (CeldaA1 == "DESPIECE PRODUCTO ESPECIAL" && CeldaA2 == "N.º" && CeldaB2 == "PARTE" && CeldaC2 == "CANT." && CeldaD2 == "COD. INV." && CeldaE2 == "AREA")
+                    {
+                        
+
+                        Session["Observacion"] = tbObservacion.Text;
+                        Session["Categoría"] = CeldaA4;
+
+                        Session["ControlEspecial"] = "Especial";
+
+                        string mensajePersonalizado = "Archivo de Excel Validado";
+                        string urlRedireccion = "FormExtPrin/DocumentacionOT.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    }
+                    else
+                    {
+                       
+                        string mensajePersonalizado = "El archivo ha sido modificado. o no es un desarrollo especial.";
+                        string urlRedireccion = "FormExtPrin/DocumentacionOT.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+                    }
+
+                }
+
+            }
+            else
+            {
+                string mensajePersonalizado = "Por favor seleccione un documento";
+                string urlRedireccion = "FormExtPrin/DocumentacionOT.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            }
+
+        }
+
+        protected void DataGridDoc_ItemDataBound(object sender, DataGridItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+
+                int MuebleEspecial = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "MuebleEspecial"));
+               
+
+                TableCell cell = e.Item.Cells[6];
+                cell.Text = (MuebleEspecial == 1) ? "Si" : "No";
+
+               
+            }
+        }
     }
 }
