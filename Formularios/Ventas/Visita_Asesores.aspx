@@ -203,7 +203,7 @@
                                 <i class="bi bi-x-lg"></i>
                             </a>
 
-                            <asp:LinkButton class="icong disabled" runat="server" title="Exportar" ID="Exportar" OnClick="ExportarExel2" OnClientClick="mostrarModal(); return true;DeshabilitarExcel">
+                            <asp:LinkButton class="icong disabled" runat="server" title="Exportar" ID="Exportar" OnClick="ExportarExel2" >
                                          <i class="custom-icon"></i>
                             </asp:LinkButton>
 
@@ -226,19 +226,7 @@
                     <ContentTemplate>
                         <div class="container p-1" >
 
-                            <!-- Agrega este div para el modal de carga -->
-                            <div class="modal fade" id="loadingModal" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-body text-center">
-                                            <div class="spinner-border" role="status">
-                                                <span class="visually-hidden">Cargando...</span>
-                                            </div>
-                                            <p class="mt-2">Generando archivo Excel...</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                  
 
                             <div class="row pb-1">
 
@@ -488,21 +476,7 @@
                     <ContentTemplate>
                         <div class="container" >
 
-                            <!-- Agrega este div para el modal de carga -->
-                            <div class="modal fade" id="loadingModal1" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-body text-center">
-                                            <div class="spinner-border" role="status">
-                                                <span class="visually-hidden">Cargando...</span>
-                                            </div>
-                                            <p class="mt-2">Generando archivo Excel...</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            
+      
 
                             <div class="row pt-1" >
 
@@ -572,7 +546,7 @@
                                             </div>
 
                                             <div class="col-1">
-                                                <asp:LinkButton ID="LinkButton1" runat="server" OnClick="ExportarExel" OnClientClick="mostrarModal1();">
+                                                <asp:LinkButton ID="LinkButton1" runat="server" OnClick="ExportarExel" >
                                                      <i class="custom-icon2"></i>
                                                 </asp:LinkButton>
                                             </div>
@@ -640,6 +614,9 @@
 
                                             </div>
                                         </ContentTemplate>
+                                        <Triggers>
+                                            <asp:PostBackTrigger ControlID="LinkButton1" />
+                                        </Triggers>
                                     </asp:UpdatePanel>
 
                                 </div>
@@ -674,7 +651,7 @@
                                                             </div>
 
                                                             <div class="col-1">
-                                                                <asp:LinkButton ID="LinkButton2" runat="server" OnClick="ExportarExel3" OnClientClick="mostrarModal1();">
+                                                                <asp:LinkButton ID="LinkButton2" runat="server" OnClick="ExportarExel3">
                                                                              <i class="custom-icon2"></i>
                                                                 </asp:LinkButton>
                                                             </div>
@@ -684,6 +661,10 @@
                                                 </div>
                                             </div>
                                         </ContentTemplate>
+
+                                        <Triggers>
+                                            <asp:PostBackTrigger ControlID="LinkButton2" />
+                                        </Triggers>
                                     </asp:UpdatePanel>
 
                                 </div>
@@ -982,31 +963,7 @@
      
     </script>
 
-    <script type="text/javascript">
-        function mostrarModal() {
-            // Muestra el modal de carga
-            $('#loadingModal').modal('show');
 
-        }
-        // Función para ocultar el modal
-        function ocultarModal() {
-            $('#loadingModal').modal('hide');
-        }
-
-    </script>
-
-    <script type="text/javascript">
-        function mostrarModal1() {
-            // Muestra el modal de carga
-            $('#loadingModal1').modal('show');
-
-        }
-        // Función para ocultar el modal
-        function ocultarModal1() {
-            $('#loadingModal1').modal('hide');
-        }
-
-    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 

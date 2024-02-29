@@ -1,11 +1,14 @@
 ﻿using DocumentFormat.OpenXml.Drawing.ChartDrawing;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Office.Word;
+using OfficeOpenXml.Style;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Runtime.InteropServices;
@@ -23,6 +26,8 @@ using Control = System.Web.UI.Control;
 using DataTable = System.Data.DataTable;
 using Excel = Microsoft.Office.Interop.Excel;
 using TextBox = System.Web.UI.WebControls.TextBox;
+using OfficeOpenXml.Drawing.Chart;
+using System.Drawing;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
@@ -661,363 +666,281 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             try
             {
-               
-                // Crear una nueva instancia de Excel
-                var excelApp = new Excel.Application();
+                // Crear un nuevo paquete de Excel
+                ExcelPackage excelPackage = new ExcelPackage();
 
-                if (excelApp == null)
-                {
-                    Console.WriteLine("Excel no está instalado en esta máquina.");
-                    return;
-                }
-                // Crear un nuevo libro y hoja de Excel
-                var workbook = excelApp.Workbooks.Add();
-                var worksheet = (Excel.Worksheet)workbook.ActiveSheet;
+                // Agregar una hoja de trabajo al paquete
+                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("EstadisticaAsesores");
 
-                // Agregar título a la tabla
-                var tableTitle = "Ducon S.A.S";
-                var titleRange = worksheet.Range["B1", "D1"];
-                titleRange.Merge(); // Fusionar celdas para el título
-                titleRange.Value = tableTitle;
-                titleRange.Font.Size = 16;  // Tamaño de fuente
-                titleRange.Font.Bold = true;  // Texto en negrita
-                titleRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;  // Centrar el título
-                titleRange.EntireRow.Font.Color = System.Drawing.Color.Black;  // Cambiar el color de fuente
+                // Definir el título y el subtítulo
+                worksheet.Cells["B1:D1"].Merge = true;
+                worksheet.Cells["B1"].Value = "Ducon S.A.S";
+                worksheet.Cells["B1"].Style.Font.Size = 16;
+                worksheet.Cells["B1"].Style.Font.Bold = true;
+                worksheet.Cells["B1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-                titleRange.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
-                titleRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
-                titleRange.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
-                titleRange.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
-
-                // Agregar subtítulo
-                var subtitleRange = worksheet.Range["B2", "D2"];
-                subtitleRange.Merge(); // Fusionar celdas para el subtítulo
-                subtitleRange.Value = "Visita Asesores entre: " + fecha5.Text + " Y " + fecha6.Text; // Cambiar por el subtítulo deseado
-                subtitleRange.Font.Size = 12;
-                subtitleRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
-
-                // Aplicar bordes a la celda de subtítulo
-                subtitleRange.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
-                subtitleRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
-                subtitleRange.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
-                subtitleRange.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
-
-
-
-                int rowIndexx = 4; // Comenzar a escribir la tabla a partir de la fila 2
-
+                worksheet.Cells["B2:D2"].Merge = true;
+                worksheet.Cells["B2"].Value = "Visita Asesores entre: " + fecha5.Text + " Y " + fecha6.Text;
+                worksheet.Cells["B2"].Style.Font.Size = 12;
+                worksheet.Cells["B2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
                 // Escribir el encabezado de la tabla
-                int colIndex = 1; // Columna 1 en Excel
+                int colIndex = 1;
                 foreach (DataGridColumn column in DataGrid2.Columns)
                 {
-                    // Excluir la primera columna (LinkButton)
-                    if (colIndex != 1)
+                    if (colIndex != 1) // Excluir la primera columna (LinkButton)
                     {
-                        // Escribe el valor del encabezado en la hoja de Excel
-                        worksheet.Cells[rowIndexx - 1, colIndex] = column.HeaderText;
-                        // Obtener el rango de la celda de encabezado
-                        var headerCell = (Excel.Range)worksheet.Cells[rowIndexx - 1, colIndex];
-                        headerCell.Font.Bold = true;  // Establecer el texto en negrita
-                        headerCell.Interior.Color = System.Drawing.Color.LightGray;  // Cambiar el color de fondo
-
-                        // Aplicar bordes a la celda de encabezado
-                        headerCell.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
-                        headerCell.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
-                        headerCell.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
-                        headerCell.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
-
-
+                        worksheet.Cells[4, colIndex].Value = column.HeaderText;
+                        worksheet.Cells[4, colIndex].Style.Font.Bold = true;
+                        worksheet.Cells[4, colIndex].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        worksheet.Cells[4, colIndex].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                        worksheet.Cells[4, colIndex].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                     }
                     colIndex++;
                 }
 
+                // Escribir los datos de la tabla
+                int rowIndex = 5;
                 foreach (DataGridItem item in DataGrid2.Items)
                 {
-                    colIndex = 1; // Comenzar en la columna 1 de Excel
+                    colIndex = 1;
                     foreach (TableCell cell in item.Cells)
                     {
-                        // Excluir la primera columna (LinkButton)
-                        if (colIndex != 1)
+                        if (colIndex == 4) // Si es la columna D (la cuarta columna)
                         {
-                            // Escribe el valor de la celda en la hoja de Excel
-                            worksheet.Cells[rowIndexx, colIndex] = cell.Text;
-                            // Obtener el rango de la celda actual
-                            var cellRange = (Excel.Range)worksheet.Cells[rowIndexx, colIndex];
-
-                            // Aplicar bordes a la celda actual
-                            cellRange.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
-                            cellRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
-                            cellRange.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
-                            cellRange.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
+                            // Convertir el valor de la celda a un número
+                            double numericValue;
+                            if (double.TryParse(cell.Text, out numericValue))
+                            {
+                                worksheet.Cells[rowIndex, colIndex].Value = numericValue;
+                            }
+                            else
+                            {
+                                // Si no se puede convertir, dejar el valor como está
+                                worksheet.Cells[rowIndex, colIndex].Value = cell.Text;
+                            }
                         }
+                        else
+                        {
+                            // Para las demás columnas, simplemente escribir el texto
+                            worksheet.Cells[rowIndex, colIndex].Value = cell.Text;
+                        }
+                        worksheet.Cells[rowIndex, colIndex].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                         colIndex++;
                     }
-                    rowIndexx++;
+                    rowIndex++;
                 }
 
-                // Agregar un gráfico de barras utilizando las columnas "C" y "D" (Nombres y Cantidad Visitas)
-                Excel.ChartObjects chartObjects = (Excel.ChartObjects)worksheet.ChartObjects(Type.Missing);
-                Excel.ChartObject chartObject = chartObjects.Add(100, 100, 400, 250);
-                Excel.Chart chart = chartObject.Chart;
+                // Ajustar el ancho de las columnas
+                worksheet.Cells.AutoFitColumns();
 
-                // Definir el rango de datos para el gráfico (columnas "C" y "D")
-                Excel.Range chartRange = worksheet.Range["C4", "D" + (rowIndexx - 1)]; // Columnas "C" y "D"
-                chart.SetSourceData(chartRange, Excel.XlRowCol.xlColumns);
+                //*****************************************************************
+                // ************* Pendiente la imagen  y la redireccion ************
+                //*****************************************************************
 
-                // Cambiar el tipo de gráfico a barras verticales
-                chart.ChartType = Excel.XlChartType.xlColumnClustered;
+                // Guardar el archivo de Excel
+                string filePath = Path.GetTempFileName() + ".xlsx";
+                FileStream fileStream = new FileStream(filePath, FileMode.Create);
+                excelPackage.SaveAs(fileStream);
+                fileStream.Close();
 
-                // Configurar el eje X para que muestre los nombres de las barras (columna "C")
-                Excel.Axis xAxis = (Excel.Axis)chart.Axes(Excel.XlAxisType.xlCategory, Excel.XlAxisGroup.xlPrimary);
-                xAxis.CategoryNames = worksheet.Range["C4", "C" + (rowIndexx - 1)];
+                // Descargar el archivo de Excel
+                Response.Clear();
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("content-disposition", "attachment; filename=Estadisticas.xlsx");
+                Response.TransmitFile(filePath);
+                Response.End();
 
-                // Agregar título al gráfico
-                chart.HasTitle = true;
-                chart.ChartTitle.Text = "Vista Asesores";
-
-
-                // Refrescar la página después de cerrar el modal
-                ScriptManager.RegisterStartupScript(this, GetType(), "RefreshPage", "window.location.reload();", true);
-
-                worksheet.Columns.AutoFit();
-                // Mostrar la aplicación de Excel
-                excelApp.Visible = true;
+             
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error al exportar a Excel: " + ex.Message);
             }
-
         }
 
         protected void ExportarExel2(object sender, EventArgs e)
         {
-
-            //funciona correctamente
-
             try
             {
-                // Crear una nueva instancia de Excel
-                var excelApp = new Excel.Application();
-
-                if (excelApp == null)
+                using (var excelPackage = new ExcelPackage())
                 {
-                    Console.WriteLine("Excel no está instalado en esta máquina.");
-                    return;
-                }
+                    // Agregar una hoja de trabajo al paquete
+                    var worksheet = excelPackage.Workbook.Worksheets.Add("Detalle_Visitas");
 
-                // Crear un nuevo libro y hoja de Excel
-                var workbook = excelApp.Workbooks.Add();
-                var worksheet = (Excel.Worksheet)workbook.ActiveSheet;
+                    // Agregar título a la tabla
+                    string tableTitle = "Detalle Visitas " + ddlAsesor.SelectedItem.Text;
+                    worksheet.Cells["A1:G1"].Merge = true;
+                    worksheet.Cells["A1"].Value = tableTitle;
+                    worksheet.Cells["A1"].Style.Font.Size = 16;
+                    worksheet.Cells["A1"].Style.Font.Bold = true;
+                    worksheet.Cells["A1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells["A1"].Style.Font.Color.SetColor(Color.Black);
 
-                // Agregar título a la tabla
-                var tableTitle = "Detalle Visitas " + ddlAsesor.SelectedItem.Text;
-                var titleRange = worksheet.Range["A1", "G1"];
-                titleRange.Merge(); // Fusionar celdas para el título
-                titleRange.Value = tableTitle;
-                titleRange.Font.Size = 16;  // Tamaño de fuente
-                titleRange.Font.Bold = true;  // Texto en negrita
-                titleRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;  // Centrar el título
-                titleRange.EntireRow.Font.Color = System.Drawing.Color.Black;  // Cambiar el color de fuente
+                    // Agregar subtítulo
+                    string subtitle = "Visita entre: " + fecha1.Text + " Y " + fecha2.Text;
+                    worksheet.Cells["A2:G2"].Merge = true;
+                    worksheet.Cells["A2"].Value = subtitle;
+                    worksheet.Cells["A2"].Style.Font.Size = 12;
+                    worksheet.Cells["A2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-                // Agregar subtítulo
-                var subtitleRange = worksheet.Range["A2", "G2"];
-                subtitleRange.Merge(); // Fusionar celdas para el subtítulo
-                subtitleRange.Value = "Visita  entre: " + fecha1.Text + " Y " + fecha2.Text; // Cambiar por el subtítulo deseado
-                subtitleRange.Font.Size = 12;
-                subtitleRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                    int rowIndex = 4; // Comenzar a escribir la tabla a partir de la fila 3
 
-                int rowIndexx = 4; // Comenzar a escribir la tabla a partir de la fila 3
+                    // Escribir el encabezado de la primera tabla
+                    int colIndex = 1; // Columna 1 en Excel
+                    int maxColumnIndex = 8;
 
-                // Escribir el encabezado de la primera tabla
-                int colIndex = 1; // Columna 1 en Excel
-                int maxColumnIndex = 8;
-
-                foreach (DataGridColumn column in DataGrid1.Columns)
-                {
-                    
-                        if (colIndex != 1 &&  colIndex <= maxColumnIndex)
-                        {
-                            // Escribe el valor del encabezado en la hoja de Excel
-                            worksheet.Cells[rowIndexx - 1, colIndex - 1] = column.HeaderText;
-                            // Obtener el rango de la celda de encabezado
-                            var headerCell = (Excel.Range)worksheet.Cells[rowIndexx - 1, colIndex - 1];
-                            headerCell.Font.Bold = true;  // Establecer el texto en negrita
-                            headerCell.Interior.Color = System.Drawing.Color.LightGray;  // Cambiar el color de fondo
-
-                            // Aplicar bordes a la celda de encabezado
-                            headerCell.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
-                            headerCell.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
-                            headerCell.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
-                            headerCell.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
-                        }
-
-                    colIndex++;
-                }
-
-                foreach (DataGridItem item in DataGrid1.Items)
-                {
-                    colIndex = 1; // Comenzar en la columna 1 de Excel
-                    foreach (TableCell cell in item.Cells)
+                    foreach (DataGridColumn column in DataGrid1.Columns)
                     {
                         if (colIndex != 1 && colIndex <= maxColumnIndex)
                         {
-                            // Reemplazar "&nbsp;" con un valor vacío
-                            string cellValue = cell.Text.Replace("&nbsp;", string.Empty);
+                            // Escribe el valor del encabezado en la hoja de Excel
+                            worksheet.Cells[rowIndex - 1, colIndex - 1].Value = column.HeaderText;
 
-                            // Escribe el valor de la celda en la hoja de Excel
-                            worksheet.Cells[rowIndexx, colIndex - 1] = cellValue;
-                            // Obtener el rango de la celda actual
-                            var cellRange = (Excel.Range)worksheet.Cells[rowIndexx, colIndex - 1];
-
-                            // Aplicar bordes a la celda actual
-                            cellRange.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
-                            cellRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
-                            cellRange.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
-                            cellRange.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
+                            // Estilo para el encabezado
+                            using (var range = worksheet.Cells[rowIndex - 1, colIndex - 1, rowIndex - 1, colIndex - 1])
+                            {
+                                range.Style.Font.Bold = true;
+                                range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                                range.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                                range.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                            }
                         }
-
                         colIndex++;
                     }
-                    rowIndexx++;
+
+                    foreach (DataGridItem item in DataGrid1.Items)
+                    {
+                        colIndex = 1; // Comenzar en la columna 1 de Excel
+                        foreach (TableCell cell in item.Cells)
+                        {
+                            if (colIndex != 1 && colIndex <= maxColumnIndex)
+                            {
+                                // Reemplazar "&nbsp;" con un valor vacío
+                                string cellValue = cell.Text.Replace("&nbsp;", string.Empty);
+
+                                // Escribe el valor de la celda en la hoja de Excel
+                                worksheet.Cells[rowIndex, colIndex - 1].Value = cellValue;
+
+                                // Estilo para las celdas de datos
+                                using (var range = worksheet.Cells[rowIndex, colIndex - 1])
+                                {
+                                    range.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                                }
+                            }
+                            colIndex++;
+                        }
+                        rowIndex++;
+                    }
+
+                    rowIndex += 2;
+
+                    // Agregar título a la segunda tabla
+                    string table2Title = "Estadisticas Visitas";
+                    worksheet.Cells["A" + rowIndex.ToString()].Value = table2Title;
+                    worksheet.Cells["A" + rowIndex.ToString() + ":G" + rowIndex.ToString()].Merge = true;
+                    worksheet.Cells["A" + rowIndex.ToString()].Style.Font.Size = 14;
+                    worksheet.Cells["A" + rowIndex.ToString()].Style.Font.Bold = true;
+                    worksheet.Cells["A" + rowIndex.ToString()].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                    // Incrementar la fila para empezar a escribir los encabezados de la segunda tabla
+                    rowIndex++;
+
+                    // Crear encabezados manuales para la segunda tabla
+                    string[] encabezados = { "Rango Fechas", "Visitas", "Visita Levantamiento %", "Visita Diseño %", "Visita Cliente Nuevo %",
+                         "Visita Cierre %", "Seguimiento Cotizacion" ,"Mantenimiento%","Entrega cotización%","Cartera%","%Total" };
+                    int headerIndex = 1;
+
+                    // Escribe los encabezados en la hoja de Excel para la segunda tabla
+                    foreach (string encabezado in encabezados)
+                    {
+                        // Escribe el valor del encabezado en la hoja de Excel
+                        worksheet.Cells[rowIndex, headerIndex].Value = encabezado;
+
+                        // Estilo para el encabezado
+                        using (var range = worksheet.Cells[rowIndex, headerIndex, rowIndex, headerIndex])
+                        {
+                            range.Style.Font.Bold = true;
+                            range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            range.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                            range.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        }
+
+                        headerIndex++;
+                    }
+
+                    // Obtener los datos para la segunda tabla
+                    string[] datosTabla2 = { fecha1.Text + " Y " + fecha2.Text, lbVisitas.InnerText, lbLev.InnerText, lbDis.InnerText, lbCli.InnerText, lblCierre.InnerText, lbSegCot.InnerText,
+                         lbMantenimiento.InnerText, lbEntregaCot.InnerText, lbCartera.InnerText, lbTotal.InnerText};
+
+                    // Escribir los datos en la hoja de Excel para la segunda tabla
+                    rowIndex++;
+                    headerIndex = 1;
+
+                    foreach (string dato in datosTabla2)
+                    {
+                        // Escribe el valor de la celda en la hoja de Excel
+                        worksheet.Cells[rowIndex, headerIndex].Value = dato;
+
+                        // Estilo para las celdas de datos
+                        using (var range = worksheet.Cells[rowIndex, headerIndex])
+                        {
+                            range.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                            range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        }
+
+                        headerIndex++;
+                    }
+
+
+
+
+
+                    // Ajustar el ancho de las columnas
+                    worksheet.Cells.AutoFitColumns();
+
+                    // Guardar el archivo de Excel
+                    string filePath = Path.GetTempFileName() + ".xlsx";
+                    FileInfo excelFile = new FileInfo(filePath);
+                    excelPackage.SaveAs(excelFile);
+
+                    // Descargar el archivo de Excel
+                    Response.Clear();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("content-disposition", "attachment; filename=Detalle_Visitas.xlsx");
+                    Response.TransmitFile(filePath);
+                    Response.End();
                 }
-
-                // Dejar dos filas de espacio
-                rowIndexx += 2;
-
-                // Agregar título a la segunda tabla (tabla2)
-                var table2Title = "Estadisticas Visitas"; // Cambiar el título deseado
-                var table2TitleRange = worksheet.Range["A" + rowIndexx.ToString(), "G" + rowIndexx.ToString()];
-                table2TitleRange.Merge(); // Fusionar celdas para el título de la segunda tabla
-                table2TitleRange.Value = table2Title;
-                table2TitleRange.Font.Size = 14;  // Tamaño de fuente
-                table2TitleRange.Font.Bold = true;  // Texto en negrita
-                table2TitleRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;  // Centrar el título
-
-                // Incrementar la fila para empezar a escribir los encabezados de la segunda tabla
-                rowIndexx++;
-
-                // Crear encabezados manuales para la segunda tabla
-                string[] encabezados = { "Rango Fechas", "Visitas", "Visita Levantamiento %", "Visita Diseño %", "Visita Cliente Nuevo %",
-                             "Visita Cierre %", "Seguimiento Cotizacion" ,"Mantenimiento%","Entrega cotización%","Cartera%","%Total" };
-                int headerIndex = 1;
-
-                // Escribe los encabezados en la hoja de Excel para la segunda tabla
-                foreach (string encabezado in encabezados)
-                {
-                    // Escribe el valor del encabezado en la hoja de Excel
-                    worksheet.Cells[rowIndexx, headerIndex] = encabezado;
-
-                    // Obtener el rango de la celda de encabezado
-                    var headerCell = (Excel.Range)worksheet.Cells[rowIndexx, headerIndex];
-                    headerCell.Font.Bold = true;  // Establecer el texto en negrita
-                    headerCell.Interior.Color = System.Drawing.Color.LightGray;  // Cambiar el color de fondo
-
-                    // Aplicar bordes a la celda de encabezado
-                    headerCell.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
-                    headerCell.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
-                    headerCell.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
-                    headerCell.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
-
-                    headerIndex++;
-                }
-
-                // Obtener los datos desde las etiquetas (labels) para la segunda tabla
-                string[] datosTabla2 = { fecha1.Text + " Y " + fecha1.Text, lbVisitas.InnerText, lbLev.InnerText, lbDis.InnerText, lbCli.InnerText, lblCierre.InnerText, lbSegCot.InnerText,
-                             lbMantenimiento.InnerText, lbEntregaCot.InnerText, lbCartera.InnerText, lbTotal.InnerText};
-
-                // Escribir los datos en la hoja de Excel para la segunda tabla
-                rowIndexx++; // Avanzar a la siguiente fila
-                colIndex = 1; // Reiniciar la columna
-
-                foreach (string dato in datosTabla2)
-                {
-                    // Escribe el valor de la celda en la hoja de Excel
-                    worksheet.Cells[rowIndexx, colIndex] = dato;
-                    // Obtener el rango de la celda actual
-                    var cellRange = (Excel.Range)worksheet.Cells[rowIndexx, colIndex];
-
-                    // Aplicar bordes a la celda actual
-                    cellRange.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
-                    cellRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
-                    cellRange.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
-                    cellRange.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
-                    // Alinear el contenido de la celda al centro
-                    cellRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
-
-                    // Avanzar a la siguiente columna
-                    colIndex++;
-                }
-
-                // Ajustar el ancho de las columnas para ambas tablas
-                worksheet.Columns.AutoFit();
-                // Mostrar la aplicación de Excel
-                excelApp.Visible = true;
-
-                Response.Redirect(Request.Url.ToString());
-
-
-
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error al exportar a Excel: " + ex.Message);
             }
-
-
         }
 
         protected void ExportarExel3(object sender, EventArgs e)
-
-
         {
             try
             {
-                // Crear una nueva instancia de Excel
-                var excelApp = new Excel.Application();
+                // Crear un nuevo paquete de Excel
+                ExcelPackage excelPackage = new ExcelPackage();
 
-                if (excelApp == null)
-                {
-                    Console.WriteLine("Excel no está instalado en esta máquina.");
-                    return;
-                }
-                // Crear un nuevo libro y hoja de Excel
-                var workbook = excelApp.Workbooks.Add();
-                var worksheet = (Excel.Worksheet)workbook.ActiveSheet;
+                // Agregar una hoja de trabajo al paquete
+                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Ducon SAS");
 
-                // Agregar título a la tabla
-                var tableTitle = "Ducon S.A.S";
-                var titleRange = worksheet.Range["B1", "D1"];
-                titleRange.Merge(); // Fusionar celdas para el título
-                titleRange.Value = tableTitle;
-                titleRange.Font.Size = 16;  // Tamaño de fuente
-                titleRange.Font.Bold = true;  // Texto en negrita
-                titleRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;  // Centrar el título
-                titleRange.EntireRow.Font.Color = System.Drawing.Color.Black;  // Cambiar el color de fuente
+                // Definir el título y el subtítulo
+                worksheet.Cells["B1:D1"].Merge = true;
+                worksheet.Cells["B1"].Value = "Ducon S.A.S";
+                worksheet.Cells["B1"].Style.Font.Size = 16;
+                worksheet.Cells["B1"].Style.Font.Bold = true;
+                worksheet.Cells["B1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-                titleRange.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
-                titleRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
-                titleRange.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
-                titleRange.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
+                worksheet.Cells["B2:D2"].Merge = true;
+                worksheet.Cells["B2"].Value = "Visita Asesores entre: " + fecha5.Text + " Y " + fecha6.Text;
+                worksheet.Cells["B2"].Style.Font.Size = 12;
+                worksheet.Cells["B2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-                // Agregar subtítulo
-                var subtitleRange = worksheet.Range["B2", "D2"];
-                subtitleRange.Merge(); // Fusionar celdas para el subtítulo
-                subtitleRange.Value = "Visita Asesores entre: " + fecha5.Text + " Y " + fecha6.Text; // Cambiar por el subtítulo deseado
-                subtitleRange.Font.Size = 12;
-                subtitleRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
-
-                // Aplicar bordes a la celda de subtítulo
-                subtitleRange.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
-                subtitleRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
-                subtitleRange.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
-                subtitleRange.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
-
-
-
-                int rowIndexx = 4; // Comenzar a escribir la tabla a partir de la fila 2
-
+                int rowIndex = 4; // Comenzar a escribir la tabla a partir de la fila 4
 
                 // Escribir el encabezado de la tabla
                 int colIndex = 1; // Columna 1 en Excel
@@ -1027,19 +950,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     if (colIndex != 1)
                     {
                         // Escribe el valor del encabezado en la hoja de Excel
-                        worksheet.Cells[rowIndexx - 1, colIndex] = column.HeaderText;
-                        // Obtener el rango de la celda de encabezado
-                        var headerCell = (Excel.Range)worksheet.Cells[rowIndexx - 1, colIndex];
-                        headerCell.Font.Bold = true;  // Establecer el texto en negrita
-                        headerCell.Interior.Color = System.Drawing.Color.LightGray;  // Cambiar el color de fondo
-
-                        // Aplicar bordes a la celda de encabezado
-                        headerCell.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
-                        headerCell.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
-                        headerCell.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
-                        headerCell.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
-
-
+                        worksheet.Cells[rowIndex - 1, colIndex].Value = column.HeaderText;
+                        worksheet.Cells[rowIndex - 1, colIndex].Style.Font.Bold = true;
+                        worksheet.Cells[rowIndex - 1, colIndex].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        worksheet.Cells[rowIndex - 1, colIndex].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                        worksheet.Cells[rowIndex - 1, colIndex].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                     }
                     colIndex++;
                 }
@@ -1052,57 +967,48 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Excluir la primera columna (LinkButton)
                         if (colIndex != 1)
                         {
-                            // Escribe el valor de la celda en la hoja de Excel
-                            worksheet.Cells[rowIndexx, colIndex] = cell.Text;
-                            // Obtener el rango de la celda actual
-                            var cellRange = (Excel.Range)worksheet.Cells[rowIndexx, colIndex];
-
-                            // Aplicar bordes a la celda actual
-                            cellRange.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
-                            cellRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
-                            cellRange.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
-                            cellRange.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
+                            double numericValue;
+                            // Intentar convertir el valor de la celda a double
+                            if (double.TryParse(cell.Text, out numericValue))
+                            {
+                                // Si es numérico, escribirlo como valor numérico
+                                worksheet.Cells[rowIndex, colIndex].Value = numericValue;
+                                worksheet.Cells[rowIndex, colIndex].Style.Numberformat.Format = "#,##0";
+                            }
+                            else
+                            {
+                                // Si no es numérico, escribirlo como texto
+                                worksheet.Cells[rowIndex, colIndex].Value = cell.Text;
+                            }
+                            worksheet.Cells[rowIndex, colIndex].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                         }
                         colIndex++;
                     }
-                    rowIndexx++;
+                    rowIndex++;
                 }
 
-                // Agregar un gráfico de barras utilizando las columnas "C" y "D" (Nombres y Cantidad Visitas)
-                Excel.ChartObjects chartObjects = (Excel.ChartObjects)worksheet.ChartObjects(Type.Missing);
-                Excel.ChartObject chartObject = chartObjects.Add(100, 100, 400, 250);
-                Excel.Chart chart = chartObject.Chart;
 
-                // Definir el rango de datos para el gráfico (columnas "C" y "D")
-                Excel.Range chartRange = worksheet.Range["B4", "C" + (rowIndexx - 1)]; // Columnas "C" y "D"
-                chart.SetSourceData(chartRange, Excel.XlRowCol.xlColumns);
+                // Ajustar el ancho de las columnas
+                worksheet.Cells.AutoFitColumns();
 
-                // Cambiar el tipo de gráfico a barras verticales
-                chart.ChartType = Excel.XlChartType.xlColumnClustered;
+                // Guardar el archivo de Excel
+                string filePath = Path.GetTempFileName() + ".xlsx";
+                FileStream fileStream = new FileStream(filePath, FileMode.Create);
+                excelPackage.SaveAs(fileStream);
+                fileStream.Close();
 
-                // Configurar el eje X para que muestre los nombres de las barras (columna "C")
-                Excel.Axis xAxis = (Excel.Axis)chart.Axes(Excel.XlAxisType.xlCategory, Excel.XlAxisGroup.xlPrimary);
-                xAxis.CategoryNames = worksheet.Range["B4", "C" + (rowIndexx - 1)];
-
-                // Agregar título al gráfico
-                chart.HasTitle = true;
-                chart.ChartTitle.Text = "Estadistica por Tipo Visita";
-
-                worksheet.Columns.AutoFit();
-                // Mostrar la aplicación de Excel
-                excelApp.Visible = true;
-
-                Response.Redirect(Request.Url.ToString());
-
-
+                // Descargar el archivo de Excel
+                Response.Clear();
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("content-disposition", "attachment; filename=Estadisticas.xlsx");
+                Response.TransmitFile(filePath);
+                Response.End();
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error al exportar a Excel: " + ex.Message);
             }
-
         }
-
 
         protected void GuardarModificarCliente(object sender, EventArgs e)
         {
@@ -1238,7 +1144,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
    
-
         [WebMethod] // Cambiar estado de variable de Session cuando dan click en NuevaSolicitud 
         public static void NuevaVisita()
         {
