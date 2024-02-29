@@ -605,7 +605,7 @@
                                                                  <asp:ListItem Text="Zona por Prototipo" Value="Zona por Prototipo" />
                                                                  <asp:ListItem Text="Piso detallado" Value="Piso detallado" />
                                                                  <asp:ListItem Text="Piso por prototipo" Value="Piso por prototipo" />
-                                                                 <asp:ListItem Text="Piso por zona detallada" Value="Completa por prototipo" />
+                                                                 <asp:ListItem Text="Piso por zona detallada" Value="Piso por zona detallada" />
                                                                  <asp:ListItem Text="En observaciones de Ventas" Value="En observaciones de Ventas" />                               
                                                         </asp:DropDownList>        
 
