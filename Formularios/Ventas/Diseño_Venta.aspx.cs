@@ -3425,10 +3425,97 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 
         }
 
-       
         protected void CargarVSC_Click(object sender, EventArgs e)
         {
             Session["AsesorDiseño"] = Session["CedulaLogeada"].ToString();
+        }
+
+        protected void ChecConDeCab_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ChecConDeCab.Checked)
+            {
+                ChecPiso.Checked = true;
+                ChecDiv.Checked = true;
+                ChecCie.Checked = true;
+                ChecCan.Checked = true;
+                ChecBteEle.Checked = true;
+                ChecBteSw.Checked = true;
+            }
+            else
+            {
+                ChecPiso.Checked = false;
+                ChecDiv.Checked = false;
+                ChecCie.Checked = false;
+                ChecCan.Checked = false;
+                ChecBteEle.Checked = false;
+                ChecBteSw.Checked = false;
+            }
+        }
+
+        protected void ChecSujPt_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ChecSujPt.Checked)
+            {
+                ChecAlCie.Checked = true;
+                ChecPerRef.Checked = true;
+                ChecGuaEsc.Checked = true;
+                TexHTot.Text = "0";   
+            }
+            else
+            {
+                ChecAlCie.Checked = false;
+                ChecPerRef.Checked = false;
+                ChecGuaEsc.Checked = false;
+                TexHTot.Text = "";
+            }
+        }
+
+        protected void ChecMue_CheckedChanged(object sender, EventArgs e)
+        {
+            if(ChecMue.Checked)
+            {
+                TextCoc.Text = "NA";
+                TextEnt.Text = "NA";
+                TextPuer.Text = "NA";
+            }
+            else
+            {
+                TextCoc.Text = "";
+                TextEnt.Text = "";
+                TextPuer.Text = "";
+            }
+        }
+
+        protected void CheckEsyMat_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CheckEsyMat.Checked)
+            {
+                TextLin.Text = "NA";
+                TextMos.Text = "NA";
+                TextSup.Text = "NA";
+                TextSop.Text = "NA";
+                TextGav.Text = "NA";
+                TextPan.Text = "NA";
+                TextTapPie.Text = "NA";
+                TextRep.Text = "NA";
+                TextTipVid.Text = "NA";
+                TextPant.Text = "NA";
+                TextArch.Text = "NA";           
+            }
+            else
+            {
+                TextLin.Text = "";
+                TextMos.Text = "";
+                TextSup.Text = "";
+                TextSop.Text = "";
+                TextGav.Text = "";
+                TextPan.Text = "";
+                TextTapPie.Text = "";
+                TextRep.Text = "";
+                TextTipVid.Text = "";
+                TextPant.Text = "";
+                TextArch.Text = "";
+            }
         }
 
     }

@@ -160,3 +160,6 @@
     border-bottom: none; /* Elimina el borde inferior */
     border-right: none; /* Elimina el borde derecho */
 }
+.checkbox-align {
+    margin-top: 8px; /* Ajusta según sea necesario para alinear con los labels */
+}

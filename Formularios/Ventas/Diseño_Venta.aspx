@@ -668,7 +668,7 @@
                                                 <div class="col-md-12 col-12">
                                                     <div class="input-group input-group-sm gap-2">
                                                         <asp:Label ID="lblConCab" runat="server" class="form-label" Style="font-size: 16px; font-weight: bold;">Conduccion de Cables</asp:Label>
-                                                        <asp:CheckBox ID="ChecConDeCab" runat="server" />
+                                                        <asp:CheckBox ID="ChecConDeCab" runat="server" AutoPostBack="True" OnCheckedChanged="ChecConDeCab_CheckedChanged"/>
                                                     </div>
                                                 </div>
                                                 <div class="row d-flex justify-content-between">
@@ -689,7 +689,7 @@
                                                     <div class="col-md-6 col-6">
                                                         <div class="input-group input-group-sm gap-2">
                                                             <asp:Label ID="lblCie" runat="server" class="col-form-label-sm">Cielo</asp:Label>
-                                                            <asp:CheckBox ID="ChecCie" runat="server" />
+                                                            <asp:CheckBox ID="ChecCie" runat="server"/>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6 col-6">
@@ -717,27 +717,24 @@
                                                 <div class="col-md-12 col-12">
                                                     <div class="input-group input-group-sm gap-2">
                                                         <asp:Label ID="lblSujPt" runat="server" class="form-label" Style="font-size: 16px; font-weight: bold;">Sujeción PT</asp:Label>
-                                                        <asp:CheckBox ID="ChecSujPt" runat="server" />
+                                                        <asp:CheckBox ID="ChecSujPt" runat="server" AutoPostBack="true" OnCheckedChanged="ChecSujPt_CheckedChanged"/>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6 col-6">
-                                                    <div class="input-group input-group-sm gap-2">
-                                                        <asp:Label ID="lblAlCie" runat="server" class="col-form-label-sm">Al Cielo</asp:Label>
-                                                        <asp:CheckBox ID="ChecAlCie" runat="server" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12 col-12">
-                                                    <div class="input-group input-group-sm gap-2">
-                                                        <asp:Label ID="lblPerRef" runat="server" class="col-form-label-sm">Perfil Refuerzo</asp:Label>
-                                                        <asp:CheckBox ID="ChecPerRef" runat="server" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12 col-12">
-                                                    <div class="input-group input-group-sm gap-2">
-                                                        <asp:Label ID="lblGuaEsc" runat="server" class="col-form-label-sm">Guarda Escobas</asp:Label>
-                                                        <asp:CheckBox ID="ChecGuaEsc" runat="server" />
-                                                    </div>
-                                                </div>
+                                             <div class="input-group input-group-sm gap-2">
+    <div class="col-md-12 col-12">
+        <asp:Label ID="lblAlCie" runat="server" class="col-form-label-sm">Al Cielo</asp:Label>
+        <asp:CheckBox ID="ChecAlCie" runat="server" CssClass="checkbox-align" />
+    </div>
+    <div class="col-md-12 col-12">
+        <asp:Label ID="lblPerRef" runat="server" class="col-form-label-sm">Perfil Refuerzo</asp:Label>
+        <asp:CheckBox ID="ChecPerRef" runat="server" CssClass="checkbox-align" />
+    </div>
+    <div class="col-md-12 col-12">
+        <asp:Label ID="lblGuaEsc" runat="server" class="col-form-label-sm">Guarda Escobas</asp:Label>
+        <asp:CheckBox ID="ChecGuaEsc" runat="server" CssClass="checkbox-align" />
+    </div>
+</div>
+
                                                 <div class="col-md-12 col-12">
                                                     <div class="input-group input-group-sm p-1 gap-2">
                                                         <asp:Label ID="lblHTotCms" runat="server" class="col-form-label-sm">H.Total(Cms)</asp:Label>
@@ -750,6 +747,7 @@
                                                     <div class="col-md-6 col-6">
                                                         <div class="input-group input-group-sm mt-1 gap-2">
                                                             <asp:Label ID="lblEsyMat" runat="server" class="form-label col-12 text-dark text-uppercase" Style="font-size: 16px; font-weight: bold;">Especificaciones y Materiales</asp:Label>
+                                                             <asp:CheckBox ID="CheckEsyMat" runat="server" AutoPostBack="true" OnCheckedChanged="CheckEsyMat_CheckedChanged"/>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3 col-6">
@@ -836,7 +834,7 @@
                                                 <div class="col-md-10 col-12">
                                                     <div class="input-group input-group-sm gap-2">
                                                         <asp:Label ID="lblMue" runat="server" class="form-label" Style="font-size: 16px; font-weight: bold;">Muebles</asp:Label>
-                                                        <asp:CheckBox ID="ChecMue" runat="server" />
+                                                        <asp:CheckBox ID="ChecMue" runat="server" AutoPostBack="true" OnCheckedChanged="ChecMue_CheckedChanged" />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-10 col-12">
@@ -874,11 +872,11 @@
                                             </div>
                                             <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
                                                 <h6>Observaciones de Dibujo y Despiece</h6>
-                                                <textarea id="TextObsDibDes" class="form-control form-control-sm" style="height: 100px" runat="server"></textarea>
+                                                <textarea id="TextObsDibDes" class="form-control form-control-sm" style="height: 100px" runat="server" readonly="readonly"></textarea>
                                             </div>
                                             <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
                                                 <h6>Seguimiento de Pausas y Devoluciones</h6>
-                                                <textarea id="TextSegPauDev" class="form-control form-control-sm" style="height: 100px" runat="server"></textarea>
+                                                <textarea id="TextSegPauDev" class="form-control form-control-sm" style="height: 100px" runat="server" readonly="readonly"></textarea>
                                             </div>
                                         </div>
                                     </div>
