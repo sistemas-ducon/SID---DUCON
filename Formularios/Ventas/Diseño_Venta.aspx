@@ -720,21 +720,24 @@
                                                         <asp:CheckBox ID="ChecSujPt" runat="server" AutoPostBack="true" OnCheckedChanged="ChecSujPt_CheckedChanged"/>
                                                     </div>
                                                 </div>
-                                             <div class="input-group input-group-sm gap-2">
-    <div class="col-md-12 col-12">
-        <asp:Label ID="lblAlCie" runat="server" class="col-form-label-sm">Al Cielo</asp:Label>
-        <asp:CheckBox ID="ChecAlCie" runat="server" CssClass="checkbox-align" />
-    </div>
-    <div class="col-md-12 col-12">
-        <asp:Label ID="lblPerRef" runat="server" class="col-form-label-sm">Perfil Refuerzo</asp:Label>
-        <asp:CheckBox ID="ChecPerRef" runat="server" CssClass="checkbox-align" />
-    </div>
-    <div class="col-md-12 col-12">
-        <asp:Label ID="lblGuaEsc" runat="server" class="col-form-label-sm">Guarda Escobas</asp:Label>
-        <asp:CheckBox ID="ChecGuaEsc" runat="server" CssClass="checkbox-align" />
-    </div>
-</div>
-
+                                                <div class="col-md-6 col-6">
+                                                    <div class="input-group input-group-sm gap-2">
+                                                        <asp:Label ID="lblAlCie" runat="server" class="col-form-label-sm">Al Cielo</asp:Label>
+                                                        <asp:CheckBox ID="ChecAlCie" runat="server" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 col-12">
+                                                    <div class="input-group input-group-sm gap-2">
+                                                        <asp:Label ID="lblPerRef" runat="server" class="col-form-label-sm">Perfil Refuerzo</asp:Label>
+                                                        <asp:CheckBox ID="ChecPerRef" runat="server" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 col-12">
+                                                    <div class="input-group input-group-sm gap-2">
+                                                        <asp:Label ID="lblGuaEsc" runat="server" class="col-form-label-sm">Guarda Escobas</asp:Label>
+                                                        <asp:CheckBox ID="ChecGuaEsc" runat="server" />
+                                                    </div>
+                                                </div>
                                                 <div class="col-md-12 col-12">
                                                     <div class="input-group input-group-sm p-1 gap-2">
                                                         <asp:Label ID="lblHTotCms" runat="server" class="col-form-label-sm">H.Total(Cms)</asp:Label>

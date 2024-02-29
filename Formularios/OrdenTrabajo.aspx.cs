@@ -822,8 +822,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void ddlCiudad_DataBound(object sender, EventArgs e)
         {
-
-            ddlCiudad.Items.Insert(0, new ListItem(" ", ""));
+            ddlCiudad.Items.Insert(0, new ListItem(" ", " "));
         }
 
         protected void ddlGrupoObjeto_DataBound(object sender, EventArgs e)
@@ -855,7 +854,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
             // Agregar un elemento inicial si lo deseas
-            ddlAsesor.Items.Insert(0, new ListItem(" ", "0"));
+            ddlAsesor.Items.Insert(0, new ListItem(" ", " "));
         }
 
         protected void ddlAsesor_SelectedIndexChanged(object sender, EventArgs e)
@@ -3854,7 +3853,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 campoFaltante = "Email";
             }
-            else if (ddlCiudad.SelectedItem == null)
+            else if (ddlCiudad.SelectedItem.Value == " ")
             {
                 campoFaltante = "Ciudad";
             }
@@ -3862,11 +3861,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 campoFaltante = "Empaque";
             }
-            else if (ddlFabrica1.SelectedItem == null)
+            else if (ddlFabrica1.SelectedItem.Value == " ")
             {
                 campoFaltante = "Fabrica";
             }
-            else if (ddlInstala.SelectedItem == null)
+            else if (ddlInstala.SelectedItem.Value == " ")
             {
                 campoFaltante = "Instala";
             }
@@ -3882,7 +3881,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 campoFaltante = "Orden de Compra";
             }
-            else if (ddlAsesor.SelectedItem == null)
+            else if (ddlAsesor.SelectedItem.Value == " ")
             {
                 campoFaltante = "Asesor";
             }

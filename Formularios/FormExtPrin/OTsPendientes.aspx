@@ -31,10 +31,8 @@
 
             <nav class="navbar navbar-light bg-light">
                 <div class="container">
-                    <div class="navbar-brand">
-                        <div>
-                            <h5 class="text-center bi bi-gear">Ordenes de Trabajo Pendientes - Departamento de Ventas</h5>
-                        </div>
+                    <div class="navbar-brand mx-auto">                     
+                            <h5 class="bi bi-gear"> Ordenes de Trabajo Pendientes - Departamento de Ventas</h5>                      
                     </div>
 
                 </div>
@@ -136,6 +134,7 @@
                                             <div class="col-12">
                                                 <div class="border rounded-3 mt-2">
                                                     <h6 class="text-center">PEDIDOS PENDIENTES - VENTAS</h6>
+                                                     <div class="table-container"> 
                                                     <div class="table-responsive table-responsive-sm mb-2 gap-2 form-control-sm" style="max-height: 40rem; overflow-x: auto;">
                                                         <asp:DataGrid Class="table table-bordered table-hover table-sm form-control-sm" ID="DataGrid1" runat="server"
                                                             AutoGenerateColumns="false">
@@ -185,7 +184,7 @@
 
                                                     </div>
                                                 </div>
-
+                                                    </div>
 
                                             </div>
                                         </div>

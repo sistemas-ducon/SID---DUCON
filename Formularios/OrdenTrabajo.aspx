@@ -815,7 +815,7 @@
                                         <div class="input-group input-group-sm mb-2 gap-2">
                                             <asp:Label class="form-label" Text="Fabrica" runat="server" ID="lblFabrica"></asp:Label>
                                             <asp:DropDownList class="form-control" ID="ddlFabrica1" runat="server">
-                                                <asp:ListItem Value=""></asp:ListItem>
+                                                <asp:ListItem Value=" "></asp:ListItem>
                                                 <asp:ListItem Value="Bogotá">Bogotá</asp:ListItem>
                                                 <asp:ListItem Value="Medellín">Medellín</asp:ListItem>
                                                 <asp:ListItem Value="BOGOTÁ">Bogotá</asp:ListItem>
@@ -842,7 +842,7 @@
                                         <div class="input-group input-group-sm mb-2 gap-2">
                                             <asp:Label class="form-label" Text="Instala" runat="server" ID="Instala"></asp:Label>
                                             <asp:DropDownList class="form-control" ID="ddlInstala" runat="server">
-                                                <asp:ListItem Value=""></asp:ListItem>
+                                                <asp:ListItem Value=" "></asp:ListItem>
                                                 <asp:ListItem Value="Bogotá">Bogotá</asp:ListItem>
                                                 <asp:ListItem Value="Medellín">Medellín</asp:ListItem>
                                                 <asp:ListItem Value="BOGOTÁ">Bogotá</asp:ListItem>
