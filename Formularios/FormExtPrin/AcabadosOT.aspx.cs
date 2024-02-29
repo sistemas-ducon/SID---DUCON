@@ -22,10 +22,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
         private string CadenaConexionSSF = "BD_SSF";
 
+        private List<int> ID_Acabados = new List<int>();
+        private List<int> ID_GruposObjetoparaAcabados = new List<int>();
+        private List<string> Detalles_Adicionales = new List<string>();
+        private List<string> AcabadosVentas = new List<string>();
+
         protected void Page_Load(object sender, EventArgs e)
-        {      
-            botonGrabarValidacion();
-            CargarDatos();
+        {
+            if (Session["usuariologueado"] != null)
+            {
+                botonGrabarValidacion();
+                CargarDatos();
+            }
+            else
+            {
+                Response.Redirect("~/Formularios/Login.aspx");
+            }
+
+           
         }
 
         protected void BtnGrabar_Click(object sender, EventArgs e)
@@ -133,16 +147,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         {
                             Button3.Enabled = true;
                             habilitarLinkButton = true;
-
                             Button1.Enabled = true;
-                           
+                            BtnCopAca.Enabled = true;
+                            BtnCopAca.CssClass = "btn shadow btn-light linkButtonClicked2 grande button-enabled";
+                            TextBox2.Enabled = true;
+                            TextBox2.CssClass = "form-control shadow grande linkButtonClicked button-enabled";
                         }
                         else
                         {
                             Button3.Enabled = false;
                             habilitarLinkButton = false;
-
                             Button1.Enabled = false;
+                            BtnCopAca.Enabled = false;
+                            BtnCopAca.CssClass = "btn shadow btn-light linkButtonClicked2 grande button-disabled";
+                            TextBox2.Enabled = false;
+                            TextBox2.CssClass = "form-control shadow grande linkButtonClicked button-disabled";
                         }
                     }
 
@@ -224,8 +243,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                                     INNER JOIN tblOTAcabados O ON A.ID_Acabado = O.ID_Acabado
                                     INNER JOIN tblGrupoObjetoparaAcabado GOA ON O.ID_GrupoObjetoParaAcabado = GOA.ID_GrupoObjetoparaAcabado
                                     WHERE O.Id_OT = @IdOT
-                                    AND O.Consecutivo_Pedido = @ConsecutivoPedido
-                                    ORDER BY A.Descripcion_Acabado";
+                                    AND O.Consecutivo_Pedido = @ConsecutivoPedido";
 
                 string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
@@ -627,6 +645,112 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                    Session["LinkButtonEnabled"] = false;
                 }
            }
+        }
+
+        protected void BtnCopAca_Click(object sender, EventArgs e)
+        {
+            string id = Session["Id_OT"]?.ToString();
+            string pedido = TextBox2.Text;
+
+            if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(pedido))
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = "SELECT ID_Acabado, ID_GrupoObjetoparaAcabado, Detalle_Adicional, AcabadoVentas " +
+                                   "FROM tblOTAcabados " +
+                                   "WHERE Id_OT = @Id_OT " +
+                                   "AND Consecutivo_Pedido = @Consecutivo_Pedido";
+
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@Id_OT", id);
+                    command.Parameters.AddWithValue("@Consecutivo_Pedido", pedido);
+
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        // Almacena los valores en listas para cada columna
+                        ID_Acabados.Add(Convert.ToInt32(reader["ID_Acabado"]));
+                        ID_GruposObjetoparaAcabados.Add(Convert.ToInt32(reader["ID_GrupoObjetoparaAcabado"]));
+                        Detalles_Adicionales.Add(reader["Detalle_Adicional"].ToString());
+                        AcabadosVentas.Add(reader["AcabadoVentas"].ToString());
+                    }
+
+                    reader.Close();
+
+                    // Luego de almacenar todos los datos, procede con la inserción
+                    RealizarInserciones();
+
+                }
+            }
+            else
+            {
+                    
+            }
+        }
+
+        protected void RealizarInserciones()
+        {
+            // Verificar si la lista de ID_Acabados está vacía
+            if (ID_Acabados.Count == 0)
+            {
+                string pedido = TextBox2.Text;
+                string contenidoModalOT = "El pedido " + pedido + ", seleccionado para copiar los acabados. No tiene acabados asociados o no existe.";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ErrorCopAca').modal('show'); $('#ErrorCopAca2').text('" + contenidoModalOT + "');", true);
+            }
+            else
+            {
+
+                string OTinsertada = Session["Id_OT"]?.ToString();
+                string PedidoInsertado = Session["Pedido"]?.ToString();
+
+                if (!string.IsNullOrEmpty(OTinsertada) && !string.IsNullOrEmpty(PedidoInsertado))
+                {
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
+
+                        // Iterar sobre las listas y realizar inserciones
+                        for (int i = 0; i < ID_Acabados.Count; i++)
+                        {
+                            string query = "INSERT INTO tblOTAcabados (Id_OT, Consecutivo_Pedido, id_Acabado, Id_GrupoObjetoParaAcabado, Detalle_Adicional, AcabadoVentas) " +
+                                           "VALUES (@Id_OT, @Consecutivo_Pedido, @ID_Acabado, @ID_GrupoObjetoParaAcabado, @Detalle_Adicional, @AcabadoVentas)";
+
+                            SqlCommand command = new SqlCommand(query, connection);
+                            command.Parameters.AddWithValue("@Id_OT", OTinsertada);
+                            command.Parameters.AddWithValue("@Consecutivo_Pedido", PedidoInsertado);
+                            command.Parameters.AddWithValue("@ID_Acabado", ID_Acabados[i]);
+                            command.Parameters.AddWithValue("@ID_GrupoObjetoParaAcabado", ID_GruposObjetoparaAcabados[i]);
+                            command.Parameters.AddWithValue("@Detalle_Adicional", Detalles_Adicionales[i]);
+                            command.Parameters.AddWithValue("@AcabadoVentas", AcabadosVentas[i]);
+
+                            int rowsAffected = command.ExecuteNonQuery();
+                            if (rowsAffected <= 0)
+                            {
+                                // Si alguna inserción falla, detenemos el proceso y mostramos un mensaje de error
+                                string mensajePersonalizado2 = "No fue posible realizar copiar los acabados";
+                                string urlRedireccion2 = "FormExtPrin/AcabadosOT.aspx";
+                                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado2)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion2)}");
+                                return; // Salir del método para evitar más intentos de inserción
+                            }
+                        }
+
+                        // Si todas las inserciones fueron exitosas, redireccionamos con un mensaje de éxito
+                        string mensajePersonalizado = "Se insertaron correctamente los acabados de la OT copiada";
+                        string urlRedireccion = "FormExtPrin/AcabadosOT.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    }
+                }
+                else
+                {
+                    string pedido = TextBox2.Text;
+                    string contenidoModalOT = "El pedido " + pedido + ", seleccionado para copiar los acabados. No tiene acabados asociados o no existe.";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ErrorCopAca').modal('show'); $('#ErrorCopAca2').text('" + contenidoModalOT + "');", true);
+                }
+            }
         }
 
     }

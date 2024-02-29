@@ -3387,6 +3387,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
               
                     string contenidoModalOT = "Se agrego el pedido " + pedido + " A la Orden de trabajo " + idOT;
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#PedidoIngresado').modal('show'); $('#PedidoIngresado2').text('" + contenidoModalOT + "');", true);
+
+                
+
+
+                    Session["Id_OT"] = Session["Id_OT3"]?.ToString();
+                    Session["pedido"] = Session["pedido3"]?.ToString();
+
                 }
                 else
                 {
@@ -4288,8 +4295,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BtnSi_Click(object sender, EventArgs e)
         {
-            string id = Session["Id_OT2"]?.ToString();
-            string pedido = Session["pedido2"]?.ToString();
+            string id = Session["Id_OT"]?.ToString();
+            string pedido = Session["pedido"]?.ToString();
 
             if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(pedido))
             {
@@ -4367,30 +4374,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@AcabadoVentas", AcabadosVentas[i]);
 
                         int rowsAffected = command.ExecuteNonQuery();
-                        if (rowsAffected > 0)
+                        if (rowsAffected <= 0)
                         {
-
-                            string mensajePersonalizado = "Se insertaron correctamente los acabados de la OT copiada";
-                            string urlRedireccion = "OrdenTrabajo.aspx";
-                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-                        }
-                        else
-                        {
-
-                            string mensajePersonalizado = "No fue posible realizar copiar los acabados";
-                            string urlRedireccion = "OrdenTrabajo.aspx";
-                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                            // Si alguna inserción falla, detenemos el proceso y mostramos un mensaje de error
+                            string mensajePersonalizado2 = "No fue posible realizar copiar los acabados";
+                            string urlRedireccion2 = "OrdenTrabajo.aspx";
+                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado2)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion2)}");
+                            return; // Salir del método para evitar más intentos de inserción
                         }
                     }
+
+                    // Si todas las inserciones fueron exitosas, redireccionamos con un mensaje de éxito
+                    string mensajePersonalizado = "Se insertaron correctamente los acabados de la OT copiada";
+                    string urlRedireccion = "OrdenTrabajo.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                 }
             }
-            else
-            {
-
-            }
-
-
         }
+
 
 
         protected void CargarOtInsertada3()

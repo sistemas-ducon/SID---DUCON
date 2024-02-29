@@ -857,7 +857,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             TextCiuPro.Enabled = false;
             TextCiuPro.CssClass = "form-control form-control-sm";
 
-            BtnProgramar.Enabled = false;
+         
 
             lblConCab.Enabled = false;
             lblCiuPro.CssClass = "form-label";
@@ -2194,6 +2194,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             Session.Remove("ModificarEjecutado");
 
+
+
                             string mensajePersonalizado = "Las Fechas: Ingreso del diseño, Ultima Activación y Entrega, se ajustaran cuando programe el diseño";
                             string urlRedireccion = "Ventas/Diseño_Venta.aspx";
                             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
@@ -3424,6 +3426,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
        
+        protected void CargarVSC_Click(object sender, EventArgs e)
+        {
+            Session["AsesorDiseño"] = Session["CedulaLogeada"].ToString();
+        }
+
     }
 
 

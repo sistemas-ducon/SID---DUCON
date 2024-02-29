@@ -463,7 +463,7 @@
                                                     <div class="row">
                                                         <div class="col-md-12 col-12">
                                                             <div class="input-group input-group-sm gap-2">
-                                                                <asp:Button runat="server" ID="Button1" CssClass="btn-outline-dark btn btn-white" Text="Cliente" OnClientClick="abrirOtraPestaña();" />
+                                                                <asp:Button runat="server" ID="Button1" CssClass="btn-outline-dark btn btn-white" Text="Cliente" OnClick="CargarVSC_Click" OnClientClick="abrirOtraPestaña();" />
                                                                 <asp:TextBox ID="TextCliente" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
                                                             </div>
                                                         </div>
@@ -605,7 +605,7 @@
                                                                  <asp:ListItem Text="Zona por Prototipo" Value="Zona por Prototipo" />
                                                                  <asp:ListItem Text="Piso detallado" Value="Piso detallado" />
                                                                  <asp:ListItem Text="Piso por prototipo" Value="Piso por prototipo" />
-                                                                 <asp:ListItem Text="Piso por zona detallada" Value="Completa por prototipo" />
+                                                                 <asp:ListItem Text="Piso por zona detallada" Value="Piso por zona detallada" />
                                                                  <asp:ListItem Text="En observaciones de Ventas" Value="En observaciones de Ventas" />                               
                                                         </asp:DropDownList>        
 

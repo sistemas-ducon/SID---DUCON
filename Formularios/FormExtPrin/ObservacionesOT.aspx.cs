@@ -30,24 +30,32 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+            if (Session["usuariologueado"] != null)
             {
-                CargarDropDownList();
-
-                // Verificar si la variable de sesión existe antes de acceder a ella
-                if (Session["ValorDeObra"] != null)
+                if (!IsPostBack)
                 {
-                    string valorDeObra = Session["ValorDeObra"].ToString();
-                    TextBox1.Text = valorDeObra; // Asignar el valor al TextBox en ObservacionesOT
-                }
-                AsignarValorTextBox();
-                ManejarIdOT();
-                ManejarPedido();
-                EnlazarDataGrid();
-                EnlazarDataGrid4();
+                    CargarDropDownList();
 
-               
+                    // Verificar si la variable de sesión existe antes de acceder a ella
+                    if (Session["ValorDeObra"] != null)
+                    {
+                        string valorDeObra = Session["ValorDeObra"].ToString();
+                        TextBox1.Text = valorDeObra; // Asignar el valor al TextBox en ObservacionesOT
+                    }
+                    AsignarValorTextBox();
+                    ManejarIdOT();
+                    ManejarPedido();
+                    EnlazarDataGrid();
+                    EnlazarDataGrid4();
+
+
+                }
             }
+            else
+            {
+                Response.Redirect("~/Formularios/Login.aspx");
+            }
+           
 
             Session.Remove("Id_OT");
             Session.Remove("pedido");

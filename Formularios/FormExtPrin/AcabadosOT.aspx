@@ -99,7 +99,7 @@
                                                         </asp:DataGrid>
 
                                                         <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
-                                                            SelectCommand="SELECT * FROM tblGrupoObjetoparaAcabado">
+                                                            SelectCommand="SELECT * FROM tblGrupoObjetoparaAcabado ORDER BY GrupoObjetoparaAcabado ASC;">
                                                             <SelectParameters>
                                                             </SelectParameters>
                                                         </asp:SqlDataSource>
@@ -182,57 +182,63 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="container-fluid">
-                                            <div class="row">
-                                                <div class="col-11">
-                                                    <div class="row">
-                                                        <div class="col-10">
-                                                            <asp:Label ID="Label2" runat="server" Text="Aplicar Acabado a:" CssClass="col-form-label-sm"></asp:Label>
-                                                            <asp:Label ID="Label3" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
-                                                             <asp:Label ID="Label8" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
-                                                        </div>
-                                                        <div class="col-2">
-                                                            <asp:Label ID="Label9" runat="server" Text="Copiar Acab. del ped" CssClass="fw-bold"></asp:Label>
-                                                        </div>
-                                                    </div>
+                                 <div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex">
+                <div class="col-11">
+                    <div class="row">
+                        <div class="col-10">
+                            <asp:Label ID="Label2" runat="server" Text="Aplicar Acabado a:" CssClass="col-form-label-sm"></asp:Label>
+                            <asp:Label ID="Label3" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
+                            <asp:Label ID="Label8" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
+                        </div>
+                        <div class="col-2">
+                            <asp:Label ID="Label9" runat="server" Text="Copiar Acab. del ped" CssClass="fw-bold"></asp:Label>
+                        </div>
+                    </div>
 
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <asp:Label ID="Label4" runat="server" Text="Acabado Definitivo:" CssClass="col-form-label-sm"></asp:Label>
-                                                            <asp:Label ID="Label5" CssClass="form-control-sm" runat="server" Text="" Visible="false"></asp:Label>
-                                                             <asp:Label ID="Label10" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
-                                                        </div>
-                                                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <asp:Label ID="Label4" runat="server" Text="Acabado Definitivo:" CssClass="col-form-label-sm"></asp:Label>
+                            <asp:Label ID="Label5" CssClass="form-control-sm" runat="server" Text="" Visible="false"></asp:Label>
+                            <asp:Label ID="Label10" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
+                        </div>
+                    </div>
 
-                                                    <div class="row">
-                                                        <div class="col-10">
-                                                            <div class="input-group input-group-sm gap-2">
-                                                                <asp:Label ID="Label6" runat="server" Text="Detalle Adicional" CssClass="col-form-label-sm"></asp:Label>
-                                                                <asp:TextBox ID="TextBox1" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-2">
-                                                            <asp:Button ID="Button3" runat="server" Text="Grabar Acabado" CssClass="btn btn-dark btn-sm" Enabled="false" OnClick="BtnGrabar_Click"/>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-1">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="input-group input-group-sm gap-2">
-                                                                <asp:Label ID="Label7" runat="server" Text="0" CssClass="border p-3 mt-2 shadow"></asp:Label>
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="input-group input-group-sm gap-2">
+                                <asp:Label ID="Label6" runat="server" Text="Detalle Adicional" CssClass="col-form-label-sm"></asp:Label>
+                                <asp:TextBox ID="TextBox1" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>                      
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <asp:Button ID="Button3" runat="server" Text="Grabar Acabado" CssClass="btn btn-dark btn-sm" Enabled="false" OnClick="BtnGrabar_Click" />              
+                        </div>
+                    </div>
+                </div>
+             <div class="col-1 m-3">
+    <div class="row">
+        <div class="col-6">
+            
+            <asp:TextBox ID="TextBox2" runat="server" CssClass="form-control shadow grande linkButtonClicked2" MaxLength="4"></asp:TextBox>
+        </div>
+        <div class="col-6">
+        <asp:LinkButton runat="server" ID="BtnCopAca" CssClass="btn shadow btn-light linkButtonClicked grande" OnClick="BtnCopAca_Click">
+    <i class="bi bi-save-fill" style="color: #0863a4;"></i>
+</asp:LinkButton>
 
-                                                                <asp:LinkButton runat="server" ID="button10" Enabled="false">
-                                                <i class="bi bi-file-earmark btn btn-sm border p-3 mt-2 shadow grande"></i> 
-                                                                </asp:LinkButton>
+        </div>
+    </div>
+</div>
 
 
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 
@@ -245,13 +251,13 @@
                 </div>
 
         <div class="modal" id="miModalll" tabindex="-1" style="display: none;">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Acabado de la obra</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Acabado de la obra</h5>
+                        <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
                         <p>Debe seleccionar a que le va aplicar el acabado y el acabado definitivo</span></p>
                     </div>
                     <div class="modal-footer">
@@ -260,14 +266,30 @@
             </div>
         </div>
 
-                <div class="modal" id="miModalError" tabindex="-1" style="display: none;">
-            <div class="modal-dialog">
+                  <div class="modal" id="ErrorCopAca" tabindex="-1" style="display: none;">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Error</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Copiar Acabados</h5>
+                        <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                        <p><span id="ErrorCopAca2"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                <div class="modal" id="miModalError" tabindex="-1" style="display: none;">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Error</h5>
+                        <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
                         <p>Debe seleccionar el acabado que desea eliminar</span></p>
                     </div>
                     <div class="modal-footer">
@@ -277,36 +299,36 @@
         </div>
 
       <div class="modal" id="DefinirAcabado" tabindex="-1" style="display: none;">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Definir Acabado</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Definir Acabado</h5>
+                        <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
                         <p>Esta seguro de aplicar a:  <span id="valorLabelSpan"></span> ?</span></p>
                     </div>
-                    <div class="modal-footer">
-                        <asp:Button runat="server" Text="Si" OnClick="BotonSi_Click" data-bs-dismiss="modal" aria-label="Close" />
-                        <asp:Button runat="server" Text="No" data-bs-dismiss="modal" aria-label="Close" />
+                    <div class="modal-footer d-flex align-items-center justify-content-center">
+                        <asp:Button runat="server" Text="Si" class="btn btn-sm btn-outline-success" OnClick="BotonSi_Click" data-bs-dismiss="modal" aria-label="Close" />
+                        <asp:Button runat="server" Text="No" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close" />
                     </div>
                 </div>
             </div>
         </div>
 
                    <div class="modal" id="EliminarAcabado" tabindex="-1" style="display: none;">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Eliminar Acabado</h5>
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Eliminar Acabado</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
                         <p>Esta seguro de Eliminar el acabado: <span id="valorLabelSpanEliminar"></span> ?</span></p>
                     </div>
                     <div class="modal-footer">
-                        <asp:Button runat="server" Text="Si" OnClick="BotonSiEliminar_Click" data-bs-dismiss="modal" aria-label="Close" />
-                        <asp:Button runat="server" Text="No" data-bs-dismiss="modal" aria-label="Close" />
+                        <asp:Button runat="server" Text="Si" class="btn btn-sm btn-outline-success" OnClick="BotonSiEliminar_Click" data-bs-dismiss="modal" aria-label="Close" />
+                        <asp:Button runat="server" Text="No" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close" />
                     </div>
                 </div>
             </div>

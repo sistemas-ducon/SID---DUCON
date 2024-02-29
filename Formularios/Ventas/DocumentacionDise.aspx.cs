@@ -174,61 +174,72 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
         protected void GuardarButton_Click(object sender, EventArgs e)
         {
+            
 
-
-            if (FileUpload1.HasFile)
-            {
-                HttpPostedFile uploadedFile = FileUpload1.PostedFile;
-
-                // Obtener el nombre del archivo
-                string fileName = Path.GetFileName(uploadedFile.FileName);
-
-                // Obtener el texto de lblNumDise
-                string lblText = Session["NumeroDiseño"] != null ? Session["NumeroDiseño"].ToString() : "";
-
-
-
-
-                // Concatenar "DS" con el texto de lblNumDise para obtener el nombre de la carpeta
-                string folderName = "DS" + lblText;
-
-                // Combinar la ruta de guardado con el nombre de la carpeta \\Srvfs\s_i_ducon$\Prueba Documentacion
-                string savePath = Path.Combine(@"\\Srvfs\s_i_ducon$\Documentacion Bitacora", folderName);
-
-                //string savePath = Path.Combine(@"\\SRVFS\PruebaDocumentacion", folderName);
-
-                try
+                if (FileUpload1.HasFile)
                 {
-                    // Verificar si la carpeta no existe y crearla si es necesario
-                    if (!Directory.Exists(savePath))
+                    HttpPostedFile uploadedFile = FileUpload1.PostedFile;
+
+                // Verificar el tamaño del archivo
+                if (uploadedFile.ContentLength <= 10240) // 10 MB en bytes
+                {
+
+                    // Obtener el nombre del archivo
+                    string fileName = Path.GetFileName(uploadedFile.FileName);
+
+                    // Obtener el texto de lblNumDise
+                    string lblText = Session["NumeroDiseño"] != null ? Session["NumeroDiseño"].ToString() : "";
+
+
+
+
+                    // Concatenar "DS" con el texto de lblNumDise para obtener el nombre de la carpeta
+                    string folderName = "DS" + lblText;
+
+                    // Combinar la ruta de guardado con el nombre de la carpeta \\Srvfs\s_i_ducon$\Prueba Documentacion
+                    string savePath = Path.Combine(@"\\Srvfs\s_i_ducon$\Documentacion Bitacora", folderName);
+
+                    //string savePath = Path.Combine(@"\\SRVFS\PruebaDocumentacion", folderName);
+
+                    try
                     {
-                        Directory.CreateDirectory(savePath);
+                        // Verificar si la carpeta no existe y crearla si es necesario
+                        if (!Directory.Exists(savePath))
+                        {
+                            Directory.CreateDirectory(savePath);
+                        }
+
                     }
-                
+                    catch (IOException ex)
+                    {
+
+                    }
+
+
+                    string filePath = Path.Combine(savePath, fileName);
+
+                    // Guardar el archivo
+                    uploadedFile.SaveAs(filePath);
+
+                    InsertarEnBaseDeDatos(folderName, fileName);
+
+
                 }
-                catch (IOException ex)
+                else
                 {
-      
+                    string mensajePersonalizado = "El archivo excede el limite de tamaño, por favor comprimalo e intentelo nuevamente";
+                    string urlRedireccion = "Ventas/DocumentacionDise.aspx"; // Cambia esto por la URL correcta
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                 }
 
-
-                string filePath = Path.Combine(savePath, fileName);
-
-                // Guardar el archivo
-                uploadedFile.SaveAs(filePath);
-
-                InsertarEnBaseDeDatos(folderName, fileName);
-
+                }
+                else
+                {
+                    string mensajePersonalizado = "Seleccione el archivo que desea Guardar";
+                    string urlRedireccion = "Ventas/DocumentacionDise.aspx"; // Cambia esto por la URL correcta
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                }
            
-
-
-            }
-            else
-            {
-                string mensajePersonalizado = "Seleccione el archivo que desea Guardar";
-                string urlRedireccion = "Ventas/DocumentacionDise.aspx"; // Cambia esto por la URL correcta
-                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-            }
         }
 
         private void InsertarEnBaseDeDatos(string folderName, string fileName)

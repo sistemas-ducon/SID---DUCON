@@ -23,15 +23,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+            if (Session["usuariologueado"] != null)
             {
-                CargarDatosPorDefecto();
+                if (!IsPostBack)
+                {
+                    CargarDatosPorDefecto();
 
-                RadioButton18.Checked = true;
-           
-            Button2.Enabled = false;
-                Button2.CssClass = "form-control-sm btn-sm btn btn-outline-dark button-disabled";
+                    RadioButton18.Checked = true;
+
+                    Button2.Enabled = false;
+                    Button2.CssClass = "form-control-sm btn-sm btn btn-outline-dark button-disabled";
+                }
             }
+            else
+            {
+                Response.Redirect("~/Formularios/Login.aspx");
+            }
+
+           
           
         }
 
