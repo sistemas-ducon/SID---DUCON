@@ -53,7 +53,7 @@
             iniciarCambiosExcel();
             setTimeout(function() {
            document.getElementById("btnTerminarDescarga").disabled = false;
-           }, 10000); // 10 segundos
+           }, 3500); // 10 segundos
 
 
         }
@@ -1575,7 +1575,7 @@
                                         </div>
 
                                         <div class="modal-footer justify-content-center">
-                                            <asp:Button ID="btnTerminarDescarga" class="btn btn-primary" runat="server" disabled="disabled" Text="Terminar Descarga" OnClick="EliminarExcel" />
+                                            <asp:Button ID="btnTerminarDescarga" class="btn btn-primary" runat="server" disabled="disabled" Text="Terminar Descarga" OnClick="Terminar" />
                                         </div>
                                     </div>
                                 </div>
