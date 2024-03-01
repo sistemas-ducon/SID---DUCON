@@ -158,6 +158,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             if (DoctOT.HasFile)
             {
+               // Obtener el tamaño máximo permitido en bytes(por ejemplo, 5 MB)
+                 int maxSizeBytes = 10 * 1024 * 1024; // 5 MB
+
+                // Verificar si el tamaño del archivo excede el límite permitido
+                if (DoctOT.PostedFile.ContentLength > maxSizeBytes)
+                {
+                    string mensajePersonalizado = "El tamaño del archivo excede el límite permitido de 10 MB.";
+                    string urlRedireccion = "FormExtPrin/DocumentacionOT.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+                }
 
                 string carpetaNombre = Session["Id_OT2"].ToString();
                 string Consecutivo = Session["pedido2"].ToString();

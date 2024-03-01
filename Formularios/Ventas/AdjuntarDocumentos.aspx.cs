@@ -75,6 +75,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         {
             if (FileUpload1.HasFile)
             {
+                // Obtener el tamaño máximo permitido en bytes(por ejemplo, 5 MB)
+                int maxSizeBytes = 10 * 1024 * 1024; // 5 MB
+
+                // Verificar si el tamaño del archivo excede el límite permitido
+                if (FileUpload1.PostedFile.ContentLength > maxSizeBytes)
+                {
+                    string mensajePersonalizado = "El tamaño del archivo excede el límite permitido de 10 MB.";
+                    string urlRedireccion = "Ventas/AdjuntarDocumentos.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+                }
+
+
 
                 string carpetaNombre = "PE" + Session["Id_Solicitud"].ToString(); // Reemplaza con el nombre de la carpeta deseada
                 string rutaBase = @"\\Srvfs\s_i_ducon$\Documentacion PE"; // Reemplaza con tu ruta base

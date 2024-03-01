@@ -1079,6 +1079,26 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             {
                 if (btnActRegCli.HasFile)
                 {
+                    // Obtener el tamaño máximo permitido en bytes(por ejemplo, 5 MB)
+                    int maxSizeBytes = 10 * 1024 * 1024; // 5 MB
+
+                    // Verificar si el tamaño del archivo excede el límite permitido
+                    if (btnActRut.PostedFile.ContentLength > maxSizeBytes)
+                    {
+                        string mensajePersonalizado = "El tamaño del archivo del RUT excede el límite permitido de 10 MB.";
+                        string urlRedireccion = "FormExtPrin/NitOTs.aspxx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+                    }
+
+                    // Verificar si el tamaño del archivo excede el límite permitido
+                    if (btnActRegCli.PostedFile.ContentLength > maxSizeBytes)
+                    {
+                        string mensajePersonalizado = "El tamaño del archivo del Registro excede el límite permitido de 10 MB";
+                        string urlRedireccion = "FormExtPrin/NitOTs.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+                    }
 
                     if (Session["GuardarClienteFact"].ToString() == "Insertar")
                     {

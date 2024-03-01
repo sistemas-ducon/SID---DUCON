@@ -200,7 +200,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-
+         
 
 
         protected void dtacboTipoPedido_SelectedIndexChanged(object sender, EventArgs e)
@@ -259,7 +259,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 txtDcto.Enabled = false;
             }
         }
-
 
 
         private bool ObtenerEstadisticaVenta(string idTipoPedido)
@@ -6267,117 +6266,526 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         // DESCARGAR LA COTIZACION EN EL TAP DE PLANO 
         protected void BtnVisGenCot_Click(object sender, EventArgs e)
         {
-            // Crear un nuevo paquete de Excel
-            using (ExcelPackage excelPackage = new ExcelPackage())
+            try
             {
-                // Agregar una hoja de trabajo al paquete
-                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Cotizacion");
-
-                // Altura de la Fila 1
-                worksheet.Row(1).Height = 60;
-                worksheet.Column(2).Width = 40;
-                worksheet.Column(5).Width = 40;
-
-
-                // Fecha del día
-                DateTime fechaActual = DateTime.Now;
-                string nombreMes = fechaActual.ToString("MMMM", new System.Globalization.CultureInfo("es-ES"));
-                int diaActual = fechaActual.Day;
-                int añoActual = fechaActual.Year;
-
-                // Logo Ducon
-                string rutaImagen = @"P:\SISTEMAS\Logo Ducon\Ducon.jpg";
-                FileInfo image = new FileInfo(rutaImagen);
-                if (image.Exists)
+                // Creamos un paquete de Excel 
+                using (ExcelPackage excelPackage = new ExcelPackage())
                 {
-                    var picture = worksheet.Drawings.AddPicture("Logo", image);
-                    picture.SetPosition(0, 10, 1 ,50); 
-                    picture.SetSize(150, 60);
+                    // Agregamos la hoja  1
+                    ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Cotizacion");
+
+                    // Altura de Filas y columnas 
+                    worksheet.Row(1).Height = 60;
+                    worksheet.Column(2).Width = 40;
+                    worksheet.Column(5).Width = 15;
+                    worksheet.Column(3).Width = 15;
+                    worksheet.Column(4).Width = 15;
+                    worksheet.Column(7).Width = 15;
                 
+                    // Fecha del día
+                    DateTime fechaActual = DateTime.Now;
+                    string nombreMes = fechaActual.ToString("MMMM", new System.Globalization.CultureInfo("es-ES"));
+                    int diaActual = fechaActual.Day;
+                    int añoActual = fechaActual.Year;
+
+                    // Logo Ducon       // validar la ruta de este logo y no se debe eliminar 
+                    string rutaImagen = @"P:\SISTEMAS\Logo Ducon\Ducon.jpg";
+                    FileInfo image = new FileInfo(rutaImagen);
+                    if (image.Exists)
+                    {
+                        var picture = worksheet.Drawings.AddPicture("Logo", image);
+                        picture.SetPosition(0, 10, 1, 50);
+                        picture.SetSize(150, 60);
+
+                    }
+
+                    // Sede y Fecha del día
+                    string tableTitle = "Sabaneta, " + nombreMes + " " + diaActual + " de " + añoActual;
+                    var titleRange = worksheet.Cells["B2"];
+                    titleRange.Value = tableTitle;
+                    titleRange.Style.Font.Name = "Century Gothic";
+                    titleRange.Style.Font.Size = 11;
+                    titleRange.Style.Font.Bold = true;
+                    titleRange.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    // Cotización
+                    string titleCot = "Cotización Nº";
+                    var CellE1 = worksheet.Cells["E1"];
+                    CellE1.Value = titleCot;
+                    CellE1.Style.Font.Name = "Century Gothic";
+                    CellE1.Style.Font.Size = 11;
+                    CellE1.Style.Font.Bold = true;
+                    CellE1.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                    //Id Plano 
+                    var CellE2 = worksheet.Cells["E2"];
+                    CellE2.Value = txtPlano.Text;
+                    CellE2.Style.Font.Name = "Century Gothic";
+                    CellE2.Style.Font.Size = 11;
+                    CellE2.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                    // Dirigido a
+                    var CellB4 = worksheet.Cells["B4"];
+                    CellB4.Value = "Señores";
+                    CellB4.Style.Font.Name = "Century Gothic";
+                    CellB4.Style.Font.Size = 11;
+                    CellB4.Style.Font.Bold = true;
+                    CellB4.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    // Contacto
+                    var CellB5 = worksheet.Cells["B5"];
+                    CellB5.Value = txtContactoPlano.Text;
+                    CellB5.Style.Font.Name = "Century Gothic";
+                    CellB5.Style.Font.Size = 11;
+                    CellB5.Style.Font.Bold = true;
+                    CellB5.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    // Cliente 
+                    var CellB6 = worksheet.Cells["B6"];
+                    CellB6.Value = txtCliente.Text;
+                    CellB6.Style.Font.Name = "Century Gothic";
+                    CellB6.Style.Font.Size = 11;
+                    CellB6.Style.Font.Bold = true;
+                    CellB6.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    // Ciudad 
+                    var CellB7 = worksheet.Cells["B7"];
+                    CellB7.Value = "Ciudad";
+                    CellB7.Style.Font.Name = "Century Gothic";
+                    CellB7.Style.Font.Size = 11;
+                    CellB7.Style.Font.Bold = true;
+                    CellB7.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellB7.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    var CellB9 = worksheet.Cells["B9"];
+                    CellB9.Value = "Ref. " + txtArea.Text;
+                    CellB9.Style.Font.Name = "Century Gothic";
+                    CellB9.Style.Font.Size = 11;
+                    CellB9.Style.Font.Bold = true;
+                    CellB9.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellB9.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+
+                    // Saludos 
+                    var CellB11 = worksheet.Cells["B11:F11"];
+                    CellB11.Merge = true;
+                    CellB11[11, 2].Value = "Atendiendo su amable solicitud con gusto presentamos cotización de las partes y ";
+                    CellB11.Style.Font.Name = "Century Gothic";
+                    CellB11.Style.Font.Size = 11;
+                    CellB11.Style.Font.Bold = true;
+                    CellB11.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellB11.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    var CellB12 = worksheet.Cells["B12:F12"];
+                    CellB12.Merge = true;
+                    CellB12[12, 2].Value = "elementos del  sistema  Modular  Ducon SMD, en nuestra línea 3500, tal como sigue ";
+                    CellB12.Style.Font.Name = "Century Gothic";
+                    CellB12.Style.Font.Size = 11;
+                    CellB12.Style.Font.Bold = true;
+                    CellB12.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellB12.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    // Comienzo de encabezados 
+                    int headerIndex = 2;
+                    int rowIndex = 14;
+
+                    // Encabezados de la tabla del despiece del plano 
+                    string[] encabezados = { "DESCRIPCIÓN", "Ancho (Cms)", "CANT", "Valor Und", "Total", "Imagen", "", "", "Cubicaje", "Peso" };
+
+                    foreach (string encabezado in encabezados)
+                    {
+                        worksheet.Cells[rowIndex, headerIndex].Value = encabezado;
+                        var headerCell = worksheet.Cells[rowIndex, headerIndex];
+
+                        // Establecemos el texto en negrita
+                        headerCell.Style.Font.Bold = true;
+                        headerCell.Style.Font.Name = "Century Gothic";
+
+                        // Aplicamos bordes a la celda de encabezado
+                        headerCell.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        headerCell.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        headerCell.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        headerCell.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+                        headerIndex++;
+                    }
+
+                    // Zona
+                    var CellB16 = worksheet.Cells["B15"];
+                    CellB16.Value = "Zona";
+                    CellB16.Style.Font.Name = "Century Gothic";
+                    CellB16.Style.Font.Size = 11;
+                    CellB16.Style.Font.Bold = true;
+                    CellB16.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellB16.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+                    rowIndex++;
+
+                    var Ref = worksheet.Cells[$"B{rowIndex}:F{rowIndex}"];
+                    Ref.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    Ref.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.DarkGray);
+                    Ref.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    var border = Ref.Style.Border;
+                    border.Top.Style = border.Bottom.Style = border.Left.Style = border.Right.Style = ExcelBorderStyle.Thin;
+
+                    // Trabajo
+                    var CellB17 = worksheet.Cells["B16"];
+                    CellB17.Value = txtArea.Text;
+                    CellB17.Style.Font.Name = "Century Gothic";
+                    CellB17.Style.Font.Size = 11;
+                    CellB17.Style.Font.Bold = true;
+                    CellB17.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellB17.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+                    rowIndex++;
+
+                    var zona = worksheet.Cells[$"B{rowIndex}:F{rowIndex}"];
+                    zona.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    zona.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.DarkGray);
+                    zona.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    var border1 = zona.Style.Border;
+                    border1.Top.Style = border1.Bottom.Style = border1.Left.Style = border1.Right.Style = ExcelBorderStyle.Thin;
+
+                    var CellF15 = worksheet.Cells["F15"];
+                    CellF15.Value = "Plano ";
+                    CellF15.Style.Font.Name = "Century Gothic";
+                    CellF15.Style.Font.Size = 11;
+                    CellF15.Style.Font.Bold = true;
+                    CellF15.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellF15.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    var cellF16 = worksheet.Cells["F16"];
+                    cellF16.Value = txtPlano.Text;
+                    cellF16.Style.Font.Name = "Century Gothic";
+                    cellF16.Style.Font.Size = 11;
+                    cellF16.Style.Font.Bold = true;
+                    cellF16.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    cellF16.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+                    rowIndex++;
+                    rowIndex++;
+
+                    // Se cargan los datos del despiece del plano en una lista 
+                    List<DatosFiltrados> datosFiltradosList = CargarDatosExcel();
+                    Dictionary<string, string> descripcionesPlano = ObtenerDescripcionesPlano(txtPlano.Text);
+                    List<string> descripcionesAsignadas = new List<string>();
+
+                    foreach (var datosFiltrados in datosFiltradosList)
+                    {
+                        if (datosFiltrados.Tipo == "Titulo")
+                        {
+                            // Combinar celdas para el título
+                            var titleRange1 = worksheet.Cells[$"B{rowIndex}:F{rowIndex}"];
+                            titleRange1.Merge = true;
+
+                            // Puedes ajustar el color de fondo según tu preferencia
+                            titleRange1.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            titleRange1.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                            titleRange1.Style.Font.Bold = true;
+
+                            titleRange1.Style.Font.Name = "Century Gothic";
+                            titleRange1.Style.Font.Size = 11;
+                            titleRange1.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                            titleRange1.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                            titleRange1.Style.WrapText = true;
+                            titleRange1.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                            titleRange1.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                            titleRange1.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                            titleRange1.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+
+                            string titulo = datosFiltrados.Titulo.ToString();
+                            if (descripcionesPlano.ContainsKey(titulo))
+                            {
+                                string descripcion = descripcionesPlano[titulo];
+
+                                if (!string.IsNullOrEmpty(descripcion))
+                                {
+                                    // Si la descripción no está vacía, aplicar formato y ajustar la altura
+                                    worksheet.Row(rowIndex).Height = 60;
+                                    string tituloConDescripcion = $"{datosFiltrados.Titulo}\n{descripcion}";
+                                    titleRange1[rowIndex, 2].Value = tituloConDescripcion;
+                                }
+                                else
+                                {
+                                    worksheet.Row(rowIndex).Height = 30;
+                                    titleRange1[rowIndex, 2].Value = datosFiltrados.Titulo;
+                                }
+
+
+                            }
+                            rowIndex++;
+                        }
+                        else if (datosFiltrados.Tipo == "Total")
+                        {
+                            var totalTitleRange = worksheet.Cells[$"B{rowIndex}:E{rowIndex}"];
+                            var totalSubtotalRange = worksheet.Cells[$"F{rowIndex}"];
+
+                            totalTitleRange.Merge = true;
+                            totalTitleRange.Style.Font.Bold = true;
+                            totalTitleRange.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                            totalTitleRange.Style.Font.Name = "Century Gothic";
+                            totalTitleRange.Style.Font.Size = 11;
+
+                            totalTitleRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                            totalTitleRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                            totalTitleRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                            totalTitleRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+                            if (!string.IsNullOrEmpty(datosFiltrados.Titulo))
+                            {
+                                totalTitleRange[rowIndex, 2].Value = datosFiltrados.Titulo;
+                                totalTitleRange.Style.Font.Bold = true;
+                                totalTitleRange.Style.Font.Name = "Century Gothic";
+                                totalTitleRange.Style.Font.Size = 11;
+                                totalTitleRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                                totalTitleRange.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                                totalTitleRange.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                            }
+                            else
+                            {
+                                totalTitleRange[rowIndex, 2].Value = "Subtotal";
+
+                            }
+
+
+
+                            rowIndex++;
+                            totalSubtotalRange.Value = datosFiltrados.SubTotal;
+                            totalSubtotalRange.Style.Font.Bold = true;
+                            totalSubtotalRange.Style.Font.Name = "Century Gothic";
+                            totalSubtotalRange.Style.Font.Size = 11;
+                            totalSubtotalRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                            totalSubtotalRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                            totalSubtotalRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+                            rowIndex++;
+                        }
+                        else
+                        {
+                            // Validar si existe una imagen en la ruta especificada
+                            string imagePath = Path.Combine(@"\\172.16.30.6\Dibujo\DUCON\ONLINE\Dropbox\BLOQUES\IMAGENES", $"{datosFiltrados.Id_Panel}.jpg");
+
+                            if (File.Exists(imagePath))
+                            {
+                                // Insertar la imagen en la celda G
+                                var picture = worksheet.Drawings.AddPicture($"Imagen_{rowIndex}", new FileInfo(imagePath));
+                                picture.SetPosition(rowIndex - 1, 15, 6, 15); // Fila, FilaOffset, Columna, ColumnaOffset
+                                picture.SetSize(55, 55);
+
+                                worksheet.Row(rowIndex).Height = 60;
+                            }
+
+                            string Descrip = datosFiltrados.Descripcion;
+
+                            if (!descripcionesAsignadas.Contains(Descrip))
+                            {
+                                descripcionesAsignadas.Add(Descrip);
+                                var cellDescripcion = worksheet.Cells[rowIndex, 2];
+                                cellDescripcion.Value = datosFiltrados.Descripcion;
+                                cellDescripcion.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                                cellDescripcion.Style.WrapText = true;
+                                cellDescripcion.Style.Font.Name = "Century Gothic";
+                                cellDescripcion.Style.Font.Size = 11;
+                            }
+
+                            var cellRange = worksheet.Cells[$"B{rowIndex}:F{rowIndex}"];
+                            cellRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                            cellRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                            cellRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                            cellRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+                            var ancho = worksheet.Cells[rowIndex, 3];
+                            ancho.Value = Convert.ToDouble(datosFiltrados.Ancho);
+                            ancho.Style.Font.Name = "Century Gothic";
+                            ancho.Style.Font.Size = 11;
+                            ancho.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+
+                            var Cantidad = worksheet.Cells[rowIndex, 4];
+                            Cantidad.Value = Convert.ToDouble(datosFiltrados.Cantidad);
+                            Cantidad.Style.Font.Name = "Century Gothic";
+                            Cantidad.Style.Font.Size = 11;
+                            Cantidad.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+
+                            var ValorUnd = worksheet.Cells[rowIndex, 5];
+                            ValorUnd.Value = Convert.ToDouble(datosFiltrados.ValorUnd);
+                            ValorUnd.Style.Font.Name = "Century Gothic";
+                            ValorUnd.Style.Font.Size = 11;
+                            ValorUnd.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+
+                            var SubTotal = worksheet.Cells[rowIndex, 6];
+                            SubTotal.Value = Convert.ToDouble(datosFiltrados.SubTotal);
+                            SubTotal.Style.Font.Name = "Century Gothic";
+                            SubTotal.Style.Font.Size = 11;
+                            SubTotal.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+
+                            var peso = worksheet.Cells[rowIndex, 11];
+                            peso.Value = Convert.ToDouble(datosFiltrados.peso) * Convert.ToDouble(datosFiltrados.Cantidad);
+                            peso.Style.Font.Name = "Century Gothic";
+                            peso.Style.Font.Size = 11;
+
+                            var Cubicaje = worksheet.Cells[rowIndex, 10];
+                            double valorCub = (Convert.ToDouble(datosFiltrados.Cantidad) * (Convert.ToDouble(datosFiltrados.Ancho) * Convert.ToDouble(datosFiltrados.Altura) * Convert.ToDouble(datosFiltrados.profundidad)) / 1000000);
+                            Cubicaje.Value = valorCub;
+                            Cubicaje.Style.Font.Name = "Century Gothic";
+                            Cubicaje.Style.Font.Size = 11;
+
+                            var cellImageRange = worksheet.Cells[rowIndex, 7];
+                            cellImageRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                            cellImageRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                            cellImageRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                            rowIndex++;
+                        }
+
+                    }
+
+
+                    var Cub = worksheet.Cells["B" + rowIndex];
+                    Cub.Value = "Cubicaje Aproximado del plano ";
+                    Cub.Style.Font.Name = "Century Gothic";
+                    Cub.Style.Font.Size = 11;
+                    Cub.Style.Font.Bold = true;
+                    Cub.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    string formulaSuma = "=ROUND(SUM(J18:J150) + SUM(J18:J150) * 0.2, 3)";
+                    var ValorCub = worksheet.Cells["D" + rowIndex];
+                    ValorCub.Formula = formulaSuma;
+                    ValorCub.Style.Font.Name = "Arial";
+                    ValorCub.Style.Font.Size = 11;
+                    ValorCub.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+
+
+                    // Agregamos la hoja numero 2 
+                    ExcelWorksheet worksheet2 = excelPackage.Workbook.Worksheets.Add("Cotizacion Detallada");
+
+                    // Altura de filas y columnas 
+                    worksheet2.Row(1).Height = 60;
+                    worksheet2.Column(2).Width = 40;
+                    worksheet2.Column(5).Width = 15;
+                    worksheet2.Column(3).Width = 15;
+                    worksheet2.Column(4).Width = 15;
+                    worksheet2.Column(7).Width = 15;
+
+
+
+                    if (image.Exists)
+                    {
+                        var picture = worksheet2.Drawings.AddPicture("Logo", image);
+                        picture.SetPosition(0, 10, 1, 50);
+                        picture.SetSize(150, 60);
+
+                    }
+
+                    // Sede y Fecha del día
+                    string tableTitle2 = "Sabaneta, " + nombreMes + " " + diaActual + " de " + añoActual;
+                    var titleRange2 = worksheet2.Cells["B2"];
+                    titleRange2.Value = tableTitle2;
+                    titleRange2.Style.Font.Name = "Century Gothic";
+                    titleRange2.Style.Font.Size = 11;
+                    titleRange2.Style.Font.Bold = true;
+                    titleRange2.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    // Cotización
+                    string titleCot2 = "Cotización Nº";
+                    var Cell2E1 = worksheet2.Cells["E1"];
+                    Cell2E1.Value = titleCot2;
+                    Cell2E1.Style.Font.Name = "Century Gothic";
+                    CellE1.Style.Font.Size = 11;
+                    Cell2E1.Style.Font.Bold = true;
+                    Cell2E1.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                    var Cell2B4 = worksheet2.Cells["B4"];
+                    Cell2B4.Value = "Señores";
+                    Cell2B4.Style.Font.Name = "Century Gothic";
+                    Cell2B4.Style.Font.Size = 11;
+                    Cell2B4.Style.Font.Bold = true;
+                    Cell2B4.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+
+
+
+
+                    // Ciudad 
+                    var Cell2B7 = worksheet2.Cells["B7"];
+                    Cell2B7.Value = "Ciudad";
+                    Cell2B7.Style.Font.Name = "Century Gothic";
+                    Cell2B7.Style.Font.Size = 11;
+                    Cell2B7.Style.Font.Bold = true;
+                    Cell2B7.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    Cell2B7.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    var Cell2B9 = worksheet2.Cells["B9"];
+                    Cell2B9.Value = "Ref. " + txtArea.Text;
+                    Cell2B9.Style.Font.Name = "Century Gothic";
+                    Cell2B9.Style.Font.Size = 11;
+                    Cell2B9.Style.Font.Bold = true;
+                    Cell2B9.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    Cell2B9.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+
+                    // Saludos 
+                    var Cell2B11 = worksheet2.Cells["B11:F11"];
+                    Cell2B11.Merge = true;
+                    Cell2B11[11, 2].Value = "Atendiendo su amable solicitud con gusto presentamos cotización de las partes y ";
+                    Cell2B11.Style.Font.Name = "Century Gothic";
+                    Cell2B11.Style.Font.Size = 11;
+                    Cell2B11.Style.Font.Bold = true;
+                    Cell2B11.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    Cell2B11.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    var Cell2B12 = worksheet2.Cells["B12:F12"];
+                    Cell2B12.Merge = true;
+                    Cell2B12[12, 2].Value = "elementos del  sistema  Modular  Ducon SMD, en nuestra línea 3500, tal como sigue ";
+                    Cell2B12.Style.Font.Name = "Century Gothic";
+                    Cell2B12.Style.Font.Size = 11;
+                    Cell2B12.Style.Font.Bold = true;
+                    Cell2B12.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    Cell2B12.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    int headerIndex2 = 2;
+                    int rowIndex2 = 14;
+
+
+                    foreach (string encabezado in encabezados)
+                    {
+                        worksheet2.Cells[rowIndex2, headerIndex2].Value = encabezado;
+                        var headerCell2 = worksheet2.Cells[rowIndex2, headerIndex2];
+
+                        // Se Establece el texto en negrita
+                        headerCell2.Style.Font.Bold = true;
+                        headerCell2.Style.Font.Name = "Century Gothic";
+
+                        // Aplicamos bordes a la celda de encabezado
+                        headerCell2.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        headerCell2.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        headerCell2.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        headerCell2.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+                        headerIndex2++;
+                    }
+
+
+                 
+
+                    // Guardamos el archivo de Excel
+                    string filePath = Path.GetTempFileName() + ".xlsx";
+                    FileInfo excelFile = new FileInfo(filePath);
+                    excelPackage.SaveAs(excelFile);
+
+                    // Descargamos el archivo de Excel
+                    Response.Clear();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("content-disposition", "attachment; filename=Cotizacion.xlsx");
+                    Response.TransmitFile(filePath);
+                    Response.End();
                 }
-
-
-
-
-                // Sede y Fecha del día
-                string tableTitle = "Sabaneta, " + nombreMes + " " + diaActual + " de " + añoActual;
-                var titleRange = worksheet.Cells["B2"];
-                titleRange.Value = tableTitle;
-                titleRange.Style.Font.Name = "Century Gothic";
-                titleRange.Style.Font.Size = 11;
-                titleRange.Style.Font.Bold = true;
-                titleRange.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-
-                // Cotización
-                string titleCot = "Cotización Nº";
-                var Cell = worksheet.Cells["E1"];
-                Cell.Value = titleCot;
-                Cell.Style.Font.Name = "Century Gothic";
-                Cell.Style.Font.Size = 11;
-                Cell.Style.Font.Bold = true;
-                Cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-
-                var CellE2 = worksheet.Cells["E2"];
-                CellE2.Value = txtPlano.Text;
-                CellE2.Style.Font.Name = "Century Gothic";
-                CellE2.Style.Font.Size = 11;
-                CellE2.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-
-                var CellB4 = worksheet.Cells["B4"];
-                CellB4.Value = "Señores";
-                CellB4.Style.Font.Name = "Century Gothic";
-                CellB4.Style.Font.Size = 11;
-                CellB4.Style.Font.Bold = true;
-                CellB4.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-
-                var CellB5 = worksheet.Cells["B5"];
-                CellB5.Value = txtContactoPlano.Text;
-                CellB5.Style.Font.Name = "Century Gothic";
-                CellB5.Style.Font.Size = 11;
-                CellB5.Style.Font.Bold = true;
-                CellB5.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-
-                var CellB6 = worksheet.Cells["B6"];
-                CellB6.Value = txtCliente.Text;
-                CellB6.Style.Font.Name = "Century Gothic";
-                CellB6.Style.Font.Size = 11;
-                CellB6.Style.Font.Bold = true;
-                CellB6.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-
-                // Ciudad 
-                var CellB7 = worksheet.Cells["B7"];
-                CellB7.Value = "Ciudad";
-                CellB7.Style.Font.Name = "Century Gothic";
-                CellB7.Style.Font.Size = 11;
-                CellB7.Style.Font.Bold = true;
-                CellB7.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-
-
-                // Guardar el archivo de Excel
-                string filePath = Path.GetTempFileName() + ".xlsx";
-                FileInfo excelFile = new FileInfo(filePath);
-                excelPackage.SaveAs(excelFile);
-
-                // Descargar el archivo de Excel
-                Response.Clear();
-                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.AddHeader("content-disposition", "attachment; filename=Cotizacion.xlsx");
-                Response.TransmitFile(filePath);
-                Response.End();
+            }
+            catch
+            {
+                txtMensaje.Text = "Ocurrió un error al intentar descargar el excel";
             }
 
-
         }
-        //static void AdjustMargins(Excel.PageSetup pageSetup)
-        //{
-        //    // Ajustar los márgenes según tus necesidades
-        //    // Los valores están en pulgadas, pero puedes ajustar según tus preferencias
-        //    pageSetup.LeftMargin = 0.5;
-        //    pageSetup.RightMargin = 0.5;
-        //    pageSetup.TopMargin = 4;
-        //    pageSetup.BottomMargin = 0.5;
 
-        //}
         public List<DatosFiltrados> CargarDatosExcel()
         {
             List<DatosFiltrados> datosFiltradosList = new List<DatosFiltrados>();
@@ -6426,76 +6834,50 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             return datosFiltradosList;
         }
-        //private Dictionary<string, string> ObtenerDescripcionesPlano(string plano)
-        //{
-        //    Dictionary<string, string> descripciones = new Dictionary<string, string>();
+        private Dictionary<string, string> ObtenerDescripcionesPlano(string plano)
+        {
+            Dictionary<string, string> descripciones = new Dictionary<string, string>();
 
-        //    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-        //    string sSql = "SELECT Distinct tblGrupoObjeto.Descripcion_Grupo,tblGrupoObjeto.GODescripcionTecnica " +
-        //                  "FROM tblPlano " +
-        //                  "INNER JOIN tblGrupoObjeto " +
-        //                  "INNER JOIN tblPanel ON tblGrupoObjeto.ID_GrupoObjeto = tblPanel.Id_GrupoObjeto " +
-        //                  "INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum ON tblPlano.Plano = tblPlano_Panel.Id_Plano " +
-        //                  "WHERE tblPlano.Plano = @plano";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "SELECT Distinct tblGrupoObjeto.Descripcion_Grupo,tblGrupoObjeto.GODescripcionTecnica " +
+                          "FROM tblPlano " +
+                          "INNER JOIN tblGrupoObjeto " +
+                          "INNER JOIN tblPanel ON tblGrupoObjeto.ID_GrupoObjeto = tblPanel.Id_GrupoObjeto " +
+                          "INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum ON tblPlano.Plano = tblPlano_Panel.Id_Plano " +
+                          "WHERE tblPlano.Plano = @plano";
 
-        //    using (SqlConnection connection = new SqlConnection(connectionString))
-        //    {
-        //        using (SqlCommand cmd = new SqlCommand(sSql, connection))
-        //        {
-        //            connection.Open();
-        //            cmd.Parameters.AddWithValue("@plano", plano);
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@plano", plano);
 
-        //            using (SqlDataReader reader = cmd.ExecuteReader())
-        //            {
-        //                while (reader.Read())
-        //                {
-        //                    string idPanel = reader["Descripcion_Grupo"].ToString();
-        //                    string descripcion = reader["GODescripcionTecnica"].ToString();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string idPanel = reader["Descripcion_Grupo"].ToString();
+                            string descripcion = reader["GODescripcionTecnica"].ToString();
 
-        //                    descripciones.Add(idPanel, descripcion);
-        //                }
-        //            }
-        //        }
-        //    }
+                            descripciones.Add(idPanel, descripcion);
+                        }
+                    }
+                }
+            }
 
-        //    return descripciones;
-        //}
-        //protected void AgregarTextoDesdeArray(Excel.Worksheet worksheet, string[] textoArray, string celdaInicio, int fontSize = 12, bool bold = false)
-        //{
-        //    int fila = int.Parse(celdaInicio.Substring(1));  // Extraemos el número de fila de la celda de inicio
-        //    int columna = celdaInicio[0] - 'A' + 1;  // Obtenemos el número de columna de la celda de inicio
-
-        //    for (int i = 0; i < textoArray.Length; i++)
-        //    {
-        //        // Calculamos la celda de inicio para cada línea
-        //        string celdaInicioLinea = $"{(char)('A' + columna - 1)}{fila + i}";
-
-        //        // Calcular la celda de fin para cada línea (columna F)
-        //        string celdaFinLinea = $"{(char)('F')}{fila + i}";
-
-        //        // Fusionar las celdas de la columna B a la F para cada línea
-        //        var cellRange = worksheet.Range[celdaInicioLinea, celdaFinLinea];
-        //        cellRange.Merge();
-        //        cellRange.Value = textoArray[i];
-        //        cellRange.Font.Size = fontSize;
-        //        cellRange.Font.Bold = bold;
-        //        cellRange.Font.Name = "Century Gothic";
-        //        cellRange.EntireRow.Font.Color = System.Drawing.Color.Black;
-        //        cellRange.WrapText = true;
-        //    }
-        //}
-
+            return descripciones;
+        }       
         protected void Terminar(object sender, EventArgs e)
         {
+            // Esta redireccion se deja por si la descarga demora un poco mas de lo normal 
+
             Session["Id_OT2"] = tbOT.Text;
             Session["pedido2"] = ddlNumbers.SelectedItem.Text;
-            string mensajePersonalizado = "Descarga Exitosa";
-            string urlRedireccion = "OrdenTrabajo.aspx";
-            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+            Response.Redirect("OrdenTrabajo.aspx");
 
         }
-
-
 
         // INICIO LOGICA DEL BOTON OK
 
