@@ -1,17 +1,11 @@
-﻿using DocumentFormat.OpenXml.Drawing.ChartDrawing;
-//using NuGet.Protocol.Plugins;
+﻿//using NuGet.Protocol.Plugins;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Windows.Forms;
-using System.Windows.Media.Media3D;
 using Button = System.Web.UI.WebControls.Button;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
@@ -47,13 +41,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     string variableSesion2Detalle = (string)Session["Id_Detalle"];
 
                     // Asignar el valor del parámetro en el SqlDataSource para cargar la documentacion
-                    Documentos.SelectParameters["Documentacion"].DefaultValue = "PE" + variableSesion1Soli +"-"+ variableSesion2Detalle;
+                    Documentos.SelectParameters["Documentacion"].DefaultValue = "PE" + variableSesion1Soli + "-" + variableSesion2Detalle;
 
                     // Cargar los datos en el DataGrid
                     DataGridDocumento.DataSourceID = "Documentos";
                     DataGridDocumento.DataBind();
 
                     TituloSolictud.Text = "Documentacion Solicitud Especial # " + Session["Id_Solicitud"].ToString() + "- Detalle " + Session["Id_Detalle"].ToString();
+
+                    if (!ConsultarTerminado())
+                    {
+                        Button1.Enabled = false;
+                        Button1.CssClass = "btn-sm btn-outline-primary";
+                    }
 
 
 
@@ -87,11 +87,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 }
 
+                if (!ConsultarTerminado())
+                {
+                    string mensajePersonalizado = "La solicitud ya ha sido programda para ventas y no puede ser modificada.";
+                    string urlRedireccion = "Ventas/AdjuntarDocumentos.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                }
+
 
 
                 string carpetaNombre = "PE" + Session["Id_Solicitud"].ToString(); // Reemplaza con el nombre de la carpeta deseada
                 string rutaBase = @"\\Srvfs\s_i_ducon$\Documentacion PE"; // Reemplaza con tu ruta base
-             //   string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion"; // Reemplaza con tu ruta base
+                                                                          //   string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion"; // Reemplaza con tu ruta base
 
                 string rutaCompleta = Path.Combine(rutaBase, carpetaNombre);
 
@@ -115,9 +122,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 // Nombre de archivo que deseas utilizar
                 string nombreArchivo = FileUpload1.FileName; // Reemplaza con el nombre que quieras
-                string NombreArchivoCarpeta =carpetaNombre +"-" + Session["Id_Detalle"].ToString() + " " + FileUpload1.FileName ;
+                string NombreArchivoCarpeta = carpetaNombre + "-" + Session["Id_Detalle"].ToString() + " " + FileUpload1.FileName;
                 // Ruta completa para guardar el archivo
-                string rutaArchivo = Path.Combine(rutaCompleta,NombreArchivoCarpeta);
+                string rutaArchivo = Path.Combine(rutaCompleta, NombreArchivoCarpeta);
 
                 try
                 {
@@ -141,7 +148,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         {
 
                             command.Parameters.AddWithValue("@Id_OT", carpetaNombre + "-" + Session["Id_Detalle"].ToString());
-                            command.Parameters.AddWithValue("@Archivo", carpetaNombre + "-"  + Session["Id_Detalle"].ToString() +" " + nombreArchivo);
+                            command.Parameters.AddWithValue("@Archivo", carpetaNombre + "-" + Session["Id_Detalle"].ToString() + " " + nombreArchivo);
                             command.Parameters.AddWithValue("@TipoDocumento", ddlTipoDoc.SelectedItem.Text);
                             command.Parameters.AddWithValue("@usuario", Session["NombreAsesor"].ToString());
                             command.Parameters.AddWithValue("@FechaRegistro", DateTime.Now);
@@ -180,7 +187,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 int Eps = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "MuebleEspecial"));
 
                 TableCell cell = e.Item.Cells[6];
-                cell.Text = (Eps == 1) ? "Si" : "No";   
+                cell.Text = (Eps == 1) ? "Si" : "No";
 
             }
         }
@@ -188,7 +195,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
         protected void DataGridDocumentosPE_LinkButton(object source, DataGridCommandEventArgs e)
         {
-            
+
             if (e.CommandName == "VerDocumento")
             {
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
@@ -199,8 +206,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 string Id_OT = row.Cells[9].Text;
 
                 Session["Id_Documento"] = Id_documento;
-                Session["NombreArchivo"] =  NombreArchivo;
-                Session["NombreCarpeta"] = "PE" +Session["Id_Solicitud"].ToString();
+                Session["NombreArchivo"] = NombreArchivo;
+                Session["NombreCarpeta"] = "PE" + Session["Id_Solicitud"].ToString();
 
                 Button bntElimnar = FindControl("bntElimnar") as Button;
                 if (bntElimnar != null)
@@ -214,8 +221,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 e.Item.CssClass = "fila-seleccionada";
 
             }
-            
-            else if(e.CommandName == "VerDocumento1")
+
+            else if (e.CommandName == "VerDocumento1")
             {
 
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
@@ -223,17 +230,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 string Id_documento = row.Cells[8].Text;
                 string NombreArchivo = row.Cells[1].Text;
-               
+
 
                 Session["Id_Documento"] = Id_documento;
                 Session["NombreArchivo"] = NombreArchivo;
-                Session["NombreCarpeta"] ="PE"+ Session["Id_Solicitud"].ToString();
-               
+                Session["NombreCarpeta"] = "PE" + Session["Id_Solicitud"].ToString();
+
 
                 // Ruta completa del archivo que deseas abrir
-                
-                  string rutaArchivo = @"\\Srvfs\s_i_ducon$\Documentacion PE\"+  Session["NombreCarpeta"].ToString() + "\\" + NombreArchivo;
-                  // string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\" + Id_OT + "\\" + NombreArchivo;
+
+                string rutaArchivo = @"\\Srvfs\s_i_ducon$\Documentacion PE\" + Session["NombreCarpeta"].ToString() + "\\" + NombreArchivo;
+                // string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\" + Id_OT + "\\" + NombreArchivo;
 
                 if (File.Exists(rutaArchivo))
                 {
@@ -277,6 +284,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
         protected void EliminarDocumento(object sender, EventArgs e)
         {
+            if (!ConsultarTerminado())
+            {
+                string mensajePersonalizado1 = "La solicitud ya ha sido programda para ventas y no puede ser modificada.";
+                string urlRedireccion1 = "Ventas/AdjuntarDocumentos.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado1)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion1)}");
+            }
+
+
             // Obtener el id del documento a eliminar
             string idDocumento = Session["Id_Documento"].ToString();
             string NombreArchivo = Session["NombreArchivo"].ToString();
@@ -313,6 +328,37 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
 
 
+        }
+
+        public bool ConsultarTerminado()
+        {
+            string consultaActual = "select ProgramadoVentas from tblSoliciDiseEspe where ID_Solicitud = @solicitud";
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(consultaActual, connection))
+                {
+                    cmd.Parameters.AddWithValue("@solicitud", Session["Id_Solicitud"].ToString());
+                    object result = cmd.ExecuteScalar();
+
+                    // Verificar si el resultado es null o no
+                    if (result != null)
+                    {
+                        bool rowCount = Convert.ToBoolean(result);
+                        // Si rowCount es igual a 1, retornamos true; de lo contrario, retornamos false
+                        return rowCount == false;
+                    }
+                    else
+                    {
+                        // Si no se encontraron filas, retornamos false
+                        return false;
+                    }
+                }
+            }
         }
 
     }

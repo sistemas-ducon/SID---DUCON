@@ -6763,8 +6763,326 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         headerIndex2++;
                     }
 
+                    // Agregamos la hoja 3 
 
-                 
+                    ExcelWorksheet worksheet3 = excelPackage.Workbook.Worksheets.Add("Condiciones Comerciales");
+
+                    worksheet3.Column(2).Width = 50;
+                    worksheet3.Column(4).Width = 30;
+
+                    var Cell3B3 = worksheet3.Cells["B3"];
+                    Cell3B3.Value = "CONDICIONES GENERALES DE VENTA:";
+                    Cell3B3.Style.Font.Name = "Century Gothic";
+                    Cell3B3.Style.Font.Size = 11;
+                    Cell3B3.Style.Font.Bold = true;
+                    Cell3B3.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    Cell3B3.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    // TIEMPO DE ENTREGA
+                    var Cell3B5 = worksheet3.Cells["B5"];
+                    Cell3B5.Value = "1. TIEMPO DE ENTREGA:";
+                    Cell3B5.Style.Font.Name = "Century Gothic";
+                    Cell3B5.Style.Font.Size = 11;
+                    Cell3B5.Style.Font.Bold = true;
+                    Cell3B5.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    Cell3B5.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    string[] tiempoDeEntrega = {
+                    "Para proyectos de hasta 100 puestos de trabajo, con diseño y",
+                    "acabados de línea, DUCON S.A.S normalmente, se tomará 21 días para despachar;",
+                    "Sin embargo, los tiempos reales de entrega deberán ser definidos con el ejecutivo de",
+                    "proyectos y estarán sujetos a las características de la obra, a la disponibilidad de",
+                    "acabados y materiales del proyecto.",
+                    "La confirmación de dichos tiempos se realizará una vez la obra ingrese al sistema de",
+                    "información DUCON y la obra sea analizada por nuestro personal de compras y de producción.",
+                    "El plazo se establece luego del anticipo, entrega de orden de compra, firma de planos y",
+                    "definición de acabados.",
+                    "El tiempo de entrega de proyectos con productos o acabados especiales puede",
+                    "incrementarse según disponibilidad de proveedor."
+                };
+
+                    AgregarTextoDesdeArray(worksheet3, tiempoDeEntrega, "B6", 11, false);
+
+                    // INSTALACIÓN
+                    var Cell3B18 = worksheet3.Cells["B18"];
+                    Cell3B18.Value = "2. INSTALACIÓN:";
+                    Cell3B18.Style.Font.Name = "Century Gothic";
+                    Cell3B18.Style.Font.Size = 11;
+                    Cell3B18.Style.Font.Bold = true;
+                    Cell3B18.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    Cell3B18.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    string[] instalacion = {
+                        "El valor de la instalación ya está incluido en la cotización, obras",
+                        "fuera del área metropolitana de Medellín y Bogotá podrán tener recargo por concepto de",
+                        "viáticos y transporte según características del proyecto.",
+                        "Cualquier solicitud de cambio en la distribución pactada o en las especificaciones de",
+                        "producto, durante o después de la instalación, se reprogramará después de firmada.",
+                        "el acta de entrega",
+                        "SI el cliente requiere postergar la entrega e instalación del proyecto, se reprogramará",
+                        "según disponibilidad de la compañía, si la prórroga es superior a 15 días calendarios, podrá",
+                        "generar recargos por concepto de bodegaje a tasa de almacén de depósito vigente."
+                };
+
+                    AgregarTextoDesdeArray(worksheet3, instalacion, "B19", 12, false);
+
+                    //  OBSERVACIONES GENERALES
+                    var Cell3B29 = worksheet3.Cells["B29"];
+                    Cell3B29.Value = "3. OBSERVACIONES GENERALES:";
+                    Cell3B29.Style.Font.Name = "Century Gothic";
+                    Cell3B29.Style.Font.Size = 11;
+                    Cell3B29.Style.Font.Bold = true;
+                    Cell3B29.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    Cell3B29.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    string[] observacionesGenerales = {
+                    "Para garantizar la entrega a satisfacción del proyecto El cliente debe garantizar:",
+                    "*  Cielos terminados",
+                    "*  Paredes estucadas y pintadas",
+                    "*  Pisos pulidos y brillados",
+                    "*  Ventanería instalada",
+                    "*  Luminarias instaladas y funcionando",
+                    "*  Obra libre de escombros",
+                    " ",
+                    "Una  vez  entregado  el  material estará bajo la responsabilidad del cliente, este deberá",
+                    "proveer de un lugar con condiciones de higiene y seguridad  adecuadas para ",
+                    "el  producto."
+                };
+                    AgregarTextoDesdeArray(worksheet3, observacionesGenerales, "B30", 12, false);
+
+                    //  NOTAS
+                    string[] NotaImportante = {
+                    "Importante: Al recibir su pedido,  revise que las cantidades y el estado de la mercancía",
+                    "coincidan con la remisión y no presenten averías.",
+                    "Si detecta deterioro de la mercancía o faltantes, agradecemos  dejar constancia en la",
+                    "remisión y notificar a su coordinador logístico."
+                };
+                    AgregarTextoDesdeArray(worksheet3, NotaImportante, "B42", 12, true);
+
+
+                    var Cell3B47 = worksheet3.Cells["B47"];
+                    Cell3B47.Value = "Nota 1:";
+                    Cell3B47.Style.Font.Name = "Century Gothic";
+                    Cell3B47.Style.Font.Size = 11;
+                    Cell3B47.Style.Font.Bold = true;
+                    Cell3B47.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    Cell3B47.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    string[] Nota1 = {
+                    "Para  garantizar el funcionamiento adecuado del producto  recomendamos",
+                    "que la instalación cableado estructurado  voz  y  datos, se realice por un experto.",
+                    "obedeciendo indicaciones mínimas del personal de instalación DUCON"
+
+                };
+                    AgregarTextoDesdeArray(worksheet3, Nota1, "B48", 12, false);
+
+                    var Cell3B52 = worksheet3.Cells["B52"];
+                    Cell3B52.Value = "Nota 2:";
+                    Cell3B52.Style.Font.Name = "Century Gothic";
+                    Cell3B52.Style.Font.Size = 11;
+                    Cell3B52.Style.Font.Bold = true;
+                    Cell3B52.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    Cell3B52.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    string[] Nota2 = {
+                    "Se debe tener especial cuidado con Las pantallas  y separadores en vidrio de puestos",
+                    "de trabajo, debido a que pueden fisurarse si son golpeadas o sometidas a presión excesiva al ",
+                    "recostarse en ellas. DUCON S.A.S. no se hace responsable por daños o perjuicios  por este tipo",
+                    "de eventos."
+
+                };
+                    AgregarTextoDesdeArray(worksheet3, Nota2, "B53", 12, false);
+
+                    var Cell3B58 = worksheet3.Cells["B58"];
+                    Cell3B58.Value = "4. COORDINACIÓN:";
+                    Cell3B58.Style.Font.Name = "Century Gothic";
+                    Cell3B58.Style.Font.Size = 11;
+                    Cell3B58.Style.Font.Bold = true;
+                    Cell3B58.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    Cell3B58.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    string[] coordinacion = {
+                    "Para  nosotros  es  importante  que  usted  este informado  en todo ",
+                    "momento  del  estado de  su  pedido, por lo tanto además del ejecutivo de proyecto, usted ",
+                    "cuenta con un coordinador logístico que le será asignado por la compañía y se pondrá ",
+                    "en contacto con usted durante la ejecución del proyecto."
+
+                };
+                    AgregarTextoDesdeArray(worksheet3, coordinacion, "B59", 12, false);
+
+                    var Cell3B65 = worksheet3.Cells["B65"];
+                    Cell3B65.Value = "5. GARANTÍA:";
+                    Cell3B65.Style.Font.Name = "Century Gothic";
+                    Cell3B65.Style.Font.Size = 11;
+                    Cell3B65.Style.Font.Bold = true;
+                    Cell3B65.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    Cell3B65.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    string[] garantia = {
+                    "DUCON S.A.S   ofrece  garantía  por  cinco  (5)  años contra  defectos de ",
+                    "fábrica  para mobiliario y  un (1) año para  sillas, elementos de ",
+                    "reposición como chapas y correderas. La garantía no cubre daños por uso inadecuado, ",
+                    "sabotaje o daños o ocasionados por personas ajenas a DUCON."
+
+                };
+                    AgregarTextoDesdeArray(worksheet3, garantia, "B66", 12, false);
+
+                    var Cell3B71 = worksheet3.Cells["B71"];
+                    Cell3B71.Value = "6. SERVICIO POSVENTA:";
+                    Cell3B71.Style.Font.Name = "Century Gothic";
+                    Cell3B71.Style.Font.Size = 11;
+                    Cell3B71.Style.Font.Bold = true;
+                    Cell3B71.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    Cell3B71.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    string[] postventa = {
+                    "DUCON S.A.S ofrece a solicitud del cliente, y dentro de los 3 meses ",
+                    "seguidos a la instalación, el servicio de visita posventa; visita preventiva para verificar el ",
+                    "estado de la obra.",
+                    "Para solicitar este servicio, llame a los telefónos: 302 11 67 ext  109 - 110 - 111   ",
+                    "ó    288 98 98 ext. 129."
+
+                };
+                    AgregarTextoDesdeArray(worksheet3, postventa, "B72", 12, false);
+
+                    var Cell3B78 = worksheet3.Cells["B78"];
+                    Cell3B78.Value = "7. FORMA DE PAGO:";
+                    Cell3B78.Style.Font.Name = "Century Gothic";
+                    Cell3B78.Style.Font.Size = 11;
+                    Cell3B78.Style.Font.Bold = true;
+                    Cell3B78.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    Cell3B78.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    var Cell3B79 = worksheet3.Cells["B79"];
+                    Cell3B79.Value = "60% Anticipo        40% A la Entrega de la obra";
+                    Cell3B79.Style.Font.Name = "Century Gothic";
+                    Cell3B79.Style.Font.Size = 11;
+                    Cell3B79.Style.Font.Bold = true;
+                    Cell3B79.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    Cell3B79.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    var Cell3B81 = worksheet3.Cells["B81"];
+                    Cell3B81.Value = "IMPORTANTE Los descuentos otorgados pierden validez con el incumplimiento de:";
+                    Cell3B81.Style.Font.Name = "Century Gothic";
+                    Cell3B81.Style.Font.Size = 11;
+                    Cell3B81.Style.Font.Bold = true;
+                    Cell3B81.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    Cell3B81.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    string[] importante = {
+                    "Las condiciones comerciales de venta, específicamente en las formas de pago tanto del",
+                    "anticipo como en el pago de facturas a la fecha de vencimiento."
+                };
+                    AgregarTextoDesdeArray(worksheet3, importante, "B82", 12, false);
+
+                    // Nota en Amarilla 
+                    var Cell2BF85 = worksheet3.Cells["B85:F90"];
+                    Cell2BF85.Merge = true;
+                    Cell2BF85[85, 2].Value = "POR CONTRATO POR MANDATO: En virtud del los artículos 1634 y 1635 del código civil colombiano realizar los pagos a nombre de VISION EMPRESARIAL G2  S.A.S con Nit 900.314.150-1 EN BANCOLOMBIA  CUENTA CORRIENTE No. 01757718995. (Si requiere copia del contrato y certificado favor solicitarlo al correo carteraducon@ducon.com.co  - laurarestrepo@ducon.com.co) ";
+                    Cell2BF85.Style.Font.Name = "Century Gothic";
+                    Cell2BF85.Style.Font.Size = 11;
+                    Cell2BF85.Style.Font.Bold = true;
+                    Cell2BF85.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    Cell2BF85.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                    Cell2BF85.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+                    Cell2BF85.Style.WrapText = true;
+                    ;
+                    Cell2BF85.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    Cell2BF85.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+
+                    Cell2BF85.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    Cell2BF85.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    Cell2BF85.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    Cell2BF85.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+
+                    // FINANCIACIÓN
+                    var CellB92P3 = worksheet3.Cells["B92"];
+                    CellB92P3.Value = "8. FINANCIACIÓN:";
+                    CellB92P3.Style.Font.Size = 11;
+                    CellB92P3.Style.Font.Name = "Century Gothic";
+                    CellB92P3.Style.Font.Bold = true;
+                    CellB92P3.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                    CellB92P3.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+                    string[] financiacion = {
+                        "DUCON ofrece las siguientes alternativas de financiación de su proyecto de oficina",
+                        "RENTING de Infraestructura: No afecta cupo de endeudamiento, recomendado para realizar",
+                        "estrategias tributarias.",
+                        "Si desea conocer más de este producto, comuníquese con su ejecutivo de proyectos.",
+                        "",
+                        "Banco Corp Banca  Leasing o crédito: Contacto Medellín  Juan Manuel Penagos.",
+                        "correo electrónico jpenagossilva@corpbanca.com.co",
+                        "Teléfono  fijo  : 4-604 18 18  op 2 ext 3454 , celular  317 364 34 78 Este  proceso  debe  ser  ",
+                        "adelantado  directamente por el cliente con el banco."
+                    };
+                    AgregarTextoDesdeArray(worksheet3, financiacion, "B93", 12, false);
+
+                    // VALIDEZ DE LA PROPUESTA
+                    var CellB104P3 = worksheet3.Cells["B104"];
+                    CellB104P3.Value = "9. VALIDEZ DE LA PROPUESTA:  ";
+                    CellB104P3.Style.Font.Size = 11;
+                    CellB104P3.Style.Font.Bold = true;
+                    CellB104P3.Style.Font.Name = "Century Gothic";
+                    CellB104P3.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                    CellB104P3.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+                    string[] validez = {
+                        "30  Días calendario.",
+                        "",
+                        "NOTA:   Somos autoretenedores Resolución  000075  -  Junio  24/93,  no somos  grandes",
+                        "contribuyentes, resolución 000041 de enero 30 del 2014, contribuyente industrial de ICA en ",
+                        "Sabaneta, somos auto retenedores de CREE, exentos de RETEICA, según articulo 77 ley 49     ",
+                        "de 1990."
+                    };
+                    AgregarTextoDesdeArray(worksheet3, validez, "B105", 12, false);
+
+                    // DEVOLUCIONES
+                    var CellB112P3 = worksheet3.Cells["B112"];
+                    CellB112P3.Value = "10. DEVOLUCIONES:";
+                    CellB112P3.Style.Font.Size = 11;
+                    CellB112P3.Style.Font.Name = "Century Gothic";
+                    CellB112P3.Style.Font.Bold = true;
+                    CellB112P3.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                    CellB112P3.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+                    string[] devoluciones = {
+                        "Una vez aprobados planos y especificaciones no se aceptan ",
+                        "devoluciones. Casos especiales serán analizados para su devolución y se reconocerá ",
+                        "hasta por un monto máximo del 50% del valor cotizado. Esta condición aplica para ",
+                        "productos manufacturados a la medida del cliente como panelería, puestos de trabajo, ",
+                        "gavetas, credenzas, bibliotecas, entre otros.",
+                        " No aplica para productos como sillas y archivadores cuya devolución puede ascender",
+                        " al 100% del valor cotizado luego de control de calidad."
+                    };
+                    AgregarTextoDesdeArray(worksheet3, devoluciones, "B113", 12, false);
+
+                    // Firma Gerencial 
+                    var CellB1121P3 = worksheet3.Cells["B121:B122"];
+                    CellB1121P3[121, 2].Merge = true;
+                    CellB1121P3.Value = "Ejecutivo de Proyectos";
+                    CellB1121P3.Style.Font.Size = 11;
+                    CellB1121P3.Style.Font.Name = "Century Gothic";
+                    CellB1121P3.Style.Font.Bold = true;
+                    CellB1121P3.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                    CellB1121P3.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    var CellD121P3 = worksheet3.Cells["D121:F121"];
+                    CellD121P3[121, 4].Merge = true;
+                    CellD121P3.Value = "JAIME RENDÓN LONDOÑO";
+                    CellD121P3.Style.Font.Size = 11;
+                    CellD121P3.Style.Font.Name = "Century Gothic";
+                    CellD121P3.Style.Font.Bold = true;
+                    CellD121P3.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                    CellD121P3.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    var CellD122P3 = worksheet3.Cells["D122:E122"];
+                    CellD122P3.Merge = true;
+                    CellD122P3[122, 4].Value = "Gerente Comercial";
+                    CellD122P3.Style.Font.Size = 11;
+                    CellD122P3.Style.Font.Name = "Century Gothic";
+                    CellD122P3.Style.Font.Bold = true;
+                    CellD122P3.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                    CellD122P3.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+
+
 
                     // Guardamos el archivo de Excel
                     string filePath = Path.GetTempFileName() + ".xlsx";
@@ -6867,7 +7185,30 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
             return descripciones;
-        }       
+        }
+
+        protected void AgregarTextoDesdeArray(ExcelWorksheet worksheet, string[] textoArray, string celdaInicio, int fontSize = 12, bool bold = false)
+        {
+            int fila = int.Parse(celdaInicio.Substring(1));  // Extraemos el número de fila de la celda de inicio
+
+            for (int i = 0; i < textoArray.Length; i++)
+            {
+                // Calcular la celda de inicio para cada línea
+                string celdaInicioLinea = $"B{fila + i}";
+
+                // Fusionar las celdas de la columna B a la F para cada línea
+                ExcelRange cellRange = worksheet.Cells[$"B{fila + i}:E{fila + i}"];
+                cellRange.Merge = true;
+                cellRange.Style.Font.Size = fontSize;
+                cellRange.Style.Font.Bold = bold;
+                cellRange.Style.Font.Name = "Century Gothic";
+                cellRange.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+                cellRange.Style.WrapText = true;
+
+                // Escribir el texto en la celda de inicio de la línea
+                worksheet.Cells[celdaInicioLinea].Value = textoArray[i];
+            }
+        }
         protected void Terminar(object sender, EventArgs e)
         {
             // Esta redireccion se deja por si la descarga demora un poco mas de lo normal 
