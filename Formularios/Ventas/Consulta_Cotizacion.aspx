@@ -235,7 +235,7 @@
                                     </table>
                                 </div>
                                      <div class="d-flex justify-content-end align-items-center mt-3">
-                                      <asp:ImageButton ID="btnCotizacion" runat="server" OnClick="LinkButton_Click" OnClientClick="CargarExcel();"
+                                      <asp:ImageButton ID="btnCotizacion" runat="server" OnClick="LinkButton_Click"
                                           ImageUrl="https://i.ibb.co/86fR8JK/icons8-microsoft-excel-2019-48.png" AlternateText="Excel Icon" />
                                          </div>
                                 </div>
@@ -394,7 +394,7 @@
                                     </div>
 
                                     <div class="d-flex justify-content-end align-items-center mt-3">
-                                      <asp:ImageButton ID="ImgBtnExportarExcel" CssClass="btn-outline-light btn btn-white btn-sm" runat="server" OnClick="BtnExportarExcelPorEstado_Click"
+                                      <asp:ImageButton ID="ImgBtnExportarExcel" CssClass="btn-outline-light btn btn-white btn-sm" runat="server"
                                           ImageUrl="https://i.ibb.co/86fR8JK/icons8-microsoft-excel-2019-48.png" AlternateText="Excel Icon" />
                                     </div>
 

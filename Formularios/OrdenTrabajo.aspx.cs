@@ -175,17 +175,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         }
 
                     }
-                    // Verificar si la variable de sesión 'MostrarModal' tiene contenido y es true
-                    if (Session["ModalMostrado"] != null && (bool)Session["ModalMostrado"] == true)
-                    {
-                        NuevaOTDespuesDeCargarNIT();
-                        Session.Remove("ModalMostrado");
-                    }
-                    else
-                    {
-                        // Si 'MostrarModal' es false o null, establecer 'ModalMostrado' en null
-                        Session["ModalMostrado"] = null;
-                    }
+                  
 
                     CargarVariablesDeSesionContable();
 
@@ -487,12 +477,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void NuevaOT_Click(object sender, EventArgs e)
         {
-            if (Session["ModalMostrado"] == null)
-            {
-                // Mostrar el modal solo si no se ha mostrado antes
+             // Mostrar el modal solo si no se ha mostrado antes
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#LlenarNIT').modal('show');", true);
 
-            }
+           
 
         }
 
@@ -703,22 +691,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BtnObservaciones_Click(object sender, EventArgs e)
         {
-            // Verifica si el LinkButton está habilitado
-            if (EstaHabilitado())
-            {
+                
                 string url = "FormExtPrin/ObservacionesOT.aspx";
                 string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
-            }
+            
         }
 
-        private bool EstaHabilitado()
-        {
-            // Agrega tu lógica para determinar si el LinkButton está habilitado o no.
-            // Devuelve true si está habilitado y false si no lo está.
-            // Ejemplo: Siempre habilitado
-            return true;
-        }
+
 
         protected void habilitarbotones()
         {
@@ -2263,7 +2243,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             catch (Exception ex)
             {
-
+         
             }
 
             Cargar_Plano(id, pedido);
@@ -2473,6 +2453,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#NuevoPedido').modal('show');", true);
 
             Session["NuevoPedido"] = true;
+
+            Session["Id_OT2"] = tbOT.Text;
 
 
         }
@@ -3078,7 +3060,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void Redireccion_Nit(object sender, EventArgs e)
         {
-            Session["Id_OT2"] = tbOT.Text;
+
+            Session["Id_OT2"] = Session["Id_OT2"].ToString();
+
             Session["pedido2"] = ddlNumbers.SelectedItem.Text;
 
             string url = "FormExtPrin/NitOts.aspx";
@@ -4181,8 +4165,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void BtnCopInfNueOT_Click(object sender, EventArgs e)
         {
             Session["Id_OT2"] = tbOT.Text;
-            Session["pedido2"] = ddlNumbers.Text;
-
+         
             List<System.Web.UI.Control> botones = new List<System.Web.UI.Control>
             {
 

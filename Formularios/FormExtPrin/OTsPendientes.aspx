@@ -92,7 +92,29 @@
                                                             <asp:Label runat="server" ID="Label4" class="col-form-label-sm">F.Busqueda</asp:Label>
                                                             <asp:SqlDataSource ID="SqlDataSource1" runat="server"
                                                                 ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
-                                                                SelectCommand="SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'tblOT' AND COLUMN_NAME IN ('Fecha_Real_Despacho_Produccion', 'Fecha_Entrega_Produccion', 'Fecha_Entrega_Dibujo_Despiece', 'Fecha_Terminada_Despacho', 'Fecha_Terminada_Empaque', 'Fecha_Instalacion', 'Fecha_Final_Instalacion')"></asp:SqlDataSource>
+                                                                SelectCommand="SELECT COLUMN_NAME 
+                                                                                            FROM INFORMATION_SCHEMA.COLUMNS 
+                                                                                            WHERE TABLE_NAME = 'tblOT' 
+                                                                                            AND COLUMN_NAME IN (
+                                                                                                'Fecha_Real_Despacho_Produccion', 
+                                                                                                'Fecha_Entrega_Produccion', 
+                                                                                                'Fecha_Entrega_Dibujo_Despiece', 
+                                                                                                'Fecha_Terminada_Despacho', 
+                                                                                                'Fecha_Terminada_Empaque', 
+                                                                                                'Fecha_Instalacion', 
+                                                                                                'Fecha_Final_Instalacion'
+                                                                                            )
+                                                                                            ORDER BY 
+                                                                                                CASE 
+                                                                                                    COLUMN_NAME 
+                                                                                                    WHEN 'Fecha_Real_Despacho_Produccion' THEN 1
+                                                                                                    WHEN 'Fecha_Entrega_Produccion' THEN 2
+                                                                                                    WHEN 'Fecha_Entrega_Dibujo_Despiece' THEN 3
+                                                                                                    WHEN 'Fecha_Terminada_Despacho' THEN 4
+                                                                                                    WHEN 'Fecha_Terminada_Empaque' THEN 5
+                                                                                                    WHEN 'Fecha_Instalacion' THEN 6
+                                                                                                    WHEN 'Fecha_Final_Instalacion' THEN 7
+                                                                                                END"></asp:SqlDataSource>
 
                                                             <asp:DropDownList ID="DropDownList1" runat="server" DataSourceID="SqlDataSource1" DataTextField="COLUMN_NAME" DataValueField="COLUMN_NAME" CssClass="form-control-sm form-control">
                                                             </asp:DropDownList>
