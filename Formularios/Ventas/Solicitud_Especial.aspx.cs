@@ -1375,12 +1375,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 Session["numeroSolicitudSession"] = IdSolicitud;
 
                                 Session["ScriptEspecifico"] = "ActivarBotonDetalle();";
-                            
+
                                 string mensajePersonalizado = "La solicitud ha sido ingresada con éxito.";
                                 string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
                                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
 
-                               
+
 
                             }
                             else
@@ -1395,8 +1395,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
-            else if(insertUpdate == "Actualizar")
+            else if (insertUpdate == "Actualizar")
             {
+
+                // Validar si la solicitud ya ha sido a aprobada por Ventas(validacion Boton de modificar )
+
+                if (!ConsultarTerminado())
+                {
+                    string mensajePersonalizado = "La solicitud ya ha sido programda para ventas y no puede ser modificada.";
+                    string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                }
+
 
                 //CalcularFechaEntregaSolicitudEspecial() de momento se envia fecha del primer dia del año  !!!!IMPORTANTE !!!!
 
@@ -1481,6 +1491,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
 
+            }
+            else
+            {
+                string mensajePersonalizado = "La solicitud ya ha sido programda para ventas y no puede ser modificada.";
+                string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
             }
 
 
@@ -1876,12 +1892,28 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         public static void NuevaSolicitud()
         {
             HttpContext.Current.Session["InsertUpdate"] = "Insertar";
+            HttpContext.Current.Session["nuevaSol"] = "1";
         }
 
         [WebMethod]  // Cambiar estado de variable de Session cuando dan click en Modificarsolicitud 
         public static void ModificarSolicitud()
         {
-            HttpContext.Current.Session["InsertUpdate"] = "Actualizar";         
+            HttpContext.Current.Session["InsertUpdate"] = "Actualizar";
+            HttpContext.Current.Session["nuevaSol"] = "2";
+        }
+
+        [WebMethod] // Cambiar estado de variable de Session cuando dan click en NuevaSolicitud 
+        public static void NuevaSolicitud1()
+        {
+          
+            HttpContext.Current.Session["nuevaSol"] = null;
+        }
+
+        [WebMethod]  // Cambiar estado de variable de Session cuando dan click en Modificarsolicitud 
+        public static void ModificarSolicitud1()
+        {
+         
+            HttpContext.Current.Session["nuevaSol"] = null;
         }
 
         // Detalle solicitud
@@ -2009,7 +2041,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void EliminarDetalle(object sender, EventArgs e)
         {
-
+            if (!ConsultarTerminado())
+            {
+                string mensajePersonalizado = "La solicitud ya ha sido programda para ventas y no puede ser modificada.";
+                string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            }
 
             string consultaActual = "Select * from tblDocumentacion where ID_OT='PE" + lbNumeroSolicitud.Text + "-" + Session["Id_Detalle"].ToString() + "'";
 
@@ -2132,7 +2169,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
            
 
-            if (Session["InsertUpdateDetalle"].ToString() == "Insertar")
+            if (Session["InsertUpdateDetalle"]?.ToString() == "Insertar")
             {
                 string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
@@ -2226,10 +2263,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
-            else if(Session["InsertUpdateDetalle"].ToString() == "Actualizar")
+            else if(Session["InsertUpdateDetalle"]?.ToString() == "Actualizar")
             {
 
                 //CalcularFechaEntregaSolicitudEspecial() de momento se envia fecha del primer dia del año  !!!!IMPORTANTE !!!!
+
+                if (!ConsultarTerminado())
+                {
+                    string mensajePersonalizado = "La solicitud ya ha sido programda para ventas y no puede ser modificada.";
+                    string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                }
 
                 string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
@@ -2313,6 +2357,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
 
             }
+            else
+            {
+                string mensajePersonalizado = "La solicitud ya ha sido programda para ventas y no puede ser modificada.";
+                string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            }
         }
 
 
@@ -2364,9 +2414,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
-
-
-
 
     }
 }

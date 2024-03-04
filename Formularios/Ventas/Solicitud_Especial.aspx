@@ -7,7 +7,7 @@
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Solicitud Especial </title>
-     <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
+    <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -341,28 +341,28 @@
                                     <div class=" input-group input-group-sm  mb-2 gap-4">
                                         <asp:Button CssClass="btn btn-outline-secondary" ID="btnCliente" runat="server" Text="Cliente" OnClick="GuardarDatosSesion" OnClientClick="abrirOtraPestana();" />
                                         <asp:TextBox ID="tbCliente" type="text" class="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
-                                        <asp:TextBox ID="tbClienteServidor" type="text" class="form-control form-control-sm " runat="server"  CssClass="hidden-textBox" ></asp:TextBox>
+                                        <asp:TextBox ID="tbClienteServidor" type="text" class="form-control form-control-sm " runat="server" CssClass="hidden-textBox"></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class=" input-group input-group-sm  mb-2 gap-4">
                                         <asp:Label ID="lbContacto" class=" col-form-label-sm  " Text="Contacto" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbContacto" type="text" class="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
-                                        <asp:TextBox ID="tbContactoServidor" type="text" class="form-control form-control-sm " runat="server"  CssClass="hidden-textBox" ></asp:TextBox>
+                                        <asp:TextBox ID="tbContactoServidor" type="text" class="form-control form-control-sm " runat="server" CssClass="hidden-textBox"></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class=" input-group input-group-sm  mb-2 gap-4">
                                         <asp:Label ID="lbTelefono" class="col-form-label-sm " Text="Telefono" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbTelefono" type="text" class="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
-                                        <asp:TextBox ID="tbTelefonoServidor" type="text" class="form-control form-control-sm " runat="server"  CssClass="hidden-textBox" ></asp:TextBox>
+                                        <asp:TextBox ID="tbTelefonoServidor" type="text" class="form-control form-control-sm " runat="server" CssClass="hidden-textBox"></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class=" input-group input-group-sm  mb-2 gap-4">
                                         <asp:Label ID="lbCelular" class="col-form-label-sm" Text="Celular" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbCelular" type="text" class="form-control form-control-sm" runat="server" disabled="disabled"></asp:TextBox>
-                                        <asp:TextBox ID="tbCelularServidor" type="text" class="form-control form-control-sm " runat="server"  CssClass="hidden-textBox" ></asp:TextBox>
+                                        <asp:TextBox ID="tbCelularServidor" type="text" class="form-control form-control-sm " runat="server" CssClass="hidden-textBox"></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -382,7 +382,7 @@
                                     <div class="input-group input-group-sm  mb-2 gap-3 justify-content-center">
                                         <asp:Label ID="lbMail" class="col-form-label-sm" Text="Mail" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbMail" type="text" class="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
-                                        <asp:TextBox ID="tbMailServidor" type="text" class="form-control form-control-sm " runat="server"  CssClass="hidden-textBox" ></asp:TextBox>
+                                        <asp:TextBox ID="tbMailServidor" type="text" class="form-control form-control-sm " runat="server" CssClass="hidden-textBox"></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -391,7 +391,7 @@
                                     <div class=" input-group input-group-sm  mb-2 gap-2 justify-content-center">
                                         <asp:Label ID="lbDireccion" class="col-form-label-sm" Text="Dirección" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbDireccion" type="text" class="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
-                                        <asp:TextBox ID="tbDireccionServidor" type="text" class="form-control form-control-sm " runat="server"  CssClass="hidden-textBox" ></asp:TextBox>
+                                        <asp:TextBox ID="tbDireccionServidor" type="text" class="form-control form-control-sm " runat="server" CssClass="hidden-textBox"></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -1192,6 +1192,45 @@
 
         document.getElementById("btnCliente").disabled = true;
 
+        //Conuevo control del boton  nuevo y modificar 
+        var nuevasol = '<%= Session["nuevaSol"] %>';
+
+        if (nuevasol === "1")
+        {
+           NuevaSolicitud();
+             
+           $.ajax({
+                type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                url: "Solicitud_Especial.aspx/NuevaSolicitud1", // La URL debe apuntar al método en el servidor
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                },
+                error: function (error) {
+                    // Manejar errores si los hay
+                }
+            });
+        } 
+        else if (nuevasol === "2")
+        {
+            ModificarSolicitud();
+           $.ajax({
+                type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                url: "Solicitud_Especial.aspx/ModificarSolicitud1", // La URL debe apuntar al método en el servidor
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                },
+                error: function (error) {
+                    // Manejar errores si los hay
+                }
+            });;
+        }
+
+
+
         function NuevaSolicitud() {
 
 
@@ -1853,7 +1892,7 @@
 
     </script>
 
-  
+
 
 </body>
 

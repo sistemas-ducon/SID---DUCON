@@ -53,7 +53,7 @@
             iniciarCambiosExcel();
             setTimeout(function() {
            document.getElementById("btnTerminarDescarga").disabled = false;
-           }, 3500); // 10 segundos
+           }, 1500); // 10 segundos
 
 
         }
@@ -1557,7 +1557,7 @@
                                 </div>
                             </div>
 
-                            <!--Modal de carga para excel -->
+                            <!--Modal de carga para excel ( Se deja por si la descargar demora un poco mas  -->
                             <div class="modal fade" id="loadingModalExcel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
