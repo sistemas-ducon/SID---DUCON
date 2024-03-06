@@ -492,6 +492,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.TextBox TextBox3;
 
         /// <summary>
+        /// Control BtnExcelCot.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton BtnExcelCot;
+
+        /// <summary>
+        /// Control BtnPDFCot.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton BtnPDFCot;
+
+        /// <summary>
         /// Control TextDesSeg.
         /// </summary>
         /// <remarks>
@@ -625,14 +643,5 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.SqlDataSource DataGridUltimoContacto;
-
-        /// <summary>
-        /// Control Eliminar.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Eliminar;
     }
 }

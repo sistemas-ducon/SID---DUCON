@@ -69,6 +69,25 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     DateTime fechaMenosUnMesUnDia = fechaActual.AddMonths(-1).AddDays(-1);          
                     TextBoxStartDate.Text = fechaMenosUnMesUnDia.ToString("yyyy-MM-dd");
                     TextBoxEndDate.Text = fechaActual.ToString("yyyy-MM-dd");
+
+                   
+                    DateTime fechaMenosUnMes4dias = fechaActual.AddMonths(-1).AddDays(-4);
+                    TextCotizacionEntreInicio2.Text = fechaMenosUnMes4dias.ToString("yyyy-MM-dd");
+                    TextCotizacionEntreFinal2.Text = fechaActual.ToString("yyyy-MM-dd");
+
+                    DateTime fechaMenosTresMes = fechaActual.AddMonths(-3);
+                    IdDateInicial.Text = fechaMenosTresMes.ToString("yyyy-MM-dd");
+                    IdDateFinal.Text = fechaActual.ToString("yyyy-MM-dd");
+
+
+                    TextUltContComer.Text = fechaActual.ToString("yyyy-MM-dd");
+
+
+                    BtnExcelCot.Enabled = false;
+                    BtnExcelCot.CssClass = "btn shadow btn-light linkButtonClicked button-disabled grande";
+
+                    BtnPDFCot.Enabled = false;
+                    BtnPDFCot.CssClass = "btn shadow btn-light linkButtonClicked button-disabled grande";
                 }
 
                 else
@@ -142,7 +161,227 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             UpdatePanelPorEstado.Update();
            
         }
-        
+
+        protected void LinkButton_Click(object sender, EventArgs e)
+        {
+            // Creamos un nuevo libro de Excel
+            ExcelPackage excelPackage = new ExcelPackage();
+
+            // Agregamos una nueva hoja al libro
+            ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Estadistica Por Vendedor");
+
+            // Encabezado
+            // Combinar celdas del rango "A1:L1"
+            // Combinar celdas para el encabezado
+            worksheet.Cells["A1:H1"].Merge = true;
+
+            // Establecer el texto con un salto de línea
+            var richText = worksheet.Cells["A1"].RichText.Add("Ducon LTDA \nEstadisticas Cotizaciones");
+            worksheet.Cells["A1:H1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            // Establecer el estilo del texto
+            richText.Bold = true;
+            richText.Size = 22;
+            richText.FontName = "Times New Roman";
+
+            // Ajustar la altura de la fila para mostrar el título completo
+            worksheet.Row(1).Height = 70; // Ajusta la altura según sea necesario
+
+            // Establecer el borde alrededor del rango combinado
+            var border = worksheet.Cells["A1:H1"].Style.Border;
+
+            // Establecer un borde más grueso
+            border.BorderAround(ExcelBorderStyle.Thick);
+
+            // Establecer el color del borde en negro
+            border.Top.Style = border.Bottom.Style = border.Left.Style = border.Right.Style = ExcelBorderStyle.Thick;
+            border.Top.Color.SetColor(Color.Black);
+            border.Bottom.Color.SetColor(Color.Black);
+            border.Left.Color.SetColor(Color.Black);
+            border.Right.Color.SetColor(Color.Black);
+
+
+
+
+            // Datos de los TextBox
+            worksheet.Cells["A2"].Value = "Asesor Comercial:";
+            worksheet.Cells["B2"].Value = TextAsesor.Text;
+            worksheet.Cells["G2"].Value = "Fecha de inicio:" + TextBoxStartDate.Text;
+            worksheet.Cells["G3"].Value = "Fecha de fin:" + TextBoxEndDate.Text;
+
+            // Establecer el estilo de fuente para el contenido, excluyendo el encabezado
+            using (var range = worksheet.Cells["A2:H3"])
+            {
+                range.Style.Font.Name = "Aptos Narrow";
+                range.Style.Font.Bold = true;
+                range.Style.Font.Size = 16;
+            }
+
+
+            // Agregar encabezados de tabla
+            int rowIndex = 5;
+            foreach (DataGridColumn column in DataGrid1.Columns)
+            {
+                if (column.HeaderText != "&nbsp;" && (column.HeaderText == "Estado" || column.HeaderText == "Cant" || column.HeaderText == "%" || column.HeaderText == "Total Valor Neto" || column.HeaderText == "%"))
+                {
+                    worksheet.Cells[rowIndex, 5].Value = column.HeaderText;
+                    worksheet.Cells[rowIndex, 5].Style.Font.Bold = true;
+                    worksheet.Cells[rowIndex, 5].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[rowIndex, 5].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                }
+            }
+
+            // Obtener datos adicionales de las etiquetas HTML
+            string estudio = lbEstudio.InnerText;
+            string cantEstudio = lbCantEstudio.InnerText;
+            string porEstudio = lbPorEst.InnerText;
+            string totEstudio = lbTotEst.InnerText;
+            string porTotEstudio = lbPorEstTot.InnerText;
+
+            string aprobada = lbAprobada.InnerText;
+            string cantAprobada = lbCantApr.InnerText;
+            string porAprobada = lbPorApr.InnerText;
+            string totAprobada = lbTotApr.InnerText;
+            string porTotAprobada = lbTotPor.InnerText;
+
+            string totales = lbTotales.InnerText;
+            string cantidadFilas = lbCantidad.InnerText;
+            string totalNetoEstudio = lbTotEst.InnerText;
+            string totalNetoAprobada = lbTotApr.InnerText;
+            string totalNeto = Label10.InnerText;
+            string porcentajeTotal = lbPorTotal.InnerText;
+
+            // Escribir datos adicionales en el archivo Excel
+            worksheet.Cells[5, 2].Value = "Estado";
+            worksheet.Cells[5, 3].Value = "Cant";
+            worksheet.Cells[5, 4].Value = "%";
+            worksheet.Cells[5, 5].Value = "Total Valor Neto";
+            worksheet.Cells[5, 6].Value = "%";
+
+
+
+            // Establecer el estilo del encabezado
+            using (ExcelRange headerRange = worksheet.Cells["B5:F5"])
+            {
+                headerRange.Style.Font.Bold = true;
+                headerRange.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                headerRange.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                headerRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                headerRange.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                headerRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
+            }
+
+            worksheet.Cells[6, 2].Value = estudio;
+            worksheet.Cells[6, 3].Value = cantEstudio;
+            worksheet.Cells[6, 4].Value = porEstudio;
+            worksheet.Cells[6, 5].Value = totEstudio;
+            worksheet.Cells[6, 6].Value = porTotEstudio;
+
+            worksheet.Cells[7, 2].Value = aprobada;
+            worksheet.Cells[7, 3].Value = cantAprobada;
+            worksheet.Cells[7, 4].Value = porAprobada;
+            worksheet.Cells[7, 5].Value = totAprobada;
+            worksheet.Cells[7, 6].Value = porTotAprobada;
+
+            worksheet.Cells[8, 2].Value = totales;
+            worksheet.Cells[8, 3].Value = cantidadFilas;
+            worksheet.Cells[8, 4].Value = porcentajeTotal;
+            worksheet.Cells[8, 5].Value = totalNeto;
+            worksheet.Cells[8, 6].Value = porcentajeTotal;
+
+
+            // Especifica el rango de datos para aplicar bordes
+            ExcelRange dataRange = worksheet.Cells[5, 2, 8, 6];
+
+            // Establece el estilo de borde para el rango de datos
+            dataRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+            dataRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            dataRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+            dataRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+            // Escribir datos del DataGrid en el archivo Excel
+
+            // Escribir el encabezado en el rango A11:H11
+            worksheet.Cells["A11"].Value = "Cotizacion";
+            worksheet.Cells["B11"].Value = "Estado";
+            worksheet.Cells["C11"].Value = "Plano";
+            worksheet.Cells["D11"].Value = "Valor";
+            worksheet.Cells["E11"].Value = "Dto(%)";
+            worksheet.Cells["F11"].Value = "Valor Neto";
+            worksheet.Cells["G11"].Value = "Cliente";
+            worksheet.Cells["H11"].Value = "F.Cot.";
+
+            // Establecer el estilo del encabezado
+            using (ExcelRange headerRange = worksheet.Cells["A11:H11"])
+            {
+                headerRange.Style.Font.Bold = true;
+                headerRange.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                headerRange.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                headerRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                headerRange.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                headerRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
+            }
+
+
+            rowIndex = 12; // Comenzar desde la fila 12
+            foreach (DataGridItem item in DataGrid1.Items)
+            {
+                int colIndex = 1; // Comenzar desde la columna 1
+                foreach (TableCell cell in item.Cells)
+                {
+                    if (colIndex == 1 || colIndex == 2 || colIndex == 4 || colIndex == 6 || colIndex == 5 || colIndex == 7)
+                    {
+                        if (cell.Text != "&nbsp;")
+                        {
+                            worksheet.Cells[rowIndex, colIndex].Value = cell.Text;
+                        }
+                    }
+                    else if (colIndex == 12) // Si es la columna 12, escribir en la columna C en lugar de 12
+                    {
+                        if (cell.Text != "&nbsp;")
+                        {
+                            worksheet.Cells[rowIndex, 3].Value = cell.Text; // Escribir en la columna C
+                        }
+                    }
+
+                    else if (colIndex == 10) // Si es la columna 12, escribir en la columna C en lugar de 12
+                    {
+                        if (cell.Text != "&nbsp;")
+                        {
+                            worksheet.Cells[rowIndex, 8].Value = cell.Text; // Escribir en la columna R
+                        }
+                    }
+                    colIndex++;
+                }
+                rowIndex++;
+            }
+
+            // Especifica el rango de datos para aplicar bordes
+            ExcelRange dataGridRange = worksheet.Cells[11, 1, rowIndex - 1, 8];
+
+            // Establece el estilo de borde para el rango de datos del DataGrid
+            dataGridRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+            dataGridRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            dataGridRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+            dataGridRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+
+            // Ajustar el ancho de las columnas
+            worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+            // Guardar el archivo de Excel en una ubicación temporal
+            string filePath = Path.GetTempFileName() + ".xlsx";
+            FileStream fileStream = new FileStream(filePath, FileMode.Create);
+            excelPackage.SaveAs(fileStream);
+            fileStream.Close();
+
+            // Descargar el archivo de Excel
+            Response.Clear();
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            Response.AddHeader("content-disposition", "attachment; filename=Datos.xlsx");
+            Response.TransmitFile(filePath);
+            Response.End();
+        }
+
         //TABLA POR VENDEDOR
 
         public void DataGridPorVendedor_PreRender(object sender, EventArgs e)
@@ -335,51 +574,474 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-        //public void BtnExportarExcelPorEstado_Click(object sender, EventArgs e)
-        //{  
-        //    //// Creamos un nuevo libro de Excel
-        //    //ExcelPackage excelPackage = new ExcelPackage();
+        public void BtnExportarExcelPorEstado_Click(object sender, EventArgs e)
+        {
+            // Creamos un nuevo libro de Excel
+            ExcelPackage excelPackage = new ExcelPackage();
 
-        //    //// Agregamos una nueva hoja al libro
-        //    //ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Resumen Estadisticas X Estado");
+            // Agregamos una nueva hoja al libro
+            ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Datos");
 
-        //    //// Obtener el DataGrid y sus datos
-        //    //System.Web.UI.WebControls.DataGrid dataGrid = DataGrid2; 
-        //    //int rowCount = dataGrid.Items.Count;
-        //    //int colCount = dataGrid.Columns.Count;
+            // Establecer el valor del encabezado en la celda A1
+            worksheet.Cells["A1"].Value = "DUCON S.A.S";
 
-        //    //// Llenar el archivo de Excel con los datos del DataGrid
-        //    //for (int i = 0; i < rowCount; i++)
-        //    //{
-        //    //    for (int j = 0; j < colCount; j++)
-        //    //    {
-        //    //        TableCell cell = dataGrid.Items[i].Cells[j];
-        //    //        worksheet.Cells[i + 1, j + 1].Value = cell.Text;
+            // Combinar celdas para el encabezado
+            ExcelRange headerRange = worksheet.Cells["A1:F1"];
+            headerRange.Merge = true;
 
-        //    //        // Agregar estilo a las celdas
-        //    //        if (i == 0) // Estilo para las celdas del encabezado
-        //    //        {
-        //    //            worksheet.Cells[i + 1, j + 1].Style.Font.Bold = true;
-        //    //            worksheet.Cells[i + 1, j + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        //    //            worksheet.Cells[i + 1, j + 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
-        //    //        }
-        //    //    }
-        //    //}
+            // Establecer el estilo del encabezado
+            headerRange.Style.Font.Name = "Times New Roman";
+            headerRange.Style.Font.Size = 22;
+            headerRange.Style.Font.Bold = true;
+            headerRange.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            headerRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
+            headerRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+            headerRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            headerRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+            headerRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
 
-        //    //// Guardar el archivo de Excel en una ubicación temporal
-        //    //string filePath = Path.GetTempFileName() + ".xlsx";
-        //    //FileStream fileStream = new FileStream(filePath, FileMode.Create);
-        //    //excelPackage.SaveAs(fileStream);
-        //    //fileStream.Close();
+            // Establecer el valor del encabezado en la celda A1
+            worksheet.Cells["A2"].Value = "Estadisticas de Cotizaciones";
 
-        //    //// Descargar el archivo de Excel
-        //    //Response.Clear();
-        //    //Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        //    //Response.AddHeader("content-disposition", "attachment; filename=Datos.xlsx");
-        //    //Response.TransmitFile(filePath);
-        //    //Response.End();
+            // Combinar celdas para el encabezado
+            ExcelRange headerRange2 = worksheet.Cells["A2:F2"];
+            headerRange2.Merge = true;
 
-        //}
+            // Establecer el estilo del encabezado
+            headerRange2.Style.Font.Name = "Times New Roman";
+            headerRange2.Style.Font.Size = 14;
+            headerRange2.Style.Font.Bold = true;
+            headerRange2.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            headerRange2.Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
+            headerRange2.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+            headerRange2.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            headerRange2.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+            headerRange2.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+            // Establecer el valor del encabezado en la celda A1
+            worksheet.Cells["A3"].Value = lbAseCom.InnerText;
+
+            // Combinar celdas para el encabezado
+            ExcelRange headerRange3 = worksheet.Cells["A3:C3"];
+            headerRange3.Merge = true;
+
+            // Establecer el estilo del encabezado
+            headerRange3.Style.Font.Name = "Times New Roman";
+            headerRange3.Style.Font.Size = 16;
+            headerRange3.Style.Font.Bold = true;
+            headerRange3.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            headerRange3.Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
+            headerRange3.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+            headerRange3.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            headerRange3.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+            headerRange3.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+            // Establecer el valor del encabezado en la celda A1
+            worksheet.Cells["D3"].Value = "Intervalo de Fecha";
+
+            // Combinar celdas para el encabezado
+            ExcelRange headerRange4 = worksheet.Cells["D3:F3"];
+            headerRange4.Merge = true;
+
+            // Establecer el estilo del encabezado
+            headerRange4.Style.Font.Name = "Times New Roman";
+            headerRange4.Style.Font.Size = 16;
+            headerRange4.Style.Font.Bold = true;
+            headerRange4.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            headerRange4.Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
+            headerRange4.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+            headerRange4.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            headerRange4.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+            headerRange4.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+            // Establecer el valor del encabezado en la celda A1
+            worksheet.Cells["A4"].Value = "Estado:" + ((System.Web.UI.WebControls.DropDownList)FindControl("ddlEstadoCotizacion")).SelectedItem.Text;
+
+            // Combinar celdas para el encabezado
+            ExcelRange headerRange5 = worksheet.Cells["A4:C4"];
+            headerRange5.Merge = true;
+
+            // Establecer el estilo del encabezado
+            headerRange5.Style.Font.Name = "Times New Roman";
+            headerRange5.Style.Font.Size = 16;
+            headerRange5.Style.Font.Bold = true;
+            headerRange5.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            headerRange5.Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
+            headerRange5.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+            headerRange5.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            headerRange5.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+            headerRange5.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+            // Establecer el valor del encabezado en la celda A1
+            worksheet.Cells["D4"].Value = "Fecha Inicial: " + ((System.Web.UI.WebControls.TextBox)FindControl("TextCotizacionEntreInicio2")).Text +
+            " Fecha Final: " + ((System.Web.UI.WebControls.TextBox)FindControl("TextCotizacionEntreFinal2")).Text;
+
+            // Combinar celdas para el encabezado
+            ExcelRange headerRange6 = worksheet.Cells["D4:F4"];
+            headerRange6.Merge = true;
+
+            // Establecer el estilo del encabezado
+            headerRange6.Style.Font.Name = "Times New Roman";
+            headerRange6.Style.Font.Size = 10;
+            headerRange6.Style.Font.Bold = true;
+            headerRange6.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            // Establece el estilo de borde para el rango de datos
+            headerRange6.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+            headerRange6.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            headerRange6.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+            headerRange6.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+            // Comenzar a escribir la tabla a partir de la fila 6
+            int rowIndex = 7;
+
+            // Escribir el encabezado de la tabla
+            worksheet.Cells[rowIndex - 1, 1].Value = "Asesor Comercial";
+            worksheet.Cells[rowIndex - 1, 2].Value = "Cantidad";
+            worksheet.Cells[rowIndex - 1, 3].Value = "%";
+            worksheet.Cells[rowIndex - 1, 4].Value = "Valor";
+            worksheet.Cells[rowIndex - 1, 5].Value = "%";
+
+            // Establecer el estilo del encabezado
+            using (ExcelRange headerRange7 = worksheet.Cells["A6:E6"])
+            {
+                headerRange7.Style.Font.Bold = true;
+                headerRange7.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                headerRange7.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                headerRange7.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                headerRange7.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                headerRange7.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                headerRange7.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                headerRange7.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                headerRange7.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+            }
+
+            // Obtener los datos de la tabla desde los Label en el aspx.cs
+            string asesor = lbAseCom.InnerText;
+            string cantidad = Label2.InnerText;
+            string porcentaje1 = Label3.InnerText;
+            string valor = Label4.InnerText;
+            string porcentaje2 = Label5.InnerText;
+
+            string totalizados = Label6.InnerText;
+            string cantidad2 = Label2.InnerText;
+            string valor2 = Label4.InnerText;
+
+            // Escribir los datos de la tabla en la hoja de Excel
+            worksheet.Cells[rowIndex, 1].Value = asesor;
+            worksheet.Cells[rowIndex, 2].Value = cantidad;
+            worksheet.Cells[rowIndex, 3].Value = porcentaje1;
+            worksheet.Cells[rowIndex, 4].Value = valor;
+            worksheet.Cells[rowIndex, 5].Value = porcentaje2;
+
+            using (ExcelRange headerRange9 = worksheet.Cells["A7:E7"])
+            {      
+                headerRange9.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                headerRange9.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                headerRange9.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                headerRange9.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                headerRange9.Style.Font.Name = "Times New Roman";
+            }
+
+            rowIndex++;
+
+            worksheet.Cells[rowIndex, 1].Value = totalizados;
+            worksheet.Cells[rowIndex, 2].Value = cantidad2;
+            worksheet.Cells[rowIndex, 4].Value = valor2;
+
+            // Establecer el estilo del encabezado
+            using (ExcelRange headerRange8 = worksheet.Cells["A8:E8"])
+            {
+                headerRange8.Style.Font.Bold = true;
+                headerRange8.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                headerRange8.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                headerRange8.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                headerRange8.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                headerRange8.Style.Font.Name = "Times New Roman";
+            }
+
+
+            // Escribir el encabezado en el rango A11:H11
+            worksheet.Cells["A10"].Value = "Asesor Comercial";
+            worksheet.Cells["B10"].Value = "Cotizacion";
+            worksheet.Cells["C10"].Value = "Fecha C.";
+            worksheet.Cells["D10"].Value = "Valor Neto";
+            worksheet.Cells["E10"].Value = "Plano";
+            worksheet.Cells["F10"].Value = "Cliente"; 
+
+            // Establecer el estilo del encabezado
+            using (ExcelRange headerRange11 = worksheet.Cells["A10:F10"])
+            {
+                headerRange11.Style.Font.Bold = true;
+                headerRange11.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                headerRange11.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                headerRange11.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                headerRange11.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                headerRange11.Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
+            }
+
+
+            rowIndex = 11; // Comenzar desde la fila 12
+            foreach (DataGridItem item in DataGrid2.Items)
+            {
+                int colIndex = 1; // Comenzar desde la columna 1
+                foreach (TableCell cell in item.Cells)
+                {
+                    if (colIndex == 1 || colIndex == 2)
+                    {
+                        if (cell.Text != "&nbsp;")
+                        {
+                            worksheet.Cells[rowIndex, colIndex].Value = cell.Text;
+                        }
+                    }
+                    else if (colIndex == 11) 
+                    {
+                        if (cell.Text != "&nbsp;")
+                        {
+                            worksheet.Cells[rowIndex, 3].Value = cell.Text; 
+                        }
+                    }
+
+                    else if (colIndex == 4) 
+                    {
+                        if (cell.Text != "&nbsp;")
+                        {
+                            worksheet.Cells[rowIndex, 4].Value = cell.Text; 
+                        }
+                    }
+                    else if (colIndex == 10) 
+                    {
+                        if (cell.Text != "&nbsp;")
+                        {
+                            worksheet.Cells[rowIndex, 5].Value = cell.Text;
+                        }
+                    }
+                    else if (colIndex == 7)
+                    {
+                        if (cell.Text != "&nbsp;")
+                        {
+                            // Obtener el valor de la columna 8
+                            string valorColumna8 = item.Cells[8].Text;
+
+                            // Concatenar los valores de las columnas 8 y 6 con un guion "-" en medio
+                            string resultado = valorColumna8 + " - " + cell.Text;
+
+                            // Mostrar el resultado en la celda 6
+                            worksheet.Cells[rowIndex, 6].Value = resultado;
+                        }
+                    }
+
+
+
+                    colIndex++;
+                }
+                rowIndex++;
+            }
+
+            // Especifica el rango de datos para aplicar bordes
+            ExcelRange dataGridRange10 = worksheet.Cells[10, 1, rowIndex - 1, 6];
+
+            // Establece el estilo de borde para el rango de datos del DataGrid
+            dataGridRange10.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+            dataGridRange10.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            dataGridRange10.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+            dataGridRange10.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+
+            // Ajustar el ancho de las columnas
+            worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+            // Guardar el archivo de Excel en una ubicación temporal
+            string filePath = Path.GetTempFileName() + ".xlsx";
+            FileStream fileStream = new FileStream(filePath, FileMode.Create);
+            excelPackage.SaveAs(fileStream);
+            fileStream.Close();
+
+            // Descargar el archivo de Excel
+            Response.Clear();
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            Response.AddHeader("content-disposition", "attachment; filename=Datos.xlsx");
+            Response.TransmitFile(filePath);
+            Response.End();
+        }
+
+
+        //POR SEGUIMIENTO
+
+        protected void lnkSelectRow_Click(object sender, EventArgs e)
+        {
+            // Obtén el LinkButton que se hizo clic
+            LinkButton lnkSelectRow = (LinkButton)sender;
+
+            // Obtén el índice de fila desde el CommandArgument
+            int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
+
+            // Accede a la fila seleccionada en el DataGrid
+            DataGridItem selectedRow = DataGrid3.Items[rowIndex];
+
+            Session["SelectCotizacion"] = selectedRow.Cells[4].Text;
+
+            Session["FechaCot"] = selectedRow.Cells[5].Text;
+
+            // Deselecciona todas las filas previamente seleccionadas
+            foreach (DataGridItem item in DataGrid3.Items)
+            {
+                if (item != selectedRow)
+                {
+                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                }
+            }
+
+            // Aplica la clase CSS a la fila seleccionada
+            selectedRow.CssClass = "selected-row";
+
+            BtnGraSeg.Enabled = true;
+            BtnGraSeg.CssClass = "button-enabled btn-outline-dark btn btn-light text-center";
+
+            BtnExcelCot.Enabled = true;
+            BtnExcelCot.CssClass = "btn shadow btn-light linkButtonClicked2 button-enabled grande";
+
+            BtnPDFCot.Enabled = true;
+            BtnPDFCot.CssClass = "btn shadow btn-light linkButtonClicked2 button-enabled grande";
+
+            ConsultaBD();
+
+        }
+
+        protected void DescargarCotizacionExcel_Click(object sender, EventArgs e)
+        {
+            // Verificar si la variable de sesión SelectCotizacion está presente y tiene un valor asignado
+            if (Session["SelectCotizacion"] != null && Session["ZonaLogeada"] != null && Session["FechaCot"] != null)
+            {
+                string nombreArchivo = Session["SelectCotizacion"].ToString(); // Obtener el nombre del archivo de la variable de sesión
+                string zonaLogeada = Session["ZonaLogeada"].ToString(); // Obtener la zona logeada de la variable de sesión
+                DateTime fechaCot = DateTime.Parse(Session["FechaCot"].ToString()); // Obtener la fecha de cotización de la variable de sesión
+
+                string year = fechaCot.ToString("yyyy");
+
+                // Mapear los números de mes a sus respectivos nombres abreviados
+                            Dictionary<int, string> mesesAbreviados = new Dictionary<int, string>
+                    {
+                        { 1, "Ene" },
+                        { 2, "Feb" },
+                        { 3, "Mar" },
+                        { 4, "Abr" },
+                        { 5, "May" },
+                        { 6, "Jun" },
+                        { 7, "Jul" },
+                        { 8, "Ago" },
+                        { 9, "Sep" },
+                        { 10, "Oct" },
+                        { 11, "Nov" },
+                        { 12, "Dic" }
+                    };
+
+                string mesAbreviado = mesesAbreviados[fechaCot.Month]; // Obtener el nombre abreviado del mes
+
+                // Construir la ruta completa al archivo
+                string rutaArchivo = @"\\172.16.30.6\Recepcion\Cotizaciones Excel\" + zonaLogeada + @"\" + year + @"\" + mesAbreviado + @"\" + nombreArchivo + ".xls";
+
+
+                if (File.Exists(rutaArchivo))
+                {
+                    // Establecer las cabeceras para la descarga del archivo
+                    Response.Clear();
+                    Response.ContentType = "application/octet-stream";
+                    Response.AppendHeader("Content-Disposition", "attachment; filename=" + Path.GetFileName(rutaArchivo));
+                    Response.AppendHeader("X-Content-Type-Options", "nosniff");
+                    Response.AppendHeader("X-Frame-Options", "SAMEORIGIN");
+                    Response.AppendHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+
+                    // Escribir el archivo al flujo de respuesta
+                    Response.WriteFile(rutaArchivo);
+
+                    // Enviar todos los encabezados al cliente antes de finalizar la respuesta
+                    Response.Flush();
+                    // Finalizar la respuesta
+                    Response.End();
+                }
+                else
+                {
+                    string mensajePersonalizado = "El archivo seleccionado no existe";
+                    string urlRedireccion = "Ventas/Consulta_Cotizacion.aspx"; // Cambia esto por la URL correcta
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                }
+            }
+            else
+            {
+                // Si la variable de sesión SelectCotizacion, ZonaLogeada o FechaCot no están presentes o no tienen un valor asignado, redireccionar o manejar según sea necesario
+                string mensajePersonalizado = "No se selecciono la cotizacion";
+                string urlRedireccion = "Ventas/Consulta_Cotizacion.aspx"; // Cambia esto por la URL correcta
+                Response.Redirect($"~/Formularios/ErrorMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            }
+        }
+        protected void DescargarPDF_Click(object sender, EventArgs e)
+        {
+            // Verificar si la variable de sesión SelectCotizacion está presente y tiene un valor asignado
+            if (Session["SelectCotizacion"] != null && Session["ZonaLogeada"] != null && Session["FechaCot"] != null)
+            {
+                string nombreArchivo = Session["SelectCotizacion"].ToString(); // Obtener el nombre del archivo de la variable de sesión
+                string zonaLogeada = Session["ZonaLogeada"].ToString(); // Obtener la zona logeada de la variable de sesión
+                DateTime fechaCot = DateTime.Parse(Session["FechaCot"].ToString()); // Obtener la fecha de cotización de la variable de sesión
+
+                string year = fechaCot.ToString("yyyy");
+
+                // Mapear los números de mes a sus respectivos nombres abreviados
+                Dictionary<int, string> mesesAbreviados = new Dictionary<int, string>
+                    {
+                        { 1, "Ene" },
+                        { 2, "Feb" },
+                        { 3, "Mar" },
+                        { 4, "Abr" },
+                        { 5, "May" },
+                        { 6, "Jun" },
+                        { 7, "Jul" },
+                        { 8, "Ago" },
+                        { 9, "Sep" },
+                        { 10, "Oct" },
+                        { 11, "Nov" },
+                        { 12, "Dic" }
+                    };
+
+                string mesAbreviado = mesesAbreviados[fechaCot.Month]; // Obtener el nombre abreviado del mes
+
+                // Construir la ruta completa al archivo
+                string rutaArchivo = @"\\172.16.30.6\Recepcion\Arcexcel\" + zonaLogeada + @"\" + year + @"\" + mesAbreviado + @"\" + nombreArchivo + ".pdf";
+
+
+                if (File.Exists(rutaArchivo))
+                {
+                    // Establecer las cabeceras para la descarga del archivo
+                    Response.Clear();
+                    Response.ContentType = "application/octet-stream";
+                    Response.AppendHeader("Content-Disposition", "attachment; filename=" + Path.GetFileName(rutaArchivo));
+                    Response.AppendHeader("X-Content-Type-Options", "nosniff");
+                    Response.AppendHeader("X-Frame-Options", "SAMEORIGIN");
+                    Response.AppendHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+
+                    // Escribir el archivo al flujo de respuesta
+                    Response.WriteFile(rutaArchivo);
+
+                    // Enviar todos los encabezados al cliente antes de finalizar la respuesta
+                    Response.Flush();
+                    // Finalizar la respuesta
+                    Response.End();
+                }
+                else
+                {
+                    string mensajePersonalizado = "El archivo seleccionado no existe";
+                    string urlRedireccion = "Ventas/DocumentacionDise.aspx"; // Cambia esto por la URL correcta
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                }
+            }
+            else
+            {
+                // Si la variable de sesión SelectCotizacion, ZonaLogeada o FechaCot no están presentes o no tienen un valor asignado, redireccionar o manejar según sea necesario
+                string mensajePersonalizado = "La variable de sesión SelectCotizacion, ZonaLogeada o FechaCot no están disponibles";
+                string urlRedireccion = "Ventas/DocumentacionDise.aspx"; // Cambia esto por la URL correcta
+                Response.Redirect($"~/Formularios/ErrorMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            }
+        }
+
 
         //BOTONES ULTIMO CONTACTO
 
@@ -392,18 +1054,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void btnExportarUlCont_Click(object sender, EventArgs e)
         {
-            // Crear una nueva instancia de Excel
-            var excelApp = new Application();
-
-            // Crear un nuevo libro y hoja de Excel
-            var workbook = excelApp.Workbooks.Add();
-            var worksheet = (Worksheet)workbook.ActiveSheet;
-
-            // Puedes agregar datos en la hoja aquí si lo deseas
-            // Ejemplo: worksheet.Cells[1, 1] = "Ejemplo";
-
-            // Mostrar la aplicación de Excel
-            excelApp.Visible = true;
+           
         }
 
         protected void btnUCCMUlCont_Click(object sender, EventArgs e)
@@ -446,298 +1097,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-        protected void LinkButton_Click(object sender, EventArgs e)
-        {
-            // Creamos un nuevo libro de Excel
-            ExcelPackage excelPackage = new ExcelPackage();
-
-            // Agregamos una nueva hoja al libro
-            ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Estadistica Por Vendedor");
-
-            // Encabezado
-            // Combinar celdas del rango "A1:L1"
-            // Combinar celdas para el encabezado
-            worksheet.Cells["A1:H1"].Merge = true;
-
-            // Establecer el texto con un salto de línea
-            var richText = worksheet.Cells["A1"].RichText.Add("Ducon LTDA \nEstadisticas Cotizaciones");
-            worksheet.Cells["A1:H1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            // Establecer el estilo del texto
-            richText.Bold = true;
-            richText.Size = 22;
-            richText.FontName = "Times New Roman";
-
-            // Ajustar la altura de la fila para mostrar el título completo
-            worksheet.Row(1).Height = 70; // Ajusta la altura según sea necesario
-
-            // Establecer el borde alrededor del rango combinado
-            var border = worksheet.Cells["A1:H1"].Style.Border;
-
-            // Establecer un borde más grueso
-            border.BorderAround(ExcelBorderStyle.Thick);
-
-            // Establecer el color del borde en negro
-            border.Top.Style = border.Bottom.Style = border.Left.Style = border.Right.Style = ExcelBorderStyle.Thick;
-            border.Top.Color.SetColor(Color.Black);
-            border.Bottom.Color.SetColor(Color.Black);
-            border.Left.Color.SetColor(Color.Black);
-            border.Right.Color.SetColor(Color.Black);
-
-
-
-
-            // Datos de los TextBox
-            worksheet.Cells["A2"].Value = "Asesor Comercial:";
-            worksheet.Cells["B2"].Value = TextAsesor.Text;
-            worksheet.Cells["G2"].Value = "Fecha de inicio:" + TextBoxStartDate.Text;
-            worksheet.Cells["G3"].Value = "Fecha de fin:" + TextBoxEndDate.Text;
-
-            // Establecer el estilo de fuente para el contenido, excluyendo el encabezado
-            using (var range = worksheet.Cells["A2:H3"])
-            {
-                range.Style.Font.Name = "Aptos Narrow";
-                range.Style.Font.Bold = true;
-                range.Style.Font.Size = 16;
-            }
-
-
-            // Agregar encabezados de tabla
-            int rowIndex = 5;
-            foreach (DataGridColumn column in DataGrid1.Columns)
-            {
-                if (column.HeaderText != "&nbsp;" && (column.HeaderText == "Estado" || column.HeaderText == "Cant" || column.HeaderText == "%" || column.HeaderText == "Total Valor Neto" || column.HeaderText == "%"))
-                {
-                    worksheet.Cells[rowIndex, 5].Value = column.HeaderText;
-                    worksheet.Cells[rowIndex, 5].Style.Font.Bold = true;
-                    worksheet.Cells[rowIndex, 5].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    worksheet.Cells[rowIndex, 5].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
-                }
-            }
-
-            // Obtener datos adicionales de las etiquetas HTML
-            string estudio = lbEstudio.InnerText;
-            string cantEstudio = lbCantEstudio.InnerText;
-            string porEstudio = lbPorEst.InnerText;
-            string totEstudio = lbTotEst.InnerText;
-            string porTotEstudio = lbPorEstTot.InnerText;
-
-            string aprobada = lbAprobada.InnerText;
-            string cantAprobada = lbCantApr.InnerText;
-            string porAprobada = lbPorApr.InnerText;
-            string totAprobada = lbTotApr.InnerText;
-            string porTotAprobada = lbTotPor.InnerText;
-
-            string totales = lbTotales.InnerText;
-            string cantidadFilas = lbCantidad.InnerText;
-            string totalNetoEstudio = lbTotEst.InnerText;
-            string totalNetoAprobada = lbTotApr.InnerText;
-            string totalNeto = Label10.InnerText;
-            string porcentajeTotal = lbPorTotal.InnerText;
-
-            // Escribir datos adicionales en el archivo Excel
-            worksheet.Cells[5, 2].Value = "Estado";
-            worksheet.Cells[5, 3].Value = "Cant";
-            worksheet.Cells[5, 4].Value = "%";
-            worksheet.Cells[5, 5].Value = "Total Valor Neto";
-            worksheet.Cells[5, 6].Value = "%";
-
-            
-
-            // Establecer el estilo del encabezado
-            using (ExcelRange headerRange = worksheet.Cells["B5:F5"])
-            {
-                headerRange.Style.Font.Bold = true;
-                headerRange.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                headerRange.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                headerRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                headerRange.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
-                headerRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
-            }
-
-            worksheet.Cells[6, 2].Value = estudio;
-            worksheet.Cells[6, 3].Value = cantEstudio;
-            worksheet.Cells[6, 4].Value = porEstudio;
-            worksheet.Cells[6, 5].Value = totEstudio;
-            worksheet.Cells[6, 6].Value = porTotEstudio;
-
-            worksheet.Cells[7, 2].Value = aprobada;
-            worksheet.Cells[7, 3].Value = cantAprobada;
-            worksheet.Cells[7, 4].Value = porAprobada;
-            worksheet.Cells[7, 5].Value = totAprobada;
-            worksheet.Cells[7, 6].Value = porTotAprobada;
-
-            worksheet.Cells[8, 2].Value = totales;
-            worksheet.Cells[8, 3].Value = cantidadFilas;
-            worksheet.Cells[8, 4].Value = porcentajeTotal;
-            worksheet.Cells[8, 5].Value = totalNeto;
-            worksheet.Cells[8, 6].Value = porcentajeTotal;
-
-
-            // Especifica el rango de datos para aplicar bordes
-            ExcelRange dataRange = worksheet.Cells[5, 2, 8, 6];
-
-            // Establece el estilo de borde para el rango de datos
-            dataRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
-            dataRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-            dataRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
-            dataRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
-
-            // Escribir datos del DataGrid en el archivo Excel
-
-            // Escribir el encabezado en el rango A11:H11
-            worksheet.Cells["A11"].Value = "Cotizacion";
-            worksheet.Cells["B11"].Value = "Estado";
-            worksheet.Cells["C11"].Value = "Plano";
-            worksheet.Cells["D11"].Value = "Valor";
-            worksheet.Cells["E11"].Value = "Dto(%)";
-            worksheet.Cells["F11"].Value = "Valor Neto";
-            worksheet.Cells["G11"].Value = "Cliente";
-            worksheet.Cells["H11"].Value = "F.Cot.";
-
-            // Establecer el estilo del encabezado
-            using (ExcelRange headerRange = worksheet.Cells["A11:H11"])
-            {
-                headerRange.Style.Font.Bold = true;
-                headerRange.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                headerRange.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                headerRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                headerRange.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
-                headerRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
-            }
-
-
-            rowIndex = 12; // Comenzar desde la fila 12
-            foreach (DataGridItem item in DataGrid1.Items)
-            {
-                int colIndex = 1; // Comenzar desde la columna 1
-                foreach (TableCell cell in item.Cells)
-                {
-                    if (colIndex == 1 || colIndex == 2 || colIndex == 4 || colIndex == 6 || colIndex == 5 || colIndex == 7)
-                    {
-                        if (cell.Text != "&nbsp;")
-                        {
-                            worksheet.Cells[rowIndex, colIndex].Value = cell.Text;
-                        }
-                    }
-                    else if (colIndex == 12) // Si es la columna 12, escribir en la columna C en lugar de 12
-                    {
-                        if (cell.Text != "&nbsp;")
-                        {
-                            worksheet.Cells[rowIndex, 3].Value = cell.Text; // Escribir en la columna C
-                        }
-                    }
-
-                    else if (colIndex == 10) // Si es la columna 12, escribir en la columna C en lugar de 12
-                    {
-                        if (cell.Text != "&nbsp;")
-                        {
-                            worksheet.Cells[rowIndex, 8].Value = cell.Text; // Escribir en la columna R
-                        }
-                    }
-                    colIndex++;
-                }
-                rowIndex++;
-            }
-
-            // Especifica el rango de datos para aplicar bordes
-            ExcelRange dataGridRange = worksheet.Cells[11, 1, rowIndex - 1, 8];
-
-            // Establece el estilo de borde para el rango de datos del DataGrid
-            dataGridRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
-            dataGridRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-            dataGridRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
-            dataGridRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
-
-
-            // Ajustar el ancho de las columnas
-            worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
-
-            // Guardar el archivo de Excel en una ubicación temporal
-            string filePath = Path.GetTempFileName() + ".xlsx";
-            FileStream fileStream = new FileStream(filePath, FileMode.Create);
-            excelPackage.SaveAs(fileStream);
-            fileStream.Close();
-
-            // Descargar el archivo de Excel
-            Response.Clear();
-            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            Response.AddHeader("content-disposition", "attachment; filename=Datos.xlsx");
-            Response.TransmitFile(filePath);
-            Response.End();
-        }
-
-
-
-
-        protected void EliminarDoc_Click(object sender, EventArgs e)
-        {
-            // Asumiendo que tienes una forma de obtener o generar el mismo nombre de archivo.
-            // Si nombreArchivo se genera en base a algún input del usuario o una variable,
-            // asegúrate de reconstruirlo de la misma manera aquí.
-            string nombreArchivo = GenerarNombreArchivo(); // Asume que esta función genera el nombre del archivo basado en la lógica que ya tienes.
-
-            string filePath = @"\\172.16.30.6\PruebaDocumentacion\COTIZACION\" + nombreArchivo;
-
-            // Verifica si el archivo existe antes de intentar eliminarlo.
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-                // Opcionalmente, puedes notificar al usuario que el archivo fue eliminado.
-                // Por ejemplo: lblMensaje.Text = "Archivo eliminado con éxito.";
-            }
-            else
-            {
-                // Opcionalmente, notifica al usuario que el archivo no se encontró.
-                // Por ejemplo: lblMensaje.Text = "El archivo no existe.";
-            }
-        }
-
-        
-        private string GenerarNombreArchivo()
-        {
-            // Aquí iría la lógica para generar el nombre del archivo, asegúrate de que
-            // sea la misma lógica utilizada en LinkButton_Click para garantizar que
-            // el nombre del archivo sea el correcto.
-            // Ejemplo simple basado en tu código actual:
-            string asesorComercial = TextAsesor.Text; // Asume que TextAsesor es accesible aquí.
-            string nombreArchivo = asesorComercial + "CotVen" + ".xls";
-            return nombreArchivo;
-        }
-
-
-        protected void lnkSelectRow_Click(object sender, EventArgs e)
-        {
-            // Obtén el LinkButton que se hizo clic
-            LinkButton lnkSelectRow = (LinkButton)sender;
-
-            // Obtén el índice de fila desde el CommandArgument
-            int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
-
-            // Accede a la fila seleccionada en el DataGrid
-            DataGridItem selectedRow = DataGrid3.Items[rowIndex];
-
-            Session["SelectCotizacion"] = selectedRow.Cells[4].Text;
-
-            // Deselecciona todas las filas previamente seleccionadas
-            foreach (DataGridItem item in DataGrid3.Items)
-            {
-                if (item != selectedRow)
-                {
-                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
-                }
-            }
-
-            // Aplica la clase CSS a la fila seleccionada
-            selectedRow.CssClass = "selected-row";
-
-            BtnGraSeg.Enabled = true;
-            BtnGraSeg.CssClass = "button-enabled btn-outline-dark btn btn-light text-center";
-
-
-
-            ConsultaBD();
-
-        }
 
         protected void ConsultaBD()
         {

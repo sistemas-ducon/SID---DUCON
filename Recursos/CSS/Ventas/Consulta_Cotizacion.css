@@ -29,3 +29,22 @@
     color: #888; /* Color de texto para botones deshabilitados */
     cursor: not-allowed; /* Cambia el cursor al estilo "no permitido" */
 }
+
+
+.grande {
+    font-size: 28px;
+}
+
+.linkButtonClicked {
+    border-top: 2px solid #ccc; /* Borde en la parte superior */
+    border-left: 2px solid #ccc; /* Borde en el lado izquierdo */
+    border-bottom: none; /* Elimina el borde inferior */
+    border-right: none; /* Elimina el borde derecho */
+}
+
+.linkButtonClicked2 {
+    border-top: none; /* Borde en la parte superior */
+    border-left: none; /* Borde en el lado izquierdo */
+    border-bottom: 2px solid #ccc; /* Elimina el borde inferior */
+    border-right: 2px solid #ccc; /* Elimina el borde derecho */
+}

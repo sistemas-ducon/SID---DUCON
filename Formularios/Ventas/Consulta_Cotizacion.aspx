@@ -16,27 +16,7 @@
     <link href="../../Recursos/CSS/Ventas/Consulta_Cotizacion.css" rel="stylesheet" />
     <title>Consultas de Cotizaciones</title>
 
-      <script type="text/javascript">
-        function CargarExcel() {
-            // Muestra el modal de carga Excel
-            $('#loadingModalExcel').modal('show');
-
-            document.getElementById('<%= Eliminar.ClientID %>').disabled = true;
-        
-        // Habilita el botón después de 10 segundos, asumiendo que la descarga ha terminado
-        setTimeout(function() {
-            document.getElementById('<%= Eliminar.ClientID %>').disabled = false;
-        }, 10000); // Ajusta el tiempo según sea necesario
-
-        }
-        // Función para ocultar el modal Excel
-        function CerrarCargarExcel() {
-            $('#loadingModalExcel').modal('hide');
-          }
-
-
-
-      </script>
+  
 
    
 
@@ -311,7 +291,7 @@
                                                 <asp:BoundColumn DataField="Valor" HeaderText="Valor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="Descuento" HeaderText="Dto(%)" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="ValorNeto" HeaderText="Valor Neto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                <asp:BoundColumn DataField="Cliente" HeaderText="Cliente" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                <asp:BoundColumn DataField="NombreCompañía" HeaderText="Cliente" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="" HeaderText="Contacto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="Obra" HeaderText="Obra" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="Plano" HeaderText="Plano" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
@@ -394,7 +374,7 @@
                                     </div>
 
                                     <div class="d-flex justify-content-end align-items-center mt-3">
-                                      <asp:ImageButton ID="ImgBtnExportarExcel" CssClass="btn-outline-light btn btn-white btn-sm" runat="server"
+                                      <asp:ImageButton ID="ImgBtnExportarExcel" CssClass="btn-outline-light btn btn-white btn-sm" runat="server" OnClick="BtnExportarExcelPorEstado_Click"
                                           ImageUrl="https://i.ibb.co/86fR8JK/icons8-microsoft-excel-2019-48.png" AlternateText="Excel Icon" />
                                     </div>
 
@@ -404,6 +384,9 @@
                         </div>
 
                     </ContentTemplate>
+                      <Triggers>
+                        <asp:PostBackTrigger ControlID="ImgBtnExportarExcel" />
+                    </Triggers>
                 </asp:UpdatePanel>
 
             </div>
@@ -414,7 +397,7 @@
 
                 <asp:UpdatePanel runat="server" ID="UpdatePanelSeguimiento" UpdateMode="Conditional">
                     <ContentTemplate>
-                        <div class="container">
+                        <div class="container-fluid">
                         <h6>Criterios para la estadistica</h6>
 
                         <div class="row">
@@ -445,7 +428,7 @@
 
                         </div>
                             </div>
-                        <div class="container mt-2">
+                        <div class="container-fluid mt-2">
                             <div class="row justify-content-center">
                                 <div class="border rounded p-1">
                                     <div class="row">
@@ -550,6 +533,20 @@
                                             <asp:Button CssClass="btn-outline-dark  btn btn-light" runat="server" Text="Cambiar Estado" Enabled="false"/>
                                         </div>
                                     </div>
+
+                                 <div class="row d-flex mt-3 p-3 container">
+                                        <div class="col-6">
+                                               <asp:LinkButton runat="server" ID="BtnExcelCot" CssClass="btn shadow btn-light linkButtonClicked2 grande" OnClick="DescargarCotizacionExcel_Click">
+                                               <i class="bi bi-file-earmark-excel-fill" style="color: #289717;"></i>
+                                                </asp:LinkButton>
+                                        </div>
+                                        <div class="col-6">
+                                            <asp:LinkButton runat="server" ID="BtnPDFCot" CssClass="btn shadow btn-light linkButtonClicked2 grande" OnClick="DescargarPDF_Click">
+                                                <i class="bi bi-file-earmark-pdf-fill" style="color: #a82f2f;"></i>
+                                                </asp:LinkButton>
+                                        </div>
+                                    </div>
+          
                                
                             </div>
                         </div>
@@ -570,18 +567,17 @@
                                 <asp:Button id="BtnGraSeg" CssClass="btn-outline-dark btn btn-light text-center" runat="server" Text="Grabar Seguimiento" OnClick="btnGraSeg_Click" Enabled="false"/>
                             </div>
 
-                            <div class="col-lg-1 col-md-6 col-sm-6 col-xs-12 mt-3">
-                                <asp:Label CssClass="col-form-label-sm" runat="server">Cotizacion Ex</asp:Label>
-                            </div>
-                             <div class="col-lg-1 col-md-6 col-sm-6 col-xs-12 mt-3">
-                                <asp:Label CssClass="col-form-label-sm" runat="server">Cotizacion PDF</asp:Label>
-                            </div>
+                           
                             </div>
                             </div>
 
 
 
                     </ContentTemplate>
+                    <Triggers>
+                         <asp:PostBackTrigger ControlID="BtnExcelCot" />    
+                        <asp:PostBackTrigger ControlID="BtnPDFCot" />   
+                    </Triggers>
                 </asp:UpdatePanel>
 
             </div>
@@ -710,7 +706,7 @@
                                             </asp:DataGrid>
                                             <asp:SqlDataSource runat="server" ID="DataGridUltimoContacto" ConnectionString="<%$
                                    ConnectionStrings:BD_SIDSQL %>"
-                                                SelectCommand="SELECT 
+                                               SelectCommand="SELECT  TOP 300
     tblUltiContCome.uccNit,
     tblUltiContCome.uccRazonSocial AS Nombre,
     tblUltiContCome.uccAsesor,
@@ -726,8 +722,7 @@ FROM
     tblUltiContCome 
 WHERE 
     tblUltiContCome.uccFecha < CONVERT(date, @uccFecha)
-ORDER BY 
-    tblUltiContCome.uccAsesor, tblUltiContCome.uccFecha">
+	ORDER BY tblUltiContCome.uccFecha DESC">
                                                 <SelectParameters>
                                                     <asp:ControlParameter ControlID="TextUltContComer" PropertyName="Text" Name="uccFecha" Type="DateTime"></asp:ControlParameter>
                                                 </SelectParameters>
@@ -746,26 +741,7 @@ ORDER BY
 
         </div>
 
-        <div class="modal fade" id="loadingModalExcel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header bg-dark">
-                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Descargar Excel</h5>
-                    </div>
-                    <div class="modal-body text-center">
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Cargando...</span>
-                        </div>
-                        <p class="mt-2">Cargando Excel...</p>
-                    </div>
-                    <div class="modal-footer">
-                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                            <asp:Button runat="server" ID="Eliminar" Text="Descarga Completada" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-outline-success" OnClick="EliminarDoc_Click" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      
 
     </form>
 

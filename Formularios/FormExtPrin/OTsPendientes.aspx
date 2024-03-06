@@ -217,6 +217,9 @@
                     </div>
                     <asp:Label ID="NoResultsLabel" runat="server" Visible="false" CssClass="text-danger">No se encontraron resultados.</asp:Label>
                 </ContentTemplate>
+                <Triggers>
+                    <asp:PostBackTrigger ControlID="Button3" />
+                </Triggers>
             </asp:UpdatePanel>
         </div>
     </form>

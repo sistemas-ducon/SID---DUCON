@@ -175,7 +175,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         }
 
                     }
-                  
+                    // Verificar si la variable de sesión 'MostrarModal' tiene contenido y es true
+                    if (Session["ModalMostrado"] != null && (bool)Session["ModalMostrado"] == true)
+                    {
+                        NuevaOTDespuesDeCargarNIT();
+                        Session.Remove("ModalMostrado");
+                    }
+                    else
+                    {
+                        // Si 'MostrarModal' es false o null, establecer 'ModalMostrado' en null
+                        Session["ModalMostrado"] = null;
+                    }
 
                     CargarVariablesDeSesionContable();
 
@@ -190,8 +200,63 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-         
 
+        protected void BotonesModificar()
+        {
+            NuevaOt.Enabled = false;
+            NuevaOt.CssClass = "btn btn-sm shadow button-disabled";
+
+            CopiarOt.Enabled = false;
+            CopiarOt.CssClass = "btn btn-sm shadow button-disabled";
+
+            GrabarOt.Enabled = true;
+            GrabarOt.CssClass = "btn btn-sm shadow button-enabled";
+
+            ModificarOt.Enabled = false;
+            ModificarOt.CssClass = "btn btn-sm shadow button-disabled";
+
+            AnularPedido.Enabled = false;
+            AnularPedido.CssClass = "btn btn-sm shadow button-disabled";
+
+            DocumentacionOt.Enabled = false;
+            DocumentacionOt.CssClass = "btn btn-sm shadow button-disabled";
+
+            ObservacionesOt.Enabled = false;
+            ObservacionesOt.CssClass = "btn btn-sm shadow button-disabled";
+
+            imprimirOt.Enabled = false;
+            imprimirOt.CssClass = "btn btn-sm shadow button-disabled";
+
+            OtPendientes.Enabled = false;
+            OtPendientes.CssClass = "btn btn-sm shadow button-disabled";
+
+            ExportarPedido.Enabled = false;
+            ExportarPedido.CssClass = "btn btn-sm shadow button-disabled";
+
+            ObraReactivada.Enabled = true;
+            ObraReactivada.CssClass = "btn btn-sm shadow button-enabled";
+
+            Cancelar.Enabled = true;
+            Cancelar.CssClass = "btn btn-sm shadow button-enabled";
+
+            btnNuevoPedido.Enabled = false;
+            btnNuevoPedido.CssClass = "btn btn-sm shadow button-disabled";
+
+            btnAcabados.Enabled = false;
+            btnAcabados.CssClass = "btn btn-sm shadow button-disabled";
+
+
+
+            HabilitarTodosLosTextBoxes();
+
+            tbPedDepen.Enabled = false;
+
+            ddlFabrica1.Enabled = false;
+
+            Nit.Enabled = true;
+
+            cbxComisionCompart.Enabled = true;
+        }
 
         protected void dtacboTipoPedido_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -476,10 +541,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void NuevaOT_Click(object sender, EventArgs e)
         {
-             // Mostrar el modal solo si no se ha mostrado antes
+            if (Session["ModalMostrado"] == null)
+            {
+                // Mostrar el modal solo si no se ha mostrado antes
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#LlenarNIT').modal('show');", true);
+            }
 
-           
 
         }
 
@@ -541,44 +608,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 LabelOTCerrada.Visible = false;
 
-                List<string> elementIds = new List<string>
-{
-                "LabelOTCerrada", "LiteralFechaCierre",
-                "dtacboTipoPedido", "DtaCboTipoAprobacion", "tbObra", "tbDir",
-                "tbContac", "tbEmail", "tbRecibe", "ddlCiudad", "tbTel", "tbCel", "tbPais",
-                "txObs1", "txObs2", "tbVenta", "dtpFechaEntregaDibujoDespiece",
-                "dtpFechaEntregaProduccion", "dtpEmpaque", "dtpRealEmpaque", "tbSupervisor",
-                "ddlFabrica1", "ddlInstala", "ObservacionCont", "txtCotizacion", "txtOrdenCompra",
-                "txtAsesor", "TextTNegociacion", "tbBolsa", "ddlAsesor", "txtDcto", "txtVtte",
-                "txtVvia", "txtVenta", "tbValorPedido","txtNit","txtNombreEmp","txtcontacto",
-                "txtMail","txtDireccion","txtMunicipio","txtTelefono","txtValorSugerido","txtVcsd",
-                "txtVccd","txtDiseño","txtComision","txtSaldo","txtVenta","txtDcto","txtDctoValor",
-                "txtVtte","txtVvia","txtGtotal"
-                };
+            
 
-                foreach (string elementId in elementIds)
-                {
-                    var element = Page.FindControl(elementId);
-
-                    if (element is TextBox)
-                    {
-                        TextBox textBox = (TextBox)element;
-                        textBox.Text = string.Empty; // Limpia el contenido del TextBox
-                    }
-                    else if (element is DropDownList)
-                    {
-                        DropDownList dropDownList = (DropDownList)element;
-                        dropDownList.ClearSelection(); // Limpia la selección del DropDownList
-                    }
-                    else if (element is Label)
-                    {
-                        Label label = (Label)element;
-                        label.Text = string.Empty; // Limpia el texto del Label
-                    }
-
-                }
-
-                LimpiarTextAreayDropDownList();
+             
 
                 HabilitarTodosLosTextBoxes();
 
@@ -2306,8 +2338,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             btnNuevoPedido.Enabled = false;
             btnNuevoPedido.CssClass = "btn btn-sm shadow button-disabled";
 
-            Nit.Enabled = true;
-            Nit.CssClass = "btn btn-sm shadow button-enabled";
+            Nit.Enabled = false;
+            Nit.CssClass = "btn btn-sm shadow button-disabled";
 
             tbPedDepen.Enabled = false;
 
@@ -2450,6 +2482,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void NuevoPedido_Click(object sender, EventArgs e)
         {
             ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#NuevoPedido').modal('show');", true);
+
+
 
             Session["NuevoPedido"] = true;
 
@@ -3266,7 +3300,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BtnNoModificar_Click(object sender, EventArgs e)
         {
+            Session["Id_OT2"] = tbOT.Text;
+            Session["Pedido2"] = ddlNumbers.Text;
 
+            string mensajePersonalizado = "Se cargara nuevamente la OT";
+            string urlRedireccion = "OrdenTrabajo.aspx";
+            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
         }
         protected void ValidarMesesDesdeUltimaVenta()
         {
@@ -3938,7 +3977,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                     else
                     {
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
+                        string mensajePersonalizado = "Se modifico exitosamente la Orden de trabajo";
+                        string urlRedireccion = "OrdenTrabajo.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                     }
 
                     reader.Close();
@@ -4015,7 +4056,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         }
                         else
                         {
-
+                            string mensajePersonalizado = "No Se modifico exitosamente la Orden de trabajo";
+                            string urlRedireccion = "OrdenTrabajo.aspx";
+                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                         }
                     }
                 }
@@ -4077,7 +4120,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             ddlFabrica1.Enabled = false;
 
-            Nit.Enabled = true;
+            Nit.Enabled = false;
 
             cbxComisionCompart.Enabled = true;
         }
