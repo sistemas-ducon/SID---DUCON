@@ -12,7 +12,7 @@
     <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
     <title>Documentos Solicitud Especial</title>
 </head>
-<body>
+<body translate="no">
     <form id="form1" runat="server">
 
         <div class="container">

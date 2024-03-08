@@ -7,7 +7,7 @@
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Clientes</title>
-     <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
+    <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -34,21 +34,34 @@
 
             var asesorAsignar = '<%= Session["AsesorDiseño"] %>';
             var NombreAsesor = '<%= Session["AsesorDiseñoNombre"] %>';
+            var cedulalogueada = '<%= Session["CedulaLogeada"] %>';
 
-            if (tbCedulaAsesorValue !== asesorAsignar) {
-                var confirmacion = confirm("Este cliente pertenece a otro Asesor. ¿Desea asignarlo al asesor " + NombreAsesor + "?");
+            if (tbCedulaAsesorValue !== "") {
 
-                if (!confirmacion) {
-                    // Aquí puedes realizar acciones adicionales si el usuario no confirma
-                    return false; // Detiene el envío del formulario
+                if (cedulalogueada !== tbCedulaAsesorValue)
+                {
+                    alert("No tienes permisos para modificar este  cliente");
+                    return false;
                 }
+                else
+                {
+                    if (tbCedulaAsesorValue !== asesorAsignar) {
+                        var confirmacion = confirm("Este cliente pertenece a otro Asesor. ¿Desea asignarlo al asesor " + NombreAsesor + "?");
+
+                        if (!confirmacion) {
+                            // Aquí puedes realizar acciones adicionales si el usuario no confirma
+                            return false; // Detiene el envío del formulario
+                        }
+                    }
+                }
+
             }
             return true; // Permite el envío del formulario si no se cumple la condición
         }
     </script>
 
 </head>
-<body>
+<body translate="no">
 
     <nav class="navbar navbar-light bg-light">
         <div class="container d-flex justify-content-center ">
@@ -206,7 +219,7 @@
                                 <div class="col-5">
                                     <div class="input-group input-group-sm  mb-2 gap-2 text-end ">
                                         <asp:CheckBox ID="CheckBox1" CssClass="form-check " runat="server" Enabled="false" OnCheckedChanged="CheckBox1_CheckedChanged" AutoPostBack="true"/>
-                                      
+
 
                                         <asp:Label ID="chxCompartir" class="form-label" Text="Compartir:" runat="server"></asp:Label>
                                     </div>
@@ -769,7 +782,7 @@
         }
     </script>
 
-    
+
 
 
 

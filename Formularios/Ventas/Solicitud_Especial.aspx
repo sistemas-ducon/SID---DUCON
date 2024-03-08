@@ -136,7 +136,7 @@
 
 
 </head>
-<body>
+<body translate="no">
 
     <form id="form1" runat="server" enctype="multipart/form-data">
         <asp:ScriptManager runat="server" />

@@ -15,7 +15,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Licitaciones</title>
 </head>
-<body>
+<body translate="no">
 
     <form id="form2" runat="server">
         <asp:ScriptManager runat="server" />

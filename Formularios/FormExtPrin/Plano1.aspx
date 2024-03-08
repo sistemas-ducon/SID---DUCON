@@ -46,7 +46,7 @@
 
 
 </head>
-<body>
+<body translate="no">
     <form id="form1" runat="server">
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
         <asp:UpdatePanel ID="panelPlano1" runat="server">

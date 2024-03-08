@@ -32,7 +32,7 @@
 </head>
 
 
-<body>
+<body translate="no">
     <form id="formRenderVenta" runat="server">
         <asp:ScriptManager runat="server" />
 

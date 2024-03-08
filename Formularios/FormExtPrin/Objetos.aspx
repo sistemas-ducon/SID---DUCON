@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <link type="text/css" href="../../Recursos/CSS/FormExtPrin/Objetos.css" rel="stylesheet" />
 </head>
-<body>
+<body translate="no">
     <form id="form1" runat="server">
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
 

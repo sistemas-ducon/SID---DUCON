@@ -434,13 +434,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             tbTelefono.Text = "";
             ddlprocedencia.SelectedIndex = 0;
             tbDireccion.Text = "";
+            tbCedulaAsesor.Text = "";
 
             //Habilitamos la edicion de los campos 
             tbNit.ReadOnly = false;
             tbNombreCliente.ReadOnly = false;
             tbTelefono.ReadOnly = false;
             tbDireccion.ReadOnly = false;
-
+          
             ddlprocedencia.Enabled = true;
 
 
@@ -600,9 +601,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
 
                         // Mensaje de éxito
-                        string mensajeExito = "El cliente " + tbNombreCliente.Text.Trim() + " ha sido agregado exitosamente.";
-                        string scriptExito = "alert('" + mensajeExito + "');";
-                        ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
+                        string mensajePersonalizado = "El cliente " + tbNombreCliente.Text.Trim() + " ha sido agregado  exitosamente.";
+                        string urlRedireccion = "Ventas/Clientes.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
 
                     }
                     catch (Exception ex)
@@ -705,10 +706,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                             connection.Close();
                         }
                     }
-                    // Mostrar mensaje de éxito
-                    string mensajeExito = "El cliente " + tbNombreCliente.Text.Trim() + " ha sido Moficado  exitosamente.";
-                    string scriptExito = "alert('" + mensajeExito + "');";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
+                    // Mostrar mensaje de éxito           
+
+                    string mensajePersonalizado = "El cliente " + tbNombreCliente.Text.Trim() + " ha sido Moficado  exitosamente.";
+                    string urlRedireccion = "Ventas/Clientes.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
 
 
 
@@ -783,9 +785,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             }
 
             // Mensaje de Exito 
-            string mensajeExito = "El cliente " + tbNombreCliente.Text + " ha sido eliminado exitosamente.";
-            string scriptExito = "alert('" + mensajeExito + "');";
-            ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
+            string mensajePersonalizado = "El cliente " + tbNombreCliente.Text.Trim() + " ha sido eliminado  exitosamente.";
+            string urlRedireccion = "Ventas/Clientes.aspx";
+            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
 
         }
 
