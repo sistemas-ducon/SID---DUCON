@@ -344,9 +344,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
             }
             else
             {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalPendiente').modal('show');", true);
+                string url = "Consultas/Reproceso.aspx";
+                string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
 
-                //ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewTab", "window.open('" + pageURL + "', '_blank');", true);
             }
         }
 
@@ -387,6 +388,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
                     break;
 
                 case "VisitaAsesores":
+                    Session["AsesorDiseño"] = Session["CedulaLogeada"].ToString();
                     pageURL = "Ventas/Visita_Asesores.aspx";
                     break;
 

@@ -158,8 +158,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             if (DoctOT.HasFile)
             {
-               // Obtener el tamaño máximo permitido en bytes(por ejemplo, 5 MB)
-                 int maxSizeBytes = 10 * 1024 * 1024; // 5 MB
+               // Obtener el tamaño máximo permitido en bytes(por ejemplo, 30 MB)
+                 int maxSizeBytes = 30 * 1024 * 1024; // 30 MB
 
                 // Verificar si el tamaño del archivo excede el límite permitido
                 if (DoctOT.PostedFile.ContentLength > maxSizeBytes)

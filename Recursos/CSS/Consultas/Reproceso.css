@@ -1,0 +1,53 @@
+﻿.fila-seleccionada {
+    background-color: black !important;
+    color: white !important;
+}
+
+.auto-width-column {
+    width: auto;
+    max-width: 200px; /* Puedes ajustar este valor según el ancho máximo deseado */
+    white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
+    overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
+    text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
+}
+
+/* Estilo para el encabezado del DataGrid */
+.datagrid-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f2f2f2; /* Ajusta el color de fondo del encabezado según tus preferencias */
+}
+
+
+
+/* Estilo para botones habilitados */
+.button-enabled {
+    background-color: #fff; /* Color de fondo para botones habilitados */
+    color: #212529; /* Color de texto para botones habilitados */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    border-bottom: 2px solid #ccc; /* Borde en la parte inferior */
+    border-right: 2px solid #ccc; /* Borde en el lado derecho */
+}
+
+/* Estilo para botones deshabilitados */
+.button-disabled {
+    background-color: #ededed; /* Color de fondo para botones deshabilitados */
+    color: #888; /* Color de texto para botones deshabilitados */
+    cursor: not-allowed; /* Cambia el cursor al estilo "no permitido" */
+    border-bottom: 2px solid #ccc; /* Borde en la parte inferior */
+    border-right: 2px solid #ccc; /* Borde en el lado derecho */
+    opacity: 0.5;
+}
+
+ .button-disabled:hover {
+     opacity: 0.3;
+     border: solid 1px #585858;
+     cursor: not-allowed;
+   }
+
+.button-enabled:hover {
+    opacity: 0.6;
+    border: solid 1px #585858;
+    
+}

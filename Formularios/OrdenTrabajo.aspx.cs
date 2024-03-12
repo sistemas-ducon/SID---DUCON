@@ -7137,7 +7137,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             using (SqlConnection connection = new SqlConnection(cn))
             {
-                SqlCommand command = new SqlCommand("cta_Plano_Paneles", connection);
+                SqlCommand command = new SqlCommand("sp_ObtenerDatosPanelPorPlano", connection);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.Add("@Plan", SqlDbType.VarChar, 30).Value = txtPlano.Text;
 

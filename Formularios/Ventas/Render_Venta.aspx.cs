@@ -873,6 +873,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             }
+            else
+            {
+               
+                // Se activo el Boton de guardar de alguina otra manera  y se debe mostrar la excepcion o la denegacion de pero
+            }
 
         }
 

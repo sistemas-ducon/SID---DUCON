@@ -150,7 +150,7 @@
     </script>
 </head>
 
-<body>
+<body translate="no">
     <form id="form1" runat="server">
         <asp:ScriptManager runat="server" />
 
