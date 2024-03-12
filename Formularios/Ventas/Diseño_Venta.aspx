@@ -17,7 +17,7 @@
     <link type="text/css" href="../../Recursos/CSS/Ventas/Diseño_Venta.css" rel="stylesheet" />
     <title>Diseño - Departamento de Ventas</title>
 </head>
-<body>
+<body translate="no">
    <form id="form1" runat="server" enctype="multipart/form-data">
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
        <asp:Literal ID="litModalScript" runat="server"></asp:Literal>
@@ -98,7 +98,7 @@
                                         </div>
                                         <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                                             <div class="input-group input-group-sm gap-2 p-2">
-                                                <asp:Button ID="But" runat="server" Text="Buscar" OnClick="But_Click" CssClass="btn btn-sm btn-outline-dark shadow-sm" />
+                                                <asp:Button ID="But" runat="server" Text="Buscar" OnClick="But_Click" CssClass="btn btn-outline-dark shadow-sm linkButtonClicked2" />
 
                                             </div>
                                         </div>
@@ -155,7 +155,7 @@
                                         </div>
 
                                     <div class="table-responsive table-responsive-sm mb-2 gap-2" style="max-height: 45rem; overflow-x: auto;">
-                                        <asp:DataGrid Class="table table-bordered table-hover table-sm" ID="DataGrid4" runat="server" OnItemDataBound="DataGridBusDis_ItemDataBound" OnItemCommand="DataGridBusDise_ItemCommand"
+                                        <asp:DataGrid Class="table table-bordered table-hover table-sm form-control-sm" ID="DataGrid4" runat="server" OnItemDataBound="DataGridBusDis_ItemDataBound" OnItemCommand="DataGridBusDise_ItemCommand"
                                             AutoGenerateColumns="false">
                                             <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                             <Columns>
@@ -183,41 +183,12 @@
                                                 <asp:BoundColumn DataField="TerminadoDibujo" HeaderText="Nueva" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="Pausado" HeaderText="Pausado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                 <asp:BoundColumn DataField="CotizaciónOK" HeaderText="CotizaciónOK" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
-                                                <asp:BoundColumn DataField="Cedula" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                               
                                             </Columns>
                                         </asp:DataGrid>
-                                        <asp:SqlDataSource runat="server" ID="SqlDataSourceFecha" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
-                                            SelectCommand="SELECT A.CotizaciónOK, A.ProgramadoVentas, A.PasarACotizar, A.TerminadoDibujo, A.Pausado, A.Numero_Diseño, A.Nombre_Diseño,  A.Asesor, A.Fecha_Ingreso, A.Fecha_Programada_Entrega, A.UltimaActivacion, A.Cliente, B.Cedula FROM tblDiseño A INNER JOIN tblAsesorComercial B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor WHERE A.Fecha_Ingreso BETWEEN @FechaInicio AND @FechaFin AND B.Cedula = @Cedula">
-                                            <SelectParameters>
-                                                <asp:ControlParameter Name="FechaInicio" ControlID="TextFechDeIng" PropertyName="Text" />
-                                                <asp:ControlParameter Name="FechaFin" ControlID="Texty" PropertyName="Text" />
-                                                <asp:SessionParameter Name="Cedula" SessionField="CedulaLogeada" Type="String" />
-                                            </SelectParameters>
-                                        </asp:SqlDataSource>
-
-                                        <asp:SqlDataSource runat="server" ID="SqlDataSourceNumeroDis" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
-                                            SelectCommand="SELECT A.CotizaciónOK, A.ProgramadoVentas, A.PasarACotizar, A.TerminadoDibujo, A.Pausado, A.Numero_Diseño, A.Nombre_Diseño,  A.Asesor, A.Fecha_Ingreso, A.Fecha_Programada_Entrega, A.UltimaActivacion, A.Cliente, B.Cedula FROM tblDiseño A INNER JOIN tblAsesorComercial B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor WHERE A.Numero_Diseño = @NumeroDis AND B.Cedula = @Cedula">
-                                            <SelectParameters>
-                                                <asp:ControlParameter Name="NumeroDis" ControlID="TextBox3" PropertyName="Text" />
-                                                <asp:SessionParameter Name="Cedula" SessionField="CedulaLogeada" Type="String" />
-                                            </SelectParameters>
-                                        </asp:SqlDataSource>
-
-                                        <asp:SqlDataSource runat="server" ID="SqlDataSourceNombreDiseño" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
-                                            SelectCommand="SELECT A.CotizaciónOK, A.ProgramadoVentas, A.PasarACotizar, A.TerminadoDibujo, A.Pausado, A.Numero_Diseño, A.Nombre_Diseño, A.Asesor, A.Fecha_Ingreso, A.Fecha_Programada_Entrega, A.UltimaActivacion, A.Cliente, B.Cedula FROM tblDiseño A INNER JOIN tblAsesorComercial B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor WHERE A.Nombre_Diseño LIKE '%' + @NombreDiseño + '%' AND B.Cedula = @Cedula">
-                                            <SelectParameters>
-                                                <asp:ControlParameter Name="NombreDiseño" ControlID="TextBox5" PropertyName="Text" />
-                                                <asp:SessionParameter Name="Cedula" SessionField="CedulaLogeada" Type="String" />
-                                            </SelectParameters>
-                                        </asp:SqlDataSource>
-
-                                        <asp:SqlDataSource runat="server" ID="SqlDataSourceCliente" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
-                                            SelectCommand="SELECT A.CotizaciónOK, A.ProgramadoVentas, A.PasarACotizar, A.TerminadoDibujo, A.Pausado, A.Numero_Diseño, A.Nombre_Diseño,  A.Asesor, A.Fecha_Ingreso, A.Fecha_Programada_Entrega, A.UltimaActivacion, A.Cliente, B.Cedula FROM tblDiseño A INNER JOIN tblAsesorComercial B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor WHERE A.Cliente LIKE '%' + @Cliente + '%' AND B.Cedula = @Cedula">
-                                            <SelectParameters>
-                                                <asp:ControlParameter Name="Cliente" ControlID="TextBox4" PropertyName="Text" />
-                                                <asp:SessionParameter Name="Cedula" SessionField="CedulaLogeada" Type="String" />
-                                            </SelectParameters>
-                                        </asp:SqlDataSource>
+                                      <asp:SqlDataSource ID="SqlDataSource3" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
+    SelectCommand="SELECT tblDiseño.*, tblDiseño.Fecha_Ingreso, tblDiseño.Nombre_Diseño FROM tblDiseño">
+</asp:SqlDataSource>
 
 
 
@@ -335,110 +306,7 @@
                                     </ul>
                                 </div>
                             </nav>
-                        </div>
-
-                        <%-- ADJUNTAR DOCUMENTACION--%>
-                  <%--      <div id="Documentacion" runat="server" style="display: none">
-                            <asp:UpdatePanel ID="updatePanel" runat="server" UpdateMode="Conditional">
-                                <ContentTemplate>
-                                    <div class="container">
-                                        <h6 class="text-center bg-light text-dark p-3 m-2">Documentación bitacora</h6>
-
-
-                                        <div class="row m-1">
-
-                                            <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
-                                            
-                                                    <div class="row justify-content-center">
-                                                        <div class="border rounded p-1 special-border col-md-12 col-12" style="height: auto; min-height: 300px;">
-
-                                                            <div class="table-responsive mb-2 gap-2">
-
-                                                                <asp:DataGrid CssClass="table table-bordered table-sm custom-grid table-hover custom-data-grid form-control-sm"
-                                                                    ID="DataGridDocumento" runat="server" AutoGenerateColumns="false"
-                                                                    DataSourceID="SqlDataSource3" DataKeyField="Id_OT">
-                                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
-                                                                    <Columns>
-                                                                        <asp:TemplateColumn>
-                                                                            <ItemTemplate>
-
-                                                                                <asp:LinkButton ID="lnkSelectRow" runat="server"
-                                                                                    CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>" OnClick="lnkSelectRow_Click" />
-                                                                            </ItemTemplate>
-                                                                        </asp:TemplateColumn>
-                                                                        <asp:BoundColumn DataField="Archivo" HeaderText="Archivo" ItemStyle-CssClass="auto-width-column" />
-                                                                        <asp:BoundColumn DataField="Observacion" HeaderText="Observacion" ItemStyle-CssClass="auto-width-column" />
-                                                                        <asp:BoundColumn DataField="Usuario" HeaderText="Usuario" ItemStyle-CssClass="auto-width-column" />
-                                                                        <asp:BoundColumn DataField="FechaRegistro" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column" />
-                                                                        <asp:BoundColumn DataField="Id_OT" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                                        <asp:TemplateColumn>
-                                                                            <ItemTemplate>
-                                                                                <asp:LinkButton ID="lnkViewFile" runat="server"
-                                                                                    CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-eye'></i>" OnClick="lnkViewFile_Click"/>
-                                                                            </ItemTemplate>
-                                                                        </asp:TemplateColumn>
-
-                                                                    </Columns>
-                                                                </asp:DataGrid>
-
-                                                                <asp:SqlDataSource ID="SqlDataSource3" runat="server"
-                                                                    ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
-                                                                    SelectCommand="SELECT TOP 0 Archivo, Observacion, Usuario, FechaRegistro, Id_OT FROM tblDocumentacion"></asp:SqlDataSource>
-
-                                                            </div>
-
-
-                                                        </div>
-                                                    </div>
-                                             
-                                            </div>
-                                        </div>
-                                            <div class="row mt-2">
-                                                <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
-                                                    <div class="input-group input-group-sm ">
-                                                        <asp:FileUpload ID="FileUpload1" runat="server" CssClass="form-control" />
-                                                        <asp:Button ID="GuardarButton" runat="server" Text="Guardar" OnClick="GuardarButton_Click"/>
-                                                        <asp:Button ID="BtnEliminar" runat="server" Text="Eliminar" OnClick="BtnEliminar_Click" />
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row mt-1">
-                                                <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
-                                                    <textarea id="TextArea1" runat="server" class="form-control"></textarea>
-                                                </div>                                              
-                                            </div>                                          
-                                            
-                                            <div class="modal fade" id="miModalDoc" tabindex="-1" role="dialog" aria-labelledby="miModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="miModalLabelDoc">Título del Modal</h5>
-
-
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <p>Desea Guardar el archivo?</p>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <asp:Button runat="server" type="button" data-dismiss="modal" Text="Si"></asp:Button>
-                                                            <asp:Button runat="server" type="button" data-dismiss="modal" Text="No"></asp:Button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    
-                                    
-                                </ContentTemplate>
-                                <Triggers>
-                                    <asp:PostBackTrigger ControlID="GuardarButton" />
-                                    <asp:PostBackTrigger ControlID="BtnEliminar" />
-                                    <asp:PostBackTrigger ControlID="DataGridDocumento" />
-                                </Triggers>
-                            </asp:UpdatePanel>
-                        </div>--%>
+                        </div>      
 
                         <div id="miDiv" runat="server" data-div="miDiv" style="display: block">
                             <%--  1/4--%>
@@ -457,7 +325,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4 col-3">
-                                                        <asp:Button runat="server" ID="BtnBus" type="button" OnClientClick="mostrarTab(); return false;" class="btn-outline-dark btn btn-white m-2 shadow btn-sm" Text="..." />
+                                                        <asp:Button runat="server" ID="BtnBus" type="button" OnClientClick="mostrarTab(); return false;" class="btn-outline-dark btn m-2 shadow-sm btn-sm linkButtonClicked2" Text="..." />
                                                     </div>
 
                                                     <div class="row">

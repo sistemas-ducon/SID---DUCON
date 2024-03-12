@@ -222,6 +222,7 @@
     <Content Include="Formularios\FormExtPrin\Plano1.aspx" />
     <Content Include="Formularios\OrdenTrabajo.aspx" />
     <Content Include="Formularios\PruebaExcel.aspx" />
+    <Content Include="Formularios\Recepcion\IngresarCotizacion.aspx" />
     <Content Include="Formularios\SuccessMessage.aspx" />
     <Content Include="Formularios\Ventas\AdjuntarDocumentos.aspx" />
     <Content Include="Formularios\Ventas\Clientes.aspx" />
@@ -263,6 +264,7 @@
     <Content Include="Recursos\CSS\Ventas\Diseño_Venta.css" />
     <Content Include="Recursos\CSS\Ventas\DocumentacionDise.css" />
     <Content Include="Recursos\CSS\Ventas\Gestion_Comercial.css" />
+    <Content Include="Recursos\CSS\Ventas\IngresarCotizacion.css" />
     <Content Include="Recursos\CSS\Ventas\Licitaciones.css" />
     <Content Include="Recursos\CSS\Ventas\Render_Venta.css" />
     <Content Include="Recursos\CSS\Ventas\SolicitudesEspeciales.css" />
@@ -369,6 +371,13 @@
     </Compile>
     <Compile Include="Formularios\PruebaExcel.aspx.designer.cs">
       <DependentUpon>PruebaExcel.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\Recepcion\IngresarCotizacion.aspx.cs">
+      <DependentUpon>IngresarCotizacion.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\Recepcion\IngresarCotizacion.aspx.designer.cs">
+      <DependentUpon>IngresarCotizacion.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\SuccessMessage.aspx.cs">
       <DependentUpon>SuccessMessage.aspx</DependentUpon>

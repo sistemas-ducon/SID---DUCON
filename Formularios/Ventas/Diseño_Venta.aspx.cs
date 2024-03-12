@@ -73,8 +73,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 LinkButton2.Enabled = false;
                 LinkButton2.CssClass = "btn btn-sm button-disabled";
 
-               
-              
+                
+
+                ChecUrgent.Enabled = false;
 
                 ApplyButtonStyles();      
                 DropDownList1.DataBind();
@@ -277,8 +278,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Obtener la fecha de activación desde el TextBox TextUltAc
             DateTime fechaActivacion = DateTime.Parse(TextUltAc.Text);
-       
-            DateTime fechaProgramadaEntrega = fechaActual.AddDays(5);
+
+            // Obtener la fecha programada de entrega y verificar si es fin de semana
+            DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual.AddDays(3));
             TextEntrega.Text = fechaProgramadaEntrega.ToString("yyyy-MM-ddTHH:mm");
 
             // Comparación y actualización de la fecha de SC
@@ -335,6 +337,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        private DateTime ObtenerProximaFechaHabil(DateTime fecha)
+        {
+            while (fecha.DayOfWeek == DayOfWeek.Saturday || fecha.DayOfWeek == DayOfWeek.Sunday)
+            {
+                fecha = fecha.AddDays(1); // Sumar un día hasta encontrar un día hábil
+            }
+            return fecha;
+        }
+
         protected void SiButton_Click(object sender, EventArgs e)
         {
             // Obtener la fecha y hora actual
@@ -346,10 +357,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             TextUltAc.Text = fechaHoraActual;
 
 
-            string fechaEntrega = now.ToString("yyyy-MM-ddTHH:mm");
+            DateTime fechaActual = DateTime.Now;
 
-            // Asignar la fecha y hora actual al TextBox
-            TextEntrega.Text = fechaEntrega;
+            // Obtener la fecha programada de entrega y verificar si es fin de semana
+            DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual.AddDays(3));
+            TextEntrega.Text = fechaProgramadaEntrega.ToString("yyyy-MM-ddTHH:mm");
 
 
             string fechaInDis = now.ToString("yyyy-MM-ddTHH:mm");
@@ -459,11 +471,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Asignar la fecha y hora actual al TextBox
             TextUltAc.Text = fechaHoraActual;
 
-          
-            string fechaEntrega = now.ToString("yyyy-MM-ddTHH:mm");
 
-            // Asignar la fecha y hora actual al TextBox
-            TextEntrega.Text = fechaEntrega;
+            // Obtener la fecha programada de entrega y verificar si es fin de semana
+            DateTime fechaActual = DateTime.Now;
+            DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual.AddDays(3));
+            TextEntrega.Text = fechaProgramadaEntrega.ToString("yyyy-MM-ddTHH:mm");
 
 
             string fechaInDis = now.ToString("yyyy-MM-ddTHH:mm");
@@ -636,11 +648,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             DateTime fechaActual = DateTime.Now;
 
-            // Agregar 5 días a la fecha actual
-            DateTime fechaEntrega = fechaActual.AddDays(5);
+            // Obtener la fecha programada de entrega y verificar si es fin de semana
+            DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual.AddDays(3));
+            TextEntrega.Text = fechaProgramadaEntrega.ToString("yyyy-MM-ddTHH:mm");
 
-            // Establecer el valor por defecto en el TextBox
-            TextEntrega.Text = fechaEntrega.ToString("yyyy-MM-ddTHH:mm");
+            
+            DateTime fechaMas5Dias = fechaActual.AddDays(-8);
+            TextFechDeIng.Text = fechaMas5Dias.ToString("yyyy-MM-dd");
+
+            DateTime fechaMenos5Dias = fechaActual.AddDays(7);
+            Texty.Text = fechaMenos5Dias.ToString("yyyy-MM-dd");
 
             BtnProgramar.CssClass = "btn btn-warning shadow btn-sm";
  
@@ -775,7 +792,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblUrg.Enabled = false;
             lblUrg.CssClass = "col-form-label-sm";
 
-            ChecUrgent.Enabled = false;
+         
 
             lblCotizar.Enabled = false;
             lblCotizar.CssClass = "col-form-label-sm";
@@ -1051,25 +1068,69 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         //BUSCAR DISE
         protected void But_Click(object sender, EventArgs e)
         {
-            // Verificar cuáles campos tienen datos y seleccionar el SqlDataSource correspondiente.
+            string consulta = "SELECT tblDiseño.*, tblDiseño.Fecha_Ingreso, tblDiseño.Nombre_Diseño FROM tblDiseño";
+
+            string whereClause = "";
+
             if (!string.IsNullOrEmpty(TextFechDeIng.Text) && !string.IsNullOrEmpty(Texty.Text))
             {
-                DataGrid4.DataSource = SqlDataSourceFecha;
-            }
-            else if (!string.IsNullOrEmpty(TextBox3.Text))
-            {
-                DataGrid4.DataSource = SqlDataSourceNumeroDis;
-            }
-            else if (!string.IsNullOrEmpty(TextBox5.Text))
-            {
-                DataGrid4.DataSource = SqlDataSourceNombreDiseño;
-            }
-            else if (!string.IsNullOrEmpty(TextBox4.Text))
-            {
-                DataGrid4.DataSource = SqlDataSourceCliente;
+
+                if (!string.IsNullOrEmpty(TextBox3.Text) && !string.IsNullOrEmpty(TextBox4.Text) && !string.IsNullOrEmpty(TextBox5.Text))
+                {
+                    // Agregar la cláusula AND a la consulta
+                    whereClause += " AND Fecha_Ingreso BETWEEN '" + TextFechDeIng.Text + "' AND '" + Texty.Text + "'";
+                }
+                else
+                {
+                 
+                    // Agregar la cláusula WHERE a la consulta
+                    whereClause += " WHERE Fecha_Ingreso BETWEEN '" + TextFechDeIng.Text + "' AND '" + Texty.Text + "'";
+                }
+
             }
 
-            // Ejecutar la consulta y enlazar los datos al DataGrid.
+            if (!string.IsNullOrEmpty(TextBox3.Text))
+            {
+                if (string.IsNullOrEmpty(whereClause))
+                {
+                    whereClause += " WHERE Numero_Diseño LIKE '%" + TextBox3.Text + "%'";
+                }
+                else
+                {
+                    whereClause += " AND Numero_Diseño LIKE '%" + TextBox3.Text + "%'";
+                }
+            }
+            if (!string.IsNullOrEmpty(TextBox4.Text))
+            {
+                if (string.IsNullOrEmpty(whereClause))
+                {
+                    whereClause += " WHERE Cliente LIKE '%" + TextBox4.Text + "%'";
+                }
+                else
+                {
+                    whereClause += " AND Cliente LIKE '%" + TextBox4.Text + "%'";
+                }
+            }
+
+            if (!string.IsNullOrEmpty(TextBox5.Text))
+            {
+                if (string.IsNullOrEmpty(whereClause))
+                {
+                    whereClause += " WHERE Nombre_Diseño LIKE '%" + TextBox5.Text + "%'";
+                }
+                else
+                {
+                    whereClause += " AND Nombre_Diseño LIKE '%" + TextBox5.Text + "%'";
+                }
+            }
+
+            consulta += whereClause;
+
+            // Asigna la consulta al control SqlDataSource1
+            SqlDataSource3.SelectCommand = consulta;
+
+            // Vincula el DataGrid al SqlDataSource y actualiza su contenido
+            DataGrid4.DataSourceID = "SqlDataSource3";
             DataGrid4.DataBind();
         }
 
@@ -1204,6 +1265,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     HabilitarDivYContenido(control);
                 }
             }
+
+            ChecUrgent.Enabled = false;
         }
 
         protected void Cancelar_Click(object sender, EventArgs e)
@@ -1425,11 +1488,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                                 DateTime fechaActual = DateTime.Now;
 
-                                // Agregar 5 días a la fecha actual
-                                DateTime fechaEntrega = fechaActual.AddDays(5);
-
-                                // Establecer el valor por defecto en el TextBox
-                                TextEntrega.Text = fechaEntrega.ToString("yyyy-MM-ddTHH:mm");
+                                // Agregar 3 días a la fecha actual                             
+                                DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual.AddDays(3));
+                                TextEntrega.Text = fechaProgramadaEntrega.ToString("yyyy-MM-ddTHH:mm");
                             }
                             else
                             {
@@ -1737,7 +1798,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblUrg.Enabled = false;
             lblUrg.CssClass = "col-form-label-sm";
 
-            ChecUrgent.Enabled = false;
+           
 
             lblCotizar.Enabled = false;
             lblCotizar.CssClass = "col-form-label-sm";
@@ -2973,8 +3034,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     TextUltAc.Text = fechaHoraActual;
                                     TextFecOkDib.Text = now.ToString("yyyy-MM-ddTHH:mm");
                                     DateTime fechaActual = DateTime.Now;
-                                    DateTime fechaEntrega = fechaActual.AddDays(5);
-                                    TextEntrega.Text = fechaEntrega.ToString("yyyy-MM-ddTHH:mm");
+                                    // Obtener la fecha programada de entrega y verificar si es fin de semana
+                                    DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual.AddDays(3));
+                                    TextEntrega.Text = fechaProgramadaEntrega.ToString("yyyy-MM-ddTHH:mm");
                                 }
 
                                 //TextFech.Text = reader.GetDateTime(reader.GetOrdinal("SC_Hora")).ToString("HH:mm");

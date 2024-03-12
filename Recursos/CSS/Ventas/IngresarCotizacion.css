@@ -1,0 +1,74 @@
+﻿.datagrid-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f2f2f2; /* Ajusta el color de fondo del encabezado según tus preferencias */
+}
+
+.auto-width-column {
+    width: auto;
+    max-width: 200px; /* Puedes ajustar este valor según el ancho máximo deseado */
+    white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
+    overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
+    text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
+}
+
+.selected-row {
+    background-color: black; /* Cambia el color de fondo a negro o el que desees */
+    color: white;
+}
+/* Estilo para botones habilitados */
+.button-enabled {
+    background-color: #fff; /* Color de fondo para botones habilitados */
+    color: #212529; /* Color de texto para botones habilitados */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+}
+
+/* Estilo para botones deshabilitados */
+.button-disabled {
+    background-color: #ededed; /* Color de fondo para botones deshabilitados */
+    color: #888; /* Color de texto para botones deshabilitados */
+    cursor: not-allowed; /* Cambia el cursor al estilo "no permitido" */
+}
+
+
+.grande {
+    font-size: 18px;
+}
+
+.AzulGuardarHab {
+   color: #0863a4;
+}
+
+.AzulClaro {
+
+   color: #bfdef5;
+}
+
+.AzulGuardarDes {
+    color: #7093ac
+}
+
+.RojoCancelar{
+    color: #b50707
+}
+
+.linkButtonClicked {
+    border-top: 2px solid #ccc; /* Borde en la parte superior */
+    border-left: 2px solid #ccc; /* Borde en el lado izquierdo */
+    border-bottom: none; /* Elimina el borde inferior */
+    border-right: none; /* Elimina el borde derecho */
+}
+
+.linkButtonClicked2 {
+    border-top: none; /* Borde en la parte superior */
+    border-left: none; /* Borde en el lado izquierdo */
+    border-bottom: 2px solid #ccc; /* Elimina el borde inferior */
+    border-right: 2px solid #ccc; /* Elimina el borde derecho */
+}
+
+
+.contenedor-icono {
+    font-size: 24px;
+    text-decoration-line: none;
+}

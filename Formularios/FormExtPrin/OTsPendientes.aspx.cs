@@ -87,56 +87,130 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
         protected void Button1_Click(object sender, EventArgs e)
         {
-            string nombreObra = TextDir.Text.Trim();
-            string codigoAsesor = TextBox2.Text.Trim();
-            
+            // Construir la consulta base
+            string consulta = @"SELECT TOP 150
+                            tblOT.Id_OT,
+                            tblOT.Consecutivo_Pedido,
+                            tblOT.Nombre_Obra,
+                            tblOT.Codigo_Asesor,
+                            tblOT.Terminada_Facturacion,
+                            tblOT.Fecha_Empaque,
+                            tblOT.Fecha_Despacho_Produccion,
+                            tblOT.Fecha_Real_Despacho_Produccion,
+                            tblOT.Fecha_Instalacion,
+                            tblOT.ResumenObra,
+                            tblOT.Id_OT_secundario,
+                            tblOT.Fecha_Confirmacion_Venta,
+                            tblOT.Fecha_Entrega_Dibujo_Despiece,
+                            tblOT.Fecha_Entrega_Produccion,
+                            tblot.RealizadoPor,
+                            tblot.Fecha_Factura,
+                            tblot.Fecha_Final_Instalacion,
+                            tblot.Terminada_Facturacion,
+                            DATEDIFF(DAY, tblOT.Fecha_Entrega_Dibujo_Despiece, tblOT.Fecha_Entrega_Produccion) AS TDibujo,
+                            DATEDIFF(DAY, tblOT.Fecha_Entrega_Produccion, tblOT.Fecha_Terminada_Empaque) AS TPccion,
+                            DATEDIFF(DAY, tblOT.Fecha_Terminada_Empaque, tblOT.Fecha_Terminada_Despacho) AS CumpPccion,
+                            DATEDIFF(DAY, tblOT.Fecha_Terminada_Despacho, tblOT.Fecha_Instalacion) AS EnPlanta,
+                            DATEDIFF(DAY, tblOT.Fecha_Instalacion, tblOT.Fecha_Final_Instalacion) AS TInstala,
+                            tblOT.Fecha_Real_Despacho_Produccion AS Real_Despacho,
+                            tblOT.Fecha_Entrega_Dibujo_Despiece AS Fecha_Dibujo_Despiece,
+                            CASE 
+                                WHEN tblOT.ValorViatico = 1 THEN 'Ok'
+                                ELSE 'Falta'
+                            END AS ValorViatico,
+                            CASE 
+                                WHEN tblOT.Importacion = 1 THEN 'SI'
+                                ELSE 'NO'
+                            END AS Importacion,
+                            CASE 
+                                WHEN tblOT.Terminada_Almacen = 1 THEN 'Ok'
+                                ELSE 'Falta'
+                            END AS Terminada_Almacen,
+                            CASE 
+                                WHEN tblOT.Terminada_Produccion = 1 THEN 'Ok'
+                                ELSE 'Falta'
+                            END AS Terminada_Produccion,
+                            CASE 
+                                WHEN tblOT.Terminado_Diseño = 1 THEN 'Ok'
+                                ELSE 'Falta'
+                            END AS Terminado_Diseño,
+                            CASE 
+                                WHEN tblOT.Terminada_Empaque = 1 THEN 'Ok'
+                                ELSE 'Falta'
+                            END
+                            AS Terminada_Empaque,
+                            CASE 
+                                WHEN tblOT.Terminada_Despacho = 1 THEN 'Ok'
+                                ELSE 'Falta'
+                            END AS Terminada_Despacho,
+                            CASE 
+                                WHEN tblOT.Terminada_Facturacion = 1 THEN 'Ok'
+                                ELSE 'Falta'
+                            END AS Terminada_Facturacion,
+                            CASE 
+                                WHEN tblOT.Terminada_Compras = 1 THEN 'Ok'
+                                ELSE 'Falta'
+                            END AS Terminada_Compras
+                        FROM
+                            tblOT";
 
-            string fechaDesde = TextBox3.Text;
-            string fechaHasta = TextBox1.Text;
-            string campoFecha = DropDownList1.SelectedValue;
+                // Construir la cláusula WHERE
+                string whereClause = "";
 
-            bool radioButton18Marcado = RadioButton18.Checked;
-            bool radioButton2Marcado = RadioButton2.Checked;
-
-            // Nombre de la conexión a la base de datos
-            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            if (!string.IsNullOrEmpty(DropDownList1.SelectedValue))
             {
-                using (SqlCommand command = new SqlCommand("sp_ObtenerDatosConFiltros", connection))
+                if (!string.IsNullOrEmpty(TextBox3.Text) && !string.IsNullOrEmpty(TextBox1.Text))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
+                    // Agregar la cláusula WHERE a la consulta
+                    whereClause += " WHERE " + DropDownList1.SelectedValue + " BETWEEN '" + TextBox3.Text + "' AND '" + TextBox1.Text + "'";
+                }
+                else
+                {
+                    // Agregar la cláusula AND a la consulta
+                    whereClause += " AND " + DropDownList1.SelectedValue + " BETWEEN '" + TextBox3.Text + "' AND '" + TextBox1.Text + "'";
+                }
 
-                    command.Parameters.Add("@NombreObra", SqlDbType.NVarChar, 255).Value = string.IsNullOrEmpty(nombreObra) ? (object)DBNull.Value : nombreObra;
-                    command.Parameters.Add("@CodigoAsesor", SqlDbType.NVarChar, 255).Value = string.IsNullOrEmpty(codigoAsesor) ? (object)DBNull.Value : codigoAsesor;
-                    command.Parameters.Add("@TerminadoVentas", SqlDbType.Bit).Value = radioButton18Marcado ? false : radioButton2Marcado ? true : (object)DBNull.Value;
-                    command.Parameters.Add("@FechaDesde", SqlDbType.Date).Value = string.IsNullOrEmpty(fechaDesde) ? (object)DBNull.Value : Convert.ToDateTime(fechaDesde);
-                    command.Parameters.Add("@FechaHasta", SqlDbType.Date).Value = string.IsNullOrEmpty(fechaHasta) ? (object)DBNull.Value : Convert.ToDateTime(fechaHasta);
-                    command.Parameters.Add("@CampoFecha", SqlDbType.NVarChar, 255).Value = string.IsNullOrEmpty(campoFecha) ? (object)DBNull.Value : campoFecha;
+            }
 
-                    connection.Open();
 
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+            if (!string.IsNullOrEmpty(TextBox2.Text))
+                {
+                    if (string.IsNullOrEmpty(DropDownList1.SelectedValue) && string.IsNullOrEmpty(TextDir.Text))
                     {
-                        DataSet dataSet = new DataSet();
-                        adapter.Fill(dataSet);
-
-                        DataGrid1.DataSource = dataSet;
-                        DataGrid1.DataBind();
+                        whereClause += " WHERE Codigo_Asesor LIKE '%" + TextBox2.Text + "%'";
+                    }
+                    else
+                    {
+                         whereClause += " AND Codigo_Asesor LIKE '%" + TextBox2.Text + "%'";
+                  
                     }
                 }
+
+                if (!string.IsNullOrEmpty(TextDir.Text))
+                {
+                    if (string.IsNullOrEmpty(TextBox2.Text) && string.IsNullOrEmpty(DropDownList1.SelectedValue))
+                    {
+                        whereClause += " WHERE Nombre_Obra LIKE '%" + TextDir.Text + "%'";
+                    }
+                    else
+                    {
+                        whereClause += " AND Nombre_Obra LIKE '%" + TextDir.Text + "%'";
+                    }
+                }
+
+                // Agregar la cláusula WHERE a la consulta
+                consulta += whereClause;
+
+                // Asignar la consulta al SqlDataSource
+                SqlDataSource2.SelectCommand = consulta;
+
+                // Vincular el DataGrid al SqlDataSource y actualizar su contenido
+                DataGrid1.DataSourceID = "SqlDataSource2";
+                DataGrid1.DataBind();
             }
 
-            if (DataGrid1.Items.Count == 0)
-            {
-                NoResultsLabel.Visible = true;
-            }
-            else
-            {
-                NoResultsLabel.Visible = false;
-            }
-        }
 
+      
 
         protected void lnkSelectRow_Click(object sender, EventArgs e)
         {

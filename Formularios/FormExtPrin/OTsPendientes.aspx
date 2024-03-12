@@ -199,10 +199,78 @@
                                                                 <asp:BoundColumn DataField="Id_OT_secundario" HeaderText="Altern" ItemStyle-CssClass="auto-width-column" />
                                                             </Columns>
                                                         </asp:DataGrid>
-                                                        <asp:SqlDataSource ID="SqlDataSource2" runat="server"
-                                                            ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
-                                                            SelectCommand="sp_OTsPendientesVPD"
-                                                            SelectCommandType="StoredProcedure"></asp:SqlDataSource>
+                                                    <asp:SqlDataSource ID="SqlDataSource2" runat="server"
+    ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
+    SelectCommand="SELECT TOP 150
+                        tblOT.Id_OT,
+                        tblOT.Consecutivo_Pedido,
+                        tblOT.Nombre_Obra,
+                        tblOT.Codigo_Asesor,
+                        tblOT.Terminada_Facturacion,
+                        tblOT.Fecha_Empaque,
+                        tblOT.Fecha_Despacho_Produccion,
+                        tblOT.Fecha_Real_Despacho_Produccion,
+                        tblOT.Fecha_Instalacion,
+                        tblOT.ResumenObra,
+                        tblOT.Id_OT_secundario,
+                        tblOT.Fecha_Confirmacion_Venta,
+                        tblOT.Fecha_Entrega_Dibujo_Despiece,
+                        tblOT.Fecha_Entrega_Produccion,
+                        tblot.RealizadoPor,
+                        tblot.Fecha_Factura,
+                        tblot.Fecha_Final_Instalacion,
+                        tblot.Terminada_Facturacion,
+                        DATEDIFF(DAY, tblOT.Fecha_Entrega_Dibujo_Despiece, tblOT.Fecha_Entrega_Produccion) AS TDibujo,
+                        DATEDIFF(DAY, tblOT.Fecha_Entrega_Produccion, tblOT.Fecha_Terminada_Empaque) AS TPccion,
+                        DATEDIFF(DAY, tblOT.Fecha_Terminada_Empaque, tblOT.Fecha_Terminada_Despacho) AS CumpPccion,
+                        DATEDIFF(DAY, tblOT.Fecha_Terminada_Despacho, tblOT.Fecha_Instalacion) AS EnPlanta,
+                        DATEDIFF(DAY, tblOT.Fecha_Instalacion, tblOT.Fecha_Final_Instalacion) AS TInstala,
+                        tblOT.Fecha_Real_Despacho_Produccion AS Real_Despacho,
+                        tblOT.Fecha_Entrega_Dibujo_Despiece AS Fecha_Dibujo_Despiece,
+                        CASE 
+                            WHEN tblOT.ValorViatico = 1 THEN 'Ok'
+                            ELSE 'Falta'
+                        END AS ValorViatico,
+                        CASE 
+                            WHEN tblOT.Importacion = 1 THEN 'SI'
+                            ELSE 'NO'
+                        END AS Importacion,
+                        CASE 
+                            WHEN tblOT.Terminada_Almacen = 1 THEN 'Ok'
+                            ELSE 'Falta'
+                        END AS Terminada_Almacen,
+                        CASE 
+                            WHEN tblOT.Terminada_Produccion = 1 THEN 'Ok'
+                            ELSE 'Falta'
+                        END AS Terminada_Produccion,
+                        CASE 
+                            WHEN tblOT.Terminado_Diseño = 1 THEN 'Ok'
+                            ELSE 'Falta'
+                        END AS Terminado_Diseño,
+                        CASE 
+                            WHEN tblOT.Terminada_Empaque = 1 THEN 'Ok'
+                            ELSE 'Falta'
+                        END AS Terminada_Empaque,
+                        CASE 
+                            WHEN tblOT.Terminada_Despacho = 1 THEN 'Ok'
+                            ELSE 'Falta'
+                        END AS Terminada_Despacho,
+                         CASE 
+                            WHEN tblOT.Terminada_Facturacion = 1 THEN 'Ok'
+                            ELSE 'Falta'
+                        END AS Terminada_Facturacion,
+                        CASE 
+                            WHEN tblOT.Terminada_Compras = 1 THEN 'Ok'
+                            ELSE 'Falta'
+                        END AS Terminada_Compras
+                    FROM
+                        tblOT
+                    WHERE 1 = 1">
+    <SelectParameters>
+      
+    </SelectParameters>
+</asp:SqlDataSource>
+
 
                                                     </div>
                                                 </div>

@@ -181,7 +181,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     HttpPostedFile uploadedFile = FileUpload1.PostedFile;
 
                 // Verificar el tamaño del archivo
-                if (uploadedFile.ContentLength <= 10240000) // 10 MB en bytes
+                if (uploadedFile.ContentLength <= 83886080) // 80 MB en bytes
                 {
 
                     // Obtener el nombre del archivo
