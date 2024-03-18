@@ -267,13 +267,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.WebControls.Label lblCompe;
 
         /// <summary>
-        /// Control TextCompe.
+        /// Control ddlCompeData.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextCompe;
+        protected global::System.Web.UI.WebControls.DropDownList ddlCompeData;
+
+        /// <summary>
+        /// Control CompeDataS.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource CompeDataS;
 
         /// <summary>
         /// Control lblCausa.
@@ -285,13 +294,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.WebControls.Label lblCausa;
 
         /// <summary>
-        /// Control TextCausa.
+        /// Control ddlCausa.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextCausa;
+        protected global::System.Web.UI.WebControls.DropDownList ddlCausa;
+
+        /// <summary>
+        /// Control CausaDataS.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource CausaDataS;
 
         /// <summary>
         /// Control lblFcot.

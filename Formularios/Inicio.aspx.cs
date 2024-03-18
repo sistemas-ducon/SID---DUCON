@@ -265,8 +265,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
 
             switch (btn.CommandName)
             {
-                case "PersonaCliente":
-                    pageURL = "Ventas/Empleado.aspx";
+                case "IngresarCotizacion":
+                    pageURL = "Recepcion/IngresarCotizacion.aspx";
                     break;
                 default:
                     // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí
@@ -274,7 +274,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
             }
 
             string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
-            bool tienePermiso = VerificarPermiso(cedulaLogueada, 15); // Pasar el número de permiso correspondiente
+            bool tienePermiso = VerificarPermiso(cedulaLogueada, 1); // Pasar el número de permiso correspondiente
 
             if (!tienePermiso)
             {
@@ -282,11 +282,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
             }
             else
             {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalPendiente').modal('show');", true);
 
-                //ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewTab", "window.open('" + pageURL + "', '_blank');", true);
+
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewTab", "window.open('" + pageURL + "', '_blank');", true);
             }
         }
+
 
         protected void Sistemas_Click(object sender, EventArgs e)
         {

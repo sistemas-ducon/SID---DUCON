@@ -693,6 +693,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             cbxComisionCompart.Enabled = true;
 
             Session["NuevaOTEjecutada"] = true;
+            Session.Remove("BtnModificarEjecutado");
+            Session.Remove("NuevoPedido");
         }
 
         protected void LimpiarTextAreayDropDownList()
@@ -2486,6 +2488,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             Session["NuevoPedido"] = true;
+            Session.Remove("BtnModificarEjecutado");
+            Session.Remove("NuevaOTEjecutada");
 
             Session["Id_OT2"] = tbOT.Text;
 
@@ -4070,6 +4074,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             Session["BtnModificarEjecutado"] = true;
 
+            Session.Remove("NuevaOTEjecutada");
+            Session.Remove("NuevoPedido");
+
             NuevaOt.Enabled = false;
             NuevaOt.CssClass = "btn btn-sm shadow button-disabled";
 
@@ -4286,6 +4293,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             LabelOTCerrada.Visible = false;
 
             Session["NuevaOTEjecutada"] = true;
+            Session.Remove("BtnModificarEjecutado");
+            Session.Remove("NuevoPedido");
 
             Session["CopiarInfOTEjecutada"] = true;
 

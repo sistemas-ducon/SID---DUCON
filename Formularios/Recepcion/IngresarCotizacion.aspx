@@ -54,7 +54,7 @@
                                                <i class="bi bi-file-earmark-plus-fill"></i>
                                             </asp:LinkButton>
 
-                                            <asp:LinkButton runat="server" ID="GuardarCot">
+                                            <asp:LinkButton runat="server" ID="GuardarCot" OnClick="Grabar_Click">
                                                  <i class="bi bi-save-fill"></i>
                                             </asp:LinkButton>
 
@@ -156,13 +156,18 @@
                                             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                                                 <div class="input-group input-group-sm mb-2 gap-4">
                                                     <asp:Label runat="server" CssClass="form-label" ID="lblCompe" Text="Compe"></asp:Label>
-                                                    <asp:TextBox runat="server" ID="TextCompe" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                    <asp:DropDownList ID="ddlCompeData" runat="server" class="form-control" DataSourceID="CompeDataS" DataTextField="NombreCompetencia" DataValueField="ID_Competencia">
+                                        </asp:DropDownList>
+                                        <asp:SqlDataSource ID="CompeDataS" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT * FROM tblCompetencia"></asp:SqlDataSource>
+                            
                                                 </div>
                                             </div>
                                             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                                                 <div class="input-group input-group-sm mb-2 gap-2">
                                                     <asp:Label runat="server" CssClass="form-label" ID="lblCausa" Text="Causa"></asp:Label>
-                                                    <asp:TextBox runat="server" ID="TextCausa" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                    <asp:DropDownList ID="ddlCausa" runat="server" class="form-control" DataSourceID="CausaDataS" DataTextField="CausaRechazoCotizacion" DataValueField="ID_CausaRechazoCotizacion">
+                                        </asp:DropDownList>
+                                        <asp:SqlDataSource ID="CausaDataS" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT * FROM tblCausadeCotizacionRechazada"></asp:SqlDataSource>
                                                 </div>
                                             </div>
                                             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
@@ -203,11 +208,11 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="p-3 m-2 border" style="height: 21rem;">
+                                    <div class="p-3 m-2 border bg-light" style="height: 21rem;">
                                         <div class="row">
                                             <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
                                                 <div class="input-group input-group-sm mb-2 gap-3">
-                                                    <asp:Label runat="server" CssClass="form-label" ID="Label2" Text="WSU"></asp:Label>
+                                                    <asp:Label runat="server" CssClass="form-label" ID="Label2" Text="VVSU"></asp:Label>
                                                     <asp:TextBox runat="server" ID="TextBox3" CssClass="form-control form-control-sm"></asp:TextBox>
                                                 </div>
                                             </div>
@@ -299,9 +304,7 @@
                                                                     <asp:BoundColumn DataField="ValorBolsa" HeaderText="Valor Tte" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>                                                                                            
                                                                 </Columns>
                                                             </asp:DataGrid>
-
                                               </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -404,6 +407,42 @@
                                         </p>
                                     </div>
                                     <div class="modal-footer  d-flex align-items-center justify-content-center">                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+        
+                        <div class="modal fade" id="ErrorMCotizacion" data-backdrop="static" data-bs-keyboard="false">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Ver cotización pedido</h5>
+                                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body form-control-sm">
+                                        <p>
+                                           El sistema no puede encontrar la cotizacion en los 6 meses anteriores.
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                                      
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+          <div class="modal fade" id="campoFaltante" data-backdrop="static" data-bs-keyboard="false">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">NIT</h5>
+                                    </div>
+                                    <div class="modal-body form-control-sm">
+                                          <p>Falta llenar el campo: <span id="campoFaltante2"></span></p>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                                       
                                     </div>
                                 </div>
                             </div>

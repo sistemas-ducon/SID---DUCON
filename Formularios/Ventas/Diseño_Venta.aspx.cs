@@ -279,8 +279,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Obtener la fecha de activación desde el TextBox TextUltAc
             DateTime fechaActivacion = DateTime.Parse(TextUltAc.Text);
 
-            // Obtener la fecha programada de entrega y verificar si es fin de semana
-            DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual.AddDays(3));
+
+            // Sumar 3 días hábiles a partir de la fecha actual
+            DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual, 3);
+
+            // Asignar la fecha programada de entrega al TextBox
             TextEntrega.Text = fechaProgramadaEntrega.ToString("yyyy-MM-ddTHH:mm");
 
             // Comparación y actualización de la fecha de SC
@@ -337,14 +340,51 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-        private DateTime ObtenerProximaFechaHabil(DateTime fecha)
+        private DateTime ObtenerProximaFechaHabil(DateTime fecha, int cantidadDias)
         {
-            while (fecha.DayOfWeek == DayOfWeek.Saturday || fecha.DayOfWeek == DayOfWeek.Sunday)
+            int diasHabilesAgregados = 0;
+
+            while (diasHabilesAgregados < cantidadDias)
             {
-                fecha = fecha.AddDays(1); // Sumar un día hasta encontrar un día hábil
+                // Sumar un día
+                fecha = fecha.AddDays(1);
+
+                // Verificar si el día actual no es sábado ni domingo
+                if (fecha.DayOfWeek != DayOfWeek.Saturday && fecha.DayOfWeek != DayOfWeek.Sunday)
+                {
+                    // Consultar si la fecha está en la tabla tblDiaNoLaboral
+                    bool esDiaNoLaboral = EsDiaNoLaboral(fecha);
+
+                    if (!esDiaNoLaboral)
+                    {
+                        // Si es un día hábil y no es un día no laboral, incrementar el contador de días hábiles agregados
+                        diasHabilesAgregados++;
+                    }
+                    
+                }
             }
+
             return fecha;
         }
+
+        private bool EsDiaNoLaboral(DateTime fecha)
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                connection.Open();
+
+                string consulta = "SELECT COUNT(*) FROM tblDiaNoLaboral WHERE dnlFecha = @Fecha";
+
+                using (SqlCommand command = new SqlCommand(consulta, connection))
+                {
+                    command.Parameters.AddWithValue("@Fecha", fecha.Date);
+                    int count = (int)command.ExecuteScalar();
+                    return count > 0;
+                }
+            }
+        }
+
+
 
         protected void SiButton_Click(object sender, EventArgs e)
         {
@@ -359,9 +399,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             DateTime fechaActual = DateTime.Now;
 
-            // Obtener la fecha programada de entrega y verificar si es fin de semana
-            DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual.AddDays(3));
+            // Sumar 3 días hábiles a partir de la fecha actual
+            DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual, 3);
+
+            // Asignar la fecha programada de entrega al TextBox
             TextEntrega.Text = fechaProgramadaEntrega.ToString("yyyy-MM-ddTHH:mm");
+
 
 
             string fechaInDis = now.ToString("yyyy-MM-ddTHH:mm");
@@ -472,9 +515,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             TextUltAc.Text = fechaHoraActual;
 
 
-            // Obtener la fecha programada de entrega y verificar si es fin de semana
             DateTime fechaActual = DateTime.Now;
-            DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual.AddDays(3));
+
+            // Sumar 3 días hábiles a partir de la fecha actual
+            DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual, 3);
+
+            // Asignar la fecha programada de entrega al TextBox
             TextEntrega.Text = fechaProgramadaEntrega.ToString("yyyy-MM-ddTHH:mm");
 
 
@@ -648,11 +694,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             DateTime fechaActual = DateTime.Now;
 
-            // Obtener la fecha programada de entrega y verificar si es fin de semana
-            DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual.AddDays(3));
+            // Sumar 3 días hábiles a partir de la fecha actual
+            DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual, 3);
+
+            // Asignar la fecha programada de entrega al TextBox
             TextEntrega.Text = fechaProgramadaEntrega.ToString("yyyy-MM-ddTHH:mm");
 
-            
+
             DateTime fechaMas5Dias = fechaActual.AddDays(-8);
             TextFechDeIng.Text = fechaMas5Dias.ToString("yyyy-MM-dd");
 
@@ -1488,8 +1536,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                                 DateTime fechaActual = DateTime.Now;
 
-                                // Agregar 3 días a la fecha actual                             
-                                DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual.AddDays(3));
+                                // Sumar 3 días hábiles a partir de la fecha actual
+                                DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual, 3);
+
+                                // Asignar la fecha programada de entrega al TextBox
                                 TextEntrega.Text = fechaProgramadaEntrega.ToString("yyyy-MM-ddTHH:mm");
                             }
                             else
@@ -2348,6 +2398,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private bool RealizarInsercion()
         {
+            bool valorChecPiso = ChecPiso.Checked;
+            bool valorChecCie = ChecCie.Checked;
+            bool valorChecDiv = ChecDiv.Checked;
+            bool valorChecCan = ChecCan.Checked;
+            bool valorChecBteEle = ChecBteEle.Checked;
+            bool valorChecBteSw = ChecBteSw.Checked;
+            bool valorChecSujPt = ChecSujPt.Checked;
+            bool valorChecPerRef = ChecPerRef.Checked;
+            bool valorChecGuaEsc = ChecGuaEsc.Checked;
+            bool valorChecCotVia = ChecCotVia.Checked;
+            bool valorChecCotTte = CheckBox4.Checked;
+            bool valorCheckBox18 = CheckBox18.Checked;
+            bool valorCheckBox19 = CheckBox19.Checked;
+            bool valorCheckBox20 = CheckBox20.Checked;
+            bool valorCheckBox21 = CheckBox21.Checked;
+            bool valorCheckBox22 = ChecMailTer.Checked;
+            bool valorCheckBox23 = ChecCot.Checked;
+            bool valorCheckBox24 = ChecUrgent.Checked;
+            bool valorCheckBox25 = CheckBox16.Checked;
+          
+
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 connection.Open();
@@ -2364,9 +2435,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@Mail", TextMail.Text);
                         command.Parameters.AddWithValue("@PresentacionCotizacion", TextPre.Text);
                         command.Parameters.AddWithValue("@Celular", TextCel.Text);
-                        command.Parameters.AddWithValue("@Cotizartransporte", CheckBox4.Checked);
-                        command.Parameters.AddWithValue("@CotizarViaticos", ChecCotVia.Checked);
-                        command.Parameters.AddWithValue("@MailTerminado", ChecMailTer.Checked);
+                        command.Parameters.AddWithValue("@Cotizartransporte", valorChecCotTte);
+                        command.Parameters.AddWithValue("@CotizarViaticos", valorChecCotVia);
+                        command.Parameters.AddWithValue("@MailTerminado", valorCheckBox22);
                         command.Parameters.AddWithValue("@Telefono", TextTel.Text);
                         command.Parameters.AddWithValue("@Contacto", TextContacto.Text);
                         command.Parameters.AddWithValue("@Zona", TextZona.Text);
@@ -2384,8 +2455,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                       
 
 
-                        command.Parameters.AddWithValue("@PasarACotizar", ChecCot.Checked);
-                        command.Parameters.AddWithValue("@Urgente", ChecUrgent.Checked);
+                        command.Parameters.AddWithValue("@PasarACotizar", valorCheckBox23);
+                        command.Parameters.AddWithValue("@Urgente", valorCheckBox24);
                         command.Parameters.AddWithValue("@PlanoBitacora", TextPla.Text);
                         command.Parameters.AddWithValue("@Nombre_Diseño", TextProyecto.Text);
 
@@ -2407,20 +2478,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@Cliente", TextCliente.Text);
                         command.Parameters.AddWithValue("@Direccion", TextDir.Text);
                         command.Parameters.AddWithValue("@Descuento", TextDes.Text);
-                        command.Parameters.AddWithValue("@ConduccionCablesPiso", ChecPiso.Checked);
-                        command.Parameters.AddWithValue("@ConduccionCablesDivision", ChecDiv.Checked);
-                        command.Parameters.AddWithValue("@ConduccionCablesCielo", ChecCie.Checked);
-                        command.Parameters.AddWithValue("@ConduccionCablesCanaleta", ChecCan.Checked);
-                        command.Parameters.AddWithValue("@BajantesElectricos", ChecBteEle.Checked);
-                        command.Parameters.AddWithValue("@Bajantesswitches", ChecBteSw.Checked);
-                        command.Parameters.AddWithValue("@SujecionCielo", ChecSujPt.Checked);
-                        command.Parameters.AddWithValue("@PerfilRefuerzo", ChecPerRef.Checked);
-                        command.Parameters.AddWithValue("@GuardaEscobas", ChecGuaEsc.Checked);
+                        command.Parameters.AddWithValue("@ConduccionCablesPiso", valorChecPiso);
+                        command.Parameters.AddWithValue("@ConduccionCablesDivision", valorChecDiv);
+                        command.Parameters.AddWithValue("@ConduccionCablesCielo", valorChecCie);
+                        command.Parameters.AddWithValue("@ConduccionCablesCanaleta", valorChecCan);
+                        command.Parameters.AddWithValue("@BajantesElectricos", valorChecBteEle);
+                        command.Parameters.AddWithValue("@Bajantesswitches", valorChecBteSw);
+                        command.Parameters.AddWithValue("@SujecionCielo", valorChecSujPt);
+                        command.Parameters.AddWithValue("@PerfilRefuerzo", valorChecPerRef);
+                        command.Parameters.AddWithValue("@GuardaEscobas", valorChecGuaEsc);
                         command.Parameters.AddWithValue("@AlturaCielo", TexHTot.Text);
                         command.Parameters.AddWithValue("@Linea", TextLin.Text);
                         command.Parameters.AddWithValue("@TipoMostrador", TextMos.Text);
                         command.Parameters.AddWithValue("@AcabadoSuperficie", TextSup.Text);
-                        command.Parameters.AddWithValue("@BalanceSuperficies", CheckBox16.Checked);
+                        command.Parameters.AddWithValue("@BalanceSuperficies", valorCheckBox25);
                         command.Parameters.AddWithValue("@TipoSoporte", TextSop.Text);
                         command.Parameters.AddWithValue("@TipoGaveta", TextGav.Text);
                         command.Parameters.AddWithValue("@AcabadoPaneles", TextPan.Text);
@@ -2436,11 +2507,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@MueblePuertas", TextPuer.Text);
                         command.Parameters.AddWithValue("@Observaciones_Ventas", TextObsVen.InnerText);
                         command.Parameters.AddWithValue("@Observaciones_Diseño", TextObsDibDes.InnerText);
-                        command.Parameters.AddWithValue("@SeguimientoPausa", TextSegPauDev.InnerText);
-                        command.Parameters.AddWithValue("@SC_Presentacionppt", CheckBox18.Checked);
-                        command.Parameters.AddWithValue("@SC_Imagenes", CheckBox19.Checked);
-                        command.Parameters.AddWithValue("@SC_Accesorios", CheckBox20.Checked);
-                        command.Parameters.AddWithValue("@SC_Tiemporeal", CheckBox21.Checked);
+
+                        command.Parameters.AddWithValue("@SC_Presentacionppt", valorCheckBox18);
+                        command.Parameters.AddWithValue("@SC_Imagenes", valorCheckBox19);
+                        command.Parameters.AddWithValue("@SC_Accesorios", valorCheckBox20);
+                        command.Parameters.AddWithValue("@SC_Tiemporeal", valorCheckBox21);
                         command.Parameters.AddWithValue("@SC_Fecha", TextFec.Text);
                         command.Parameters.AddWithValue("@SC_Hora", TextFech.Text);
                         command.Parameters.AddWithValue("@SC_Ubicacion", TextUbi.Text);
@@ -2479,6 +2550,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private bool RealizarActualizacion()
         {
+            bool valorChecPiso = ChecPiso.Checked;
+            bool valorChecCie = ChecCie.Checked;
+            bool valorChecDiv = ChecDiv.Checked;
+            bool valorChecCan = ChecCan.Checked;
+            bool valorChecBteEle = ChecBteEle.Checked;
+            bool valorChecBteSw = ChecBteSw.Checked;
+            bool valorChecSujPt = ChecSujPt.Checked;
+            bool valorChecPerRef = ChecPerRef.Checked;
+            bool valorChecGuaEsc = ChecGuaEsc.Checked;
+            bool valorChecCotVia = ChecCotVia.Checked;
+            bool valorChecCotTte = CheckBox4.Checked;
+            bool valorCheckBox18 = CheckBox18.Checked;
+            bool valorCheckBox19 = CheckBox19.Checked;
+            bool valorCheckBox20 = CheckBox20.Checked;
+            bool valorCheckBox21 = CheckBox21.Checked;
+            bool valorCheckBox22 = ChecMailTer.Checked;
+            bool valorCheckBox23 = ChecCot.Checked;
+            bool valorCheckBox24 = ChecUrgent.Checked;
+            bool valorCheckBox25 = CheckBox16.Checked;
+
+
             // Obtén el número de diseño de la etiqueta lblNumDise
             string numeroDiseño = lblNumDise.Text;
 
@@ -2535,9 +2627,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@Mail", TextMail.Text);
                         command.Parameters.AddWithValue("@PresentacionCotizacion", TextPre.Text);
                         command.Parameters.AddWithValue("@Celular", TextCel.Text);
-                        command.Parameters.AddWithValue("@Cotizartransporte", CheckBox4.Checked);
-                        command.Parameters.AddWithValue("@CotizarViaticos", ChecCotVia.Checked);
-                        command.Parameters.AddWithValue("@MailTerminado", ChecMailTer.Checked);
+                        command.Parameters.AddWithValue("@Cotizartransporte", valorChecCotTte);
+                        command.Parameters.AddWithValue("@CotizarViaticos", valorChecCotVia);
+                        command.Parameters.AddWithValue("@MailTerminado", valorCheckBox22);
                         command.Parameters.AddWithValue("@Telefono", TextTel.Text);
                         command.Parameters.AddWithValue("@Contacto", TextContacto.Text);
                         command.Parameters.AddWithValue("@Zona", TextZona.Text);
@@ -2552,8 +2644,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         command.Parameters.AddWithValue("@Fecha_Programada_Entrega", fechaProEnt);
 
-                        command.Parameters.AddWithValue("@PasarACotizar", ChecCot.Checked);
-                        command.Parameters.AddWithValue("@Urgente", ChecUrgent.Checked);
+                        command.Parameters.AddWithValue("@PasarACotizar", valorCheckBox23);
+                        command.Parameters.AddWithValue("@Urgente", valorCheckBox24);
                         command.Parameters.AddWithValue("@PlanoBitacora", TextPla.Text);
 
                         // Obtener la fecha y hora del TextBox con type="datetime-local"
@@ -2571,20 +2663,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@Cliente", TextCliente.Text);
                         command.Parameters.AddWithValue("@Direccion", TextDir.Text);
                         command.Parameters.AddWithValue("@Descuento", TextDes.Text);
-                        command.Parameters.AddWithValue("@ConduccionCablesPiso", ChecPiso.Checked);
-                        command.Parameters.AddWithValue("@ConduccionCablesDivision", ChecDiv.Checked);
-                        command.Parameters.AddWithValue("@ConduccionCablesCielo", ChecCie.Checked);
-                        command.Parameters.AddWithValue("@ConduccionCablesCanaleta", ChecCan.Checked);
-                        command.Parameters.AddWithValue("@BajantesElectricos", ChecBteEle.Checked);
-                        command.Parameters.AddWithValue("@Bajantesswitches", ChecBteSw.Checked);
-                        command.Parameters.AddWithValue("@SujecionCielo", ChecSujPt.Checked);
-                        command.Parameters.AddWithValue("@PerfilRefuerzo", ChecPerRef.Checked);
-                        command.Parameters.AddWithValue("@GuardaEscobas", ChecGuaEsc.Checked);
+                        command.Parameters.AddWithValue("@ConduccionCablesPiso", valorChecPiso);
+                        command.Parameters.AddWithValue("@ConduccionCablesDivision", valorChecDiv);
+                        command.Parameters.AddWithValue("@ConduccionCablesCielo", valorChecCie);
+                        command.Parameters.AddWithValue("@ConduccionCablesCanaleta", valorChecCan);
+                        command.Parameters.AddWithValue("@BajantesElectricos", valorChecBteEle);
+                        command.Parameters.AddWithValue("@Bajantesswitches", valorChecBteSw);
+                        command.Parameters.AddWithValue("@SujecionCielo", valorChecSujPt);
+                        command.Parameters.AddWithValue("@PerfilRefuerzo", valorChecPerRef);
+                        command.Parameters.AddWithValue("@GuardaEscobas", valorChecGuaEsc);
                         command.Parameters.AddWithValue("@AlturaCielo", TexHTot.Text);
                         command.Parameters.AddWithValue("@Linea", TextLin.Text);
                         command.Parameters.AddWithValue("@TipoMostrador", TextMos.Text);
                         command.Parameters.AddWithValue("@AcabadoSuperficie", TextSup.Text);
-                        command.Parameters.AddWithValue("@BalanceSuperficies", CheckBox16.Text);
+                        command.Parameters.AddWithValue("@BalanceSuperficies", valorCheckBox25);
                         command.Parameters.AddWithValue("@TipoSoporte", TextSop.Text);
                         command.Parameters.AddWithValue("@TipoGaveta", TextGav.Text);
                         command.Parameters.AddWithValue("@AcabadoPaneles", TextPan.Text);
@@ -2599,10 +2691,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@Observaciones_Ventas", TextObsVen.InnerText);
                         command.Parameters.AddWithValue("@Observaciones_Diseño", TextObsDibDes.InnerText);
                         command.Parameters.AddWithValue("@SeguimientoPausa", TextSegPauDev.InnerText);
-                        command.Parameters.AddWithValue("@SC_Presentacionppt", CheckBox18.Checked);
-                        command.Parameters.AddWithValue("@SC_Imagenes", CheckBox19.Checked);
-                        command.Parameters.AddWithValue("@SC_Accesorios", CheckBox20.Checked);
-                        command.Parameters.AddWithValue("@SC_Tiemporeal", CheckBox21.Checked);
+                        command.Parameters.AddWithValue("@SC_Presentacionppt", valorCheckBox18);
+                        command.Parameters.AddWithValue("@SC_Imagenes", valorCheckBox19);
+                        command.Parameters.AddWithValue("@SC_Accesorios", valorCheckBox20);
+                        command.Parameters.AddWithValue("@SC_Tiemporeal", valorCheckBox21);
                         command.Parameters.AddWithValue("@SC_Fecha", TextFec.Text);
                         command.Parameters.AddWithValue("@SC_Hora", TextFech.Text);
                         command.Parameters.AddWithValue("@SC_Ubicacion", TextUbi.Text);
@@ -3034,8 +3126,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     TextUltAc.Text = fechaHoraActual;
                                     TextFecOkDib.Text = now.ToString("yyyy-MM-ddTHH:mm");
                                     DateTime fechaActual = DateTime.Now;
-                                    // Obtener la fecha programada de entrega y verificar si es fin de semana
-                                    DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual.AddDays(3));
+
+                                    // Sumar 3 días hábiles a partir de la fecha actual
+                                    DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual, 3);
+
+                                    // Asignar la fecha programada de entrega al TextBox
                                     TextEntrega.Text = fechaProgramadaEntrega.ToString("yyyy-MM-ddTHH:mm");
                                 }
 
