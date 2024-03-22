@@ -38,6 +38,8 @@
 
                         <div class="container-fluid">
 
+                            <asp:Label ID="error" runat="server" Text="" Visible="false"></asp:Label>
+
                             <div class="row">
 
                                 <div class="col-4 pt-2 mt-2">
@@ -77,7 +79,7 @@
                                 <div class="col-2 pt-2 mt-2">
                                     <div class="input-group input-group-sm  mb-2 gap-2  justify-content-around">
                                         <asp:Button ID="btnConsultar" CssClass="btn btn-outline-secondary" runat="server" Text="Consultar" OnClick="btnConsultar_Click" OnClientClick="return validarFechas();" />
-                                        <asp:Button ID="btnNotificar" CssClass="btn btn-outline-secondary" runat="server" Text="Notificar" />
+                                        <asp:Button ID="btnNotificar" CssClass="btn btn-outline-secondary" runat="server" Text="Notificar" OnClick="btnNotificar_Click" />
 
 
                                     </div>
@@ -85,7 +87,7 @@
 
                                 <div class="col-2 pt-2 mt-2  ">
                                     <div class="input-group input-group-sm  mb-2 gap-2 ">
-                                        <asp:CheckBox ID="chkConvenciones" runat="server" />
+                                        <asp:CheckBox ID="chkConvenciones" runat="server" OnCheckedChanged="chkConvenciones_CheckedChanged" AutoPostBack="true" />
                                         <asp:Label ID="lbConvenciones" runat="server" Text="Convenciones"></asp:Label>
 
                                     </div>
@@ -104,7 +106,7 @@
                                                     <Columns>
                                                         <asp:TemplateColumn HeaderText="...">
                                                             <ItemTemplate>
-                                                                <asp:LinkButton ID="lnkView" runat="server" CommandName="VerReproceso" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
+                                                                <asp:LinkButton CssClass="Tam" ID="lnkView" runat="server" CommandName="VerReproceso" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
                                                             </ItemTemplate>
                                                         </asp:TemplateColumn>
                                                         <asp:BoundColumn DataField="" HeaderText="Cant" />
@@ -229,7 +231,7 @@
                                         <div class="col-5">
                                             <div class=" input-group input-group-sm mb-2">
 
-                                                <asp:DropDownList ID="ddlElemento" runat="server" class="form-control" DataTextField="Descripcion" DataValueField="Descripcion" DataSourceID="Elementos" OnDataBound="ddlElemento_DataBound"></asp:DropDownList><asp:SqlDataSource runat="server" ID="Elementos" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL %>" SelectCommand="select * from tblElementoReproceso where activo = 1 order by descripcion"></asp:SqlDataSource>
+                                                <asp:DropDownList ID="ddlElemento" runat="server" class="form-control" DataTextField="Descripcion" DataValueField="Id_Elemento" DataSourceID="Elementos" OnDataBound="ddlElemento_DataBound"></asp:DropDownList><asp:SqlDataSource runat="server" ID="Elementos" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL %>" SelectCommand="select * from tblElementoReproceso where activo = 1 order by descripcion"></asp:SqlDataSource>
                                             </div>
                                         </div>
 
@@ -252,7 +254,7 @@
 
                                         <div class="col-5">
                                             <div class="input-group input-group-sm mb-2">
-                                                <asp:DropDownList ID="ddlArea1" runat="server" DataTextField="Descripcion" DataValueField="Descripcion" class="form-control" DataSourceID="AreaConsulta" OnDataBound="ddlArea1_DataBound"></asp:DropDownList><asp:SqlDataSource runat="server" ID="AreaConsulta" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL %>" SelectCommand="SELECT
+                                                <asp:DropDownList ID="ddlArea1" runat="server" DataTextField="Descripcion" DataValueField="Id_Area" class="form-control" DataSourceID="AreaConsulta" OnDataBound="ddlArea1_DataBound"></asp:DropDownList><asp:SqlDataSource runat="server" ID="AreaConsulta" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL %>" SelectCommand="SELECT
                                                                              Id_Area,Descripcion,CAST(mailResponsable AS NVARCHAR(MAX))as MailResponsable,
                                                                              ResponsableReproceso From tblAreaReproceso Where (Activo = 1) order by descripcion "></asp:SqlDataSource>
                                             </div>
@@ -261,15 +263,15 @@
                                         <div class="col-6 pt-1">
 
                                             <div class="input-group input-group-sm mb-2 gap-5 justify-content-center">
-                                                <asp:LinkButton runat="server" title="Cerrar" ID="Cerrar">
+                                                <asp:LinkButton runat="server" title="Cerrar" ID="CerrarReproceso" OnClick="CerrarReproceso_Click">
                                                          <i class="bi bi-door-open" style="color: blue; font-size:1rem; font-weight:600;"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Agregar" ID="Agregar">
+                                                <asp:LinkButton runat="server" title="Agregar" ID="Agregar" OnClick="Agregar_Click">
                                                          <i class="bi bi-file-earmark-plus" style="color: green; font-size:1rem; font-weight:600;"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Eliminar" ID="Eliminar">
+                                                <asp:LinkButton runat="server" title="Eliminar" ID="EliminarElemento1" OnClick="EliminarElemento1_Click">
                                                          <i class="bi bi-trash3" style="color: red; font-size:1rem; font-weight:600;"></i>
                                                 </asp:LinkButton>
 
@@ -279,13 +281,21 @@
 
                                     </div>
 
-
                                 </div>
 
                                 <div class="col-7">
 
                                     <div class="row">
-                                        <div class="col-12">
+
+                                        <div class="col-6">
+                                            <asp:Label ID="Id_detalle" runat="server" Text="" Visible="false"></asp:Label>
+                                            <asp:Label ID="lbNombAreaRepro" runat="server" Text="" Visible="false" ></asp:Label>
+                                            <asp:Label ID="lbRedirigido" runat="server" Text="" Visible="false" ></asp:Label>
+                                             <asp:Label ID="lbIdElemnto" runat="server" Text="" Visible="false" ></asp:Label>
+                                            <span id="ErrorValidacionDoc" style="color: red;" runat="server" visible="false"></span>
+                                        </div>
+
+                                        <div class="col-6">
                                             <div class="input-group input-group-sm  mb-2 gap-2 justify-content-end ">
                                                 <asp:CheckBox ID="chkcerrado" runat="server" />
                                                 <asp:Label ID="lbCerrada" runat="server" Text="Cerrado"></asp:Label>
@@ -294,6 +304,7 @@
 
                                             </div>
                                         </div>
+
                                     </div>
 
                                     <div class="row justify-content-center" style="padding-left: 0.8rem">
@@ -307,7 +318,7 @@
                                                             <Columns>
                                                                 <asp:TemplateColumn HeaderText="...">
                                                                     <ItemTemplate>
-                                                                        <asp:LinkButton ID="lnkView" runat="server" CommandName="VerDetalleReproceso" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
+                                                                        <asp:LinkButton CssClass="Tam" ID="lnkView" runat="server" CommandName="VerDetalleReproceso" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
                                                                     </ItemTemplate>
                                                                 </asp:TemplateColumn>
                                                                 <asp:BoundColumn DataField="Area" HeaderText="Area" ItemStyle-CssClass="auto-width-column" />
@@ -329,9 +340,11 @@
                                                                 <asp:BoundColumn DataField="Redirigido" HeaderText="Redirigido" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Cerrado" HeaderText="Cerrado" ItemStyle-CssClass="auto-width-column" />
 
-                                                                <%-- Campos oscultos pero que se muestran en el formulario empieza en el 13]--%>
 
                                                                 <asp:BoundColumn DataField="Precio" Visible="false" />
+                                                                <asp:BoundColumn DataField="Id_Area" Visible="false" />
+                                                                <asp:BoundColumn DataField="Id_Elemento" Visible="false" />
+
 
                                                             </Columns>
                                                         </asp:DataGrid><asp:SqlDataSource runat="server" ID="DetalleReproceso" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL %>" SelectCommand="SELECT
@@ -466,6 +479,7 @@
                                             <div class="input-group-sm mb-1 gap-2">
                                                 <asp:Label class="form-label" Text="Precio" runat="server" ID="lbPrecio"></asp:Label>
                                                 <asp:TextBox ID="tbPrecio" runat="server" CssClass="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="precioHidden" runat="server" CssClass="form-control" Visible="false"></asp:TextBox>
                                             </div>
                                         </div>
 
@@ -473,12 +487,12 @@
 
                                             <div class="input-group input-group-sm mb-2 pt-3 mt-2 gap-2">
 
-                                                <asp:LinkButton runat="server" title="Guardar" ID="Guardar">
+                                                <asp:LinkButton runat="server" title="Guardar" ID="Guardar" OnClick="Guardar_Click">
                                                       <i class="bi bi-save2" style="color:blue; font-size:1rem; font-weight:600;"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Adjuntar" ID="Adjuntar">
-                                                        <i class="bi bi-paperclip" style="color:blue; font-size:1rem; font-weight:600;"></i>
+                                                <asp:LinkButton runat="server" title="Adjuntar" ID="Adjuntar" OnClick="Adjuntar_Click">
+                                                        <i class="bi bi-paperclip" style="color:blue; font-size:1rem !important; font-weight:600 !important;"></i>
                                                 </asp:LinkButton>
 
                                             </div>
@@ -493,8 +507,8 @@
 
                                         <div class="col-1">
                                             <div class="input-group input-group-sm mb-2 pt-3 mt-2 gap-2">
-                                                <asp:LinkButton runat="server" title="Guardar" ID="Redireccionar">
-                                                     <i class="bi bi-arrow-90deg-right" style="color:green; font-size:1rem; font-weight:600"></i>
+                                                <asp:LinkButton runat="server" title="Guardar" ID="Redireccionar" OnClick="Redireccionar_Click">
+                                                     <i class="bi bi-arrow-90deg-right" style="color:green; font-size:1rem !important; font-weight:600 !important"></i>
                                                 </asp:LinkButton>
                                             </div>
                                         </div>
@@ -507,6 +521,176 @@
 
                         </div>
 
+                        <!--Modal Cerrar Reproceso -->
+                        <div id="cerrarReprocesoModal" class="modal" tabindex="-1" style="display: none;">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary text-white">
+                                        <h5 class="modal-title text-center">Cerrar reproceso</h5>
+
+                                    </div>
+                                    <div class="modal-body border rounded">
+                                        <div class="container-fluid">
+                                            <h6>Estás seguro que deseas cerrar el reproceso de la OT: <span runat="server" id="Ot"></span>- <span runat="server" id="Pedido"></span>? </h6>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                            <asp:Button runat="server" ID="cerrarReproceso1" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-outline-primary" Style="width: 5rem;" OnClick="cerrarReproceso1_Click1" />
+                                            <asp:Button runat="server" ID="CerrarQuitarRepro" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Modal Eliminar Reproceso -->
+                        <div id="eliminarReprocesoModal" class="modal" tabindex="-1" style="display: none;">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger text-white">
+                                        <h5 class="modal-title text-center">Eliminar elemento</h5>
+
+                                    </div>
+                                    <div class="modal-body border rounded">
+                                        <div class="container-fluid">
+                                            <h6>¿Estás seguro que desea eliminar el elemento seleccionado?</h6>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                            <asp:Button runat="server" ID="EliminarElemento" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-outline-danger" Style="width: 5rem;" OnClick="EliminarElemento_Click" />
+                                            <asp:Button runat="server" ID="CerrarElimnarElemento" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Modal Agregar Reproceso -->
+                        <div id="agregarReproMoodal" class="modal" tabindex="-1" style="display: none;">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-success text-white">
+                                        <h5 class="modal-title text-center">Agregar reproceso</h5>
+
+                                    </div>
+                                    <div class="modal-body border rounded">
+                                        <div class="container-fluid">
+                                            <h6>¿ Estás seguro de querer agregar el reproceso?  Se notificará por correo electrónico al responsable del área de este proceso.  </h6>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                            <asp:Button runat="server" ID="btnAgregar" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-success" Style="width: 5rem;" OnClick="btnAgregar_Click" />
+                                            <asp:Button runat="server" ID="Button2" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Modal Convenciones -->
+                        <div class="modal fade" id="convenciones" data-bs-backdrop="static" data-bs-keyboard="false"  tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered  ">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Convenciones</h5>
+                                        <asp:Button ID="moldaCerrar" type="button" data-bs-dismiss="modal" aria-label="Close" class="btn-close" runat="server" OnClick="moldaCerrar_Click" />
+
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <div class="row justify-content-center mb-3">
+                                            <div class="border rounded p-2">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="input-group input-group-sm mb-1 gap-2">
+                                                            <div class="input-group " style="width: 20px; height: 20px; border: 1px; background-color: #673f8b; white-space: nowrap"></div>
+                                                            <label for="lbNoAceptado" class="form-label">No se ha aceptado</label>
+                                                        </div>
+
+                                                        <div class="input-group input-group-sm mb-1 gap-2">
+                                                            <div class="input-group " style="width: 20px; height: 20px; border: 1px; background-color: #FA721E"></div>
+                                                            <label for="lbPendiente" class="form-label">Pendiente por precio</label>
+                                                        </div>
+
+                                                        <div class="input-group input-group-sm mb-1 gap-2">
+                                                            <div class="input-group " style="width: 20px; height: 20px; border: 1px; background-color: #F1FF43"></div>
+                                                            <label for="lbSinAsignar" class="form-label">Sin asignar</label>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+
+                                    <div class="modal-footer">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                           <!--Modal Redireccionar Reproceso -->
+                        <div id="redireccionarReproMoodal" class="modal" tabindex="-1" style="display: none;">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-success text-white">
+                                        <h5 class="modal-title text-center">Redireccionar reproceso</h5>
+
+                                    </div>
+                                    <div class="modal-body border rounded">
+                                        <div class="container-fluid">
+                                            <h6>¿ Estás seguro que deseaas redireccionar el reproceso?  Se notificará por correo electrónico al responsable del área de este proceso.  </h6>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                            <asp:Button runat="server" ID="btnRediret" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-success" Style="width: 5rem;" OnClick="btnRediret_Click" />
+                                            <asp:Button runat="server" ID="Cerrar" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                            <!--Modal Redireccionar Reproceso -->
+                        <div id="notificarReproMoodal" class="modal" tabindex="-1" style="display: none;">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-success text-white">
+                                        <h5 class="modal-title text-center">Notificar Reproceso</h5>
+
+                                    </div>
+                                    <div class="modal-body border rounded">
+                                        <div class="container-fluid">
+                                            <h6>¿ Estás seguro que deseaas notificar los  reprocesos?  Se notificará por correo electrónico a los responsables de as áreas.  </h6>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                            <asp:Button runat="server" ID="btnNotRepro_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-success" Style="width: 5rem;" OnClick="btnNotRepro_SI_Click"  />
+                                            <asp:Button runat="server" ID="btnNotRepro_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                     </ContentTemplate>
                 </asp:UpdatePanel>
@@ -519,10 +703,324 @@
                     <ContentTemplate>
                         <div class="container-fluid">
 
-                         
+                            <div class="row pt-2 mt-2">
+
+                                <div class="col-4 "></div>
+
+                                <div class="col-4 ">
+                                    <h4>Estadísticas Reprocesos</h4>
+                                </div>
+
+                                <div class="col-2">
+                                    <div class=" input-group input-group-sm mb-1 gap-2 justify-content-center">
+                                        <asp:Label class="form-label" Text="Año" runat="server" ID="lbAnio"></asp:Label>
+                                        <asp:DropDownList CssClass="form-control" ID="ddlAnioBusqueda" runat="server">
+                                            <asp:ListItem Text="" Value=""></asp:ListItem>
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+
+                                <div class="col-1">
+                                    <div class=" input-group input-group-sm mb-1 gap-2 justify-content-center">
+                                        <asp:Button ID="btnConsultar1" CssClass="btn btn-outline-secondary" runat="server" Text="Consultar" OnClick="btnConsultar1_Click" />
+                                    </div>
+                                </div>
+
+                                <div class="col-1">
+                                    <asp:LinkButton class="icong disabled" runat="server" title="Exportar" ID="ExportarExcel" OnClick="ExportarExcel_Click">
+                                         <i class="custom-icon"></i>
+                                    </asp:LinkButton>
+                                </div>
+
+
+                            </div>
+
+                            <div class="row gap-0 justify-content-around  pb-2 mb-2 ">
+
+                                <div class=" col-7 border rounded pt-2 mt-2">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="table-responsive  mb-2 gap-2" style="height: 14rem; overflow-x: auto;">
+
+                                                <h6 class="datagrid-header text-center">Estadísticas Consolidadas</h6>
+
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DatagridConsolidado" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                    <Columns>
+
+                                                        <asp:BoundColumn DataField="Mes" HeaderText="Mes" />
+                                                        <asp:BoundColumn DataField="CantRepr" HeaderText="Cant. Repro" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="CantOT" HeaderText="OT por Mes" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="PorcRepr" HeaderText="%Reproc" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="CostoTotales" HeaderText="Costo Totales" ItemStyle-CssClass="auto-width-column" DataFormatString="{0:N0}" />
+                                                        <asp:BoundColumn DataField="CostoDucon" HeaderText="Costo Ducon" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="VentasMes" HeaderText="Venta/Mes" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="PorcRepVent" HeaderText="%Rep/Vent" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Meta" HeaderText="Meta" ItemStyle-CssClass="auto-width-column" />
+
+                                                    </Columns>
+                                                </asp:DataGrid>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class=" col-4 border rounded  pt-2 mt-2">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="table-responsive  mb-2 gap-2" style="height: 14rem; overflow-x: auto;">
+                                                <h6 class="datagrid-header text-center">Responsable Reproceso</h6>
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DatagridResponsable" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemCommand="DatagridResponsable_ItemCommand">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                    <Columns>
+
+                                                        <asp:TemplateColumn HeaderText="...">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="lknRespo" runat="server" CommandName="VerRespXCausa" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+
+                                                        <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" />
+                                                        <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Descripcion" Visible="false" />
+                                                        <asp:BoundColumn DataField="Mes" Visible="false" />
+
+                                                    </Columns>
+                                                </asp:DataGrid>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row gap-0 justify-content-around pb-2 mb-2 ">
+
+                                <div class=" col-7 border rounded pt-2 mt-2">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="table-responsive  mb-2 gap-2" style="height: 14rem; overflow-x: auto;">
+
+                                                <h6 class="datagrid-header text-center">Cantidad Reprocesos Por Área</h6>
+
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DatagridCantidad" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemCommand="DatagridCantidad_ItemCommand">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                    <Columns>
+
+                                                        <asp:TemplateColumn HeaderText="Responsable">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="Responsable" runat="server" CommandName="VerFullDetalle" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Bind("Responsable") %>' CssClass="NoLetra auto-width-column" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+
+                                                        <asp:TemplateColumn HeaderText="Ene">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="Enero" runat="server" CommandName="VerEnero" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Bind("Enero") %>' CssClass="NoLetra auto-width-column" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+
+                                                        <asp:TemplateColumn HeaderText="Feb">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="Febrero" runat="server" CommandName="VerFebrero" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Bind("Febrero") %>' CssClass="NoLetra auto-width-column" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+
+                                                        <asp:TemplateColumn HeaderText="Mar">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="Marzo" runat="server" CommandName="VerMarzo" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Bind("Marzo") %>' CssClass="NoLetra auto-width-column" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+
+
+                                                        <asp:TemplateColumn HeaderText="Abr">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="Abril" runat="server" CommandName="VerAbril" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Bind("Abril") %>' CssClass="NoLetra auto-width-column" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+
+
+                                                        <asp:TemplateColumn HeaderText="May">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="Mayo" runat="server" CommandName="VerMayo" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Bind("Mayo") %>' CssClass="NoLetra auto-width-column" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+
+                                                        <asp:TemplateColumn HeaderText="Jun">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="Junio" runat="server" CommandName="VerJunio" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Bind("Junio") %>' CssClass="NoLetra auto-width-column" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+
+                                                        <asp:TemplateColumn HeaderText="Jul">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="Julio" runat="server" CommandName="VerJulio" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Bind("Julio") %>' CssClass="NoLetra auto-width-column" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+
+                                                        <asp:TemplateColumn HeaderText="Ago">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="Agosto" runat="server" CommandName="VerAgosto" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Bind("Agosto") %>' CssClass="NoLetra auto-width-column" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+
+                                                        <asp:TemplateColumn HeaderText="Sep">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="Septiembre" runat="server" CommandName="VerSeptiembre" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Bind("Septiembre") %>' CssClass="NoLetra auto-width-column" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+
+                                                        <asp:TemplateColumn HeaderText="Oct">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="Octubre" runat="server" CommandName="VerOctubre" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Bind("Octubre") %>' CssClass="NoLetra auto-width-column" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+
+
+                                                        <asp:TemplateColumn HeaderText="Nov">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="Noviembre" runat="server" CommandName="VerNoviembre" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Bind("Noviembre") %>' CssClass="NoLetra auto-width-column" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+
+                                                        <asp:TemplateColumn HeaderText="Dic">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="Diciembre" runat="server" CommandName="VerDiciembre" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Bind("Diciembre") %>' CssClass="NoLetra auto-width-column" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+
+                                                        <asp:TemplateColumn HeaderText="Total">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="Total" runat="server" CommandName="VerFullDetalle" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Bind("Total") %>' CssClass="NoLetra auto-width-column" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+
+
+                                                        <asp:TemplateColumn HeaderText="%">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="Porcentaje" runat="server" CommandName="VerFullDetalle" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Bind("Porcentaje") %>' CssClass="NoLetra auto-width-column" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+
+
+
+
+                                                    </Columns>
+                                                </asp:DataGrid>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class=" col-4 border rounded  pt-2 mt-2">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="table-responsive  mb-2 gap-2" style="height: 14rem; overflow-x: auto;">
+                                                <h6 class="datagrid-header text-center">Causa Reproceso</h6>
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGridCausa" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemCommand="DataGridCausa_ItemCommand">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                    <Columns>
+
+                                                        <asp:TemplateColumn HeaderText="...">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="lknCausa" runat="server" CommandName="VerRespXCausa1" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+
+                                                        <asp:BoundColumn DataField="Causa" HeaderText="Causa" />
+                                                        <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Descripcion" Visible="false" />
+                                                        <asp:BoundColumn DataField="Mes" Visible="false" />
+
+                                                    </Columns>
+                                                </asp:DataGrid>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row gap-0 justify-content-around ">
+
+                                <div class=" col-7 border rounded pt-2 mt-2">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="table-responsive  mb-2 gap-2" style="height: 14rem; overflow-x: auto;">
+
+                                                <h6 class="datagrid-header text-center">Precio Reproceso Por Área </h6>
+
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DatagridPrecioArea" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                    <Columns>
+
+                                                        <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Enero" HeaderText="Ene" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Febrero" HeaderText="Feb" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Marzo" HeaderText="Mar" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Abril" HeaderText="Abr" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Mayo" HeaderText="May" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Junio" HeaderText="Jun" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Julio" HeaderText="Jul" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Agosto" HeaderText="Ago" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Septiembre" HeaderText="Sep" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Octubre" HeaderText="Oct" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Noviembre" HeaderText="Nov" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Diciembre" HeaderText="Dic" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Total" HeaderText="Total" ItemStyle-CssClass="auto-width-column" />
+
+                                                        <%-- Campos oscultos pero que se muestran en el formulario empieza en el 13]--%>
+
+                                                        <asp:BoundColumn DataField="" Visible="false" />
+
+                                                    </Columns>
+                                                </asp:DataGrid>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class=" col-4 border rounded  pt-2 mt-2">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="table-responsive  mb-2 gap-2" style="height: 14rem; overflow-x: auto;">
+                                                <h6 class="datagrid-header text-center">Responsable Causa</h6>
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DatagridRespoCausa" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                    <Columns>
+
+                                                        <asp:BoundColumn DataField="RespoCausa" HeaderText="" />
+                                                        <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column" />
+
+                                                    </Columns>
+                                                </asp:DataGrid>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
 
                         </div>
                     </ContentTemplate>
+
+                    <Triggers>
+                        <asp:PostBackTrigger ControlID="ExportarExcel" />
+                    </Triggers>
+
+
                 </asp:UpdatePanel>
 
             </div>
@@ -538,6 +1036,8 @@
                 // Obtenemos los valores de los texxbox
                 var fechaInicio = document.getElementById('fechaIni').value;
                 var fechaFin = document.getElementById('fechaFin').value;
+                // Obtener la fecha actual
+                var fechaActual = new Date();
 
                 // Validar si las fechas están en el rango permitido
                 if (!validarRangoFechas(fechaInicio) || !validarRangoFechas(fechaFin)) {
@@ -563,6 +1063,15 @@
                     alert('La fecha de inicio debe ser anterior a la fecha de fin.');
                     return false; // Evitar que se ejecute la acción
                 }
+               
+
+                // Verificar si la fecha de fin es posterior a la fecha actual
+                if (fin > fechaActual) {
+                    alert('La fecha Y no puede ser posterior a la fecha actual.');
+                    return false;
+                }
+
+                
 
                 // Si las fechas son válidas y la fecha de inicio es anterior a la fecha de fin, permitir la acción
                 return true;
@@ -573,6 +1082,17 @@
                 var year = parseInt(fecha.split("-")[0]);
                 return year >= 1900;
             }
+
+
+            function actualizarValorOt() {
+                // Obtener el valor del TextBox
+                var OT = document.getElementById('tbOT').value;
+                var Ped = document.getElementById('tbPedido').value;
+                // Actualizar el contenido del span con el valor del TextBox
+                document.getElementById('Ot').innerText = OT;
+                document.getElementById('Pedido').innerText = Ped;
+            }
+
 
         </script>
 

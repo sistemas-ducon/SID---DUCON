@@ -59,8 +59,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         public int PermisoEmpleado()
         {
 
-            string consultaActual = "select ID_Permiso  from tblPermiso_Empleado As A Inner join tblEmpleado AS B on  B.Cedula = A.ID_Empleado" +
-                                    " where B.Login = @Login And A.ID_Permiso = '22'";
+            string consultaActual = "SELECT ID_Permiso  FROM tblPermiso_Empleado As A INNER JOIN tblEmpleado AS B on  B.Cedula = A.ID_Empleado" +
+                                    " where B.Cedula = @cedula And A.ID_Permiso = '22'";
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -69,7 +69,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 using (SqlCommand command = new SqlCommand(consultaActual, connection))
                 {
-                    command.Parameters.AddWithValue("@Login", Session["usuariologueado"].ToString());
+                    command.Parameters.AddWithValue("@cedula", Session["CedulaLogeada"].ToString());
                     SqlDataReader reader = command.ExecuteReader();
 
                     if (reader.HasRows)
@@ -167,7 +167,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 int Permiso = PermisoEmpleado();
 
-                if (Permiso == 22 || campos[7] == Session["CedulaLogeada"].ToString())
+                if (Permiso == 22 || campos[7] == Session["CedulaLogeada"].ToString() || CompartidoCon.Contains(Session["usuariologueado"].ToString())   )
                 {
                     // Habilita el botón "Modificar"
                     Button btnModificar = FindControl("Modificar") as Button;
@@ -945,7 +945,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     using (SqlCommand command = new SqlCommand(consultaActual, connection))
                     {
                         command.Parameters.AddWithValue("@Cedula", cedulaCliente);
-                        cadenaActual = (string)command.ExecuteScalar();
+                        object resultado = command.ExecuteScalar();
+                        cadenaActual = resultado != DBNull.Value ? resultado.ToString() : string.Empty;
                     }
                 }
 
@@ -1034,7 +1035,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     using (SqlCommand command = new SqlCommand(consultaActual, connection))
                     {
                         command.Parameters.AddWithValue("@Cedula", cedulaCliente);
-                        cadenaActual = (string)command.ExecuteScalar();
+                        object resultado = command.ExecuteScalar();
+                        cadenaActual = resultado != DBNull.Value ? resultado.ToString() : string.Empty;
+
+
+
                     }
                 }
 

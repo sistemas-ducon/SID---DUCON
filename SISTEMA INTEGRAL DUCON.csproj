@@ -212,6 +212,7 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Formularios\Administrativo\EstadisticasVentas.aspx" />
+    <Content Include="Formularios\Consultas\DocumentacionReproceso.aspx" />
     <Content Include="Formularios\Consultas\Reproceso.aspx" />
     <Content Include="Formularios\FormExtPrin\AcabadosOT.aspx" />
     <Content Include="Formularios\FormExtPrin\DocumentacionOT.aspx" />
@@ -303,6 +304,13 @@
     </Compile>
     <Compile Include="Formularios\Administrativo\EstadisticasVentas.aspx.designer.cs">
       <DependentUpon>EstadisticasVentas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\Consultas\DocumentacionReproceso.aspx.cs">
+      <DependentUpon>DocumentacionReproceso.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\Consultas\DocumentacionReproceso.aspx.designer.cs">
+      <DependentUpon>DocumentacionReproceso.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\Consultas\Reproceso.aspx.cs">
       <DependentUpon>Reproceso.aspx</DependentUpon>
