@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Office.Word;
 using Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json;
+using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -698,8 +699,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
 
             // Validamos si el campo esta vacio para ejecurar un sqldatasource sino usamoos el otr 
-
-            if (tbFechaIni.Text != "" && tbFechaFin.Text != "" && tbProyectoX.Text != "")
+           if (tbFechaIni.Text != "" && tbFechaFin.Text != "" && tbSolicitud1.Text != "")
+            {
+                BuscarDesarrollo.DataSourceID = "SolicitudXID";
+                BuscarDesarrollo.DataBind();
+            }
+            else if  (tbFechaIni.Text != "" && tbFechaFin.Text != "" && tbProyectoX.Text != "")
             {
                 BuscarDesarrollo.DataSourceID = "SolicXProyecto";
                 BuscarDesarrollo.DataBind();
@@ -708,12 +713,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             else if (tbFechaIni.Text != "" && tbFechaFin.Text != "" && tbClienteX.Text != "")
             {
                 BuscarDesarrollo.DataSourceID = "solicitudXCliente";
-                BuscarDesarrollo.DataBind();
-            }
-
-            else if (tbFechaIni.Text != "" && tbFechaFin.Text != "" && tbSolicitud1.Text != "")
-            {
-                BuscarDesarrollo.DataSourceID = "SolicitudXID";
                 BuscarDesarrollo.DataBind();
             }
             else
@@ -1843,51 +1842,63 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         //Calculo de la Fecha de entrega 
         public DateTime CalcularFechaEntrega(DateTime FechaIngreso)
         {
-
             DateTime UltimaActivacionSolicitud = FechaIngreso;
 
+            //Se valida  si ingresan la solicitud un dia sabado o domingo 
             while (UltimaActivacionSolicitud.DayOfWeek == DayOfWeek.Saturday || UltimaActivacionSolicitud.DayOfWeek == DayOfWeek.Sunday)
             {
                 UltimaActivacionSolicitud = UltimaActivacionSolicitud.AddDays(1);
                 UltimaActivacionSolicitud = new DateTime(UltimaActivacionSolicitud.Year, UltimaActivacionSolicitud.Month, UltimaActivacionSolicitud.Day, 8, 0, 0);
-            }
-            DateTime FechaEntrega = UltimaActivacionSolicitud.AddDays(5);
-
-            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-
-            // Calcula el día siguiente a la fecha de entrega
-            DateTime DiaSiguiente = FechaEntrega.AddDays(1);
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-
-                // Consulta SQL para verificar si la fecha de entrega es un día feriado
-                string query = "SELECT COUNT(*) FROM tblDiaNoLaboral WHERE dnlFecha BETWEEN @UltimaActivacionRender AND @FechaEntrega OR dnlFecha = @DiaSiguiente";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    // Agrega el parámetro para la fecha de entrega
-                    command.Parameters.AddWithValue("@FechaEntrega", FechaEntrega);
-                    command.Parameters.AddWithValue("@UltimaActivacionRender", UltimaActivacionSolicitud);
-                    command.Parameters.AddWithValue("@DiaSiguiente", DiaSiguiente);
-
-                    int count = (int)command.ExecuteScalar(); // Ejecuta la consulta y obtén el resultado
-
-                    if (count > 0)
-                    {
-                        // Si la fecha de entrega o el día siguiente son días feriados, agrega el número correcto de días adicionales a la fecha de entrega
-                        FechaEntrega = FechaEntrega.AddDays(count);
-                    }
-                }
-            }
-
+            }       
+            DateTime FechaEntrega = SumarDiaLaboral(UltimaActivacionSolicitud, 5);
 
             return FechaEntrega;
         }
+        private DateTime SumarDiaLaboral(DateTime fecha, int CantDias)
+        {
+            int diaHabilAdd = 0;
+
+            while (diaHabilAdd < CantDias)
+            {
+                // sumamos un dia  a la fecha inicial 
+                fecha = fecha.AddDays(1);
+
+                // Verificar si el día actual no es sábado ni domingo
+                if (fecha.DayOfWeek != DayOfWeek.Saturday && fecha.DayOfWeek != DayOfWeek.Sunday)
+                {
+                    // Se consulta si es un dia fectivo 
+                    bool festivo = ConsultarDiaFestivo(fecha);
+
+                    if (!festivo)
+                    {
+                        // Si es un día hábil y no es un día no laboral, se incrementa diaHabilAdd
+                        diaHabilAdd++;
+                    }
+
+                }
+            }
+
+            return fecha;
+        }
+        private bool ConsultarDiaFestivo(DateTime fecha)
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                connection.Open();
+
+                string consulta = "SELECT COUNT(*) FROM tblDiaNoLaboral WHERE dnlFecha = @Fecha";
+
+                using (SqlCommand command = new SqlCommand(consulta, connection))
+                {
+                    command.Parameters.AddWithValue("@Fecha", fecha.Date);
+                    int count = (int)command.ExecuteScalar();
+                    return count > 0;
+                }
+            }
+        }
 
 
-        
+
         [WebMethod] // Cambiar estado de variable de Session cuando dan click en NuevaSolicitud 
         public static void NuevaSolicitud()
         {
