@@ -268,13 +268,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
                 case "IngresarCotizacion":
                     pageURL = "Recepcion/IngresarCotizacion.aspx";
                     break;
+            
                 default:
                     // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí
                     break;
             }
 
             string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
-            bool tienePermiso = VerificarPermiso(cedulaLogueada, 1); // Pasar el número de permiso correspondiente
+            bool tienePermiso = VerificarPermiso(cedulaLogueada, 4); // Pasar el número de permiso correspondiente
 
             if (!tienePermiso)
             {

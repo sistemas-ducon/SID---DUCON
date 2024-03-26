@@ -58,11 +58,11 @@
                                                  <i class="bi bi-save-fill"></i>
                                             </asp:LinkButton>
 
-                                            <asp:LinkButton runat="server" ID="ModificarCot">
+                                            <asp:LinkButton runat="server" ID="ModificarCot" OnClick="Modificar_Click">
                                               <i class="bi bi-wrench-adjustable"></i>
                                             </asp:LinkButton>
 
-                                            <asp:LinkButton runat="server" ID="EliminarCot">
+                                            <asp:LinkButton runat="server" ID="EliminarCot" OnClick="ConfirmarEliminarCot_Click">
                                                <i class="bi bi-trash-fill"></i>
                                             </asp:LinkButton>
 
@@ -116,8 +116,8 @@
                                             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                                                 <div class="input-group input-group-sm mb-2 gap-2">
                                                     <asp:Label class="form-label form-label" Text="Diseño" runat="server" ID="Label1"></asp:Label>
-                                                    <asp:TextBox runat="server" ID="TextBox2" CssClass="form-control form-control-sm"></asp:TextBox>
-                                                      <asp:LinkButton runat="server" ID="LinkButton5" CssClass="btn shadow btn-light linkButtonClicked2">
+                                                    <asp:TextBox runat="server" ID="TextBox2" CssClass="form-control form-control-sm" OnTextChanged="ddlDise_SelectedIndexChanged" AutoPostBack="true"></asp:TextBox>
+                                                      <asp:LinkButton runat="server" ID="BtnDiseno" CssClass="btn shadow btn-light linkButtonClicked2" OnClick="BtnDiseno_Click">
                                                           <i class="bi bi-arrow-down-circle-fill"></i>
                                                       </asp:LinkButton>
                                                 </div>
@@ -213,7 +213,7 @@
                                             <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
                                                 <div class="input-group input-group-sm mb-2 gap-3">
                                                     <asp:Label runat="server" CssClass="form-label" ID="Label2" Text="VVSU"></asp:Label>
-                                                    <asp:TextBox runat="server" ID="TextBox3" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                   <asp:TextBox runat="server" ID="TextBox3" CssClass="form-control form-control-sm"></asp:TextBox>
                                                 </div>
                                             </div>
                                         </div>
@@ -377,6 +377,25 @@
                             </div>
                         </div>
 
+                        <div class="modal fade" id="ConfimacionActualizarCliente" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Actualizar Cotizacion</h5>
+                                    </div>
+                                    <div class="modal-body form-control-sm">
+                                        <p>
+                                         Este cliente esta guardado con otro asesor ¿Desea cambiarlo?
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">      
+                                         <asp:Button runat="server" Text="SI" data-bs-dismiss="modal" aria-label="Close" class="btn btn-sm button-enabled shadow linkButtonClicked2" OnClick="ActualizarCliente_Click"></asp:Button>
+                                         <asp:Button runat="server" Text="NO" data-bs-dismiss="modal" aria-label="Close" class="btn btn-sm button-enabled shadow linkButtonClicked2" OnClick="NOActualizarCliente_Click"></asp:Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </div>
@@ -413,6 +432,94 @@
                         </div>
 
         
+                      <div class="modal fade" id="DiseNoEncontrado" data-backdrop="static" data-bs-keyboard="false">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Ingresar Cotizacion</h5>
+                                    </div>
+                                    <div class="modal-body form-control-sm">
+                                        <p>
+                                           El diseño no existe, por favor digite un diseño valido
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+         <div class="modal fade" id="ClienteNoEncontrado" data-backdrop="static" data-bs-keyboard="false">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Ingresar Cotizacion</h5>
+                                    </div>
+                                    <div class="modal-body form-control-sm">
+                                        <p>
+                                           El diseño no se pudo encontrar, por favor digite un diseño valido
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+        <div class="modal fade" id="ConfirmarEliminarCot" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Eliminar cotizacion</h5>
+                                    </div>
+                                    <div class="modal-body form-control-sm">
+                                        <p>
+                                           <span id="ConfirmarEliminarCot2"></span>
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">      
+                                         <asp:Button runat="server" Text="SI" data-bs-dismiss="modal" aria-label="Close" class="btn btn-sm button-enabled shadow linkButtonClicked2" OnClick="EliminarCot_Click"></asp:Button>
+                                         <asp:Button runat="server" Text="NO" data-bs-dismiss="modal" aria-label="Close" class="btn btn-sm button-enabled shadow linkButtonClicked2" OnClick="NOEliminarCot_Click"></asp:Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+          <div class="modal fade" id="llenarClienteP" data-backdrop="static" data-bs-keyboard="false">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">llenar cliente</h5>
+                                    </div>
+                                    <div class="modal-body form-control-sm">
+                                        <p>
+                                            Por favor, diligenciar primero el cliente
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+           <div class="modal fade" id="CotizacionAprobada" data-backdrop="static" data-bs-keyboard="false">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Cotización Aprobada</h5>
+                                    </div>
+                                    <div class="modal-body form-control-sm">
+                                        <p>
+                                            La cotización ha sido aprobada. No se puede modificar
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+         
                         <div class="modal fade" id="ErrorMCotizacion" data-backdrop="static" data-bs-keyboard="false">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -436,10 +543,12 @@
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-dark">
-                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">NIT</h5>
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Ingresar Cotizacion</h5>
                                     </div>
                                     <div class="modal-body form-control-sm">
-                                          <p>Falta llenar el campo: <span id="campoFaltante2"></span></p>
+                                          <p>Falta llenar el campo: <span id="campoFaltante2"></span>
+                                              por favor llenelo y vuelva a intentarlo.
+                                          </p>
                                     </div>
                                     <div class="modal-footer  d-flex align-items-center justify-content-center">
                                        
@@ -448,7 +557,13 @@
                             </div>
                         </div>
 
+           
+        
+
+
     </form>
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
