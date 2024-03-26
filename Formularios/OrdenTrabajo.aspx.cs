@@ -1943,11 +1943,33 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             if (txtCotizacion.Text.ToUpper() != "NO TIENE")
             {
-                // Construir la ruta al archivo de Excel
-                string rutaArchivo = @"\\172.16.30.6\Recepcion\Cotizaciones Excel\" + ddlZona.SelectedValue + @"\" + tbVenta.Text.Substring(0, 4) + @"\" + ObtenerNombreMes() + @"\" + txtCotizacion.Text + ".xls";
+                DateTime fechaVentaAño = DateTime.ParseExact(tbVenta.Text, "yyyy-MM-dd", null);
+                DateTime fechaVenta = DateTime.ParseExact(tbVenta.Text, "yyyy-MM-dd", null);
+                fechaVenta = fechaVenta.AddMonths(1);
+                string rutaBase = @"\\172.16.30.6\Recepcion\Cotizaciones Excel\" + ddlZona.SelectedValue + @"";
 
-                try
+                for (int i = 0; i <= 6; i++)
                 {
+                    // Obtener el mes y el año correspondientes
+                    DateTime fechaMes = fechaVenta.AddMonths(-i);
+                    int mes = fechaMes.Month;
+                    int año = fechaMes.Year;
+
+                    // Si estamos en diciembre, retroceder al año anterior
+                    if (mes == 12 && i > 0)
+                    {
+                        int año1 = fechaVentaAño.Year;
+                        año1--;
+                        año = año1;
+                    }
+
+                    // Obtener la abreviatura del nombre del mes
+                    string nombreMes = ObtenerNombreMesAbreviado(fechaMes);
+
+                    // Construir la ruta del archivo para este mes
+                    string rutaArchivo = Path.Combine(rutaBase, año.ToString(), nombreMes, txtCotizacion.Text + ".xls");
+
+                    // Verificar si el archivo existe
                     if (File.Exists(rutaArchivo))
                     {
                         // Establecer las cabeceras para la descarga del archivo
@@ -1966,35 +1988,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Finalizar la respuesta
                         Response.End();
 
-
-                    }
-                    else
-                    {
-                        string mensajeExito = "La Cotización  " + txtCotizacion.Text.Trim() + " ha sido cambiada o borrada en el servidor.";
-                        string scriptExito = "alert('" + mensajeExito + "');";
-                        ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
+                        // Si se encuentra el archivo, salir del bucle
+                        break;
                     }
                 }
-                catch (Exception ex)
-                {
 
-                    string mensajeExito = "Error al intentar abrir el archivo, Por favor intente mas tarde o comuniquese con Sistemas.";
-                    string scriptExito = "alert('" + mensajeExito + "');";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
 
-                }
+                string mensajeExito = "La Cotización  " + txtCotizacion.Text.Trim() + " no se encuentra en los ultimos 6 meses.";
+                string scriptExito = "alert('" + mensajeExito + "');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
+
             }
-
-
-
         }
 
-        private string ObtenerNombreMes()
+        public string ObtenerNombreMesAbreviado(DateTime fecha)
         {
-            int numeroMes = int.Parse(tbVenta.Text.Substring(5, 2));
-            string nombreMes = new DateTime(DateTime.Now.Year, numeroMes, 1).ToString("MMM");
-            return nombreMes.Replace(".", "");
+            return fecha.ToString("MMM").TrimEnd('.');
         }
+
 
         protected void txtCotizacion_TextChanged(object sender, EventArgs e)
         {
@@ -11083,7 +11094,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 connectionISID.Open();
 
-                string sSql = "UPDATE tblOTBolsa SET otbolCantidadCotizada= @Cantidad, @otbolValorCotizado= @SubTotal " +
+                string sSql = "UPDATE tblOTBolsa SET otbolCantidadCotizada= @Cantidad, otbolValorCotizado= @SubTotal " +
                     "WHERE OTBolBolsa= @bolsa and otbolIDGrupoObjeto= @id_GrupoObjeto ";
 
 

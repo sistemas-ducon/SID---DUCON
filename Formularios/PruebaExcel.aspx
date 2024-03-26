@@ -42,6 +42,13 @@
             </div>
             </div>
 
+            <div class="container">
+                <div class="row">
+                    <asp:Label ID="error" runat="server" Text="Label"></asp:Label>                   
+                    <asp:Button ID="Correo" runat="server" Text="Enviar Correo" OnClick="Correo_Click" />
+                </div>
+            </div>
+
            
 
 
