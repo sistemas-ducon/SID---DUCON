@@ -914,11 +914,10 @@ WHERE
 
                 IWorkbook workbook = null;
 
-                // Verificar si el archivo existe
                 if (File.Exists(filePath))
                 {
-                    // Leer el contenido del archivo de Excel
-                    using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                    // Leer el contenido del archivo de Excel con NPOI
+                    using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
                         // Determinar el tipo de archivo Excel
                         if (Path.GetExtension(filePath).Equals(".xls"))
@@ -933,9 +932,10 @@ WHERE
                         // Buscar y obtener valores para 'vccd', 'vvsu', 'vcsd', 'vmo'
                         BuscarYObtenerValores(workbook, textosABuscar, out valorColumnaF_vccd, out valorColumnaF_vvsu, out valorColumnaF_vcsd, out valorColumnaF_vmo, out valorColumnaF_vtte, out valorColumnaF_viat, out valorColumnaF_vcsd_vccd);
                     }
+                
 
-                    // Asignar los valores obtenidos a los TextBox
-                    TextBox7.Text = SumarValoresSiNecesario(workbook, textosABuscar[0], valorColumnaF_vccd) ?? "0";
+                // Asignar los valores obtenidos a los TextBox
+                TextBox7.Text = SumarValoresSiNecesario(workbook, textosABuscar[0], valorColumnaF_vccd) ?? "0";
                     TextBox3.Text = SumarValoresSiNecesario(workbook, textosABuscar[1], valorColumnaF_vvsu) ?? "0";
                     TextBox4.Text = SumarValoresSiNecesario(workbook, textosABuscar[2], valorColumnaF_vcsd) ?? "0";
                     TextBox6.Text = SumarValoresSiNecesario(workbook, textosABuscar[3], valorColumnaF_vmo) ?? "0";

@@ -150,10 +150,17 @@
                                 <div class="col-lg-5 col-md-6 col-sm-12 col-xs-12">
                                     <div class="p-3 m-2 border" style="height: 52.5rem;">
 
-                                        <div class="border rounded p-1 special-border" style="max-height: 40rem; overflow-x: auto;">
+                                        <div class="border rounded p-1 special-border" style="max-height: 38rem; overflow-x: auto;">
                                             <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm p-1" ID="DataGrid2" runat="server" AutoGenerateColumns="false" DataSourceID="SqlDataSource2">
                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                 <Columns>
+                                                       <asp:TemplateColumn>
+                                                    <ItemTemplate>
+
+                                                        <asp:LinkButton ID="lnkCliee" runat="server"
+                                                            CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square text-dark'></i>" OnClick="SeleccionarVarios_Click"/>
+                                                    </ItemTemplate>
+                                                </asp:TemplateColumn>
                                                     <asp:BoundColumn HeaderText="Departamento/Cargo" DataField="Cargo" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     <asp:BoundColumn HeaderText="Nombre" DataField="NombreCompleto" ItemStyle-CssClass="auto-width-column" />
                                                 </Columns>
@@ -192,9 +199,12 @@
                                                     <asp:TextBox ID="TextBox1" runat="server" CssClass="form-control form-control-sm mt-2"></asp:TextBox>
                                                 </div>
                                             </div>
-                                             <div class="row col-lg-12 col-md-6 col-sm-12 col-xs-12 container">
-                                            <%--     <asp:Button ID="Button1" runat="server" Text="Grabar Observacion" CssClass="mt-2 btn-sm btn-outline-dark btn" OnClick="Button1_Click"/>--%>
-                                                 </div>
+                                           
+                                                <div class="row justify-content-end mt-3">
+                                                    <div class="col-md-3">                                                  
+                                                        <asp:Button ID="BtnGrabarObservacion" runat="server" Text="Grabar Observacion" OnClick="GrabarObservacion_Click"/>
+                                                    </div>                                     
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -505,6 +515,19 @@
             });
 
         </script>
+
+           <script type="text/javascript">
+               window.onload = function () {
+                   var hash = window.location.hash.substr(1);
+                   if (hash !== '') {
+                       var rowElement = document.querySelector('#<%= DataGrid2.ClientID %> tr:nth-child(' + (parseInt(hash) + 1) + ')');
+                       if (rowElement) {
+                           rowElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                       }
+                   }
+               };
+           </script>
+
     </form>
 
 

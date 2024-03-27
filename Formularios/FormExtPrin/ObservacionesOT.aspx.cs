@@ -48,7 +48,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     EnlazarDataGrid();
                     EnlazarDataGrid4();
 
-
+                    BtnGrabarObservacion.Enabled = false;
+                    BtnGrabarObservacion.CssClass = "mt-2 btn shadow button-disabled linkButtonClicked";
                 }
             }
             else
@@ -425,7 +426,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
         }
 
+        protected void GrabarObservacion_Click(object sender, EventArgs e)
+        {
 
+        }
+
+        protected void SeleccionarVarios_Click(object sender, EventArgs e)
+        {
+            // Obtén el LinkButton que se hizo clic
+            LinkButton lnkSelectRow = (LinkButton)sender;
+
+            // Obtén el índice de fila desde el CommandArgument
+            int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
+
+            // Accede a la fila seleccionada en el DataGrid
+            DataGridItem selectedRow = DataGrid2.Items[rowIndex];
+
+            // Invierte el estado de selección de la fila
+            if (selectedRow.CssClass.Contains("selected-row"))
+            {
+                selectedRow.CssClass = selectedRow.CssClass.Replace("selected-row", ""); // Deselecciona la fila
+                lnkSelectRow.Attributes["href"] = "#"; // Reinicia el atributo href
+            }
+            else
+            {
+                selectedRow.CssClass += " selected-row"; // Selecciona la fila
+                lnkSelectRow.Attributes["href"] = "#" + rowIndex.ToString(); // Almacena la posición de la fila en href
+            }
+        }
 
 
     }
