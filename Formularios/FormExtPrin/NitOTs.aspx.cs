@@ -549,6 +549,30 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             {
                                 ddlNaturaleza.ClearSelection();
                                 item.Selected = true;
+
+                                if(naturaleza == "J - Juridica")
+                                {
+                                    lbPriApellido.Text = "Razón Social";
+
+                                    lbSegApellido.Visible = false;
+                                    tbSegApellido.Visible = false;
+
+                                    lbNombre.Visible = false;
+                                    tbNombre.Visible = false;
+                                }
+                                else
+                                {
+                                    lbPriApellido.Text = "Primer Apellido";
+
+
+                                    lbSegApellido.Visible = true;
+                                    tbSegApellido.Visible = true;
+
+                                    lbNombre.Visible = true;
+                                    tbNombre.Visible = true;
+                                }
+
+
                                 break;
                             }
                         }

@@ -569,7 +569,7 @@
                                                     <Columns>
                                                         <asp:TemplateColumn HeaderText="...">
                                                             <ItemTemplate>
-                                                                <asp:LinkButton ID="lnkView" runat="server" CommandName="VerDetalleSolicitud" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
+                                                                <asp:LinkButton ID="lnkView" runat="server" CssClass="Tam" CommandName="VerDetalleSolicitud" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
                                                             </ItemTemplate>
                                                         </asp:TemplateColumn>
                                                         <asp:BoundColumn DataField="Id_SolicitudDetalle" HeaderText="ID" />
@@ -835,7 +835,7 @@
                                                     <Columns>
                                                         <asp:TemplateColumn HeaderText="...">
                                                             <ItemTemplate>
-                                                                <asp:LinkButton ID="lnkView" runat="server" CommandName="VerDesarrollo" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>"
+                                                                <asp:LinkButton ID="lnkView" runat="server" CommandName="VerDesarrollo" CssClass="Tam" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>"
                                                                     OnClientClick="activarTab('BitacoraDesarrollo-content');" />
                                                             </ItemTemplate>
                                                         </asp:TemplateColumn>
@@ -926,7 +926,7 @@
                                                     <Columns>
                                                         <asp:TemplateColumn HeaderText="...">
                                                             <ItemTemplate>
-                                                                <asp:LinkButton ID="lnkView" runat="server" CommandName="VerCotizacion" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>"
+                                                                <asp:LinkButton ID="lnkView" runat="server" CommandName="VerCotizacion" CssClass="Tam" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>"
                                                                     OnClientClick="activarTab('BitacoraDesarrollo-content');" />
                                                             </ItemTemplate>
                                                         </asp:TemplateColumn>
@@ -1070,7 +1070,7 @@
 
                                                         <asp:TemplateColumn HeaderText="...">
                                                             <ItemTemplate>
-                                                                <asp:LinkButton ID="lnkView" runat="server" CommandName="VerBuscado" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>"
+                                                                <asp:LinkButton ID="lnkView" runat="server" CommandName="VerBuscado" CssClass="Tam" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>"
                                                                     OnClientClick="activarTab('BitacoraDesarrollo-content');" />
                                                             </ItemTemplate>
                                                         </asp:TemplateColumn>
