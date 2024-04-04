@@ -2510,15 +2510,53 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void BtnSiNuevoPedido_Click(object sender, EventArgs e)
         {
             BotonesNuevoPedido();
+            LimpiarCamposCotizacion();
         }
 
         protected void BtnNoNuevoPedido_Click(object sender, EventArgs e)
         {
             BotonesNuevoPedido();
+            LimpiarCamposCotizacion();
 
             txObs1.Value = "Altura Total: \r\nLínea: \r\nTipo de Sujeción: \r\nPerfil Refuerzo Superior: \r\nTipo y Color de Sillas: \r\nObservaciones: \r\n\r\nALMACEN:\r\nCORTE: \r\nMOLDURADO: \r\nCARPINTERIA: \r\nTAPIZADO: \r\nENSAMBLE VIDRIO: \r\nENSAMBLE: \r\nEMPAQUE:  ";
             txObs2.Value = "Altura Total: \r\nLínea: \r\nTipo de Sujeción: \r\nPerfil Refuerzo Superior: \r\nTipo y Color de Sillas: \r\nObservaciones: \r\n\r\nALMACEN:\r\nCORTE: \r\nMOLDURADO: \r\nCARPINTERIA: \r\nTAPIZADO: \r\nENSAMBLE VIDRIO: \r\nENSAMBLE: \r\nEMPAQUE:  ";
         }
+
+
+
+  private void LimpiarCamposCotizacion()
+
+        {
+
+            txtValorSugerido.Text = "0";
+
+            txtVcsd.Text = "0";
+
+            txtVccd.Text = "0";
+
+            txtDiseño.Text = "0";
+
+            txtComision.Text = "0";
+
+            txtSaldo.Text = "0";
+
+            txtVenta.Text = "0";
+
+            txtDctoValor.Text = "0";
+
+            txtDcto.Text = "0";
+
+            txtVtte.Text = "0";
+
+            txtVvia.Text = "0";
+
+            txtGtotal.Text = "0";
+
+        }
+
+
+
+
 
         //MODIFICADO POR CARLOS PINEDA
         protected void Acabados_Click(object sender, EventArgs e)
@@ -4335,6 +4373,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             DateTime fechaMas10Dias = fechaActual.AddDays(10);
             dtpEmpaque.Text = fechaMas10Dias.ToString("yyyy-MM-dd");
             dtpRealEmpaque.Text = fechaMas10Dias.ToString("yyyy-MM-dd");
+
+            LimpiarCamposCotizacion();
 
         }
 
