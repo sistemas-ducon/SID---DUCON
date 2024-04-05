@@ -314,6 +314,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 if (File.Exists(rutaArchivo))
                 {
                     File.Delete(rutaArchivo);
+                    string mensajePersonalizado1 = "El documento ha sido eliminado correctamente.";
+                    string urlRedireccion1 = "FormExtPrin/DocumentacionOT.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado1)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion1)}");
                 }
 
             }
@@ -324,9 +327,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado3)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion3)}");
             }
 
-            string mensajePersonalizado1 = "El documento ha sido eliminado correctamente.";
-            string urlRedireccion1 = "FormExtPrin/DocumentacionOT.aspx";
-            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado1)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion1)}");
+           
 
         }
 
