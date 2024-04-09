@@ -1969,8 +1969,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string InfoDetOrigen = row.Cells[23].Text;
 
 
-
+                // Cargamos el id de Detalle para la documentacion 
                 Session["Id_Detalle"] = IdDetalle;
+
+                // Cargamos el id de la Solicitud para la documentacion 
+                Session["Id_Solicitud"] = lbNumeroSolicitud.Text;
+
+
                 lbIdDetalle.Text = IdDetalle;
                 tbAncho.Text = Ancho;
                 tbAltura.Text = Alto;

@@ -41,7 +41,7 @@
                             },
                             ticks: {
                                 font: {
-                                    size: 7
+                                    size: 10
                                 }
                             }
                         },
@@ -91,7 +91,7 @@
                 data: {
                     labels: nombres1,
                     datasets: [{
-                        label: 'Estadísticas Venta Por Año',
+                        label: 'Estadísticas Venta Por Mes',
                         data: cantidades1,
                         backgroundColor: backgroundColors, // Asignar los colores
                         borderColor: 'rgba(0, 0, 0, 0.6)', // Cambiar el color del borde a negro
@@ -107,7 +107,7 @@
                             },
                             ticks: {
                                 font: {
-                                    size: 7
+                                    size: 10
                                 }
                             }
                         },
@@ -123,7 +123,65 @@
             });
         }
 
+        function GenerarGrafica3(nombres1, cantidades1) {
+            var ctx1 = document.getElementById("grafica3").getContext('2d');
 
+            // Definir un arreglo de colores
+            var colores = [
+                'rgba(173, 216, 230, 0.3)',   // Enero-Marzo Azul claro
+                'rgba(255, 105, 180, 0.3)',   // Abrl-Junio: Rosa claro
+                'rgba(144, 238, 144, 0.3)',   // Julio - Septimebre: Verde claro
+                'rgba(255, 255, 224, 0.3)'    // Octubre- Diciembre: Amarillo pálido
+
+            ];
+
+
+
+            // Crear un arreglo de colores para los datos
+            var backgroundColors = [];
+            for (var i = 0; i < nombres1.length; i++) {
+                backgroundColors.push(colores[i % colores.length]); // Usar un color diferente para cada etiqueta de mes
+            }
+
+
+            var myChart1 = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: nombres1,
+                    datasets: [{
+
+                        label: 'Estadísticas Venta Por Trimestre',
+                        data: cantidades1,
+                        backgroundColor: backgroundColors, // Asignar los colores
+                        borderColor: 'rgba(0, 0, 0, 0.6)', // Cambiar el color del borde a negro
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Trimestre' // Título del eje X
+                            },
+                            ticks: {
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Ventas ' // Título del eje Y
+
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
     </script>
 
 
@@ -165,7 +223,7 @@
         <div class="tab-content">
 
             <div class="tab-pane fade show active" id="TipoPedido-content">
-                <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                <asp:UpdatePanel ID="PanelTipPed" runat="server">
                     <ContentTemplate>
                         <div class=" container-fluid ">
 
@@ -210,11 +268,10 @@
                                 </div>
 
                                 <div class="col-1">
-                                    <asp:LinkButton class="icong disabled" runat="server" title="Exportar" ID="ExportarExcel" OnClick="ExportarExcel_Click">
+                                    <asp:LinkButton class="icong disabled" runat="server" title="Exportar Excel" ID="ExportarExcel" OnClick="ExportarExcel_Click">
                                          <i class="custom-icon"></i>
                                     </asp:LinkButton>
                                 </div>
-
 
                             </div>
 
@@ -282,7 +339,7 @@
                                         </div>
 
                                         <div class="col-7 border" id="GraAsesor" runat="server">
-                                            <h6 class="datagrid-header text-center">Grafico Venta por Asesor (<span id="FechaI" runat="server"></span> - <span id="FechaF" runat="server"></span> )</h6>
+                                            <h6 class="datagrid-header text-center">Grafico Venta por Asesor (<span id="FechaI" runat="server"></span> - <span id="FechaF" runat="server"></span>)</h6>
                                             <div class="input-group input-group-sm justify-content-end">
 
                                                 <asp:LinkButton class="icong" runat="server" title="Expandir Grafico" ID="Expandir" OnClientClick="expandirDiv(); return false;">
@@ -328,7 +385,7 @@
             </div>
 
             <div class="tab-pane fade " id="Xmeses-content">
-                <asp:UpdatePanel ID="UpdatePanel2" runat="server">
+                <asp:UpdatePanel ID="PanelMes" runat="server">
                     <ContentTemplate>
                         <div class="container-fluid ">
 
@@ -385,7 +442,7 @@
 
                                 <div class="col-1">
                                     <div class=" input-group input-group-sm">
-                                        <asp:LinkButton class="icong " runat="server" title="Exportar" ID="ExportarExcel2" OnClick="ExportarExcel2_Click">
+                                        <asp:LinkButton class="icong " runat="server" title="Exportar Excel" ID="ExportarExcel2" OnClick="ExportarExcel2_Click">
                                          <i class="custom-icon"></i>
                                         </asp:LinkButton>
                                     </div>
@@ -397,35 +454,27 @@
                                 <div class="border rounded">
                                     <div class="row">
 
-                                        <div class="col-7" id="EstMes" runat="server">
+                                        <div class="col-8" id="EstMes" runat="server">
                                             <div class="table-responsive  mb-2 gap-2" style="height: 30rem; overflow-x: auto;">
                                                 <h6 class="datagrid-header text-center">Intervalo de Mes</h6>
                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm mt-2 " ID="DataGridEstXMes" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemDataBound="DataGridEstXMes_ItemDataBound">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                     <Columns>
-
                                                         <asp:BoundColumn DataField="" HeaderText="Mes" ItemStyle-CssClass="auto-width-column" />
-
-
                                                     </Columns>
                                                 </asp:DataGrid>
-
-
 
                                             </div>
                                         </div>
 
-                                        <div class="col-5 border" id="GraMes" style="height: 28rem;" runat="server">
+                                        <div class="col-4 border" id="GraMes" style="height: 28rem;" runat="server">
                                             <h6 class="datagrid-header text-center mb-3">Grafico Ventas Año:  <span id="SpanAño" runat="server"></span></h6>
 
                                             <div class="input-group input-group-sm justify-content-end">
-
                                                 <asp:LinkButton class="icong" runat="server" title="Expandir Grafico" ID="Expandir1" OnClientClick="expandirDiv1(); return false;">
                                                         <i class="bi bi-arrows-fullscreen"></i>
                                                 </asp:LinkButton>
-
                                             </div>
-
 
                                             <canvas id="grafica2" width="350" height="200"></canvas>
                                         </div>
@@ -445,18 +494,106 @@
 
 
             <div class="tab-pane fade " id="Xtrimestre-content">
-                <asp:UpdatePanel ID="UpdatePanel3" runat="server">
+                <asp:UpdatePanel ID="PnaleTrimestre" runat="server">
                     <ContentTemplate>
-                        <div class="container ">
-                            <h1>X trimestre</h1>
+                        <div class="container-fluid ">
+
+                            <div class="row pt-2 mt-2 pb-2 mb-2">
+
+                                <div class="col-1"></div>
+
+                                <div class="col-2">
+                                    <div class=" input-group input-group-sm mb-1 ">
+                                        <asp:Label class="form-label" Text="Seleccione año para estadistica" runat="server" ID="Label2"></asp:Label>
+                                    </div>
+                                </div>
+
+                                <div class="col-1">
+                                    <div class=" input-group input-group-sm mb-1 ">
+                                        <asp:DropDownList CssClass="form-control" ID="ddlAnioBusquedaT" runat="server">
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+
+                                <div class="col-1">
+                                    <div class="input-group input-group-sm mb-2 gap-2">
+                                        <asp:Label class="form-label" Text="Zona" runat="server" ID="Label4"></asp:Label>
+                                        <asp:DropDownList class="form-control" ID="ddlZonaT" runat="server">
+                                            <asp:ListItem Value="%">%</asp:ListItem>
+                                            <asp:ListItem Value="01">01</asp:ListItem>
+                                            <asp:ListItem Value="02">02</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+
+                                <div class="col-4"></div>
+
+                                <div class="col-1">
+                                    <div class=" input-group input-group-sm">
+                                        <asp:Button CssClass="btn btn-outline-secondary" ID="btnConsultaTrimestre" runat="server" Text="Consultar Trimestre" OnClick="btnConsultaTrimestre_Click" />
+                                    </div>
+                                </div>
+
+                                <div class="col-1"></div>
+
+                                <div class="col-1">
+                                    <div class=" input-group input-group-sm">
+                                        <asp:LinkButton class="icong " runat="server" title="Exportar Excel" ID="ExportarExcel3" OnClick="ExportarExcel3_Click">
+                                         <i class="custom-icon"></i>
+                                        </asp:LinkButton>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row justify-content-center p-1 m-1 pb-2" runat="server">
+                                <div class="border rounded">
+                                    <div class="row">
+
+                                        <div class="col-5" id="DivT1" runat="server">
+                                            <div class="table-responsive  mb-2 gap-2" style="height: 27rem; overflow-x: auto;">
+                                                <h6 class="datagrid-header text-center">Intervalo de Trimestre</h6>
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm mt-2 " ID="DataGridTrimestre" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemDataBound="DataGridTrimestre_ItemDataBound">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                    <Columns>
+                                                        <asp:BoundColumn DataField="Trimestre" HeaderText="Trimestre" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="FechaIni" HeaderText="Fecha Ini." ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="FechaFin" HeaderText="Fecha Fin." ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="TotalTrimestre" HeaderText="Total Trimestre" ItemStyle-CssClass="auto-width-column" />
+                                                    </Columns>
+                                                </asp:DataGrid>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col-7 border" id="DivT2" style="height: 28rem;" runat="server">
+                                            <h6 class="datagrid-header text-center mb-3">Grafico Ventas Trimestre año:   <span id="SpanAnioTrimestre" runat="server"></span></h6>
+
+                                            <div class="input-group input-group-sm justify-content-end">
+                                                <asp:LinkButton class="icong" runat="server" title="Expandir Grafico" ID="ExpandirT" OnClientClick="expandirDiv3(); return false;">
+                                                        <i class="bi bi-arrows-fullscreen"></i>
+                                                </asp:LinkButton>
+                                            </div>
+
+                                            <canvas id="grafica3" width="600" height="200"></canvas>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </div>
                     </ContentTemplate>
+                    <Triggers>
+                        <asp:PostBackTrigger ControlID="ExportarExcel3" />
+                    </Triggers>
                 </asp:UpdatePanel>
 
             </div>
 
             <div class="tab-pane fade " id="Xrangos-content">
-                <asp:UpdatePanel ID="UpdatePanel4" runat="server">
+                <asp:UpdatePanel ID="PanelRangos" runat="server">
                     <ContentTemplate>
                         <div class="container ">
                             <h1>X Rangos</h1>
@@ -467,10 +604,171 @@
             </div>
 
             <div class="tab-pane fade " id="XcuotaMensual-content">
-                <asp:UpdatePanel ID="UpdatePanel5" runat="server">
+                <asp:UpdatePanel ID="PanelCuotaMes" runat="server">
                     <ContentTemplate>
-                        <div class="container ">
-                            <h1>X Couta Mensual</h1>
+                        <div class="container-fluid ">
+
+                            <div class="row pt-2 mt-2 pb-2 mb-2">
+
+                                <div class="col-1"></div>
+
+                                <div class="col-2">
+                                    <div class=" input-group input-group-sm mb-1 gap-2 ">
+                                        <asp:Label class="form-label" Text="Año" runat="server" ID="lbAnioM"></asp:Label>
+                                        <asp:DropDownList CssClass="form-control" ID="ddlanioBusquedaM" runat="server">
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+
+                                <div class="col-2">
+                                    <div class="input-group input-group-sm  mb-2 gap-2 justify-content-center ">
+                                        <asp:CheckBox ID="chkActivos" runat="server" />
+                                        <asp:Label ID="lbActivos" runat="server" Text="Activos"></asp:Label>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-2">
+                                    <div class=" input-group input-group-sm justify-content-start">
+                                        <asp:Button CssClass="btn btn-outline-secondary" ID="btnConsultarCouM" runat="server" Text="Consultar" OnClick="btnConsultarCouM_Click" />
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-9">
+                                    <div class="row justify-content-center p-1 m-1 pb-2" id="Div2" runat="server">
+                                        <div class="border rounded">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="table-responsive  mb-2 gap-2" style="height: 14rem; overflow-x: auto;">
+                                                        <h6 class="datagrid-header text-center">Estadística por couta Mensual</h6>
+                                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm mt-2 " ID="DataGridCoutaMes" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemDataBound="DataGridCoutaMes_ItemDataBound" OnItemCommand="DataGridCoutaMes_ItemCommand">
+                                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                            <Columns>
+                                                                <asp:TemplateColumn HeaderText="...">
+                                                                    <ItemTemplate>
+                                                                        <asp:LinkButton CssClass="Tam" ID="lnkView" runat="server" CommandName="VerAsesor" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateColumn>
+                                                                <asp:BoundColumn DataField="" HeaderText="N°" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Cedula" HeaderText="Cédula" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Asesor" HeaderText="Nombre" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Grupo" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Año" HeaderText="Año" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Cuota" HeaderText="Cuota" ItemStyle-CssClass="auto-width-column" />
+
+
+                                                            </Columns>
+                                                        </asp:DataGrid>
+
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-2">
+                                    <div class=" input-group-sm justify-content-end ">
+                                        <asp:Label class="form-label" Text="Cuota: " runat="server" ID="lbCouta"></asp:Label>
+                                        <asp:TextBox ID="tbCouta" runat="server" CssClass="form-control"></asp:TextBox>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-1 pt-4">
+                                    <div class=" input-group-sm justify-content-end ">
+                                        <asp:Button CssClass="btn btn-outline-secondary" ID="btnAsignar" runat="server" Text="Asignar" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row pt-1 mt-1 pb-1 mb-1">
+
+                                <div class="col-1"></div>
+
+                                <div class="col-2">
+                                    <div class="input-group input-group-sm mb-2 gap-2">
+                                        <asp:Label class="form-label" Text="Mes" runat="server" ID="lbMes"></asp:Label>
+                                        <asp:DropDownList class="form-control" ID="ddlMes" runat="server">
+                                            <asp:ListItem Value=""></asp:ListItem>
+                                            <asp:ListItem Value="1">Enero</asp:ListItem>
+                                            <asp:ListItem Value="2">Febrero</asp:ListItem>
+                                            <asp:ListItem Value="3">Marzo</asp:ListItem>
+                                            <asp:ListItem Value="4">Abril</asp:ListItem>
+                                            <asp:ListItem Value="5">Mayo</asp:ListItem>
+                                            <asp:ListItem Value="6">Junio</asp:ListItem>
+                                            <asp:ListItem Value="7">Julio</asp:ListItem>
+                                            <asp:ListItem Value="8">Agosto</asp:ListItem>
+                                            <asp:ListItem Value="9">Septiembre</asp:ListItem>
+                                            <asp:ListItem Value="10">Octubre</asp:ListItem>
+                                            <asp:ListItem Value="11">Noviembre</asp:ListItem>
+                                            <asp:ListItem Value="12">Diciembre</asp:ListItem>
+
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+
+                                <div class="col-2">
+                                    <div class=" input-group input-group-sm justify-content-center">
+                                        <asp:Button CssClass="btn btn-outline-secondary" ID="btnConsultarM2" runat="server" Text="Consultar" OnClick="btnConsultarM2_Click" />
+                                    </div>
+                                </div>
+
+                                <div class="col-2">
+                                    <div class=" input-group input-group-sm text-start">
+                                        <asp:LinkButton class="icong " runat="server" title="Exportar Excel" ID="ExportarExcel5">
+                                         <i class="custom-icon"></i>
+                                        </asp:LinkButton>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row justify-content-center p-1 m-1 pb-1" id="Div3" runat="server">
+                                <div class="border rounded">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="table-responsive  mb-2 gap-2" style="height: 15rem; overflow-x: auto;">
+                                                <h6 class="datagrid-header text-center">Estadistica Venta Mes</h6>
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm mt-2 " ID="DataGridGeneralMes" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                    <Columns>
+
+                                                        <asp:BoundColumn DataField="" HeaderText="N°" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Cedula" HeaderText="Cédula" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Grupo+" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="Año" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="Mes" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="P. Mensual" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="Venta Mes" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="% Cump Mes" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
+
+                                                    </Columns>
+                                                </asp:DataGrid>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </div>
                     </ContentTemplate>
                 </asp:UpdatePanel>
@@ -478,12 +776,90 @@
             </div>
 
             <div class="tab-pane fade " id="XcuotaTimensual-content">
-                <asp:UpdatePanel ID="UpdatePanel6" runat="server">
+                <asp:UpdatePanel ID="PanelCuotaTrimestre" runat="server">
                     <ContentTemplate>
-                        <div class="container ">
-                            <h1>X Cuota Trimestral.</h1>
+                        <div class="container-fluid ">
+
+                            <div class="row pt-2 mt-2 pb-2 mb-2">
+
+                                <div class="col-1"></div>
+
+                                <div class="col-2">
+                                    <div class=" input-group input-group-sm mb-1 gap-2 ">
+                                        <asp:Label class="form-label" Text="Año" runat="server" ID="lbAñoCouTri"></asp:Label>
+                                        <asp:DropDownList CssClass="form-control" ID="ddlAnioBusquedaCouTri" runat="server">
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+
+                                <div class="col-2">
+                                    <div class="input-group input-group-sm mb-2 gap-2">
+                                        <asp:Label class="form-label" Text="Trimestre" runat="server" ID="Label5"></asp:Label>
+                                        <asp:DropDownList class="form-control" ID="ddlTrimestre" runat="server">
+                                            <asp:ListItem Value=""></asp:ListItem>
+                                            <asp:ListItem Value="1">1</asp:ListItem>
+                                            <asp:ListItem Value="2">2</asp:ListItem>
+                                            <asp:ListItem Value="3">3</asp:ListItem>
+                                            <asp:ListItem Value="4">4</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+
+                                <div class="col-2"></div>
+
+                                <div class="col-2">
+                                    <div class=" input-group input-group-sm justify-content-end">
+                                        <asp:Button CssClass="btn btn-outline-secondary" ID="btnConsultarCouTri" runat="server" Text="Consultar" OnClick="btnConsultarCouTri_Click" />
+                                    </div>
+                                </div>
+
+                                <div class="col-1"></div>
+
+                                <div class="col-2">
+                                    <div class=" input-group input-group-sm text-start">
+                                        <asp:LinkButton class="icong " runat="server" title="Exportar Excel" ID="ExportarExcel6" OnClick="ExportarExcel6_Click">
+                                         <i class="custom-icon"></i>
+                                        </asp:LinkButton>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row justify-content-center p-1 m-1 pb-2" id="Div1" runat="server">
+                                <div class="border rounded">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="table-responsive  mb-2 gap-2" style="height: 30rem; overflow-x: auto;">
+                                                <h6 class="datagrid-header text-center">Estadistica por couta trimestral</h6>
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm mt-2 " ID="DataGridCouTri" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemDataBound="DataGridCouTri_ItemDataBound">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                    <Columns>
+
+                                                        <asp:BoundColumn DataField="" HeaderText="N°" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Cedula" HeaderText="Cédula" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="Trimestre" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Cuota" HeaderText="Cuota" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="CuotaTrimestral" HeaderText="Cuota Trimestral" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Total" HeaderText="Total" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="% Cumplimiento" ItemStyle-CssClass="auto-width-column" />
+
+                                                    </Columns>
+                                                </asp:DataGrid>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </ContentTemplate>
+                    <Triggers>
+                        <asp:PostBackTrigger ControlID="ExportarExcel6" />
+                    </Triggers>
                 </asp:UpdatePanel>
 
             </div>
@@ -512,15 +888,34 @@
         function expandirDiv1() {
             var graMesDiv = document.getElementById('<%= GraMes.ClientID %>');
 
-            if (graMesDiv.classList.contains('col-5')) {
+            if (graMesDiv.classList.contains('col-4')) {
                 document.getElementById('<%= EstMes.ClientID %>').style.display = 'none';
-                graMesDiv.classList.remove('col-5');
-                graMesDiv.classList.add('col-10');
+                graMesDiv.classList.remove('col-4');
+                graMesDiv.classList.add('col-12');
 
             } else {
                 document.getElementById('<%= EstMes.ClientID %>').style.display = 'block';
-                graMesDiv.classList.remove('col-10');
-                graMesDiv.classList.add('col-5');
+                graMesDiv.classList.remove('col-12');
+                graMesDiv.classList.add('col-4');
+
+
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        function expandirDiv3() {
+            var graDivT2 = document.getElementById('<%= DivT2.ClientID %>');
+
+            if (graDivT2.classList.contains('col-7')) {
+                document.getElementById('<%= DivT1.ClientID %>').style.display = 'none';
+                graDivT2.classList.remove('col-7');
+                graDivT2.classList.add('col-12');
+
+            } else {
+                document.getElementById('<%= DivT1.ClientID %>').style.display = 'block';
+                graDivT2.classList.remove('col-12');
+                graDivT2.classList.add('col-7');
 
 
             }

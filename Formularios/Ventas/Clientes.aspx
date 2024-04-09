@@ -163,7 +163,7 @@
                                 <div class="col-3">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbNombreCliente" class="form-label" Text="Cliente" runat="server"></asp:Label>
-                                        <asp:TextBox ID="tbNombreCliente" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                        <asp:TextBox ID="tbNombreCliente" type="text" class="form-control " placeHolder="Max 39 caracteres" maxlength="39" runat="server" ReadOnly="true"></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -188,7 +188,7 @@
                                 <div class="col-6">
                                     <div class="input-group input-group-sm  mb-2 gap-4">
                                         <asp:Label ID="lbDireccion" class="form-label" Text="Direccion" runat="server"></asp:Label>
-                                        <asp:TextBox ID="tbDireccion" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
+                                        <asp:TextBox ID="tbDireccion" type="text" class="form-control " placeHolder="Max 149 caracteres" maxlength="149" runat="server" ReadOnly="true"></asp:TextBox>
                                     </div>
                                 </div>
 

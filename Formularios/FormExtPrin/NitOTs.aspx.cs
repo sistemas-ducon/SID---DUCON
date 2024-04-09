@@ -687,12 +687,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         {
                             List<string> cedulasList = new List<string>();
 
-                            foreach (DataRowView rowView1 in datosView1)
+                            if(datosView1.Count > 0)
                             {
-                                string cedula = rowView1["Cedula"].ToString();
+                                // Obtener la primera fila del DataView
+                                DataRowView primeraFila = datosView1[0];
+
+                                // Obtener la cedula de la primera fila
+                                string cedula = primeraFila["Cedula"].ToString();
                                 cedulasList.Add(cedula);
+
                             }
-                           
+                            
+
                             // Convierte la lista de cédulas a un array si es necesario
                             string[] cedulasArray = cedulasList.ToArray();
                             int persmiso = PermisoEmpleado();                                                                                                          
@@ -716,6 +722,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                                 btnModificar.Enabled = false;
                                 btnModificar.CssClass = "btn btn-outline-secondary";
                                 Contacto.Visible = false;
+                                tbTelefono.Text = "";
+                                tbDireccion.Text = "";
+                                tbFax.Text = "";
                             }
 
                             // estos botones se activan sin importar si es o no cliente de ese asesor 
