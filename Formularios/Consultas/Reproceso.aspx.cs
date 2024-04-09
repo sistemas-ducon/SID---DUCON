@@ -1524,7 +1524,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Consultas
                     cmdUpdate.Parameters.AddWithValue("@pq3", tbPq3.Text);
                     cmdUpdate.Parameters.AddWithValue("@pq4", tbPq4.Text);
                     cmdUpdate.Parameters.AddWithValue("@pq5", tbPq5.Text);
-                    cmdUpdate.Parameters.AddWithValue("@pq5", tbPq5.Text);
                     cmdUpdate.Parameters.AddWithValue("@idDetalle", Id_detalle.Text);
 
 

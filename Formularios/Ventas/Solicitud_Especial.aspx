@@ -424,7 +424,7 @@
                                 <div class="row">
                                     <div class=" col-6-sm">
                                         <div class=" input-group-sm  mb-2 gap-2">
-                                            <textarea class="form-control form-control-sm" id="txDescProduc" runat="server" cols="25" rows="3" disabled="disabled"></textarea>
+                                            <textarea class="form-control form-control-sm" id="txDescProduc" runat="server" cols="25" rows="3" maxlength="99" placeholder="Escriba máximo 99 caracteres" disabled="disabled"></textarea>
                                         </div>
                                     </div>
 

@@ -45,3 +45,9 @@
     background-color: black !important; /*Se Cambia el color de la fila Seleccionada  */
     color: white !important;
 }
+
+.Tam {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
