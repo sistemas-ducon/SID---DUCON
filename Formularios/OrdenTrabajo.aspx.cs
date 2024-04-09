@@ -75,7 +75,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (!IsPostBack)
                 {
-
+                   
 
                     tbVenta.Text = DateTime.Now.ToString("yyyy-MM-dd");
                     dtpFechaEntregaDibujoDespiece.Text = DateTime.Now.ToString("yyyy-MM-dd");
@@ -118,6 +118,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     txResumen.Disabled = true;
 
                     ValorPorDefectoTexArea();
+
                     CargarAsesoresEnDropDownList();
                     DeshabilitarTextBoxes(listaTextBoxes);
                     DeshabilitarDropDownLists(listaDropDownLists);
@@ -996,7 +997,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             txtAsesor.CssClass = "form-control";
 
             txObs1.Disabled = false;
-            txObs2.Disabled = false;
+            txObs2.Disabled = true;
 
             ObservacionCont.Disabled = false;
             TextTNegociacion.Disabled = false;

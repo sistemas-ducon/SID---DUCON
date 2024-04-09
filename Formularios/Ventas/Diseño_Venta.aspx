@@ -219,7 +219,7 @@
                                         <div class="contenedor-icono ">
 
 
-                                            <asp:LinkButton runat="server" ID="NuevoDisBit" Enabled="false" OnClick="NuevoDisBit_Click">
+                                            <asp:LinkButton runat="server" title="Nuevo Diseño" ID="NuevoDisBit" Enabled="false" OnClick="NuevoDisBit_Click">
                                                 <i class="bi bi-file-earmark"></i> 
                                             </asp:LinkButton>
 
@@ -261,41 +261,41 @@
                                             </div>
 
 
-                                            <asp:LinkButton runat="server" ID="Grabar" Enabled="false" OnClick="btnInsertar_Click">
+                                            <asp:LinkButton runat="server" title="Grabar Diseño" ID="Grabar" Enabled="false" OnClick="btnInsertar_Click">
                                                <i class="bi bi-save2"></i>
                                             </asp:LinkButton>
 
                                             <asp:Label ID="lblMensaje" runat="server" CssClass="mensaje"></asp:Label>
 
-                                            <asp:LinkButton runat="server" ID="Modificar" Enabled="false" OnClick="Modificar_Click">
+                                            <asp:LinkButton runat="server" title="Modificar Diseño" ID="Modificar" Enabled="false" OnClick="Modificar_Click">
                                                <i class="bi bi-wrench"></i>
                                             </asp:LinkButton>
 
-                                            <asp:LinkButton runat="server" ID="DocBitacora"  Enabled="false" Onclick="DocBitacora_Click">
+                                            <asp:LinkButton runat="server" title="Documentacion Diseño" ID="DocBitacora"  Enabled="false" Onclick="DocBitacora_Click">
                                             <i class="bi bi-send-plus"></i>
                                             </asp:LinkButton>
 
-                                            <asp:LinkButton runat="server" ID="RegresarDiseño" Enabled="false">
+                                            <asp:LinkButton runat="server" title="Regresar Diseño" ID="RegresarDiseño" Enabled="false">
                                                   <i class="bi bi-box-arrow-in-left"></i>
                                             </asp:LinkButton>
 
-                                            <asp:LinkButton runat="server" ID="AdicionarElemento" Enabled="false">
+                                            <asp:LinkButton runat="server" title="Adicionar Elemento" ID="AdicionarElemento" Enabled="false">
                                               <i class="bi bi-file-earmark-spreadsheet"></i>
                                             </asp:LinkButton>
 
-                                            <asp:LinkButton runat="server" ID="ActualizarDiseno" Enabled="false">
+                                            <asp:LinkButton runat="server" title="Actualizar Diseños" ID="ActualizarDiseno" Enabled="false">
                                               <i class="bi bi-arrow-right-square"></i>
                                             </asp:LinkButton>
 
-                                            <asp:LinkButton runat="server" ID="PausarDiseño" Enabled="false">
+                                            <asp:LinkButton runat="server" title="Pausar Diseño" ID="PausarDiseño" Enabled="false">
                                               <i class="bi bi-stop-circle"></i>
                                             </asp:LinkButton>
 
-                                            <asp:LinkButton runat="server" ID="Cancelar" Enabled="false" OnClick="Cancelar_Click">
+                                            <asp:LinkButton runat="server" title="Cancelar" ID="Cancelar" Enabled="false" OnClick="Cancelar_Click">
                                                <i class="bi bi-x-lg"></i>
                                             </asp:LinkButton>
 
-                                            <asp:LinkButton runat="server" ID="EliminarDiseño" Enabled="false">
+                                            <asp:LinkButton runat="server" title="Eliminar Diseño" ID="EliminarDiseño" Enabled="false">
                                                     <i class="bi bi-trash"></i>
                                             </asp:LinkButton>
 
@@ -818,7 +818,6 @@
                                                                     <asp:BoundColumn DataField="RealizadoPor" HeaderText="Realizado Por" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Composicion" HeaderText="Composición" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="FechalecturaDespiece" HeaderText="Despiece" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-
                                                                 </Columns>
                                                                 <ItemStyle CssClass="fila-verde" />
                                                             </asp:DataGrid>
@@ -852,7 +851,7 @@
                                              <asp:LinkButton runat="server" ID="LinkButton4" CssClass="btn btn-sm" > 
                                                  <i class="bi bi-menu-app"></i>
                                             </asp:LinkButton>
-                                        <asp:LinkButton runat="server" ID="LinkButton2" CssClass="btn btn-sm" style="background-color: #00ff21"> 
+                                        <asp:LinkButton runat="server" ID="LinkButton2" CssClass="btn btn-sm" style="background-color: #00ff21" OnClick="VisualizarCotPrecioActual_Click">  
                                                    <i class="bi bi-currency-dollar"></i>
                                             </asp:LinkButton>
                                     </div>
@@ -877,6 +876,9 @@
                         </div>
 
                     </ContentTemplate>
+                      <Triggers>
+                        <asp:PostBackTrigger ControlID="LinkButton2" />
+                    </Triggers>
                 </asp:UpdatePanel>
             </div>
 

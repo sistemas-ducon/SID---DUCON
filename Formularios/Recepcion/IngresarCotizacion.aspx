@@ -8,19 +8,19 @@
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
-     <link type="text/css" href="../../Recursos/CSS/Ventas/IngresarCotizacion.css" rel="stylesheet" />
+    <link type="text/css" href="../../Recursos/CSS/Ventas/IngresarCotizacion.css" rel="stylesheet" />
     <title>Ingresar Cotizacion</title>
 </head>
 <body translate="no">
     <form id="form1" runat="server">
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
-       
 
-               <nav class="navbar navbar-light bg-light">
+
+        <nav class="navbar navbar-light bg-light">
             <div class="container d-flex justify-content-center">
                 <ul class="nav nav-tabs" id="myTabs">
                     <li class="nav-item">
@@ -32,7 +32,7 @@
 
                 </ul>
             </div>
-               </nav>
+        </nav>
 
         <div class="tab-content" id="myTabContent">
 
@@ -72,7 +72,7 @@
                                     </ul>
                                 </div>
                             </nav>
-                          <div id="d-flex" class="d-flex">
+                            <div id="d-flex" class="d-flex">
                                 <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
                                     <div class="p-3 m-2 border bg-light" style="height: 21rem;">
                                         <h6>Información Cotización</h6>
@@ -91,7 +91,7 @@
                                             <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
                                                 <div class="input-group input-group-sm mb-2 gap-2">
                                                     <asp:Label class="form-label" runat="server" ID="txtAsesor" Text="Asesor"></asp:Label>
-                                                   <asp:DropDownList ID="ddlAsesor" class="form-control form-control-sm" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlAsesor_SelectedIndexChanged" EnableViewState="true"></asp:DropDownList>
+                                                    <asp:DropDownList ID="ddlAsesor" class="form-control form-control-sm" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlAsesor_SelectedIndexChanged" EnableViewState="true"></asp:DropDownList>
 
 
                                                 </div>
@@ -117,9 +117,9 @@
                                                 <div class="input-group input-group-sm mb-2 gap-2">
                                                     <asp:Label class="form-label form-label" Text="Diseño" runat="server" ID="Label1"></asp:Label>
                                                     <asp:TextBox runat="server" ID="TextBox2" CssClass="form-control form-control-sm" OnTextChanged="ddlDise_SelectedIndexChanged" AutoPostBack="true"></asp:TextBox>
-                                                      <asp:LinkButton runat="server" ID="BtnDiseno" CssClass="btn shadow btn-light linkButtonClicked2" OnClick="BtnDiseno_Click">
+                                                    <asp:LinkButton runat="server" ID="BtnDiseno" CssClass="btn shadow btn-light linkButtonClicked2" OnClick="BtnDiseno_Click">
                                                           <i class="bi bi-arrow-down-circle-fill"></i>
-                                                      </asp:LinkButton>
+                                                    </asp:LinkButton>
                                                 </div>
                                             </div>
                                         </div>
@@ -157,17 +157,17 @@
                                                 <div class="input-group input-group-sm mb-2 gap-4">
                                                     <asp:Label runat="server" CssClass="form-label" ID="lblCompe" Text="Compe"></asp:Label>
                                                     <asp:DropDownList ID="ddlCompeData" runat="server" class="form-control" DataSourceID="CompeDataS" DataTextField="NombreCompetencia" DataValueField="ID_Competencia">
-                                        </asp:DropDownList>
-                                        <asp:SqlDataSource ID="CompeDataS" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT * FROM tblCompetencia"></asp:SqlDataSource>
-                            
+                                                    </asp:DropDownList>
+                                                    <asp:SqlDataSource ID="CompeDataS" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT * FROM tblCompetencia"></asp:SqlDataSource>
+
                                                 </div>
                                             </div>
                                             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                                                 <div class="input-group input-group-sm mb-2 gap-2">
                                                     <asp:Label runat="server" CssClass="form-label" ID="lblCausa" Text="Causa"></asp:Label>
                                                     <asp:DropDownList ID="ddlCausa" runat="server" class="form-control" DataSourceID="CausaDataS" DataTextField="CausaRechazoCotizacion" DataValueField="ID_CausaRechazoCotizacion">
-                                        </asp:DropDownList>
-                                        <asp:SqlDataSource ID="CausaDataS" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT * FROM tblCausadeCotizacionRechazada"></asp:SqlDataSource>
+                                                    </asp:DropDownList>
+                                                    <asp:SqlDataSource ID="CausaDataS" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT * FROM tblCausadeCotizacionRechazada"></asp:SqlDataSource>
                                                 </div>
                                             </div>
                                             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
@@ -213,7 +213,7 @@
                                             <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
                                                 <div class="input-group input-group-sm mb-2 gap-3">
                                                     <asp:Label runat="server" CssClass="form-label" ID="Label2" Text="VVSU"></asp:Label>
-                                                   <asp:TextBox runat="server" ID="TextBox3" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                    <asp:TextBox runat="server" ID="TextBox3" CssClass="form-control form-control-sm"></asp:TextBox>
                                                 </div>
                                             </div>
                                         </div>
@@ -282,68 +282,68 @@
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="p-3 m-2 border" style="height: 10rem;">
 
-                                         <div class="table-responsive mb-2 gap-2" style="max-height: 9rem; overflow-x: auto;">
-                                         <asp:DataGrid CssClass="table table-bordered table-hover table-sm form-control-sm" ID="DataGrid2" runat="server"
-                                                                AutoGenerateColumns="false">
-                                                                <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
-                                                                <Columns>
+                                        <div class="table-responsive mb-2 gap-2" style="max-height: 9rem; overflow-x: auto;">
+                                            <asp:DataGrid CssClass="table table-bordered table-hover table-sm form-control-sm" ID="DataGrid2" runat="server"
+                                                AutoGenerateColumns="false">
+                                                <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                <Columns>
 
-                                                                      <asp:TemplateColumn ItemStyle-CssClass="auto-width-column">
-                                                                            <ItemTemplate>
-                                                                                <asp:LinkButton ID="BtnSelec2" runat="server" 
+                                                    <asp:TemplateColumn ItemStyle-CssClass="auto-width-column">
+                                                        <ItemTemplate>
+                                                            <asp:LinkButton ID="BtnSelec2" runat="server"
                                                                                     CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square text-dark'></i>"/>
-                                                                            </ItemTemplate>
-                                                                        </asp:TemplateColumn>
-                              
-                                                                    <asp:BoundColumn DataField="Id_OT" HeaderText="OT" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                    <asp:BoundColumn DataField="Consecutivo_Pedido" HeaderText="Ped" ItemStyle-CssClass="auto-width-column" />
-                                                                    <asp:BoundColumn DataField="Cotizacion" HeaderText="Cotización" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                    <asp:BoundColumn DataField="Precio_Venta" HeaderText="Venta" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                    <asp:BoundColumn DataField="Descuento" HeaderText="Dcto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>                                                                                                           
-                                                                   <asp:BoundColumn DataField="DescuentoparaComision" HeaderText="Dcto.Com" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                    <asp:BoundColumn DataField="ValorBolsa" HeaderText="Valor Tte" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>                                                                                            
-                                                                </Columns>
-                                                            </asp:DataGrid>
-                                              </div>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateColumn>
+
+                                                    <asp:BoundColumn DataField="Id_OT" HeaderText="OT" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="Consecutivo_Pedido" HeaderText="Ped" ItemStyle-CssClass="auto-width-column" />
+                                                    <asp:BoundColumn DataField="Cotizacion" HeaderText="Cotización" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="Precio_Venta" HeaderText="Venta" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="Descuento" HeaderText="Dcto" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="DescuentoparaComision" HeaderText="Dcto.Com" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="ValorBolsa" HeaderText="Valor Tte" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                </Columns>
+                                            </asp:DataGrid>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="p-3 m-2 border" style="height: 15rem;">
-                                         <div class="table-responsive mb-2 gap-2" style="max-height: 14rem; overflow-x: auto;">
-                                         <asp:DataGrid CssClass="table table-bordered table-hover table-sm form-control-sm" ID="DataGrid1" runat="server"
-                                                                AutoGenerateColumns="false">
-                                                                <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
-                                                                <Columns>
+                                        <div class="table-responsive mb-2 gap-2" style="max-height: 14rem; overflow-x: auto;">
+                                            <asp:DataGrid CssClass="table table-bordered table-hover table-sm form-control-sm" ID="DataGrid1" runat="server"
+                                                AutoGenerateColumns="false">
+                                                <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                <Columns>
 
-                                                                      <asp:TemplateColumn ItemStyle-CssClass="auto-width-column">
-                                                                            <ItemTemplate>
-                                                                                <asp:LinkButton ID="BtnSelec" runat="server" OnClick="lnkSelectRow_Click"
+                                                    <asp:TemplateColumn ItemStyle-CssClass="auto-width-column">
+                                                        <ItemTemplate>
+                                                            <asp:LinkButton ID="BtnSelec" runat="server" OnClick="lnkSelectRow_Click"
                                                                                     CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square text-dark'></i>"/>
-                                                                            </ItemTemplate>
-                                                                        </asp:TemplateColumn>
-                              
-                                                                    <asp:BoundColumn DataField="Cotización" HeaderText="Cotización" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                    <asp:BoundColumn DataField="Estado" HeaderText="Estado" ItemStyle-CssClass="auto-width-column" />
-                                                                    <asp:BoundColumn DataField="Valor" HeaderText="Valor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                    <asp:BoundColumn DataField="Cliente" HeaderText="Cliente" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                    <asp:BoundColumn DataField="Obra" HeaderText="Obra" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>                                                                                                           
-                                                                   <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                    <asp:BoundColumn DataField="Fecha_Cotización" HeaderText="F.Cotización" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                    <asp:BoundColumn DataField="Fecha_Respuesta" HeaderText="F.Respuesta" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                     <asp:BoundColumn DataField="Plano" HeaderText="Plano" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                     <asp:BoundColumn DataField="NombreCompetencia" HeaderText="Competencia" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                     <asp:BoundColumn DataField="Contacto_Cotizacion" HeaderText="Contacto Cotizacion" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                     <asp:BoundColumn DataField="CausaRechazoCotizacion" HeaderText="Causa de Rechazo" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                     <asp:BoundColumn DataField="Zona" HeaderText="Zona" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                     <asp:BoundColumn DataField="Id_OT" HeaderText="OT" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
-                                                                </Columns>
-                                                            </asp:DataGrid><asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
+                                                        </ItemTemplate>
+                                                    </asp:TemplateColumn>
+
+                                                    <asp:BoundColumn DataField="Cotización" HeaderText="Cotización" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="Estado" HeaderText="Estado" ItemStyle-CssClass="auto-width-column" />
+                                                    <asp:BoundColumn DataField="Valor" HeaderText="Valor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="Cliente" HeaderText="Cliente" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="Obra" HeaderText="Obra" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="Fecha_Cotización" HeaderText="F.Cotización" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="Fecha_Respuesta" HeaderText="F.Respuesta" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="Plano" HeaderText="Plano" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="NombreCompetencia" HeaderText="Competencia" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="Contacto_Cotizacion" HeaderText="Contacto Cotizacion" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="CausaRechazoCotizacion" HeaderText="Causa de Rechazo" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="Zona" HeaderText="Zona" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    <asp:BoundColumn DataField="Id_OT" HeaderText="OT" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                </Columns>
+                                            </asp:DataGrid><asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
     SelectCommand="SELECT TOP 400 tblCotización.*, tblEstado_Cotización.Descripción_Estado AS Estado, CONCAT(tblAsesorComercial.Nombre, ' ', tblAsesorComercial.Apellidos) AS Asesor, tblCompetencia.NombreCompetencia, tblCausadeCotizacionRechazada.CausaRechazoCotizacion, tblCliente.NombreCompañía AS Cliente2 FROM tblAsesorComercial INNER JOIN (tblEstado_Cotización INNER JOIN (tblCompetencia INNER JOIN (tblCliente INNER JOIN (tblCausadeCotizacionRechazada INNER JOIN tblCotización ON tblCausadeCotizacionRechazada.ID_CausaRechazoCotizacion = tblCotización.ID_CausaRechazoCotizacion) ON tblCliente.Id_Cliente = tblCotización.Cliente) ON tblCompetencia.ID_Competencia = tblCotización.ID_Competencia) ON tblEstado_Cotización.Id_Estado = tblCotización.Estado) ON tblAsesorComercial.Cedula = tblCotización.Asesor">
 </asp:SqlDataSource>
 
-                                              </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -371,7 +371,7 @@
                                     <div class="input-group input-group-sm mb-2 gap-3">
                                         <asp:Label runat="server" CssClass="form-label" ID="Label14" Text="Nit"></asp:Label>
                                         <asp:TextBox runat="server" ID="TextBox15" CssClass="form-control form-control-sm gap-3"></asp:TextBox>
-                                      <asp:LinkButton runat="server" ID="BtnPuntos" CssClass="btn shadow btn-light linkButtonClicked2" Text="..." OnClick="Buscar_Click"></asp:LinkButton>
+                                        <asp:LinkButton runat="server" ID="BtnPuntos" CssClass="btn shadow btn-light linkButtonClicked2" Text="..." OnClick="Buscar_Click"></asp:LinkButton>
                                     </div>
                                 </div>
                             </div>
@@ -385,12 +385,12 @@
                                     </div>
                                     <div class="modal-body form-control-sm">
                                         <p>
-                                         Este cliente esta guardado con otro asesor ¿Desea cambiarlo?
+                                            Este cliente esta guardado con otro asesor ¿Desea cambiarlo?
                                         </p>
                                     </div>
-                                    <div class="modal-footer  d-flex align-items-center justify-content-center">      
-                                         <asp:Button runat="server" Text="SI" data-bs-dismiss="modal" aria-label="Close" class="btn btn-sm button-enabled shadow linkButtonClicked2" OnClick="ActualizarCliente_Click"></asp:Button>
-                                         <asp:Button runat="server" Text="NO" data-bs-dismiss="modal" aria-label="Close" class="btn btn-sm button-enabled shadow linkButtonClicked2" OnClick="NOActualizarCliente_Click"></asp:Button>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                                        <asp:Button runat="server" Text="SI" data-bs-dismiss="modal" aria-label="Close" class="btn btn-sm button-enabled shadow linkButtonClicked2" OnClick="ActualizarCliente_Click"></asp:Button>
+                                        <asp:Button runat="server" Text="NO" data-bs-dismiss="modal" aria-label="Close" class="btn btn-sm button-enabled shadow linkButtonClicked2" OnClick="NOActualizarCliente_Click"></asp:Button>
                                     </div>
                                 </div>
                             </div>
@@ -414,148 +414,148 @@
 
         </div>
 
-                      <div class="modal fade" id="llenarCliente" data-backdrop="static" data-bs-keyboard="false">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-dark">
-                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">llenar cliente</h5>
-                                    </div>
-                                    <div class="modal-body form-control-sm">
-                                        <p>
-                                            Por favor, empiece por diligenciar el asesor comercial
-                                        </p>
-                                    </div>
-                                    <div class="modal-footer  d-flex align-items-center justify-content-center">                        
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <div class="modal fade" id="llenarCliente" data-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">llenar cliente</h5>
+                    </div>
+                    <div class="modal-body form-control-sm">
+                        <p>
+                            Por favor, empiece por diligenciar el asesor comercial
+                        </p>
+                    </div>
+                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        
-                      <div class="modal fade" id="DiseNoEncontrado" data-backdrop="static" data-bs-keyboard="false">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-dark">
-                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Ingresar Cotizacion</h5>
-                                    </div>
-                                    <div class="modal-body form-control-sm">
-                                        <p>
-                                           El diseño no existe, por favor digite un diseño valido
-                                        </p>
-                                    </div>
-                                    <div class="modal-footer  d-flex align-items-center justify-content-center">                        
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-         <div class="modal fade" id="ClienteNoEncontrado" data-backdrop="static" data-bs-keyboard="false">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-dark">
-                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Ingresar Cotizacion</h5>
-                                    </div>
-                                    <div class="modal-body form-control-sm">
-                                        <p>
-                                           El diseño no se pudo encontrar, por favor digite un diseño valido
-                                        </p>
-                                    </div>
-                                    <div class="modal-footer  d-flex align-items-center justify-content-center">                        
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <div class="modal fade" id="DiseNoEncontrado" data-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Ingresar Cotizacion</h5>
+                    </div>
+                    <div class="modal-body form-control-sm">
+                        <p>
+                            El diseño no existe, por favor digite un diseño valido
+                        </p>
+                    </div>
+                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="ClienteNoEncontrado" data-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Ingresar Cotizacion</h5>
+                    </div>
+                    <div class="modal-body form-control-sm">
+                        <p>
+                            El diseño no se pudo encontrar, por favor digite un diseño valido
+                        </p>
+                    </div>
+                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="modal fade" id="ConfirmarEliminarCot" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-dark">
-                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Eliminar cotizacion</h5>
-                                    </div>
-                                    <div class="modal-body form-control-sm">
-                                        <p>
-                                           <span id="ConfirmarEliminarCot2"></span>
-                                        </p>
-                                    </div>
-                                    <div class="modal-footer  d-flex align-items-center justify-content-center">      
-                                         <asp:Button runat="server" Text="SI" data-bs-dismiss="modal" aria-label="Close" class="btn btn-sm button-enabled shadow linkButtonClicked2" OnClick="EliminarCot_Click"></asp:Button>
-                                         <asp:Button runat="server" Text="NO" data-bs-dismiss="modal" aria-label="Close" class="btn btn-sm button-enabled shadow linkButtonClicked2" OnClick="NOEliminarCot_Click"></asp:Button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Eliminar cotizacion</h5>
+                    </div>
+                    <div class="modal-body form-control-sm">
+                        <p>
+                            <span id="ConfirmarEliminarCot2"></span>
+                        </p>
+                    </div>
+                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                        <asp:Button runat="server" Text="SI" data-bs-dismiss="modal" aria-label="Close" class="btn btn-sm button-enabled shadow linkButtonClicked2" OnClick="EliminarCot_Click"></asp:Button>
+                        <asp:Button runat="server" Text="NO" data-bs-dismiss="modal" aria-label="Close" class="btn btn-sm button-enabled shadow linkButtonClicked2" OnClick="NOEliminarCot_Click"></asp:Button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-          <div class="modal fade" id="llenarClienteP" data-backdrop="static" data-bs-keyboard="false">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-dark">
-                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">llenar cliente</h5>
-                                    </div>
-                                    <div class="modal-body form-control-sm">
-                                        <p>
-                                            Por favor, diligenciar primero el cliente
-                                        </p>
-                                    </div>
-                                    <div class="modal-footer  d-flex align-items-center justify-content-center">                        
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <div class="modal fade" id="llenarClienteP" data-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">llenar cliente</h5>
+                    </div>
+                    <div class="modal-body form-control-sm">
+                        <p>
+                            Por favor, diligenciar primero el cliente
+                        </p>
+                    </div>
+                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                    </div>
+                </div>
+            </div>
+        </div>
 
-           <div class="modal fade" id="CotizacionAprobada" data-backdrop="static" data-bs-keyboard="false">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-dark">
-                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Cotización Aprobada</h5>
-                                    </div>
-                                    <div class="modal-body form-control-sm">
-                                        <p>
-                                            La cotización ha sido aprobada. No se puede modificar
-                                        </p>
-                                    </div>
-                                    <div class="modal-footer  d-flex align-items-center justify-content-center">                        
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <div class="modal fade" id="CotizacionAprobada" data-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Cotización Aprobada</h5>
+                    </div>
+                    <div class="modal-body form-control-sm">
+                        <p>
+                            La cotización ha sido aprobada. No se puede modificar
+                        </p>
+                    </div>
+                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                    </div>
+                </div>
+            </div>
+        </div>
 
-         
-                        <div class="modal fade" id="ErrorMCotizacion" data-backdrop="static" data-bs-keyboard="false">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-dark">
-                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Ver cotización pedido</h5>
-                                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body form-control-sm">
-                                        <p>
-                                           El sistema no puede encontrar la cotizacion en los 6 meses anteriores.
-                                        </p>
-                                    </div>
-                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+
+        <div class="modal fade" id="ErrorMCotizacion" data-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Ver cotización pedido</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body form-control-sm">
+                        <p>
+                            El sistema no puede encontrar la cotizacion en los 6 meses anteriores.
+                        </p>
+                    </div>
+                    <div class="modal-footer  d-flex align-items-center justify-content-center">
                                       
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-          <div class="modal fade" id="campoFaltante" data-backdrop="static" data-bs-keyboard="false">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-dark">
-                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Ingresar Cotizacion</h5>
-                                    </div>
-                                    <div class="modal-body form-control-sm">
+        <div class="modal fade" id="campoFaltante" data-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Ingresar Cotizacion</h5>
+                    </div>
+                    <div class="modal-body form-control-sm">
                                           <p>Falta llenar el campo: <span id="campoFaltante2"></span>
-                                              por favor llenelo y vuelva a intentarlo.
-                                          </p>
-                                    </div>
-                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                            por favor llenelo y vuelva a intentarlo.
+                        </p>
+                    </div>
+                    <div class="modal-footer  d-flex align-items-center justify-content-center">
                                        
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
            
         

@@ -148,6 +148,27 @@
 
 
     </script>
+
+     <script>
+         function reflejarContenido() {
+             // Obtener el contenido del primer textarea
+             var contenidoTextarea1 = document.getElementById("txObs1").value;
+
+             // Mostrar el mismo contenido en el segundo textarea
+             document.getElementById("txObs2").value = contenidoTextarea1;
+         }
+     </script>
+
+     <script>
+         window.onload = function () {
+             var textarea1 = document.getElementById('txObs1');
+             var textarea2 = document.getElementById('txObs2');
+
+             textarea1.oninput = function () {
+                 textarea2.value = textarea1.value;
+             };
+         };
+     </script>
 </head>
 
 <body translate="no">
@@ -641,7 +662,7 @@
                                 <div class="row">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <div class=" input-group-sm  mb-2 gap-2">
-                                            <textarea class="form-control form-control-sm" id="txObs1" runat="server" cols="20" rows="10"></textarea>
+                                            <textarea class="form-control form-control-sm" id="txObs1" runat="server" cols="20" rows="10" oninput="reflejarContenido()"></textarea>
 
                                         </div>
                                     </div>

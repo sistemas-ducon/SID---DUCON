@@ -21,12 +21,24 @@ using System.Windows.Media.TextFormatting;
 using System.Globalization;
 using DocumentFormat.OpenXml.Drawing.Diagrams;
 using System.Xml;
+using OfficeOpenXml.Style;
+using OfficeOpenXml;
+using System.Reflection.Emit;
+using System.Drawing;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+using NPOI.SS.Util;
+using System.Text;
+
+
+
+
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
     public partial class Diseño_Venta : System.Web.UI.Page
     {
-       
+
         private string CadenaConexionSID = "BD_SIDSQL";
 
         private string CadenaConexionISID = "BD_ISIDSQL";
@@ -36,154 +48,161 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private bool isModalVisible = false;
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
-            {         
+            if (Session["usuariologueado"] != null)
+            {
 
-                if (Session["usuariologueado"] != null)
+
+                if (!IsPostBack)
                 {
-                    string usuariologueado = Session["usuariologueado"].ToString();
-                    DataGridDiseñosPorFecha.SelectParameters["NombreUsuario"].DefaultValue = usuariologueado;
-                }
-                else
-                {
-                    Response.Redirect("/Formularios/Login.aspx");
-                }
+                    cargarSiempre();
 
-                if (Session["CedulaLogeada"] != null)
-                {
-                    string cedulaLogeada = Session["CedulaLogeada"].ToString();
-                    SqlDataSource1.SelectParameters["Cedula"].DefaultValue = cedulaLogeada;
-                    DataGridDiseño.SelectParameters["Cedula"].DefaultValue = cedulaLogeada;                                
-                    DataGridRenderPorFechaYAsesor.SelectParameters["Cedula"].DefaultValue = cedulaLogeada;
-                    SqlDataSource4.SelectParameters.Add("CodigoAsesor", cedulaLogeada);
-                }
-
-                LinkButton1.Enabled = false;
-                LinkButton1.CssClass = "btn btn-sm button-disabled";
-
-                LinkButton3.Enabled = false;
-                LinkButton3.CssClass = "btn btn-sm button-disabled";
-
-                LinkButton5.Enabled = false;
-                LinkButton5.CssClass = "btn btn-sm button-disabled";
-
-                LinkButton4.Enabled = false;
-                LinkButton4.CssClass = "btn btn-sm button-disabled";
-
-                LinkButton2.Enabled = false;
-                LinkButton2.CssClass = "btn btn-sm button-disabled";
-
-                
-
-                ChecUrgent.Enabled = false;
-
-                ApplyButtonStyles();      
-                DropDownList1.DataBind();
-                DropDownList1.Items.Insert(0, new ListItem(""));
-                TextCiuPro.DataBind();
-                TextCiuPro.Items.Insert(0, new ListItem(""));
-                habilitarbotones();
-                DeshabilitarDivYContenido(miDiv);
-                CheckBox22.Checked = isModalVisible;              
-                elementosllenosalcargarlapagina();
-               
-
-                if (Session["NumeroDiseño2"] != null && !string.IsNullOrEmpty(Session["NumeroDiseño2"].ToString()))
-                {
-                    if (Session["Documentacion"] != null && (bool)Session["Documentacion"])
+                    string tipoAccion = Session["Diseno"] as string;
+                    if (tipoAccion == "Ventas")
                     {
-                        // Realizar las acciones necesarias cuando Documentacion es true
-                                   
-                        ProcesarNumeroDiseño2(null);
-                        AccionesAlCargarDiseño();
+                        string usuariologueado = Session["usuariologueado"].ToString();
+                        DataGridDiseñosPorFecha.SelectParameters["NombreUsuario"].DefaultValue = usuariologueado;
 
-                     
-                        
-                               
+                        Page_LoadDise();
+
                     }
-                    else
+                    else if (tipoAccion == "Recepcion")
                     {
-                        // Si Documentacion es false, ejecutar solo estos métodos
-                        ProcesarNumeroDiseño2(null);
-                        AccionesAlCargarDiseño();
-                    
+                        Page_LoadRecep();
                     }
 
-                    string script = @"
-            <script type='text/javascript'>
-                window.onload = function () {
-                    // Obtener el elemento del tab deseado
-                    var tab = document.getElementById('Diseño-BitacoraFPV-001-tab');
-                    
-                    // Hacer clic en el tab deseado
-                    tab.click();
-                    
-                    // Ocultar el tab actual si es necesario
-                    var activeTab = document.querySelector('.nav-item .active');
-                    if (activeTab) {
-                        activeTab.classList.remove('active');
-                    }
-                    
-                    // Agregar la clase 'active' al tab deseado
-                    tab.classList.add('active');
-                };
-            </script>";
+                }
+            }
+            else
+            {
+                Response.Redirect("/Formularios/Login.aspx");
+            }
+        }
 
-                    // Registrar el script en el cliente
-                    Page.ClientScript.RegisterStartupScript(this.GetType(), "SwitchToDesiredTab", script);
+        protected void cargarSiempre()
+        {
+
+            if (Session["CedulaLogeada"] != null)
+            {
+                string cedulaLogeada = Session["CedulaLogeada"].ToString();
+                SqlDataSource1.SelectParameters["Cedula"].DefaultValue = cedulaLogeada;
+                DataGridDiseño.SelectParameters["Cedula"].DefaultValue = cedulaLogeada;
+                DataGridRenderPorFechaYAsesor.SelectParameters["Cedula"].DefaultValue = cedulaLogeada;
+                SqlDataSource4.SelectParameters.Add("CodigoAsesor", cedulaLogeada);
+            }
+            ChecUrgent.Enabled = false;
+            ApplyButtonStyles();
+            DropDownList1.DataBind();
+            DropDownList1.Items.Insert(0, new ListItem(""));
+            TextCiuPro.DataBind();
+            TextCiuPro.Items.Insert(0, new ListItem(""));
+            habilitarbotonesDise();
+            DeshabilitarDivYContenido(miDiv);
+            CheckBox22.Checked = isModalVisible;
+
+
+
+            LinkButton1.Enabled = false;
+            LinkButton1.CssClass = "btn btn-sm button-disabled";
+
+            LinkButton3.Enabled = false;
+            LinkButton3.CssClass = "btn btn-sm button-disabled";
+
+            LinkButton5.Enabled = false;
+            LinkButton5.CssClass = "btn btn-sm button-disabled";
+
+            LinkButton4.Enabled = false;
+            LinkButton4.CssClass = "btn btn-sm button-disabled";
+
+            LinkButton2.Enabled = false;
+            LinkButton2.CssClass = "btn btn-sm button-disabled";
+
+        }
+
+        protected void Page_LoadDise()
+        {
+            elementosllenosalcargarlapagina();
+
+            if (Session["NumeroDiseño2"] != null && !string.IsNullOrEmpty(Session["NumeroDiseño2"].ToString()))
+            {
+              
+
+                if (Session["Documentacion"] != null && (bool)Session["Documentacion"])
+                {
+                    // Realizar las acciones necesarias cuando Documentacion es true
+
+                    AccionesAlCargarDiseño();
+
+                    ProcesarNumeroDiseño2(null);
                 }
                 else
                 {
-                    // Manejar el caso cuando Session["NumeroDiseño"] es null o vacío
+                    // Si Documentacion es false, ejecutar solo estos métodos
+                    
+                    AccionesAlCargarDiseño();
+                    ProcesarNumeroDiseño2(null);
                 }
 
-                if (Session["Id_ClienteBD"] != null && !string.IsNullOrEmpty(Session["Id_ClienteBD"].ToString()))
-                {
-                    string script = @"
-            <script type='text/javascript'>
-                window.onload = function () {
-                    // Obtener el elemento del tab deseado
-                    var tab = document.getElementById('Diseño-BitacoraFPV-001-tab');
-                    
-                    // Hacer clic en el tab deseado
-                    tab.click();
-                    
-                    // Ocultar el tab actual si es necesario
-                    var activeTab = document.querySelector('.nav-item .active');
-                    if (activeTab) {
-                        activeTab.classList.remove('active');
-                    }
-                    
-                    // Agregar la clase 'active' al tab deseado
-                    tab.classList.add('active');
-                };
-            </script>";
+                scripTabDise();
+            }
+            else
+            {
+                // Manejar el caso cuando Session["NumeroDiseño"] es null o vacío
+            }
 
-                    // Registrar el script en el cliente
-                    Page.ClientScript.RegisterStartupScript(this.GetType(), "SwitchToDesiredTab", script);
+            if (Session["Id_ClienteBD"] != null && !string.IsNullOrEmpty(Session["Id_ClienteBD"].ToString()))
+            {
+                scripTabDise();
 
-                    NuevoLimpiar();
-                }
-                else
-                {
-
-                }
-
-                CargarClienteYContacto();
-
-                // Eliminar la variable de sesión "NumeroDiseño" después de usarla
-                Session.Remove("NumeroDiseño2");
-                Session.Remove("SelectedIdOT");
-                Session.Remove("SelectedFileName");
-                Session.Remove("Documentacion");
-                Session.Remove("lnkClieClicked");
-                Session.Remove("lnkClieeClicked");
-          
-
-
-
+                NuevoLimpiar();
+            }
+            else
+            {
 
             }
+
+            CargarClienteYContacto();
+
+            // Eliminar la variable de sesión "NumeroDiseño" después de usarla
+            Session.Remove("NumeroDiseño2");
+            Session.Remove("SelectedIdOT");
+            Session.Remove("SelectedFileName");
+            Session.Remove("Documentacion");
+            Session.Remove("lnkClieClicked");
+            Session.Remove("lnkClieeClicked");
+        }
+
+        protected void scripTabDise()
+        {
+            string script = @"
+            <script type='text/javascript'>
+                window.onload = function () {
+                    // Obtener el elemento del tab deseado
+                    var tab = document.getElementById('Diseño-BitacoraFPV-001-tab');
+                    
+                    // Hacer clic en el tab deseado
+                    tab.click();
+                    
+                    // Ocultar el tab actual si es necesario
+                    var activeTab = document.querySelector('.nav-item .active');
+                    if (activeTab) {
+                        activeTab.classList.remove('active');
+                    }
+                    
+                    // Agregar la clase 'active' al tab deseado
+                    tab.classList.add('active');
+                };
+            </script>";
+
+            // Registrar el script en el cliente
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "SwitchToDesiredTab", script);
+        }
+
+        protected void Page_LoadRecep()
+        {
+            elementosllenosalcargarlapagina();
+            scripTabDise();
+            habilitarbotonesRece();
+            BtnProgramar.Text = "TERMINAR";
         }
 
         protected void AccionesAlCargarDiseño()
@@ -252,13 +271,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string urlRedireccion = "OrdenTrabajo.aspx";
             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
 
-         
+
 
         }
 
         protected void BtnProgramar_Click(object sender, EventArgs e)
         {
-            string diseño = lblNumDise.Text + " - " ;
+            string diseño = lblNumDise.Text + " - ";
 
             string contenidoModalOT = "Una Vez aprobado el Diseño, no podra realizarle modificaciones, esta seguro de aprobar el diseño: " + diseño + ", para dibujo y despiece?";
             ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ProgramarDiseño').modal('show'); $('#ProgramarDiseño2').text('" + contenidoModalOT + "');", true);
@@ -360,7 +379,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Si es un día hábil y no es un día no laboral, incrementar el contador de días hábiles agregados
                         diasHabilesAgregados++;
                     }
-                    
+
                 }
             }
 
@@ -383,8 +402,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
-
-
 
         protected void SiButton_Click(object sender, EventArgs e)
         {
@@ -446,7 +463,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             TextObsDibDes.Value = string.Empty;
             TextSegPauDev.Value = string.Empty;
 
-          
+
 
             lblNumDise.Text = "Por definir";
 
@@ -477,7 +494,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             NuevoDisBit.Enabled = false;
             NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
 
-            
+
             Grabar.Enabled = true;
             Grabar.CssClass = "btn btn-sm shadow button-enabled";
 
@@ -504,7 +521,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void NoButton_Click(object sender, EventArgs e)
         {
-           
+
 
             // Obtener la fecha y hora actual
             DateTime now = DateTime.Now;
@@ -534,7 +551,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Asignar la fecha y hora actual al TextBox
             TextFecOkDib.Text = fechaOkDib;
 
-            
+
 
 
             lblNumDise.Text = "Por definir";
@@ -584,7 +601,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             TextCliente.CssClass = "form-control form-control-sm";
 
             Session["EventoNoButtonEjecutado"] = true;
-           
+
         }
 
         private void ApplyButtonStyles()
@@ -599,7 +616,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ApplyButtonStyle(PausarDiseño);
             ApplyButtonStyle(Cancelar);
             ApplyButtonStyle(EliminarDiseño);
-          
+
         }
 
         private void ApplyButtonStyle(WebControl button)
@@ -626,7 +643,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
-                        string query = "SELECT X.NombreCompañía, X.Dirección, Y.NombreContacto, Y.MailContacto " +
+                        string query = "SELECT * " +
                                        "FROM tblCliente AS X " +
                                        "INNER JOIN tblClienteContacto AS Y ON Y.Id_Cliente = X.Id_Cliente " +
                                        "WHERE X.Id_Cliente = @ParametroCliente AND Y.Id_ClienteContacto = @ParametroClienteContacto";
@@ -659,6 +676,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     if (!reader.IsDBNull(reader.GetOrdinal("MailContacto")))
                                     {
                                         TextMail.Text = reader["MailContacto"].ToString();
+                                    }
+                                    if (!reader.IsDBNull(reader.GetOrdinal("Telefono")))
+                                    {
+                                        TextTel.Text = reader["Telefono"].ToString();
+                                    }
+                                    if (!reader.IsDBNull(reader.GetOrdinal("Celular")))
+                                    {
+                                        TextCel.Text = reader["Celular"].ToString();
                                     }
                                 }
                             }
@@ -708,8 +733,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Texty.Text = fechaMenos5Dias.ToString("yyyy-MM-dd");
 
             BtnProgramar.CssClass = "btn btn-warning shadow btn-sm";
- 
- 
+
+
             TextTel.Text = ("2889898");
             TextCel.Text = ("3002025400");
 
@@ -732,14 +757,49 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ChecMue.Checked = true;
         }
 
-        protected void habilitarbotones()
+        protected void habilitarbotonesDise()
         {
             NuevoDisBit.Enabled = true;
             ActualizarDiseno.Enabled = true;
             Cancelar.Enabled = true;
 
             NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled";
-          
+
+
+            ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
+            Cancelar.CssClass = "btn btn-sm shadow button-enabled";
+
+
+            Grabar.Enabled = false;
+            Grabar.CssClass = "btn btn-sm shadow button-disabled";
+
+            Modificar.Enabled = false;
+            Modificar.CssClass = "btn btn-sm shadow button-disabled";
+
+            DocBitacora.Enabled = false;
+            DocBitacora.CssClass = "btn btn-sm shadow button-disabled";
+
+            RegresarDiseño.Enabled = false;
+            RegresarDiseño.CssClass = "btn btn-sm shadow button-disabled";
+
+            AdicionarElemento.Enabled = false;
+            AdicionarElemento.CssClass = "btn btn-sm shadow button-disabled";
+
+            PausarDiseño.Enabled = false;
+            PausarDiseño.CssClass = "btn btn-sm shadow button-disabled";
+
+            EliminarDiseño.Enabled = false;
+            EliminarDiseño.CssClass = "btn btn-sm shadow button-disabled";
+        }
+
+        protected void habilitarbotonesRece()
+        {
+            NuevoDisBit.Enabled = false;
+            ActualizarDiseno.Enabled = true;
+            Cancelar.Enabled = true;
+
+            NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
+
 
             ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
             Cancelar.CssClass = "btn btn-sm shadow button-enabled";
@@ -797,13 +857,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Button10.CssClass = "form-control form-control-sm";
 
 
-           
-           
+
+
             TextCliente.Enabled = false;
             TextCliente.CssClass = "form-control form-control-sm";
 
             Button1.Enabled = false;
-           
+
             TextDir.Enabled = false;
             TextDir.CssClass = "form-control form-control-sm";
 
@@ -840,7 +900,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblUrg.Enabled = false;
             lblUrg.CssClass = "col-form-label-sm";
 
-         
+
 
             lblCotizar.Enabled = false;
             lblCotizar.CssClass = "col-form-label-sm";
@@ -922,7 +982,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             TextCiuPro.Enabled = false;
             TextCiuPro.CssClass = "form-control form-control-sm";
 
-         
+
 
             lblConCab.Enabled = false;
             lblCiuPro.CssClass = "form-label";
@@ -1130,7 +1190,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
                 else
                 {
-                 
+
                     // Agregar la cláusula WHERE a la consulta
                     whereClause += " WHERE Fecha_Ingreso BETWEEN '" + TextFechDeIng.Text + "' AND '" + Texty.Text + "'";
                 }
@@ -1184,7 +1244,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void ddlCiudadX_DataBound(object sender, EventArgs e)
         {
-           
+
         }
 
         protected void NuevoDisBit_Click(object sender, EventArgs e)
@@ -1196,7 +1256,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 // Mostrar el modal si se hizo clic en lnkClie o lnkCliee
                 ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modall').modal('show');", true);
-                
+
 
             }
             else
@@ -1354,7 +1414,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Modificar.CssClass = "btn btn-sm shadow button-disabled";
             }
 
-         
+
 
             // Deshabilitar el botón "Grabar"
             Grabar.Enabled = false;
@@ -1370,7 +1430,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Ocultar el div y su contenido
             DeshabilitarDivYContenido(miDiv);
 
-           
+
             lblCotizar.CssClass = "col-form-label-sm text-dark";
             lblCotizar.Font.Bold = false;
 
@@ -1400,7 +1460,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 lblNumDise.Text = "Numero";
 
-              
+
 
                 // Limpia la variable de sesión "EventoItemCommandEjecutado" después de utilizarla.
                 Session["EventoItemCommandEjecutado"] = false;
@@ -1419,7 +1479,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Limpia la variable de sesión "Modificado" después de utilizarla.
             Session["ModificarEjecutado"] = false;
 
-        } 
+        }
 
         protected void lnkClie_Click(object sender, EventArgs e)
         {
@@ -1444,7 +1504,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
-            
+
 
             AccionesAlCargarDiseño();
 
@@ -1477,7 +1537,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             // Ajustar la propiedad Enabled del botón BtnProgramar
                             BtnProgramar.Enabled = (programadoVentas == 0);
 
-                          
+
                         }
                         reader.Close();
                     }
@@ -1559,7 +1619,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
         protected void lnkCliee_Click(object sender, EventArgs e)
         {
             // Obtén el LinkButton que se hizo clic
@@ -1585,32 +1644,71 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             Session["lnkClieeClicked"] = true;
 
-            NuevoDisBit.Enabled = true;
-            NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled";
-
-            Grabar.Enabled = false;
-            Grabar.CssClass = "btn btn-sm shadow button-disabled";
-
-            // Habilitar el botón "ActualizarDiseno"
-            ActualizarDiseno.Enabled = true;
-            ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
-
-            // Habilitar el botón "Modificar"
-            Modificar.Enabled = true;
-            Modificar.CssClass = "btn btn-sm shadow button-enabled";
-
-            DocBitacora.Enabled = true;
-            DocBitacora.CssClass = "btn btn-sm shadow button-enabled";
-
-            // Habilitar el botón "AdicionarElemento"
-            AdicionarElemento.Enabled = true;
-            AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled";
+            BotonesCargarDise();
 
             ValidarBotonOk();
 
 
             DeshabilitarDivYContenido(miDiv);
-        
+
+        }
+
+        protected void BotonesCargarDise()
+        {
+            string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Ventas")
+            {
+                NuevoDisBit.Enabled = true;
+                NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled";
+
+                Grabar.Enabled = false;
+                Grabar.CssClass = "btn btn-sm shadow button-disabled";
+
+                // Habilitar el botón "ActualizarDiseno"
+                ActualizarDiseno.Enabled = true;
+                ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
+
+                // Habilitar el botón "Modificar"
+                Modificar.Enabled = true;
+                Modificar.CssClass = "btn btn-sm shadow button-enabled";
+
+                DocBitacora.Enabled = true;
+                DocBitacora.CssClass = "btn btn-sm shadow button-enabled";
+
+                // Habilitar el botón "AdicionarElemento"
+                AdicionarElemento.Enabled = true;
+                AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled";
+
+            }
+            else if (tipoAccion == "Recepcion")
+            {
+                NuevoDisBit.Enabled = false;
+                NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
+
+                Grabar.Enabled = false;
+                Grabar.CssClass = "btn btn-sm shadow button-disabled";
+
+                // Habilitar el botón "ActualizarDiseno"
+                ActualizarDiseno.Enabled = true;
+                ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
+
+                RegresarDiseño.Enabled = true;
+                RegresarDiseño.CssClass = "btn btn-sm shadow button-enabled";
+
+                // Habilitar el botón "Modificar"
+                Modificar.Enabled = false;
+                Modificar.CssClass = "btn btn-sm shadow button-disabled";
+
+                DocBitacora.Enabled = true;
+                DocBitacora.CssClass = "btn btn-sm shadow button-enabled";
+
+                // Habilitar el botón "AdicionarElemento"
+                AdicionarElemento.Enabled = true;
+                AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled";
+
+                LinkButton2.Enabled = false;
+                LinkButton2.CssClass = "btn btn-sm button-disabled";
+            }
         }
 
         protected void CargarDiseñoSC_Click(object sender, EventArgs e)
@@ -1687,7 +1785,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             string zona = reader["Zona"].ToString();
                             string nombre = reader["Nombre"].ToString();
                             string apellidos = reader["Apellidos"].ToString();
-                           
+
                             TextZona.Text = zona;
                         }
 
@@ -1700,20 +1798,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Response.Redirect("/Formularios/Login.aspx");
             }
         }
-    
+
         protected void Modificar_Click(object sender, EventArgs e)
         {
             ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ShowCase').modal('show');", true);
 
             Session["ModificarEjecutado"] = true;
-          
+
         }
 
         protected void BtnModificarNo_Click(object sender, EventArgs e)
         {
             BtnProgramar.Enabled = false;
             BtnProgramar.CssClass = "btn btn-sm shadow button-disabled";
-        
+
             Modificar.Enabled = false;
             Modificar.CssClass = "btn btn-sm shadow button-disabled";
 
@@ -1848,7 +1946,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblUrg.Enabled = false;
             lblUrg.CssClass = "col-form-label-sm";
 
-           
+
 
             lblCotizar.Enabled = false;
             lblCotizar.CssClass = "col-form-label-sm";
@@ -2140,7 +2238,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             else if (string.IsNullOrEmpty(TextCel.Text))
             {
                 campoFaltante = "Celular";
-            }           
+            }
             else if (string.IsNullOrEmpty(TextTel.Text))
             {
                 campoFaltante = "Teléfono";
@@ -2160,7 +2258,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             else if (string.IsNullOrEmpty(TextEntrega.Text))
             {
                 campoFaltante = "Fecha Programada de Entrega";
-            }       
+            }
             else if (string.IsNullOrEmpty(TextPla.Text))
             {
                 campoFaltante = "Plano";
@@ -2192,7 +2290,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             else if (string.IsNullOrEmpty(TextDes.Text))
             {
                 campoFaltante = "Descuento";
-            } 
+            }
             else if (string.IsNullOrEmpty(TexHTot.Text))
             {
                 campoFaltante = "H.Total";
@@ -2208,7 +2306,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             else if (string.IsNullOrEmpty(TextSup.Text))
             {
                 campoFaltante = "Acabado de Superficie";
-            } 
+            }
             else if (string.IsNullOrEmpty(TextSop.Text))
             {
                 campoFaltante = "Tipo de Soporte";
@@ -2262,12 +2360,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void btnInsertar_Click(object sender, EventArgs e)
         {
-           
+
 
             // Verifica si "NuevoDisBit" se ejecutó previamente
             bool nuevoDisBitEjecutado = Session["NuevoDisBitEjecutado"] != null && (bool)Session["NuevoDisBitEjecutado"];
 
-          
+
             // Realiza la validación de campos
             string campoFaltante = ValidarCampos();
 
@@ -2293,7 +2391,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                     }
 
-                   
+
                 }
                 else
                 {
@@ -2311,7 +2409,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             string urlRedireccion = "Ventas/Diseño_Venta.aspx";
                             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
 
-                           
+
 
                         }
                         else
@@ -2322,7 +2420,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             string urlRedireccion = "Ventas/Diseño_Venta.aspx";
                             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                         }
-                       
+
                     }
                     else
                     {
@@ -2336,10 +2434,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalll').modal('show'); $('#campoFaltante').text('" + campoFaltante + "');", true);
             }
 
-        
 
 
-    }
+
+        }
 
         protected void ValidarFecha(object sender, EventArgs e)
         {
@@ -2417,7 +2515,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             bool valorCheckBox23 = ChecCot.Checked;
             bool valorCheckBox24 = ChecUrgent.Checked;
             bool valorCheckBox25 = CheckBox16.Checked;
-          
+
 
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
@@ -2452,7 +2550,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         command.Parameters.AddWithValue("@Fecha_Programada_Entrega", fechaProEnt);
 
-                      
+
 
 
                         command.Parameters.AddWithValue("@PasarACotizar", valorCheckBox23);
@@ -2468,10 +2566,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         DateTime fechaIngreso = DateTime.ParseExact(TextIngDis.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
 
-                       
+
                         command.Parameters.AddWithValue("@Fecha_Ingreso", fechaIngreso);
 
-                       
+
 
 
                         command.Parameters.AddWithValue("@Asesor", DropDownList1.SelectedItem.Text);
@@ -2506,7 +2604,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@MuebleEntrepano", TextEnt.Text);
                         command.Parameters.AddWithValue("@MueblePuertas", TextPuer.Text);
                         command.Parameters.AddWithValue("@Observaciones_Ventas", TextObsVen.InnerText);
-                        command.Parameters.AddWithValue("@Observaciones_Diseño", TextObsDibDes.InnerText);
+                   
 
                         command.Parameters.AddWithValue("@SC_Presentacionppt", valorCheckBox18);
                         command.Parameters.AddWithValue("@SC_Imagenes", valorCheckBox19);
@@ -2607,105 +2705,104 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
 
-              
-                
-                    // Crear el nombre del procedimiento almacenado
-                    string storedProcedureName = "sp_ActualizarDiseño";
-
-                    // Crear el comando para ejecutar el procedimiento almacenado
-                    using (SqlCommand command = new SqlCommand(storedProcedureName, connection))
-                    {
-                        // Especificar que el comando es un procedimiento almacenado
-                        command.CommandType = CommandType.StoredProcedure;
-
-                        // Asignar los valores a los parámetros del procedimiento almacenado
-                        command.Parameters.AddWithValue("@Nombre_Diseño", TextProyecto.Text);
 
 
-                        command.Parameters.AddWithValue("@Numero_Diseño", lblNumDise.Text);
-                        command.Parameters.AddWithValue("@id_CiudadProyecto", TextCiuPro.Text);
-                        command.Parameters.AddWithValue("@Mail", TextMail.Text);
-                        command.Parameters.AddWithValue("@PresentacionCotizacion", TextPre.Text);
-                        command.Parameters.AddWithValue("@Celular", TextCel.Text);
-                        command.Parameters.AddWithValue("@Cotizartransporte", valorChecCotTte);
-                        command.Parameters.AddWithValue("@CotizarViaticos", valorChecCotVia);
-                        command.Parameters.AddWithValue("@MailTerminado", valorCheckBox22);
-                        command.Parameters.AddWithValue("@Telefono", TextTel.Text);
-                        command.Parameters.AddWithValue("@Contacto", TextContacto.Text);
-                        command.Parameters.AddWithValue("@Zona", TextZona.Text);
+                // Crear el nombre del procedimiento almacenado
+                string storedProcedureName = "sp_ActualizarDiseño";
 
-                        DateTime fechaOkDib = DateTime.ParseExact(TextFecOkDib.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
+                // Crear el comando para ejecutar el procedimiento almacenado
+                using (SqlCommand command = new SqlCommand(storedProcedureName, connection))
+                {
+                    // Especificar que el comando es un procedimiento almacenado
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Asignar los valores a los parámetros del procedimiento almacenado
+                    command.Parameters.AddWithValue("@Nombre_Diseño", TextProyecto.Text);
 
 
-                        command.Parameters.AddWithValue("@FechaDibujoOK", fechaOkDib);
+                    command.Parameters.AddWithValue("@Numero_Diseño", lblNumDise.Text);
+                    command.Parameters.AddWithValue("@id_CiudadProyecto", TextCiuPro.Text);
+                    command.Parameters.AddWithValue("@Mail", TextMail.Text);
+                    command.Parameters.AddWithValue("@PresentacionCotizacion", TextPre.Text);
+                    command.Parameters.AddWithValue("@Celular", TextCel.Text);
+                    command.Parameters.AddWithValue("@Cotizartransporte", valorChecCotTte);
+                    command.Parameters.AddWithValue("@CotizarViaticos", valorChecCotVia);
+                    command.Parameters.AddWithValue("@MailTerminado", valorCheckBox22);
+                    command.Parameters.AddWithValue("@Telefono", TextTel.Text);
+                    command.Parameters.AddWithValue("@Contacto", TextContacto.Text);
+                    command.Parameters.AddWithValue("@Zona", TextZona.Text);
 
-                        DateTime fechaProEnt = DateTime.ParseExact(TextEntrega.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
-
-
-                        command.Parameters.AddWithValue("@Fecha_Programada_Entrega", fechaProEnt);
-
-                        command.Parameters.AddWithValue("@PasarACotizar", valorCheckBox23);
-                        command.Parameters.AddWithValue("@Urgente", valorCheckBox24);
-                        command.Parameters.AddWithValue("@PlanoBitacora", TextPla.Text);
-
-                        // Obtener la fecha y hora del TextBox con type="datetime-local"
-                        DateTime fechaHora = DateTime.ParseExact(TextUltAc.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
-
-                        // Utilizar el valor formateado en el comando SQL
-                        command.Parameters.AddWithValue("@UltimaActivacion", fechaHora);
-
-                        DateTime fechaIngreso = DateTime.ParseExact(TextIngDis.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
+                    DateTime fechaOkDib = DateTime.ParseExact(TextFecOkDib.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
 
 
-                        command.Parameters.AddWithValue("@Fecha_Ingreso", fechaIngreso);
+                    command.Parameters.AddWithValue("@FechaDibujoOK", fechaOkDib);
 
-                        command.Parameters.AddWithValue("@Asesor", DropDownList1.SelectedItem.Text);
-                        command.Parameters.AddWithValue("@Cliente", TextCliente.Text);
-                        command.Parameters.AddWithValue("@Direccion", TextDir.Text);
-                        command.Parameters.AddWithValue("@Descuento", TextDes.Text);
-                        command.Parameters.AddWithValue("@ConduccionCablesPiso", valorChecPiso);
-                        command.Parameters.AddWithValue("@ConduccionCablesDivision", valorChecDiv);
-                        command.Parameters.AddWithValue("@ConduccionCablesCielo", valorChecCie);
-                        command.Parameters.AddWithValue("@ConduccionCablesCanaleta", valorChecCan);
-                        command.Parameters.AddWithValue("@BajantesElectricos", valorChecBteEle);
-                        command.Parameters.AddWithValue("@Bajantesswitches", valorChecBteSw);
-                        command.Parameters.AddWithValue("@SujecionCielo", valorChecSujPt);
-                        command.Parameters.AddWithValue("@PerfilRefuerzo", valorChecPerRef);
-                        command.Parameters.AddWithValue("@GuardaEscobas", valorChecGuaEsc);
-                        command.Parameters.AddWithValue("@AlturaCielo", TexHTot.Text);
-                        command.Parameters.AddWithValue("@Linea", TextLin.Text);
-                        command.Parameters.AddWithValue("@TipoMostrador", TextMos.Text);
-                        command.Parameters.AddWithValue("@AcabadoSuperficie", TextSup.Text);
-                        command.Parameters.AddWithValue("@BalanceSuperficies", valorCheckBox25);
-                        command.Parameters.AddWithValue("@TipoSoporte", TextSop.Text);
-                        command.Parameters.AddWithValue("@TipoGaveta", TextGav.Text);
-                        command.Parameters.AddWithValue("@AcabadoPaneles", TextPan.Text);
-                        command.Parameters.AddWithValue("@TipoTapaPierna", TextTapPie.Text);
-                        command.Parameters.AddWithValue("@TipoRepisa", TextRep.Text);
-                        command.Parameters.AddWithValue("@TipodePantalla", TextPant.Text);
-                        command.Parameters.AddWithValue("@TipodeVidrio", TextTipVid.Text);
-                        command.Parameters.AddWithValue("@TipoArchivador", TextArch.Text);
-                        command.Parameters.AddWithValue("@MuebleCoco", TextCoc.Text);
-                        command.Parameters.AddWithValue("@MuebleEntrepano", TextEnt.Text);
-                        command.Parameters.AddWithValue("@MueblePuertas", TextPuer.Text);
-                        command.Parameters.AddWithValue("@Observaciones_Ventas", TextObsVen.InnerText);
-                        command.Parameters.AddWithValue("@Observaciones_Diseño", TextObsDibDes.InnerText);
-                        command.Parameters.AddWithValue("@SeguimientoPausa", TextSegPauDev.InnerText);
-                        command.Parameters.AddWithValue("@SC_Presentacionppt", valorCheckBox18);
-                        command.Parameters.AddWithValue("@SC_Imagenes", valorCheckBox19);
-                        command.Parameters.AddWithValue("@SC_Accesorios", valorCheckBox20);
-                        command.Parameters.AddWithValue("@SC_Tiemporeal", valorCheckBox21);
-                        command.Parameters.AddWithValue("@SC_Fecha", TextFec.Text);
-                        command.Parameters.AddWithValue("@SC_Hora", TextFech.Text);
-                        command.Parameters.AddWithValue("@SC_Ubicacion", TextUbi.Text);
-                        // Ejecutar el procedimiento almacenado
-                        int rowsAffected = command.ExecuteNonQuery();
+                    DateTime fechaProEnt = DateTime.ParseExact(TextEntrega.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
+
+
+                    command.Parameters.AddWithValue("@Fecha_Programada_Entrega", fechaProEnt);
+
+                    command.Parameters.AddWithValue("@PasarACotizar", valorCheckBox23);
+                    command.Parameters.AddWithValue("@Urgente", valorCheckBox24);
+                    command.Parameters.AddWithValue("@PlanoBitacora", TextPla.Text);
+
+                    // Obtener la fecha y hora del TextBox con type="datetime-local"
+                    DateTime fechaHora = DateTime.ParseExact(TextUltAc.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
+
+                    // Utilizar el valor formateado en el comando SQL
+                    command.Parameters.AddWithValue("@UltimaActivacion", fechaHora);
+
+                    DateTime fechaIngreso = DateTime.ParseExact(TextIngDis.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
+
+
+                    command.Parameters.AddWithValue("@Fecha_Ingreso", fechaIngreso);
+
+                    command.Parameters.AddWithValue("@Asesor", DropDownList1.SelectedItem.Text);
+                    command.Parameters.AddWithValue("@Cliente", TextCliente.Text);
+                    command.Parameters.AddWithValue("@Direccion", TextDir.Text);
+                    command.Parameters.AddWithValue("@Descuento", TextDes.Text);
+                    command.Parameters.AddWithValue("@ConduccionCablesPiso", valorChecPiso);
+                    command.Parameters.AddWithValue("@ConduccionCablesDivision", valorChecDiv);
+                    command.Parameters.AddWithValue("@ConduccionCablesCielo", valorChecCie);
+                    command.Parameters.AddWithValue("@ConduccionCablesCanaleta", valorChecCan);
+                    command.Parameters.AddWithValue("@BajantesElectricos", valorChecBteEle);
+                    command.Parameters.AddWithValue("@Bajantesswitches", valorChecBteSw);
+                    command.Parameters.AddWithValue("@SujecionCielo", valorChecSujPt);
+                    command.Parameters.AddWithValue("@PerfilRefuerzo", valorChecPerRef);
+                    command.Parameters.AddWithValue("@GuardaEscobas", valorChecGuaEsc);
+                    command.Parameters.AddWithValue("@AlturaCielo", TexHTot.Text);
+                    command.Parameters.AddWithValue("@Linea", TextLin.Text);
+                    command.Parameters.AddWithValue("@TipoMostrador", TextMos.Text);
+                    command.Parameters.AddWithValue("@AcabadoSuperficie", TextSup.Text);
+                    command.Parameters.AddWithValue("@BalanceSuperficies", valorCheckBox25);
+                    command.Parameters.AddWithValue("@TipoSoporte", TextSop.Text);
+                    command.Parameters.AddWithValue("@TipoGaveta", TextGav.Text);
+                    command.Parameters.AddWithValue("@AcabadoPaneles", TextPan.Text);
+                    command.Parameters.AddWithValue("@TipoTapaPierna", TextTapPie.Text);
+                    command.Parameters.AddWithValue("@TipoRepisa", TextRep.Text);
+                    command.Parameters.AddWithValue("@TipodePantalla", TextPant.Text);
+                    command.Parameters.AddWithValue("@TipodeVidrio", TextTipVid.Text);
+                    command.Parameters.AddWithValue("@TipoArchivador", TextArch.Text);
+                    command.Parameters.AddWithValue("@MuebleCoco", TextCoc.Text);
+                    command.Parameters.AddWithValue("@MuebleEntrepano", TextEnt.Text);
+                    command.Parameters.AddWithValue("@MueblePuertas", TextPuer.Text);
+                    command.Parameters.AddWithValue("@Observaciones_Ventas", TextObsVen.InnerText);
+                   
+                    command.Parameters.AddWithValue("@SC_Presentacionppt", valorCheckBox18);
+                    command.Parameters.AddWithValue("@SC_Imagenes", valorCheckBox19);
+                    command.Parameters.AddWithValue("@SC_Accesorios", valorCheckBox20);
+                    command.Parameters.AddWithValue("@SC_Tiemporeal", valorCheckBox21);
+                    command.Parameters.AddWithValue("@SC_Fecha", TextFec.Text);
+                    command.Parameters.AddWithValue("@SC_Hora", TextFech.Text);
+                    command.Parameters.AddWithValue("@SC_Ubicacion", TextUbi.Text);
+                    // Ejecutar el procedimiento almacenado
+                    int rowsAffected = command.ExecuteNonQuery();
 
                     if (rowsAffected > 0)
                     {
                         Session["NumeroDiseño2"] = lblNumDise.Text;
 
-                       
+
 
                         // Inserción exitosa
                         return true;
@@ -2718,9 +2815,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         return false;
                     }
                 }
-                }
-               
-            
+            }
+
+
         }
 
         protected void Button9_Click(object sender, EventArgs e)
@@ -2804,9 +2901,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void DataGridDise_ItemCommand(object source, DataGridCommandEventArgs e)
         {
-           
-                ProcesarNumeroDiseño(e);
-           
+
+            ProcesarNumeroDiseño(e);
+
         }
 
         private void ProcesarNumeroDiseño(DataGridCommandEventArgs e)
@@ -2849,13 +2946,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         if (programadoVentas)
                         {
                             // ProgramadoVentas es 1, deshabilitar los botones
-                            BtnProgramar.Enabled = false;              
-           
+                            BtnProgramar.Enabled = false;
+
                         }
                         else
                         {
                             // ProgramadoVentas es 0, habilitar los botones
-                            BtnProgramar.Enabled = true;                            
+                            BtnProgramar.Enabled = true;
 
                         }
                     }
@@ -2910,7 +3007,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     TextIngDis.Text = now.ToString("yyyy-MM-ddTHH:mm");
                                     string fechaHoraActual = now.ToString("yyyy-MM-ddTHH:mm");
                                     TextUltAc.Text = fechaHoraActual;
-                                    TextFecOkDib.Text = reader.GetDateTime(reader.GetOrdinal("FechaDibujoOK")).ToString("yyyy-MM-ddTHH:mm");                                                           
+                                    TextFecOkDib.Text = reader.GetDateTime(reader.GetOrdinal("FechaDibujoOK")).ToString("yyyy-MM-ddTHH:mm");
                                     TextEntrega.Text = reader.GetDateTime(reader.GetOrdinal("Fecha_Programada_Entrega")).ToString("yyyy-MM-ddTHH:mm");
                                 }
 
@@ -3065,13 +3162,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             // ProgramadoVentas es 1, deshabilitar los botones
                             BtnProgramar.Enabled = false;
-                           
+
                         }
                         else
                         {
                             // ProgramadoVentas es 0, habilitar los botones
                             BtnProgramar.Enabled = true;
-                          
+
                         }
                     }
 
@@ -3352,8 +3449,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     descripcionCell.Text = $"{cliente} - {nombreDiseño}";
                 }
             }
-            }
-        
+        }
+
         protected void DataGrid4_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
@@ -3391,26 +3488,26 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     }
                 }
-              
-               
+
+
             }
 
 
 
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-               // Obtener los valores de Cliente y Nombre_Diseño de la fila actual
+                // Obtener los valores de Cliente y Nombre_Diseño de la fila actual
                 string cliente = DataBinder.Eval(e.Item.DataItem, "Cliente").ToString();
-               string nombreRender = DataBinder.Eval(e.Item.DataItem, "Nombre_Render").ToString();
+                string nombreRender = DataBinder.Eval(e.Item.DataItem, "Nombre_Render").ToString();
 
                 // Encontrar la celda correspondiente a la columna Descripción por índice
-               TableCell descripcionCell = e.Item.Cells[3]; // Ajusta el índice si es necesario
-                                
+                TableCell descripcionCell = e.Item.Cells[3]; // Ajusta el índice si es necesario
+
                 // Combinar los valores de Cliente y Nombre_Diseño en la celda de Descripción
-               if (descripcionCell != null)
+                if (descripcionCell != null)
                 {
-                  descripcionCell.Text = $"{cliente} - {nombreRender}";
-               }
+                    descripcionCell.Text = $"{cliente} - {nombreRender}";
+                }
             }
         }
 
@@ -3499,7 +3596,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 isModalVisible = false;
             }
-        } 
+        }
 
         protected void DataGridBusDis_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
@@ -3554,14 +3651,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
 
-             
+
                 }
             }
         }
 
         protected void Unnamed_Click(object sender, EventArgs e)
         {
-           
+
         }
 
         protected void DocBitacora_Click(object sender, EventArgs e)
@@ -3579,7 +3676,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void lnkSelectRowRender_Click(object sender, EventArgs e)
         {
-                
+
         }
 
         protected void CargarVSC_Click(object sender, EventArgs e)
@@ -3616,7 +3713,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ChecAlCie.Checked = true;
                 ChecPerRef.Checked = true;
                 ChecGuaEsc.Checked = true;
-                TexHTot.Text = "0";   
+                TexHTot.Text = "0";
             }
             else
             {
@@ -3629,7 +3726,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void ChecMue_CheckedChanged(object sender, EventArgs e)
         {
-            if(ChecMue.Checked)
+            if (ChecMue.Checked)
             {
                 TextCoc.Text = "NA";
                 TextEnt.Text = "NA";
@@ -3657,7 +3754,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 TextRep.Text = "NA";
                 TextTipVid.Text = "NA";
                 TextPant.Text = "NA";
-                TextArch.Text = "NA";           
+                TextArch.Text = "NA";
             }
             else
             {
@@ -3673,6 +3770,695 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 TextPant.Text = "";
                 TextArch.Text = "";
             }
+        }
+
+        //EVENTOS RECEPCION
+
+        protected void VisualizarCotPrecioActual_Click(object sender, EventArgs e)
+        {
+            // Crear un nuevo libro de Excel
+            IWorkbook workbook = new HSSFWorkbook();
+
+            // Crear las tres hojas requeridas
+            ISheet cotizacionSheet = workbook.CreateSheet("Cotizacion");
+            ISheet cotizacionDetalladaSheet = workbook.CreateSheet("Cotizacion Detallada");
+            ISheet condicionesComercialesSheet = workbook.CreateSheet("Condiciones Comerciales");
+
+            // Llenar la hoja de Cotizacion Detallada
+            FillCotizacionDetalladaSheet(cotizacionDetalladaSheet);
+
+            // Crear el estilo de fuente
+            IFont font = workbook.CreateFont();
+            font.FontName = "Century Gothic";
+            font.FontHeightInPoints = 11;
+            font.IsBold = true;
+
+            // Crear el estilo de celda y establecer la fuente
+            ICellStyle style = workbook.CreateCellStyle();
+            style.SetFont(font);
+
+            // Crear la fila y las celdas
+            IRow fechaRow = cotizacionDetalladaSheet.CreateRow(0);
+            ICell fechaCell = fechaRow.CreateCell(1);
+            fechaCell.SetCellValue("Sabaneta,   " + DateTime.Now.ToString("MMMM   d") + "  de  " + DateTime.Now.ToString("yyyy"));
+            fechaCell.CellStyle = style;
+
+            ICell senoresCell = fechaRow.CreateCell(4);
+            senoresCell.SetCellValue("Cotizacion N°");
+            senoresCell.CellStyle = style;
+
+            fechaRow.HeightInPoints = cotizacionDetalladaSheet.DefaultRowHeightInPoints * 4;
+
+            // Agregar fila vacía después del encabezado
+            cotizacionDetalladaSheet.CreateRow(2);
+
+            // Agregar "Señores" en negrita en la celda B4
+            IRow senoresRow1 = cotizacionDetalladaSheet.CreateRow(3);
+            ICell senoresCell1 = senoresRow1.CreateCell(1);
+            senoresCell1.SetCellValue("Señores");
+            senoresCell1.CellStyle = style;
+
+            // Agregar datos en negrita desde la celda B5 hacia abajo
+            int currentRow = 4;
+            foreach (var dato in new List<string> { TextContacto.Text, TextCliente.Text, "Ciudad" })
+            {
+                IRow dataRow = cotizacionDetalladaSheet.CreateRow(currentRow++);
+                ICell dataCell = dataRow.CreateCell(1);
+                dataCell.SetCellValue(dato);
+                dataCell.CellStyle = style;
+            }
+
+            // Agregar fila vacía después del encabezado
+            cotizacionDetalladaSheet.CreateRow(7);
+
+
+            // Agregar "Diseño: lblNumDise.Text" en negrita en la celda E1
+            IRow opcionRow = cotizacionDetalladaSheet.CreateRow(1);
+            ICell opcionCell = opcionRow.CreateCell(4);
+            opcionCell.SetCellValue("Diseño: " + lblNumDise.Text);
+
+            // Agregar "REF. " + TextProyecto.Text en negrita en la celda B8
+            IRow refRow = cotizacionDetalladaSheet.CreateRow(8);
+            ICell refCell = refRow.CreateCell(1);
+            refCell.SetCellValue("REF. " + TextProyecto.Text);
+            refCell.CellStyle = style;
+
+            // Agregar fila vacía después del encabezado
+            cotizacionDetalladaSheet.CreateRow(9);
+
+            // Agregar el texto en las celdas fusionadas
+            IRow row11 = cotizacionDetalladaSheet.CreateRow(10);
+            IRow row12 = cotizacionDetalladaSheet.CreateRow(11);
+
+            // Fusionar celdas desde B11 hasta F11
+            cotizacionDetalladaSheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(10, 10, 1, 5));
+            // Fusionar celdas desde B12 hasta F12
+            cotizacionDetalladaSheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(11, 11, 1, 5));
+
+
+            // Establecer el contenido en las celdas fusionadas
+            ICell mergedCell11 = row11.CreateCell(1);
+            mergedCell11.SetCellValue("Atendiendo su amable solicitud con gusto presentamos cotización de las partes y ");
+            ICell mergedCell12 = row12.CreateCell(1);
+            mergedCell12.SetCellValue("elementos del sistema Modular Ducon SMD, en nuestra línea 3500, tal como sigue:");
+            mergedCell11.CellStyle = style;
+            mergedCell12.CellStyle = style;
+
+            cotizacionDetalladaSheet.CreateRow(12);
+            cotizacionDetalladaSheet.CreateRow(13);
+
+            // Agregar el contenido en la fila 14
+            IRow row14 = cotizacionDetalladaSheet.CreateRow(14);
+
+            // En la celda B15
+            ICell cellB15 = row14.CreateCell(1);
+            cellB15.SetCellValue("DESCRIPCIÓN");
+
+            // En la celda C15
+            ICell cellC15 = row14.CreateCell(2);
+            cellC15.SetCellValue("Ancho (cms)");
+
+            // En la celda D15
+            ICell cellD15 = row14.CreateCell(3);
+            cellD15.SetCellValue("CANT");
+
+            // En la celda E15
+            ICell cellE15 = row14.CreateCell(4);
+            cellE15.SetCellValue("Valor Unidad");
+
+            // En la celda F15
+            ICell cellF15 = row14.CreateCell(5);
+            cellF15.SetCellValue("Total");
+
+            // En la celda G15
+            ICell cellG15 = row14.CreateCell(6);
+            cellG15.SetCellValue("Imagen");
+
+            // Crear el estilo de borde más delgado
+            ICellStyle borderStyle = workbook.CreateCellStyle();
+            borderStyle.BorderBottom = NPOI.SS.UserModel.BorderStyle.Medium;
+            borderStyle.BorderLeft = NPOI.SS.UserModel.BorderStyle.Medium;
+            borderStyle.BorderRight = NPOI.SS.UserModel.BorderStyle.Medium;
+            borderStyle.BorderTop = NPOI.SS.UserModel.BorderStyle.Medium;
+
+            // Aplicar el estilo de fuente y centrar el contenido a las celdas desde B15 hasta G15
+            for (int i = 1; i <= 6; i++)
+            {
+                ICell cell = row14.GetCell(i);
+                if (cell != null)
+                {
+                    // Crear el estilo de fuente y establecer la fuente
+                    IFont fontCenturyGothic = workbook.CreateFont();
+                    fontCenturyGothic.FontName = "Century Gothic";
+                    fontCenturyGothic.FontHeightInPoints = 10;
+                    fontCenturyGothic.IsBold = true;
+
+                    // Crear el estilo de celda y establecer la fuente
+                    ICellStyle styleCenturyGothic = workbook.CreateCellStyle();
+                    styleCenturyGothic.SetFont(fontCenturyGothic);
+                    styleCenturyGothic.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Center;
+
+                    cell.CellStyle = styleCenturyGothic;
+
+                    // Aplicar el estilo de borde a la celda
+                    cell.CellStyle.BorderBottom = borderStyle.BorderBottom;
+                    cell.CellStyle.BorderLeft = borderStyle.BorderLeft;
+                    cell.CellStyle.BorderRight = borderStyle.BorderRight;
+                    cell.CellStyle.BorderTop = borderStyle.BorderTop;
+                }
+            }
+
+            row14.HeightInPoints = cotizacionDetalladaSheet.DefaultRowHeightInPoints * 2;
+
+            cotizacionDetalladaSheet.AutoSizeColumn(5);
+
+            // Ajustar el ancho de todas las columnas en la hoja Cotizacion Detallada
+            for (int i = 0; i < cotizacionDetalladaSheet.GetRow(0).LastCellNum; i++)
+            {
+                cotizacionDetalladaSheet.AutoSizeColumn(i);
+            }
+
+            int anchoMaximo = 60 * 256;
+            cotizacionDetalladaSheet.SetColumnWidth(1, anchoMaximo);
+
+            // Guardar el archivo de Excel modificado en una ubicación temporal
+            string tempFilePath = Path.GetTempFileName() + ".xls";
+            using (FileStream tempFileStream = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write))
+            {
+                workbook.Write(tempFileStream);
+            }
+
+            // Descargar el archivo de Excel modificado
+            Response.Clear();
+            Response.ContentType = "application/vnd.ms-excel";
+            Response.AddHeader("content-disposition", "attachment; filename=Datos.xls");
+            Response.TransmitFile(tempFilePath);
+            Response.End();
+        }
+
+        private void FillCotizacionDetalladaSheet(ISheet cotizacionDetalladaSheet)
+        {
+            // Obtener el número de diseño de la etiqueta lblNumDise
+            string numeroDiseño = lblNumDise.Text;
+
+            // Crear estilo para el texto en negrita y color gris oscuro
+            IWorkbook workbook = cotizacionDetalladaSheet.Workbook;
+            ICellStyle estiloNegritaGris = workbook.CreateCellStyle();
+            IFont fuenteNegrita = workbook.CreateFont();
+            fuenteNegrita.IsBold = true;
+            fuenteNegrita.Color = IndexedColors.Black.Index;
+            fuenteNegrita.FontName = "Century Gothic";
+            fuenteNegrita.FontHeightInPoints = 11;
+            estiloNegritaGris.SetFont(fuenteNegrita);
+            estiloNegritaGris.FillForegroundColor = IndexedColors.Grey40Percent.Index;
+            estiloNegritaGris.FillPattern = FillPattern.SolidForeground;
+            estiloNegritaGris.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+            estiloNegritaGris.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+            estiloNegritaGris.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
+
+            // Opciones disponibles
+            string[] opciones = { "1", "2", "3" };
+
+            // Fila inicial para insertar los resultados
+            int currentRow = 15;
+
+            // Recorrer cada opción
+            foreach (string opcion in opciones)
+            {
+                // Realizar la consulta SQL para obtener los datos de la opción actual
+                string consultaSQL = $@"SELECT tblPlanoDiseño.*, 
+                                tblPlano.RealizadoPor, 
+                                tblPlano.Area, 
+                                tblPlano.Plano,
+
+                                ISNULL(
+                                    (
+                                        SELECT 
+                                            SUM(tblPlano_Panel.Cantidad * tblPanel.Precio_Venta) 
+                                        FROM 
+                                            tblPlano 
+                                            INNER JOIN tblPlano_Panel ON tblPlano.Plano = tblPlano_Panel.Id_Plano 
+                                            INNER JOIN tblPanel ON tblPlano_Panel.Id_PanelNum = tblPanel.Id_Numerico 
+                                            INNER JOIN tblGrupoObjeto ON tblPanel.Id_GrupoObjeto = tblGrupoObjeto.ID_GrupoObjeto 
+                                        WHERE 
+                                            tblGrupoObjeto.Cotizar = 1 
+                                        GROUP BY 
+                                            tblPlano.Plano 
+                                        HAVING 
+                                            tblPlano.Plano = tblPlanoDiseño.Plano
+                                    ), 
+                                    0
+                                ) AS SubTotalActualZona 
+                        FROM tblPlano 
+                        INNER JOIN tblPlanoDiseño ON tblPlano.Plano = tblPlanoDiseño.Plano 
+                        WHERE tblPlanoDiseño.Numero_Diseño = '{numeroDiseño}' AND Opcion = '{opcion}'
+                        ORDER BY opcion, tblPlano.Plano ASC";
+
+                // Ejecutar la consulta y obtener los resultados
+                DataTable resultados = new DataTable();
+                using (SqlConnection conexion = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+                {
+                    using (SqlCommand comando = new SqlCommand(consultaSQL, conexion))
+                    {
+                        conexion.Open();
+                        SqlDataAdapter adaptador = new SqlDataAdapter(comando);
+                        adaptador.Fill(resultados);
+                    }
+                }
+
+                // Si hay al menos un resultado, agregar el texto de la opción en negrita
+                if (resultados.Rows.Count > 0)
+                {
+                    // Agregar una fila vacía si no es la primera opción
+                    if (currentRow > 15)
+                    {
+                        currentRow++;
+                    }
+
+                    // Agregar el texto de la opción en negrita en la columna B
+                    IRow opcionRow = cotizacionDetalladaSheet.CreateRow(currentRow++);
+                    ICell opcionCell = opcionRow.CreateCell(1);
+                    opcionCell.SetCellValue($"OPCIÓN: {opcion}");
+                    IFont fontOpcion = workbook.CreateFont();
+                    fontOpcion.FontName = "Century Gothic";
+                    fontOpcion.FontHeightInPoints = 11;
+                    fontOpcion.IsBold = true;
+                    ICellStyle styleOpcion = workbook.CreateCellStyle();
+                    styleOpcion.SetFont(fontOpcion);
+                    opcionCell.CellStyle = styleOpcion;
+
+                    // Agregar los resultados de la consulta a la hoja de Excel
+                    foreach (DataRow fila in resultados.Rows)
+                    {
+                        // Agregar el texto 'Zona' en la fila siguiente y en la misma columna B
+                        IRow zonaRow = cotizacionDetalladaSheet.CreateRow(currentRow++);
+                        ICell zonaCell = zonaRow.CreateCell(1);
+                        zonaCell.SetCellValue("Zona");
+                        zonaCell.CellStyle = estiloNegritaGris;
+
+                        // Agregar el valor del área en la misma fila y columna B
+                        IRow zonaRow2 = cotizacionDetalladaSheet.CreateRow(currentRow++);
+                        ICell areaCell = zonaRow2.CreateCell(1);
+                        areaCell.SetCellValue(fila["Area"].ToString());
+
+                        // Agregar el texto 'Plano' en la misma fila y columna G
+                        ICell planoCell = zonaRow.CreateCell(5);
+                        planoCell.SetCellValue("Plano");
+                        planoCell.CellStyle = estiloNegritaGris;
+
+                        // Agregar el valor del plano en la misma fila y columna G
+                        ICell planoCellValue = zonaRow2.CreateCell(5);
+                        planoCellValue.SetCellValue(fila["Plano"].ToString());
+
+                        // Aplicar el estilo a todas las celdas desde la columna 'B' hasta la columna 'G'
+                        for (int i = 1; i <= 6; i++)
+                        {
+                            for (int j = currentRow - 2; j <= currentRow; j++)
+                            {
+                                IRow row = cotizacionDetalladaSheet.GetRow(j);
+                                if (row == null)
+                                {
+                                    row = cotizacionDetalladaSheet.CreateRow(j);
+                                }
+
+                                ICell cell = row.GetCell(i);
+                                if (cell == null)
+                                {
+                                    cell = row.CreateCell(i);
+                                }
+
+                                cell.CellStyle = estiloNegritaGris;
+                            }
+                        }
+
+
+                        // Agregar una fila vacía
+                        opcionRow = cotizacionDetalladaSheet.CreateRow(currentRow++);
+                        currentRow++;
+
+                        // Ejecutar el procedimiento almacenado cta_Plano_Paneles
+                        string plan = fila["Plano"].ToString();
+                   
+                        // Obtener el valor de 'Cantidad' de tu consulta SQL
+                        double cantidadConsultaSQL = Convert.ToDouble(fila["Cantidad"]);
+
+                        // Llamar a AgregarResultadosProcedimientoAlmacenado y pasar el valor de 'Cantidad'
+                        AgregarResultadosProcedimientoAlmacenado(cotizacionDetalladaSheet, workbook, ref currentRow, plan, cantidadConsultaSQL, opcion);
+
+                        // Agregar una fila vacía después de los resultados del procedimiento almacenado
+                        currentRow++;
+                    }
+                }
+
+                //double sumaTotalZona = 0.0;
+                //for (int rowNum = 0; rowNum <= cotizacionDetalladaSheet.LastRowNum; rowNum++)
+                //{
+                //    IRow row = cotizacionDetalladaSheet.GetRow(rowNum);
+                //    if (row != null)
+                //    {
+                //        ICell cell = row.GetCell(1); // Columna B
+                //        if (cell != null && cell.StringCellValue == "Total Zona")
+                //        {
+                //            ICell totalZonaCell = row.GetCell(5); // Columna F
+                //            if (totalZonaCell != null && totalZonaCell.CellType == CellType.Numeric)
+                //            {
+                //                sumaTotalZona += totalZonaCell.NumericCellValue;
+                //            }
+                //        }
+                //    }
+                //}
+
+                //// Colocar el resultado de la suma en la celda B justo después de llenar la opción actual
+                //IRow sumaTotalZonaRow = cotizacionDetalladaSheet.CreateRow(currentRow++);
+                //ICell sumaTotalZonaCell = sumaTotalZonaRow.CreateCell(1); // Columna B
+                //sumaTotalZonaCell.SetCellValue($"Suma Total para Opción {opcion}: {sumaTotalZona}");
+            }
+
+            // Después del segundo bucle foreach
+            // Agregar una fila vacía
+            cotizacionDetalladaSheet.CreateRow(currentRow++);
+
+            // Agregar el texto 'RESUMEN DEL PROYECTO POR GRUPOS DE OBJETOS' en la columna B
+            IRow resumenRow = cotizacionDetalladaSheet.CreateRow(currentRow++);
+            ICell resumenCell = resumenRow.CreateCell(1);
+            resumenCell.SetCellValue("RESUMEN DEL PROYECTO POR GRUPOS DE OBJETOS");
+
+            // Aplicar estilo al texto 'RESUMEN DEL PROYECTO POR GRUPOS DE OBJETOS'
+            IFont fontResumen = workbook.CreateFont();
+            fontResumen.FontName = "Century Gothic";
+            fontResumen.FontHeightInPoints = 11;
+            fontResumen.IsBold = true;
+            ICellStyle styleResumen = workbook.CreateCellStyle();
+            styleResumen.SetFont(fontResumen);
+            resumenCell.CellStyle = styleResumen;
+
+           
+
+            // Establecer la altura de la fila en 2 centímetros
+            resumenRow.HeightInPoints = 2 * cotizacionDetalladaSheet.DefaultRowHeightInPoints;
+
+
+            string sSql = "SELECT tblPlanoDiseño.opcion, tblPlanoDiseño.Numero_Diseño, tblGrupoObjeto.Descripcion_Grupo, Sum(tblPlano_Panel.Cantidad) AS Cantidad, Sum(tblPlano_Panel.Cantidad*tblPlano_Panel.Precio_Venta) AS SubTotalPlano, Sum(tblPlano_Panel.Cantidad*tblPanel.Precio_Venta) AS SubTotalActual " +
+      "FROM (tblPlano INNER JOIN ((tblGrupoObjeto INNER JOIN tblPanel ON tblGrupoObjeto.ID_GrupoObjeto = tblPanel.Id_GrupoObjeto) INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum) ON tblPlano.Plano = tblPlano_Panel.Id_Plano) INNER JOIN tblPlanoDiseño ON tblPlano.Plano = tblPlanoDiseño.Plano " +
+      "Where (((tblGrupoObjeto.Cotizar) = 1)) " +
+      "GROUP BY tblPlanoDiseño.opcion, tblPlanoDiseño.Numero_Diseño, tblGrupoObjeto.Descripcion_Grupo Having (((tblPlanoDiseño.Numero_Diseño) = '" + numeroDiseño + "')) ORDER BY tblPlanoDiseño.opcion, tblGrupoObjeto.Descripcion_Grupo;";
+            DataTable resultadosConsulta = new DataTable();
+            using (SqlConnection conexion = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                using (SqlCommand comando = new SqlCommand(sSql, conexion))
+                {
+                    conexion.Open();
+                    SqlDataAdapter adaptador = new SqlDataAdapter(comando);
+                    adaptador.Fill(resultadosConsulta);
+                }
+            }
+
+            // Obtener la última fila para agregar los resultados
+            int ultimaFila = cotizacionDetalladaSheet.LastRowNum + 1;
+
+            // Agregar los resultados al final del contenido de la hoja de Excel "Cotizacion Detallada"
+            foreach (DataRow fila in resultadosConsulta.Rows)
+            {
+                // Obtener los valores de la fila
+                string opcion = fila["opcion"].ToString();
+                string descripcionGrupo = fila["Descripcion_Grupo"].ToString();
+                int cantidad = Convert.ToInt32(fila["Cantidad"]);
+                double subTotalActual = Convert.ToDouble(fila["SubTotalActual"]);
+
+                // Agregar los valores a la hoja de Excel
+                IRow row = cotizacionDetalladaSheet.CreateRow(ultimaFila++);
+                row.CreateCell(1).SetCellValue("OP" + opcion + "-" + descripcionGrupo);
+                row.CreateCell(3).SetCellValue(cantidad);
+                row.CreateCell(5).SetCellValue(subTotalActual);
+            }
+
+        
+
+        }
+
+        private void AgregarResultadosProcedimientoAlmacenado(ISheet cotizacionDetalladaSheet, IWorkbook workbook, ref int currentRow, string plan, double cantidadConsultaSQL, string opcion)
+        {
+            // Crear el estilo para los números
+            ICellStyle estiloNumero = workbook.CreateCellStyle();
+            IDataFormat formatoNumero = workbook.CreateDataFormat();
+            estiloNumero.DataFormat = formatoNumero.GetFormat("0.0");
+
+            // Aplicar los estilos requeridos a la celda de Descripcion_Grupo
+            ICellStyle estiloNegritaGris = workbook.CreateCellStyle();
+            IFont fuenteNegrita = workbook.CreateFont();
+            fuenteNegrita.IsBold = true;
+            fuenteNegrita.Color = IndexedColors.Black.Index;
+            fuenteNegrita.FontName = "Century Gothic";
+            fuenteNegrita.FontHeightInPoints = 11;
+            estiloNegritaGris.SetFont(fuenteNegrita);
+            estiloNegritaGris.FillForegroundColor = IndexedColors.Grey25Percent.Index;
+            estiloNegritaGris.FillPattern = FillPattern.SolidForeground;
+            estiloNegritaGris.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+
+            // Ejecutar el procedimiento almacenado
+            string consultaSQL = "EXEC cta_Plano_Paneles @Plan = '" + plan + "'";
+            DataTable resultados = new DataTable();
+            using (SqlConnection conexion = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                using (SqlCommand comando = new SqlCommand(consultaSQL, conexion))
+                {
+                    conexion.Open();
+                    SqlDataAdapter adaptador = new SqlDataAdapter(comando);
+                    adaptador.Fill(resultados);
+                }
+            }
+
+            // Conjunto para almacenar valores únicos de Descripcion_Grupo por Plano
+            Dictionary<string, HashSet<string>> gruposMostradosPorPlano = new Dictionary<string, HashSet<string>>();
+
+            // Diccionario para almacenar la suma de sumaValorActual por cada Id_Plano
+            Dictionary<string, double> sumaTotalPorPlano = new Dictionary<string, double>();
+
+            foreach (DataRow fila in resultados.Rows)
+            {
+                string descripcionGrupo = fila["Descripcion_Grupo"].ToString();
+                string planoActual = fila["Id_Plano"].ToString();
+
+                // Verificar si el plano ya está en el diccionario
+                if (!gruposMostradosPorPlano.ContainsKey(planoActual))
+                {
+                    // Si el plano no está en el diccionario, agregarlo con un nuevo HashSet
+                    gruposMostradosPorPlano.Add(planoActual, new HashSet<string>());
+                }
+
+                // Verificar si el Descripcion_Grupo ya se ha mostrado para este Plano
+                if (!gruposMostradosPorPlano[planoActual].Contains(descripcionGrupo))
+                {
+                    // Si el Descripcion_Grupo no se ha mostrado para este Plano, agregarlo a la hoja de Excel
+
+                    // Agregar el valor de Descripcion_Grupo en la columna B
+                    IRow row = cotizacionDetalladaSheet.CreateRow(currentRow++);
+                    ICell descripcionCell = row.CreateCell(1);
+                    descripcionCell.SetCellValue(descripcionGrupo);
+
+                    descripcionCell.CellStyle = estiloNegritaGris;
+
+                    // Aplicar los estilos a las celdas de Descripcion_Grupo
+                    for (int i = 1; i <= 6; i++)
+                    {
+                        ICell cell = row.GetCell(i);
+                        if (cell == null)
+                        {
+                            cell = row.CreateCell(i);
+                        }
+                        cell.CellStyle = estiloNegritaGris;
+                    }
+
+                    // Restablecer la suma de ValorActual para la Descripcion_Grupo actual
+                    double sumaValorActual = 0.0;
+                   
+
+                    foreach (DataRow filaGrupo in resultados.Rows)
+                    {
+                        if (filaGrupo["Descripcion_Grupo"].ToString() == descripcionGrupo && filaGrupo["Id_Plano"].ToString() == planoActual)
+                        {
+                            string idNumerico = filaGrupo["Id_Numerico"].ToString();
+                            string descripcionTecnica = ObtenerDescripcionTecnicaPanel(idNumerico);
+                            string descripcionPanel = descripcionTecnica;
+                            double ancho = Convert.ToDouble(filaGrupo["Ancho"]);
+                            double cantidad = Convert.ToDouble(filaGrupo["Cantidad"]);
+                            double valorActual = Convert.ToDouble(filaGrupo["ValorActual"]);
+
+                            // 3. Multiplicar los valores de la columna 'Cantidad' obtenidos en el punto 1 con los de la consulta del procedimiento almacenado
+                            double cantidadFinal = cantidadConsultaSQL * cantidad;
+
+                            // Realizar la multiplicación de ValorActual por Cantidad
+                            double resultadoMultiplicacion = valorActual * cantidadFinal;
+
+                            // Crear una nueva fila y agregar los valores
+                            row = cotizacionDetalladaSheet.CreateRow(currentRow++);
+                            descripcionCell = row.CreateCell(1);
+                            descripcionCell.SetCellValue(descripcionPanel);
+
+                            // Aplicar el estilo para aumentar el alto de la fila
+                            row.HeightInPoints = cotizacionDetalladaSheet.DefaultRowHeightInPoints * 6;
+
+                            ICell anchoCell = row.CreateCell(2);
+                            anchoCell.SetCellValue(ancho); // Establecer el valor como número
+                            anchoCell.CellStyle = estiloNumero;
+                            row.CreateCell(3).SetCellValue(cantidadFinal);
+                            row.CreateCell(4).SetCellValue(valorActual);
+                            row.CreateCell(5).SetCellValue(resultadoMultiplicacion);
+
+                            // Agregar el valor de la multiplicación al total de ValorActual para la Descripcion_Grupo actual
+                            sumaValorActual += resultadoMultiplicacion;
+
+                           
+                        }
+                    }
+     
+                    // Agregar la suma de los valores de ValorActual en la fila siguiente a la de Id_Panel
+                    if (sumaValorActual > 0) // Verificar que se haya sumado al menos un ValorActual
+                    {
+                        IRow filaSuma = cotizacionDetalladaSheet.CreateRow(currentRow++);
+                        ICell sumaCell = filaSuma.CreateCell(5);
+                        sumaCell.SetCellValue(sumaValorActual);
+
+                        // Aplicar estilo de negrita, tamaño de letra 11 y tipo de letra Century Gothic
+                        ICellStyle estiloSuma = workbook.CreateCellStyle();
+                        IFont fontSuma = workbook.CreateFont();
+                        fontSuma.FontName = "Century Gothic";
+                        fontSuma.FontHeightInPoints = 11;
+                        fontSuma.IsBold = true;
+                        estiloSuma.SetFont(fontSuma);
+                        sumaCell.CellStyle = estiloSuma;
+
+                        // Agregar 'Sub Total' en la columna anterior y en la misma fila
+                        ICell subTotalCell = filaSuma.CreateCell(4);
+                        subTotalCell.SetCellValue("Sub Total");
+                        subTotalCell.CellStyle = estiloSuma;
+                    }
+
+
+                    // Agregar la suma al total por plano
+                    if (!sumaTotalPorPlano.ContainsKey(planoActual))
+                    {
+                        sumaTotalPorPlano[planoActual] = 0.0;
+                    }
+                    sumaTotalPorPlano[planoActual] += sumaValorActual;
+
+                    // Agregar el Descripcion_Grupo al conjunto de Descripcion_Grupo mostrados para este Plano
+                    gruposMostradosPorPlano[planoActual].Add(descripcionGrupo);
+
+                    // Agregar la fila vacía
+                    cotizacionDetalladaSheet.CreateRow(currentRow++);
+                }
+            }
+
+            // Crear un nuevo estilo con negrita y color gris oscuro para el texto
+            IFont fontTotalZona = workbook.CreateFont();
+            fontTotalZona.FontName = "Century Gothic";
+            fontTotalZona.FontHeightInPoints = 11;
+            fontTotalZona.IsBold = true;
+            fontTotalZona.Color = IndexedColors.Black.Index;
+
+            // Crear un relleno con color gris oscuro
+            ICellStyle styleTotalZona = workbook.CreateCellStyle();
+            styleTotalZona.SetFont(fontTotalZona);
+            styleTotalZona.FillForegroundColor = IndexedColors.Grey25Percent.Index;
+            styleTotalZona.FillPattern = FillPattern.SolidForeground;
+
+            // Agregar el texto 'Total Zona' y aplicar el estilo a las celdas desde la columna 'B' hasta la 'G'
+            foreach (var kvp in sumaTotalPorPlano)
+            {
+                IRow filaSumaTotalPorPlano = cotizacionDetalladaSheet.CreateRow(currentRow++);
+
+                foreach (DataRow fila in resultados.Rows)
+                {
+                    string idPlano = fila["Id_Plano"].ToString();
+
+                    // Llamar al método para obtener el valor de 'Area'
+                    string area = ObtenerAreaPorIdPlano(idPlano);
+
+                    // Concatenar el valor de 'Area' con el texto 'Total Zona'
+                    string textoTotalZona = $"Total Zona - {area}";
+
+                  
+                     ICell totalCell = filaSumaTotalPorPlano.CreateCell(1);
+                     totalCell.SetCellValue(textoTotalZona);
+                }
+
+
+                ICell sumaTotalPorPlanoCell = filaSumaTotalPorPlano.CreateCell(5);
+                sumaTotalPorPlanoCell.SetCellValue(kvp.Value);
+
+            
+
+                // Aplicar el estilo a todas las celdas desde la columna 'B' hasta la 'G'
+                for (int i = 1; i <= 6; i++)
+                {
+                    ICell cell = filaSumaTotalPorPlano.GetCell(i);
+                    if (cell == null)
+                    {
+                        cell = filaSumaTotalPorPlano.CreateCell(i);
+                    }
+                    cell.CellStyle = styleTotalZona;
+                }
+            }
+
+
+
+
+
+        }
+
+        private string ObtenerAreaPorIdPlano(string idPlano)
+        {
+            string area = "";
+            string consultaArea = $"SELECT Area FROM tblPlano WHERE Plano = '{idPlano}'";
+
+            using (SqlConnection conexionArea = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                using (SqlCommand comandoArea = new SqlCommand(consultaArea, conexionArea))
+                {
+                    conexionArea.Open();
+                    area = comandoArea.ExecuteScalar()?.ToString();
+                }
+            }
+
+            return area;
+        }
+
+        private string ObtenerDescripcionTecnicaPanel(string idNumerico)
+        {
+            string descripcionTecnica = string.Empty;
+
+            // Construir la consulta SQL
+            string consultaSQL = $"SELECT * FROM tblPanel WHERE Id_Numerico = '{idNumerico}'";
+
+            // Ejecutar la consulta y obtener la descripción técnica del panel
+            using (SqlConnection conexion = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                using (SqlCommand comando = new SqlCommand(consultaSQL, conexion))
+                {
+                    conexion.Open();
+                    using (SqlDataReader reader = comando.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            // Verificar si la descripcionTecnica es nula
+                            descripcionTecnica = reader["Descripcion_Tecnica"] as string;
+                            if (string.IsNullOrEmpty(descripcionTecnica))
+                            {
+                                // Si es nula, devolver el valor de la columna Id_Panel
+                                descripcionTecnica = reader["Descripcion_Panel"] as string;
+                            }
+                            if (string.IsNullOrEmpty(descripcionTecnica))
+                            {
+                                // Si es nula, devolver el valor de la columna Id_Panel
+                                descripcionTecnica = reader["Id_Panel"] as string;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return descripcionTecnica;
         }
 
     }

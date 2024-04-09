@@ -259,6 +259,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
 
         protected void Recepcion_Click(object sender, EventArgs e)
         {
+            
+
             LinkButton btn = (LinkButton)sender;
 
             string pageURL = string.Empty;
@@ -267,6 +269,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
             {
                 case "IngresarCotizacion":
                     pageURL = "Recepcion/IngresarCotizacion.aspx";
+                    break;
+               case "TablaDiseños":
+                    Session["Diseno"] = "Recepcion";
+                    pageURL = "Ventas/Diseño_Venta.aspx";
                     break;
             
                 default:
@@ -355,6 +361,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
 
         protected void ValidarPermiso_Ventas(object sender, EventArgs e)
         {
+           
+
             LinkButton btn = (LinkButton)sender;
 
             string pageURL = string.Empty;
@@ -374,6 +382,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
                     break;
 
                 case "ProgramarDiseno":
+                    Session["Diseno"] = "Ventas";
                     pageURL = "Ventas/Diseño_Venta.aspx";
                     break;
 
