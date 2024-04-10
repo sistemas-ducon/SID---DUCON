@@ -9006,7 +9006,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         cmdInsert.Parameters.AddWithValue("@cocTelefono", cocTelefono);
                         cmdInsert.Parameters.AddWithValue("@cocCelular", cocCelular);
                         cmdInsert.Parameters.AddWithValue("@cocMail", cocMail);
-                        cmdInsert.Parameters.AddWithValue("@cocFechaCreacion", Convert.ToDateTime(cocFechaCreacion));
+                        cmdInsert.Parameters.AddWithValue("@cocFechaCreacion", string.IsNullOrEmpty(cocFechaCreacion) ? (object)DBNull.Value : Convert.ToDateTime(cocFechaCreacion));
                         cmdInsert.Parameters.AddWithValue("@cocUltimaActualizacion", Convert.ToDateTime(cocUltimaActualizacion));
 
 
