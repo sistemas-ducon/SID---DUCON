@@ -1741,9 +1741,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 string mensajeError = "Por favor, seleccione un cliente.";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showError", $"alert('{mensajeError}');", true);
             }
-
-
-
           
         }
 
