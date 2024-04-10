@@ -151,9 +151,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (Session["Id_ClienteBD"] != null && !string.IsNullOrEmpty(Session["Id_ClienteBD"].ToString()))
             {
-                scripTabDise();
 
-                NuevoLimpiar();
+                if (Session["ID_ContactoBD"] != null && !string.IsNullOrEmpty(Session["ID_ContactoBD"].ToString()))
+                {
+                    scripTabDise();
+
+                    NuevoLimpiar();
+                }
+                else
+                {
+                    Session.Remove("Id_ClienteBD");
+
+                    elementosllenosalcargarlapagina();
+                }
             }
             else
             {
@@ -690,6 +700,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         }
                     }
 
+                    TextObsVen.Disabled = false;
+                    CheckEsyMat.Enabled = true;
+
                     Session.Remove("Id_ClienteBD");
                     Session.Remove("ID_ContactoBD");
                 }
@@ -755,6 +768,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ChecCotVia.Checked = true;
             CheckBox4.Checked = true;
             ChecMue.Checked = true;
+            TextObsVen.Disabled = true;
+            CheckEsyMat.Enabled = false;
         }
 
         protected void habilitarbotonesDise()
@@ -1263,7 +1278,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 NuevoLimpiar();
 
+                
+
             }
+
+            TextObsVen.Disabled = false;
+            CheckEsyMat.Enabled = true;
 
             Session["NuevoDisBitEjecutado"] = true;
 
@@ -1487,8 +1507,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                
             }
 
+            TextObsVen.Disabled = true;
+            CheckEsyMat.Enabled = false;
 
-           
 
         }
 
@@ -1717,8 +1738,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 AdicionarElemento.Enabled = true;
                 AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled";
 
-                LinkButton2.Enabled = true;
-                LinkButton2.CssClass = "btn btn-sm button-enabled";
+                LinkButton2.Enabled = false;
+                LinkButton2.CssClass = "btn btn-sm button-disabled";
             }
         }
 
@@ -1813,6 +1834,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void Modificar_Click(object sender, EventArgs e)
         {
             ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ShowCase').modal('show');", true);
+
+            TextObsVen.Disabled = false;
+            CheckEsyMat.Enabled = true;
 
             Session["ModificarEjecutado"] = true;
 
@@ -4121,28 +4145,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
 
-                //double sumaTotalZona = 0.0;
-                //for (int rowNum = 0; rowNum <= cotizacionDetalladaSheet.LastRowNum; rowNum++)
-                //{
-                //    IRow row = cotizacionDetalladaSheet.GetRow(rowNum);
-                //    if (row != null)
-                //    {
-                //        ICell cell = row.GetCell(1); // Columna B
-                //        if (cell != null && cell.StringCellValue == "Total Zona")
-                //        {
-                //            ICell totalZonaCell = row.GetCell(5); // Columna F
-                //            if (totalZonaCell != null && totalZonaCell.CellType == CellType.Numeric)
-                //            {
-                //                sumaTotalZona += totalZonaCell.NumericCellValue;
-                //            }
-                //        }
-                //    }
-                //}
+              
 
-                //// Colocar el resultado de la suma en la celda B justo después de llenar la opción actual
-                //IRow sumaTotalZonaRow = cotizacionDetalladaSheet.CreateRow(currentRow++);
-                //ICell sumaTotalZonaCell = sumaTotalZonaRow.CreateCell(1); // Columna B
-                //sumaTotalZonaCell.SetCellValue($"Suma Total para Opción {opcion}: {sumaTotalZona}");
             }
 
             // Después del segundo bucle foreach
