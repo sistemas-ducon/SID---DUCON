@@ -643,7 +643,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
-                        string query = "SELECT * " +
+                        string query = "SELECT X.NombreCompañía, X.Teléfono, Y.NombreContacto, Y.MailContacto, Y.Telefono, Y.Celular, X.Dirección " +
                                        "FROM tblCliente AS X " +
                                        "INNER JOIN tblClienteContacto AS Y ON Y.Id_Cliente = X.Id_Cliente " +
                                        "WHERE X.Id_Cliente = @ParametroCliente AND Y.Id_ClienteContacto = @ParametroClienteContacto";
@@ -1379,105 +1379,116 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void Cancelar_Click(object sender, EventArgs e)
         {
-
-            // Verifica si la variable de sesión "Modificado" está establecida como true.
-            bool modificado = Session["ModificarEjecutado"] as bool? ?? false;
-
-            if (modificado)
+            string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Ventas")
             {
-                // Si se hizo clic en Modificar antes, realiza las acciones necesarias para volver al estado anterior.
-                NuevoDisBit.Enabled = false;
-                NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
+                // Verifica si la variable de sesión "Modificado" está establecida como true.
+                bool modificado = Session["ModificarEjecutado"] as bool? ?? false;
 
-                Modificar.Enabled = true;
-                Modificar.CssClass = "btn btn-sm shadow button-enabled";
+                if (modificado)
+                {
+                    // Si se hizo clic en Modificar antes, realiza las acciones necesarias para volver al estado anterior.
+                    NuevoDisBit.Enabled = false;
+                    NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
 
-                ActualizarDiseno.Enabled = false;
-                ActualizarDiseno.CssClass = "btn btn-sm shadow button-disabled";
+                    Modificar.Enabled = true;
+                    Modificar.CssClass = "btn btn-sm shadow button-enabled";
+
+                    ActualizarDiseno.Enabled = false;
+                    ActualizarDiseno.CssClass = "btn btn-sm shadow button-disabled";
 
 
-                // Resto de las acciones para volver al estado anterior...
-            }
-            else
-            {
-                // Si no se hizo clic en Modificar antes, simplemente restablece todo como estaba antes de Cancelar.
+                    // Resto de las acciones para volver al estado anterior...
+                }
+                else
+                {
+                    // Si no se hizo clic en Modificar antes, simplemente restablece todo como estaba antes de Cancelar.
+                    Grabar.Enabled = false;
+                    Grabar.CssClass = "btn btn-sm shadow button-disabled";
+
+                    NuevoDisBit.Enabled = true;
+                    NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled";
+
+                    ActualizarDiseno.Enabled = true;
+                    ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
+
+                    Modificar.Enabled = false;
+                    Modificar.CssClass = "btn btn-sm shadow button-disabled";
+                }
+
+
+
+                // Deshabilitar el botón "Grabar"
                 Grabar.Enabled = false;
                 Grabar.CssClass = "btn btn-sm shadow button-disabled";
 
+                // Habilitar el botón "NuevoDisBit"
                 NuevoDisBit.Enabled = true;
+
+                // Habilitar el botón "ActualizarDiseno"
+                ActualizarDiseno.Enabled = true;
                 NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled";
 
-                ActualizarDiseno.Enabled = true;
-                ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
+                // Ocultar el div y su contenido
+                DeshabilitarDivYContenido(miDiv);
 
-                Modificar.Enabled = false;
-                Modificar.CssClass = "btn btn-sm shadow button-disabled";
+
+                lblCotizar.CssClass = "col-form-label-sm text-dark";
+                lblCotizar.Font.Bold = false;
+
+                // Manejo del evento DataGridDise_ItemCommand
+                bool eventoItemCommandEjecutado = Session["EventoItemCommandEjecutado"] as bool? ?? false;
+
+                if (eventoItemCommandEjecutado)
+                {
+                    // Si el evento DataGridDise_ItemCommand se ejecutó correctamente,
+                    // obtener el valor de la variable de sesión "NumeroDisenoSession" y asignarlo a lblNumDise
+                    int numeroDiseno = Session["NumeroDisenoSession"] as int? ?? 0;
+                    lblNumDise.Text = numeroDiseno.ToString();
+
+                    Modificar.Enabled = true;
+                    Modificar.CssClass = "btn btn-sm shadow button-enabled";
+                }
+                else
+                {
+                    Grabar.Enabled = false;
+                    Grabar.CssClass = "btn btn-sm shadow button-disabled";
+
+                    NuevoDisBit.Enabled = true;
+                    NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled";
+
+                    ActualizarDiseno.Enabled = true;
+                    ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
+
+                    lblNumDise.Text = "Numero";
+
+
+
+                    // Limpia la variable de sesión "EventoItemCommandEjecutado" después de utilizarla.
+                    Session["EventoItemCommandEjecutado"] = false;
+                }
+
+                // Manejo del evento DataGridDise_ItemCommand
+                bool eventoNoButtonEjecutado = Session["EventoNoButtonEjecutado"] as bool? ?? false;
+
+
+                if (eventoNoButtonEjecutado)
+                {
+                    Modificar.Enabled = true;
+                    Modificar.CssClass = "btn btn-sm shadow button-enabled";
+                }
+
+                // Limpia la variable de sesión "Modificado" después de utilizarla.
+                Session["ModificarEjecutado"] = false;
+
             }
-
-
-
-            // Deshabilitar el botón "Grabar"
-            Grabar.Enabled = false;
-            Grabar.CssClass = "btn btn-sm shadow button-disabled";
-
-            // Habilitar el botón "NuevoDisBit"
-            NuevoDisBit.Enabled = true;
-
-            // Habilitar el botón "ActualizarDiseno"
-            ActualizarDiseno.Enabled = true;
-            NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled";
-
-            // Ocultar el div y su contenido
-            DeshabilitarDivYContenido(miDiv);
-
-
-            lblCotizar.CssClass = "col-form-label-sm text-dark";
-            lblCotizar.Font.Bold = false;
-
-            // Manejo del evento DataGridDise_ItemCommand
-            bool eventoItemCommandEjecutado = Session["EventoItemCommandEjecutado"] as bool? ?? false;
-
-            if (eventoItemCommandEjecutado)
+            else if (tipoAccion == "Recepcion")
             {
-                // Si el evento DataGridDise_ItemCommand se ejecutó correctamente,
-                // obtener el valor de la variable de sesión "NumeroDisenoSession" y asignarlo a lblNumDise
-                int numeroDiseno = Session["NumeroDisenoSession"] as int? ?? 0;
-                lblNumDise.Text = numeroDiseno.ToString();
-
-                Modificar.Enabled = true;
-                Modificar.CssClass = "btn btn-sm shadow button-enabled";
-            }
-            else
-            {
-                Grabar.Enabled = false;
-                Grabar.CssClass = "btn btn-sm shadow button-disabled";
-
-                NuevoDisBit.Enabled = true;
-                NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled";
-
-                ActualizarDiseno.Enabled = true;
-                ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
-
-                lblNumDise.Text = "Numero";
-
-
-
-                // Limpia la variable de sesión "EventoItemCommandEjecutado" después de utilizarla.
-                Session["EventoItemCommandEjecutado"] = false;
+               
             }
 
-            // Manejo del evento DataGridDise_ItemCommand
-            bool eventoNoButtonEjecutado = Session["EventoNoButtonEjecutado"] as bool? ?? false;
 
-
-            if (eventoNoButtonEjecutado)
-            {
-                Modificar.Enabled = true;
-                Modificar.CssClass = "btn btn-sm shadow button-enabled";
-            }
-
-            // Limpia la variable de sesión "Modificado" después de utilizarla.
-            Session["ModificarEjecutado"] = false;
+           
 
         }
 
@@ -1706,8 +1717,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 AdicionarElemento.Enabled = true;
                 AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled";
 
-                LinkButton2.Enabled = false;
-                LinkButton2.CssClass = "btn btn-sm button-disabled";
+                LinkButton2.Enabled = true;
+                LinkButton2.CssClass = "btn btn-sm button-enabled";
             }
         }
 
