@@ -1629,35 +1629,82 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
         protected void GuardarModificarContactoFact(object sender, EventArgs e)
         {
-            if (Session["GuaModContactoFactSession"].ToString() == "Insertar")
+
+            if(tbNumero.Text != "")
             {
-                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                if (Session["GuaModContactoFactSession"].ToString() == "Insertar")
                 {
-                    connection.Open();
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
-
-                    using (SqlCommand getMaxIdCmd = new SqlCommand("Select  Max(cocConsecutivoContacto) from tblClienteObraContacto WHERE cocNIT= @Nit", connection))
+                    using (SqlConnection connection = new SqlConnection(connectionString))
                     {
-                        getMaxIdCmd.Parameters.AddWithValue("@Nit", tbNumero.Text);
-
-                        object maxIdObj = getMaxIdCmd.ExecuteScalar();
-                        int maxId = (maxIdObj != null && maxIdObj != DBNull.Value) ? Convert.ToInt32(maxIdObj) : 0;
+                        connection.Open();
 
 
-                        int Consecutivo = maxId + 1;
+                        using (SqlCommand getMaxIdCmd = new SqlCommand("Select  Max(cocConsecutivoContacto) from tblClienteObraContacto WHERE cocNIT= @Nit", connection))
+                        {
+                            getMaxIdCmd.Parameters.AddWithValue("@Nit", tbNumero.Text);
+
+                            object maxIdObj = getMaxIdCmd.ExecuteScalar();
+                            int maxId = (maxIdObj != null && maxIdObj != DBNull.Value) ? Convert.ToInt32(maxIdObj) : 0;
 
 
-                        string IdConsecutivo = Consecutivo.ToString();
-                        connection.Close();
+                            int Consecutivo = maxId + 1;
 
-                        using (SqlCommand cmd = new SqlCommand("sp_InsertarContactoClienteObra", connection))
+
+                            string IdConsecutivo = Consecutivo.ToString();
+                            connection.Close();
+
+                            using (SqlCommand cmd = new SqlCommand("sp_InsertarContactoClienteObra", connection))
+                            {
+
+                                cmd.CommandType = CommandType.StoredProcedure;
+                                cmd.Parameters.AddWithValue("@cocNIT", tbNumero.Text);
+                                cmd.Parameters.AddWithValue("@cocConsecutivoContacto", IdConsecutivo);
+                                cmd.Parameters.AddWithValue("@cocSede", tbSede.Text);
+                                cmd.Parameters.AddWithValue("@cocDireccion", tbDireccion1.Text);
+                                cmd.Parameters.AddWithValue("@cocNombre", tbNombreContacto.Text);
+                                cmd.Parameters.AddWithValue("@cocTelefono", tbTelefono1.Text);
+                                cmd.Parameters.AddWithValue("@cocCelular", tbCelular.Text);
+                                cmd.Parameters.AddWithValue("@cocMail", tbMailContacto.Text);
+                                cmd.Parameters.AddWithValue("@cocCiudad", ddlCiudad1.SelectedItem.Text);
+                                cmd.Parameters.AddWithValue("@cocFechaCreacion", DateTime.Now);
+                                cmd.Parameters.AddWithValue("@cocUltimaActualizacion", DateTime.Now);
+
+
+                                connection.Open();
+
+
+                                int rowsAffected = cmd.ExecuteNonQuery();
+                                if (rowsAffected > 0)
+                                {
+                                    string mensajePersonalizado = "El Contacto ha sido guardado con exito.";
+                                    string urlRedireccion = "FormExtPrin/NitOTs.aspx";
+                                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+                                }
+                                else
+                                {
+                                    // script de error de Insercion  
+                                }
+
+                            }
+                        }
+                    }
+
+                }
+
+                else if (Session["GuaModContactoFactSession"].ToString() == "Actualizar")
+                {
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        using (SqlCommand cmd = new SqlCommand("Sp_ActualizarconatctoClienteObra", connection))
                         {
 
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@cocNIT", tbNumero.Text);
-                            cmd.Parameters.AddWithValue("@cocConsecutivoContacto", IdConsecutivo);
+                            cmd.Parameters.AddWithValue("@IdContacto", Session["IdContactoFactSession"].ToString());
                             cmd.Parameters.AddWithValue("@cocSede", tbSede.Text);
                             cmd.Parameters.AddWithValue("@cocDireccion", tbDireccion1.Text);
                             cmd.Parameters.AddWithValue("@cocNombre", tbNombreContacto.Text);
@@ -1665,7 +1712,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             cmd.Parameters.AddWithValue("@cocCelular", tbCelular.Text);
                             cmd.Parameters.AddWithValue("@cocMail", tbMailContacto.Text);
                             cmd.Parameters.AddWithValue("@cocCiudad", ddlCiudad1.SelectedItem.Text);
-                            cmd.Parameters.AddWithValue("@cocFechaCreacion", DateTime.Now);
                             cmd.Parameters.AddWithValue("@cocUltimaActualizacion", DateTime.Now);
 
 
@@ -1675,62 +1721,30 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             int rowsAffected = cmd.ExecuteNonQuery();
                             if (rowsAffected > 0)
                             {
-                                string mensajePersonalizado = "El Contacto ha sido guardado con exito.";
+                                string mensajePersonalizado = "El contacto ha sido actualizado correctamente.";
                                 string urlRedireccion = "FormExtPrin/NitOTs.aspx";
                                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
 
                             }
                             else
                             {
-                               // script de error de Insercion  
+                                //Error de actualizacion  
                             }
 
                         }
                     }
                 }
-
             }
-
-            else if (Session["GuaModContactoFactSession"].ToString() == "Actualizar")
+            else
             {
-                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    using (SqlCommand cmd = new SqlCommand("Sp_ActualizarconatctoClienteObra", connection))
-                    {
-
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@IdContacto", Session["IdContactoFactSession"].ToString());                
-                        cmd.Parameters.AddWithValue("@cocSede", tbSede.Text);
-                        cmd.Parameters.AddWithValue("@cocDireccion", tbDireccion1.Text);
-                        cmd.Parameters.AddWithValue("@cocNombre", tbNombreContacto.Text);
-                        cmd.Parameters.AddWithValue("@cocTelefono", tbTelefono1.Text);
-                        cmd.Parameters.AddWithValue("@cocCelular", tbCelular.Text);
-                        cmd.Parameters.AddWithValue("@cocMail", tbMailContacto.Text);
-                        cmd.Parameters.AddWithValue("@cocCiudad", ddlCiudad1.SelectedItem.Text);
-                        cmd.Parameters.AddWithValue("@cocUltimaActualizacion", DateTime.Now);
-
-
-                        connection.Open();
-
-
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                        if (rowsAffected > 0)
-                        {
-                            string mensajePersonalizado = "El contacto ha sido actualizado correctamente.";
-                            string urlRedireccion = "FormExtPrin/NitOTs.aspx";
-                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-
-                        }
-                        else
-                        {
-                          //Error de actualizacion  
-                        }
-
-                    }
-                }
+                // La eliminación no fue exitosa, mostrar mensajes o tomar acciones adicionales
+                string mensajeError = "Por favor, seleccione un cliente.";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showError", $"alert('{mensajeError}');", true);
             }
+
+
+
+          
         }
 
        
