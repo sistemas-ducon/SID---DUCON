@@ -561,7 +561,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Asignar la fecha y hora actual al TextBox
             TextFecOkDib.Text = fechaOkDib;
 
-
+            TextObsDibDes.Value = string.Empty;
+            TextSegPauDev.Value = string.Empty;
 
 
             lblNumDise.Text = "Por definir";
@@ -1905,6 +1906,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             NuevoDisBit.Enabled = false;
             NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
 
+
             DeshabilitarDivYContenidoMitad(miDiv);
         }
 
@@ -2639,7 +2641,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@MuebleEntrepano", TextEnt.Text);
                         command.Parameters.AddWithValue("@MueblePuertas", TextPuer.Text);
                         command.Parameters.AddWithValue("@Observaciones_Ventas", TextObsVen.InnerText);
-                   
+                        command.Parameters.AddWithValue("@Observaciones_Diseño", TextObsDibDes.InnerText);
 
                         command.Parameters.AddWithValue("@SC_Presentacionppt", valorCheckBox18);
                         command.Parameters.AddWithValue("@SC_Imagenes", valorCheckBox19);
@@ -2822,7 +2824,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     command.Parameters.AddWithValue("@MuebleEntrepano", TextEnt.Text);
                     command.Parameters.AddWithValue("@MueblePuertas", TextPuer.Text);
                     command.Parameters.AddWithValue("@Observaciones_Ventas", TextObsVen.InnerText);
-                   
+                    command.Parameters.AddWithValue("@Observaciones_Diseño", TextObsDibDes.InnerText);
+                    command.Parameters.AddWithValue("@SeguimientoPausa", TextSegPauDev.InnerText);
+
                     command.Parameters.AddWithValue("@SC_Presentacionppt", valorCheckBox18);
                     command.Parameters.AddWithValue("@SC_Imagenes", valorCheckBox19);
                     command.Parameters.AddWithValue("@SC_Accesorios", valorCheckBox20);
