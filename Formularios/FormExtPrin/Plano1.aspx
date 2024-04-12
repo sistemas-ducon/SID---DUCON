@@ -70,7 +70,8 @@
                                         </asp:LinkButton>
 
                                         <asp:LinkButton runat="server" Text="Guardar Plano" ID="GurdarPlano" title="Guardar Plano" OnClick="GuardarModifcarPlano" OnClientClick=" return validarFormulario();">
-                                                  <i class="bi bi-save2"></i>
+                                               <%--   <i class="bi bi-save2"></i>--%>
+                                                <i class="bi bi-sd-card-fill"></i> <%--Icono Guardar--%>
                                         </asp:LinkButton>
 
                                         <asp:LinkButton runat="server" Text="Modificar Plano" ID="ModificarPlano" OnClick="ModificarPlano_Click" title="Modificar Plano">

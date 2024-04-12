@@ -262,7 +262,8 @@
 
 
                                             <asp:LinkButton runat="server" title="Grabar Diseño" ID="Grabar" Enabled="false" OnClick="btnInsertar_Click">
-                                               <i class="bi bi-save2"></i>
+                                               <%--<i class="bi bi-save2"></i>--%>
+                                                <i class="bi bi-sd-card-fill"></i> <%--Icono Guardar--%>
                                             </asp:LinkButton>
 
                                             <asp:Label ID="lblMensaje" runat="server" CssClass="mensaje"></asp:Label>
@@ -272,7 +273,8 @@
                                             </asp:LinkButton>
 
                                             <asp:LinkButton runat="server" title="Documentacion Diseño" ID="DocBitacora"  Enabled="false" Onclick="DocBitacora_Click">
-                                            <i class="bi bi-send-plus"></i>
+                                            <%--<i class="bi bi-send-plus"></i>--%>
+                                                <i class="bi bi-paperclip"></i> <%--Icono Documentacion--%>
                                             </asp:LinkButton>
 
                                             <asp:LinkButton runat="server" title="Regresar Diseño" ID="RegresarDiseño" Enabled="false">

@@ -61,7 +61,8 @@
                                 <i class="bi bi-file-earmark"></i>
                             </a>
                             <asp:LinkButton class="icong disabled" runat="server" title="Grabar Licitacion" ID="GrabarLic" OnClick="Grabar">
-                                 <i class="bi bi-save2"></i>
+                                <%-- <i class="bi bi-save2"></i>--%>
+                                <i class="bi bi-sd-card-fill"></i> <%--Icono Guardar--%>
                             </asp:LinkButton>
 
                             <asp:CheckBox ID="estadoLicitacion" runat="server"  />

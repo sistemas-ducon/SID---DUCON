@@ -192,7 +192,8 @@
                             </a>
 
                             <asp:LinkButton class="icong disabled" runat="server" title="Guardar Visita" ID="GrabarVisita" OnClick="GuardarModificarCliente" OnClientClick="return ValidarFormulario();">
-                                        <i class="bi bi-save2"></i>
+                                      <%--  <i class="bi bi-save2"></i>--%>
+                                <i class="bi bi-sd-card-fill"></i> <%--Icono Guardar--%>
                             </asp:LinkButton>
 
 

@@ -183,7 +183,8 @@
                             </asp:LinkButton>
 
                             <asp:LinkButton class="icong disabled" runat="server" title="Guardar Solicitud" ID="GrabarSolicitud" OnClick="GuardarModificarSolicitud" OnClientClick="return validarFormularioSolicitud();">
-                                        <i class="bi bi-save2"></i>
+                                     <%--   <i class="bi bi-save2"></i>--%>
+                                <i class="bi bi-sd-card-fill"></i> <%--Icono Guardar--%>
                             </asp:LinkButton>
 
                             <a class="icong disabled" href="#" title="Modificar Solicitud" id="ModificarSolicitud" onclick="ModificarSolicitud()">
@@ -660,7 +661,8 @@
                                                         </a>
 
                                                         <asp:LinkButton class="icong disabled" runat="server" title="Guardar Detalle" ID="GrabarDetalle" OnClick="GuardarModificarDetalle" OnClientClick="return validarFormularioDetalle();">
-                                                           <i class="bi bi-save2"></i>
+                                                          <%-- <i class="bi bi-save2"></i>--%>
+                                                            <i class="bi bi-sd-card-fill"></i> <%--Icono Guardar--%>
                                                         </asp:LinkButton>
 
                                                         <a class="icong disabled" href="#" title="Modificar Detalle" id="ModificarDetalle" onclick="ModificarDetalle()">

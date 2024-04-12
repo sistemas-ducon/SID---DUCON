@@ -71,7 +71,8 @@
                             </a>
 
                             <asp:LinkButton class="icong disabled" runat="server" title="Guardar Render" ID="GrabarRender" OnClick="GuardarModificarRender" OnClientClick="return validarFormularioRender();">
-                                        <i class="bi bi-save2"></i>
+                                    <%--    <i class="bi bi-save2"></i>--%>
+                                <i class="bi bi-sd-card-fill"></i> <%--Icono Guardar--%>
                             </asp:LinkButton>
 
                             <a class="icong disabled" href="#" title="Modificar Render" id="ModificarRender" onclick="ModificarRender()">

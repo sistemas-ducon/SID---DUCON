@@ -375,7 +375,9 @@
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Grabar Orden de Trabajo" ID="GrabarOt" OnClick="BtnGrabar_Click">
-                                                  <i class="bi bi-save2"></i>
+                                                
+                                                 <i class="bi bi-sd-card-fill"></i> <%--Icono Guardar--%>
+
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Modificar Orden de Trabajo" ID="ModificarOt" OnClick="BtnModificar_Click">
@@ -1659,7 +1661,8 @@
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Guardar TXT" ID="BtnGuaTxt">
-                                                    <i class="bi bi-save2"></i>
+                                                    <%--<i class="bi bi-save2"></i>--%>
+                                                    <i class="bi bi-sd-card-fill"></i> <%--Icono Guardar--%>
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Exportar Plano u Orden de Trabajo" ID="BtnExpPlaOrdTra">
