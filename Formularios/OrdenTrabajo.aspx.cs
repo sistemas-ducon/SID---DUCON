@@ -2094,18 +2094,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         if (Convert.ToInt32(leer["Saldo"].ToString()) == 0)
                         {
-                            txtValorSugerido.Text = "";
-                            txtVccd.Text = "";
-                            txtVcsd.Text = "";
-                            txtSaldo.Text = "";
-                            txtDiseño.Text = "";
-                            txtDcto.Text = "";
-                            txtComision.Text = "";
-                            txtVenta.Text = "";
-                            txtVtte.Text = "";
-                            txtVvia.Text = "";
-                            txtDctoValor.Text = "";
-                            txtGtotal.Text = "";
+                            txtValorSugerido.Text = "0";
+                            txtVccd.Text = "0";
+                            txtVcsd.Text = "0";
+                            txtSaldo.Text = "0";
+                            txtDiseño.Text = "0";
+                            txtDcto.Text = "0";
+                            txtComision.Text = "0";
+                            txtVenta.Text = "0";
+                            txtVtte.Text = "0";
+                            txtVvia.Text = "0";
+                            txtDctoValor.Text = "0";
+                            txtGtotal.Text = "0";
                             string scriptSaldoMayorCero = "alert('La cotización digitada, no tiene saldo para un nuevo pedido. Por favor digite nuevamente un numero de cotización');";
                             ScriptManager.RegisterStartupScript(this, GetType(), "showSaldo", scriptSaldoMayorCero, true);
                             ScriptManager.GetCurrent(this).SetFocus(txtCotizacion);

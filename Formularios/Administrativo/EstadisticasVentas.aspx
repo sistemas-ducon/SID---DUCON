@@ -184,9 +184,6 @@
         }
     </script>
 
-
-
-
 </head>
 <body>
 
@@ -494,7 +491,7 @@
 
 
             <div class="tab-pane fade " id="Xtrimestre-content">
-                <asp:UpdatePanel ID="PnaleTrimestre" runat="server">
+                <asp:UpdatePanel ID="PanelTrimestre" runat="server">
                     <ContentTemplate>
                         <div class="container-fluid ">
 
@@ -582,7 +579,6 @@
                                 </div>
                             </div>
 
-
                         </div>
                     </ContentTemplate>
                     <Triggers>
@@ -595,8 +591,104 @@
             <div class="tab-pane fade " id="Xrangos-content">
                 <asp:UpdatePanel ID="PanelRangos" runat="server">
                     <ContentTemplate>
-                        <div class="container ">
-                            <h1>X Rangos</h1>
+                        <div class="container-fluid ">
+
+                            <div class="row pt-2 mt-2 pb-2 mb-2">
+
+                                <div class="col-1"></div>
+
+                                <div class="col-2">
+                                    <div class=" input-group input-group-sm mb-1 ">
+                                        <asp:Label class="form-label" Text="Seleccione año para estadistica" runat="server" ID="lbAñoRango"></asp:Label>
+                                    </div>
+                                </div>
+
+                                <div class="col-1">
+                                    <div class=" input-group input-group-sm mb-1 ">
+                                        <asp:DropDownList CssClass="form-control" ID="ddlBusquedaAñoRango" runat="server">
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+
+                                <div class="col-1">
+                                    <div class="input-group input-group-sm mb-2 gap-2">
+                                        <asp:Label class="form-label" Text="Zona" runat="server" ID="Label3"></asp:Label>
+                                        <asp:DropDownList class="form-control" ID="ddlZonaRango" runat="server">
+                                            <asp:ListItem Value="%">%</asp:ListItem>
+                                            <asp:ListItem Value="01">01</asp:ListItem>
+                                            <asp:ListItem Value="02">02</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+
+                                <div class="col-2">
+                                    <div class="input-group input-group-sm  mb-2 gap-2 justify-content-center ">
+                                        <asp:CheckBox ID="chkAprodRango" runat="server" />
+                                        <asp:Label ID="lbProdRango" runat="server" Text="A producción"></asp:Label>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-2"></div>
+
+                                <div class="col-1">
+                                    <div class=" input-group input-group-sm">
+                                        <asp:Button CssClass="btn btn-outline-secondary" ID="btnAgregarAñoRango" runat="server" Text="Agregar Año" />
+                                    </div>
+                                </div>
+
+                                <div class="col-1">
+                                    <div class=" input-group input-group-sm">
+                                        <asp:LinkButton class="icong " runat="server" title="Exportar Excel" ID="ExpotarExcel4">
+                                         <i class="custom-icon"></i>
+                                        </asp:LinkButton>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row justify-content-center p-1 m-1 pb-2" runat="server">
+                                <div class="border rounded">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="table-responsive  mb-2 gap-2" style="height: 18rem; overflow-x: auto;">
+                                                <h6 class="datagrid-header text-center">Rango de Valores</h6>
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm mt-2 " ID="DataGridRango" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                    <Columns>
+                                                        <asp:TemplateColumn HeaderText="...">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton CssClass="Tam" ID="lnkView" runat="server" CommandName="VerRango" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText=" " ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
+
+
+
+                                                        <%-- Campos oscultos pero que se muestran en el formulario empieza en el 13]--%>
+
+                                                        <asp:BoundColumn DataField="" Visible="false" />
+
+                                                    </Columns>
+                                                </asp:DataGrid>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </div>
                     </ContentTemplate>
                 </asp:UpdatePanel>
@@ -630,20 +722,21 @@
 
                                 <div class="col-2">
                                     <div class=" input-group input-group-sm justify-content-start">
-                                        <asp:Button CssClass="btn btn-outline-secondary" ID="btnConsultarCouM" runat="server" Text="Consultar" OnClick="btnConsultarCouM_Click" />
+                                        <asp:Button CssClass="btn btn-outline-secondary" ID="btnConsultarCuoM" runat="server" Text="Consultar" OnClick="btnConsultarCuoM_Click" />
                                     </div>
                                 </div>
 
                             </div>
 
                             <div class="row">
+
                                 <div class="col-9">
                                     <div class="row justify-content-center p-1 m-1 pb-2" id="Div2" runat="server">
                                         <div class="border rounded">
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="table-responsive  mb-2 gap-2" style="height: 14rem; overflow-x: auto;">
-                                                        <h6 class="datagrid-header text-center">Estadística por couta Mensual</h6>
+                                                        <h6 class="datagrid-header text-center">Cuota Asesores </h6>
                                                         <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm mt-2 " ID="DataGridCoutaMes" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemDataBound="DataGridCoutaMes_ItemDataBound" OnItemCommand="DataGridCoutaMes_ItemCommand">
                                                             <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                             <Columns>
@@ -672,19 +765,48 @@
                                     </div>
                                 </div>
 
-                                <div class="col-2">
-                                    <div class=" input-group-sm justify-content-end ">
-                                        <asp:Label class="form-label" Text="Cuota: " runat="server" ID="lbCouta"></asp:Label>
-                                        <asp:TextBox ID="tbCouta" runat="server" CssClass="form-control"></asp:TextBox>
+                                <div class="col-3">
+
+                                    <div class="row pb-2">
+                                        <div class="col-8">
+                                            <div class=" input-group-sm justify-content-end ">
+                                                <asp:Label class="form-label" Text="Cuota: " runat="server" ID="lbCouta"></asp:Label>
+                                                <asp:TextBox ID="tbCouta" runat="server" type="number" CssClass="form-control"></asp:TextBox>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-4 pt-4">
+                                            <div class=" input-group-sm justify-content-end ">
+                                                <asp:Button CssClass="btn btn-outline-secondary" ID="btnAsignar" runat="server" Text="Asignar" OnClick="btnAsignar_Click" />
+                                            </div>
+                                        </div>
 
                                     </div>
+
+                                    <div class="row pb-2">
+
+                                        <div class="col-8">
+                                            <div class="input-group-sm">
+                                                <asp:Label ID="lbCedAiganr" Text="Cedula Asesor" runat="server"></asp:Label>
+                                                <asp:TextBox ID="tbCedAsignar" runat="server" CssClass="form-control" Enabled="false"></asp:TextBox>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="row pb-2">
+
+                                        <div class="col-8">
+                                            <div class="input-group-sm">
+                                                <asp:Label ID="lbNombre" Text="Nombre Asesor" runat="server"></asp:Label>
+                                                <asp:TextBox ID="tbNombreAsesor" runat="server" CssClass="form-control" Enabled="false"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
 
-                                <div class="col-1 pt-4">
-                                    <div class=" input-group-sm justify-content-end ">
-                                        <asp:Button CssClass="btn btn-outline-secondary" ID="btnAsignar" runat="server" Text="Asignar" />
-                                    </div>
-                                </div>
                             </div>
 
                             <div class="row pt-1 mt-1 pb-1 mb-1">
@@ -695,16 +817,15 @@
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Mes" runat="server" ID="lbMes"></asp:Label>
                                         <asp:DropDownList class="form-control" ID="ddlMes" runat="server">
-                                            <asp:ListItem Value=""></asp:ListItem>
-                                            <asp:ListItem Value="1">Enero</asp:ListItem>
-                                            <asp:ListItem Value="2">Febrero</asp:ListItem>
-                                            <asp:ListItem Value="3">Marzo</asp:ListItem>
-                                            <asp:ListItem Value="4">Abril</asp:ListItem>
-                                            <asp:ListItem Value="5">Mayo</asp:ListItem>
-                                            <asp:ListItem Value="6">Junio</asp:ListItem>
-                                            <asp:ListItem Value="7">Julio</asp:ListItem>
-                                            <asp:ListItem Value="8">Agosto</asp:ListItem>
-                                            <asp:ListItem Value="9">Septiembre</asp:ListItem>
+                                            <asp:ListItem Value="01">Enero</asp:ListItem>
+                                            <asp:ListItem Value="02">Febrero</asp:ListItem>
+                                            <asp:ListItem Value="03">Marzo</asp:ListItem>
+                                            <asp:ListItem Value="04">Abril</asp:ListItem>
+                                            <asp:ListItem Value="05">Mayo</asp:ListItem>
+                                            <asp:ListItem Value="06">Junio</asp:ListItem>
+                                            <asp:ListItem Value="07">Julio</asp:ListItem>
+                                            <asp:ListItem Value="08">Agosto</asp:ListItem>
+                                            <asp:ListItem Value="09">Septiembre</asp:ListItem>
                                             <asp:ListItem Value="10">Octubre</asp:ListItem>
                                             <asp:ListItem Value="11">Noviembre</asp:ListItem>
                                             <asp:ListItem Value="12">Diciembre</asp:ListItem>
@@ -721,7 +842,7 @@
 
                                 <div class="col-2">
                                     <div class=" input-group input-group-sm text-start">
-                                        <asp:LinkButton class="icong " runat="server" title="Exportar Excel" ID="ExportarExcel5">
+                                        <asp:LinkButton class="icong " runat="server" title="Exportar Excel" ID="ExportarExcel5" OnClick="ExportarExcel5_Click">
                                          <i class="custom-icon"></i>
                                         </asp:LinkButton>
                                     </div>
@@ -733,27 +854,27 @@
                                 <div class="border rounded">
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="table-responsive  mb-2 gap-2" style="height: 15rem; overflow-x: auto;">
-                                                <h6 class="datagrid-header text-center">Estadistica Venta Mes</h6>
-                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm mt-2 " ID="DataGridGeneralMes" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true">
+                                            <div class="table-responsive  mb-2 gap-2" style="height: 17rem; overflow-x: auto; overflow-y: auto;">
+                                                <h6 class="datagrid-header text-center">Estadisticas</h6>
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm mt-2 " ID="DataGridGeneralMes" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemDataBound="DataGridGeneralMes_ItemDataBound">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                     <Columns>
 
                                                         <asp:BoundColumn DataField="" HeaderText="N°" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="Cedula" HeaderText="Cédula" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Grupo+" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="" HeaderText="Año" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Grupo" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Año" HeaderText="Año" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="" HeaderText="Mes" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="" HeaderText="P. Mensual" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="" HeaderText="Venta Mes" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Cuota" HeaderText="P. Mensual" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Total" HeaderText="Venta Mes" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="" HeaderText="% Cump Mes" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="Presupuesto X Mes" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="TVentas" HeaderText="" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="% Cump Anual" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="" HeaderText="Promedio Mensual" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="TVentasAñoAnterior" HeaderText="" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="TVentasAñoAnteriorMes" HeaderText="" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="" HeaderText="" ItemStyle-CssClass="auto-width-column" />
 
@@ -768,9 +889,36 @@
                                 </div>
                             </div>
 
+                            <!--Modal Asgnar Cuota -->
+                            <div id="asignarCuotaMoodal" class="modal" tabindex="-1" style="display: none;">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-success text-white">
+                                            <h5 class="modal-title text-center">Asignar Cuota</h5>
+
+                                        </div>
+                                        <div class="modal-body border rounded">
+                                            <div class="container-fluid">
+                                                <h6>¿ Esta seguro de asignar una cuota de : $ <span id="SpanCuota" runat="server"></span>al asesor:  <span id="SpanNombre" runat="server"></span>? </h6>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                                <asp:Button runat="server" ID="btnAsignar_Si" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-success" Style="width: 5rem;" OnClick="btnAsignar_Si_Click" />
+                                                <asp:Button runat="server" ID="btnAsignar_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
                     </ContentTemplate>
+                    <Triggers>
+                        <asp:PostBackTrigger ControlID="ExportarExcel5" />
+                    </Triggers>
                 </asp:UpdatePanel>
 
             </div>
