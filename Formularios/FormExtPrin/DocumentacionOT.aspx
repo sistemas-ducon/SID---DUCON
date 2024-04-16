@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="../../Recursos/CSS/FormExtPrin/NitOTS.css" />
     <title>Documentación OT</title>
@@ -257,8 +257,8 @@
         function ocultarLabel() {
             var lbMensajeEspecial = document.getElementById('<%= lbMensajeEspecial.ClientID %>');
             setTimeout(function () {
-                lbMensajeEspecial.style.display = 'none'; 
-            }, 8000); 
+                lbMensajeEspecial.style.display = 'none';
+            }, 8000);
         }
 
         // Llamar a la función para ocultar el label cuando la página se haya cargado completamente
@@ -268,8 +268,8 @@
     <script>  
         // Función para ocultar el mensaje al hacer clic en él
         function ocultarMensaje() {
-            var lbMensaje = document.getElementById('<%= lbMensajeEspecial.ClientID %>'); 
-            lbMensaje.style.display = 'none'; 
+            var lbMensaje = document.getElementById('<%= lbMensajeEspecial.ClientID %>');
+            lbMensaje.style.display = 'none';
         }
     </script>
 
@@ -302,16 +302,13 @@
 
             var isValid = true;
 
-            if (tipodoc === "DLLO.ESPECIAL" && cantidad <= 0)
-            {
+            if (tipodoc === "DLLO.ESPECIAL" && cantidad <= 0) {
                 ErrorValidacionDoc.innerHTML = "Por favor ingrese la cantidad.";
                 isValid = false;
-            } else if (tipodoc === "")
-            {
+            } else if (tipodoc === "") {
                 ErrorValidacionDoc.innerHTML = "Por Favor seleccione el tipo de documento.";
                 isValid = false;
-            } else
-            {
+            } else {
                 isValid = true;
             }
             return isValid;
@@ -341,12 +338,10 @@
             var validarEspecial = document.getElementById('<%= ValidarEspecial.ClientID %>');
             var mensajeEspecial = document.getElementById('<%= lbMensajeEspecial.ClientID %>');
 
-            if (ddlTipoDoc.value !== '')
-            {
+            if (ddlTipoDoc.value !== '') {
                 validarEspecial.style.display = 'none';
                 mensajeEspecial.style.display = 'none';
-            } else
-            {
+            } else {
                 validarEspecial.style.display = 'block';
                 mensajeEspecial.style.display = 'block';
             }

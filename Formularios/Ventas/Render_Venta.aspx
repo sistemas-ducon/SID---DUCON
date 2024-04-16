@@ -8,26 +8,26 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <title>Render Departamento Ventas</title>
-     <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
+    <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="../../Recursos/CSS/Ventas/Render_Venta.css" />
     <script>
-         function confirmProgramarRender(event) {
+        function confirmProgramarRender(event) {
 
-             var IdRender = document.getElementById("NumeroRender").innerHTML;
-             var Nombre = document.getElementById("tbCliente").value;
-             var mensaje = "Una vez aprobado el Render no podrá modificarlo. Esta seguro de Terminar el render: " + IdRender + " " + Nombre + " ?";
+            var IdRender = document.getElementById("NumeroRender").innerHTML;
+            var Nombre = document.getElementById("tbCliente").value;
+            var mensaje = "Una vez aprobado el Render no podrá modificarlo. Esta seguro de Terminar el render: " + IdRender + " " + Nombre + " ?";
 
-             var result = confirm(mensaje);
-             if (result) {
-                 // Llamar al evento del botón de eliminar en el servidor
-                 $(event.target).removeAttr('onclick');
-                 $(event.target).click();
-             }
-             return false; // Previene que el evento del botón se ejecute dos veces
-         }
+            var result = confirm(mensaje);
+            if (result) {
+                // Llamar al evento del botón de eliminar en el servidor
+                $(event.target).removeAttr('onclick');
+                $(event.target).click();
+            }
+            return false; // Previene que el evento del botón se ejecute dos veces
+        }
     </script>
 </head>
 
@@ -71,8 +71,7 @@
                             </a>
 
                             <asp:LinkButton class="icong disabled" runat="server" title="Guardar Render" ID="GrabarRender" OnClick="GuardarModificarRender" OnClientClick="return validarFormularioRender();">
-                                    <%--    <i class="bi bi-save2"></i>--%>
-                                <i class="bi bi-sd-card-fill"></i> <%--Icono Guardar--%>
+                               <i class="bi bi-floppy-fill"></i>
                             </asp:LinkButton>
 
                             <a class="icong disabled" href="#" title="Modificar Render" id="ModificarRender" onclick="ModificarRender()">
@@ -109,7 +108,7 @@
                             <ul />
                     </ul>
 
-                        <span id="ErrorValidacionRender" style="color: red;"></span>
+                    <span id="ErrorValidacionRender" style="color: red;"></span>
                 </div>
 
             </div>
@@ -168,7 +167,7 @@
                                     <div class="col-3">
                                         <div class=" input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbDiseño" class="form-label" Text="Diseño" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbDiseño" type="text" class="form-control" runat="server" disabled="disabled" EnableViewState="true" ></asp:TextBox>
+                                            <asp:TextBox ID="tbDiseño" type="text" class="form-control" runat="server" disabled="disabled" EnableViewState="true"></asp:TextBox>
                                         </div>
                                     </div>
 
@@ -648,7 +647,7 @@
                                                         <%-- [41]--%>
                                                         <asp:BoundColumn DataField="TerminadoRender" Visible="false" ItemStyle-CssClass="auto-width-column" />
                                                         <%-- [42]--%>
-                                                         <asp:BoundColumn DataField="Cliente" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Cliente" Visible="false" ItemStyle-CssClass="auto-width-column" />
                                                         <%-- [43]--%>
                                                     </Columns>
                                                 </asp:DataGrid>
@@ -748,8 +747,8 @@
                                                     <Columns>
                                                         <asp:TemplateColumn HeaderText="...">
                                                             <ItemTemplate>
-                                                                <asp:LinkButton ID="lnkView" runat="server" CommandName="VerRenders2" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" 
-                                                                     OnClientClick="activarTab('Render-Content');"/>
+                                                                <asp:LinkButton ID="lnkView" runat="server" CommandName="VerRenders2" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>"
+                                                                    OnClientClick="activarTab('Render-Content');" />
                                                             </ItemTemplate>
                                                         </asp:TemplateColumn>
 
@@ -837,7 +836,7 @@
                                                         <%-- [41]--%>
                                                         <asp:BoundColumn DataField="TerminadoRender" Visible="false" ItemStyle-CssClass="auto-width-column" />
                                                         <%-- [42]--%>
-                                                           <asp:BoundColumn DataField="Cliente" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Cliente" Visible="false" ItemStyle-CssClass="auto-width-column" />
                                                         <%-- [43]--%>
                                                     </Columns>
 
@@ -852,7 +851,7 @@
 
                                                 <asp:SqlDataSource ID="RenderCliente" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,Cliente +'-'+ Nombre_Render AS Nombre,   * FROM tblRender WHERE Cliente LIKE '%' + @NombreCliente + '%' AND Fecha_Ingreso between  @FechaIni and  @FechaFin ORDER BY  Fecha_Ingreso DESC ">
                                                     <SelectParameters>
-                                                         <asp:ControlParameter ControlID="FechaIni" PropertyName="Text" Name="FechaIni"></asp:ControlParameter>
+                                                        <asp:ControlParameter ControlID="FechaIni" PropertyName="Text" Name="FechaIni"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="FechaFin" PropertyName="Text" Name="FechaFin"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="tbClienteX" PropertyName="Text" Name="NombreCliente"></asp:ControlParameter>
                                                     </SelectParameters>
@@ -860,14 +859,14 @@
 
                                                 <asp:SqlDataSource ID="RenderNombreRender" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,Cliente +'-'+ Nombre_Render AS Nombre,  * FROM tblRender WHERE Nombre_Render LIKE '%' + @NombreRender + '%' AND Fecha_Ingreso between  @FechaIni and  @FechaFin ORDER BY  Fecha_Ingreso DESC ">
                                                     <SelectParameters>
-                                                          <asp:ControlParameter ControlID="FechaIni" PropertyName="Text" Name="FechaIni"></asp:ControlParameter>
+                                                        <asp:ControlParameter ControlID="FechaIni" PropertyName="Text" Name="FechaIni"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="FechaFin" PropertyName="Text" Name="FechaFin"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="tbProyectoX" PropertyName="Text" Name="NombreRender"></asp:ControlParameter>
                                                     </SelectParameters>
                                                 </asp:SqlDataSource>
                                                 <asp:SqlDataSource ID="RenderXIdRender" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="select  ROW_NUMBER() OVER (ORDER BY [Id_Render]) AS Turno,Cliente +'-'+ Nombre_Render AS Nombre,  * from tblRender where Id_Render = @IdRender AND Fecha_Ingreso between  @FechaIni and  @FechaFin ORDER BY  Fecha_Ingreso DESC ">
                                                     <SelectParameters>
-                                                         <asp:ControlParameter ControlID="FechaIni" PropertyName="Text" Name="FechaIni"></asp:ControlParameter>
+                                                        <asp:ControlParameter ControlID="FechaIni" PropertyName="Text" Name="FechaIni"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="FechaFin" PropertyName="Text" Name="FechaFin"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="tbNumeroRender" PropertyName="Text" Name="IdRender"></asp:ControlParameter>
                                                     </SelectParameters>
@@ -894,9 +893,9 @@
 
     <script>
 
-       // se Habilitan enlaces 
-        document.getElementById("NuevoRender").classList.add("enabled");        
-        document.getElementById("ImportarRender").classList.add("enabled");      
+        // se Habilitan enlaces 
+        document.getElementById("NuevoRender").classList.add("enabled");
+        document.getElementById("ImportarRender").classList.add("enabled");
         document.getElementById("CancelarRender").classList.add("enabled");
 
         // Habilitar o deshabilitar los DropDownList
@@ -926,7 +925,7 @@
     </script>
 
     <script>
-       
+
 
         //Funcion para habilitar Modificar Cuando dan Click en linkButton Del DataGrid 
         function HabilitarEnlaces1() {
@@ -1055,7 +1054,7 @@
             // Habilitar enlace Grabar Render
             document.getElementById("GrabarRender").classList.add("enabled");
 
-          
+
 
 
 
@@ -1072,7 +1071,7 @@
                 }
             });
 
-         }
+        }
 
         function ModificarRender() {
 
@@ -1081,13 +1080,11 @@
             var terminadoVentasValue = tbTerminadoVentas.value;
 
 
-            if (terminadoVentasValue.toLowerCase() === "true")
-            {
+            if (terminadoVentasValue.toLowerCase() === "true") {
                 // No se puede modificar, muestra un mensaje de error
                 alert("El render ya fue aprobado para Dibujo y Despiece, este departamento lo debe habilitar para ser modificado");
             }
-            else
-            {
+            else {
                 // Habilitar enlace grabar
                 document.getElementById("GrabarRender").classList.add("enabled");
 
@@ -1151,7 +1148,7 @@
 
             }
 
-             $.ajax({
+            $.ajax({
                 type: "POST", // Puede ser "GET" o "POST" según tus necesidades
                 url: "Render_Venta.aspx/ModificarRender", // La URL debe apuntar al método en el servidor
                 contentType: "application/json; charset=utf-8",
@@ -1209,7 +1206,7 @@
                     textBoxes[i].disabled = true;
                 }
 
-               
+
             }
 
             // Habilitar o deshabilitar los TextBox Type text
