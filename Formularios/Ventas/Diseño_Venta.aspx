@@ -10,7 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
 
@@ -33,7 +34,6 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark active" id="Programacion-tab" data-bs-toggle="tab" href="#Programacion-content">Programación</a>
                     </li>
-
 
                     <li class="nav-item">
                         <a class="nav-link text-dark" id="Cotizacion-tab" data-bs-toggle="tab" href="#Cotizacion-content">Cotización</a>
@@ -220,7 +220,7 @@
 
 
                                             <asp:LinkButton runat="server" title="Nuevo Diseño" ID="NuevoDisBit" Enabled="false" OnClick="NuevoDisBit_Click">
-                                                <i class="bi bi-file-earmark"></i> 
+                                                <i class="bi bi-file-earmark-fill"></i> 
                                             </asp:LinkButton>
 
                                             <!-- Modal -->
@@ -262,25 +262,25 @@
 
 
                                             <asp:LinkButton runat="server" title="Grabar Diseño" ID="Grabar" Enabled="false" OnClick="btnInsertar_Click">
-                                               <i class="bi bi-save2"></i>
+                                               <i class="bi-floppy-fill"></i>
                                             </asp:LinkButton>
 
                                             <asp:Label ID="lblMensaje" runat="server" CssClass="mensaje"></asp:Label>
 
                                             <asp:LinkButton runat="server" title="Modificar Diseño" ID="Modificar" Enabled="false" OnClick="Modificar_Click">
-                                               <i class="bi bi-wrench"></i>
+                                               <i class="bi bi-wrench-adjustable"></i>
                                             </asp:LinkButton>
 
                                             <asp:LinkButton runat="server" title="Documentacion Diseño" ID="DocBitacora"  Enabled="false" Onclick="DocBitacora_Click">
                                             <i class="bi bi-send-plus"></i>
                                             </asp:LinkButton>
 
-                                            <asp:LinkButton runat="server" title="Regresar Diseño" ID="RegresarDiseño" Enabled="false">
-                                                  <i class="bi bi-box-arrow-in-left"></i>
+                                            <asp:LinkButton runat="server" title="Regresar Diseño" ID="RegresarDiseño" Enabled="false" Onclick="RegresarDise_Click">
+                                                  <i class="bi bi-arrow-left-square-fill"></i>
                                             </asp:LinkButton>
 
                                             <asp:LinkButton runat="server" title="Adicionar Elemento" ID="AdicionarElemento" Enabled="false">
-                                              <i class="bi bi-file-earmark-spreadsheet"></i>
+                                              <i class="bi bi-table"></i>
                                             </asp:LinkButton>
 
                                             <asp:LinkButton runat="server" title="Actualizar Diseños" ID="ActualizarDiseno" Enabled="false">
@@ -292,11 +292,11 @@
                                             </asp:LinkButton>
 
                                             <asp:LinkButton runat="server" title="Cancelar" ID="Cancelar" Enabled="false" OnClick="Cancelar_Click">
-                                               <i class="bi bi-x-lg"></i>
+                                               <i class="bi bi-x-circle-fill"></i>
                                             </asp:LinkButton>
 
                                             <asp:LinkButton runat="server" title="Eliminar Diseño" ID="EliminarDiseño" Enabled="false">
-                                                    <i class="bi bi-trash"></i>
+                                                    <i class="bi bi-trash-fill"></i>
                                             </asp:LinkButton>
 
 
@@ -367,7 +367,7 @@
                                                     <div class="col-md-12 col-12">
                                                         <div class="input-group input-group-sm mt-1 gap-2">
                                                             <asp:Label runat="server" ID="lblPro" class="col-form-label-sm">Proyecto</asp:Label>
-                                                            <asp:TextBox ID="TextProyecto" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                            <asp:TextBox ID="TextProyecto" runat="server" CssClass="form-control form-control-sm" MaxLength="49"></asp:TextBox>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -511,12 +511,10 @@
                                                                         INNER JOIN tblDepartamentoPais ON tblCiudad.Id_Departamento = tblDepartamentoPais.Id_Departamento_Auto
                                                                         GROUP BY tblCiudad.id_Ciudad_Aut, tblCiudad.NombreCiudad + ' - ' + tblDepartamentoPais.NombreDepartamento
                                                                         ORDER BY tblCiudad.NombreCiudad + ' - ' + tblDepartamentoPais.NombreDepartamento;"></asp:SqlDataSource>
-
-
                                                             </div>
                                                         </div>
                                                         <div class="col-md-5 col-4 mt-1">
-                                                            <asp:Button runat="server" ID="BtnProgramar" CssClass="btn-outline-dark btn btn-sm btn-white" Text="PROGRAMAR" OnClick="BtnProgramar_Click" Enabled="false" />
+                                                            <asp:Button runat="server" ID="BtnProgramar" CssClass="btn-outline-dark btn btn-sm btn-white fw-bold" Text="PROGRAMAR" OnClick="BtnProgramar_Click" Enabled="false" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1450,6 +1448,40 @@
                    </div>
                    <div class="modal-footer">
                      <asp:Button runat="server" Text="Si" OnClick="ProgramarDiseño_Click" CssClass="btn btn-sm btn-outline-dark"/>
+                       <asp:Button runat="server" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-dark"/>
+                   </div>
+               </div>
+           </div>
+       </div>
+
+          <div class="modal" id="ProgramarDiseñoCotizacion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+           <div class="modal-dialog modal-dialog-centered">
+               <div class="modal-content">
+                   <div class="modal-header bg-dark">
+                       <h5 class="modal-title text-white text-center">Programar Diseño</h5>          
+                   </div>
+                   <div class="modal-body">
+                       <p><spam id="ProgramarDiseñoCotizacion2"></spam></p>
+                   </div>
+                   <div class="modal-footer">
+                     <asp:Button runat="server" Text="Si" OnClick="ProgramarDiseñoCotizacion_Click" CssClass="btn btn-sm btn-outline-dark"/>
+                       <asp:Button runat="server" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-dark"/>
+                   </div>
+               </div>
+           </div>
+       </div>
+
+            <div class="modal" id="RegresarDise" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+           <div class="modal-dialog modal-dialog-centered">
+               <div class="modal-content">
+                   <div class="modal-header bg-dark">
+                       <h5 class="modal-title text-white text-center">Programar Diseño</h5>          
+                   </div>
+                   <div class="modal-body">
+                       <p>Desea regresar el diseño para el departamento de Dibujo y despiece?</p>
+                   </div>
+                   <div class="modal-footer">
+                     <asp:Button runat="server" Text="Si" OnClick="UpdateRegresarDise_Click" CssClass="btn btn-sm btn-outline-dark"/>
                        <asp:Button runat="server" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-dark"/>
                    </div>
                </div>

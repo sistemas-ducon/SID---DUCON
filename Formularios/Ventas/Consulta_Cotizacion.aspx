@@ -84,9 +84,10 @@
                             <div class="col-lg-5 col-md-6 col-sm-6 col-xs-12">
 
                                 <div class="input-group input-group-sm mb-2 gap-2">
-                                    <asp:Label CssClass="col-form-label-sm" runat="server">Asesor:</asp:Label>
-                                    <asp:TextBox ID="TextAsesor" CssClass="form-control" runat="server" Enabled="false"></asp:TextBox>
+                                    <asp:Label CssClass="col-form-label-sm" runat="server">Asesor:</asp:Label>   
+                                     <asp:DropDownList ID="ddlAsesor" class="form-control form-control-sm" runat="server"></asp:DropDownList>
 
+                                    
                                 </div>
 
                             </div>
@@ -127,7 +128,7 @@
                                                 <asp:SqlDataSource runat="server" ID="DataGridConsultaCotizaciones" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
                                                     SelectCommand="cta_Cotizaciones_Por_Vendedor" SelectCommandType="StoredProcedure">
                                                     <SelectParameters>
-                                                        <asp:ControlParameter ControlID="TextAsesor" PropertyName="Text" Name="NombreAsesor" Type="String"></asp:ControlParameter>
+                                                        <asp:ControlParameter ControlID="ddlAsesor" PropertyName="Text" Name="NombreAsesor" Type="String"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="TextBoxStartDate" PropertyName="Text" DbType="Date" Name="FechaInicio"></asp:ControlParameter>
                                                         <asp:ControlParameter ControlID="TextBoxEndDate" PropertyName="Text" DbType="Date" Name="FechaFin"></asp:ControlParameter>
                                                     </SelectParameters>
@@ -258,7 +259,7 @@
 
                                 <div class="input-group input-group-sm mb-2 gap-2">
                                     <asp:Label CssClass="col-form-label-sm" runat="server">Asesor:</asp:Label>
-                                    <asp:TextBox ID="TextAsesortab2" CssClass="form-control" runat="server" Enabled="false"></asp:TextBox>
+                                       <asp:DropDownList ID="ddlAsesorTapEstado" class="form-control form-control-sm" runat="server"></asp:DropDownList>
                                 </div>
 
                             </div>
@@ -301,7 +302,7 @@
                                         </asp:DataGrid>                                      
                                         <asp:SqlDataSource runat="server" ID="DataGridPorEstado" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="cta_Cotizaciones_Por_Estado" SelectCommandType="StoredProcedure">
                                             <SelectParameters>
-                                                <asp:ControlParameter ControlID="TextAsesortab2" PropertyName="Text" Name="NombreAsesor" Type="String"></asp:ControlParameter>
+                                                <asp:ControlParameter ControlID="ddlAsesorTapEstado" PropertyName="Text" Name="NombreAsesor" Type="String"></asp:ControlParameter>
                                                 <asp:ControlParameter ControlID="TextCotizacionEntreInicio2" PropertyName="Text" DbType="Date" Name="FechaInicio"></asp:ControlParameter>
                                                 <asp:ControlParameter ControlID="TextCotizacionEntreFinal2" PropertyName="Text" DbType="Date" Name="FechaFin"></asp:ControlParameter>
                                                 <asp:ControlParameter ControlID="ddlEstadoCotizacion" PropertyName="SelectedValue" Name="Estado" Type="String"></asp:ControlParameter>
@@ -417,7 +418,7 @@
 
                                 <div class="input-group input-group-sm mb-2 gap-2">
                                     <asp:Label CssClass="col-form-label-sm" runat="server">Asesor:</asp:Label>
-                                    <asp:TextBox ID="TextAsesorSeguimiento" CssClass="form-control" runat="server" Enabled="false"></asp:TextBox>
+                                      <asp:DropDownList ID="ddlAsesorTabSeguimiento" class="form-control form-control-sm" runat="server"></asp:DropDownList>
                                 </div>
 
                             </div>
@@ -454,16 +455,16 @@
 
                                         <div class="col-lg-10 col-md-6 col-sm-6 col-xs-12">
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 400px; overflow-x: auto;">
-
-                                                <asp:DataGrid Class="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid3" runat="server" AutoGenerateColumns="false">
-                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header auto-width-column" />
+                                                <asp:DataGrid ID="DataGrid3" runat="server" AutoGenerateColumns="false" CssClass="table table-bordered table-sm table-hover form-control-sm">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header auto-width-column" />
                                                     <Columns>
-                                                             <asp:TemplateColumn>
-                                                                    <ItemTemplate>
-                                                                        <asp:LinkButton ID="lnkSelectRoww3" runat="server" OnClick="lnkSelectRow_Click" CommandName="Select" CommandArgument='<%# Container.ItemIndex %>'
-                                                                            Text="<i class='bi bi-pencil-square text-dark'></i>" />
-                                                                    </ItemTemplate>
-                                                                </asp:TemplateColumn>
+                                                        <asp:TemplateColumn>
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="lnkSelectRoww3" runat="server" OnClick="lnkSelectRow_Click" CommandName="Select" CommandArgument='<%# Container.ItemIndex %>'>
+                                                              <i class='bi bi-pencil-square text-dark'></i>
+                                                                </asp:LinkButton>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
                                                         <asp:BoundColumn DataField="AsesorComercial" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="NombreCompañía" HeaderText="Cliente" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                         <asp:BoundColumn DataField="Teléfono" HeaderText="Teléfono" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
@@ -474,13 +475,7 @@
                                                         <asp:BoundColumn DataField="Obra" HeaderText="Obra" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     </Columns>
                                                 </asp:DataGrid>
-                                                <asp:SqlDataSource runat="server" ID="DataGridSeguimiento" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="sp_Cotizaciones_Seguimiento" SelectCommandType="StoredProcedure">
-                                                    <SelectParameters>
-                                                        <asp:ControlParameter ControlID="TextAsesorSeguimiento" PropertyName="Text" Name="NombreAsesor" Type="String"></asp:ControlParameter>
-                                                        <asp:ControlParameter ControlID="IdDateInicial" PropertyName="Text" DbType="Date" Name="FechaInicio"></asp:ControlParameter>
-                                                        <asp:ControlParameter ControlID="IdDateFinal" PropertyName="Text" DbType="Date" Name="FechaFin"></asp:ControlParameter>
-                                                    </SelectParameters>
-                                                </asp:SqlDataSource>
+
                                             </div>
                                         </div>
                                     </div>

@@ -1272,30 +1272,61 @@ WHERE
 
         protected void Grabar_Click(object sender, EventArgs e)
         {
-     
-            // Realiza la validación de campos
-            string campoFaltante = ValidarCampos();
+            // Realizar la consulta
+            string codigoAsesorSeleccionado = ddlAsesor.SelectedValue;
+            string zonaSeleccionada = ddlZona.SelectedValue;
+            bool validacionCorrecta = false;
 
-            if (string.IsNullOrEmpty(campoFaltante))
+            // Realizar la consulta SQL para verificar si el código de asesor y la zona coinciden
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string query = "SELECT CodigoAsesor, Zona FROM tblAsesorComercial WHERE Activo = '1'";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-               
-                string tipoAccion = Session["TipoAccion"] as string;
-                if (tipoAccion == "Insertar")
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    Insercion();
-                 
-                }
-                else if (tipoAccion == "Actualizar")
-                {
-                    ValidarClienteAsesor();
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        string codigoAsesorBD = reader["CodigoAsesor"].ToString();
+                        string zonaBD = reader["Zona"].ToString();
 
+                        if (codigoAsesorBD == codigoAsesorSeleccionado && zonaBD == zonaSeleccionada)
+                        {
+                            validacionCorrecta = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Si la validación es correcta, continuar con la acción según el tipo de acción
+            if (validacionCorrecta)
+            {
+                string campoFaltante = ValidarCampos();
+
+                if (string.IsNullOrEmpty(campoFaltante))
+                {
+                    string tipoAccion = Session["TipoAccion"] as string;
+                    if (tipoAccion == "Insertar")
+                    {
+                        Insercion();
+                    }
+                    else if (tipoAccion == "Actualizar")
+                    {
+                        ValidarClienteAsesor();
+                    }
+                }
+                else
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#campoFaltante').modal('show'); $('#campoFaltante2').text('" + campoFaltante + "');", true);
                 }
             }
             else
             {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#campoFaltante').modal('show'); $('#campoFaltante2').text('" + campoFaltante + "');", true);     
+               
             }
-           
         }
 
         protected void ValidarClienteAsesor()
@@ -2143,6 +2174,7 @@ WHERE
                             TextTelefono.Text = reader["Telefono"].ToString();
                             TextMail.Text = reader["mail"].ToString();
                             ddlAsesor.SelectedItem.Text = reader["asesor"].ToString();
+                            ddlZona.SelectedItem.Text = reader["Zona"].ToString();
                             TextProyecto.Text = reader["Nombre_Diseño"].ToString();
                             TextPlano.Text = reader["Plano"].ToString();
 

@@ -60,13 +60,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.TextBox TextBoxEndDate;
 
         /// <summary>
-        /// Control TextAsesor.
+        /// Control ddlAsesor.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextAsesor;
+        protected global::System.Web.UI.WebControls.DropDownList ddlAsesor;
 
         /// <summary>
         /// Control DataGrid1.
@@ -258,13 +258,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.TextBox TextCotizacionEntreFinal2;
 
         /// <summary>
-        /// Control TextAsesortab2.
+        /// Control ddlAsesorTapEstado.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextAsesortab2;
+        protected global::System.Web.UI.WebControls.DropDownList ddlAsesorTapEstado;
 
         /// <summary>
         /// Control ddlEstadoCotizacion.
@@ -429,13 +429,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.TextBox IdDateFinal;
 
         /// <summary>
-        /// Control TextAsesorSeguimiento.
+        /// Control ddlAsesorTabSeguimiento.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextAsesorSeguimiento;
+        protected global::System.Web.UI.WebControls.DropDownList ddlAsesorTabSeguimiento;
 
         /// <summary>
         /// Control DataGrid3.
@@ -445,15 +445,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DataGrid DataGrid3;
-
-        /// <summary>
-        /// Control DataGridSeguimiento.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.SqlDataSource DataGridSeguimiento;
 
         /// <summary>
         /// Control DataGrid6.
