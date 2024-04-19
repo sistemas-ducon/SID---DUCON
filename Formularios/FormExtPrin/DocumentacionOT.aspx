@@ -5,12 +5,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="../../Recursos/CSS/FormExtPrin/NitOTS.css" />
     <title>Documentación OT</title>
     <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
+
+
 </head>
 <body translate="no">
     <form id="form1" runat="server">
@@ -90,12 +93,17 @@
 
                     <div class="row text-center pb-1 mb-1">
                         <div class="col-6">
+                            <asp:Label CssClass=" alert-danger" ID="lbMensajeEspecial" runat="server" Text="Estimado usuario! Recuerde,
+                                para adjuntar el archivo de Excel generado por dibujo para desarrollo especial, debe validar el documento primero. ¡Gracias! "
+                                Visible="true" onclick="ocultarMensaje()"></asp:Label>
                         </div>
-                        <div class="col-6">
+                        <div class="col-6" style="font-size: 1.1rem;">
                             <asp:Label CssClass=" alert-success" ID="mensaje" runat="server" Text="" Visible="false"></asp:Label>
+
                         </div>
 
                     </div>
+
 
                     <div class="row  pb-1 mb-1">
 
@@ -218,7 +226,7 @@
                                 </div>
 
                                 <div class="col-4">
-                                    <div class="input-group input-group-sm pt-4">                                       
+                                    <div class="input-group input-group-sm pt-4">
                                         <asp:Button ID="btnSubirAdjuntar" type="button" Text="Adjuntar Especial" class="btn btn-outline-secondary" runat="server" OnClick="btnSubirAdjuntar_Click" OnClientClick="return ValidarCantidad();"></asp:Button>
                                     </div>
                                 </div>
@@ -228,6 +236,7 @@
                     </div>
 
                 </div>
+
 
             </ContentTemplate>
 
@@ -239,10 +248,35 @@
             </Triggers>
 
         </asp:UpdatePanel>
+
+
     </form>
 
     <script>
+        // Función para ocultar el label después de 8 segundos
+        function ocultarLabel() {
+            var lbMensajeEspecial = document.getElementById('<%= lbMensajeEspecial.ClientID %>');
+            setTimeout(function () {
+                lbMensajeEspecial.style.display = 'none';
+            }, 8000);
+        }
+
+        // Llamar a la función para ocultar el label cuando la página se haya cargado completamente
+        window.onload = ocultarLabel;
+    </script>
+
+    <script>  
+        // Función para ocultar el mensaje al hacer clic en él
+        function ocultarMensaje() {
+            var lbMensaje = document.getElementById('<%= lbMensajeEspecial.ClientID %>');
+            lbMensaje.style.display = 'none';
+        }
+    </script>
+
+    <script>
+        //funcion para validar la cantidad al copiar un documento especial 
         function ValidarCantidad() {
+
             var cantidad = document.getElementById("tbCantidad").value;
             var tipodoc = document.getElementById("ddlTipoDoc").value;
 
@@ -260,23 +294,27 @@
 
         }
 
+        // funcion para validar si seleccion de tipo doc y si es  especial la cantidad.
         function ValidarAdjuntar() {
+
             var tipodoc = document.getElementById("ddlTipoDoc").value;
+            var cantidad = document.getElementById("tbCantidad").value;
 
             var isValid = true;
 
-            if (tipodoc === "") {
+            if (tipodoc === "DLLO.ESPECIAL" && cantidad <= 0) {
+                ErrorValidacionDoc.innerHTML = "Por favor ingrese la cantidad.";
+                isValid = false;
+            } else if (tipodoc === "") {
                 ErrorValidacionDoc.innerHTML = "Por Favor seleccione el tipo de documento.";
                 isValid = false;
             } else {
-
                 isValid = true;
             }
-
             return isValid;
-
         }
 
+        // funcion para validar confirmar eliminacion 
         function ValidarEliminacion(event) {
             var mensaje = "Está seguro que desea eliminar el archivo seleccionado ? ";
 
@@ -292,14 +330,20 @@
     </script>
 
     <script type="text/javascript">
+
+        //funcion oara cambio de documento y ocultar Validar Especial si no es necesario 
         function ddlTipoDocChanged() {
+
             var ddlTipoDoc = document.getElementById('<%= ddlTipoDoc.ClientID %>');
             var validarEspecial = document.getElementById('<%= ValidarEspecial.ClientID %>');
+            var mensajeEspecial = document.getElementById('<%= lbMensajeEspecial.ClientID %>');
 
             if (ddlTipoDoc.value !== '') {
                 validarEspecial.style.display = 'none';
+                mensajeEspecial.style.display = 'none';
             } else {
                 validarEspecial.style.display = 'block';
+                mensajeEspecial.style.display = 'block';
             }
         }
     </script>

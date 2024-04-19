@@ -7,9 +7,9 @@
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Visita Asesores</title>
-     <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
+    <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="../../Recursos/CSS/Ventas/Visita_Asesores.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -192,7 +192,7 @@
                             </a>
 
                             <asp:LinkButton class="icong disabled" runat="server" title="Guardar Visita" ID="GrabarVisita" OnClick="GuardarModificarCliente" OnClientClick="return ValidarFormulario();">
-                                        <i class="bi bi-save2"></i>
+                                 <i class="bi bi-floppy-fill"></i>
                             </asp:LinkButton>
 
 
@@ -203,7 +203,7 @@
                                 <i class="bi bi-x-lg"></i>
                             </a>
 
-                            <asp:LinkButton class="icong disabled" runat="server" title="Exportar" ID="Exportar" OnClick="ExportarExel2" >
+                            <asp:LinkButton class="icong disabled" runat="server" title="Exportar" ID="Exportar" OnClick="ExportarExel2">
                                          <i class="custom-icon"></i>
                             </asp:LinkButton>
 
@@ -211,7 +211,7 @@
                             <ul />
                     </ul>
 
-                     <span id="ErrorValidacion1" style="color: red;"></span>
+                    <span id="ErrorValidacion1" style="color: red;"></span>
                 </div>
 
             </div>
@@ -224,9 +224,9 @@
             <div class="tab-pane fade show active" id="Visitas-content">
                 <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                     <ContentTemplate>
-                        <div class="container p-1" >
+                        <div class="container p-1">
 
-                  
+
 
                             <div class="row pb-1">
 
@@ -264,7 +264,7 @@
                                     <div class="input-group input-group-sm  mb-2 gap-2 ">
                                         <asp:Button class="btn btn-outline-secondary" ID="btnCliente" type="button" Text="Cliente" runat="server" OnClick="GuardarDatosSesion" OnClientClick="abrirOtraPestana();"></asp:Button>
                                         <asp:TextBox ID="tbCliente" type="text" class="form-control" runat="server" disabled="false"></asp:TextBox>
-                                        <asp:TextBox ID="tbClienteServidor" type="text" class="form-control" runat="server" Visible="false" ></asp:TextBox>
+                                        <asp:TextBox ID="tbClienteServidor" type="text" class="form-control" runat="server" Visible="false"></asp:TextBox>
 
                                     </div>
                                 </div>
@@ -273,7 +273,7 @@
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbTelefono" class="form-label" Text="Telefono" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbTelefono" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
-                                         <asp:TextBox ID="tbTelefonoServidor" type="text" class="form-control " runat="server" Visible="false" ></asp:TextBox>
+                                        <asp:TextBox ID="tbTelefonoServidor" type="text" class="form-control " runat="server" Visible="false"></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -284,7 +284,7 @@
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbCotizacion" class="form-label" Text="Cotizacion" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbCotizacion" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
-                                       
+
                                     </div>
                                 </div>
 
@@ -297,7 +297,7 @@
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbContacto" class="form-label" Text="Contacto" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbContacto" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
-                                          <asp:TextBox ID="tbContactoServidor" type="text" class="form-control " runat="server" Visible="false"></asp:TextBox>
+                                        <asp:TextBox ID="tbContactoServidor" type="text" class="form-control " runat="server" Visible="false"></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -305,7 +305,7 @@
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbMailCont" class="form-label" Text="Mail Contacto" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbMailCont" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
-                                           <asp:TextBox ID="tbMailContServidor" type="text" class="form-control " runat="server" Visible="false" ></asp:TextBox>
+                                        <asp:TextBox ID="tbMailContServidor" type="text" class="form-control " runat="server" Visible="false"></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -471,16 +471,16 @@
 
             </div>
 
-            <div class="tab-pane fade " id="Estadisticas_content" runat="server" >
+            <div class="tab-pane fade " id="Estadisticas_content" runat="server">
                 <asp:UpdatePanel ID="UpdatePanel2" runat="server">
                     <ContentTemplate>
-                        <div class="container" >
+                        <div class="container">
 
-      
 
-                            <div class="row pt-1" >
 
-                                <div class="col-6" >
+                            <div class="row pt-1">
+
+                                <div class="col-6">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="Label1" class="form-label" Text="Visitas entre" runat="server"></asp:Label>
                                         <asp:TextBox ID="fecha5" type="date" runat="server" class="form-control"></asp:TextBox>
@@ -504,9 +504,9 @@
                             </div>
 
                             <div class="container text-bg-warning  text-center ">
-                                <asp:Label CssClass=" text-danger" ID="EstMensaje" runat="server" Text="Lo siento, no tienes acceso a esta sección." style="font-size: 2rem; opacity:0.5;" Visible="false"></asp:Label>
+                                <asp:Label CssClass=" text-danger" ID="EstMensaje" runat="server" Text="Lo siento, no tienes acceso a esta sección." Style="font-size: 2rem; opacity: 0.5;" Visible="false"></asp:Label>
                             </div>
-                            
+
 
                             <div class="container mt-4" id="Est1" runat="server">
                                 <div class="row justify-content-center">
@@ -546,7 +546,7 @@
                                             </div>
 
                                             <div class="col-1">
-                                                <asp:LinkButton ID="LinkButton1" runat="server" OnClick="ExportarExel" >
+                                                <asp:LinkButton ID="LinkButton1" runat="server" OnClick="ExportarExel">
                                                      <i class="custom-icon2"></i>
                                                 </asp:LinkButton>
                                             </div>
@@ -946,7 +946,7 @@
             // Devuelve true si los campos son válidos, de lo contrario, devuelve false
             return isValid;
         }
-        
+
 
         // Ocultar el div con clase "contenedor-icono" cuando se activa la pestaña "Info-content" 
         $(document).ready(function () {
@@ -960,7 +960,7 @@
             });
         });
 
-     
+
     </script>
 
 

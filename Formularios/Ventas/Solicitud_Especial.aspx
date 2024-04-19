@@ -9,7 +9,7 @@
     <title>Solicitud Especial </title>
     <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="../../Recursos/CSS/Ventas/SolicitudesEspeciales.css" />
 
@@ -182,8 +182,8 @@
                                 <i class="bi bi-pause-circle"></i> 
                             </asp:LinkButton>
 
-                            <asp:LinkButton class="icong disabled" runat="server" title="Guardar Solicitud" ID="GrabarSolicitud" OnClick="GuardarModificarSolicitud" OnClientClick="return validarFormularioSolicitud();">
-                                        <i class="bi bi-save2"></i>
+                            <asp:LinkButton class="icong disabled " runat="server" title="Guardar Solicitud" ID="GrabarSolicitud" OnClick="GuardarModificarSolicitud" OnClientClick="return validarFormularioSolicitud();">                                 
+                               <i class="bi bi-floppy-fill"></i>
                             </asp:LinkButton>
 
                             <a class="icong disabled" href="#" title="Modificar Solicitud" id="ModificarSolicitud" onclick="ModificarSolicitud()">
@@ -203,7 +203,7 @@
                             </asp:LinkButton>
 
 
-                            <asp:LinkButton class="icong disabled" title="Cancelar" ID="CancelarSolicitud" OnClientClick="CancelarSolicitud();" OnClick="LimpiarCampos" runat="server">
+                            <asp:LinkButton class="icong disabled " title="Cancelar" ID="CancelarSolicitud" OnClientClick="CancelarSolicitud();" OnClick="LimpiarCampos" runat="server">
                                   <i class="bi bi-x-lg"></i>
                             </asp:LinkButton>
 
@@ -655,12 +655,12 @@
                                                             <i class="bi bi-file-earmark"></i>
                                                         </a>
 
-                                                        <a class="icong disabled" href="#" title="Importar Detalle de la Solicitud de Origen" id="ImportarDetalle">
-                                                            <i class="bi bi-arrow-bar-down"></i>
-                                                        </a>
+                                                        <asp:LinkButton class="icong disabled" runat="server" title="Importar Detalle de la Solicitud de Origen" ID="ImportarDetalle" OnClick="ImportarDetalle_Click">
+                                                             <i class="bi bi-arrow-bar-down"></i>
+                                                        </asp:LinkButton>
 
                                                         <asp:LinkButton class="icong disabled" runat="server" title="Guardar Detalle" ID="GrabarDetalle" OnClick="GuardarModificarDetalle" OnClientClick="return validarFormularioDetalle();">
-                                                           <i class="bi bi-save2"></i>
+                                                       <i class="bi bi-floppy-fill"></i>
                                                         </asp:LinkButton>
 
                                                         <a class="icong disabled" href="#" title="Modificar Detalle" id="ModificarDetalle" onclick="ModificarDetalle()">
@@ -1195,11 +1195,10 @@
         //Conuevo control del boton  nuevo y modificar 
         var nuevasol = '<%= Session["nuevaSol"] %>';
 
-        if (nuevasol === "1")
-        {
-           NuevaSolicitud();
-             
-           $.ajax({
+        if (nuevasol === "1") {
+            NuevaSolicitud();
+
+            $.ajax({
                 type: "POST", // Puede ser "GET" o "POST" según tus necesidades
                 url: "Solicitud_Especial.aspx/NuevaSolicitud1", // La URL debe apuntar al método en el servidor
                 contentType: "application/json; charset=utf-8",
@@ -1211,11 +1210,10 @@
                     // Manejar errores si los hay
                 }
             });
-        } 
-        else if (nuevasol === "2")
-        {
+        }
+        else if (nuevasol === "2") {
             ModificarSolicitud();
-           $.ajax({
+            $.ajax({
                 type: "POST", // Puede ser "GET" o "POST" según tus necesidades
                 url: "Solicitud_Especial.aspx/ModificarSolicitud1", // La URL debe apuntar al método en el servidor
                 contentType: "application/json; charset=utf-8",
@@ -1770,8 +1768,7 @@
             } else if (Tipo === "") {
                 ErrorValidacion.innerHTML = "El campo Tipo Solicitud es obligatorio.";
                 isValid = false;
-            } else if (solicitudOrigen === "")
-            {
+            } else if (solicitudOrigen === "") {
                 ErrorValidacion.innerHTML = "El campo  Solicitud Origen  es obligatorio.";
                 isValid = false;
             } else if (!regex.test(solicitudOrigen)) {
@@ -1797,12 +1794,12 @@
         }
 
 
-        
+
 
         function ActivarBotonDetalle1() {
             var boton2 = document.getElementById("<%= btnProgramarSolicitud.ClientID %>");
             boton2.disabled = false;
-            
+
         }
 
         function validarFormularioDetalle() {
@@ -1877,18 +1874,18 @@
                 eval(scriptToExecute);
 
                 $.ajax({
-                    type: "POST", 
-                    url: "Solicitud_Especial.aspx/LimpiarVaribleSessiondetalle", 
+                    type: "POST",
+                    url: "Solicitud_Especial.aspx/LimpiarVaribleSessiondetalle",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
-                   
+
                 });
 
-               
+
             }
         });
 
-       
+
 
     </script>
 

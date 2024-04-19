@@ -63,6 +63,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     btnSubirAdjuntar.Enabled = false;
                     btnSubirAdjuntar.CssClass = "btn btn-outline-secondary";
 
+
                 }
 
                 chxMespecial.Enabled = false;
@@ -157,103 +158,149 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         {
 
             if (DoctOT.HasFile)
-            {
-               // Obtener el tamaño máximo permitido en bytes(por ejemplo, 30 MB)
-                 int maxSizeBytes = 30 * 1024 * 1024; // 30 MB
+            {            
+                    // Obtener el tamaño máximo permitido en bytes(por ejemplo, 30 MB)
+                    int maxSizeBytes = 30 * 1024 * 1024; // 30 MB
 
-                // Verificar si el tamaño del archivo excede el límite permitido
-                if (DoctOT.PostedFile.ContentLength > maxSizeBytes)
-                {
-                    string mensajePersonalizado = "El tamaño del archivo excede el límite permitido de 10 MB.";
-                    string urlRedireccion = "FormExtPrin/DocumentacionOT.aspx";
-                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    // Verificar si el tamaño del archivo excede el límite permitido
+                    if (DoctOT.PostedFile.ContentLength > maxSizeBytes)
+                    {
+                        string mensajePersonalizado = "El tamaño del archivo excede el límite permitido de 10 MB.";
+                        string urlRedireccion = "FormExtPrin/DocumentacionOT.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
 
-                }
+                    }
 
-                string carpetaNombre = Session["Id_OT2"].ToString();
-                string Consecutivo = Session["pedido2"].ToString();
-                String rutaBase = @"\\Srvfs\s_i_ducon$\Documentacion de Obras";
-                //string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion"; // Reemplaza con tu ruta base
+                    string carpetaNombre = Session["Id_OT2"].ToString();
+                    string Consecutivo = Session["pedido2"].ToString();
+                    String rutaBase = @"\\Srvfs\s_i_ducon$\Documentacion de Obras";
+                    //string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion"; // Reemplaza con tu ruta base
 
-                string rutaCompleta = Path.Combine(rutaBase, carpetaNombre);
+                    string rutaCompleta = Path.Combine(rutaBase, carpetaNombre);
 
-                // Verificamos si la carpeta existe
-                if (!Directory.Exists(rutaCompleta))
-                {
+                    // Verificamos si la carpeta existe
+                    if (!Directory.Exists(rutaCompleta))
+                    {
+                        try
+                        {
+                            // Si no existe, se crea  la carpeta
+                            Directory.CreateDirectory(rutaCompleta);
+                        }
+                        catch (Exception ex)
+                        {
+                            ErrorValidacionDoc.InnerText = "Se ha producido un error al intentar crear la carpeta. " + ex.Message;
+                            return;
+                        }
+                    }
+
+                    string nombreArchivo = carpetaNombre + "-" + Consecutivo + " " + DoctOT.FileName; // Reemplaza con el nombre que quieras
+
+                    // Ruta completa para guardar el archivo
+                    string rutaArchivo = Path.Combine(rutaCompleta, nombreArchivo);
+
                     try
                     {
-                        // Si no existe, se crea  la carpeta
-                        Directory.CreateDirectory(rutaCompleta);
-                    }
-                    catch (Exception ex)
-                    {
-                        ErrorValidacionDoc.InnerText = "Se ha producido un error al intentar crear la carpeta. " + ex.Message;
-                        return;
-                    }
-                }
+                        // Guardar el archivo en la ruta 
+                        DoctOT.SaveAs(rutaArchivo);
 
-                string nombreArchivo = carpetaNombre + "-" + Consecutivo + " " + DoctOT.FileName; // Reemplaza con el nombre que quieras
+                        // Realizaos la Insercion 
 
-                // Ruta completa para guardar el archivo
-                string rutaArchivo = Path.Combine(rutaCompleta, nombreArchivo);
+                        string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
-                try
-                {
-                    // Guardar el archivo en la ruta 
-                    DoctOT.SaveAs(rutaArchivo);
-
-                    // Realizaos la Insercion 
-
-                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-
-                    using (SqlConnection connection = new SqlConnection(connectionString))
-                    {
-                        connection.Open();
-
-                        string query = "INSERT INTO tblDocumentacion (Id_OT, Pedido, Archivo, Observacion, TipoDocumento,usuario,FechaRegistro,MuebleEspecial,Cantidad ) " +
-                                       "VALUES (@Id_OT, @Pedido, @Archivo, @Observacion, @TipoDocumento, @usuario,@FechaRegistro , @muebleEspecial, @cantidad)";
-
-                        using (SqlCommand command = new SqlCommand(query, connection))
+                        if(ddlTipoDoc.SelectedItem.Text == "DLLO.ESPECIAL")
                         {
-
-                            command.Parameters.AddWithValue("@Id_OT", Session["Id_OT2"].ToString());
-                            command.Parameters.AddWithValue("@Pedido", Session["pedido2"].ToString());
-                            command.Parameters.AddWithValue("@Archivo", nombreArchivo);
-                            command.Parameters.AddWithValue("@Observacion", tbObservacion.Text);
-                            command.Parameters.AddWithValue("@TipoDocumento", ddlTipoDoc.SelectedItem.Text);
-                            command.Parameters.AddWithValue("@usuario", Session["usuariologueado"].ToString());
-                            command.Parameters.AddWithValue("@FechaRegistro", DateTime.Now);
-                            command.Parameters.AddWithValue("@cantidad", tbCantidad.Text);
-                            command.Parameters.AddWithValue("@muebleEspecial", chxMespecial.Checked);
-
-
-
-                            int rowsAffected = command.ExecuteNonQuery();
-                            if (rowsAffected > 0)
+                            using (SqlConnection connection = new SqlConnection(connectionString))
                             {
-                                string mensajePersonalizado = "El documento se ha guardado exitosamente.";
-                                string urlRedireccion = "FormExtPrin/DocumentacionOT.aspx";
-                                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-                            }
-                            else
-                            {
-                                string mensajePersonalizado = "Ha ocurrido un error al guardar el documento.";
-                                string urlRedireccion = "FormExtPrin/DocumentacionOT.aspx";
-                                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-                            }
+                                connection.Open();
 
+                                string query = "INSERT INTO tblDocumentacion (Id_OT, Pedido, Archivo, Observacion, TipoDocumento,usuario,FechaRegistro,MuebleEspecial,Cantidad, Categoria) " +
+                                               "VALUES (@Id_OT, @Pedido, @Archivo, @Observacion, @TipoDocumento, @usuario,@FechaRegistro , @muebleEspecial, @cantidad, @Categoria)";
+
+                                using (SqlCommand command = new SqlCommand(query, connection))
+                                {
+
+                                    command.Parameters.AddWithValue("@Id_OT", Session["Id_OT2"].ToString());
+                                    command.Parameters.AddWithValue("@Pedido", Session["pedido2"].ToString());
+                                    command.Parameters.AddWithValue("@Archivo", nombreArchivo);
+                                    command.Parameters.AddWithValue("@Observacion", tbObservacion.Text);
+                                    command.Parameters.AddWithValue("@TipoDocumento", ddlTipoDoc.SelectedItem.Text);
+                                    command.Parameters.AddWithValue("@usuario", Session["usuariologueado"].ToString());
+                                    command.Parameters.AddWithValue("@FechaRegistro", DateTime.Now);
+                                    command.Parameters.AddWithValue("@cantidad", tbCantidad.Text);
+                                    command.Parameters.AddWithValue("@muebleEspecial", chxMespecial.Checked);
+                                    command.Parameters.AddWithValue("@Categoria", tbCategoria.Text);
+
+
+                                    int rowsAffected = command.ExecuteNonQuery();
+                                    if (rowsAffected > 0)
+                                    {
+                                        string mensajePersonalizado = "El documento se ha guardado exitosamente.";
+                                        string urlRedireccion = "FormExtPrin/DocumentacionOT.aspx";
+                                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                                    }
+                                    else
+                                    {
+                                        string mensajePersonalizado = "Ha ocurrido un error al guardar el documento.";
+                                        string urlRedireccion = "FormExtPrin/DocumentacionOT.aspx";
+                                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                                    }
+
+                                }
+
+                            }
+                        }
+                        else
+                        {
+                            using (SqlConnection connection = new SqlConnection(connectionString))
+                            {
+                                connection.Open();
+
+                                string query = "INSERT INTO tblDocumentacion (Id_OT, Pedido, Archivo, Observacion, TipoDocumento,usuario,FechaRegistro,MuebleEspecial,Cantidad ) " +
+                                               "VALUES (@Id_OT, @Pedido, @Archivo, @Observacion, @TipoDocumento, @usuario,@FechaRegistro , @muebleEspecial, @cantidad)";
+
+                                using (SqlCommand command = new SqlCommand(query, connection))
+                                {
+
+                                    command.Parameters.AddWithValue("@Id_OT", Session["Id_OT2"].ToString());
+                                    command.Parameters.AddWithValue("@Pedido", Session["pedido2"].ToString());
+                                    command.Parameters.AddWithValue("@Archivo", nombreArchivo);
+                                    command.Parameters.AddWithValue("@Observacion", tbObservacion.Text);
+                                    command.Parameters.AddWithValue("@TipoDocumento", ddlTipoDoc.SelectedItem.Text);
+                                    command.Parameters.AddWithValue("@usuario", Session["usuariologueado"].ToString());
+                                    command.Parameters.AddWithValue("@FechaRegistro", DateTime.Now);
+                                    command.Parameters.AddWithValue("@cantidad", tbCantidad.Text);
+                                    command.Parameters.AddWithValue("@muebleEspecial", chxMespecial.Checked);
+
+
+
+                                    int rowsAffected = command.ExecuteNonQuery();
+                                    if (rowsAffected > 0)
+                                    {
+                                        string mensajePersonalizado = "El documento se ha guardado exitosamente.";
+                                        string urlRedireccion = "FormExtPrin/DocumentacionOT.aspx";
+                                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                                    }
+                                    else
+                                    {
+                                        string mensajePersonalizado = "Ha ocurrido un error al guardar el documento.";
+                                        string urlRedireccion = "FormExtPrin/DocumentacionOT.aspx";
+                                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                                    }
+
+                                }
+
+                            }
                         }
 
                     }
 
-                }
+                    catch (Exception ex)
+                    {
 
-                catch (Exception ex)
-                {
-
-                    string scriptNoSeleccionado = "alert('Se ha producido un error al intentar guardar el archivo.');";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "showNoSeleccionado", scriptNoSeleccionado, true);
-                }
+                        string scriptNoSeleccionado = "alert('Se ha producido un error al intentar guardar el archivo.');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showNoSeleccionado", scriptNoSeleccionado, true);
+                    }
+                
 
             }
             else
@@ -336,6 +383,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             if (e.CommandName == "VerDocumento")
             {
+             
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGridDoc.Items[rowIndex];
 
@@ -564,8 +612,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         {
                             connection.Open();
 
-                            string query = "INSERT INTO tblDocumentacion (Id_OT, Pedido, Archivo, Observacion, TipoDocumento,usuario,FechaRegistro,MuebleEspecial,Cantidad ) " +
-                                           "VALUES (@Id_OT, @Pedido, @Archivo, @Observacion, @TipoDocumento, @usuario,@FechaRegistro , @MuebleEspecial, @Cantidad)";
+                            string query = "INSERT INTO tblDocumentacion (Id_OT, Pedido, Archivo, Observacion, TipoDocumento,usuario,FechaRegistro,MuebleEspecial,Cantidad, Categoria ) " +
+                                           "VALUES (@Id_OT, @Pedido, @Archivo, @Observacion, @TipoDocumento, @usuario,@FechaRegistro , @MuebleEspecial, @Cantidad, @Categoria)";
 
                             using (SqlCommand command = new SqlCommand(query, connection))
                             {
@@ -579,8 +627,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                                 command.Parameters.AddWithValue("@FechaRegistro", DateTime.Now);
                                 command.Parameters.AddWithValue("@MuebleEspecial", chxMespecial.Checked);
                                 command.Parameters.AddWithValue("@Cantidad", tbCantidad.Text);
-
-
+                                command.Parameters.AddWithValue("@Categoria", tbCategoria.Text);
+                                
                                 int rowsAffected = command.ExecuteNonQuery();
                                 if (rowsAffected > 0)
                                 {
@@ -620,6 +668,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
         protected void ValidarEspecial_Click(object sender, EventArgs e)
         {
+
             if (DoctOT.HasFile)
             {
                 HttpPostedFile file = DoctOT.PostedFile;
@@ -707,5 +756,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                
             }
         }
+
     }
 }

@@ -393,13 +393,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
         protected global::System.Web.UI.WebControls.LinkButton Expandir1;
 
         /// <summary>
-        /// Control PnaleTrimestre.
+        /// Control PanelTrimestre.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel PnaleTrimestre;
+        protected global::System.Web.UI.UpdatePanel PanelTrimestre;
 
         /// <summary>
         /// Control Label2.
@@ -510,6 +510,87 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
         protected global::System.Web.UI.UpdatePanel PanelRangos;
 
         /// <summary>
+        /// Control lbAñoRango.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbAñoRango;
+
+        /// <summary>
+        /// Control ddlBusquedaAñoRango.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlBusquedaAñoRango;
+
+        /// <summary>
+        /// Control Label3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label3;
+
+        /// <summary>
+        /// Control ddlZonaRango.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlZonaRango;
+
+        /// <summary>
+        /// Control chkAprodRango.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkAprodRango;
+
+        /// <summary>
+        /// Control lbProdRango.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbProdRango;
+
+        /// <summary>
+        /// Control btnAgregarAñoRango.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAgregarAñoRango;
+
+        /// <summary>
+        /// Control ExpotarExcel4.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton ExpotarExcel4;
+
+        /// <summary>
+        /// Control DataGridRango.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DataGrid DataGridRango;
+
+        /// <summary>
         /// Control PanelCuotaMes.
         /// </summary>
         /// <remarks>
@@ -555,13 +636,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
         protected global::System.Web.UI.WebControls.Label lbActivos;
 
         /// <summary>
-        /// Control btnConsultarCouM.
+        /// Control btnConsultarCuoM.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnConsultarCouM;
+        protected global::System.Web.UI.WebControls.Button btnConsultarCuoM;
 
         /// <summary>
         /// Control Div2.
@@ -607,6 +688,42 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnAsignar;
+
+        /// <summary>
+        /// Control lbCedAiganr.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbCedAiganr;
+
+        /// <summary>
+        /// Control tbCedAsignar.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbCedAsignar;
+
+        /// <summary>
+        /// Control lbNombre.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbNombre;
+
+        /// <summary>
+        /// Control tbNombreAsesor.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbNombreAsesor;
 
         /// <summary>
         /// Control lbMes.
@@ -661,6 +778,42 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DataGrid DataGridGeneralMes;
+
+        /// <summary>
+        /// Control SpanCuota.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl SpanCuota;
+
+        /// <summary>
+        /// Control SpanNombre.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl SpanNombre;
+
+        /// <summary>
+        /// Control btnAsignar_Si.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAsignar_Si;
+
+        /// <summary>
+        /// Control btnAsignar_NO.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAsignar_NO;
 
         /// <summary>
         /// Control PanelCuotaTrimestre.

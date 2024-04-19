@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Office.Word;
+using MathNet.Numerics;
 using Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json;
 using NPOI.SS.Formula.Functions;
@@ -17,6 +18,8 @@ using System.Web.UI.WebControls;
 using static SISTEMA_INTEGRAL_DUCON.Formularios.Ventas.Clientes;
 using Button = System.Web.UI.WebControls.Button;
 using CheckBox = System.Web.UI.WebControls.CheckBox;
+using Control = System.Web.UI.Control;
+using DataTable = System.Data.DataTable;
 using Label = System.Web.UI.WebControls.Label;
 using TextBox = System.Web.UI.WebControls.TextBox;
 
@@ -2128,15 +2131,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             if (rowsAffected > 0)
                             {
 
-                                // Variables de session de Detalle 
-                                Session["ProductoSession"] = txDescProduc.InnerText;
-                                Session["ProveedorVentaSession"] = tbProveedor.Text;
-                                Session["AnchoSession"] = tbAncho.Text;
-                                Session["AlturaSession"] = tbAltura.Text;
-                                Session["ProfundidadSession"] = tbProfundidad.Text;
-                                Session["MaterialSession"] = tbMaterial.Text;
-                                Session["CantidadSession"] = tbCantidad.Text;
-                                Session["EspGeneralSession"] = txEspGen.InnerText;
 
                                 // Variables de Session de la solicitud 
                                 Session["FecIngrSolSession"] = tbFechaIngresoServidor.Text;
@@ -2156,11 +2150,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 Session["Mailsolsession"] = tbMailServidor.Text;
                                 Session["DirecccionSolSession"] = tbDireccionServidor.Text;
                                 Session["AsesorSolSession"] = ddlAsesor.SelectedItem.Text;
-                                Session["numeroSolicitudSession"] = lbNumeroSolicitud.Text; 
+                                Session["numeroSolicitudSession"] = lbNumeroSolicitud.Text;
 
-                               
+                                Session.Remove("Id_Detalle");
 
-                                string mensajePersonalizado = "El detalle " + Session["Id_Detalle"].ToString() + " se eliminó con éxito,";
+                                string mensajePersonalizado = "El detalle " + lbIdDetalle.Text + " se eliminó con éxito,";
                                 string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
                                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
 
@@ -2173,10 +2167,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             }
-
-
-
-
 
 
         }
@@ -2430,6 +2420,217 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
+
+
+        protected void ImportarDetalle_Click(object sender, EventArgs e)
+        {
+            DataTable DetalleImportado = ConsultarInfoDetalle();
+
+
+            if(DetalleImportado.Rows.Count > 0)
+            {
+                foreach(DataRow row in DetalleImportado.Rows)
+                {
+                    string Id_Detalle = row["ID_SolicitudDetalle"].ToString();
+
+                    if (!ValidarDetalle(Id_Detalle))
+                    {
+                        // Se consulta el consecutivo de detalle 
+                        int Id_DetalleNuevo = ConsultarConsecutivoDetalle();
+
+
+                        // Se crea un nuevo DataTable que contenga solo la fila actual
+                        DataTable DetalleFilaActual = DetalleImportado.Clone();
+                        DetalleFilaActual.ImportRow(row);
+
+                        // Se realiza la Inserción solo con la fila actual
+                        InsertarDetalle(DetalleFilaActual, Id_DetalleNuevo + 1);
+
+                        DataGridDetalleSolicitud.DataBind();
+
+                    }               
+                  
+                }
+
+                string scriptAgregado = "alert('Detalles Agregados.');";
+                ScriptManager.RegisterStartupScript(this,GetType(),"showAgregado",scriptAgregado,true);
+
+
+            }
+            else
+            {
+                // La solcitud de origen no tiene detalle para importar  (mensaje)
+                string scriptEncontrado = "alert('La solicitud de origen no tiene detalles para importar.');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showEncontrado", scriptEncontrado, true);
+            }
+
+
+
+        }
+        public DataTable ConsultarInfoDetalle()
+        {
+            DataTable DetallesOrigen = new DataTable();
+
+            string query = $"Select *, CONCAT('Producto: ',producto,', ancho: ',ancho,', Alto: ',alto,'," +
+                           $" Profundidad: ',profundidad,', Material: ',material,', Especificaciones: '," +
+                           $"EspecificacionesTecnicas) as DetalleOrigen from tblSoliciDiseEspeDeta where ID_Solicitud= @IdDetalleOrigen";
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionStringSID))
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter(query, connection))
+                {
+
+                    adapter.SelectCommand.Parameters.AddWithValue("@IdDetalleOrigen", tbSolicitudOrigen.Text);                 
+                    adapter.Fill(DetallesOrigen);
+                }
+            }
+
+            return DetallesOrigen;
+        }
+        private bool ValidarDetalle(string IdDetalle)
+        {
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT * FROM tblSoliciDiseEspeDeta WHERE ID_Solicitud= @Solicitud and Id_SolicitudDetalleOrigen= @Id_Detalle ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@Solicitud", lbNumeroSolicitud.Text);
+                    cmd.Parameters.AddWithValue("@Id_Detalle", IdDetalle);
+                    object result = cmd.ExecuteScalar();
+
+                    // Verificar si el resultado es null o no
+                    if (result != null)
+                    {
+                        int rowCount = Convert.ToInt32(result);
+                        // Si rowCount es mayor que cero se retorne true 
+                        return rowCount > 0;
+                    }
+                    else
+                    {
+                        // Si no se encontraron filas, retornamos false
+                        return false;
+                    }
+                }
+            }
+        }
+        private int ConsultarConsecutivoDetalle()
+        {
+            int numDetalle = 0; // Se inicializa como 0 en caso de que no haya resultados en la consulta
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT Max(tblSoliciDiseEspeDeta.Id_SolicitudDetalle) FROM tblSoliciDiseEspeDeta";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    connection.Open();
+                    object result = command.ExecuteScalar();
+
+                    if (result != null && result != DBNull.Value)
+                    {
+                        numDetalle = Convert.ToInt32(result);
+                    }
+                }
+            }
+
+            return numDetalle;
+        }
+        private void InsertarDetalle(DataTable DatosDetalle, int ID_DetalleNuevo)
+        {
+            if (DatosDetalle.Rows.Count > 0)
+            {
+                string Producto = DatosDetalle.Rows[0]["Producto"].ToString();
+                string ProveedorSugerido = DatosDetalle.Rows[0]["ProveedorSugerido"].ToString();
+                string Ancho = DatosDetalle.Rows[0]["Ancho"].ToString();
+                string Alto = DatosDetalle.Rows[0]["Alto"].ToString();
+                string Profundidad = DatosDetalle.Rows[0]["Profundidad"].ToString();
+                string Material = DatosDetalle.Rows[0]["Material"].ToString();
+                string EspecificacionesTecnicas = DatosDetalle.Rows[0]["EspecificacionesTecnicas"].ToString();
+                string Cantidad = DatosDetalle.Rows[0]["Cantidad"].ToString();
+                string observacionDesarrollo = DatosDetalle.Rows[0]["observacionDesarrollo"].ToString();
+                string Proveedor = DatosDetalle.Rows[0]["Proveedor"].ToString();
+                string PrecioSugerido = DatosDetalle.Rows[0]["PrecioSugerido"].ToString();
+                string observacionCompras = DatosDetalle.Rows[0]["observacionCompras"].ToString();
+                string Costo = DatosDetalle.Rows[0]["Costo"].ToString();
+                string Factor = DatosDetalle.Rows[0]["Factor"].ToString();
+                string Detalle = DatosDetalle.Rows[0]["Detalle"].ToString();
+                string RedirigidoaCompras = DatosDetalle.Rows[0]["RedirigidoaCompras"].ToString();
+                string Redirigidoel = DatosDetalle.Rows[0]["Redirigidoel"].ToString();
+                string ComprasOk = DatosDetalle.Rows[0]["ComprasOk"].ToString();
+                string FechaComprasOk = DatosDetalle.Rows[0]["FechaComprasOk"].ToString();
+                string CostoCompras = DatosDetalle.Rows[0]["CostoCompras"].ToString();
+                string FactorCompras = DatosDetalle.Rows[0]["FactorCompras"].ToString();
+                string Categoria = DatosDetalle.Rows[0]["Categoria"].ToString();
+                string RealizadoPor = DatosDetalle.Rows[0]["RealizadoPor"].ToString();
+                string Id_SolicitudDetalle = DatosDetalle.Rows[0]["ID_SolicitudDetalle"].ToString();                     
+                string DetalleOrigen = DatosDetalle.Rows[0]["DetalleOrigen"].ToString();
+
+
+
+
+                string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+                using (SqlConnection connectionISID = new SqlConnection(connectionStringSID))
+                {
+                    connectionISID.Open();
+
+                    string sSql = "INSERT INTO tblSoliciDiseEspeDeta (Id_SolicitudDetalle,ID_Solicitud,Producto,ProveedorSugerido,Ancho,Alto,Profundidad," +
+                                  "Material,EspecificacionesTecnicas,Cantidad,observacionDesarrollo,Proveedor,PrecioSugerido,observacionCompras,Costo,Factor," +
+                                  "Detalle,RedirigidoaCompras,Redirigidoel,ComprasOk,FechaComprasOk,CostoCompras,FactorCompras,Categoria,RealizadoPor," +
+                                  " Id_SolicitudDetalleOrigen,ID_SolicitudOrigen,informacionDetalleOrigen) " +
+                                  "VALUES (@Id_SolicitudDetalle, @ID_Solicitud, @Producto, @ProveedorSugerido, @Ancho, @Alto, @Profundidad, @Material, " +
+                                  "@EspecificacionesTecnicas, @Cantidad, @observacionDesarrollo, @Proveedor, @PrecioSugerido, @observacionCompras, @Costo, @Factor," +
+                                  "@Detalle, @RedirigidoaCompras, @Redirigidoel, @ComprasOk, @FechaComprasOk, @CostoCompras, @FactorCompras, @Categoria,  " +
+                                  "@RealizadoPor, @Id_SolicitudDetalleOrigen, @SolicitudOrigen, @DetalleOrigen)";
+
+
+                    using (SqlCommand cmdInsert = new SqlCommand(sSql, connectionISID))
+                    {
+                        cmdInsert.Parameters.AddWithValue("@Id_SolicitudDetalle", ID_DetalleNuevo );
+                        cmdInsert.Parameters.AddWithValue("@Id_Solicitud", lbNumeroSolicitud.Text);                       
+                        cmdInsert.Parameters.AddWithValue("@Producto", Producto);
+                        cmdInsert.Parameters.AddWithValue("@ProveedorSugerido", ProveedorSugerido);
+                        cmdInsert.Parameters.AddWithValue("@Ancho", Ancho);
+                        cmdInsert.Parameters.AddWithValue("@Alto", Alto);
+                        cmdInsert.Parameters.AddWithValue("@Profundidad", Profundidad);
+                        cmdInsert.Parameters.AddWithValue("@Material", Material);
+                        cmdInsert.Parameters.AddWithValue("@EspecificacionesTecnicas", EspecificacionesTecnicas);
+                        cmdInsert.Parameters.AddWithValue("@Cantidad", Cantidad);
+                        cmdInsert.Parameters.AddWithValue("@observacionDesarrollo", observacionDesarrollo);
+                        cmdInsert.Parameters.AddWithValue("@Proveedor", Proveedor);
+                        cmdInsert.Parameters.AddWithValue("@PrecioSugerido", PrecioSugerido);
+                        cmdInsert.Parameters.AddWithValue("@observacionCompras", observacionCompras);
+                        cmdInsert.Parameters.AddWithValue("@Costo", Costo);
+                        cmdInsert.Parameters.AddWithValue("@Factor", Factor);
+                        cmdInsert.Parameters.AddWithValue("@Detalle", Detalle);
+                        cmdInsert.Parameters.AddWithValue("@RedirigidoaCompras", RedirigidoaCompras != null ? (bool.TryParse(RedirigidoaCompras.ToString(), out var parsedValue) ? (object)parsedValue : false) : DBNull.Value);
+                        cmdInsert.Parameters.AddWithValue("@Redirigidoel", string.IsNullOrEmpty(Redirigidoel) ? (object)DBNull.Value : Convert.ToDateTime(Redirigidoel));
+                        cmdInsert.Parameters.AddWithValue("@ComprasOk", ComprasOk != null ? (bool.TryParse(ComprasOk.ToString(), out var parsedValue1) ? (object)parsedValue1 : false) : DBNull.Value);
+                        cmdInsert.Parameters.AddWithValue("@FechaComprasOk", string.IsNullOrEmpty(FechaComprasOk) ? (object)DBNull.Value : Convert.ToDateTime(FechaComprasOk));
+                        cmdInsert.Parameters.AddWithValue("@CostoCompras", CostoCompras);
+                        cmdInsert.Parameters.AddWithValue("@FactorCompras", FactorCompras);
+                        cmdInsert.Parameters.AddWithValue("@Categoria", Categoria);
+                        cmdInsert.Parameters.AddWithValue("@RealizadoPor", RealizadoPor);
+                        cmdInsert.Parameters.AddWithValue("@Id_SolicitudDetalleOrigen", Id_SolicitudDetalle);
+                        cmdInsert.Parameters.AddWithValue("@SolicitudOrigen", tbSolicitudOrigen.Text);
+                        cmdInsert.Parameters.AddWithValue("@DetalleOrigen", DetalleOrigen);
+
+
+                        cmdInsert.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
 
     }
 }

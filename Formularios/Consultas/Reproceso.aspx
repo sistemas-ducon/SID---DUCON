@@ -8,7 +8,7 @@
     <title>Reprocesos</title>
     <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="../../Recursos/CSS/Consultas/Reproceso.css" />
 </head>
@@ -289,9 +289,9 @@
 
                                         <div class="col-6">
                                             <asp:Label ID="Id_detalle" runat="server" Text="" Visible="false"></asp:Label>
-                                            <asp:Label ID="lbNombAreaRepro" runat="server" Text="" Visible="false" ></asp:Label>
-                                            <asp:Label ID="lbRedirigido" runat="server" Text="" Visible="false" ></asp:Label>
-                                             <asp:Label ID="lbIdElemnto" runat="server" Text="" Visible="false" ></asp:Label>
+                                            <asp:Label ID="lbNombAreaRepro" runat="server" Text="" Visible="false"></asp:Label>
+                                            <asp:Label ID="lbRedirigido" runat="server" Text="" Visible="false"></asp:Label>
+                                            <asp:Label ID="lbIdElemnto" runat="server" Text="" Visible="false"></asp:Label>
                                             <span id="ErrorValidacionDoc" style="color: red;" runat="server" visible="false"></span>
                                         </div>
 
@@ -597,7 +597,7 @@
                         </div>
 
                         <!--Modal Convenciones -->
-                        <div class="modal fade" id="convenciones" data-bs-backdrop="static" data-bs-keyboard="false"  tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal fade" id="convenciones" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered  ">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -642,7 +642,7 @@
                             </div>
                         </div>
 
-                           <!--Modal Redireccionar Reproceso -->
+                        <!--Modal Redireccionar Reproceso -->
                         <div id="redireccionarReproMoodal" class="modal" tabindex="-1" style="display: none;">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -667,7 +667,7 @@
                             </div>
                         </div>
 
-                            <!--Modal Redireccionar Reproceso -->
+                        <!--Modal Redireccionar Reproceso -->
                         <div id="notificarReproMoodal" class="modal" tabindex="-1" style="display: none;">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -683,7 +683,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                            <asp:Button runat="server" ID="btnNotRepro_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-success" Style="width: 5rem;" OnClick="btnNotRepro_SI_Click"  />
+                                            <asp:Button runat="server" ID="btnNotRepro_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-success" Style="width: 5rem;" OnClick="btnNotRepro_SI_Click" />
                                             <asp:Button runat="server" ID="btnNotRepro_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
                                         </div>
 
@@ -1063,7 +1063,7 @@
                     alert('La fecha de inicio debe ser anterior a la fecha de fin.');
                     return false; // Evitar que se ejecute la acción
                 }
-               
+
 
                 // Verificar si la fecha de fin es posterior a la fecha actual
                 if (fin > fechaActual) {
@@ -1071,7 +1071,7 @@
                     return false;
                 }
 
-                
+
 
                 // Si las fechas son válidas y la fecha de inicio es anterior a la fecha de fin, permitir la acción
                 return true;

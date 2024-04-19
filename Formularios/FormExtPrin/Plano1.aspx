@@ -11,7 +11,7 @@
     <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
     <link type="text/css" href="../../Recursos/CSS/FormExtPrin/Plano1.css" rel="stylesheet" />
 
     <script>
@@ -70,7 +70,7 @@
                                         </asp:LinkButton>
 
                                         <asp:LinkButton runat="server" Text="Guardar Plano" ID="GurdarPlano" title="Guardar Plano" OnClick="GuardarModifcarPlano" OnClientClick=" return validarFormulario();">
-                                                  <i class="bi bi-save2"></i>
+                                               <i class="bi bi-floppy-fill"></i>
                                         </asp:LinkButton>
 
                                         <asp:LinkButton runat="server" Text="Modificar Plano" ID="ModificarPlano" OnClick="ModificarPlano_Click" title="Modificar Plano">

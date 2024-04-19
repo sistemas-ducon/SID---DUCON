@@ -21,6 +21,8 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using TableCell = System.Web.UI.WebControls.TableCell;
 using ListItem = System.Web.UI.WebControls.ListItem;
 using System.Security.Policy;
+using Microsoft.Office.Interop.Excel;
+using DataTable = System.Data.DataTable;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
 {
@@ -77,7 +79,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
                 ddlAnioBusqueda.Items.Add(new ListItem(i.ToString(), i.ToString()));
                 ddlAnioBusquedaT.Items.Add(new ListItem(i.ToString(), i.ToString()));
                 ddlAnioBusquedaCouTri.Items.Add(new ListItem(i.ToString(), i.ToString()));
-                ddlanioBusquedaM.Items.Add(new ListItem(i.ToString(), i.ToString())); 
+                ddlanioBusquedaM.Items.Add(new ListItem(i.ToString(), i.ToString()));
+                ddlBusquedaAñoRango.Items.Add(new ListItem(i.ToString(), i.ToString()));
+                
             }
         }
 
@@ -953,6 +957,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
             }
         }
 
+
         // TAP X MESES 
 
         protected void DataGridEstXMes_ItemDataBound(object sender, DataGridItemEventArgs e)
@@ -1554,7 +1559,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
 
             return resultados;
         }
-
         protected void DataGridTrimestre_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
@@ -1580,7 +1584,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
                 }
             }
         }
-
         protected void ExportarExcel3_Click(object sender, EventArgs e)
         {
             try
@@ -1707,7 +1710,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
         }
 
 
+        // TAP X RANGOS 
+
+
+
+
+
         // TAP X CUOTA MENSUAL
+
+        //DataGrid Superior 
         protected void DataGridCoutaMes_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
@@ -1729,17 +1740,49 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
 
             }
         }
-        protected void btnConsultarCouM_Click(object sender, EventArgs e)
+        protected void DataGridCoutaMes_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            if (e.CommandName == "VerAsesor")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGridCoutaMes.Items[rowIndex];
+
+                string cedula = row.Cells[2].Text;
+                string nombre = row.Cells[3].Text;
+
+                foreach (DataGridItem item in DataGridCoutaMes.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+                //se usa Para darle un color a la fila seleccionada  
+                e.Item.CssClass = "fila-seleccionada";
+
+                tbCedAsignar.Text = cedula;
+                tbNombreAsesor.Text = nombre;
+
+
+
+            }
+        }
+        protected void btnConsultarCuoM_Click(object sender, EventArgs e)
+        {
+            CargarDatGridMes();
+        }
+
+        private void CargarDatGridMes()
         {
             bool activo = chkActivos.Checked;
 
-            DataTable FullAsesores1 = ConsultarAsesoresActivos1(activo);
+            DataTable FullAsesores = ConsultarAsesoresActivos(activo);
 
-            DataGridCoutaMes.DataSource = FullAsesores1;
+            DataGridCoutaMes.DataSource = FullAsesores;
             DataGridCoutaMes.DataBind();
         }
-
-        private DataTable ConsultarAsesoresActivos1(bool activo)
+        private DataTable ConsultarAsesoresActivos(bool activo)
         {
 
             DataTable dtFulAsesroes = new DataTable();
@@ -1752,7 +1795,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
                             INNER JOIN tblAsesorComercial ON tblEmpleado.Cedula = tblAsesorComercial.Cedula
                             WHERE (((tblAsesorComercial.Activo) = @Activo)) ORDER BY tblEmpleado.Grupo";
 
-           
+
 
             string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionStringSID))
@@ -1781,9 +1824,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
                 string cedula = row["Cedula"].ToString();
 
                 string anio = ConsultarCuotaAñoMes(cedula, año);
-                
+
                 decimal cuota = ConsultarCuotaAsesorMes(cedula, año);
-                
+
                 row["Año"] = anio;
                 row["Cuota"] = cuota;
             }
@@ -1793,7 +1836,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
 
             return dtFulAsesroes;
         }
-
         private decimal ConsultarCuotaAsesorMes(string cedula, string año)
         {
             string sSqlCuota = @"SELECT
@@ -1823,7 +1865,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
 
             return cuota;
         }
-
         private string ConsultarCuotaAñoMes(string cedula, string año)
         {
             string sSqlCuota = @"SELECT
@@ -1854,14 +1895,732 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
             return anio;
         }
 
+
+
+
+        // DataGrid Inferioor
+        protected void DataGridGeneralMes_ItemDataBound(object sender, DataGridItemEventArgs e)
+        {
+            // Encabezados 
+            if (e.Item.ItemType == ListItemType.Header)
+            {
+                // Titulo de encabezado columna 9 T. Ventas + Año 
+                DataGridItem headerItem10 = e.Item;
+                headerItem10.Cells[10].Text = "T. Ventas " + ddlanioBusquedaM.SelectedItem.Text;
+
+                // Titulo de encabezado columna 13 T. Vent Año anterior 
+                DataGridItem headerItem13 = e.Item;
+                int año = Convert.ToInt32(ddlanioBusquedaM.SelectedItem.Text);
+                headerItem13.Cells[13].Text = "T. Ventas " + (año - 1);
+
+                // Titulo de encabezado columna 14 Ventas 1 Año anterior 
+                DataGridItem headerItem14 = e.Item;
+                headerItem14.Cells[14].Text = "Ventas " + ddlMes.SelectedItem.Text + " " + (año - 1);
+
+                // Titulo de encabezado columna 15 Ventas Año actal VS año anterior
+                DataGridItem headerItem15 = e.Item;
+                headerItem15.Cells[15].Text = "Año " + año + " VS " + (año - 1);
+
+                //Titulo de encabezado columna 15 Ventas Año actal VS año anterior
+                DataGridItem headerItem16 = e.Item;
+                headerItem16.Cells[16].Text = ddlMes.SelectedItem.Text + " " + año + " VS " + ddlMes.SelectedItem.Text + " " + (año - 1);
+
+            }
+
+            // Filas de Datos 
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                // Numerador para asesores
+                TableCell Numero = e.Item.Cells[0];
+                Numero.Text = posCounter.ToString();
+                posCounter++;
+
+                // Se le da formato a la columna Couta 
+                TableCell CellCouta = e.Item.Cells[6];
+                double cuota;
+                if (double.TryParse(CellCouta.Text, out cuota))
+                {
+                    string valorFormateado = cuota.ToString("#,0");
+                    CellCouta.Text = valorFormateado;
+                }
+
+                // Se establece el mes segun el dropdownlist 
+                TableCell CellMes = e.Item.Cells[5];
+                CellMes.Text = ddlMes.SelectedValue.ToString();
+                // Se convierte en un numero operable el  mes 
+                Int32 mes;
+                if (Int32.TryParse(CellMes.Text, out mes))
+                {
+
+                }
+
+                // Se le da formato a la columna Couta 
+                TableCell CellTotal = e.Item.Cells[7];
+                double total;
+                if (double.TryParse(CellTotal.Text, out total))
+                {
+                    string valorFormateado = total.ToString("#,0");
+                    CellTotal.Text = valorFormateado;
+                }
+
+                // celda porcentaje de cumnplimiento mes 
+                TableCell CellCumplMes = e.Item.Cells[8];
+
+                // Se convierte en un numero operable el presupuesto mes 
+                TableCell CellPreMes = e.Item.Cells[9];
+                double Presu = 0;
+
+
+                // Se valida si el total o la cuota son igual a cero 
+                if (total == 0 || cuota == 0)
+                {
+                    CellCumplMes.Text = "0";
+                    CellPreMes.Text = "0";
+                }
+                else
+                {
+                    CellCumplMes.Text = string.Format("{0:N2}", (total / cuota * 100)) + " %";
+                    CellPreMes.Text = (cuota * mes).ToString("#,0");
+                    if (double.TryParse(CellPreMes.Text, out Presu))
+                    {
+
+                    }
+
+                }
+
+
+                // Se le da formato a la columna Tventa y se convierta en un numero operable  
+                TableCell CellTVentas = e.Item.Cells[10];
+                double Tventas;
+                if (double.TryParse(CellTVentas.Text, out Tventas))
+                {
+                    string valorFormateado = Tventas.ToString("#,0");
+                    CellTVentas.Text = valorFormateado;
+                }
+
+
+                // celda porcentaje de cumnplimiento año 
+                TableCell CellCumplAño = e.Item.Cells[11];
+
+                // Se valida si TVentas o el Presu son igual a cero 
+                if (Tventas == 0 || Presu == 0)
+                {
+                    CellCumplAño.Text = "0";
+                }
+                else
+                {
+                    CellCumplAño.Text = string.Format("{0:N2}", (Tventas / Presu * 100)) + " %";
+                }
+
+                // celda porcentaje de cumnplimiento año 
+                TableCell CellPromedioMensaul = e.Item.Cells[12];
+
+                if (Tventas == 0)
+                {
+                    CellPromedioMensaul.Text = "0";
+                }
+                else
+                {
+                    CellPromedioMensaul.Text = (Tventas * mes).ToString("#,0");
+                }
+
+
+                // Se formatea la celda Ventas año anterior y se convierte en un numero operable
+                TableCell CellTVentasAñoAnte = e.Item.Cells[13];
+                double TventasAñoAnte;
+                if (double.TryParse(CellTVentasAñoAnte.Text, out TventasAñoAnte))
+                {
+                    string valorFormateado = TventasAñoAnte.ToString("#,0");
+                    CellTVentasAñoAnte.Text = valorFormateado;
+                }
+
+                // Se formatea la celda Ventas mes y  año anterior y se convierte en un numero operable
+                TableCell CellTVentaMesAñosAnterior = e.Item.Cells[14];
+                double TventasMesAñoAnte;
+                if (double.TryParse(CellTVentaMesAñosAnterior.Text, out TventasMesAñoAnte))
+                {
+                    string valorFormateado = TventasMesAñoAnte.ToString("#,0");
+                    CellTVentaMesAñosAnterior.Text = valorFormateado;
+                }
+
+                // celda porcentaje de cumnplimiento año 
+                TableCell CellAñoVsAÑoAnt = e.Item.Cells[15];
+
+                if (Tventas == 0 || TventasAñoAnte == 0)
+                {
+                    CellAñoVsAÑoAnt.Text = "0";
+                }
+                else
+                {
+                    CellAñoVsAÑoAnt.Text = string.Format("{0:N2}", (Tventas / TventasAñoAnte * 100)) + " %";
+                }
+
+
+                // celda porcentaje de cumnplimiento año 
+                TableCell CellAñoMesVsAñoMesAnt = e.Item.Cells[16];
+
+                if (total == 0 || TventasMesAñoAnte == 0)
+                {
+                    CellAñoMesVsAñoMesAnt.Text = "0";
+                }
+                else
+                {
+                    CellAñoMesVsAñoMesAnt.Text = string.Format("{0:N2}", (total / TventasMesAñoAnte * 100)) + " %";
+                }
+
+
+            }
+        }
         protected void btnConsultarM2_Click(object sender, EventArgs e)
         {
-           
+            bool activo = chkActivos.Checked;
+
+            DataTable FullAsesores1 = ConsultarAsesoresActivos1(activo);
+
+            DataGridGeneralMes.DataSource = FullAsesores1;
+            DataGridGeneralMes.DataBind();
+        }
+        private DataTable ConsultarAsesoresActivos1(bool activo)
+        {
+            DataTable dtFulAsesroes1 = new DataTable();
+
+            string sSqlAsesores = @"SELECT
+                                    tblAsesorComercial.Cedula,[tblAsesorComercial].[Nombre]+' '+[tblAsesorComercial].[Apellidos] AS Asesor,
+                                    tblEmpleado.Grupo FROM tblEmpleado 
+                                    INNER JOIN tblAsesorComercial ON tblEmpleado.Cedula = tblAsesorComercial.Cedula 
+                                    Where (((tblAsesorComercial.Activo) = @Activo)) ORDER BY tblEmpleado.Grupo;";
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionStringSID))
+            {
+                using (SqlCommand command = new SqlCommand(sSqlAsesores, connection))
+                {
+                    // Agregar el parámetro @Activo al comando SQL
+                    command.Parameters.AddWithValue("@Activo", activo);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    {
+                        adapter.Fill(dtFulAsesroes1);
+                    }
+                }
+            }
+
+            // Agregar una nueva columna para la cuota, couta trimestral y total 
+            dtFulAsesroes1.Columns.Add("Año", typeof(string));
+            dtFulAsesroes1.Columns.Add("Cuota", typeof(decimal));
+            dtFulAsesroes1.Columns.Add("Total", typeof(decimal));
+            dtFulAsesroes1.Columns.Add("TVentas", typeof(decimal));
+            dtFulAsesroes1.Columns.Add("TVentasAñoAnterior", typeof(decimal));
+            dtFulAsesroes1.Columns.Add("TVentasAñoAnteriorMes", typeof(decimal));
+
+            DataTable Año_Couta = new DataTable();
+
+            string año = ddlanioBusquedaM.SelectedItem.Text;
+            Int32 añoNumero = Convert.ToInt32(año);
+            string mes = ddlMes.SelectedValue.ToString();
+
+            // fechas para consulta total 
+            string FechaIni = año + "/" + mes + "/01";
+            string FechaFin = ObtenerUltimoDiaMes(FechaIni);
+
+
+            // fechas para consulta T Ventas
+            string FechaIni2 = año + "/01/01";
+            DateTime ultimoDiaMes = new DateTime(Convert.ToInt32(año), Convert.ToInt32(mes), DateTime.DaysInMonth(Convert.ToInt32(año), Convert.ToInt32(mes)));
+            string fechaFin2 = ultimoDiaMes.ToString("yyyy/MM/dd");
+
+
+
+            // fechas para consulta T Ventas año anterior  
+            string FechaIni3 = (añoNumero - 1) + "/01/01";
+            DateTime ultimoDiaMes3 = new DateTime(Convert.ToInt32(añoNumero - 1), Convert.ToInt32(mes), DateTime.DaysInMonth(Convert.ToInt32(añoNumero - 1), Convert.ToInt32(mes)));
+            string FechaFin3 = ultimoDiaMes3.ToString("yyyy/MM/dd");
+
+
+            // fechas para consulta T Ventas año anterior  ( ASI ESTA EL CODIGO EN EL SID VIEJO VALIDAR SI EL MES SI ES CORRECTO EN LA FECHA INICIAL )
+            string FechaIni4 = (añoNumero - 1) + "/01/01";
+            DateTime ultimoDiaMes4 = new DateTime(Convert.ToInt32(añoNumero - 1), Convert.ToInt32(mes), DateTime.DaysInMonth(Convert.ToInt32(añoNumero - 1), Convert.ToInt32(mes)));
+            string FechaFin4 = ultimoDiaMes3.ToString("yyyy/MM/dd");
+
+
+
+            foreach (DataRow row in dtFulAsesroes1.Rows)
+            {
+                string cedula = row["Cedula"].ToString();
+
+                // Se consulta el año y la cuota 
+                Año_Couta = ConsultarAño_Couta(cedula, año);
+                if (Año_Couta.Rows.Count > 0)
+                {
+                    row["Año"] = Año_Couta.Rows[0]["Año"];
+                    row["Cuota"] = Año_Couta.Rows[0]["Cuota"];
+                }
+                else
+                {
+                    row["Año"] = "";
+                    row["Cuota"] = "0";
+                }
+
+                // Se Consulta el total ventas por mes  seleccionado  
+                decimal total = ConsultarTotalVenta_X_Mes_X_Asesor(cedula, FechaIni, FechaFin);
+
+                if (total > 0)
+                {
+                    row["Total"] = total;
+                }
+                else
+                {
+                    row["Total"] = "0";
+                }
+
+                // Se Consulta el total ventas por año  seleccionado
+                decimal TVentas = ConsultarTVenta_Año(cedula, FechaIni, FechaFin);
+
+                if (TVentas > 0)
+                {
+                    row["TVentas"] = TVentas;
+                }
+                else
+                {
+                    row["TVentas"] = "0";
+                }
+
+                // Se Consulta el total ventas por año anterior  seleccionado
+                decimal TVentAñoAnt = ConsultarTVenta_Año_Anterior(cedula, FechaIni3, FechaFin3);
+
+                if (TVentAñoAnt > 0)
+                {
+                    row["TVentasAñoAnterior"] = TVentAñoAnt;
+                }
+                else
+                {
+                    row["TVentasAñoAnterior"] = "0";
+                }
+
+                // Se Consulta el total ventas por año anterior  y mes   seleccionado
+                decimal TVentAñoAntMes = ConsultarTVenta_Año_AnteriorMes(cedula, FechaIni4, FechaFin4);
+
+                if (TVentAñoAntMes > 0)
+                {
+                    row["TVentasAñoAnteriorMes"] = TVentAñoAntMes;
+                }
+                else
+                {
+                    row["TVentasAñoAnteriorMes"] = "0";
+                }
+
+            }
+
+            return dtFulAsesroes1;
+        }
+        public DataTable ConsultarAño_Couta(string cedula, string año)
+        {
+            DataTable Año_Couta = new DataTable();
+
+
+            // Consulta para traer la suma de las ventas de cada mes (todos, Zona 1 ó 2 )
+            string query = $"SELECT tblCuotaAsesor.Año,tblCuotaAsesor.Cuota " +
+                           $"From tblCuotaAsesor " +
+                           $"WHERE (((tblCuotaAsesor.Año)= @año) " +
+                           $"AND ((tblCuotaAsesor.ID_Asesor)= @cedula))";
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionStringSID))
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter(query, connection))
+                {
+
+                    adapter.SelectCommand.Parameters.AddWithValue("@cedula", cedula);
+                    adapter.SelectCommand.Parameters.AddWithValue("@año", año);
+
+
+                    adapter.Fill(Año_Couta);
+                }
+            }
+
+
+            return Año_Couta;
+        }
+        private decimal ConsultarTotalVenta_X_Mes_X_Asesor(string cedula, string FechaIni, string FechaFin)
+        {
+            string sSqlCuota = @"SELECT 
+                                Sum(Precio_Venta-Precio_Venta*Descuento/100) AS Total
+                                FROM tblTipoPedido 
+                                INNER JOIN (tblOT 
+                                INNER JOIN tblEmpleado ON tblOT.Codigo_Asesor = tblEmpleado.Cedula)
+                                ON tblTipoPedido.Id_TipoPedido = tblOT.Id_TipoPedido
+                                WHERE (((tblOT.Fecha_Confirmacion_Venta)  Between @fechaIni And @fechaFin) AND ((tblOT.Terminado_Diseño)=1) 
+                                AND ((tblEmpleado.Cedula)= @cedula))
+                                GROUP BY tblTipoPedido.EstadisticaVenta HAVING (((tblTipoPedido.EstadisticaVenta)=1))";
+
+            decimal total = 0;
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionStringSID))
+            {
+                using (SqlCommand command = new SqlCommand(sSqlCuota, connection))
+                {
+                    command.Parameters.AddWithValue("@cedula", cedula);
+                    command.Parameters.AddWithValue("@fechaIni", FechaIni);
+                    command.Parameters.AddWithValue("@fechaFin", FechaFin);
+
+                    connection.Open();
+                    object result = command.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        total = Convert.ToDecimal(result);
+                    }
+                }
+            }
+
+            return total;
+        }
+        private decimal ConsultarTVenta_Año(string cedula, string FechaIni, string FechaFin)
+        {
+            string sSqlCuota = @"SELECT
+                                Sum(Precio_Venta-Precio_Venta*Descuento/100) AS Total
+                                FROM tblTipoPedido INNER JOIN (tblOT 
+                                INNER JOIN tblEmpleado ON tblOT.Codigo_Asesor = tblEmpleado.Cedula) 
+                                ON tblTipoPedido.Id_TipoPedido = tblOT.Id_TipoPedido
+                                WHERE (((tblOT.Fecha_Confirmacion_Venta)  Between @fechaIni And @fechaFin ) AND ((tblOT.Terminado_Diseño)=1) 
+                                AND ((tblEmpleado.Cedula)= @cedula))
+                                GROUP BY tblTipoPedido.EstadisticaVenta HAVING (((tblTipoPedido.EstadisticaVenta)=1))";
+
+            decimal TVentas = 0;
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionStringSID))
+            {
+                using (SqlCommand command = new SqlCommand(sSqlCuota, connection))
+                {
+                    command.Parameters.AddWithValue("@cedula", cedula);
+                    command.Parameters.AddWithValue("@fechaIni", FechaIni);
+                    command.Parameters.AddWithValue("@fechaFin", FechaFin);
+
+                    connection.Open();
+                    object result = command.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        TVentas = Convert.ToDecimal(result);
+                    }
+                }
+            }
+
+            return TVentas;
+        }
+        private decimal ConsultarTVenta_Año_Anterior(string cedula, string FechaIni, string FechaFin)
+        {
+            string sSqlCuota = @"SELECT 
+                                Sum(Precio_Venta-Precio_Venta*Descuento/100) AS Total
+                                FROM tblTipoPedido 
+                                INNER JOIN (tblOT 
+                                INNER JOIN tblEmpleado ON tblOT.Codigo_Asesor = tblEmpleado.Cedula) 
+                                ON tblTipoPedido.Id_TipoPedido = tblOT.Id_TipoPedido
+                                WHERE (((tblOT.Fecha_Confirmacion_Venta)  Between @fechaIni And @fechaFin) 
+                                AND ((tblOT.Terminado_Diseño)=1) AND ((tblEmpleado.Cedula)= @cedula))
+                                GROUP BY tblTipoPedido.EstadisticaVenta HAVING (((tblTipoPedido.EstadisticaVenta)=1))";
+
+            decimal TVentas = 0;
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionStringSID))
+            {
+                using (SqlCommand command = new SqlCommand(sSqlCuota, connection))
+                {
+                    command.Parameters.AddWithValue("@cedula", cedula);
+                    command.Parameters.AddWithValue("@fechaIni", FechaIni);
+                    command.Parameters.AddWithValue("@fechaFin", FechaFin);
+
+                    connection.Open();
+                    object result = command.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        TVentas = Convert.ToDecimal(result);
+                    }
+                }
+            }
+
+            return TVentas;
+        }
+        private decimal ConsultarTVenta_Año_AnteriorMes(string cedula, string FechaIni, string FechaFin)
+        {
+            string sSqlCuota = @"SELECT 
+                                Sum(Precio_Venta-Precio_Venta*Descuento/100) AS Total
+                                FROM tblTipoPedido 
+                                INNER JOIN (tblOT 
+                                INNER JOIN tblEmpleado ON tblOT.Codigo_Asesor = tblEmpleado.Cedula) 
+                                ON tblTipoPedido.Id_TipoPedido = tblOT.Id_TipoPedido
+                                WHERE (((tblOT.Fecha_Confirmacion_Venta)  Between @fechaIni And @fechaFin) 
+                                AND ((tblOT.Terminado_Diseño)=1) AND ((tblEmpleado.Cedula)= @cedula))
+                                GROUP BY tblTipoPedido.EstadisticaVenta HAVING (((tblTipoPedido.EstadisticaVenta)=1))";
+
+            decimal TVentas = 0;
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionStringSID))
+            {
+                using (SqlCommand command = new SqlCommand(sSqlCuota, connection))
+                {
+                    command.Parameters.AddWithValue("@cedula", cedula);
+                    command.Parameters.AddWithValue("@fechaIni", FechaIni);
+                    command.Parameters.AddWithValue("@fechaFin", FechaFin);
+
+                    connection.Open();
+                    object result = command.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        TVentas = Convert.ToDecimal(result);
+                    }
+                }
+            }
+
+            return TVentas;
+        }
+        protected void ExportarExcel5_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Creamos un paquete de Excel 
+                using (ExcelPackage excelPackage = new ExcelPackage())
+                {
+                    // Agregamos la hoja  1
+                    ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Estadisticas Venta ");
+
+                    worksheet.Row(1).Height = 60;
+                    worksheet.Column(2).Width = 40;
+                    worksheet.Column(5).Width = 20;
+                    worksheet.Column(3).Width = 20;
+                    worksheet.Column(4).Width = 20;
+
+                    // Logo Ducon       // validar la ruta de este logo y no se debe eliminar 
+                    string rutaImagen = @"P:\SISTEMAS\Logo Ducon\Ducon.jpg";
+                    FileInfo image = new FileInfo(rutaImagen);
+                    if (image.Exists)
+                    {
+                        var picture = worksheet.Drawings.AddPicture("Logo", image);
+                        picture.SetPosition(0, 10, 1, 50);
+                        picture.SetSize(150, 60);
+
+                    }
+
+                    var CellC1E1 = worksheet.Cells["C1:E1"];
+                    CellC1E1.Merge = true;
+                    CellC1E1[1, 3].Value = "Estadistica año " + ddlanioBusquedaM.SelectedItem.Text;
+                    CellC1E1.Style.Font.Name = "Century Gothic";
+                    CellC1E1.Style.Font.Size = 16;
+                    CellC1E1.Style.Font.Bold = true;
+                    CellC1E1.Style.Font.Italic = true;
+                    CellC1E1.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    CellC1E1.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    CellC1E1.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+
+                    // Obtener los encabezados de las columnas del DataGrid
+                    int colIndex = 2;
+                    int rowIndex = 2;
+
+
+                    int año = Convert.ToInt32(ddlanioBusquedaM.SelectedItem.Text);
+                    string mes = ddlMes.SelectedItem.Text;
+
+                    string tVentaAño = "T Ventas: " + año;
+                    string tVentaAñoAnterior = "T Ventas: " + (año - 1);
+                    string tVentaAñoMes = "T Ventas: " + mes + " " + año;
+                    string tVentaVsAño = "Año " + año + "  VS " + (año - 1);
+                    string tVentaVsAñoMes = mes + " " + año + "  VS " + mes + " " + (año - 1);
+
+                    // Encabezados de la tabla 
+                    string[] encabezados = { "N°", "Cédula", "Asesor", "Grupo","Año", "Mes", "P. Mensual", "Venta Mes", "% Cump Mes", "Presupuesto X Mes",tVentaAño,"% Cump Anual",
+                                            "Promedio Mensual",tVentaAñoAnterior,tVentaAñoMes, tVentaVsAño, tVentaVsAñoMes};
+
+                    foreach (string encabezado in encabezados)
+                    {
+                        worksheet.Cells[rowIndex, colIndex].Value = encabezado;
+                        var headerCell = worksheet.Cells[rowIndex, colIndex];
+
+                        // Establecemos el texto en negrita
+                        headerCell.Style.Font.Bold = true;
+                        headerCell.Style.Font.Name = "Century Gothic";
+
+                        // Aplicamos bordes a la celda de encabezado
+                        headerCell.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        headerCell.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        headerCell.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        headerCell.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+                        colIndex++;
+                    }
+
+                    // Obtener los datos de las filas del DataGrid
+                    rowIndex = 3;
+
+                    foreach (DataGridItem row in DataGridGeneralMes.Items)
+                    {
+                        colIndex = 2;
+                        foreach (TableCell cell in row.Cells)
+                        {
+
+                            string cellText = cell.Text;
+
+                            // Verificar si el texto de la celda es nulo o "&nbsp;"
+                            if (string.IsNullOrEmpty(cellText) || cellText.Trim() == "&nbsp;" || cellText == "")
+                            {
+                                cellText = ""; // Asignar una cadena vacía en lugar de null o "&nbsp;"
+                            }
+
+
+                            worksheet.Cells[rowIndex, colIndex].Value = cellText;
+                            var Dato = worksheet.Cells[rowIndex, colIndex];
+
+
+                            Dato.Style.Font.Size = 11;
+                            Dato.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                            Dato.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                            Dato.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                            Dato.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                            Dato.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+
+                            colIndex++;
+                        }
+                        rowIndex++;
+                    }
+
+
+
+                    // Guardamos el archivo de Excel
+                    string filePath = Path.GetTempFileName() + ".xlsx";
+                    FileInfo excelFile = new FileInfo(filePath);
+                    excelPackage.SaveAs(excelFile);
+
+                    // Descargamos el archivo de Excel
+                    Response.Clear();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("content-disposition", "attachment; filename=EstadisticasVenta.xlsx");
+                    Response.TransmitFile(filePath);
+                    Response.End();
+                }
+            }
+            catch
+            {
+                tbMensaje.Text = "Ocurrió un error al intentar descargar el excel";
+            }
         }
 
 
-        // TAP X CUOTA TRIMESTRAL 
+        // Asignar Cuota Venta 
+        protected void btnAsignar_Click(object sender, EventArgs e)
+        {
+            if (tbCedAsignar.Text == "")
+            {
+                string scriptNoSeleccionado = "alert('Por favor, seleccione un asesor para asignar.');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowNosleccionado", scriptNoSeleccionado, true);
+            }
+            else
+            {
 
+                if (tbCouta.Text == "")
+                {
+                    string scriptNoAgregado = "alert('No se ha ingresado ningún valor de cuota.');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "ShowNoAgregado", scriptNoAgregado, true);
+
+                }
+                else
+                {
+                    SpanCuota.InnerText = tbCouta.Text;
+                    SpanNombre.InnerText = tbNombreAsesor.Text;
+
+                    ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#asignarCuotaMoodal').modal('show');", true);
+                }
+
+            }
+
+        }
+        protected void btnAsignar_Si_Click(object sender, EventArgs e)
+        {
+            DataTable Cuota = ConsultarCoutaAseor();
+
+            if (Cuota.Rows.Count > 0)
+            {
+                string mensajeError = "No se puede agregar cuota al vendedor:  " + tbNombreAsesor.Text + " porque ya tiene una asignada.";
+                string scriptError = "alert('" + mensajeError + "');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showError", scriptError, true);
+                return;
+            }
+            else
+            {
+                // Agregar Couta a un asesor.
+                string cedula = tbCedAsignar.Text;
+                string año = ddlanioBusquedaM.SelectedItem.Text;
+                int cuota = Convert.ToInt32(tbCouta.Text);
+                InsertarCoutaAsesor(cedula, año, cuota);
+
+            }
+        }
+        private DataTable ConsultarCoutaAseor()
+        {
+            string sSqlCUOTAAsesor = @"SELECT Cuota FROM tblCuotaAsesor WHERE ID_asesor= @cedula AND Año = @año";
+
+            DataTable dtCouta = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionStringSID))
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter(sSqlCUOTAAsesor, connection))
+                {
+                    adapter.SelectCommand.Parameters.AddWithValue("@cedula", tbCedAsignar.Text);
+                    adapter.SelectCommand.Parameters.AddWithValue("@año", ddlanioBusquedaM.SelectedItem.Text);
+                    adapter.Fill(dtCouta);
+                }
+            }
+
+            return dtCouta;
+        }
+        private void InsertarCoutaAsesor(string cedula, string año, int cuota)
+        {
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "INSERT INTO tblCuotaAsesor (ID_Asesor,Año,Cuota) " +
+                              "VALUES (@cedula, @año,@couta) ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@cedula", cedula);
+                    cmd.Parameters.AddWithValue("@año", año);
+                    cmd.Parameters.AddWithValue("@couta", cuota);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+
+                    if (CantidadFilasAfectada > 0)
+                    {
+                        //Se refresca el datagrid
+                        CargarDatGridMes();
+
+                        // limpiamos los campos de 
+                        tbCouta.Text = "";
+                        tbCedAsignar.Text = "";
+                        tbNombreAsesor.Text = "";
+
+
+                        string scriptExito = "alert('La cuota ha sido asiganada exitosamente.');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showNoSelect", scriptExito, true);
+                    }
+
+
+
+                }
+
+            }
+        }
+
+
+
+        // TAP X CUOTA TRIMESTRAL 
         protected void DataGridCouTri_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
@@ -1922,7 +2681,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
             }
 
         }
-
         protected void btnConsultarCouTri_Click(object sender, EventArgs e)
         {
 
@@ -1967,7 +2725,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
             }
 
         }
-
         private DataTable ConsultarAsesoresActivos(string FechaIni, string FechaFin)
         {
             string sSqlAsesores = @"SELECT tblAsesorComercial.Cedula,[tblAsesorComercial].[Nombre]+' '+[tblAsesorComercial].[Apellidos] AS Asesor,
@@ -2018,7 +2775,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
 
             return dtFulAsesroes;
         }
-
         private decimal ConsultarCuotaAsesor(string cedula)
         {
             string sSqlCuota = @"SELECT  tblCuotaAsesor.Cuota 
@@ -2047,7 +2803,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
 
             return cuota;
         }
-
         private decimal ConsultarTotal(string FechaIni, string FechaFin, string cedula)
         {
             string sSqlCuota = @"SELECT Sum(Precio_Venta-Precio_Venta*Descuento/100) AS Total FROM tblTipoPedido 
@@ -2082,7 +2837,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
 
             return total;
         }
-
         protected void ExportarExcel6_Click(object sender, EventArgs e)
         {
             try
@@ -2182,34 +2936,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
             }
         }
 
-        protected void DataGridCoutaMes_ItemCommand(object source, DataGridCommandEventArgs e)
-        {
-            if (e.CommandName == "VerAsesor")
-            {
-                int rowIndex = Convert.ToInt32(e.CommandArgument);
-                DataGridItem row = DataGridCoutaMes.Items[rowIndex];
 
-
-                string cedula = row.Cells[2].Text;
-
-                
-
-                foreach (DataGridItem item in DataGridCoutaMes.Items)
-                {
-                    if (item != row)
-                    {
-                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
-                    }
-                }
-
-                //se usa Para darle un color a la fila seleccionada  
-                e.Item.CssClass = "fila-seleccionada";
-
-              
-
-            }
-        }
-
-      
     }
 }

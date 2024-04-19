@@ -10,7 +10,7 @@
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="../../Recursos/CSS/Ventas/Licitaciones.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Licitaciones</title>
@@ -61,10 +61,10 @@
                                 <i class="bi bi-file-earmark"></i>
                             </a>
                             <asp:LinkButton class="icong disabled" runat="server" title="Grabar Licitacion" ID="GrabarLic" OnClick="Grabar">
-                                 <i class="bi bi-save2"></i>
+                               <i class="bi bi-floppy-fill"></i>
                             </asp:LinkButton>
 
-                            <asp:CheckBox ID="estadoLicitacion" runat="server"  />
+                            <asp:CheckBox ID="estadoLicitacion" runat="server" />
 
 
                             <a class="icong disabled" href="#" title="Modificar Licitacion" id="ModificarLic" runat="server" onclick="ModificarLic()">
@@ -464,7 +464,7 @@
                                 <div class="col-3">
                                     <div class="input-group input-group-sm  input-group-sm mb-2 gap-2">
                                         <label class="form-label" runat="server" id="lbEstado1">Estado</label>
-                                        <asp:DropDownList class="form-control" ID="ddlEstado1" runat="server" DataTextField="Estado" DataValueField="Estado" DataSourceID="Estados"  OnDataBound="ddlEstado1_DataBound"></asp:DropDownList>
+                                        <asp:DropDownList class="form-control" ID="ddlEstado1" runat="server" DataTextField="Estado" DataValueField="Estado" DataSourceID="Estados" OnDataBound="ddlEstado1_DataBound"></asp:DropDownList>
                                         <asp:SqlDataSource runat="server" ID="Estados" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand=" select EstadoLicitacion As Estado, Id_EstadoLicitacion As IdLicitacion from tblEstadoLicitacion where activa = 1 order by id_EstadoLicitacion asc"></asp:SqlDataSource>
                                     </div>
                                 </div>
@@ -670,11 +670,11 @@
             var checkBox = document.getElementById('<%= estadoLicitacion.ClientID %>');
 
             if (checkBox.checked === false) {
-                    checkBox.checked = true;
-                }
-           
+                checkBox.checked = true;
+            }
 
-          
+
+
 
 
 
@@ -793,10 +793,10 @@
             }
 
             var checkBox = document.getElementById('<%= estadoLicitacion.ClientID %>');
-                if (checkBox.checked === true) {
-                    checkBox.checked = false;
-                }
-           
+            if (checkBox.checked === true) {
+                checkBox.checked = false;
+            }
+
 
 
 

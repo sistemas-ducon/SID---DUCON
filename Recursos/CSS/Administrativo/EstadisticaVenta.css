@@ -17,6 +17,7 @@
     top: 0;
     z-index: 1;
     background-color: #f2f2f2; /* Ajusta el color de fondo del encabezado según tus preferencias */
+    white-space: nowrap;
 }
 
 
