@@ -1627,7 +1627,7 @@
                 var checkBox = document.getElementById(checkBoxId);
 
                 if (checkBox) {
-                    checkBox.disabled = false; // Habilita el CheckBox
+                    checkBox.disabled = true; // Habilita el CheckBox
                 }
             }
 
@@ -1702,7 +1702,7 @@
                 var checkBox = document.getElementById(checkBoxId);
 
                 if (checkBox) {
-                    checkBox.disabled = false; // Habilita el CheckBox
+                    checkBox.disabled = true; // Habilita el CheckBox
                 }
             }
 

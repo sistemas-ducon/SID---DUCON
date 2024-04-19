@@ -2058,10 +2058,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         txtSaldo.Text = leer["Saldo"].ToString();
                         txtDiseño.Text = leer["Diseño"].ToString();
 
-                        if (Convert.ToBoolean(Session["NuevaOTEjecutada"]?.ToString()) == true || Convert.ToBoolean(Session["BtnModificarEjecutado"]?.ToString()) == true)
-                        {
-                            txtVenta.Text = leer["Saldo"].ToString();
-                        }
+                       
+                         txtVenta.Text = leer["Saldo"].ToString();
+                        
                         txtDcto.Text = leer["Descuento"].ToString();
                         txtComision.Text = leer["DescuentoComision"].ToString();
 
