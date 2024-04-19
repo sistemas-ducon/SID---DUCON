@@ -33,7 +33,6 @@ using System.Text;
 
 
 
-
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
     public partial class Diseño_Venta : System.Web.UI.Page
@@ -213,6 +212,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             scripTabDise();
             habilitarbotonesRece();
             BtnProgramar.Text = "TERMINAR";
+            ValidarBotonTerminarRecep();
+
+            if (Session["NumeroDiseño2"] != null && !string.IsNullOrEmpty(Session["NumeroDiseño2"].ToString()))
+            {           
+                    ProcesarNumeroDiseño2(null);                       
+            }
+
         }
 
         protected void AccionesAlCargarDiseño()
@@ -287,68 +293,130 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BtnProgramar_Click(object sender, EventArgs e)
         {
-            string diseño = lblNumDise.Text + " - ";
+            string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Ventas")
+            {
+                string diseño = lblNumDise.Text;
 
-            string contenidoModalOT = "Una Vez aprobado el Diseño, no podra realizarle modificaciones, esta seguro de aprobar el diseño: " + diseño + ", para dibujo y despiece?";
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ProgramarDiseño').modal('show'); $('#ProgramarDiseño2').text('" + contenidoModalOT + "');", true);
+                string contenidoModalOT = "Una Vez aprobado el Diseño, no podra realizarle modificaciones, esta seguro de aprobar el diseño: " + diseño + ", para dibujo y despiece?";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ProgramarDiseño').modal('show'); $('#ProgramarDiseño2').text('" + contenidoModalOT + "');", true);
+
+            }
+            else if (tipoAccion == "Recepcion")
+            {
+                string diseño = lblNumDise.Text + " - ";
+                string nombreDiseño = TextBox5.Text;
+
+                string contenidoModalOT = "Esta seguro de terminar el diseño: " + diseño + nombreDiseño + " en el proceso de cotizacion?";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ProgramarDiseñoCotizacion').modal('show'); $('#ProgramarDiseñoCotizacion2').text('" + contenidoModalOT + "');", true);
+            }
+
+          
 
         }
 
         protected void ProgramarDiseño_Click(object sender, EventArgs e)
         {
-            // Obtener la fecha programada de entrega desde el TextBox TextEntrega
-            DateTime fechaActual = DateTime.Now;
+          
 
-            // Obtener el valor del número de diseño desde el label
-            string numeroDiseño = lblNumDise.Text;
+                // Obtener la fecha programada de entrega desde el TextBox TextEntrega
+                DateTime fechaActual = DateTime.Now;
 
-
-            DateTime fechaIngresoDiseño = DateTime.Parse(TextIngDis.Text);
-
-            // Obtener la fecha de activación desde el TextBox TextUltAc
-            DateTime fechaActivacion = DateTime.Parse(TextUltAc.Text);
+                // Obtener el valor del número de diseño desde el label
+                string numeroDiseño = lblNumDise.Text;
 
 
-            // Sumar 3 días hábiles a partir de la fecha actual
-            DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual, 3);
+                DateTime fechaIngresoDiseño = DateTime.Parse(TextIngDis.Text);
 
-            // Asignar la fecha programada de entrega al TextBox
-            TextEntrega.Text = fechaProgramadaEntrega.ToString("yyyy-MM-ddTHH:mm");
+                // Obtener la fecha de activación desde el TextBox TextUltAc
+                DateTime fechaActivacion = DateTime.Parse(TextUltAc.Text);
 
-            // Comparación y actualización de la fecha de SC
-            DateTime dtpFechaSC = DateTime.Parse(TextFec.Text);
 
-            if (fechaProgramadaEntrega > dtpFechaSC)
-            {
-                dtpFechaSC = fechaProgramadaEntrega.Date;
-                // Aquí puedes decidir si también deseas actualizar dtpHoraSC
+                // Sumar 3 días hábiles a partir de la fecha actual
+                DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual, 3);
+
+                // Asignar la fecha programada de entrega al TextBox
+                TextEntrega.Text = fechaProgramadaEntrega.ToString("yyyy-MM-ddTHH:mm");
+
+                // Comparación y actualización de la fecha de SC
+                DateTime dtpFechaSC = DateTime.Parse(TextFec.Text);
+
+                if (fechaProgramadaEntrega > dtpFechaSC)
+                {
+                    dtpFechaSC = fechaProgramadaEntrega.Date;
+                    // Aquí puedes decidir si también deseas actualizar dtpHoraSC
+                }
+
+                // Realizar la actualización en la base de datos
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string updateQuery = "UPDATE tblDiseño SET ProgramadoVentas = 1, Fecha_Ingreso = @FechaIngreso, Fecha_Programada_Entrega = @FechaProgramadaEntrega, UltimaActivacion = @UltimaActivacion, PactodeEntrega = @PactodeEntrega WHERE Numero_Diseño = @NumeroDiseño";
+
+                    using (SqlCommand cmd = new SqlCommand(updateQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@NumeroDiseño", numeroDiseño);
+                        cmd.Parameters.AddWithValue("@FechaIngreso", fechaIngresoDiseño);
+                        cmd.Parameters.AddWithValue("@FechaProgramadaEntrega", fechaProgramadaEntrega);
+                        cmd.Parameters.AddWithValue("@UltimaActivacion", fechaActivacion);
+                        cmd.Parameters.AddWithValue("@PactodeEntrega", fechaProgramadaEntrega);
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            Session["NumeroDiseño2"] = numeroDiseño;
+
+
+                            string mensajePersonalizado = "Diseño Programado exitosamente!";
+                            string urlRedireccion = "Ventas/Diseño_Venta.aspx";
+                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+                            // Si se actualizaron filas, se deshabilita el botón y se cambia su clase CSS
+                            BtnProgramar.Enabled = false;
+                            BtnProgramar.CssClass = "button-disabled form-control";
+                        }
+                        else
+                        {
+
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
+
+                            // Si no se actualizaron filas, se mantiene el botón habilitado y se cambia su clase CSS
+                            BtnProgramar.Enabled = true;
+                            BtnProgramar.CssClass = "button-enabled form-control";
+                        }
+                    
+                }
+
             }
+           
+        }
 
-            // Realizar la actualización en la base de datos
+        protected void ProgramarDiseñoCotizacion_Click(object sender, EventArgs e)
+        {
+            string diseño = lblNumDise.Text;
+
+            // Actualizar la tabla tblDiseño estableciendo CotizaciónOK en 1
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string query = "UPDATE tblDiseño SET CotizaciónOK = 1 WHERE Numero_Diseño = @Numero_Diseño";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                connection.Open();
-
-                string updateQuery = "UPDATE tblDiseño SET ProgramadoVentas = 1, Fecha_Ingreso = @FechaIngreso, Fecha_Programada_Entrega = @FechaProgramadaEntrega, UltimaActivacion = @UltimaActivacion, PactodeEntrega = @PactodeEntrega WHERE Numero_Diseño = @NumeroDiseño";
-
-                using (SqlCommand cmd = new SqlCommand(updateQuery, connection))
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    cmd.Parameters.AddWithValue("@NumeroDiseño", numeroDiseño);
-                    cmd.Parameters.AddWithValue("@FechaIngreso", fechaIngresoDiseño);
-                    cmd.Parameters.AddWithValue("@FechaProgramadaEntrega", fechaProgramadaEntrega);
-                    cmd.Parameters.AddWithValue("@UltimaActivacion", fechaActivacion);
-                    cmd.Parameters.AddWithValue("@PactodeEntrega", fechaProgramadaEntrega);
-
-                    int rowsAffected = cmd.ExecuteNonQuery();
+                    command.Parameters.AddWithValue("@Numero_Diseño", diseño);
+                    connection.Open();            
+                    int rowsAffected = command.ExecuteNonQuery();
 
                     if (rowsAffected > 0)
                     {
-                        Session["NumeroDiseño2"] = numeroDiseño;
+                        Session["NumeroDiseño2"] = diseño;
 
 
-                        string mensajePersonalizado = "Diseño Programado exitosamente!";
+                        string mensajePersonalizado = "Diseño Terminado exitosamente!";
                         string urlRedireccion = "Ventas/Diseño_Venta.aspx";
                         Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
 
@@ -359,12 +427,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     else
                     {
 
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
-
-                        // Si no se actualizaron filas, se mantiene el botón habilitado y se cambia su clase CSS
-                        BtnProgramar.Enabled = true;
-                        BtnProgramar.CssClass = "button-enabled form-control";
                     }
+
                 }
             }
         }
@@ -1347,8 +1411,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (Session["CedulaLogeada"] != null)
             {
                 string usuariologeado = Session["CedulaLogeada"].ToString();
-                DropDownList1.SelectedValue = usuariologeado;
+                if (DropDownList1.Items.FindByValue(usuariologeado) != null)
+                {
+                    DropDownList1.SelectedValue = usuariologeado;
+                }
+                else
+                {
+                  
+                    DropDownList1.SelectedValue = "";
+                }
             }
+
             else
             {
                 //NO SE ENCONTRO LA VIABLE DE SESSION ZONALOGEADA
@@ -1510,8 +1583,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             TextObsVen.Disabled = true;
             CheckEsyMat.Enabled = false;
-
-
         }
 
         protected void lnkClie_Click(object sender, EventArgs e)
@@ -1654,36 +1725,169 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void lnkCliee_Click(object sender, EventArgs e)
         {
-            // Obtén el LinkButton que se hizo clic
-            LinkButton lnkSelectRow = (LinkButton)sender;
-
-            // Obtén el índice de fila desde el CommandArgument
-            int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
-
-            // Accede a la fila seleccionada en el DataGrid
-            DataGridItem selectedRow = DataGrid4.Items[rowIndex];
-
-            // Almacena el nombre del archivo en la variable de sesión
-            Session["NumeroDiseño"] = selectedRow.Cells[2].Text;
-
-            // Deselecciona todas las filas previamente seleccionadas
-            foreach (DataGridItem item in DataGrid4.Items)
+            
+            string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Ventas")
             {
-                if (item != selectedRow)
+                // Obtén el LinkButton que se hizo clic
+                LinkButton lnkSelectRow = (LinkButton)sender;
+
+                // Obtén el índice de fila desde el CommandArgument
+                int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
+
+                // Accede a la fila seleccionada en el DataGrid
+                DataGridItem selectedRow = DataGrid4.Items[rowIndex];
+
+                // Almacena el nombre del archivo en la variable de sesión
+                Session["NumeroDiseño"] = selectedRow.Cells[2].Text;
+
+                // Deselecciona todas las filas previamente seleccionadas
+                foreach (DataGridItem item in DataGrid4.Items)
                 {
-                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    if (item != selectedRow)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
                 }
+
+                Session["lnkClieeClicked"] = true;
+
+                BotonesCargarDise();
+
+                ValidarBotonOk();
+
+
+                DeshabilitarDivYContenido(miDiv);
+            }
+            else if (tipoAccion == "Recepcion")
+            {
+
+                // Obtén el LinkButton que se hizo clic
+                LinkButton lnkSelectRow = (LinkButton)sender;
+
+                // Obtén el índice de fila desde el CommandArgument
+                int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
+
+                // Accede a la fila seleccionada en el DataGrid
+                DataGridItem selectedRow = DataGrid4.Items[rowIndex];
+
+                // Almacena el nombre del archivo en la variable de sesión
+                Session["NumeroDiseño"] = selectedRow.Cells[2].Text;
+
+                // Deselecciona todas las filas previamente seleccionadas
+                foreach (DataGridItem item in DataGrid4.Items)
+                {
+                    if (item != selectedRow)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+                Session["lnkClieeClicked"] = true;
+
+                BotonesCargarDise();
+
+                DeshabilitarDivYContenido(miDiv);
+
+                ValidarBotonTerminarRecep();
+
+                ValidarBotonRegresarDise();
             }
 
-            Session["lnkClieeClicked"] = true;
+          
 
-            BotonesCargarDise();
+        }
 
-            ValidarBotonOk();
+        protected void ValidarBotonTerminarRecep()
+        {
+            // Verificar si la variable de sesión 'NumeroDiseño' tiene contenido
+            if (Session["NumeroDiseño"] != null && !string.IsNullOrEmpty(Session["NumeroDiseño"].ToString()))
+            {
+                string numeroDiseño = Session["NumeroDiseño"].ToString();
 
+                // Consulta SQL para verificar si el diseño está terminado y la cotización no está OK
+                string consulta = "SELECT TerminadoDibujo, CotizaciónOK FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseño AND TerminadoDibujo = 1 AND CotizaciónOK = 0";
 
-            DeshabilitarDivYContenido(miDiv);
+                // Establecer la conexión con la base de datos y ejecutar la consulta
+                using (SqlConnection conexion = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+                {
+                    using (SqlCommand comando = new SqlCommand(consulta, conexion))
+                    {
+                        // Agregar parámetro para evitar SQL injection
+                        comando.Parameters.AddWithValue("@NumeroDiseño", numeroDiseño);
 
+                        // Abrir conexión y ejecutar consulta
+                        conexion.Open();
+                        SqlDataReader reader = comando.ExecuteReader();
+
+                        // Verificar si la consulta arrojó resultados
+                        if (reader.HasRows)
+                        {
+                            // Si hay resultados, habilitar el botón BtnProgramar
+                            BtnProgramar.Enabled = true;
+                            BtnProgramar.CssClass = "btn btn-sm shadow btn-warning fw-bold";
+                            LinkButton2.Enabled = true;
+                            LinkButton2.CssClass = "btn btn-sm shadow button-enabled";
+                        }
+                        else
+                        {
+                            // Si no hay resultados, deshabilitar el botón BtnProgramar
+                            BtnProgramar.Enabled = false;
+                            BtnProgramar.CssClass = "btn btn-sm shadow btn-warning fw-bold";
+                            LinkButton2.Enabled = false;
+                            LinkButton2.CssClass = "btn btn-sm shadow button-disabled";
+                        }
+
+                        // Cerrar la conexión y liberar recursos
+                        reader.Close();
+                        conexion.Close();
+                    }
+                }
+            }       
+        }
+
+        protected void ValidarBotonRegresarDise()
+        {
+            // Verificar si la variable de sesión 'NumeroDiseño' tiene contenido
+            if (Session["NumeroDiseño"] != null && !string.IsNullOrEmpty(Session["NumeroDiseño"].ToString()))
+            {
+                string numeroDiseño = Session["NumeroDiseño"].ToString();
+
+                // Consulta SQL para verificar si el diseño está terminado y la cotización no está OK
+                string consulta = "SELECT TerminadoDibujo, CotizaciónOK FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseño AND TerminadoDibujo = 1 AND CotizaciónOK = 0";
+
+                // Establecer la conexión con la base de datos y ejecutar la consulta
+                using (SqlConnection conexion = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+                {
+                    using (SqlCommand comando = new SqlCommand(consulta, conexion))
+                    {
+                        // Agregar parámetro para evitar SQL injection
+                        comando.Parameters.AddWithValue("@NumeroDiseño", numeroDiseño);
+
+                        // Abrir conexión y ejecutar consulta
+                        conexion.Open();
+                        SqlDataReader reader = comando.ExecuteReader();
+
+                        // Verificar si la consulta arrojó resultados
+                        if (reader.HasRows)
+                        {
+                            // Si hay resultados, habilitar el botón BtnProgramar
+                            RegresarDiseño.Enabled = true;
+                            RegresarDiseño.CssClass = "btn btn-sm shadow button-enabled";
+                        }
+                        else
+                        {
+                            // Si no hay resultados, deshabilitar el botón BtnProgramar
+                            RegresarDiseño.Enabled = false;
+                            RegresarDiseño.CssClass = "btn btn-sm shadow button-disabled";
+                        }
+
+                        // Cerrar la conexión y liberar recursos
+                        reader.Close();
+                        conexion.Close();
+                    }
+                }
+            }
         }
 
         protected void BotonesCargarDise()
@@ -1724,9 +1928,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Habilitar el botón "ActualizarDiseno"
                 ActualizarDiseno.Enabled = true;
                 ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
-
-                RegresarDiseño.Enabled = true;
-                RegresarDiseño.CssClass = "btn btn-sm shadow button-enabled";
+         
 
                 // Habilitar el botón "Modificar"
                 Modificar.Enabled = false;
@@ -1739,8 +1941,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 AdicionarElemento.Enabled = true;
                 AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled";
 
-                LinkButton2.Enabled = false;
-                LinkButton2.CssClass = "btn btn-sm button-disabled";
+                LinkButton2.Enabled = true;
+                LinkButton2.CssClass = "btn btn-sm button-enabled";
             }
         }
 
@@ -2981,19 +3183,29 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             }
                         }
 
-                        // Validar ProgramadoVentas
-                        if (programadoVentas)
+                        string tipoAccion = Session["Diseno"] as string;
+                        if (tipoAccion == "Ventas")
                         {
-                            // ProgramadoVentas es 1, deshabilitar los botones
-                            BtnProgramar.Enabled = false;
+                            // Validar ProgramadoVentas
+                            if (programadoVentas)
+                            {
+                                // ProgramadoVentas es 1, deshabilitar los botones
+                                BtnProgramar.Enabled = false;
 
+                            }
+                            else
+                            {
+                                // ProgramadoVentas es 0, habilitar los botones
+                                BtnProgramar.Enabled = true;
+
+                            }
                         }
-                        else
+                        else if (tipoAccion == "Recepcion")
                         {
-                            // ProgramadoVentas es 0, habilitar los botones
-                            BtnProgramar.Enabled = true;
-
+                            ValidarBotonTerminarRecep();
                         }
+
+                       
                     }
 
                     using (SqlCommand command = new SqlCommand("sp_FormularioDisBita", connection))
@@ -3158,6 +3370,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Actualizar el panel de diseño de bitácora
                 UpdateDiseñoBitacora.Update();
             }
+
+            Session.Remove("NumeroDiseño");
         }
 
         private void ProcesarNumeroDiseño2(DataGridCommandEventArgs e)
@@ -3196,18 +3410,26 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             }
                         }
 
-                        // Validar ProgramadoVentas
-                        if (programadoVentas)
+                        string tipoAccion = Session["Diseno"] as string;
+                        if (tipoAccion == "Ventas")
                         {
-                            // ProgramadoVentas es 1, deshabilitar los botones
-                            BtnProgramar.Enabled = false;
+                            // Validar ProgramadoVentas
+                            if (programadoVentas)
+                            {
+                                // ProgramadoVentas es 1, deshabilitar los botones
+                                BtnProgramar.Enabled = false;
 
+                            }
+                            else
+                            {
+                                // ProgramadoVentas es 0, habilitar los botones
+                                BtnProgramar.Enabled = true;
+
+                            }
                         }
-                        else
+                        else if (tipoAccion == "Recepcion")
                         {
-                            // ProgramadoVentas es 0, habilitar los botones
-                            BtnProgramar.Enabled = true;
-
+                            ValidarBotonTerminarRecep();
                         }
                     }
 
@@ -3378,6 +3600,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Actualizar el panel de diseño de bitácora
                 UpdateDiseñoBitacora.Update();
             }
+
+            Session.Remove("NumeroDiseño2");
         }
 
         protected void DataGridSC(object source, DataGridCommandEventArgs e)
@@ -3813,46 +4037,63 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         //EVENTOS RECEPCION
 
+        //EVENTOS RECEPCION
+
         protected void VisualizarCotPrecioActual_Click(object sender, EventArgs e)
         {
             // Crear un nuevo libro de Excel
             IWorkbook workbook = new HSSFWorkbook();
+    
+            CreateCotizacionSheet(workbook.CreateSheet("Cotizacion"));
+            CreateCotizacionSheet(workbook.CreateSheet("Cotizacion Detallada"));
 
-            // Crear las tres hojas requeridas
-            ISheet cotizacionSheet = workbook.CreateSheet("Cotizacion");
-            ISheet cotizacionDetalladaSheet = workbook.CreateSheet("Cotizacion Detallada");
-            ISheet condicionesComercialesSheet = workbook.CreateSheet("Condiciones Comerciales");
+            // Guardar y descargar el archivo de Excel
+            DownloadExcelFile(workbook);
+        }
+
+        // Método para crear una hoja de cotización
+        private void CreateCotizacionSheet(ISheet sheet)
+        {
+            // Llenar la hoja de Cotizacion Detallada
+            if (sheet.SheetName == "Cotizacion Detallada")
+            {
+                FillCotizacionDetalladaSheet(sheet);
+            }
 
             // Llenar la hoja de Cotizacion Detallada
-            FillCotizacionDetalladaSheet(cotizacionDetalladaSheet);
+            if (sheet.SheetName == "Cotizacion")
+            {
+                // Llenar la hoja de Cotizacion
+                FillCotizacionSheet(sheet);
+            }
 
-            // Crear el estilo de fuente
-            IFont font = workbook.CreateFont();
+            // Crear el estilo de fuente y establecer la fuente
+            IFont font = sheet.Workbook.CreateFont();
             font.FontName = "Century Gothic";
             font.FontHeightInPoints = 11;
             font.IsBold = true;
 
             // Crear el estilo de celda y establecer la fuente
-            ICellStyle style = workbook.CreateCellStyle();
+            ICellStyle style = sheet.Workbook.CreateCellStyle();
             style.SetFont(font);
 
-            // Crear la fila y las celdas
-            IRow fechaRow = cotizacionDetalladaSheet.CreateRow(0);
+            // Crear la fila y las celdas para la fecha y el número de cotización
+            IRow fechaRow = sheet.CreateRow(0);
             ICell fechaCell = fechaRow.CreateCell(1);
-            fechaCell.SetCellValue("Sabaneta,   " + DateTime.Now.ToString("MMMM   d") + "  de  " + DateTime.Now.ToString("yyyy"));
+            fechaCell.SetCellValue($"Sabaneta, {DateTime.Now.ToString("MMMM d")} de {DateTime.Now.ToString("yyyy")}");
             fechaCell.CellStyle = style;
 
-            ICell senoresCell = fechaRow.CreateCell(4);
-            senoresCell.SetCellValue("Cotizacion N°");
-            senoresCell.CellStyle = style;
+            ICell cotizacionCell = fechaRow.CreateCell(4);
+            cotizacionCell.SetCellValue("Cotizacion N°");
+            cotizacionCell.CellStyle = style;
 
-            fechaRow.HeightInPoints = cotizacionDetalladaSheet.DefaultRowHeightInPoints * 4;
+            fechaRow.HeightInPoints = sheet.DefaultRowHeightInPoints * 4;
 
             // Agregar fila vacía después del encabezado
-            cotizacionDetalladaSheet.CreateRow(2);
+            sheet.CreateRow(2);
 
             // Agregar "Señores" en negrita en la celda B4
-            IRow senoresRow1 = cotizacionDetalladaSheet.CreateRow(3);
+            IRow senoresRow1 = sheet.CreateRow(3);
             ICell senoresCell1 = senoresRow1.CreateCell(1);
             senoresCell1.SetCellValue("Señores");
             senoresCell1.CellStyle = style;
@@ -3861,39 +4102,37 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             int currentRow = 4;
             foreach (var dato in new List<string> { TextContacto.Text, TextCliente.Text, "Ciudad" })
             {
-                IRow dataRow = cotizacionDetalladaSheet.CreateRow(currentRow++);
+                IRow dataRow = sheet.CreateRow(currentRow++);
                 ICell dataCell = dataRow.CreateCell(1);
                 dataCell.SetCellValue(dato);
                 dataCell.CellStyle = style;
             }
 
             // Agregar fila vacía después del encabezado
-            cotizacionDetalladaSheet.CreateRow(7);
-
+            sheet.CreateRow(7);
 
             // Agregar "Diseño: lblNumDise.Text" en negrita en la celda E1
-            IRow opcionRow = cotizacionDetalladaSheet.CreateRow(1);
+            IRow opcionRow = sheet.CreateRow(1);
             ICell opcionCell = opcionRow.CreateCell(4);
             opcionCell.SetCellValue("Diseño: " + lblNumDise.Text);
 
             // Agregar "REF. " + TextProyecto.Text en negrita en la celda B8
-            IRow refRow = cotizacionDetalladaSheet.CreateRow(8);
+            IRow refRow = sheet.CreateRow(8);
             ICell refCell = refRow.CreateCell(1);
             refCell.SetCellValue("REF. " + TextProyecto.Text);
             refCell.CellStyle = style;
 
             // Agregar fila vacía después del encabezado
-            cotizacionDetalladaSheet.CreateRow(9);
+            sheet.CreateRow(9);
 
             // Agregar el texto en las celdas fusionadas
-            IRow row11 = cotizacionDetalladaSheet.CreateRow(10);
-            IRow row12 = cotizacionDetalladaSheet.CreateRow(11);
+            IRow row11 = sheet.CreateRow(10);
+            IRow row12 = sheet.CreateRow(11);
 
             // Fusionar celdas desde B11 hasta F11
-            cotizacionDetalladaSheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(10, 10, 1, 5));
+            sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(10, 10, 1, 5));
             // Fusionar celdas desde B12 hasta F12
-            cotizacionDetalladaSheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(11, 11, 1, 5));
-
+            sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(11, 11, 1, 5));
 
             // Establecer el contenido en las celdas fusionadas
             ICell mergedCell11 = row11.CreateCell(1);
@@ -3903,11 +4142,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             mergedCell11.CellStyle = style;
             mergedCell12.CellStyle = style;
 
-            cotizacionDetalladaSheet.CreateRow(12);
-            cotizacionDetalladaSheet.CreateRow(13);
+            sheet.CreateRow(12);
+            sheet.CreateRow(13);
 
             // Agregar el contenido en la fila 14
-            IRow row14 = cotizacionDetalladaSheet.CreateRow(14);
+            IRow row14 = sheet.CreateRow(14);
 
             // En la celda B15
             ICell cellB15 = row14.CreateCell(1);
@@ -3934,7 +4173,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             cellG15.SetCellValue("Imagen");
 
             // Crear el estilo de borde más delgado
-            ICellStyle borderStyle = workbook.CreateCellStyle();
+            ICellStyle borderStyle = sheet.Workbook.CreateCellStyle();
             borderStyle.BorderBottom = NPOI.SS.UserModel.BorderStyle.Medium;
             borderStyle.BorderLeft = NPOI.SS.UserModel.BorderStyle.Medium;
             borderStyle.BorderRight = NPOI.SS.UserModel.BorderStyle.Medium;
@@ -3947,13 +4186,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 if (cell != null)
                 {
                     // Crear el estilo de fuente y establecer la fuente
-                    IFont fontCenturyGothic = workbook.CreateFont();
+                    IFont fontCenturyGothic = sheet.Workbook.CreateFont();
                     fontCenturyGothic.FontName = "Century Gothic";
                     fontCenturyGothic.FontHeightInPoints = 10;
                     fontCenturyGothic.IsBold = true;
 
                     // Crear el estilo de celda y establecer la fuente
-                    ICellStyle styleCenturyGothic = workbook.CreateCellStyle();
+                    ICellStyle styleCenturyGothic = sheet.Workbook.CreateCellStyle();
                     styleCenturyGothic.SetFont(fontCenturyGothic);
                     styleCenturyGothic.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Center;
 
@@ -3967,32 +4206,286 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
-            row14.HeightInPoints = cotizacionDetalladaSheet.DefaultRowHeightInPoints * 2;
+            row14.HeightInPoints = sheet.DefaultRowHeightInPoints * 2;
 
-            cotizacionDetalladaSheet.AutoSizeColumn(5);
+            sheet.AutoSizeColumn(5);
 
-            // Ajustar el ancho de todas las columnas en la hoja Cotizacion Detallada
-            for (int i = 0; i < cotizacionDetalladaSheet.GetRow(0).LastCellNum; i++)
+            // Ajustar el ancho de todas las columnas en la hoja
+            for (int i = 0; i < sheet.GetRow(0).LastCellNum; i++)
             {
-                cotizacionDetalladaSheet.AutoSizeColumn(i);
+                sheet.AutoSizeColumn(i);
             }
 
             int anchoMaximo = 60 * 256;
-            cotizacionDetalladaSheet.SetColumnWidth(1, anchoMaximo);
+            sheet.SetColumnWidth(1, anchoMaximo);
 
-            // Guardar el archivo de Excel modificado en una ubicación temporal
+
+
+        }
+
+        // Método para guardar y descargar el archivo de Excel
+        private void DownloadExcelFile(IWorkbook workbook)
+        {
             string tempFilePath = Path.GetTempFileName() + ".xls";
             using (FileStream tempFileStream = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write))
             {
                 workbook.Write(tempFileStream);
             }
 
-            // Descargar el archivo de Excel modificado
             Response.Clear();
             Response.ContentType = "application/vnd.ms-excel";
             Response.AddHeader("content-disposition", "attachment; filename=Datos.xls");
             Response.TransmitFile(tempFilePath);
             Response.End();
+        }
+
+        // Método para llenar la hoja de Cotizacion   
+        private void FillCotizacionSheet(ISheet cotizacionSheet)
+        {
+            // Aplicar la lógica aquí
+            // Obtener el número de diseño de la etiqueta lblNumDise
+            string numeroDiseño = lblNumDise.Text;
+
+            // Crear estilo para el texto en negrita y color gris oscuro
+            IWorkbook workbook = cotizacionSheet.Workbook;
+            ICellStyle estiloNegritaGris = workbook.CreateCellStyle();
+            IFont fuenteNegrita = workbook.CreateFont();
+            fuenteNegrita.IsBold = true;
+            fuenteNegrita.Color = IndexedColors.Black.Index;
+            fuenteNegrita.FontName = "Century Gothic";
+            fuenteNegrita.FontHeightInPoints = 11;
+            estiloNegritaGris.SetFont(fuenteNegrita);
+            estiloNegritaGris.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+            estiloNegritaGris.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+            estiloNegritaGris.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
+
+            // Consulta SQL para obtener las opciones del número de diseño
+            string consultaOpciones = $@"SELECT DISTINCT tblPlanoDiseño.Opcion 
+                            FROM tblPlano 
+                            INNER JOIN tblPlanoDiseño ON tblPlano.Plano = tblPlanoDiseño.Plano 
+                            WHERE tblPlanoDiseño.Numero_Diseño = '{numeroDiseño}'";
+
+            // Lista para almacenar las opciones
+            List<string> opcionesList = new List<string>();
+
+            // Ejecutar la consulta SQL para obtener las opciones
+            using (SqlConnection conexion = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                using (SqlCommand comando = new SqlCommand(consultaOpciones, conexion))
+                {
+                    conexion.Open();
+                    SqlDataReader reader = comando.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        string opcion = reader["Opcion"].ToString();
+                        opcionesList.Add(opcion);
+                    }
+                }
+            }
+
+            // Convertir la lista de opciones a un array
+            string[] opciones = opcionesList.ToArray();
+
+            // Fila inicial para insertar los resultados
+            int currentRow = 15;
+
+            // Recorrer cada opción
+            foreach (string opcion in opciones)
+            {
+                // Realizar la consulta SQL para obtener los datos de la opción actual
+                string consultaSQL = $@"SELECT tblPlanoDiseño.*, 
+                    tblPlano.RealizadoPor, 
+                    tblPlano.Area, 
+                    tblPlano.Plano,
+
+                    ISNULL(
+                        (
+                            SELECT 
+                                SUM(tblPlano_Panel.Cantidad * tblPanel.Precio_Venta) 
+                            FROM 
+                                tblPlano 
+                                INNER JOIN tblPlano_Panel ON tblPlano.Plano = tblPlano_Panel.Id_Plano 
+                                INNER JOIN tblPanel ON tblPlano_Panel.Id_PanelNum = tblPanel.Id_Numerico 
+                                INNER JOIN tblGrupoObjeto ON tblPanel.Id_GrupoObjeto = tblGrupoObjeto.ID_GrupoObjeto 
+                            WHERE 
+                                tblGrupoObjeto.Cotizar = 1 
+                            GROUP BY 
+                                tblPlano.Plano 
+                            HAVING 
+                                tblPlano.Plano = tblPlanoDiseño.Plano
+                        ), 
+                        0
+                    ) AS SubTotalActualZona 
+            FROM tblPlano 
+            INNER JOIN tblPlanoDiseño ON tblPlano.Plano = tblPlanoDiseño.Plano 
+            WHERE tblPlanoDiseño.Numero_Diseño = '{numeroDiseño}' AND Opcion = '{opcion}'
+            ORDER BY opcion, tblPlano.Plano ASC";
+
+                // Ejecutar la consulta y obtener los resultados
+                DataTable resultados = new DataTable();
+                using (SqlConnection conexion = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+                {
+                    using (SqlCommand comando = new SqlCommand(consultaSQL, conexion))
+                    {
+                        conexion.Open();
+                        SqlDataAdapter adaptador = new SqlDataAdapter(comando);
+                        adaptador.Fill(resultados);
+                    }
+                }
+
+                // Si hay al menos un resultado, agregar el texto de la opción en negrita
+                if (resultados.Rows.Count > 0)
+                {
+                    // Agregar una fila vacía si no es la primera opción
+                    if (currentRow > 15)
+                    {
+                        currentRow++;
+                    }
+
+                    // Agregar el texto de la opción en negrita en la columna B
+                    IRow opcionRow = cotizacionSheet.CreateRow(currentRow++);
+                    ICell opcionCell = opcionRow.CreateCell(1);
+                    opcionCell.SetCellValue($"OPCIÓN: {opcion}");
+                    IFont fontOpcion = workbook.CreateFont();
+                    fontOpcion.FontName = "Century Gothic";
+                    fontOpcion.FontHeightInPoints = 11;
+                    fontOpcion.IsBold = true;
+                    ICellStyle styleOpcion = workbook.CreateCellStyle();
+                    styleOpcion.SetFont(fontOpcion);
+                    opcionCell.CellStyle = styleOpcion;
+
+                    // Crear un nuevo estilo para el texto con tipo de letra 'Century Gothic' y tamaño de letra 11
+                    ICellStyle estiloCentGothic11 = workbook.CreateCellStyle();
+                    IFont fuenteCentGothic11 = workbook.CreateFont();
+                    fuenteCentGothic11.FontName = "Century Gothic";
+                    fuenteCentGothic11.FontHeightInPoints = 11;
+                    estiloCentGothic11.SetFont(fuenteCentGothic11);
+
+                    // Agregar los resultados de la consulta a la hoja de Excel
+                    foreach (DataRow fila in resultados.Rows)
+                    {
+                        // Agregar el valor del área y de la composición en la misma fila y columna B
+                        IRow zonaRow2 = cotizacionSheet.CreateRow(currentRow++);
+                        ICell areaCell = zonaRow2.CreateCell(1);
+                        string areaYComposicion = $"{fila["Area"]}\n{fila["Composicion"]}";
+                        areaCell.SetCellValue(areaYComposicion);
+                        areaCell.CellStyle = estiloCentGothic11;
+                        areaCell.CellStyle.WrapText = true;
+
+                        // Agregar el valor de la cantidad en la columna C
+                        ICell cantidadCell = zonaRow2.CreateCell(3);
+                        cantidadCell.SetCellValue(Convert.ToDouble(fila["Cantidad"]));
+                        cantidadCell.CellStyle = estiloCentGothic11;
+
+                        IDataFormat formatoNumerico = workbook.CreateDataFormat();
+
+                        // Crear un nuevo estilo que combine los estilosCentGothic11 y estiloNumerico
+                        ICellStyle estiloSubtotal = workbook.CreateCellStyle();
+                        estiloSubtotal.CloneStyleFrom(estiloCentGothic11); // Copiar propiedades del estiloCentGothic11
+                        estiloSubtotal.DataFormat = formatoNumerico.GetFormat("#,##0"); // Establecer formato numérico
+
+                        // Agregar el valor del subtotal en la columna D con los estilos combinados
+                        ICell subtotalCell = zonaRow2.CreateCell(4);
+                        double subtotalActualZona = Convert.ToDouble(fila["SubTotalActualZona"]);
+                        subtotalCell.SetCellValue(subtotalActualZona);
+                        subtotalCell.CellStyle = estiloSubtotal;
+
+                        // Crear un nuevo estilo que combine los estilosCentGothic11 y estiloNumerico para subtotalMultiplicadoCell
+                        ICellStyle estiloSubtotalMultiplicado = workbook.CreateCellStyle();
+                        estiloSubtotalMultiplicado.CloneStyleFrom(estiloCentGothic11); // Copiar propiedades del estiloCentGothic11
+                        estiloSubtotalMultiplicado.DataFormat = formatoNumerico.GetFormat("#,##0"); // Establecer formato numérico
+
+                        // Agregar el valor del subtotal multiplicado en la columna E con los estilos combinados
+                        ICell subtotalMultiplicadoCell = zonaRow2.CreateCell(5);
+                        double cantidad = Convert.ToDouble(fila["Cantidad"]);
+                        double subtotalMultiplicado = cantidad * subtotalActualZona;
+                        subtotalMultiplicadoCell.SetCellValue(subtotalMultiplicado);
+                        subtotalMultiplicadoCell.CellStyle = estiloSubtotalMultiplicado;
+
+
+                    }
+
+
+                }
+
+                // Crear una nueva fila para el total y el texto "TOTAL OPCION"
+                IRow totalRow = cotizacionSheet.CreateRow(currentRow++);
+
+                double total = ObtenerTotalSubTotalMultiplicadoCotizacion(numeroDiseño, opcion);
+
+                // Crear la celda en la columna 'B' (índice 1) para el texto "TOTAL OPCION"
+                ICell totalLabelCell = totalRow.CreateCell(1);
+                totalLabelCell.SetCellValue("TOTAL OPCION: " + opcion);
+
+                // Aplicar los estilos al texto "TOTAL OPCION"
+                IFont fontTotalLabel = workbook.CreateFont();
+                fontTotalLabel.FontName = "Century Gothic";
+                fontTotalLabel.FontHeightInPoints = 11;
+                fontTotalLabel.IsBold = true;
+                ICellStyle styleTotalLabel = workbook.CreateCellStyle();
+                styleTotalLabel.SetFont(fontTotalLabel);
+                totalLabelCell.CellStyle = styleTotalLabel;
+
+                // Crear la celda en la columna 'F' (índice 5) para el total
+                ICell totalCell = totalRow.CreateCell(5);
+
+                // Establecer el valor del total en la celda
+                totalCell.SetCellValue(total);
+
+                IDataFormat formatoNumerico1 = workbook.CreateDataFormat();
+
+                // Crear el estilo para el texto del total
+                IFont fontTotal = workbook.CreateFont();
+                fontTotal.FontName = "Century Gothic";
+                fontTotal.FontHeightInPoints = 11;
+                fontTotal.IsBold = true;
+                ICellStyle styleTotal = workbook.CreateCellStyle();
+                styleTotal.SetFont(fontTotal);
+
+                // Crear un nuevo estilo que combine los estilosCentGothic11 y estiloNumerico para el valor total
+                ICellStyle estiloTotal = workbook.CreateCellStyle();
+                estiloTotal.CloneStyleFrom(styleTotal); // Copiar propiedades del estiloCentGothic11
+                estiloTotal.DataFormat = formatoNumerico1.GetFormat("#,##0"); // Establecer formato numérico
+
+                // Combinar los estilos estiloTotal y styleTotal
+                estiloTotal.SetFont(fontTotal);
+
+                // Aplicar los estilos al valor del total
+                totalCell.CellStyle = estiloTotal;
+
+
+            }
+
+
+        }
+
+        private double ObtenerTotalSubTotalMultiplicadoCotizacion(string numeroDiseno, string opcion)
+        {
+            double total = 0;
+
+            // Realizar la consulta SQL para obtener el total multiplicado de los subtotales
+            string consultaSQL = $@"
+        SELECT ISNULL(SUM(tblPanel.Precio_Venta * tblPlano_Panel.Cantidad * tblPlanoDiseño.Cantidad), 0) AS TotalSubTotalMultiplicado
+        FROM tblDiseño 
+        INNER JOIN tblPlanoDiseño ON tblDiseño.Numero_Diseño = tblPlanoDiseño.Numero_Diseño
+        INNER JOIN tblPlano_Panel ON tblPlanoDiseño.Plano = tblPlano_Panel.Id_Plano 
+        INNER JOIN tblPanel ON tblPlano_Panel.Id_PanelNum = tblPanel.Id_Numerico 
+        INNER JOIN tblGrupoObjeto ON tblPanel.Id_GrupoObjeto = tblGrupoObjeto.ID_GrupoObjeto
+        WHERE (tblGrupoObjeto.Cotizar = 1) 
+        AND (tblDiseño.Numero_Diseño = '{numeroDiseno}')                            
+        AND (tblPlanoDiseño.Opcion = '{opcion}')";
+
+            // Ejecutar la consulta y obtener el total
+            using (SqlConnection conexion = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                using (SqlCommand comando = new SqlCommand(consultaSQL, conexion))
+                {
+                    conexion.Open();
+                    total = Convert.ToDouble(comando.ExecuteScalar());
+                }
+            }
+
+            return total;
         }
 
         private void FillCotizacionDetalladaSheet(ISheet cotizacionDetalladaSheet)
@@ -4015,8 +4508,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             estiloNegritaGris.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
             estiloNegritaGris.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
 
-            // Opciones disponibles
-            string[] opciones = { "1", "2", "3" };
+            // Consulta SQL para obtener las opciones del número de diseño
+            string consultaOpciones = $@"SELECT DISTINCT tblPlanoDiseño.Opcion 
+                            FROM tblPlano 
+                            INNER JOIN tblPlanoDiseño ON tblPlano.Plano = tblPlanoDiseño.Plano 
+                            WHERE tblPlanoDiseño.Numero_Diseño = '{numeroDiseño}'";
+
+            // Lista para almacenar las opciones
+            List<string> opcionesList = new List<string>();
+
+            // Ejecutar la consulta SQL para obtener las opciones
+            using (SqlConnection conexion = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                using (SqlCommand comando = new SqlCommand(consultaOpciones, conexion))
+                {
+                    conexion.Open();
+                    SqlDataReader reader = comando.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        string opcion = reader["Opcion"].ToString();
+                        opcionesList.Add(opcion);
+                    }
+                }
+            }
+
+            // Convertir la lista de opciones a un array
+            string[] opciones = opcionesList.ToArray();
+
+         
 
             // Fila inicial para insertar los resultados
             int currentRow = 15;
@@ -4108,6 +4627,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Agregar el valor del plano en la misma fila y columna G
                         ICell planoCellValue = zonaRow2.CreateCell(5);
                         planoCellValue.SetCellValue(fila["Plano"].ToString());
+      
 
                         // Aplicar el estilo a todas las celdas desde la columna 'B' hasta la columna 'G'
                         for (int i = 1; i <= 6; i++)
@@ -4133,11 +4653,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         // Agregar una fila vacía
                         opcionRow = cotizacionDetalladaSheet.CreateRow(currentRow++);
-                        currentRow++;
+                      
 
-                        // Ejecutar el procedimiento almacenado cta_Plano_Paneles
+                        
                         string plan = fila["Plano"].ToString();
-                   
+
                         // Obtener el valor de 'Cantidad' de tu consulta SQL
                         double cantidadConsultaSQL = Convert.ToDouble(fila["Cantidad"]);
 
@@ -4146,14 +4666,57 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         // Agregar una fila vacía después de los resultados del procedimiento almacenado
                         currentRow++;
+
                     }
                 }
 
-              
+                // Crear una nueva fila para el total y el texto "TOTAL OPCION"
+                IRow totalRow = cotizacionDetalladaSheet.CreateRow(currentRow++);
+
+                double total = ObtenerTotalSubTotalMultiplicadoCotizacion(numeroDiseño, opcion);
+
+                // Crear la celda en la columna 'B' (índice 1) para el texto "TOTAL OPCION"
+                ICell totalLabelCell = totalRow.CreateCell(1);
+                totalLabelCell.SetCellValue("TOTAL OPCION: " + opcion);
+
+                // Aplicar los estilos al texto "TOTAL OPCION"
+                IFont fontTotalLabel = workbook.CreateFont();
+                fontTotalLabel.FontName = "Century Gothic";
+                fontTotalLabel.FontHeightInPoints = 11;
+                fontTotalLabel.IsBold = true;
+                ICellStyle styleTotalLabel = workbook.CreateCellStyle();
+                styleTotalLabel.SetFont(fontTotalLabel);
+                totalLabelCell.CellStyle = styleTotalLabel;
+
+                // Crear la celda en la columna 'F' (índice 5) para el total
+                ICell totalCell = totalRow.CreateCell(5);
+
+                // Establecer el valor del total en la celda
+                totalCell.SetCellValue(total);
+
+                IDataFormat formatoNumerico1 = workbook.CreateDataFormat();
+
+                // Crear el estilo para el texto del total
+                IFont fontTotal = workbook.CreateFont();
+                fontTotal.FontName = "Century Gothic";
+                fontTotal.FontHeightInPoints = 11;
+                fontTotal.IsBold = true;
+                ICellStyle styleTotal = workbook.CreateCellStyle();
+                styleTotal.SetFont(fontTotal);
+
+                // Crear un nuevo estilo que combine los estilosCentGothic11 y estiloNumerico para el valor total
+                ICellStyle estiloTotal = workbook.CreateCellStyle();
+                estiloTotal.CloneStyleFrom(styleTotal); // Copiar propiedades del estiloCentGothic11
+                estiloTotal.DataFormat = formatoNumerico1.GetFormat("#,##0"); // Establecer formato numérico
+
+                // Combinar los estilos estiloTotal y styleTotal
+                estiloTotal.SetFont(fontTotal);
+
+                // Aplicar los estilos al valor del total
+                totalCell.CellStyle = estiloTotal;
 
             }
 
-            // Después del segundo bucle foreach
             // Agregar una fila vacía
             cotizacionDetalladaSheet.CreateRow(currentRow++);
 
@@ -4171,7 +4734,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             styleResumen.SetFont(fontResumen);
             resumenCell.CellStyle = styleResumen;
 
-           
+
 
             // Establecer la altura de la fila en 2 centímetros
             resumenRow.HeightInPoints = 2 * cotizacionDetalladaSheet.DefaultRowHeightInPoints;
@@ -4204,24 +4767,195 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 int cantidad = Convert.ToInt32(fila["Cantidad"]);
                 double subTotalActual = Convert.ToDouble(fila["SubTotalActual"]);
 
+                ICellStyle estiloCentGothic11 = workbook.CreateCellStyle();
+                IFont fuenteCentGothic11 = workbook.CreateFont();
+                fuenteCentGothic11.FontName = "Century Gothic";
+                fuenteCentGothic11.FontHeightInPoints = 11;
+                ICellStyle estiloCentGothic111 = workbook.CreateCellStyle();
+                estiloCentGothic111.SetFont(fuenteCentGothic11);
+
                 // Agregar los valores a la hoja de Excel
                 IRow row = cotizacionDetalladaSheet.CreateRow(ultimaFila++);
-                row.CreateCell(1).SetCellValue("OP" + opcion + "-" + descripcionGrupo);
-                row.CreateCell(3).SetCellValue(cantidad);
-                row.CreateCell(5).SetCellValue(subTotalActual);
+       
+                ICell totalCellDesOpcGru = row.CreateCell(1);
+                totalCellDesOpcGru.SetCellValue("OP" + opcion + "-" + descripcionGrupo);
+                totalCellDesOpcGru.CellStyle = estiloCentGothic111;
+
+                ICell totalCellCan = row.CreateCell(3);
+                totalCellCan.SetCellValue(cantidad);
+                totalCellCan.CellStyle = estiloCentGothic111;
+
+                // Crear la celda en la columna 'F' (índice 5) para el total
+                ICell totalCell = row.CreateCell(5);        
+                totalCell.SetCellValue(subTotalActual);
+
+                IDataFormat formatoNumerico1 = workbook.CreateDataFormat();
+
+                // Crear un nuevo estilo que combine los estilosCentGothic11 y estiloNumerico para el valor total
+                ICellStyle estiloTotal = workbook.CreateCellStyle();
+                estiloTotal.CloneStyleFrom(estiloCentGothic111); // Copiar propiedades del estiloCentGothic11
+                estiloTotal.DataFormat = formatoNumerico1.GetFormat("#,##0"); // Establecer formato numérico
+
+                // Combinar los estilos estiloTotal y styleTotal
+                estiloTotal.SetFont(fuenteCentGothic11);
+
+                // Aplicar los estilos al valor del total
+                totalCell.CellStyle = estiloTotal;
+
+              
+
+
             }
 
-        
+            IRow sumaRow8 = cotizacionDetalladaSheet.CreateRow(ultimaFila++);
 
+
+         
+
+
+            double totalCubicajeAcumulado = CalcularTotalCotizacion(cotizacionDetalladaSheet);
+
+
+            // Obtener la suma de los valores en la columna 9
+            double totalPesoKG = 0;
+            for (int rowIndex = 16; rowIndex < ultimaFila; rowIndex++)
+            {
+                IRow currentRow2 = cotizacionDetalladaSheet.GetRow(rowIndex);
+                if (currentRow2 != null)
+                {
+                    ICell cell = currentRow2.GetCell(10); // Columna 9 (índice 8)
+                    if (cell != null && cell.CellType == CellType.Numeric)
+                    {
+                        totalPesoKG += cell.NumericCellValue;
+                    }
+                }
+            }
+
+            ICellStyle estiloCentGothic1144 = workbook.CreateCellStyle();
+            IFont fuenteCentGothic114 = workbook.CreateFont();
+            fuenteCentGothic114.FontName = "Century Gothic";
+            fuenteCentGothic114.FontHeightInPoints = 11;
+            ICellStyle estiloCentGothic1114 = workbook.CreateCellStyle();
+            estiloCentGothic1114.SetFont(fuenteCentGothic114);
+
+
+            double totalCubicajeProyecto2 = CalcularTotalCubicajeProyecto(totalCubicajeAcumulado);
+
+          
+           
+            IRow sumaRow2 = cotizacionDetalladaSheet.CreateRow(ultimaFila++);
+            // Obtener el texto para la primera celda
+            string textoCelda1 = "TRANSPORTE DE " + totalCubicajeProyecto2.ToString("#.#") + "M3 A " + TextCiuPro.SelectedItem.Text;
+
+            // Crear una nueva celda en la columna 14 (contando desde 0) de la fila 1
+            ICell textoCelda12 = sumaRow2.CreateCell(1);
+            textoCelda12.CellStyle = estiloCentGothic1114;
+
+            // Establecer el valor de totalCubicajeProyecto en la celda
+            textoCelda12.SetCellValue(textoCelda1);
+
+           
+            IRow sumaRow3 = cotizacionDetalladaSheet.CreateRow(ultimaFila++);
+
+            // Obtener el texto para la primera celda
+            string textoCelda2 = "PESO DEL PROYECTO: " + totalPesoKG.ToString("#.#") + "KG";
+
+            // Crear una nueva celda en la columna 14 (contando desde 0) de la fila 1
+            ICell textoCelda123 = sumaRow3.CreateCell(1);
+            textoCelda123.CellStyle = estiloCentGothic1114;
+
+            // Establecer el valor de totalCubicajeProyecto en la celda
+            textoCelda123.SetCellValue(textoCelda2);
+
+
+            // Obtener el ID de la ciudad seleccionada en el DropDownList TextCiuPro
+            int idCiudad = Convert.ToInt32(TextCiuPro.SelectedValue);
+     
+            decimal costoTransporteDecimal = CalcularCostoTransporte(idCiudad, (decimal)totalCubicajeProyecto2);
+
+            // Convertir el costo de transporte de decimal a double
+            double costoTransporte = (double)costoTransporteDecimal;
+
+            // Crear una nueva celda en la columna 5 (índice 4) de la fila 'sumaRow3'
+            ICell costoTransporteCell = sumaRow3.CreateCell(5);
+
+            // Establecer el estilo de la celda
+            costoTransporteCell.CellStyle = estiloCentGothic1114;
+
+            // Establecer el valor del costo de transporte en la celda
+            costoTransporteCell.SetCellValue((double)costoTransporte);
+
+            // Obtener el formato de número para aplicar a la celda
+            IDataFormat formatoNumerico = workbook.CreateDataFormat();
+            short formatoNumero = formatoNumerico.GetFormat("#,##0"); // Formato de número con dos decimales y separador de miles
+
+            // Aplicar el formato numérico a la celda
+            ICellStyle estiloNumerico = workbook.CreateCellStyle();
+            estiloNumerico.CloneStyleFrom(estiloCentGothic1114); // Clonar el estilo existente
+            estiloNumerico.DataFormat = formatoNumero;
+            costoTransporteCell.CellStyle = estiloNumerico;
+
+
+
+        }
+       
+        public decimal CalcularCostoTransporte(int idCiudad, decimal totalCubicajeProyecto)
+            {
+                decimal costoTransporteCalculado = 0;
+
+                string sSql = "SELECT * FROM tblCostoTransporte WHERE tte_ID_Ciudad = @idCiudad ORDER BY tte_RangoFinal DESC";
+
+                using (SqlConnection conexion = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand(sSql, conexion))
+                    {
+                        cmd.Parameters.AddWithValue("@idCiudad", idCiudad);
+                        conexion.Open();
+                        SqlDataReader rsCostoTransporte = cmd.ExecuteReader();
+
+                        while (rsCostoTransporte.Read())
+                        {
+                            short rangoInicial = rsCostoTransporte.GetInt16(rsCostoTransporte.GetOrdinal("tte_RangoInicial"));
+                            short rangoFinal = rsCostoTransporte.GetInt16(rsCostoTransporte.GetOrdinal("tte_RangoFinal"));
+                            float valor = rsCostoTransporte.GetFloat(rsCostoTransporte.GetOrdinal("tte_Valor"));
+
+                            if (rangoInicial <= totalCubicajeProyecto && totalCubicajeProyecto <= rangoFinal)
+                            {
+                                costoTransporteCalculado += (decimal)valor;
+                            }
+                        }
+
+                        rsCostoTransporte.Close();
+                    }
+                }
+
+                return costoTransporteCalculado;
+            }
+
+        private double CalcularTotalCotizacion(ISheet cotizacionDetalladaSheet)
+        {
+            double total = 0;
+            // Itera sobre las filas relevantes en la hoja "Cotizacion"
+            for (int rowIndex = 15; rowIndex <= cotizacionDetalladaSheet.LastRowNum; rowIndex++)
+            {
+                IRow currentRow = cotizacionDetalladaSheet.GetRow(rowIndex);
+                if (currentRow != null)
+                {
+                    // Obtén la celda en la columna específica (por ejemplo, columna 8)
+                    ICell cell = currentRow.GetCell(9); // Ajusta el índice de acuerdo a tu estructura
+                    if (cell != null && cell.CellType == CellType.Numeric)
+                    {
+                        // Suma el valor de la celda al total
+                        total += cell.NumericCellValue;
+                    }
+                }
+            }
+            return total;
         }
 
         private void AgregarResultadosProcedimientoAlmacenado(ISheet cotizacionDetalladaSheet, IWorkbook workbook, ref int currentRow, string plan, double cantidadConsultaSQL, string opcion)
         {
-            // Crear el estilo para los números
-            ICellStyle estiloNumero = workbook.CreateCellStyle();
-            IDataFormat formatoNumero = workbook.CreateDataFormat();
-            estiloNumero.DataFormat = formatoNumero.GetFormat("0.0");
-
+           
             // Aplicar los estilos requeridos a la celda de Descripcion_Grupo
             ICellStyle estiloNegritaGris = workbook.CreateCellStyle();
             IFont fuenteNegrita = workbook.CreateFont();
@@ -4234,8 +4968,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             estiloNegritaGris.FillPattern = FillPattern.SolidForeground;
             estiloNegritaGris.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
 
+         
+
             // Ejecutar el procedimiento almacenado
-            string consultaSQL = "EXEC cta_Plano_Paneles @Plan = '" + plan + "'";
+            string consultaSQL = "EXEC cta_Plano_PanelesNue @Plan = '" + plan + "'";
             DataTable resultados = new DataTable();
             using (SqlConnection conexion = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
@@ -4253,9 +4989,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Diccionario para almacenar la suma de sumaValorActual por cada Id_Plano
             Dictionary<string, double> sumaTotalPorPlano = new Dictionary<string, double>();
 
+            double totalCubicajeAcumulado = 0.0;
+
             foreach (DataRow fila in resultados.Rows)
             {
                 string descripcionGrupo = fila["Descripcion_Grupo"].ToString();
+                string idGrupoObjeto = fila["ID_GrupoObjeto"].ToString();
                 string planoActual = fila["Id_Plano"].ToString();
 
                 // Verificar si el plano ya está en el diccionario
@@ -4270,11 +5009,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     // Si el Descripcion_Grupo no se ha mostrado para este Plano, agregarlo a la hoja de Excel
 
+                    string descripcionTecnica = ObtenerDescripcionTecnicaGrupo(idGrupoObjeto);
+
+                    // Concatenar la descripción técnica con la descripción del grupo con un salto de línea
+                    string descripcionCompleta = $"{descripcionGrupo}\n{descripcionTecnica}";
+
                     // Agregar el valor de Descripcion_Grupo en la columna B
                     IRow row = cotizacionDetalladaSheet.CreateRow(currentRow++);
                     ICell descripcionCell = row.CreateCell(1);
-                    descripcionCell.SetCellValue(descripcionGrupo);
-
+                    descripcionCell.SetCellValue(descripcionCompleta);
                     descripcionCell.CellStyle = estiloNegritaGris;
 
                     // Aplicar los estilos a las celdas de Descripcion_Grupo
@@ -4286,22 +5029,44 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             cell = row.CreateCell(i);
                         }
                         cell.CellStyle = estiloNegritaGris;
+                        // Establecer WrapText en true para que el texto se ajuste automáticamente
+                        cell.CellStyle.WrapText = true;
                     }
+
 
                     // Restablecer la suma de ValorActual para la Descripcion_Grupo actual
                     double sumaValorActual = 0.0;
-                   
-
+                    double totalCubicaje = 0.0;
+                  
                     foreach (DataRow filaGrupo in resultados.Rows)
                     {
                         if (filaGrupo["Descripcion_Grupo"].ToString() == descripcionGrupo && filaGrupo["Id_Plano"].ToString() == planoActual)
                         {
                             string idNumerico = filaGrupo["Id_Numerico"].ToString();
-                            string descripcionTecnica = ObtenerDescripcionTecnicaPanel(idNumerico);
-                            string descripcionPanel = descripcionTecnica;
+                            string descripcionTecnicaPanel = ObtenerDescripcionTecnicaPanel(idNumerico);
+                          
                             double ancho = Convert.ToDouble(filaGrupo["Ancho"]);
                             double cantidad = Convert.ToDouble(filaGrupo["Cantidad"]);
                             double valorActual = Convert.ToDouble(filaGrupo["ValorActual"]);
+
+                            ICellStyle estiloCentGothic11 = workbook.CreateCellStyle();
+                            IFont fuenteCentGothic11 = workbook.CreateFont();
+                            fuenteCentGothic11.FontName = "Century Gothic";
+                            fuenteCentGothic11.FontHeightInPoints = 11;
+                            estiloCentGothic11.SetFont(fuenteCentGothic11);
+                            estiloCentGothic11.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+                            estiloCentGothic11.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+                            estiloCentGothic11.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
+                            ICellStyle estiloCentGothic111 = workbook.CreateCellStyle();
+                            estiloCentGothic111.SetFont(fuenteCentGothic11);
+
+                            ICellStyle estiloCentGothic112 = workbook.CreateCellStyle();
+                            IFont fuenteCentGothic112 = workbook.CreateFont();
+                            fuenteCentGothic112.FontName = "Century Gothic";
+                            fuenteCentGothic112.FontHeightInPoints = 11;
+                            ICellStyle estiloCentGothic1112 = workbook.CreateCellStyle();
+                            estiloCentGothic1112.SetFont(fuenteCentGothic112);
+
 
                             // 3. Multiplicar los valores de la columna 'Cantidad' obtenidos en el punto 1 con los de la consulta del procedimiento almacenado
                             double cantidadFinal = cantidadConsultaSQL * cantidad;
@@ -4312,31 +5077,87 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             // Crear una nueva fila y agregar los valores
                             row = cotizacionDetalladaSheet.CreateRow(currentRow++);
                             descripcionCell = row.CreateCell(1);
-                            descripcionCell.SetCellValue(descripcionPanel);
+                            descripcionCell.SetCellValue(descripcionTecnicaPanel);
+                           
+                            descripcionCell.CellStyle = estiloCentGothic11;
 
                             // Aplicar el estilo para aumentar el alto de la fila
                             row.HeightInPoints = cotizacionDetalladaSheet.DefaultRowHeightInPoints * 6;
 
+                            descripcionCell.CellStyle.WrapText = true;
+
+                            IDataFormat formatoNumerico2 = workbook.CreateDataFormat();
+
                             ICell anchoCell = row.CreateCell(2);
                             anchoCell.SetCellValue(ancho); // Establecer el valor como número
+
+                            ICellStyle estiloNumero = workbook.CreateCellStyle();
+                            estiloNumero.CloneStyleFrom(estiloCentGothic11); // Copiar propiedades del estiloCentGothic11
+                            estiloNumero.DataFormat = formatoNumerico2.GetFormat("0.0");
+
+
+                            // Combinar los estilos estiloTotal y styleTotal
+                            estiloNumero.SetFont(fuenteCentGothic11);
+
+                            // Aplicar los estilos al valor del total
                             anchoCell.CellStyle = estiloNumero;
-                            row.CreateCell(3).SetCellValue(cantidadFinal);
-                            row.CreateCell(4).SetCellValue(valorActual);
-                            row.CreateCell(5).SetCellValue(resultadoMultiplicacion);
+
+
+                            ICell cantidadaCell = row.CreateCell(3);
+                            cantidadaCell.SetCellValue(cantidadFinal); // Establecer el valor como número
+                            cantidadaCell.CellStyle = estiloCentGothic11;
+
+                            ICellStyle estiloSubtotal = workbook.CreateCellStyle();
+                            estiloSubtotal.CloneStyleFrom(estiloCentGothic11); // Copiar propiedades del estiloCentGothic11
+                            estiloSubtotal.DataFormat = formatoNumerico2.GetFormat("#,##0"); // Establecer formato numérico
+
+                            // Crear celdas para los valores que deseas enviar como números
+                            ICell valorActualCell = row.CreateCell(4);
+                            valorActualCell.CellStyle = estiloSubtotal;
+
+                            ICell resultadoMultiplicacionCell = row.CreateCell(5);
+                            resultadoMultiplicacionCell.CellStyle = estiloSubtotal;
+
+                            // Establecer los valores como números en las celdas correspondientes
+                            valorActualCell.SetCellValue(Convert.ToDouble(valorActual));
+                            resultadoMultiplicacionCell.SetCellValue(Convert.ToDouble(resultadoMultiplicacion));
 
                             // Agregar el valor de la multiplicación al total de ValorActual para la Descripcion_Grupo actual
                             sumaValorActual += resultadoMultiplicacion;
 
+                            double cubicaje = CalcularCubicaje(plan, idNumerico, cantidadFinal);
+
+                            totalCubicajeAcumulado += cubicaje;
+
+                            ICell totalCubicajeCell = row.CreateCell(9);
+                            totalCubicajeCell.CellStyle = estiloCentGothic1112;
+
+                            totalCubicajeCell.SetCellValue(cubicaje);
+
+                            double peso = CalcularPesoKG(plan, idNumerico, cantidadFinal);
+
+                         
+                            ICell totalPesoCell = row.CreateCell(10);
+                            totalPesoCell.CellStyle = estiloCentGothic1112;
+                            totalPesoCell.SetCellValue(peso);
+
                            
+
                         }
                     }
-     
+
+                 
+
+
+
                     // Agregar la suma de los valores de ValorActual en la fila siguiente a la de Id_Panel
                     if (sumaValorActual > 0) // Verificar que se haya sumado al menos un ValorActual
                     {
                         IRow filaSuma = cotizacionDetalladaSheet.CreateRow(currentRow++);
                         ICell sumaCell = filaSuma.CreateCell(5);
                         sumaCell.SetCellValue(sumaValorActual);
+
+                        IDataFormat formatoNumerico3 = workbook.CreateDataFormat();
 
                         // Aplicar estilo de negrita, tamaño de letra 11 y tipo de letra Century Gothic
                         ICellStyle estiloSuma = workbook.CreateCellStyle();
@@ -4351,14 +5172,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         ICell subTotalCell = filaSuma.CreateCell(4);
                         subTotalCell.SetCellValue("Sub Total");
                         subTotalCell.CellStyle = estiloSuma;
+
+                        // Crear un nuevo estilo que combine los estilosCentGothic11 y estiloNumerico para el valor total
+                        ICellStyle estiloTotal = workbook.CreateCellStyle();
+                        estiloTotal.CloneStyleFrom(estiloSuma); // Copiar propiedades del estiloCentGothic11
+                        estiloTotal.DataFormat = formatoNumerico3.GetFormat("#,##0"); // Establecer formato numérico
+
+                        // Combinar los estilos estiloTotal y styleTotal
+                        estiloTotal.SetFont(fontSuma);
+
+                        // Aplicar los estilos al valor del total
+                        sumaCell.CellStyle = estiloTotal;
                     }
 
 
-                    // Agregar la suma al total por plano
-                    if (!sumaTotalPorPlano.ContainsKey(planoActual))
-                    {
+              
                         sumaTotalPorPlano[planoActual] = 0.0;
-                    }
+                    
                     sumaTotalPorPlano[planoActual] += sumaValorActual;
 
                     // Agregar el Descripcion_Grupo al conjunto de Descripcion_Grupo mostrados para este Plano
@@ -4382,48 +5212,365 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             styleTotalZona.FillForegroundColor = IndexedColors.Grey25Percent.Index;
             styleTotalZona.FillPattern = FillPattern.SolidForeground;
 
-            // Agregar el texto 'Total Zona' y aplicar el estilo a las celdas desde la columna 'B' hasta la 'G'
             foreach (var kvp in sumaTotalPorPlano)
             {
+                // Obtener el número de diseño de la etiqueta lblNumDise
+                string numeroDiseño = lblNumDise.Text;
+
                 IRow filaSumaTotalPorPlano = cotizacionDetalladaSheet.CreateRow(currentRow++);
+                string idPlano = ""; // Variable para almacenar el ID del plano actual
 
                 foreach (DataRow fila in resultados.Rows)
                 {
-                    string idPlano = fila["Id_Plano"].ToString();
-
-                    // Llamar al método para obtener el valor de 'Area'
-                    string area = ObtenerAreaPorIdPlano(idPlano);
+                    idPlano = fila["Id_Plano"].ToString(); // Obtener el ID del plano
+                    string area = ObtenerAreaPorIdPlano(idPlano); // Obtener el área
 
                     // Concatenar el valor de 'Area' con el texto 'Total Zona'
                     string textoTotalZona = $"Total Zona - {area}";
+                    ICell totalCell = filaSumaTotalPorPlano.CreateCell(1);
+                    totalCell.SetCellValue(textoTotalZona);
 
-                  
-                     ICell totalCell = filaSumaTotalPorPlano.CreateCell(1);
-                     totalCell.SetCellValue(textoTotalZona);
+                    // Aplicar el estilo al texto 'Total Zona - {area}' en la columna B
+                    for (int i = 1; i <= 6; i++)
+                    {
+                        ICell cell = filaSumaTotalPorPlano.GetCell(i);
+                        if (cell == null)
+                        {
+                            cell = filaSumaTotalPorPlano.CreateCell(i);
+                        }
+                        cell.CellStyle = styleTotalZona;
+                    }
                 }
 
+                // Realizar la consulta SQL para obtener SubTotalZona y Cantidad
+                double subtotalZona = 0.0;
+                int cantidad = 0;
+                string consultaSQLSubtotal = $"SELECT ISNULL(SUM(tblPanel.Precio_Venta * tblPlano_Panel.Cantidad), 0) AS SubTotalZona, tblPlanoDiseño.Cantidad " +
+                                            $"FROM tblDiseño " +
+                                            $"INNER JOIN tblPlanoDiseño ON tblDiseño.Numero_Diseño = tblPlanoDiseño.Numero_Diseño " +
+                                            $"INNER JOIN tblPlano_Panel ON tblPlanoDiseño.Plano = tblPlano_Panel.Id_Plano " +
+                                            $"INNER JOIN tblPanel ON tblPlano_Panel.Id_PanelNum = tblPanel.Id_Numerico " +
+                                            $"INNER JOIN tblGrupoObjeto ON tblPanel.Id_GrupoObjeto = tblGrupoObjeto.ID_GrupoObjeto " +
+                                            $"WHERE (tblGrupoObjeto.Cotizar = 1) " +
+                                            $"AND (tblDiseño.Numero_Diseño = '{numeroDiseño}') " +
+                                            $"AND (tblPlanoDiseño.Plano = '{idPlano}') " +
+                                            $"AND (tblPlanoDiseño.Opcion = '{opcion}') " +
+                                            $"GROUP BY tblDiseño.Numero_Diseño, tblDiseño.Nombre_Diseño, tblDiseño.Asesor, tblPlanoDiseño.Plano, tblPlanoDiseño.Opcion, tblPlanoDiseño.Cantidad";
 
-                ICell sumaTotalPorPlanoCell = filaSumaTotalPorPlano.CreateCell(5);
-                sumaTotalPorPlanoCell.SetCellValue(kvp.Value);
-
-            
-
-                // Aplicar el estilo a todas las celdas desde la columna 'B' hasta la 'G'
-                for (int i = 1; i <= 6; i++)
+                using (SqlConnection conexion = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
                 {
-                    ICell cell = filaSumaTotalPorPlano.GetCell(i);
-                    if (cell == null)
+                    using (SqlCommand comando = new SqlCommand(consultaSQLSubtotal, conexion))
                     {
-                        cell = filaSumaTotalPorPlano.CreateCell(i);
+                        conexion.Open();
+                        SqlDataReader reader = comando.ExecuteReader();
+                        if (reader.Read())
+                        {
+                            subtotalZona = Convert.ToDouble(reader["SubTotalZona"]);
+                            cantidad = Convert.ToInt32(reader["Cantidad"]);
+                        }
+                        reader.Close();
                     }
-                    cell.CellStyle = styleTotalZona;
+                }
+
+                // Calcular el valor final multiplicando el subtotal por la cantidad
+                double valorFinal = subtotalZona * cantidad;
+
+                IDataFormat formatoNumerico4 = workbook.CreateDataFormat();
+
+                // Establecer el valor final en la celda de sumaTotalPorPlanoCell
+                ICell sumaTotalPorPlanoCell = filaSumaTotalPorPlano.CreateCell(5);
+                sumaTotalPorPlanoCell.SetCellValue(valorFinal);
+      
+                // Aplicar estilo a la celda de sumaTotalPorPlanoCell
+                ICellStyle styleSubtotal = workbook.CreateCellStyle();
+                styleSubtotal.SetFont(fontTotalZona);
+                styleSubtotal.FillForegroundColor = IndexedColors.Grey25Percent.Index;
+                styleSubtotal.FillPattern = FillPattern.SolidForeground;
+                sumaTotalPorPlanoCell.CellStyle = styleSubtotal;
+
+                // Crear un nuevo estilo que combine los estilosCentGothic11 y estiloNumerico para el valor total
+                ICellStyle estiloTotal = workbook.CreateCellStyle();
+                estiloTotal.CloneStyleFrom(styleSubtotal); // Copiar propiedades del estiloCentGothic11
+                estiloTotal.DataFormat = formatoNumerico4.GetFormat("#,##0"); // Establecer formato numérico
+
+                // Combinar los estilos estiloTotal y styleTotal
+                estiloTotal.SetFont(fontTotalZona);
+
+                // Aplicar los estilos al valor del total
+                sumaTotalPorPlanoCell.CellStyle = estiloTotal;
+
+            }
+
+        
+
+        }
+
+        // Método para obtener la ruta de la imagen desde la base de datos
+        private string ObtenerRutaImagenDesdeBaseDeDatos()
+        {
+            string rutaImagen = ""; // Variable para almacenar la ruta de la imagen
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string consultaSQL = "SELECT mail FROM tblUsosVarios WHERE ObjetivoMail = 'PathImagendeBloques'";
+
+            // Crear y abrir la conexión a la base de datos
+            using (SqlConnection conexion = new SqlConnection(connectionString))
+            {
+                // Crear el comando SQL
+                using (SqlCommand comando = new SqlCommand(consultaSQL, conexion))
+                {
+                    // Abrir la conexión
+                    conexion.Open();
+
+                    // Ejecutar el comando y leer el resultado
+                    using (SqlDataReader reader = comando.ExecuteReader())
+                    {
+                        // Verificar si se encontró algún resultado
+                        if (reader.Read())
+                        {
+                            // Obtener la ruta de la imagen del primer resultado
+                            rutaImagen = reader["mail"].ToString();
+                        }
+                    }
                 }
             }
 
+            // Devolver la ruta de la imagen
+            return rutaImagen;
+        }
 
 
+        // Método para calcular el cubicaje
+        private double CalcularCubicaje(string plan, string idNumerico, double cantidadFinal)
+        {
+            double cubicaje = 0.0;
 
+            // Definir la cadena de conexión a la base de datos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
+            // Consulta SQL para obtener los datos necesarios para calcular el cubicaje
+            string consultaSQL = @"
+    SELECT MAX(tblPanel.Id_Numerico) AS Id_Numerico, tblGrupoObjeto.Descripcion_Grupo, tblGrupoObjeto.GODescripcionTecnica, (CASE WHEN tblPanel.Descripcion_Tecnica IS NULL OR tblPanel.Descripcion_Tecnica ='' THEN tblPanel.Descripcion_Panel ELSE tblPanel.Descripcion_Tecnica END) AS Descripcion, tblPanel.Ancho, tblPanel.Altura, tblPanel.Profundidad,  tblPanel.Precio_Venta AS PrecioObjetoActual,tblPanel.PesoKG, tblPlano_Panel.Id_Plano, SUM(tblPlano_Panel.Cantidad) AS Cantidad, tblPlano.Area, MAX(tblPlano_Panel.Precio_Venta) AS PrecioVentaPlano, tblGrupoObjeto.AjusteCubicaje,  MAX(tblPanel.Id_Panel) AS Id_Panel
+    FROM tblPlano INNER JOIN 
+    tblGrupoObjeto INNER JOIN tblPanel ON tblGrupoObjeto.ID_GrupoObjeto = tblPanel.Id_GrupoObjeto INNER JOIN 
+    tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum ON tblPlano.Plano = tblPlano_Panel.Id_Plano 
+    WHERE (tblGrupoObjeto.Cotizar = 1 AND Id_Numerico = @IdNumerico) 
+    GROUP BY tblGrupoObjeto.Descripcion_Grupo, tblGrupoObjeto.GODescripcionTecnica, tblPanel.Ancho, tblPanel.Altura, tblPanel.Profundidad, tblPanel.Precio_Venta,tblPanel.PesoKG, tblPlano_Panel.Id_Plano, tblPlano.Area, tblGrupoObjeto.AjusteCubicaje, (CASE WHEN tblPanel.Descripcion_Tecnica IS NULL OR tblPanel.Descripcion_Tecnica ='' THEN tblPanel.Descripcion_Panel ELSE tblPanel.Descripcion_Tecnica END) 
+    HAVING (tblPlano_Panel.Id_Plano = @Plan) ORDER BY tblGrupoObjeto.Descripcion_Grupo asc,(CASE WHEN tblPanel.Descripcion_Tecnica IS NULL OR tblPanel.Descripcion_Tecnica =''  THEN tblPanel.Descripcion_Panel ELSE tblPanel.Descripcion_Tecnica END) asc, tblPanel.Ancho";
+
+            // Crear una nueva conexión a la base de datos
+            using (SqlConnection conexion = new SqlConnection(connectionString))
+            {
+                // Crear un comando SQL con la consulta y la conexión
+                using (SqlCommand comando = new SqlCommand(consultaSQL, conexion))
+                {
+                    // Agregar parámetros a la consulta
+                    comando.Parameters.AddWithValue("@IdNumerico", idNumerico);
+                    comando.Parameters.AddWithValue("@Plan", plan);
+
+                    // Abrir la conexión
+                    conexion.Open();
+
+                    // Ejecutar la consulta y obtener los resultados
+                    using (SqlDataReader reader = comando.ExecuteReader())
+                    {
+                        // Verificar si hay filas en el resultado
+                        if (reader.Read())
+                        {
+                            // Obtener los valores necesarios para el cálculo
+                            double ancho = Convert.ToDouble(reader["Ancho"]);
+                            double altura = Convert.ToDouble(reader["Altura"]);
+                            double profundidad = Convert.ToDouble(reader["Profundidad"]);
+                            double ajusteCubicaje = Convert.ToDouble(reader["AjusteCubicaje"]);
+                            double cantidadZona = Convert.ToDouble(reader["Cantidad"]);
+
+                            // Calcular el cubicaje según la fórmula dada
+                            cubicaje = cantidadFinal * (ancho * altura * profundidad * ajusteCubicaje / 1000000);
+                            cubicaje = Math.Round(cubicaje, 5);
+                        }
+                    }
+                }
+            }
+
+            // Devolver el valor de cubicaje
+            return cubicaje;
+        }
+
+        private double ObtenerPorcentajeAdicionalCubicaje()
+        {
+            double porcentajeAdicional = 0.0;
+
+            // Definir la cadena de conexión a la base de datos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            // Consulta SQL para obtener el valor de mail
+            string consultaSQL = "SELECT mail FROM tblUsosVarios WHERE ObjetivoMail = 'PorcentajeAdicionalCubicaje'";
+
+            // Crear una nueva conexión a la base de datos
+            using (SqlConnection conexion = new SqlConnection(connectionString))
+            {
+                // Crear un comando SQL con la consulta y la conexión
+                using (SqlCommand comando = new SqlCommand(consultaSQL, conexion))
+                {
+                    // Abrir la conexión
+                    conexion.Open();
+
+                    // Ejecutar la consulta y obtener el resultado
+                    object resultado = comando.ExecuteScalar();
+
+                    // Verificar si se obtuvo un resultado no nulo
+                    if (resultado != null)
+                    {
+                        // Convertir el resultado a double
+                        porcentajeAdicional = Convert.ToDouble(resultado);
+                    }
+                }
+            }
+
+            return porcentajeAdicional;
+        }
+
+        private double CalcularTotalCubicajeProyecto(double totalCubicajeAcumulado)
+        {
+            double porcentajeAdicional = ObtenerPorcentajeAdicionalCubicaje();
+
+            // Calcular el total de cubicaje del proyecto
+            double totalCubicajeProyecto = totalCubicajeAcumulado + (totalCubicajeAcumulado * porcentajeAdicional / 100.0);
+
+            return totalCubicajeProyecto;
+        }
+
+        private double CalcularPesoKG(string plan, string idNumerico, double cantidadFinal)
+        {
+            double pesoTotal = 0.0;
+
+            // Definir la cadena de conexión a la base de datos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            // Consulta SQL para obtener los datos necesarios para calcular el cubicaje
+            string consultaSQL = @"
+    SELECT MAX(tblPanel.Id_Numerico) AS Id_Numerico, tblGrupoObjeto.Descripcion_Grupo, tblGrupoObjeto.GODescripcionTecnica, (CASE WHEN tblPanel.Descripcion_Tecnica IS NULL OR tblPanel.Descripcion_Tecnica ='' THEN tblPanel.Descripcion_Panel ELSE tblPanel.Descripcion_Tecnica END) AS Descripcion, tblPanel.Ancho, tblPanel.Altura, tblPanel.Profundidad,  tblPanel.Precio_Venta AS PrecioObjetoActual,tblPanel.PesoKG, tblPlano_Panel.Id_Plano, SUM(tblPlano_Panel.Cantidad) AS Cantidad, tblPlano.Area, MAX(tblPlano_Panel.Precio_Venta) AS PrecioVentaPlano, tblGrupoObjeto.AjusteCubicaje,  MAX(tblPanel.Id_Panel) AS Id_Panel
+         FROM tblPlano INNER JOIN 
+         tblGrupoObjeto INNER JOIN tblPanel ON tblGrupoObjeto.ID_GrupoObjeto = tblPanel.Id_GrupoObjeto INNER JOIN 
+         tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum ON tblPlano.Plano = tblPlano_Panel.Id_Plano 
+         Where (tblGrupoObjeto.Cotizar = 1 AND Id_Numerico = @IdNumerico) 
+         GROUP BY tblGrupoObjeto.Descripcion_Grupo, tblGrupoObjeto.GODescripcionTecnica, tblPanel.Ancho, tblPanel.Altura, tblPanel.Profundidad, tblPanel.Precio_Venta,tblPanel.PesoKG, tblPlano_Panel.Id_Plano, tblPlano.Area, tblGrupoObjeto.AjusteCubicaje, (CASE WHEN tblPanel.Descripcion_Tecnica IS NULL OR tblPanel.Descripcion_Tecnica ='' THEN tblPanel.Descripcion_Panel ELSE tblPanel.Descripcion_Tecnica END) 
+         HAVING (tblPlano_Panel.Id_Plano = @Plan) ORDER BY tblGrupoObjeto.Descripcion_Grupo asc,(CASE WHEN tblPanel.Descripcion_Tecnica IS NULL OR tblPanel.Descripcion_Tecnica =''  THEN tblPanel.Descripcion_Panel ELSE tblPanel.Descripcion_Tecnica END) asc, tblPanel.Ancho
+
+";
+
+            // Crear una nueva conexión a la base de datos
+            using (SqlConnection conexion = new SqlConnection(connectionString))
+            {
+                // Crear un comando SQL con la consulta y la conexión
+                using (SqlCommand comando = new SqlCommand(consultaSQL, conexion))
+                {
+                    // Agregar parámetros a la consulta
+                    comando.Parameters.AddWithValue("@IdNumerico", idNumerico);
+                    comando.Parameters.AddWithValue("@Plan", plan);
+
+                    // Abrir la conexión
+                    conexion.Open();
+
+                    // Ejecutar la consulta y obtener los resultados
+                    using (SqlDataReader reader = comando.ExecuteReader())
+                    {
+                        // Verificar si hay filas en el resultado
+                        if (reader.Read())
+                        {
+                            // Obtener los valores necesarios para el cálculo
+                            double pesoKG = Convert.ToDouble(reader["PesoKG"]);
+
+                            // Calcular el cubicaje según la fórmula dada
+                            pesoTotal = cantidadFinal * pesoKG;
+
+                            pesoTotal = Math.Round(pesoTotal, 5);
+                        }
+                    }
+                }
+            }
+
+            return pesoTotal;
+        }
+
+        private string ObtenerDescripcionTecnicaGrupo(string idGrupoObjeto)
+        {
+            string descripcionTecnica = string.Empty;
+
+            // Realizar la consulta SQL para obtener la descripción técnica del grupo objeto
+            string consultaSQL = $"SELECT GODescripcionTecnica FROM tblGrupoObjeto WHERE ID_GrupoObjeto = '{idGrupoObjeto}'";
+
+            using (SqlConnection conexion = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                using (SqlCommand comando = new SqlCommand(consultaSQL, conexion))
+                {
+                    conexion.Open();
+                    descripcionTecnica = comando.ExecuteScalar()?.ToString();
+                }
+            }
+
+            return descripcionTecnica;
+        }
+
+        // Método para ejecutar la consulta SQL y devolver un solo valor
+        // Declara un diccionario para almacenar los totales calculados
+        private Dictionary<string, Dictionary<string, double>> totalesCalculados = new Dictionary<string, Dictionary<string, double>>();
+
+        public double ObtenerTotalSubTotalMultiplicado(string numeroDiseño, string opcionParaCalcularTotal)
+        {
+            // Verifica si ya se ha calculado el total para la combinación específica
+            if (totalesCalculados.ContainsKey(numeroDiseño) && totalesCalculados[numeroDiseño].ContainsKey(opcionParaCalcularTotal))
+            {
+                return totalesCalculados[numeroDiseño][opcionParaCalcularTotal];
+            }
+
+            // Si no se ha calculado previamente, realiza la consulta SQL
+            double totalSubTotalMultiplicado = 0;
+
+            // Consulta SQL
+            string consultaSQL = @"
+        SELECT ISNULL(SUM(tblPanel.Precio_Venta * tblPlano_Panel.Cantidad * tblPlanoDiseño.Cantidad), 0) AS TotalSubTotalMultiplicado
+        FROM tblDiseño 
+        INNER JOIN tblPlanoDiseño ON tblDiseño.Numero_Diseño = tblPlanoDiseño.Numero_Diseño
+        INNER JOIN tblPlano_Panel ON tblPlanoDiseño.Plano = tblPlano_Panel.Id_Plano 
+        INNER JOIN tblPanel ON tblPlano_Panel.Id_PanelNum = tblPanel.Id_Numerico 
+        INNER JOIN tblGrupoObjeto ON tblPanel.Id_GrupoObjeto = tblGrupoObjeto.ID_GrupoObjeto
+        WHERE (tblGrupoObjeto.Cotizar = 1) 
+        AND (tblDiseño.Numero_Diseño = @NumeroDiseño)                            
+        AND (tblPlanoDiseño.Opcion = @OpcionParaCalcularTotal)";
+
+            // Establecer la conexión y ejecutar la consulta
+            using (SqlConnection conexion = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                using (SqlCommand comando = new SqlCommand(consultaSQL, conexion))
+                {
+                    comando.Parameters.AddWithValue("@NumeroDiseño", numeroDiseño);
+                    comando.Parameters.AddWithValue("@OpcionParaCalcularTotal", opcionParaCalcularTotal);
+
+                    try
+                    {
+                        conexion.Open();
+                        object resultado = comando.ExecuteScalar();
+                        if (resultado != DBNull.Value)
+                        {
+                            totalSubTotalMultiplicado = Convert.ToDouble(resultado);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejar excepciones
+                    }
+                }
+            }
+
+            // Almacena el total calculado en el diccionario
+            if (!totalesCalculados.ContainsKey(numeroDiseño))
+            {
+                totalesCalculados[numeroDiseño] = new Dictionary<string, double>();
+            }
+            totalesCalculados[numeroDiseño][opcionParaCalcularTotal] = totalSubTotalMultiplicado;
+
+            return totalSubTotalMultiplicado;
         }
 
         private string ObtenerAreaPorIdPlano(string idPlano)
@@ -4479,6 +5626,88 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             return descripcionTecnica;
         }
+
+        private string ObtenerIdPanel(string idNumerico)
+        {
+            string idPanel = string.Empty;
+
+            // Construir la consulta SQL
+            string consultaSQL = $"SELECT * FROM tblPanel WHERE Id_Numerico = '{idNumerico}'";
+
+            // Ejecutar la consulta y obtener la descripción técnica del panel
+            using (SqlConnection conexion = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                using (SqlCommand comando = new SqlCommand(consultaSQL, conexion))
+                {
+                    conexion.Open();
+                    using (SqlDataReader reader = comando.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {             
+                                // Si es nula, devolver el valor de la columna Id_Panel
+                                idPanel = reader["Id_Panel"] as string;
+                            
+                        }
+                    }
+                }
+            }
+
+            return idPanel;
+        }
+
+        protected void RegresarDise_Click(object sender, EventArgs e)
+        {
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#RegresarDise').modal('show');", true);
+        }
+
+        protected void UpdateRegresarDise_Click(object sender, EventArgs e)
+        {
+            string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Ventas")
+            {
+
+            }
+            else if (tipoAccion == "Recepcion")
+            {
+                string diseño = lblNumDise.Text;
+
+                // Actualizar la tabla tblDiseño estableciendo CotizaciónOK en 1
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+                string query = "Update tblDiseño set TerminadoDibujo = 0 WHERE Numero_Diseño = @Numero_Diseño";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Numero_Diseño", diseño);
+                        connection.Open();
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            Session["NumeroDiseño2"] = diseño;
+
+
+                            string mensajePersonalizado = "Diseño regresado exitosamente!";
+                            string urlRedireccion = "Ventas/Diseño_Venta.aspx";
+                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+                            // Si se actualizaron filas, se deshabilita el botón y se cambia su clase CSS
+                            BtnProgramar.Enabled = false;
+                            BtnProgramar.CssClass = "button-disabled form-control";
+                        }
+                        else
+                        {
+
+                        }
+
+                    }
+                }
+            }        
+        }
+
+     
+
 
     }
 

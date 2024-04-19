@@ -30,7 +30,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
             Response.Redirect("Login.aspx");
         }
 
-
         protected void bOrdeDeTraba_Click(object sender, EventArgs e)
         {
             
@@ -54,7 +53,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
                 case "EstadisticaVentas":
                     pageURL = "Administrativo/EstadisticasVentas.aspx";
                     break;
-
+                case "SeguimientoCotizaciones":
+                    Session["SeguimientoCotizaciones"] = "GerenciaComercial";
+                    pageURL = "Ventas/Consulta_Cotizacion.aspx";
+                    break;
 
                 default:
                     // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí
@@ -298,7 +300,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
             }
         }
 
-
         protected void Sistemas_Click(object sender, EventArgs e)
         {
             LinkButton btn = (LinkButton)sender;
@@ -394,6 +395,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
                     break;
 
                 case "SeguimientoCotizacion":
+                    Session["SeguimientoCotizaciones"] = "Ventas";
                     pageURL = "Ventas/Consulta_Cotizacion.aspx";
                     break;
 

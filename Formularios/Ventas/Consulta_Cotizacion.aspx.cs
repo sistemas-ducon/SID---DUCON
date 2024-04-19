@@ -29,65 +29,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            if (!IsPostBack)
-            {
-              
-               
-
                 if (Session["CedulaLogeada"] != null)
+            {
+                if (!IsPostBack)
                 {
-                    ConsultarDatos();
-                    DataGrid2.DataBind();
-                    LoadEstados();
-
-                    string usuariologueado = Session["CedulaLogeada"].ToString();
-
-                    // Realizar la conexión a la base de datos y la consulta para obtener el nombre y apellido del usuario
-                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-
-                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    string tipoAccion = Session["SeguimientoCotizaciones"] as string;
+                    if (tipoAccion == "Ventas")
                     {
-                        connection.Open();
-                        string query = "SELECT Nombre, Apellidos, cedula FROM tblEmpleado WHERE cedula = @nombreUsuario";
-                        using (SqlCommand command = new SqlCommand(query, connection))
-                        {
-                            command.Parameters.AddWithValue("@nombreUsuario", usuariologueado);
-                            SqlDataReader reader = command.ExecuteReader();
-                            if (reader.Read())
-                            {
-                                string nombre = reader["Nombre"].ToString();
-                                string apellidos = reader["Apellidos"].ToString();
-                                TextAsesor.Text = nombre + " " + apellidos; // Asignar el nombre y apellidos al TextBox
-                                TextAsesortab2.Text = nombre + " " + apellidos;
-                                TextAsesorSeguimiento.Text = nombre + " " + apellidos;
-                            }
-                            
-                        }
+                        Page_Load();
                     }
-
-                    DateTime fechaActual = DateTime.Now;
-                    DateTime fechaMenosUnMesUnDia = fechaActual.AddMonths(-1).AddDays(-1);          
-                    TextBoxStartDate.Text = fechaMenosUnMesUnDia.ToString("yyyy-MM-dd");
-                    TextBoxEndDate.Text = fechaActual.ToString("yyyy-MM-dd");
-
-                   
-                    DateTime fechaMenosUnMes4dias = fechaActual.AddMonths(-1).AddDays(-4);
-                    TextCotizacionEntreInicio2.Text = fechaMenosUnMes4dias.ToString("yyyy-MM-dd");
-                    TextCotizacionEntreFinal2.Text = fechaActual.ToString("yyyy-MM-dd");
-
-                    DateTime fechaMenosTresMes = fechaActual.AddMonths(-3);
-                    IdDateInicial.Text = fechaMenosTresMes.ToString("yyyy-MM-dd");
-                    IdDateFinal.Text = fechaActual.ToString("yyyy-MM-dd");
-
-
-                    TextUltContComer.Text = fechaActual.ToString("yyyy-MM-dd");
-
-
-                    BtnExcelCot.Enabled = false;
-                    BtnExcelCot.CssClass = "btn shadow btn-light linkButtonClicked button-disabled grande";
-
-                    BtnPDFCot.Enabled = false;
-                    BtnPDFCot.CssClass = "btn shadow btn-light linkButtonClicked button-disabled grande";
+                    else if (tipoAccion == "GerenciaComercial")
+                    {
+                        Page_LoadGerenciaComercial();
+                    }
+                   }
                 }
 
                 else
@@ -95,10 +50,127 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     Response.Redirect("/Formularios/Login.aspx");
                 }
 
+        }
+
+        protected void Page_Load()
+        {
+            CargarAsesoresEnDropDownList();
+            ConsultarDatos();
+            DataGrid2.DataBind();
+            LoadEstados();
+
+            string usuariologueado = Session["CedulaLogeada"].ToString();
+
+            // Realizar la conexión a la base de datos y la consulta para obtener el nombre y apellido del usuario
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT Nombre, Apellidos, cedula FROM tblEmpleado WHERE cedula = @nombreUsuario";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@nombreUsuario", usuariologueado);
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+         
+                        ddlAsesor.SelectedValue = usuariologueado; // Asignar el nombre y apellidos al TextBox
+                        ddlAsesorTapEstado.SelectedValue = usuariologueado;
+                        ddlAsesorTabSeguimiento.SelectedValue = usuariologueado;
+
+                        // Deshabilitar los DropDownList
+                        ddlAsesor.Enabled = false;
+                        ddlAsesor.CssClass = "form-control";
+                        ddlAsesorTapEstado.Enabled = false;
+                        ddlAsesorTapEstado.CssClass = "form-control";
+                        ddlAsesorTabSeguimiento.Enabled = false;
+                        ddlAsesorTabSeguimiento.CssClass = "form-control";
+                    }
+
+                }
+            }
+
+            DateTime fechaActual = DateTime.Now;
+            DateTime fechaMenosUnMesUnDia = fechaActual.AddMonths(-1).AddDays(-1);
+            TextBoxStartDate.Text = fechaMenosUnMesUnDia.ToString("yyyy-MM-dd");
+            TextBoxEndDate.Text = fechaActual.ToString("yyyy-MM-dd");
+
+
+            DateTime fechaMenosUnMes4dias = fechaActual.AddMonths(-1).AddDays(-4);
+            TextCotizacionEntreInicio2.Text = fechaMenosUnMes4dias.ToString("yyyy-MM-dd");
+            TextCotizacionEntreFinal2.Text = fechaActual.ToString("yyyy-MM-dd");
+
+            DateTime fechaMenosTresMes = fechaActual.AddMonths(-3);
+            IdDateInicial.Text = fechaMenosTresMes.ToString("yyyy-MM-dd");
+            IdDateFinal.Text = fechaActual.ToString("yyyy-MM-dd");
+
+
+            TextUltContComer.Text = fechaActual.ToString("yyyy-MM-dd");
+
+
+            BtnExcelCot.Enabled = false;
+            BtnExcelCot.CssClass = "btn shadow btn-light linkButtonClicked button-disabled grande";
+
+            BtnPDFCot.Enabled = false;
+            BtnPDFCot.CssClass = "btn shadow btn-light linkButtonClicked button-disabled grande";
+        }
+
+        protected void Page_LoadGerenciaComercial()
+        {
+         
+                CargarAsesoresEnDropDownList();
+
+            string usuariologueado = Session["CedulaLogeada"].ToString();
+
+                // Realiza la conexión a la base de datos y la consulta para obtener el nombre y apellido del usuario
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT Nombre, Apellidos, cedula FROM tblEmpleado WHERE cedula = @nombreUsuario";
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@nombreUsuario", usuariologueado);
+                        SqlDataReader reader = command.ExecuteReader();
+                        if (reader.Read())
+                        {
+                            string cedulaUsuario = reader["cedula"].ToString();
+                            ddlAsesor.SelectedValue = cedulaUsuario; // Asignar el valor de la cédula al DropDownList
+                            ddlAsesorTapEstado.SelectedValue = cedulaUsuario;
+                            ddlAsesorTabSeguimiento.SelectedValue = cedulaUsuario;
+      
+                        }
+                    }
                 }
 
+               ConsultarDatos();
+               DataGrid2.DataBind();
+               LoadEstados();
 
-        }
+            DateTime fechaActual = DateTime.Now;
+                DateTime fechaMenosUnMesUnDia = fechaActual.AddMonths(-1).AddDays(-1);
+                TextBoxStartDate.Text = fechaMenosUnMesUnDia.ToString("yyyy-MM-dd");
+                TextBoxEndDate.Text = fechaActual.ToString("yyyy-MM-dd");
+
+                DateTime fechaMenosUnMes4dias = fechaActual.AddMonths(-1).AddDays(-4);
+                TextCotizacionEntreInicio2.Text = fechaMenosUnMes4dias.ToString("yyyy-MM-dd");
+                TextCotizacionEntreFinal2.Text = fechaActual.ToString("yyyy-MM-dd");
+
+                DateTime fechaMenosTresMes = fechaActual.AddMonths(-3);
+                IdDateInicial.Text = fechaMenosTresMes.ToString("yyyy-MM-dd");
+                IdDateFinal.Text = fechaActual.ToString("yyyy-MM-dd");
+
+                TextUltContComer.Text = fechaActual.ToString("yyyy-MM-dd");
+
+                BtnExcelCot.Enabled = false;
+                BtnExcelCot.CssClass = "btn shadow btn-light linkButtonClicked button-disabled grande";
+
+                BtnPDFCot.Enabled = false;
+                BtnPDFCot.CssClass = "btn shadow btn-light linkButtonClicked button-disabled grande";
+
+            }
 
         //POR VENDEDOR
         protected void TapPorVendedor_Click(object sender, EventArgs e)
@@ -108,7 +180,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Realiza la consulta utilizando el SqlDataSource
             DataGridConsultaCotizaciones.SelectCommand = "cta_Cotizaciones_Por_Vendedor"; // Nombre del nuevo procedimiento almacenado
             DataGridConsultaCotizaciones.SelectParameters.Clear();
-            DataGridConsultaCotizaciones.SelectParameters.Add("NombreAsesor", TextAsesor.Text);
+            DataGridConsultaCotizaciones.SelectParameters.Add("NombreAsesor", ddlAsesor.SelectedItem.Text);
             DataGridConsultaCotizaciones.SelectParameters.Add("FechaInicio", TextBoxStartDate.Text);
             DataGridConsultaCotizaciones.SelectParameters.Add("FechaFin", TextBoxEndDate.Text);
 
@@ -151,7 +223,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Realiza la consulta utilizando el SqlDataSource
                 DataGridPorEstado.SelectCommand = "cta_Cotizaciones_Por_Estado"; // Nombre del nuevo procedimiento almacenado
                 DataGridPorEstado.SelectParameters.Clear();
-                DataGridPorEstado.SelectParameters.Add("NombreAsesor", TextAsesortab2.Text);
+                DataGridPorEstado.SelectParameters.Add("NombreAsesor", ddlAsesorTapEstado.SelectedItem.Text);
                 DataGridPorEstado.SelectParameters.Add("FechaInicio", TextCotizacionEntreInicio2.Text);
                 DataGridPorEstado.SelectParameters.Add("FechaFin", TextCotizacionEntreFinal2.Text);
                 DataGridPorEstado.SelectParameters.Add("Estado", estadoSeleccionado);
@@ -204,7 +276,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Datos de los TextBox
             worksheet.Cells["A2"].Value = "Asesor Comercial:";
-            worksheet.Cells["B2"].Value = TextAsesor.Text;
+            worksheet.Cells["B2"].Value = ddlAsesor.SelectedItem.Text;
             worksheet.Cells["G2"].Value = "Fecha de inicio:" + TextBoxStartDate.Text;
             worksheet.Cells["G3"].Value = "Fecha de fin:" + TextBoxEndDate.Text;
 
@@ -1176,14 +1248,87 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void Consultar_Click(object sender, EventArgs e)
         {
-            DataGrid3.DataSource = DataGridSeguimiento;
-            DataGrid3.DataBind();
-            BtnGraSeg.Enabled = false;
-            BtnGraSeg.CssClass = "button-disabled btn-outline-dark btn btn-light text-center";
-            DataGrid6.DataBind();
+            // Obtener los valores seleccionados
+            string nombreAsesor = ddlAsesorTabSeguimiento.SelectedItem.Text;
+            DateTime fechaInicio = DateTime.Parse(IdDateInicial.Text);
+            DateTime fechaFin = DateTime.Parse(IdDateFinal.Text);
+
+            // Establecer la conexión con la base de datos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Crear el comando para ejecutar el procedimiento almacenado
+                SqlCommand command = new SqlCommand("sp_Cotizaciones_Seguimiento", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                // Agregar los parámetros al comando
+                command.Parameters.AddWithValue("@NombreAsesor", nombreAsesor);
+                command.Parameters.AddWithValue("@FechaInicio", fechaInicio);
+                command.Parameters.AddWithValue("@FechaFin", fechaFin);
+
+                // Abrir la conexión
+                connection.Open();
+
+                // Ejecutar el comando y cargar los resultados en un System.Data.DataTable
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                System.Data.DataTable dataTable = new System.Data.DataTable(); // Especifica System.Data.DataTable
+                adapter.Fill(dataTable);
+                DataGrid3.DataSource = dataTable;
+                DataGrid3.DataBind();
+            }
         }
+
+        //ADMINISTRATIVO
+
+        private void CargarAsesoresEnDropDownList()
+        {
+           
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+                string consulta = "SELECT Cedula, CONCAT(Nombre, ' ', Apellidos) AS NombreCompleto FROM tblAsesorComercial WHERE Activo = 1 ORDER BY NombreCompleto ASC";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand(consulta, connection);
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        // Cargar el DropDownList ddlAsesor
+                        ddlAsesor.DataSource = reader;
+                        ddlAsesor.DataTextField = "NombreCompleto";
+                        ddlAsesor.DataValueField = "Cedula";
+                        ddlAsesor.DataBind();
+                    }
+
+                    // Reutilizar el mismo comando para cargar los otros DropDownList
+                    command.CommandText = consulta;
+
+                    // Cargar el DropDownList ddlAsesorTapEstado
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        ddlAsesorTapEstado.DataSource = reader;
+                        ddlAsesorTapEstado.DataTextField = "NombreCompleto";
+                        ddlAsesorTapEstado.DataValueField = "Cedula";
+                        ddlAsesorTapEstado.DataBind();
+                    }
+
+                    // Cargar el DropDownList ddlAsesorTabSeguimiento
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        ddlAsesorTabSeguimiento.DataSource = reader;
+                        ddlAsesorTabSeguimiento.DataTextField = "NombreCompleto";
+                        ddlAsesorTabSeguimiento.DataValueField = "Cedula";
+                        ddlAsesorTabSeguimiento.DataBind();
+                    }
+                }
+
+            ddlAsesor.Items.Insert(0, new ListItem("", ""));
+            ddlAsesorTapEstado.Items.Insert(0, new ListItem("", ""));
+            ddlAsesorTabSeguimiento.Items.Insert(0, new ListItem("", ""));
+        }
+
     }
 
 
-    }
+}
     
