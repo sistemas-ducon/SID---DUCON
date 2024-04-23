@@ -152,7 +152,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link text-dark " id="BuscarDesarrollo-tab" data-bs-toggle="tab" href="#BuscarDesarrollo-content">Buscar Desarrollos</a>
+                        <a class="nav-link text-dark " id="BuscarDesarrollo-tab" data-bs-toggle="tab" href="#BuscarDesarrollo-content">Buscar Solicitudes</a>
                     </li>
 
                 </ul>
@@ -190,8 +190,8 @@
                                 <i class="bi bi-wrench"></i>
                             </a>
 
-                            <a class="icong disabled " href="#" title="Observaciones" id="Observaciones">
-                                <i class="bi bi-eye"></i>
+                            <a class="icong disabled" href="#" title="Observaciones" id="Observaciones"  onclick="abrirObservaciones();">
+                               <i class="bi bi-eye"></i>
                             </a>
 
                             <asp:LinkButton class="icong disabled" title="Devolver Solicitud a Ventas" ID="DevolverSolicitud" runat="server">
@@ -228,6 +228,7 @@
             <div class="tab-pane fade  show active" id="BitacoraDesarrollo-content">
                 <asp:UpdatePanel ID="PanelBitacora" runat="server">
                     <ContentTemplate>
+
                         <div class="container-fluid border ">
 
                             <div class="row pt-1 mt-1 pb-1 mb-1 ">
@@ -302,7 +303,7 @@
                                     <div class="input-group input-group-sm  mb-2 gap-3 justify-content-center">
                                         <asp:Label ID="lbProyecto" class="col-form-label-sm" Text="Proyecto" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbProyecto" type="text" class="form-control form-control-sm " runat="server" disabled="disabled" required=""></asp:TextBox>
-
+                                        <asp:TextBox ID="tbProyectoServidor" type="text" class="form-control form-control-sm " runat="server" CssClass="hidden-textBox"></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -704,6 +705,31 @@
 
                             </div>
 
+                        </div>
+
+                            <!--Modal confirmar Importar -->
+                        <div id="confirmarImportar" class="modal" tabindex="-1" style="display: none;">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-success text-white">
+                                        <h5 class="modal-title text-center">Importar  Detalle</h5>
+
+                                    </div>
+                                    <div class="modal-body border rounded">
+                                        <div class="container-fluid">
+                                            <h6>¿ Esta seguro de importar los detalles de esta solicitud?  </h6>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                            <asp:Button runat="server" ID="btnImportar" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-success" Style="width: 5rem;" OnClick="btnImportar_Si_Click" />
+                                            <asp:Button runat="server" ID="btnClose" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                     </ContentTemplate>
@@ -1738,6 +1764,39 @@
             window.open('AdjuntarDocumentos.aspx', '_blank');
         }
 
+
+        function abrirObservaciones() {
+          
+            // Obtener los valores de los textbox del DOM
+            var solicitud1 = document.getElementById("lbNumeroSolicitud").innerText;
+            var cliente1 = document.getElementById("tbClienteServidor").value;
+            var proyecto1 = document.getElementById("tbProyectoServidor").value;
+
+            // Realizar la petición AJAX
+            $.ajax({
+                type: "POST",
+                url: "Solicitud_Especial.aspx/ObservacionesRedirect",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({
+                    solicitud: solicitud1,
+                    cliente: cliente1,
+                    proyecto: proyecto1
+                }),
+                success: function (response) {
+                    // Utiliza window.open para abrir "Formulario2.aspx" en otra pestaña
+                    window.open('../FormExtPrin/ObservacionesOT.aspx', '_blank');
+                },
+                error: function (error) {
+                    // Manejar errores si los hay
+                }
+            });
+
+
+           
+
+        }
+
         //Funcion para cuando seleccionan un desarrollo o una cotizacion nos lleva al formulario
         function activarTab(tabId) {
             // Oculta todas las pestañas
@@ -1792,9 +1851,6 @@
             // Devuelve true si los campos son válidos, de lo contrario, devuelve false
             return isValid;
         }
-
-
-
 
         function ActivarBotonDetalle1() {
             var boton2 = document.getElementById("<%= btnProgramarSolicitud.ClientID %>");

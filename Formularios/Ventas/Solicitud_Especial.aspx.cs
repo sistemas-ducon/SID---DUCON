@@ -132,7 +132,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         btnDesprogramar1.CssClass = "btn-sm btn-outline-secondary";
 
                     }
-     
+
 
                 }
                 else
@@ -178,7 +178,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 { "MaterialSession", tbMaterial},
                 { "CantidadSession", tbCantidad},
                 { "EspGeneralSession", txEspGen}
-       
+
         };
 
             foreach (var kvp in variablesDeSesionYControles)
@@ -238,14 +238,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     else if (kvp.Value is DropDownList)
                     {
 
-                        if(kvp.Key == "TipoSession" || kvp.Key == "SolOrigenSession" || kvp.Key == "DirigidoSession" || kvp.Key == "AsesorSolSession")
+                        if (kvp.Key == "TipoSession" || kvp.Key == "SolOrigenSession" || kvp.Key == "DirigidoSession" || kvp.Key == "AsesorSolSession")
                         {
                             ddlDirigido.DataBind();
                             ddlTipo.DataBind();
                             ((DropDownList)kvp.Value).SelectedItem.Text = valorSesion;
                             ((DropDownList)kvp.Value).SelectedItem.Value = valorSesion;
                         }
-                       
+
                         if (kvp.Key == "CiudadSession")
                         {
                             ddlCiudad.DataBind();
@@ -259,7 +259,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 }
                             }
 
-                          
+
                         }
 
 
@@ -287,7 +287,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         Session.Remove("EspGeneralSession");
                     }
 
-                    
+
 
                     Session.Remove(kvp.Key);
                 }
@@ -555,7 +555,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 else if (programadoVentas == 1 && pausado == 1)
                 {
                     e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#08F4E2");    // Aqua
-                   
+
                 }
                 else if (fechaProgramada <= DateTime.Now && programadoVentas == 1 )
                 {
@@ -569,9 +569,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
                 else
-                {                
-                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F1FF43");//amarillo 
-                        e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");                 
+                {
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F1FF43");//amarillo 
+                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
                 }
 
 
@@ -702,12 +702,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
 
             // Validamos si el campo esta vacio para ejecurar un sqldatasource sino usamoos el otr 
-           if (tbFechaIni.Text != "" && tbFechaFin.Text != "" && tbSolicitud1.Text != "")
+            if (tbFechaIni.Text != "" && tbFechaFin.Text != "" && tbSolicitud1.Text != "")
             {
                 BuscarDesarrollo.DataSourceID = "SolicitudXID";
                 BuscarDesarrollo.DataBind();
             }
-            else if  (tbFechaIni.Text != "" && tbFechaFin.Text != "" && tbProyectoX.Text != "")
+            else if (tbFechaIni.Text != "" && tbFechaFin.Text != "" && tbProyectoX.Text != "")
             {
                 BuscarDesarrollo.DataSourceID = "SolicXProyecto";
                 BuscarDesarrollo.DataBind();
@@ -735,7 +735,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-              
+
 
 
                 // Obtener los valores de las columnas ocultas
@@ -846,6 +846,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 lbNumeroSolicitud.Text = IdSolicitud;
                 tbProyecto.Text = NombreProyecto;
+                tbProyectoServidor.Text = NombreProyecto;
 
                 foreach (ListItem item in ddlAsesor.Items)
                 {
@@ -1009,6 +1010,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 lbNumeroSolicitud.Text = IdSolicitud;
                 tbProyecto.Text = NombreProyecto;
+                tbProyectoServidor.Text = NombreProyecto;
 
                 foreach (ListItem item in ddlAsesor.Items)
                 {
@@ -1173,7 +1175,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 lbNumeroSolicitud.Text = IdSolicitud;
                 tbProyecto.Text = NombreProyecto;
-
+                tbProyectoServidor.Text = NombreProyecto;
                 foreach (ListItem item in ddlAsesor.Items)
                 {
                     if (item.Text == Asesor)
@@ -1293,7 +1295,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void GuardarModificarSolicitud(object sender, EventArgs e)
         {
-           
+
             string insertUpdate = Session["InsertUpdate"] as string;
 
             if (insertUpdate == "Insertar")
@@ -1603,12 +1605,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         Session.Remove("Tipo");
                         Session.Remove("AsesorSol");
                         Session.Remove("Id_Solicitud_Pantalla");
-                
+
                         string script = "<script>ActivarGuardar();</script>";
                         ScriptManager.RegisterStartupScript(this, GetType(), "ActivarGuardar", script, false);
 
                     }
-                   
+
 
                 }
 
@@ -1852,7 +1854,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 UltimaActivacionSolicitud = UltimaActivacionSolicitud.AddDays(1);
                 UltimaActivacionSolicitud = new DateTime(UltimaActivacionSolicitud.Year, UltimaActivacionSolicitud.Month, UltimaActivacionSolicitud.Day, 8, 0, 0);
-            }       
+            }
             DateTime FechaEntrega = SumarDiaLaboral(UltimaActivacionSolicitud, 5);
 
             return FechaEntrega;
@@ -1919,14 +1921,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         [WebMethod] // Cambiar estado de variable de Session cuando dan click en NuevaSolicitud 
         public static void NuevaSolicitud1()
         {
-          
+
             HttpContext.Current.Session["nuevaSol"] = null;
         }
 
         [WebMethod]  // Cambiar estado de variable de Session cuando dan click en Modificarsolicitud 
         public static void ModificarSolicitud1()
         {
-         
+
             HttpContext.Current.Session["nuevaSol"] = null;
         }
 
@@ -2173,7 +2175,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void GuardarModificarDetalle(object sender, EventArgs e)
         {
-           
+
 
             if (Session["InsertUpdateDetalle"]?.ToString() == "Insertar")
             {
@@ -2217,7 +2219,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             int rowsAffected = cmd.ExecuteNonQuery();
                             if (rowsAffected > 0)
                             {
-                               // Variables de session de Detalle 
+                                // Variables de session de Detalle 
                                 Session["ProductoSession"] = txDescProduc.InnerText;
                                 Session["ProveedorVentaSession"] = tbProveedor.Text;
                                 Session["AnchoSession"] = tbAncho.Text;
@@ -2320,7 +2322,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             Session["AlturaSession"] = tbAltura.Text;
                             Session["ProfundidadSession"] = tbProfundidad.Text;
                             Session["MaterialSession"] = tbMaterial.Text;
-                            Session["CantidadSession"] =tbCantidad.Text;
+                            Session["CantidadSession"] = tbCantidad.Text;
                             Session["EspGeneralSession"] = txEspGen.InnerText;
 
                             // Variables de Session de la solicitud 
@@ -2372,19 +2374,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
 
-        [WebMethod] 
+        [WebMethod]
         public static void NuevoDetalle()
         {
             HttpContext.Current.Session["InsertUpdateDetalle"] = "Insertar";
         }
 
-        [WebMethod] 
+        [WebMethod]
         public static void ModificarDetalle()
         {
             HttpContext.Current.Session["InsertUpdateDetalle"] = "Actualizar";
         }
 
-        [WebMethod] 
+        [WebMethod]
         public static void LimpiarVaribleSessiondetalle()
         {
             HttpContext.Current.Session["ScriptEspecifico"] = null;
@@ -2424,12 +2426,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void ImportarDetalle_Click(object sender, EventArgs e)
         {
+            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#confirmarImportar').modal('show');", true);
+        }
+        protected void btnImportar_Si_Click(object sender, EventArgs e)
+        {
+
             DataTable DetalleImportado = ConsultarInfoDetalle();
 
 
-            if(DetalleImportado.Rows.Count > 0)
+            if (DetalleImportado.Rows.Count > 0)
             {
-                foreach(DataRow row in DetalleImportado.Rows)
+                foreach (DataRow row in DetalleImportado.Rows)
                 {
                     string Id_Detalle = row["ID_SolicitudDetalle"].ToString();
 
@@ -2448,12 +2455,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         DataGridDetalleSolicitud.DataBind();
 
-                    }               
-                  
+                    }
+
                 }
 
                 string scriptAgregado = "alert('Detalles Agregados.');";
-                ScriptManager.RegisterStartupScript(this,GetType(),"showAgregado",scriptAgregado,true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "showAgregado", scriptAgregado, true);
 
 
             }
@@ -2463,8 +2470,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string scriptEncontrado = "alert('La solicitud de origen no tiene detalles para importar.');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showEncontrado", scriptEncontrado, true);
             }
-
-
 
         }
         public DataTable ConsultarInfoDetalle()
@@ -2481,7 +2486,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 using (SqlDataAdapter adapter = new SqlDataAdapter(query, connection))
                 {
 
-                    adapter.SelectCommand.Parameters.AddWithValue("@IdDetalleOrigen", tbSolicitudOrigen.Text);                 
+                    adapter.SelectCommand.Parameters.AddWithValue("@IdDetalleOrigen", tbSolicitudOrigen.Text);
                     adapter.Fill(DetallesOrigen);
                 }
             }
@@ -2571,7 +2576,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string FactorCompras = DatosDetalle.Rows[0]["FactorCompras"].ToString();
                 string Categoria = DatosDetalle.Rows[0]["Categoria"].ToString();
                 string RealizadoPor = DatosDetalle.Rows[0]["RealizadoPor"].ToString();
-                string Id_SolicitudDetalle = DatosDetalle.Rows[0]["ID_SolicitudDetalle"].ToString();                     
+                string Id_SolicitudDetalle = DatosDetalle.Rows[0]["ID_SolicitudDetalle"].ToString();
                 string DetalleOrigen = DatosDetalle.Rows[0]["DetalleOrigen"].ToString();
 
 
@@ -2595,8 +2600,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     using (SqlCommand cmdInsert = new SqlCommand(sSql, connectionISID))
                     {
-                        cmdInsert.Parameters.AddWithValue("@Id_SolicitudDetalle", ID_DetalleNuevo );
-                        cmdInsert.Parameters.AddWithValue("@Id_Solicitud", lbNumeroSolicitud.Text);                       
+                        cmdInsert.Parameters.AddWithValue("@Id_SolicitudDetalle", ID_DetalleNuevo);
+                        cmdInsert.Parameters.AddWithValue("@Id_Solicitud", lbNumeroSolicitud.Text);
                         cmdInsert.Parameters.AddWithValue("@Producto", Producto);
                         cmdInsert.Parameters.AddWithValue("@ProveedorSugerido", ProveedorSugerido);
                         cmdInsert.Parameters.AddWithValue("@Ancho", Ancho);
@@ -2629,6 +2634,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
             }
+        }
+
+
+        [WebMethod] // Metdodo estatico para cambiar las variables de session para cargar observaciones 
+        public static void ObservacionesRedirect(string solicitud, string cliente, string proyecto)
+        {
+
+            HttpContext.Current.Session["Id_OT"] = "SPE" + solicitud;
+            HttpContext.Current.Session["pedido"] = "0";
+            HttpContext.Current.Session["ValorDeObra"] = cliente + " " + proyecto;
         }
 
 

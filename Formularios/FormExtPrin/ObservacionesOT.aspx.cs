@@ -40,23 +40,29 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     if (Session["ValorDeObra"] != null)
                     {
                         string valorDeObra = Session["ValorDeObra"].ToString();
-                        TextBox1.Text = valorDeObra; // Asignar el valor al TextBox en ObservacionesOT
+                        tbNombreObra.Text = valorDeObra; // Asignar el valor al TextBox en ObservacionesOT
+                        tbNombreObra.Enabled = false;
+                        tbNombreObra.CssClass = "form-control";
+
                     }
-                    AsignarValorTextBox();
-                    ManejarIdOT();
+                    ConsultarCorreosPorDefecto(); 
+                    ManejarIdOT(); 
                     ManejarPedido();
                     EnlazarDataGrid();
                     EnlazarDataGrid4();
 
-                    BtnGrabarObservacion.Enabled = false;
-                    BtnGrabarObservacion.CssClass = "mt-2 btn shadow button-disabled linkButtonClicked";
+                    DateTime fecha = DateTime.Now;
+                    tbfechaActividad.Text = fecha.ToString("yyyy-MM-dd");
+                    tbfechaActividad.Enabled = false;
+                    tbfechaActividad.CssClass = "form-control";
+
+
                 }
             }
             else
             {
                 Response.Redirect("~/Formularios/Login.aspx");
             }
-           
 
             Session.Remove("Id_OT");
             Session.Remove("pedido");
@@ -69,13 +75,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             if (dt != null && dt.Rows.Count > 0)
             {
-                DropDownList1.DataSource = dt;
-                DropDownList1.DataTextField = "TipoObservacion"; // Columna que se mostrará
-                DropDownList1.DataValueField = "id_TipoObservacion"; // Columna para el valor
-                DropDownList1.DataBind();
+                ddlTipoObservacion.DataSource = dt;
+                ddlTipoObservacion.DataTextField = "TipoObservacion"; // Columna que se mostrará
+                ddlTipoObservacion.DataValueField = "id_TipoObservacion"; // Columna para el valor
+                ddlTipoObservacion.DataBind();
 
                 // Agregar un elemento por defecto
-                DropDownList1.Items.Insert(0, new System.Web.UI.WebControls.ListItem(" "));
+                ddlTipoObservacion.Items.Insert(0, new System.Web.UI.WebControls.ListItem(" "));
 
             }
         }
@@ -86,11 +92,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString))
             {
-                string query = "SELECT tblTipoObservacion.id_TipoObservacion, CONCAT_WS('-', tblTipoObservacion.Aplicacion, tblTipoObservacion.Descripcion) AS TipoObservacion " +
-                               "FROM tblTipoObservacion " +
-                               "WHERE tblTipoObservacion.Aplicacion IS NOT NULL AND tblTipoObservacion.Descripcion IS NOT NULL " +
-                               "GROUP BY tblTipoObservacion.id_TipoObservacion, tblTipoObservacion.Aplicacion, tblTipoObservacion.Descripcion " +
-                               "ORDER BY tblTipoObservacion.Aplicacion";
+                string query = "SELECT Id_TipoObservacion,Aplicacion,Descripcion,Aplicacion + ' - ' + Descripcion as TipoObservacion ,DestinatarioPorDefecto,Programable,AlDirectorComercial" +
+                               " FROM tblTipoObservacion WHERE UsoEspecifico=0  AND  Activa=1  AND  Aplicacion like '%' ORDER BY Aplicacion ASC , Descripcion ASC";
 
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
@@ -103,7 +106,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             return dt;
         }
 
-        private void AsignarValorTextBox()
+        private void ConsultarCorreosPorDefecto()
         {
             string id = Session["Id_OT"]?.ToString();
             string pedido = Session["pedido"]?.ToString();
@@ -116,36 +119,67 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 {
                     connection.Open();
 
-                    string query = "SELECT tblEmpleado.Mail " +
-                                   "FROM tblOT " +
-                                   "INNER JOIN tblEmpleado ON tblOT.AbiertoPor = tblEmpleado.Cedula " +
-                                   "WHERE tblOT.Id_OT = @CedulaLogeada " +
-                                   "AND tblOT.Consecutivo_Pedido = @NumeroPedido";
-
-                    SqlCommand command = new SqlCommand(query, connection);
-                    command.Parameters.AddWithValue("@CedulaLogeada", id);
-                    command.Parameters.AddWithValue("@NumeroPedido", pedido);
-
-                    SqlDataReader reader = command.ExecuteReader();
-
-                    // Verificar si hay filas devueltas por la consulta
-                    if (reader.Read())
+                    // Se valida si la observacion  viene de solicitudes especiales 
+                    if (id.StartsWith("SPE"))
                     {
-                        string mail = reader["Mail"].ToString();
-                        TextBox3.Text = mail; // Asignar el valor a TextBox3
+                        string query = "SELECT E.Mail  FROM tblSoliciDiseEspe AS  SE INNER JOIN tblEmpleado AS E " +
+                                       " ON  E.Nombre + ' ' + Apellidos =  SE.Asesor WHERE SE.ID_Solicitud = @Id_Solicitud";
+
+                        SqlCommand command = new SqlCommand(query, connection);
+                        command.Parameters.AddWithValue("@Id_Solicitud", id.Substring(3));
+                       
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        // Verificar si hay filas devueltas por la consulta
+                        if (reader.Read())
+                        {
+                            string mail = reader["Mail"].ToString();
+                            tbReceptorCorreo.Text = mail; // Asignar el valor a TextBox3
+                        }
+                        else
+                        {
+                            tbReceptorCorreo.Text = string.Empty; // Si no hay resultados, establecer el TextBox3 como vacío
+                        }
+
+                        reader.Close();
                     }
                     else
                     {
-                        TextBox3.Text = string.Empty; // Si no hay resultados, establecer el TextBox3 como vacío
-                    }
+                        string query = "SELECT tblEmpleado.Mail " +
+                                "FROM tblOT " +
+                                "INNER JOIN tblEmpleado ON tblOT.AbiertoPor = tblEmpleado.Cedula " +
+                                "WHERE tblOT.Id_OT = @CedulaLogeada " +
+                                "AND tblOT.Consecutivo_Pedido = @NumeroPedido";
 
-                    reader.Close();
+                        SqlCommand command = new SqlCommand(query, connection);
+                        command.Parameters.AddWithValue("@CedulaLogeada", id);
+                        command.Parameters.AddWithValue("@NumeroPedido", pedido);
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        // Verificar si hay filas devueltas por la consulta
+                        if (reader.Read())
+                        {
+                            string mail = reader["Mail"].ToString();
+                            tbReceptorCorreo.Text = mail; // Asignar el valor a TextBox3
+                        }
+                        else
+                        {
+                            tbReceptorCorreo.Text = string.Empty; // Si no hay resultados, establecer el TextBox3 como vacío
+                        }
+
+                        reader.Close();
+                    }
+                  
+                    
                 }
             }
             else
             {
-                TextBox3.Text = string.Empty; // Si los parámetros son nulos o vacíos, establecer el TextBox3 como vacío
+                tbReceptorCorreo.Text = string.Empty; // Si los parámetros son nulos o vacíos, establecer el TextBox3 como vacío
             }
+
+            tbReceptorCorreo.Enabled = false;
+            tbReceptorCorreo.CssClass = "form-control";
         }
 
         private void ManejarIdOT()
@@ -157,7 +191,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             if (!string.IsNullOrEmpty(idOT))
             {
                 SqlDataSource1.SelectParameters["Id_OT"].DefaultValue = idOT;
-                TextBox5.Text = idOT;
+                tbOT.Text = idOT;
+                tbOT.Enabled = false;
+                tbOT.CssClass = "form-control";
+
             }
         }
 
@@ -165,7 +202,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         {
             if (Session["pedido"] != null)
             {
-                TextBox4.Text = Session["pedido"].ToString();
+                tbPedido.Text = Session["pedido"].ToString();
+                tbPedido.Enabled = false;
+                tbPedido.CssClass = "form-control";
             }
         }
 
@@ -219,6 +258,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             {
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
 
+                DataGridItem row = DataGrid1.Items[rowIndex];
+
+                // Se utiliza para darle el color solo a la fila seleccionada 
+                foreach (DataGridItem item in DataGrid1.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+                e.Item.CssClass = "fila-seleccionada";
+
 
                 if (rowIndex >= 0 && rowIndex < DataGrid1.Items.Count)
                 {
@@ -230,7 +282,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     string consecutivoPedido = DataGrid1.Items[rowIndex].Cells[2].Text;
 
                     // Asigna la observación al textarea
-                    TextArea1.Value = observacion;
+                    txObservacion.Value = observacion;
 
 
                 }
@@ -425,36 +477,389 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
 
         }
+      
 
+        // Grabar Observacion 
         protected void GrabarObservacion_Click(object sender, EventArgs e)
         {
+            // Validar que tenga los campos necesarios
+            if (ValidarCamposRequeridos())
+            {
+                // Se realiza la Insercion de la Observacion   
+                   InsertarObservacion();
+                   DataGrid1.DataBind();
+
+                // Traemos el Id_MaxObservacion 
+                string Id_Observacion = ConsultarId_Observacion();
+
+                // Se valida si hay receptores seleccionados             
+                if(tbCedulaRecp.Text != "")
+                {
+                    string cedulasNotificar = tbCedulaRecp.Text.Trim(';');
+                    string NombresNotificar = tbNombreRecp.Text.Trim(';');
+
+                    string[] CedNot = cedulasNotificar.Split(';');
+                    string[] NomNot = NombresNotificar.Split(';');
+
+                    for (int i = 0; i < CedNot.Length; i++)
+                    {
+                        // Llamamos al método InsertarObservacionReceptores con la cédula y el nombre actuales
+                       InsertarObservacionReceptores(Id_Observacion, CedNot[i], NomNot[i]);
+                       
+                    }
+                 
+                    // Mostrar mensaje de éxito
+                    string script1 = "alert('La observación ha sido grabada para los siguientes usuarios del sistema: " + tbNombreRecp.Text.Replace(";"," - ") + @"');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", script1, true);
+
+                }
+
+
+
+                //Consultamos el area de aplicacion  con el codigo del ddlTipoObservacion              
+                string Aplicacion =  ConsultarAreaAplicacion();
+
+                //Enviar la notificacion por Correo 
+                string destinatarios = tbReceptorCorreo.Text;
+                string cuerpo = @"
+                    <!DOCTYPE html>
+                    <html lang='es'>
+                    <head>
+                        <meta charset='UTF-8'>
+                        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+                        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                        <style>
+                            body {
+                                font-family: Arial, sans-serif;
+                                font-size: 14px;
+                                line-height: 1.6;
+                                margin: 0;
+                                padding: 0;
+                                background-color: #f9f9f9;
+                            }
+                            .container {
+                                max-width: 37rem;
+                                margin: 20px auto;
+                                padding: 20px;
+                                border: 1px solid #ccc;
+                                border-radius: 5px;
+                                background-color: #fff;
+                            }
+                            h2 {
+                                color: #333;
+                                font-size: 24px;
+                                margin-bottom: 20px;
+                            }
+                            p {
+                                margin-bottom: 10px;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class='container'>
+                            <h2>Notificación de Observación </h2>
+                            <p> <strong> Fecha de Observación: </strong> " + DateTime.Now.ToString() + @"</p>
+                            <p><strong> Emisor : </strong> <strong> " + Session["usuariologueado"].ToString() + @"</strong></p>
+                            <p><strong>Nombre de la Obra: </strong> " + tbNombreObra.Text + @"</p>
+                            <p><strong>Tipo Observacion : </strong> " + ddlTipoObservacion.SelectedItem.Text + @"</p>
+                            <p><strong>Detalle Observación: </strong> " + txObservacion.InnerText + @"</p>
+                            <p><strong>Fin Observación </strong> </p>
+                           
+                        </div>
+                    </body>
+                    </html>";
+
+                //ejecutar el procedimiento almacenado que envia el correo 
+                EnviarCorreoReproceso(destinatarios, cuerpo, Aplicacion);
+
+              
+            }
+            
 
         }
 
-        protected void SeleccionarVarios_Click(object sender, EventArgs e)
+        public void EnviarCorreoReproceso(string destinatarios, string cuerpo, string aplicacion)
         {
-            // Obtén el LinkButton que se hizo clic
-            LinkButton lnkSelectRow = (LinkButton)sender;
+            string nombreProcedimiento = "duc_sp_Correo";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
-            // Obtén el índice de fila desde el CommandArgument
-            int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
-
-            // Accede a la fila seleccionada en el DataGrid
-            DataGridItem selectedRow = DataGrid2.Items[rowIndex];
-
-            // Invierte el estado de selección de la fila
-            if (selectedRow.CssClass.Contains("selected-row"))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                selectedRow.CssClass = selectedRow.CssClass.Replace("selected-row", ""); // Deselecciona la fila
-                lnkSelectRow.Attributes["href"] = "#"; // Reinicia el atributo href
-            }
-            else
-            {
-                selectedRow.CssClass += " selected-row"; // Selecciona la fila
-                lnkSelectRow.Attributes["href"] = "#" + rowIndex.ToString(); // Almacena la posición de la fila en href
+                using (SqlCommand command = new SqlCommand(nombreProcedimiento, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Definir los parámetros del procedimiento almacenado
+                    command.Parameters.AddWithValue("@Destinatarios", destinatarios);
+                    command.Parameters.AddWithValue("@asunto", "Observacion: " + aplicacion + " APL: " + tbOT.Text + "-" +tbPedido.Text);
+                    command.Parameters.AddWithValue("@cuerpo", cuerpo);
+                    command.Parameters.AddWithValue("@adjuntos", "");
+                    command.Parameters.AddWithValue("@usuario", Session["usuariologueado"].ToString());
+
+                    try
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                        // Mostrar mensaje  de exito del envio de correo 
+                        string script2 = "alert('La notificación de la observación ha sido enviada por correo electronico a los  destinatarios " + tbReceptorCorreo.Text.Replace(";", " - ") + @"');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess2", script2, true);
+
+                    }
+                    catch (SqlException ex)
+                    {
+                        // Manejar la excepción (opcional)
+                        //error.Visible = true;
+                        // error.Text = ex.Message;
+                    }
+                }
             }
         }
 
+        private bool ValidarCamposRequeridos()
+        {
+            bool valido = true;
+
+            if(ddlTipoObservacion.SelectedValue == " ")
+            {
+                // Mensaje de alerta
+                string script1 = "alert('Por favor seleccione el tipo de observación.');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", script1, true);
+                valido = false;
+            }
+
+            if(txObservacion.InnerText == "")
+            {
+                // Mensaje de alerta
+                string script1 = "alert('Por favor escriba  la justificaci{on de la observación.');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", script1, true);
+                valido = false;
+            }
+
+            if (tbOT.Text == "" )
+            {
+                // Mensaje de alerta
+                string script1 = "alert('No se ha seleccionado una OT o una Solicitud Especial para generar una observacion');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", script1, true);
+                valido = false;
+            }
+
+
+            return valido;
+        }
+  
+        public string ConsultarAreaAplicacion()
+        {
+            string areaAplicacion = "";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT Aplicacion FROM tblTipoObservacion WHERE UsoEspecifico=0  AND  Activa=1  AND  Aplicacion like '%' AND ID_TipoObservacion = @TipoObs";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+
+                    command.Parameters.AddWithValue("@TipoObs", ddlTipoObservacion.SelectedValue);
+
+
+                    try
+                    {
+                        connection.Open();
+                        areaAplicacion = Convert.ToString(command.ExecuteScalar());
+                    }
+                    catch (Exception ex)
+                    {
+                      
+                    }
+                }
+            }
+
+            return areaAplicacion;
+        }
+
+        public string ConsultarMailReproceso()
+        {
+            string mailResponsable = null;
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+            string query = "";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@cedula", "");
+
+                    connection.Open();
+                    object result = command.ExecuteScalar();
+
+                    // Verificar si el resultado no es nulo
+                    if (result != null)
+                    {
+                        // Convertir el resultado a string
+                        mailResponsable = result.ToString();
+                    }
+                }
+            }
+
+            return mailResponsable;
+        }
+
+        protected void DataGridReceptorMail_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            if (e.CommandName == "VerMail")
+            {
+
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGridReceptorMail.Items[rowIndex];
+
+                string Nombre = row.Cells[2].Text;
+                string mailAgregar = row.Cells[3].Text;
+                string cedula = row.Cells[4].Text;
+              
+
+                // Tomamos los mail ya agregados y las cedulas agregadas
+                string MailAgregados = tbReceptorCorreo.Text;
+                string cedulaAgregadas = tbCedulaRecp.Text;
+                string NombreAgregado =  tbNombreRecp.Text;
+
+                if (!MailAgregados.Contains(mailAgregar))
+                {
+                    //Agregamos el correo del  receptor
+                    tbReceptorCorreo.Text =MailAgregados + ";" + mailAgregar;
+
+                    // Agregamos la cedula del Receptor 
+
+                    if(tbCedulaRecp.Text != "")
+                    {
+                        tbCedulaRecp.Text = cedulaAgregadas + ";" + cedula;
+                        tbNombreRecp.Text = NombreAgregado + ";" + Nombre;
+                    }
+                    else
+                    {
+                        tbCedulaRecp.Text = cedula;
+                        tbNombreRecp.Text = Nombre;
+                    }
+               
+
+                    //se usa Para darle un color a la fila seleccionada  
+                    e.Item.CssClass = "fila-seleccionada";
+                }
+                else
+                {
+                    // Eliminamos el correo del receptor  
+                    tbReceptorCorreo.Text = MailAgregados.Replace( ";"+mailAgregar , "");
+
+                    // Eliminamos la cedula del receptor 
+                    tbCedulaRecp.Text = cedulaAgregadas.Replace(cedula, "").TrimEnd(';').Replace(";;",";");
+
+                    // Eliminamos el  nombre  del receptor 
+                    tbNombreRecp.Text = NombreAgregado.Replace(Nombre, "").TrimEnd(';').Replace(";;", ";");
+                   
+
+                    e.Item.CssClass = "fila-seleccionada1";
+                }
+
+             
+               
+            }
+               
+        }
+
+        public void InsertarObservacion()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "INSERT INTO tblOtObservacion (Id_OT,Consecutivo_Pedido,Nombre_Obra,Observacion,FechaObservacion,Emisor,Nombre_Emisor," +
+                               "ID_TipoObservacion,FechaAnteriorDespacho,FechaNuevaDespacho,CedulaAsesor, FechaActividad,  Destinatarios) " +
+                               "VALUES(@OT, @Pedido, @NombreObra, @Observacion, @fechaObsercion,@Emisor, @Nombre_Emisor, @ID_TipoObservacion," +
+                               " @FechaAnteriorDespacho,@FechaNuevaDespacho, @CedulaAsesor, @FechaActividad,@Destinatarios)";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@OT", tbOT.Text);
+                    command.Parameters.AddWithValue("@Pedido", tbPedido.Text);
+                    command.Parameters.AddWithValue("@NombreObra", tbNombreObra.Text);
+                    command.Parameters.AddWithValue("@Observacion", txObservacion.InnerText);
+                    command.Parameters.AddWithValue("@fechaObsercion", DateTime.Now);
+                    command.Parameters.AddWithValue("@Emisor", Session["CedulaLogeada"].ToString());
+                    command.Parameters.AddWithValue("@Nombre_Emisor", Session["usuariologueado"].ToString());
+                    command.Parameters.AddWithValue("@ID_TipoObservacion",ddlTipoObservacion.SelectedValue);
+                    command.Parameters.AddWithValue("@FechaAnteriorDespacho", DateTime.Now); 
+                    command.Parameters.AddWithValue("@FechaNuevaDespacho", DateTime.Now);
+                    command.Parameters.AddWithValue("@CedulaAsesor", Session["CedulaLogeada"].ToString());
+                    command.Parameters.AddWithValue("@FechaActividad", tbfechaActividad.Text);
+                    command.Parameters.AddWithValue("@Destinatarios", tbReceptorCorreo.Text);
+               
+
+                    try
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Cambiar el mensaje de error
+                        //Console.WriteLine("Error al insertar datos: " + ex.Message);
+                    }
+                }
+            }
+        }
+
+        public string ConsultarId_Observacion()
+        {
+            string Id_Observacion = "";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "select max(id_Observacion) from tblOTObservacion";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    try
+                    {
+                        connection.Open();
+                        Id_Observacion = Convert.ToString(command.ExecuteScalar());
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejar la excepción 
+                        //Console.WriteLine("Error al ejecutar la consulta: " + ex.Message);
+                    }
+                }
+            }
+
+            return Id_Observacion;
+        }
+
+        public void InsertarObservacionReceptores(string Id_Observacion, string cedula, string nombre)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "INSERT INTO tblOTObservacion_Receptor (Id_Observacion,Receptor,Nombre_Receptor) Values(@ID_Observacion, @CedulaRecep , @NombreReceptor)";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ID_Observacion", Id_Observacion);
+                    command.Parameters.AddWithValue("@CedulaRecep", cedula);
+                    command.Parameters.AddWithValue("@NombreReceptor", nombre);
+         
+                    try
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Cambiar el mensaje de error
+                        // Console.WriteLine("Error al insertar datos: " + ex.Message);
+                    }
+                }
+            }
+        }
 
     }
 }

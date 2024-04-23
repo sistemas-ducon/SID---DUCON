@@ -199,13 +199,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     string rutaArchivo = Path.Combine(rutaCompleta, nombreArchivo);
 
                     try
+                    {               
+                    // Guardar el archivo en la ruta 
+                    DoctOT.SaveAs(rutaArchivo);
+
+                   
+                    FileAttributes atributosArchivo = File.GetAttributes(rutaArchivo);
+                    if ((atributosArchivo & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
                     {
-                        // Guardar el archivo en la ruta 
-                        DoctOT.SaveAs(rutaArchivo);
+                        // Si el archivo tiene el atributo de solo lectura, lo quitamos
+                        File.SetAttributes(rutaArchivo, atributosArchivo & ~FileAttributes.ReadOnly);
+                    }
 
-                        // Realizaos la Insercion 
 
-                        string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+                    // Realizaos la Insercion 
+
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                         if(ddlTipoDoc.SelectedItem.Text == "DLLO.ESPECIAL")
                         {
@@ -360,6 +369,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             {
                 if (File.Exists(rutaArchivo))
                 {
+                    // Quitar el atributo de solo lectura si está presente
+                    FileAttributes atributosArchivo = File.GetAttributes(rutaArchivo);
+                    if ((atributosArchivo & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                    {
+                        // Si el archivo tiene el atributo de solo lectura, lo quitamos
+                        File.SetAttributes(rutaArchivo, atributosArchivo & ~FileAttributes.ReadOnly);
+                    }
+
+
                     File.Delete(rutaArchivo);
                     string mensajePersonalizado1 = "El documento ha sido eliminado correctamente.";
                     string urlRedireccion1 = "FormExtPrin/DocumentacionOT.aspx";
@@ -605,7 +623,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     {
                         File.Copy(RutaCompletaCopia, RutaCompletaDestinoArchivo, true);
                         // Establecer la fecha de modificación del archivo copiado
-                      
+
+                        // Quitar el atributo de solo lectura si está presente
+                        FileAttributes attributes = File.GetAttributes(RutaCompletaDestinoArchivo);
+                        if ((attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                        {
+                            // Si el archivo tiene el atributo de solo lectura, lo quitamos
+                            File.SetAttributes(RutaCompletaDestinoArchivo, attributes & ~FileAttributes.ReadOnly);
+                        }
+
                         string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                         using (SqlConnection connection = new SqlConnection(connectionString))
