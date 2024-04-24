@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../../Recursos/CSS/OrdenTrabajo.css" />
     <title>Ordenes de Trabajo</title>
     <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
-
+ 
 
     <script>
         // Mostrar y Ocultar  acabados plano
@@ -577,14 +577,14 @@
                                 <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Obra" runat="server" ID="lblObra"></asp:Label>
-                                        <asp:TextBox ID="tbObra" type="text" class="form-control" runat="server"></asp:TextBox>
+                                        <asp:TextBox ID="tbObra" type="text" class="form-control" runat="server"  MaxLength="49"></asp:TextBox>
                                     </div>
                                 </div>
 
                                 <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-4">
                                         <asp:Label class="form-label" Text="Dir" runat="server" ID="lblDir"></asp:Label>
-                                        <asp:TextBox ID="tbDir" type="text" class="form-control" runat="server"></asp:TextBox>
+                                        <asp:TextBox ID="tbDir" type="text" class="form-control" runat="server" MaxLength="59"></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -1260,10 +1260,10 @@
                             </div>
                         </div>
 
-                        <div id="OTingresada" class="modal" tabindex="-1">
+                        <div id="OTingresada" class="modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
-                                    <div class="modal-header bg-dark">
+                                    <div class="modal-header bg-success">
                                         <h5 class="modal-title d-flex align-items-center justify-content-center text-white">S_I_Ducon</h5>
 
                                     </div>
@@ -1271,7 +1271,7 @@
                                         <p><span id="OTingresada2"></span></p>
                                     </div>
                                     <div class="modal-footer  d-flex align-items-center justify-content-center">
-                                        <asp:Button runat="server" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" OnClick="MonstrasrModalAcabados_Click"></asp:Button>
+                                        <asp:Button runat="server" type="button"  class="btn btn-sm btn-outline-dark" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" OnClick="MonstrasrModalAcabados_Click"></asp:Button>
                                     </div>
                                 </div>
                             </div>
@@ -1337,12 +1337,52 @@
                                     </div>
                                     <div class="modal-body form-control-sm">
                                         <p>
-                                            Debes de llenar el NIT <br />
-                                            Al darle aceptar se redireccionará al NIT
+                                            Antes de proceder, por favor completa los campos de NIT.<br />
+                                          Haz clic en "Aceptar" para ingresar al NIT y continuar.
                                         </p>
                                     </div>
                                     <div class="modal-footer  d-flex align-items-center justify-content-center">
                                         <asp:Button runat="server" Text="Aceptar" OnClick="Redireccion_Nit_Click" CssClass="btn btn-sm btn-outline-dark" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div class="modal fade" id="GuardarNIT" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID</h5>
+                                    </div>
+                                   <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                                        <p>
+                                          ¿Deseas realizar más cambios en esta Orden de Trabajo?<br />
+                                             Si tienes más ajustes por hacer, puedes indicarlo aquí.
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                                         <asp:Button runat="server" Text="Si" OnClick="HaabilitarTextbox_click" CssClass="btn btn-sm btn-outline-dark" data-bs-dismiss="modal" aria-label="Close"/>
+                                          <asp:Button runat="server" class="btn btn-sm btn-outline-dark" Text="No" data-bs-dismiss="modal" aria-label="Close"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        
+                        <div class="modal fade" id="LlenarNITModificar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">NIT</h5>
+                                    </div>
+                                  <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                                        <p>
+                                          Desea modificar el NIT?
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                                        <asp:Button runat="server" Text="Si" OnClick="Redireccion_Nit" CssClass="btn btn-sm btn-outline-dark"/>
+                                         <asp:Button runat="server" class="btn btn-sm btn-outline-dark" Text="No" data-bs-dismiss="modal" aria-label="Close" OnClick="NoModificarNIT_Click" />
                                     </div>
                                 </div>
                             </div>
@@ -1364,7 +1404,7 @@
                             </div>
                         </div>
 
-                        <div id="OTModificada" class="modal" tabindex="-1">
+                        <div id="OTModificada" class="modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-dark">
@@ -1373,9 +1413,9 @@
                                     <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
                                         <p><span id="OTModificada1"></span></p>
                                     </div>
-                                    <div class="modal-footer">
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
                                         <asp:Button runat="server" Text="Sí" class="btn btn-sm btn-outline-success" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnSiModificar_Click"></asp:Button>
-                                        <asp:Button runat="server" Text="No" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close" OnClick="BtnNoModificar_Click"></asp:Button>
+                                        <asp:Button runat="server" Text="No" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close"></asp:Button>
                                     </div>
                                 </div>
                             </div>
@@ -2553,6 +2593,16 @@
         }
     </script>
 
+      <script type="text/javascript">
+          function openModal2() {
+              var myModal = new bootstrap.Modal(document.getElementById('GuardarNIT'), {
+                  keyboard: false
+              });
+              myModal.show();
+
+          }
+      </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var checkBox = document.getElementById('<%= chxBloques.ClientID %>');
@@ -2635,6 +2685,9 @@
 
         }
     </script>
+
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 

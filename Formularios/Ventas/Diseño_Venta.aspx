@@ -227,7 +227,7 @@
                                             <div class="modal fade" id="modall" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered">
                                                     <div class="modal-content">
-                                                        <div class="modal-header bg-dark">
+                                                        <div class="modal-header bg-success">
                                                             <h5 class="modal-title d-flex align-items-center justify-content-center text-white" id="modallLabel">Dejar Infomación</h5>
                                                           
                                                         </div>

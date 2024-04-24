@@ -75,7 +75,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (!IsPostBack)
                 {
-                   
+              
 
                     tbVenta.Text = DateTime.Now.ToString("yyyy-MM-dd");
                     dtpFechaEntregaDibujoDespiece.Text = DateTime.Now.ToString("yyyy-MM-dd");
@@ -179,7 +179,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     // Verificar si la variable de sesión 'MostrarModal' tiene contenido y es true
                     if (Session["ModalMostrado"] != null && (bool)Session["ModalMostrado"] == true)
                     {
+                        if (Session["BtnModificarEjecutado"] != null && (bool)Session["BtnModificarEjecutado"] == true)
+                        {
+                            if (Session["NuevoPedido"] == null)
+                            {
+                                if (Session["NuevaOTEjecutada"] == null)
+                                {
+                                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "setTimeout(function() { openModal2(); }, 1500);", true);
+                                    BotonesModificar();
+                                }        
+                            }
+                        }
                         NuevaOTDespuesDeCargarNIT();
+
                         Session.Remove("ModalMostrado");
                     }
                     else
@@ -189,6 +201,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
 
                     CargarVariablesDeSesionContable();
+         
 
                 }
 
@@ -204,6 +217,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BotonesModificar()
         {
+
             NuevaOt.Enabled = false;
             NuevaOt.CssClass = "btn btn-sm shadow button-disabled";
 
@@ -248,15 +262,36 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
 
-            HabilitarTodosLosTextBoxes();
+            listaTextBoxes = new List<TextBox>
+                {
+                    tbObra,tbDir,tbContac,tbEmail,tbRecibe,tbTel,tbCel,tbPais,tbHTotal,tbVenta,dtpFechaEntregaDibujoDespiece,dtpFechaEntregaProduccion,dtpEmpaque,dtpRealEmpaque,tbSupervisor,
+                    tbBolsa,tbValorPedido,txtNit,txtNombreEmp,txtcontacto,txtMail,txtDireccion,txtMunicipio,txtTelefono,txtCotizacion,txtValorSugerido,txtVcsd,txtVccd,txtOrdenCompra,txtAsesor,txtComision,
+                    txtDiseño,txtSaldo,txtVenta,txtDcto,txtDctoValor,txtVtte,txtVvia,txtGtotal
+
+                };
+
+            DeshabilitarTextBoxes(listaTextBoxes);
+
+            listaDropDownLists = new List<DropDownList>
+                {
+                   ddlNumbers,ddlZona,dtacboTipoPedido,cboPedidoBase,DtaCboTipoAprobacion,ddlFabrica1,ddlInstala,ddlAsesor,ddlCiudad
+
+                };
+
+            DeshabilitarDropDownLists(listaDropDownLists);
 
             tbPedDepen.Enabled = false;
 
             ddlFabrica1.Enabled = false;
 
+            tbOT.Enabled = false;
+
             Nit.Enabled = true;
 
             cbxComisionCompart.Enabled = true;
+      
+                
+
         }
 
         protected void dtacboTipoPedido_SelectedIndexChanged(object sender, EventArgs e)
@@ -402,7 +437,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (Session["CargarOTsEjecutada"] != null && (bool)Session["CargarOTsEjecutada"])
             {
                 tbOT.Text = "Por Asig";
-
             }
             else
             {
@@ -548,154 +582,187 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#LlenarNIT').modal('show');", true);
             }
 
-
+            Session["NuevaOTEjecutada"] = true;
+            Session.Remove("BtnModificarEjecutado");
+            Session.Remove("NuevoPedido");
         }
 
         protected void NuevaOTDespuesDeCargarNIT()
         {
-            // Verificar si Cargar_OTs se ha ejecutado
-            if (Session["CargarOTsEjecutada"] != null && (bool)Session["CargarOTsEjecutada"])
+       
+
+            if (Session["BtnModificarEjecutado"] == null)
             {
-                tbOT.Text = "Por Asig";
+                if (Session["NuevoPedido"] == null)
+                {
+                    if (Session["NuevaOTEjecutada"] != null && (bool)Session["NuevaOTEjecutada"] == true)
+                    {
+                        if (Session["CargarOTsEjecutada"] != null && (bool)Session["CargarOTsEjecutada"])
+                        {
+                            tbOT.Text = "Por Asig";
 
+                        }
+                        else
+                        {
+                            NuevaOt.Enabled = false;
+                            NuevaOt.CssClass = "btn btn-sm shadow button-disabled";
+                            ObservacionesOt.Enabled = false;
+                            ObservacionesOt.CssClass = "btn btn-sm shadow button-disabled";
+                            OtPendientes.Enabled = false;
+                            OtPendientes.CssClass = "btn btn-sm shadow button-disabled";
+                            GrabarOt.Enabled = true;
+                            GrabarOt.CssClass = "btn btn-sm shadow button-enabled";
+                            Cancelar.Enabled = true;
+                            Cancelar.CssClass = "btn btn-sm shadow button-enabled";
+
+                            tbOT.Text = "Por Asig.";
+                        }
+                        if (tbOT.Text == "Por Asig")
+                        {
+                            NuevaOt.Enabled = false;
+                            NuevaOt.CssClass = "btn btn-sm shadow button-disabled";
+                            CopiarOt.Enabled = false;
+                            CopiarOt.CssClass = "btn btn-sm shadow button-disabled";
+                            OtPendientes.Enabled = false;
+                            OtPendientes.CssClass = "btn btn-sm shadow button-disabled";
+                            DocumentacionOt.Enabled = false;
+                            DocumentacionOt.CssClass = "btn btn-sm shadow button-disabled";
+                            ObservacionesOt.Enabled = false;
+                            ObservacionesOt.CssClass = "btn btn-sm shadow button-disabled";
+                            imprimirOt.Enabled = false;
+                            imprimirOt.CssClass = "btn btn-sm shadow button-disabled";
+                            ReimprimirOt.Enabled = false;
+                            ReimprimirOt.CssClass = "btn btn-sm shadow button-disabled";
+                            ConsultarBolsa.Enabled = false;
+                            ConsultarBolsa.CssClass = "btn btn-sm shadow button-disabled";
+                            ObraReactivada.Enabled = false;
+                            ObraReactivada.CssClass = "btn btn-sm shadow button-disabled";
+                            ExportarPedido.Enabled = false;
+                            ExportarPedido.CssClass = "btn btn-sm shadow button-disabled";
+                            GrabarOt.Enabled = true;
+                            GrabarOt.CssClass = "btn btn-sm shadow button-enabled";
+                            Cancelar.Enabled = true;
+                            Cancelar.CssClass = "btn btn-sm shadow button-enabled";
+                            ObraReactivada.Enabled = true;
+                            ObraReactivada.CssClass = "btn btn-sm shadow button-enabled";
+                            ModificarOt.Enabled = false;
+                            ModificarOt.CssClass = "btn btn-sm shadow button-disabled";
+                            AnularPedido.Enabled = false;
+                            AnularPedido.CssClass = "btn btn-sm shadow button-disabled";
+
+                            LabelOTCerrada.Visible = false;
+
+                            HabilitarTodosLosTextBoxes();
+
+                            btnOk.Enabled = false;
+                            btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
+
+                            btnAcabados.Enabled = false;
+                            btnAcabados.CssClass = "btn btn-sm shadow button-disabled fw-bold";
+
+                            btnNuevoPedido.Enabled = false;
+                            btnNuevoPedido.CssClass = "btn btn-sm shadow button-disabled fw-bold";
+
+                            tbOT.Enabled = false;
+                            tbOT.CssClass = "form-control";
+
+                            ddlNumbers.Enabled = false;
+                            ddlNumbers.CssClass = "form-control";
+
+                            cboPedidoBase.Enabled = false;
+
+                            tbPedDepen.Enabled = false;
+
+                            dtacboTipoPedido.Enabled = true;
+
+                            ddlAsesor.Enabled = true;
+                            ddlAsesor.CssClass = "form-control";
+
+                            ddlCiudad.Enabled = true;
+                            ddlCiudad.CssClass = "form-control";
+
+                            ddlInstala.Enabled = true;
+                            ddlInstala.CssClass = "form-control";
+
+                            tbVenta.Text = DateTime.Now.ToString("yyyy-MM-dd");
+                            dtpFechaEntregaDibujoDespiece.Text = DateTime.Now.ToString("yyyy-MM-dd");
+                            dtpFechaEntregaProduccion.Text = DateTime.Now.ToString("yyyy-MM-dd");
+                            DateTime fechaActual = DateTime.Now;
+                            DateTime fechaMas10Dias = fechaActual.AddDays(10);
+                            dtpEmpaque.Text = fechaMas10Dias.ToString("yyyy-MM-dd");
+                            dtpRealEmpaque.Text = fechaMas10Dias.ToString("yyyy-MM-dd");
+
+                            tbPedDepen.DataBind();
+                            tbPedDepen.Items.Insert(0, new ListItem(" "));
+                            cboPedidoBase.DataBind();
+                            cboPedidoBase.Items.Insert(0, new ListItem(" "));
+                            dtacboTipoPedido.DataBind();
+                            dtacboTipoPedido.Items.Insert(0, new ListItem(" "));
+
+                        }
+                        if (tbOT.Text == "Por Asig.")
+                        {
+                            HabilitarTodosLosTextBoxes();
+
+                            string zonaLogeada = Session["ZonaLogeada"] as string; // Obtén el valor de la variable de sesión
+
+                            // Establece el valor seleccionado en el DropDownList ddlZona
+                            ddlZona.SelectedValue = zonaLogeada;
+
+
+                        }
+
+                        TiposDePedidos.SelectCommand = "SELECT Descripcion_TipoPedido, Id_TipoPedido, EstadisticaVenta FROM tblTipoPedido WHERE Activo = '1' AND EstadisticaVenta = '1' ORDER BY Descripcion_TipoPedido";
+
+                        dtacboTipoPedido.DataBind();
+                        dtacboTipoPedido.Items.Insert(0, new ListItem(" "));
+                    }
+                }
             }
-            else
+
+            if (Session["NuevaOTEjecutada"] == null )
             {
-                NuevaOt.Enabled = false;
-                NuevaOt.CssClass = "btn btn-sm shadow button-disabled";
-                ObservacionesOt.Enabled = false;
-                ObservacionesOt.CssClass = "btn btn-sm shadow button-disabled";
-                OtPendientes.Enabled = false;
-                OtPendientes.CssClass = "btn btn-sm shadow button-disabled";
-                GrabarOt.Enabled = true;
-                GrabarOt.CssClass = "btn btn-sm shadow button-enabled";
-                Cancelar.Enabled = true;
-                Cancelar.CssClass = "btn btn-sm shadow button-enabled";
+                if (Session["NuevoPedido"] == null)
+                {
+                    if (Session["BtnModificarEjecutado"] != null && (bool)Session["BtnModificarEjecutado"] == true)
+                    {
+                        NuevaOt.Enabled = false;
+                        NuevaOt.CssClass = "btn btn-sm shadow button-disabled";
+                        ObservacionesOt.Enabled = false;
+                        ObservacionesOt.CssClass = "btn btn-sm shadow button-disabled";
+                        OtPendientes.Enabled = false;
+                        OtPendientes.CssClass = "btn btn-sm shadow button-disabled";
+                        GrabarOt.Enabled = true;
+                        GrabarOt.CssClass = "btn btn-sm shadow button-enabled";
+                        Cancelar.Enabled = true;
+                        Cancelar.CssClass = "btn btn-sm shadow button-enabled";
 
-                tbOT.Text = "Por Asig.";
+
+                        HabilitarTodosLosTextBoxes();
+
+                        string zonaLogeada = Session["ZonaLogeada"] as string; // Obtén el valor de la variable de sesión
+
+                        // Establece el valor seleccionado en el DropDownList ddlZona
+                        ddlZona.SelectedValue = zonaLogeada;
+
+                        TiposDePedidos.SelectCommand = "SELECT Descripcion_TipoPedido, Id_TipoPedido, EstadisticaVenta FROM tblTipoPedido WHERE Activo = '1'  ORDER BY Descripcion_TipoPedido";
+
+                        dtacboTipoPedido.DataBind();
+                        dtacboTipoPedido.Items.Insert(0, new ListItem(" "));
+
+                        ddlFabrica1.Enabled = false;
+                        ddlFabrica1.CssClass = "form-control";
+                    }
+                }
             }
-            if (tbOT.Text == "Por Asig")
-            {
-                NuevaOt.Enabled = false;
-                NuevaOt.CssClass = "btn btn-sm shadow button-disabled";
-                CopiarOt.Enabled = false;
-                CopiarOt.CssClass = "btn btn-sm shadow button-disabled";
-                OtPendientes.Enabled = false;
-                OtPendientes.CssClass = "btn btn-sm shadow button-disabled";
-                DocumentacionOt.Enabled = false;
-                DocumentacionOt.CssClass = "btn btn-sm shadow button-disabled";
-                ObservacionesOt.Enabled = false;
-                ObservacionesOt.CssClass = "btn btn-sm shadow button-disabled";
-                imprimirOt.Enabled = false;
-                imprimirOt.CssClass = "btn btn-sm shadow button-disabled";
-                ReimprimirOt.Enabled = false;
-                ReimprimirOt.CssClass = "btn btn-sm shadow button-disabled";
-                ConsultarBolsa.Enabled = false;
-                ConsultarBolsa.CssClass = "btn btn-sm shadow button-disabled";
-                ObraReactivada.Enabled = false;
-                ObraReactivada.CssClass = "btn btn-sm shadow button-disabled";
-                ExportarPedido.Enabled = false;
-                ExportarPedido.CssClass = "btn btn-sm shadow button-disabled";
-                GrabarOt.Enabled = true;
-                GrabarOt.CssClass = "btn btn-sm shadow button-enabled";
-                Cancelar.Enabled = true;
-                Cancelar.CssClass = "btn btn-sm shadow button-enabled";
-                ObraReactivada.Enabled = true;
-                ObraReactivada.CssClass = "btn btn-sm shadow button-enabled";
-                ModificarOt.Enabled = false;
-                ModificarOt.CssClass = "btn btn-sm shadow button-disabled";
-                AnularPedido.Enabled = false;
-                AnularPedido.CssClass = "btn btn-sm shadow button-disabled";
-
-                LabelOTCerrada.Visible = false;
-
-            
-
-             
-
-                HabilitarTodosLosTextBoxes();
-
-                btnOk.Enabled = false;
-                btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
-
-                btnAcabados.Enabled = false;
-                btnAcabados.CssClass = "btn btn-sm shadow button-disabled fw-bold";
-
-                btnNuevoPedido.Enabled = false;
-                btnNuevoPedido.CssClass = "btn btn-sm shadow button-disabled fw-bold";
-
-                tbOT.Enabled = false;
-                tbOT.CssClass = "form-control";
-
-                ddlNumbers.Enabled = false;
-                ddlNumbers.CssClass = "form-control";
-
-                cboPedidoBase.Enabled = false;
-
-                tbPedDepen.Enabled = false;
-
-                dtacboTipoPedido.Enabled = true;
-
-                ddlAsesor.Enabled = true;
-                ddlAsesor.CssClass = "form-control";
-
-                ddlCiudad.Enabled = true;
-                ddlCiudad.CssClass = "form-control";
-
-                ddlInstala.Enabled = true;
-                ddlInstala.CssClass = "form-control";
-
-                tbVenta.Text = DateTime.Now.ToString("yyyy-MM-dd");
-                dtpFechaEntregaDibujoDespiece.Text = DateTime.Now.ToString("yyyy-MM-dd");
-                dtpFechaEntregaProduccion.Text = DateTime.Now.ToString("yyyy-MM-dd");
-                DateTime fechaActual = DateTime.Now;
-                DateTime fechaMas10Dias = fechaActual.AddDays(10);
-                dtpEmpaque.Text = fechaMas10Dias.ToString("yyyy-MM-dd");
-                dtpRealEmpaque.Text = fechaMas10Dias.ToString("yyyy-MM-dd");
-
-                tbPedDepen.DataBind();
-                tbPedDepen.Items.Insert(0, new ListItem(" "));
-                cboPedidoBase.DataBind();
-                cboPedidoBase.Items.Insert(0, new ListItem(" "));
-                dtacboTipoPedido.DataBind();
-                dtacboTipoPedido.Items.Insert(0, new ListItem(" "));
-
-
-
-
-            }
-            if (tbOT.Text == "Por Asig.")
-            {
-
-
-                HabilitarTodosLosTextBoxes();
-
-
-                string zonaLogeada = Session["ZonaLogeada"] as string; // Obtén el valor de la variable de sesión
-
-                // Establece el valor seleccionado en el DropDownList ddlZona
-                ddlZona.SelectedValue = zonaLogeada;
-
-
-            }
-
+          
             txtAsesor.Enabled = false;
-
-
             Nit.Enabled = false;
             Nit.CssClass = "btn btn-sm shadow button-disabled";
 
-            TiposDePedidos.SelectCommand = "SELECT Descripcion_TipoPedido, Id_TipoPedido, EstadisticaVenta FROM tblTipoPedido WHERE Activo = '1' AND EstadisticaVenta = '1' ORDER BY Descripcion_TipoPedido";
-
-
-            dtacboTipoPedido.DataBind();
-            dtacboTipoPedido.Items.Insert(0, new ListItem(" "));
+            AsesorPorDefecto();
 
             cbxComisionCompart.Enabled = true;
-
-            Session["NuevaOTEjecutada"] = true;
-            Session.Remove("BtnModificarEjecutado");
-            Session.Remove("NuevoPedido");
         }
 
         protected void LimpiarTextAreayDropDownList()
@@ -725,8 +792,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BtnObservaciones_Click(object sender, EventArgs e)
         {
-                
-                string url = "FormExtPrin/ObservacionesOT.aspx";
+
+            string url = "FormExtPrin/ObservacionesOT.aspx";
                 string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
             
@@ -1002,6 +1069,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ObservacionCont.Disabled = false;
             TextTNegociacion.Disabled = false;
 
+        }
+
+        protected void HaabilitarTextbox_click(object sender, EventArgs e)
+        {
+            HabilitarTodosLosTextBoxes();
+
+            Nit.Enabled = false;      
         }
 
         public void DeshabilitarDropDownLists(List<DropDownList> dropDownLists)
@@ -2008,6 +2082,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
 
+        protected void AsesorPorDefecto()
+        {
+            string cedula = Session["CedulaLogeada"].ToString();
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                connection.Open();
+
+                string query = "SELECT Cedula FROM tblAsesorComercial WHERE Cedula = @Cedula ORDER BY Apellidos";
+
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Cedula", cedula);
+
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    string valorCedula = reader["Cedula"].ToString();
+                    ddlAsesor.SelectedValue = valorCedula;
+                }
+                reader.Close();
+                connection.Close();
+            }
+
+            // Llama al evento ddlAsesor_SelectedIndexChanged después de asignar el valor
+            ddlAsesor_SelectedIndexChanged(null, EventArgs.Empty);
+        }
+
         protected void txtCotizacion_TextChanged(object sender, EventArgs e)
         {
             if (txtCotizacion.Text.ToUpper() != "NO TIENE")
@@ -2310,7 +2412,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Guardar el valor en una variable de sesión
             Session["ValorDeObra"] = valorTextBox;
 
-            Session["CargarOTsEjecutada"] = true;
 
 
         }
@@ -3147,14 +3248,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void Redireccion_Nit(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(tbOT.Text) || ddlNumbers.SelectedItem == null || string.IsNullOrWhiteSpace(ddlNumbers.SelectedItem.Text))
+            {
+                string url = "FormExtPrin/NitOts.aspx";
+                string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+            }
+            else
+            {
+              
+                Session["Id_OT2"] = tbOT.Text;
 
-            Session["Id_OT2"] = Session["Id_OT2"].ToString();
+                Session["pedido2"] = ddlNumbers.SelectedItem.Text;
 
-            Session["pedido2"] = ddlNumbers.SelectedItem.Text;
-
-            string url = "FormExtPrin/NitOts.aspx";
-            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
-            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+                string url = "FormExtPrin/NitOts.aspx";
+                string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+            }
         }
 
         protected void Redireccion_Nit_Click(object sender, EventArgs e)
@@ -3320,10 +3430,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Verificar si se ha ejecutado el evento BtnModificar_Click
                 else if (Session["BtnModificarEjecutado"] != null && (bool)Session["BtnModificarEjecutado"])
                 {
-                    MostrarModalModificar();
-
-                    Session.Remove("BtnModificarEjecutado");
-
+                    MostrarModalModificar();       
                 }
 
                 else if (Session["NuevoPedido"] != null && (bool)Session["NuevoPedido"])
@@ -3352,15 +3459,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ValidarUsuario();
         }
 
-        protected void BtnNoModificar_Click(object sender, EventArgs e)
-        {
-            Session["Id_OT2"] = tbOT.Text;
-            Session["Pedido2"] = ddlNumbers.Text;
-
-            string mensajePersonalizado = "Se cargara nuevamente la OT";
-            string urlRedireccion = "OrdenTrabajo.aspx";
-            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-        }
+   
         protected void ValidarMesesDesdeUltimaVenta()
         {
             // Obtener el valor del NIT desde el TextBox
@@ -4122,6 +4221,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BtnModificar_Click(object sender, EventArgs e)
         {
+          
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#LlenarNITModificar').modal('show');", true);
+
             Session["BtnModificarEjecutado"] = true;
 
             Session.Remove("NuevaOTEjecutada");
@@ -4170,16 +4272,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             btnAcabados.CssClass = "btn btn-sm shadow button-disabled";
 
 
-
-            HabilitarTodosLosTextBoxes();
-
             tbPedDepen.Enabled = false;
 
             ddlFabrica1.Enabled = false;
 
-            Nit.Enabled = false;
+         
 
             cbxComisionCompart.Enabled = true;
+        }
+
+        protected void NoModificarNIT_Click(object sender, EventArgs e)
+        {
+           
+            HabilitarTodosLosTextBoxes();
+
+            Nit.Enabled = false;
+            Nit.CssClass = "btn btn-sm shadow button-disabled";
         }
 
         protected void ValidarFecha(object sender, EventArgs e)
@@ -4319,8 +4427,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Cancelar.Enabled = true;
             Cancelar.CssClass = "btn btn-sm shadow button-enabled";
 
-            Nit.Enabled = true;
-            Nit.CssClass = "btn btn-sm shadow button-enabled";
+            Nit.Enabled = false;
+            Nit.CssClass = "btn btn-sm shadow button-disabled";
 
 
 

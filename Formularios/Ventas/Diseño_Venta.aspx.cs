@@ -29,8 +29,7 @@ using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
 using System.Text;
-
-
+using NPOI.XSSF.UserModel;
 
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
@@ -4083,11 +4082,31 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             fechaCell.SetCellValue($"Sabaneta, {DateTime.Now.ToString("MMMM d")} de {DateTime.Now.ToString("yyyy")}");
             fechaCell.CellStyle = style;
 
+            // Agregar la imagen
+            string imagePath = @"P:\SISTEMAS\Logo Ducon\Ducon.jpg"; // Ruta de la imagen
+            if (File.Exists(imagePath))
+            {
+                byte[] imageBytes = File.ReadAllBytes(imagePath);
+
+                // Convertir bytes de la imagen a un objeto HSSFWorkbook
+                int pictureIdx = sheet.Workbook.AddPicture(imageBytes, PictureType.JPEG);
+
+                // Crear el ancla de la imagen (ubicación en la hoja)
+                IDrawing patriarch = sheet.CreateDrawingPatriarch();
+                HSSFClientAnchor anchor = new HSSFClientAnchor(0, 0, 0, 0, 1, 0, 2, 1); // Celda de la esquina superior izquierda
+
+                // Crear la forma de la imagen
+                HSSFPicture picture = (HSSFPicture)patriarch.CreatePicture(anchor, pictureIdx);
+
+                // Ajustar el tamaño de la imagen (opcional)
+                picture.Resize(0.6, 0.8); // Puedes ajustar el tamaño según tu necesidad
+            }
+
             ICell cotizacionCell = fechaRow.CreateCell(4);
             cotizacionCell.SetCellValue("Cotizacion N°");
             cotizacionCell.CellStyle = style;
 
-            fechaRow.HeightInPoints = sheet.DefaultRowHeightInPoints * 4;
+            fechaRow.HeightInPoints = sheet.DefaultRowHeightInPoints * 6;
 
             // Agregar fila vacía después del encabezado
             sheet.CreateRow(2);

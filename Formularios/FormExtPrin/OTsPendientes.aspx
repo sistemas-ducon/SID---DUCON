@@ -170,7 +170,7 @@
                                                                 </asp:TemplateColumn>
                                                                 <asp:BoundColumn DataField="Id_OT" HeaderText="OT" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Consecutivo_Pedido" HeaderText="Ped" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn DataField="Nombre_Obra" HeaderText="Nombre Obra" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Nombre_Obra" HeaderText="Nombre Obra" ItemStyle-CssClass="auto-width-column2"/>
                                                                 <asp:BoundColumn DataField="Codigo_Asesor" HeaderText="Vend" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Fecha_Entrega_Dibujo_Despiece" HeaderText="F.Ok.Venta" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Fecha_Entrega_Produccion" HeaderText="F.Ok.Dib" ItemStyle-CssClass="auto-width-column" />

@@ -50,23 +50,23 @@
                                     <ul class="navbar-nav mx-auto contenedor-icono">
                                         <div class="contenedor-icono">
 
-                                            <asp:LinkButton runat="server" ID="NuevaCot" OnClick="NuevaCot_Clik">
+                                            <asp:LinkButton runat="server" title="Nueva Cotizacion" ID="NuevaCot" OnClick="NuevaCot_Clik">
                                                <i class="bi bi-file-earmark-plus-fill"></i>
                                             </asp:LinkButton>
 
-                                            <asp:LinkButton runat="server" ID="GuardarCot" OnClick="Grabar_Click">
+                                            <asp:LinkButton runat="server" title="Grabar Cotizacion" ID="GuardarCot" OnClick="Grabar_Click">
                                                  <i class="bi bi-save-fill"></i>
                                             </asp:LinkButton>
 
-                                            <asp:LinkButton runat="server" ID="ModificarCot" OnClick="Modificar_Click">
+                                            <asp:LinkButton runat="server" title="Modificar Cotizacion" ID="ModificarCot" OnClick="Modificar_Click">
                                               <i class="bi bi-wrench-adjustable"></i>
                                             </asp:LinkButton>
 
-                                            <asp:LinkButton runat="server" ID="EliminarCot" OnClick="ConfirmarEliminarCot_Click">
+                                            <asp:LinkButton runat="server" title="Eliminar Cotizacion" ID="EliminarCot" OnClick="ConfirmarEliminarCot_Click">
                                                <i class="bi bi-trash-fill"></i>
                                             </asp:LinkButton>
 
-                                            <asp:LinkButton runat="server" ID="CancelarCot" OnClick="Cancelar_Click">
+                                            <asp:LinkButton runat="server" title="Cancelar" ID="CancelarCot" OnClick="Cancelar_Click">
                                                 <i class="bi bi-x-circle-fill"></i>
                                             </asp:LinkButton>
                                     </ul>

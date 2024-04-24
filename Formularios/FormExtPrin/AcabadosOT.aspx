@@ -93,7 +93,7 @@
                                                                             Text="<i class='bi bi-pencil-square text-dark'></i>" />
                                                                     </ItemTemplate>
                                                                 </asp:TemplateColumn>
-                                                                <asp:BoundColumn DataField="GrupoObjetoparaAcabado" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                                <asp:BoundColumn DataField="GrupoObjetoparaAcabado" ItemStyle-CssClass="auto-width-column2"></asp:BoundColumn>
                                                                 <asp:BoundColumn DataField="ID_GrupoObjetoparaAcabado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                             </Columns>
                                                         </asp:DataGrid>
@@ -162,7 +162,7 @@
                                                                             Text="<i class='bi bi-pencil-square text-dark'></i>" />
                                                                     </ItemTemplate>
                                                                 </asp:TemplateColumn>
-                                                                <asp:BoundColumn DataField="Acab" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                                <asp:BoundColumn DataField="Acab" ItemStyle-CssClass="auto-width-column2"></asp:BoundColumn>
                                                                 <asp:BoundColumn DataField="Id_GrupoAcabado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                                  <asp:BoundColumn DataField="ID_Acabado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                                  <asp:BoundColumn DataField="Descripcion_Acabado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
