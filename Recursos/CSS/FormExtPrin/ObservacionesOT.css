@@ -41,3 +41,18 @@
     border-bottom: 2px solid #ccc; /* Elimina el borde inferior */
     border-right: 2px solid #ccc; /* Elimina el borde derecho */
 }
+
+.fila-seleccionada {
+    background-color: black !important; /*Se Cambia el color de la fila Seleccionada  */
+    color: white !important;
+}
+
+.fila-seleccionada1 {
+    background-color: white !important; /*Se Cambia el color de la fila Seleccionada  */
+    color: black !important;
+}
+
+.Tam {
+    display: block;
+    width: 100%;
+}

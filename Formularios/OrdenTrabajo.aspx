@@ -52,14 +52,14 @@
             $('#loadingModalExcel').modal('show');
             iniciarCambiosExcel();
             setTimeout(function() {
-           document.getElementById("btnTerminarDescarga").disabled = false;
-           }, 1500); // 10 segundos
+                document.getElementById("btnTerminarDescarga").disabled = false;
+            }, 1500); // 10 segundos
 
 
         }
         // Función para ocultar el modal Excel
         function CerrarCargarExcel() {
-            $('#loadingModalExcel').modal('hide');         
+            $('#loadingModalExcel').modal('hide');
         }
 
     </script>
@@ -149,26 +149,26 @@
 
     </script>
 
-     <script>
-         function reflejarContenido() {
-             // Obtener el contenido del primer textarea
-             var contenidoTextarea1 = document.getElementById("txObs1").value;
+    <script>
+        function reflejarContenido() {
+            // Obtener el contenido del primer textarea
+            var contenidoTextarea1 = document.getElementById("txObs1").value;
 
-             // Mostrar el mismo contenido en el segundo textarea
-             document.getElementById("txObs2").value = contenidoTextarea1;
-         }
-     </script>
+            // Mostrar el mismo contenido en el segundo textarea
+            document.getElementById("txObs2").value = contenidoTextarea1;
+        }
+    </script>
 
-     <script>
-         window.onload = function () {
-             var textarea1 = document.getElementById('txObs1');
-             var textarea2 = document.getElementById('txObs2');
+    <script>
+        window.onload = function () {
+            var textarea1 = document.getElementById('txObs1');
+            var textarea2 = document.getElementById('txObs2');
 
-             textarea1.oninput = function () {
-                 textarea2.value = textarea1.value;
-             };
-         };
-     </script>
+            textarea1.oninput = function () {
+                textarea2.value = textarea1.value;
+            };
+        };
+    </script>
 </head>
 
 <body translate="no">
@@ -474,7 +474,7 @@
 
                             <div class="row">
 
-                                <div class="col-lg-1 col-md-6 col-sm-6 col-xs-12">
+                                <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="OT" runat="server" ID="lblOT"></asp:Label>
                                         <asp:TextBox ID="tbOT" runat="server" CssClass="form-control" OnTextChanged="ObtenerInfoOt" AutoPostBack="true"></asp:TextBox>
@@ -513,8 +513,8 @@
 
                                 <div class="col-lg-1 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
-                                        <asp:Label class="form-label" Text="Ped.Base" runat="server" ID="lblPedBase"></asp:Label>
-                                        <asp:DropDownList ID="cboPedidoBase" runat="server" class="form-control" DataSourceID="PedidoBase" DataTextField="Consecutivo_Pedido" DataValueField="Consecutivo_Pedido"></asp:DropDownList>
+                                        <asp:Label class="form-label" Text="P.Base" runat="server" ID="lblPedBase" ></asp:Label>
+                                        <asp:DropDownList ID="cboPedidoBase" runat="server" class="form-control" DataSourceID="PedidoBase" DataTextField="Consecutivo_Pedido" DataValueField="Consecutivo_Pedido" ToolTip="Pedido Base"></asp:DropDownList>
                                         <asp:SqlDataSource ID="PedidoBase" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT Consecutivo_Pedido, EstadisticaVenta
                                                                 FROM tblTipoPedido
                                                                 INNER JOIN tblOT ON tblTipoPedido.Id_TipoPedido = tblOT.Id_TipoPedido
@@ -529,10 +529,10 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
+                                <div class="col-lg-1 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
-                                        <asp:Label class="form-label" Text="Ped.Deped" runat="server" ID="lblPedDepen"></asp:Label>
-                                        <asp:DropDownList ID="tbPedDepen" CssClass="form-control" runat="server" DataSourceID="sqlDataSource1"
+                                        <asp:Label class="form-label" Text="P.Dep" runat="server" ID="lblPedDepen"></asp:Label>
+                                        <asp:DropDownList ID="tbPedDepen" CssClass="form-control" runat="server" DataSourceID="sqlDataSource1" ToolTip="Pedido Dependiente"
                                             DataTextField="Consecutivo_Pedido" DataValueField="Consecutivo_Pedido">
                                         </asp:DropDownList>
                                         <asp:SqlDataSource ID="sqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
@@ -1044,26 +1044,97 @@
 
                             <div class="Datos-Cliente2">
 
-                                <div class="superior">
+                                <div class="superior gap-2">
 
                                     <div class="Info2">
-                                        <asp:Button ID="btnCotizacion" runat="server" Text="Ver cotización" class="bi bf btn btn-secondary" OnClick="btnCotizacion_Click" OnClientClick="return validarCotizacion();" />
-                                        <asp:TextBox type="text" class="form-control" runat="server" ID="txtCotizacion" OnTextChanged="txtCotizacion_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <asp:Button ID="btnCotizacion" runat="server" Text="Ver cotización" class="bi bf btn btn-secondary" OnClick="btnCotizacion_Click" OnClientClick="return validarCotizacion();" />
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col-12">
+                                                <div class="input-group input-group-sm gap-2 ">
+                                                    <asp:TextBox type="text" class="form-control" runat="server" ID="txtCotizacion" OnTextChanged="txtCotizacion_TextChanged" AutoPostBack="true" ></asp:TextBox>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
                                     </div>
 
                                     <div class="Info2">
-                                        <asp:Button ID="btnValorSugeroido" runat="server" Text="Valor Sugerido" class="bi bf" disabled="true" />
-                                        <asp:TextBox type="text" class="form-control text-end" runat="server" ID="txtValorSugerido"></asp:TextBox>
+
+                                        <div class="row ">
+
+                                            <div class="col-12">
+                                                <asp:Button ID="btnValorSugeroido" runat="server" Text="Valor Sugerido" class="bi bf w-100" disabled="true" />
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row justify-content-end">
+
+                                            <div class="col-12">
+                                                <div class="input-group input-group-sm gap-2 ">
+                                                    <asp:Label ID="Label4" CssClass=" form-label shadow" runat="server">$</asp:Label>
+                                                    <asp:TextBox type="text" class="form-control text-end" runat="server" ID="txtValorSugerido" style="text-align: left !important;"></asp:TextBox>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
                                     </div>
 
                                     <div class="Info2">
-                                        <asp:Button ID="btnVscd" runat="server" Text="VCSD" class="bi bf" disabled="true" />
-                                        <asp:TextBox type="text" class="form-control text-end" runat="server" ID="txtVcsd"></asp:TextBox>
+
+                                        <div class="row">
+
+                                            <div class="col-12">
+                                                <asp:Button ID="btnVscd" runat="server" Text="VCSD" class="bi bf w-100" disabled="true" />
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row justify-content-end">
+
+                                            <div class="col-12">
+                                                <div class="input-group input-group-sm gap-2 ">
+                                                    <asp:Label ID="Label5" CssClass=" form-label shadow" runat="server">$</asp:Label>
+                                                    <asp:TextBox type="text" class="form-control text-end" runat="server" ID="txtVcsd"  style="text-align: left !important;"></asp:TextBox>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
                                     </div>
 
                                     <div class="Info2">
-                                        <asp:Button ID="btnVccd" runat="server" Text="VCCD" class="bi bf" disabled="true" />
-                                        <asp:TextBox type="text" class="form-control text-end" runat="server" ID="txtVccd"></asp:TextBox>
+
+                                        <div class="row">
+
+                                            <div class="col-12">
+                                                <asp:Button ID="btnVccd" runat="server" Text="VCCD" class="bi bf w-100" disabled="true" />
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row justify-content-end">
+
+                                            <div class="col-12">
+                                                <div class="input-group input-group-sm gap-2 ">
+                                                    <asp:Label ID="Label6" CssClass=" form-label shadow" runat="server">$</asp:Label>
+                                                    <asp:TextBox type="text" class="form-control text-end" runat="server" ID="txtVccd"  style="text-align: left !important;"></asp:TextBox>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
                                     </div>
 
                                 </div>
@@ -1077,7 +1148,7 @@
 
                                     <div class="Info_M2">
                                         <asp:Label ID="lblComisionCompart" class="form-label" Text="Comisión Compartida" runat="server"></asp:Label>
-                                        <asp:CheckBox class="" ID="cbxComisionCompart" runat="server" AutoPostBack="true" OnCheckedChanged="cbxComisionCompart_CheckedChanged"/>
+                                        <asp:CheckBox class="" ID="cbxComisionCompart" runat="server" AutoPostBack="true" OnCheckedChanged="cbxComisionCompart_CheckedChanged" />
                                     </div>
                                 </div>
 
@@ -1277,7 +1348,7 @@
                             </div>
                         </div>
 
-                         <div id="PedidoIngresado" class="modal" tabindex="-1">
+                        <div id="PedidoIngresado" class="modal" tabindex="-1">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-dark">

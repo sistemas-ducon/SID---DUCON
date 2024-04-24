@@ -75,7 +75,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (!IsPostBack)
                 {
-              
+
 
                     tbVenta.Text = DateTime.Now.ToString("yyyy-MM-dd");
                     dtpFechaEntregaDibujoDespiece.Text = DateTime.Now.ToString("yyyy-MM-dd");
@@ -125,7 +125,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     Nit.Enabled = false;
                     Nit.CssClass = "bi bf  btn btn-outline-secondary";
                     btnCotizacion.Enabled = false;
-                    btnCotizacion.CssClass = "bi bf  btn btn-outline-secondary";
+                    btnCotizacion.CssClass = "bi bf  btn btn-outline-secondary w-100";
                     tbPedDepen.DataBind();
                     tbPedDepen.Items.Insert(0, new ListItem(" "));
                     cboPedidoBase.DataBind();
@@ -794,11 +794,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
 
             string url = "FormExtPrin/ObservacionesOT.aspx";
-                string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
-                ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
-            
-        }
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
 
+        }
 
 
         protected void habilitarbotones()
@@ -1310,7 +1309,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 LabelOTCerrada.Visible = true;
                 LabelOTCerrada.Text = "OT cerrada el día " + fechaCierre.ToString("dd/MM/yyyy");
                 LiteralFechaCierre.Text = fechaCierre.ToString("dd/MM/yyyy");
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "openModal();", true);
+                // Esperar 1 segundo antes de abrir el modal
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "setTimeout(function() { openModal(); }, 1000);", true);
             }
             else
             {
@@ -2160,10 +2160,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         txtSaldo.Text = leer["Saldo"].ToString();
                         txtDiseño.Text = leer["Diseño"].ToString();
 
-                        if (Convert.ToBoolean(Session["NuevaOTEjecutada"]?.ToString()) == true || Convert.ToBoolean(Session["BtnModificarEjecutado"]?.ToString()) == true)
-                        {
-                            txtVenta.Text = leer["Saldo"].ToString();
-                        }
+                       
+                         txtVenta.Text = leer["Saldo"].ToString();
+                        
                         txtDcto.Text = leer["Descuento"].ToString();
                         txtComision.Text = leer["DescuentoComision"].ToString();
 
@@ -2390,7 +2389,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             catch (Exception ex)
             {
-         
+
             }
 
             Cargar_Plano(id, pedido);
@@ -2537,7 +2536,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     if (Math.Abs(saldo) * 100 / TotalObraMas >= 25)
                     {
-                        string mensajeError = "El saldo esta en  un " + Math.Abs(saldo) + " % en contra";
+                        string mensajeError = "El saldo esta en  un " + ((Math.Abs(saldo) / TotalObraMas) * 100).ToString("N0") + " % en contra";
                         string scriptError = "alert('" + mensajeError + "');";
                         ScriptManager.RegisterStartupScript(this, GetType(), "showError", scriptError, true);
                     }
@@ -2626,7 +2625,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
 
-  private void LimpiarCamposCotizacion()
+        private void LimpiarCamposCotizacion()
 
         {
 
@@ -3563,7 +3562,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     string contenidoModalOT = "Se agrego el pedido " + pedido + " A la Orden de trabajo " + idOT;
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#PedidoIngresado').modal('show'); $('#PedidoIngresado2').text('" + contenidoModalOT + "');", true);
 
-                
+
 
 
                     Session["Id_OT"] = Session["Id_OT3"]?.ToString();
@@ -4372,7 +4371,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void BtnCopInfNueOT_Click(object sender, EventArgs e)
         {
             Session["Id_OT2"] = tbOT.Text;
-         
+
             List<System.Web.UI.Control> botones = new List<System.Web.UI.Control>
             {
 
@@ -6476,7 +6475,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     worksheet.Column(3).Width = 15;
                     worksheet.Column(4).Width = 15;
                     worksheet.Column(7).Width = 15;
-                
+
                     // Fecha del día
                     DateTime fechaActual = DateTime.Now;
                     string nombreMes = fechaActual.ToString("MMMM", new System.Globalization.CultureInfo("es-ES"));
