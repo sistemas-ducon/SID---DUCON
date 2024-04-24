@@ -2004,11 +2004,7 @@ WHERE
             else if (string.IsNullOrEmpty(TextProyecto.Text))
             {
                 campoFaltante = "Proyecto";
-            }
-            else if (string.IsNullOrEmpty(TextContacto.Text))
-            {
-                campoFaltante = "Contacto";
-            }
+            }   
             else if (DropDownListEstado.SelectedItem == null)
             {
                 campoFaltante = "Estado";
@@ -2020,19 +2016,7 @@ WHERE
             else if (ddlZona.SelectedItem == null)
             {
                 campoFaltante = "Zona";
-            }
-            else if (string.IsNullOrEmpty(TextTelefono.Text))
-            {
-                campoFaltante = "Telefono";
-            }
-            else if (string.IsNullOrEmpty(TextMail.Text))
-            {
-                campoFaltante = "Mail";
-            }
-            else if (string.IsNullOrEmpty(TextBox2.Text))
-            {
-                campoFaltante = "Diseño";
-            }
+            }    
             else if (string.IsNullOrEmpty(TextBox5.Text))
             {
                 campoFaltante = "D.Com";
