@@ -223,25 +223,25 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void AccionesAlCargarDiseño()
         {
             NuevoDisBit.Enabled = true;
-            NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled";
+            NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
 
             Grabar.Enabled = false;
             Grabar.CssClass = "btn btn-sm shadow button-disabled";
 
             // Habilitar el botón "ActualizarDiseno"
             ActualizarDiseno.Enabled = true;
-            ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
+            ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
             // Habilitar el botón "Modificar"
             Modificar.Enabled = true;
             Modificar.CssClass = "btn btn-sm shadow button-enabled";
 
             DocBitacora.Enabled = true;
-            DocBitacora.CssClass = "btn btn-sm shadow button-enabled";
+            DocBitacora.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
             // Habilitar el botón "AdicionarElemento"
             AdicionarElemento.Enabled = true;
-            AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled";
+            AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
 
             ValidarBotonOk();
 
@@ -569,7 +569,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             Grabar.Enabled = true;
-            Grabar.CssClass = "btn btn-sm shadow button-enabled";
+            Grabar.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
             Modificar.Enabled = false;
             Modificar.CssClass = "btn btn-sm shadow button-disabled";
@@ -659,7 +659,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             Grabar.Enabled = true;
-            Grabar.CssClass = "btn btn-sm shadow button-enabled";
+            Grabar.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
             Modificar.Enabled = false;
             Modificar.CssClass = "btn btn-sm shadow button-disabled";
@@ -842,11 +842,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ActualizarDiseno.Enabled = true;
             Cancelar.Enabled = true;
 
-            NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled";
+            NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
 
 
-            ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
-            Cancelar.CssClass = "btn btn-sm shadow button-enabled";
+            ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+            Cancelar.CssClass = "btn btn-sm shadow button-enabled RojoCancelar";
 
 
             Grabar.Enabled = false;
@@ -880,8 +880,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
 
 
-            ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
-            Cancelar.CssClass = "btn btn-sm shadow button-enabled";
+            ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+            Cancelar.CssClass = "btn btn-sm shadow button-enabled RojoCancelar";
 
 
             Grabar.Enabled = false;
@@ -1367,7 +1367,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Habilitar el botón "Grabar"
             Grabar.Enabled = true;
-            Grabar.CssClass = "btn btn-sm shadow button-enabled";
+            Grabar.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
             // Deshabilitar el botón "ActualizarDiseno"
             ActualizarDiseno.Enabled = false;
@@ -1500,10 +1500,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     Grabar.CssClass = "btn btn-sm shadow button-disabled";
 
                     NuevoDisBit.Enabled = true;
-                    NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled";
+                    NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
 
                     ActualizarDiseno.Enabled = true;
-                    ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
+                    ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
                     Modificar.Enabled = false;
                     Modificar.CssClass = "btn btn-sm shadow button-disabled";
@@ -1520,7 +1520,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 // Habilitar el botón "ActualizarDiseno"
                 ActualizarDiseno.Enabled = true;
-                NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled";
+                NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
 
                 // Ocultar el div y su contenido
                 DeshabilitarDivYContenido(miDiv);
@@ -1548,10 +1548,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     Grabar.CssClass = "btn btn-sm shadow button-disabled";
 
                     NuevoDisBit.Enabled = true;
-                    NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled";
+                    NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
 
                     ActualizarDiseno.Enabled = true;
-                    ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
+                    ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
                     lblNumDise.Text = "Numero";
 
@@ -1935,25 +1935,25 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (tipoAccion == "Ventas")
             {
                 NuevoDisBit.Enabled = true;
-                NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled";
+                NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
 
                 Grabar.Enabled = false;
                 Grabar.CssClass = "btn btn-sm shadow button-disabled";
 
                 // Habilitar el botón "ActualizarDiseno"
                 ActualizarDiseno.Enabled = true;
-                ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
+                ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
                 // Habilitar el botón "Modificar"
                 Modificar.Enabled = true;
                 Modificar.CssClass = "btn btn-sm shadow button-enabled";
 
                 DocBitacora.Enabled = true;
-                DocBitacora.CssClass = "btn btn-sm shadow button-enabled";
+                DocBitacora.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
                 // Habilitar el botón "AdicionarElemento"
                 AdicionarElemento.Enabled = true;
-                AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled";
+                AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
 
             }
             else if (tipoAccion == "Recepcion")
@@ -1966,7 +1966,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 // Habilitar el botón "ActualizarDiseno"
                 ActualizarDiseno.Enabled = true;
-                ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
+                ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
          
 
                 // Habilitar el botón "Modificar"
@@ -1974,11 +1974,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Modificar.CssClass = "btn btn-sm shadow button-disabled";
 
                 DocBitacora.Enabled = true;
-                DocBitacora.CssClass = "btn btn-sm shadow button-enabled";
+                DocBitacora.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
                 // Habilitar el botón "AdicionarElemento"
                 AdicionarElemento.Enabled = true;
-                AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled";
+                AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
 
                 LinkButton2.Enabled = true;
                 LinkButton2.CssClass = "btn btn-sm button-enabled";
@@ -2011,25 +2011,25 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session["lnkClieeClicked"] = true;
 
             NuevoDisBit.Enabled = true;
-            NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled";
+            NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
 
             Grabar.Enabled = false;
             Grabar.CssClass = "btn btn-sm shadow button-disabled";
 
             // Habilitar el botón "ActualizarDiseno"
             ActualizarDiseno.Enabled = true;
-            ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled";
+            ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
             // Habilitar el botón "Modificar"
             Modificar.Enabled = true;
             Modificar.CssClass = "btn btn-sm shadow button-enabled";
 
             DocBitacora.Enabled = true;
-            DocBitacora.CssClass = "btn btn-sm shadow button-enabled";
+            DocBitacora.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
             // Habilitar el botón "AdicionarElemento"
             AdicionarElemento.Enabled = true;
-            AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled";
+            AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
 
             ValidarBotonOk();
 
@@ -2097,10 +2097,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Habilitar el botón "Grabar"
             Grabar.Enabled = true;
-            Grabar.CssClass = "btn btn-sm shadow button-enabled";
+            Grabar.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
             DocBitacora.Enabled = true;
-            DocBitacora.CssClass = "btn btn-sm shadow button-enabled";
+            DocBitacora.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
             // Habilitar el div y su contenido
             HabilitarDivYContenido(miDiv);
@@ -2138,10 +2138,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Habilitar el botón "Grabar"
             Grabar.Enabled = true;
-            Grabar.CssClass = "btn btn-sm shadow button-enabled";
+            Grabar.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
             DocBitacora.Enabled = true;
-            DocBitacora.CssClass = "btn btn-sm shadow button-enabled";
+            DocBitacora.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
             // Deshabilitar el botón "NuevoDisBit"
             NuevoDisBit.Enabled = false;

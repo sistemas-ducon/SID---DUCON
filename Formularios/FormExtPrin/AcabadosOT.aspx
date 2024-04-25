@@ -11,6 +11,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
 
@@ -226,7 +227,7 @@
         </div>
         <div class="col-6">
         <asp:LinkButton runat="server" ID="BtnCopAca" CssClass="btn shadow btn-light linkButtonClicked grande" OnClick="BtnCopAca_Click">
-    <i class="bi bi-save-fill" style="color: #0863a4;"></i>
+    <i class="bi-floppy-fill" style="color: #0863a4;"></i>
 </asp:LinkButton>
 
         </div>

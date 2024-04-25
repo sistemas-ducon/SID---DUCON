@@ -11,6 +11,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
     <link type="text/css" href="../../Recursos/CSS/Ventas/IngresarCotizacion.css" rel="stylesheet" />
     <title>Ingresar Cotizacion</title>
@@ -51,11 +52,11 @@
                                         <div class="contenedor-icono">
 
                                             <asp:LinkButton runat="server" title="Nueva Cotizacion" ID="NuevaCot" OnClick="NuevaCot_Clik">
-                                               <i class="bi bi-file-earmark-plus-fill"></i>
+                                               <i class="bi bi-file-earmark-fill"></i>
                                             </asp:LinkButton>
 
                                             <asp:LinkButton runat="server" title="Grabar Cotizacion" ID="GuardarCot" OnClick="Grabar_Click">
-                                                 <i class="bi bi-save-fill"></i>
+                                                 <i class="bi-floppy-fill"></i>
                                             </asp:LinkButton>
 
                                             <asp:LinkButton runat="server" title="Modificar Cotizacion" ID="ModificarCot" OnClick="Modificar_Click">
