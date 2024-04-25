@@ -1791,6 +1791,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ValidarBotonTerminarRecep();
 
                 ValidarBotonRegresarDise();
+
+                ValidarBotonVisualizarCotActual();
             }
 
           
@@ -1824,15 +1826,53 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             // Si hay resultados, habilitar el botón BtnProgramar
                             BtnProgramar.Enabled = true;
-                            BtnProgramar.CssClass = "btn btn-sm shadow btn-warning fw-bold";
-                            LinkButton2.Enabled = true;
-                            LinkButton2.CssClass = "btn btn-sm shadow button-enabled";
+                            BtnProgramar.CssClass = "btn btn-sm shadow btn-warning fw-bold";      
                         }
                         else
                         {
                             // Si no hay resultados, deshabilitar el botón BtnProgramar
                             BtnProgramar.Enabled = false;
-                            BtnProgramar.CssClass = "btn btn-sm shadow btn-warning fw-bold";
+                            BtnProgramar.CssClass = "btn btn-sm shadow btn-warning fw-bold";       
+                        }
+
+                        // Cerrar la conexión y liberar recursos
+                        reader.Close();
+                        conexion.Close();
+                    }
+                }
+            }       
+        }
+
+        protected void ValidarBotonVisualizarCotActual()
+        {
+            // Verificar si la variable de sesión 'NumeroDiseño' tiene contenido
+            if (Session["NumeroDiseño"] != null && !string.IsNullOrEmpty(Session["NumeroDiseño"].ToString()))
+            {
+                string numeroDiseño = Session["NumeroDiseño"].ToString();
+
+                // Consulta SQL para verificar si el diseño está terminado y la cotización no está OK
+                string consulta = "SELECT TerminadoDibujo FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseño AND TerminadoDibujo = 1";
+
+                // Establecer la conexión con la base de datos y ejecutar la consulta
+                using (SqlConnection conexion = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+                {
+                    using (SqlCommand comando = new SqlCommand(consulta, conexion))
+                    {
+                        // Agregar parámetro para evitar SQL injection
+                        comando.Parameters.AddWithValue("@NumeroDiseño", numeroDiseño);
+
+                        // Abrir conexión y ejecutar consulta
+                        conexion.Open();
+                        SqlDataReader reader = comando.ExecuteReader();
+
+                        // Verificar si la consulta arrojó resultados
+                        if (reader.HasRows)
+                        {       
+                            LinkButton2.Enabled = true;
+                            LinkButton2.CssClass = "btn btn-sm shadow button-enabled";
+                        }
+                        else
+                        {        
                             LinkButton2.Enabled = false;
                             LinkButton2.CssClass = "btn btn-sm shadow button-disabled";
                         }
@@ -1842,7 +1882,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         conexion.Close();
                     }
                 }
-            }       
+            }
         }
 
         protected void ValidarBotonRegresarDise()
@@ -4380,6 +4420,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     fuenteCentGothic11.FontHeightInPoints = 11;
                     estiloCentGothic11.SetFont(fuenteCentGothic11);
 
+                   
+
                     // Agregar los resultados de la consulta a la hoja de Excel
                     foreach (DataRow fila in resultados.Rows)
                     {
@@ -4412,14 +4454,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Crear un nuevo estilo que combine los estilosCentGothic11 y estiloNumerico para subtotalMultiplicadoCell
                         ICellStyle estiloSubtotalMultiplicado = workbook.CreateCellStyle();
                         estiloSubtotalMultiplicado.CloneStyleFrom(estiloCentGothic11); // Copiar propiedades del estiloCentGothic11
-                        estiloSubtotalMultiplicado.DataFormat = formatoNumerico.GetFormat("#,##0"); // Establecer formato numérico
+                        estiloSubtotalMultiplicado.DataFormat = formatoNumerico.GetFormat("#,##0"); // Establecer formato numérico     
 
-                        // Agregar el valor del subtotal multiplicado en la columna E con los estilos combinados
-                        ICell subtotalMultiplicadoCell = zonaRow2.CreateCell(5);
-                        double cantidad = Convert.ToDouble(fila["Cantidad"]);
-                        double subtotalMultiplicado = cantidad * subtotalActualZona;
-                        subtotalMultiplicadoCell.SetCellValue(subtotalMultiplicado);
-                        subtotalMultiplicadoCell.CellStyle = estiloSubtotalMultiplicado;
+
+                        // Crear celda para mostrar la fórmula
+                        ICell resultadoMultiplicacionCell = zonaRow2.CreateCell(5);
+                        resultadoMultiplicacionCell.CellStyle = estiloSubtotal;
+                        resultadoMultiplicacionCell.CellStyle = estiloSubtotalMultiplicado;
+                        // Establecer la fórmula en la celda
+                        string formula = string.Format("E{0}*D{0}", currentRow);
+                        resultadoMultiplicacionCell.SetCellFormula(formula);
 
 
                     }
@@ -4666,6 +4710,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 }
 
                                 cell.CellStyle = estiloNegritaGris;
+
+                                cell.CellStyle.WrapText = true;
                             }
                         }
 
@@ -5010,6 +5056,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             double totalCubicajeAcumulado = 0.0;
 
+            int filaInicioResultadosPlano = currentRow;
+
             foreach (DataRow fila in resultados.Rows)
             {
                 string descripcionGrupo = fila["Descripcion_Grupo"].ToString();
@@ -5056,7 +5104,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     // Restablecer la suma de ValorActual para la Descripcion_Grupo actual
                     double sumaValorActual = 0.0;
                     double totalCubicaje = 0.0;
-                  
+                   
+                 
+                 
+                    int filaInicioResultados = currentRow;
+
+                    // Resto de tu código...
+
+
                     foreach (DataRow filaGrupo in resultados.Rows)
                     {
                         if (filaGrupo["Descripcion_Grupo"].ToString() == descripcionGrupo && filaGrupo["Id_Plano"].ToString() == planoActual)
@@ -5090,8 +5145,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             // 3. Multiplicar los valores de la columna 'Cantidad' obtenidos en el punto 1 con los de la consulta del procedimiento almacenado
                             double cantidadFinal = cantidadConsultaSQL * cantidad;
 
-                            // Realizar la multiplicación de ValorActual por Cantidad
-                            double resultadoMultiplicacion = valorActual * cantidadFinal;
+                           
 
                             // Crear una nueva fila y agregar los valores
                             row = cotizacionDetalladaSheet.CreateRow(currentRow++);
@@ -5134,15 +5188,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             ICell valorActualCell = row.CreateCell(4);
                             valorActualCell.CellStyle = estiloSubtotal;
 
+                            // Crear celda para mostrar la fórmula
                             ICell resultadoMultiplicacionCell = row.CreateCell(5);
                             resultadoMultiplicacionCell.CellStyle = estiloSubtotal;
 
+                            // Establecer la fórmula en la celda
+                            string formula = string.Format("E{0}*D{0}", currentRow);
+                            resultadoMultiplicacionCell.SetCellFormula(formula);
+
                             // Establecer los valores como números en las celdas correspondientes
                             valorActualCell.SetCellValue(Convert.ToDouble(valorActual));
-                            resultadoMultiplicacionCell.SetCellValue(Convert.ToDouble(resultadoMultiplicacion));
-
-                            // Agregar el valor de la multiplicación al total de ValorActual para la Descripcion_Grupo actual
-                            sumaValorActual += resultadoMultiplicacion;
+                           
 
                             double cubicaje = CalcularCubicaje(plan, idNumerico, cantidadFinal);
 
@@ -5166,15 +5222,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
 
                  
-
-
-
-                    // Agregar la suma de los valores de ValorActual en la fila siguiente a la de Id_Panel
-                    if (sumaValorActual > 0) // Verificar que se haya sumado al menos un ValorActual
-                    {
                         IRow filaSuma = cotizacionDetalladaSheet.CreateRow(currentRow++);
                         ICell sumaCell = filaSuma.CreateCell(5);
-                        sumaCell.SetCellValue(sumaValorActual);
+
+                        // Establecer la fórmula de suma en la celda
+                        // Establecer la fórmula de suma en la celda
+                        string formulaSuma = string.Format("SUM(F{0}:F{1})", filaInicioResultados + 1, currentRow - 1);
+                        sumaCell.SetCellFormula(formulaSuma);
 
                         IDataFormat formatoNumerico3 = workbook.CreateDataFormat();
 
@@ -5202,7 +5256,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         // Aplicar los estilos al valor del total
                         sumaCell.CellStyle = estiloTotal;
-                    }
+                    
 
 
               
@@ -5258,54 +5312,26 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             cell = filaSumaTotalPorPlano.CreateCell(i);
                         }
                         cell.CellStyle = styleTotalZona;
+
+                        cell.CellStyle.WrapText = true;
                     }
                 }
-
-                // Realizar la consulta SQL para obtener SubTotalZona y Cantidad
-                double subtotalZona = 0.0;
-                int cantidad = 0;
-                string consultaSQLSubtotal = $"SELECT ISNULL(SUM(tblPanel.Precio_Venta * tblPlano_Panel.Cantidad), 0) AS SubTotalZona, tblPlanoDiseño.Cantidad " +
-                                            $"FROM tblDiseño " +
-                                            $"INNER JOIN tblPlanoDiseño ON tblDiseño.Numero_Diseño = tblPlanoDiseño.Numero_Diseño " +
-                                            $"INNER JOIN tblPlano_Panel ON tblPlanoDiseño.Plano = tblPlano_Panel.Id_Plano " +
-                                            $"INNER JOIN tblPanel ON tblPlano_Panel.Id_PanelNum = tblPanel.Id_Numerico " +
-                                            $"INNER JOIN tblGrupoObjeto ON tblPanel.Id_GrupoObjeto = tblGrupoObjeto.ID_GrupoObjeto " +
-                                            $"WHERE (tblGrupoObjeto.Cotizar = 1) " +
-                                            $"AND (tblDiseño.Numero_Diseño = '{numeroDiseño}') " +
-                                            $"AND (tblPlanoDiseño.Plano = '{idPlano}') " +
-                                            $"AND (tblPlanoDiseño.Opcion = '{opcion}') " +
-                                            $"GROUP BY tblDiseño.Numero_Diseño, tblDiseño.Nombre_Diseño, tblDiseño.Asesor, tblPlanoDiseño.Plano, tblPlanoDiseño.Opcion, tblPlanoDiseño.Cantidad";
-
-                using (SqlConnection conexion = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
-                {
-                    using (SqlCommand comando = new SqlCommand(consultaSQLSubtotal, conexion))
-                    {
-                        conexion.Open();
-                        SqlDataReader reader = comando.ExecuteReader();
-                        if (reader.Read())
-                        {
-                            subtotalZona = Convert.ToDouble(reader["SubTotalZona"]);
-                            cantidad = Convert.ToInt32(reader["Cantidad"]);
-                        }
-                        reader.Close();
-                    }
-                }
-
-                // Calcular el valor final multiplicando el subtotal por la cantidad
-                double valorFinal = subtotalZona * cantidad;
 
                 IDataFormat formatoNumerico4 = workbook.CreateDataFormat();
 
-                // Establecer el valor final en la celda de sumaTotalPorPlanoCell
-                ICell sumaTotalPorPlanoCell = filaSumaTotalPorPlano.CreateCell(5);
-                sumaTotalPorPlanoCell.SetCellValue(valorFinal);
-      
+                IRow filaSuma = filaSumaTotalPorPlano;
+                ICell sumaCell = filaSuma.CreateCell(5);
+  
+                // Establecer la fórmula de suma en la celda
+                string formulaSuma = string.Format("SUM(F{0}:F{1})/2", filaInicioResultadosPlano + 1, currentRow - 1);
+                sumaCell.SetCellFormula(formulaSuma);
+
                 // Aplicar estilo a la celda de sumaTotalPorPlanoCell
                 ICellStyle styleSubtotal = workbook.CreateCellStyle();
                 styleSubtotal.SetFont(fontTotalZona);
                 styleSubtotal.FillForegroundColor = IndexedColors.Grey25Percent.Index;
                 styleSubtotal.FillPattern = FillPattern.SolidForeground;
-                sumaTotalPorPlanoCell.CellStyle = styleSubtotal;
+                sumaCell.CellStyle = styleSubtotal;
 
                 // Crear un nuevo estilo que combine los estilosCentGothic11 y estiloNumerico para el valor total
                 ICellStyle estiloTotal = workbook.CreateCellStyle();
@@ -5316,7 +5342,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 estiloTotal.SetFont(fontTotalZona);
 
                 // Aplicar los estilos al valor del total
-                sumaTotalPorPlanoCell.CellStyle = estiloTotal;
+                sumaCell.CellStyle = estiloTotal;
 
             }
 
