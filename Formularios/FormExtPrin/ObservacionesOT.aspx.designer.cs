@@ -159,6 +159,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected global::System.Web.UI.WebControls.TextBox tbReceptorCorreo;
 
         /// <summary>
+        /// Control tbRecepTipoObs.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbRecepTipoObs;
+
+        /// <summary>
         /// Control tbCedulaRecp.
         /// </summary>
         /// <remarks>

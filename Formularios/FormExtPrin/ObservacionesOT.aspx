@@ -105,7 +105,7 @@
                                             <div class="col-lg-7 col-md-6 col-sm-12 col-xs-12">
                                                 <div class="input-group input-group-sm gap-2">
                                                     <asp:Label ID="Label1" runat="server" CssClass="col-form-label-sm fw-bold" Text="T.Obs."></asp:Label>
-                                                    <asp:DropDownList ID="ddlTipoObservacion" runat="server" CssClass="form-control form-control-sm"></asp:DropDownList>
+                                                    <asp:DropDownList ID="ddlTipoObservacion" runat="server" CssClass="form-control form-control-sm" OnSelectedIndexChanged="ddlTipoObservacion_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>                                                   
                                                 </div>
                                             </div>
                                             <div class="col-lg-5 col-md-6 col-sm-12 col-xs-12">
@@ -121,7 +121,7 @@
                                     <div class="p-2 m- border" style="height: 24rem;">
                                         <h6>Observación</h6>
                                         <textarea id="txObservacion" runat="server" class="form-control form-control-sm" style="height: 10rem;"> </textarea>
-                                       
+
 
                                         <div class="border rounded p-1 special-border mt-1" style="height: auto; min-height: 10rem;">
                                             <h6 class="text-center">Receptores de la Observación Seleccionada</h6>
@@ -194,10 +194,17 @@
 
                                             </div>
 
+                                             <div class="row pt-2 ">
+                                                <div class="col-12">
+                                                    <asp:TextBox ID="tbRecepTipoObs" runat="server" CssClass=" form-control form-control-sm" placeHolder="Correos por tipo de observación"></asp:TextBox>
+                                                </div>
+
+                                            </div>
+
                                             <div class="row pt-2 ">
                                                 <div class="col-12">
                                                     <asp:TextBox ID="tbCedulaRecp" runat="server" CssClass=" form-control form-control-sm" Visible="false"></asp:TextBox>
-                                                      <asp:TextBox ID="tbNombreRecp" runat="server" CssClass=" form-control form-control-sm" Visible="false"></asp:TextBox>
+                                                    <asp:TextBox ID="tbNombreRecp" runat="server" CssClass=" form-control form-control-sm" Visible="false"></asp:TextBox>
                                                 </div>
 
                                             </div>

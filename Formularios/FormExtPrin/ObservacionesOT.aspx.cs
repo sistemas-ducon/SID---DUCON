@@ -45,8 +45,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         tbNombreObra.CssClass = "form-control";
 
                     }
-                    ConsultarCorreosPorDefecto(); 
-                    ManejarIdOT(); 
+                    ConsultarCorreosPorDefecto();
+                    ManejarIdOT();
                     ManejarPedido();
                     EnlazarDataGrid();
                     EnlazarDataGrid4();
@@ -127,7 +127,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
                         SqlCommand command = new SqlCommand(query, connection);
                         command.Parameters.AddWithValue("@Id_Solicitud", id.Substring(3));
-                       
+
                         SqlDataReader reader = command.ExecuteReader();
 
                         // Verificar si hay filas devueltas por la consulta
@@ -145,22 +145,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     }
                     else
                     {
-                        string query = "SELECT tblEmpleado.Mail " +
-                                "FROM tblOT " +
-                                "INNER JOIN tblEmpleado ON tblOT.AbiertoPor = tblEmpleado.Cedula " +
-                                "WHERE tblOT.Id_OT = @CedulaLogeada " +
-                                "AND tblOT.Consecutivo_Pedido = @NumeroPedido";
+                        string query = "SELECT  Mail FROM tblAsesorComercial  AS AC " +
+                                       "INNER JOIN tblOT AS OT ON OT.Codigo_Asesor = AC.Cedula " +
+                                       "WHERE OT.Id_OT = @OT AND Consecutivo_Pedido =  @pedido ";
 
                         SqlCommand command = new SqlCommand(query, connection);
-                        command.Parameters.AddWithValue("@CedulaLogeada", id);
-                        command.Parameters.AddWithValue("@NumeroPedido", pedido);
+                        command.Parameters.AddWithValue("@ot", id);
+                        command.Parameters.AddWithValue("@pedido", pedido);
                         SqlDataReader reader = command.ExecuteReader();
 
                         // Verificar si hay filas devueltas por la consulta
                         if (reader.Read())
                         {
                             string mail = reader["Mail"].ToString();
-                            tbReceptorCorreo.Text = mail; // Asignar el valor a TextBox3
+                            string mailOK = ValidarMail(id, mail);
+                            tbReceptorCorreo.Text = mailOK; // Asignar el valor a TextBox3
                         }
                         else
                         {
@@ -169,8 +168,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
                         reader.Close();
                     }
-                  
-                    
+
+
                 }
             }
             else
@@ -179,7 +178,41 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             }
 
             tbReceptorCorreo.Enabled = false;
-            tbReceptorCorreo.CssClass = "form-control";
+            tbReceptorCorreo.CssClass = "form-control form-contro-sm";
+
+            tbRecepTipoObs.Enabled = false;
+            tbRecepTipoObs.CssClass = "form-control form-contro-sm";
+        }
+
+        private string ValidarMail(string idOT, string mail)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+            string correos = "";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = @"SELECT ISNULL(SUBSTRING((SELECT ';' + tblAsesorComercial.Mail FROM tblReporteOT, tblAsesorComercial 
+                                WHERE Id_OT = @OT and tblAsesorComercial.Cedula=Codigo_Asesor  and tblAsesorComercial.Activo=1 and Id_OT
+                                NOT IN ('0109700','0102000')  GROUP BY Id_OT,Codigo_Asesor,tblAsesorComercial.Mail 
+                                FOR XML PATH('')),2,9999), @mail)";
+
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@OT", idOT);
+                command.Parameters.AddWithValue("@mail",mail); 
+
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    correos = reader[0].ToString();
+                }
+
+                reader.Close();
+            }
+
+            return correos;
         }
 
         private void ManejarIdOT()
@@ -367,7 +400,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             // Aplica la clase CSS a la fila seleccionada
             selectedRow.CssClass = "selected-row";
 
-          
+
 
             // Llamar al método para actualizar el DataGrid6
             UpdateDataGrid6(idObservacion);
@@ -413,7 +446,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             // Realizar la consulta SQL utilizando el idObservacion obtenido
             string query = "SELECT  CASE WHEN Leida = 1 THEN 'SI' ELSE 'NO' END AS LeidaText,* FROM tblOTObservacion_Receptor WHERE id_Observacion = '" + idObservacion + "'";
 
-              string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
             SqlDataAdapter adapter = new SqlDataAdapter(query, connectionString);
             DataSet dataSet = new DataSet();
             adapter.Fill(dataSet);
@@ -477,7 +510,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
 
         }
-      
+
 
         // Grabar Observacion 
         protected void GrabarObservacion_Click(object sender, EventArgs e)
@@ -486,8 +519,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             if (ValidarCamposRequeridos())
             {
                 // Se realiza la Insercion de la Observacion   
-                   InsertarObservacion();
-                   DataGrid1.DataBind();
+                InsertarObservacion();
+                DataGrid1.DataBind();
 
                 // Traemos el Id_MaxObservacion 
                 string Id_Observacion = ConsultarId_Observacion();
@@ -504,10 +537,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     for (int i = 0; i < CedNot.Length; i++)
                     {
                         // Llamamos al método InsertarObservacionReceptores con la cédula y el nombre actuales
-                       InsertarObservacionReceptores(Id_Observacion, CedNot[i], NomNot[i]);
-                       
+                         InsertarObservacionReceptores(Id_Observacion, CedNot[i], NomNot[i]);
+
                     }
-                 
+
                     // Mostrar mensaje de éxito
                     string script1 = "alert('La observación ha sido grabada para los siguientes usuarios del sistema: " + tbNombreRecp.Text.Replace(";"," - ") + @"');";
                     ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", script1, true);
@@ -517,10 +550,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
 
                 //Consultamos el area de aplicacion  con el codigo del ddlTipoObservacion              
-                string Aplicacion =  ConsultarAreaAplicacion();
+                string Aplicacion = ConsultarAreaAplicacion();
 
                 //Enviar la notificacion por Correo 
-                string destinatarios = tbReceptorCorreo.Text;
+                string destinatarios = (tbReceptorCorreo.Text + ";" + tbRecepTipoObs.Text).Trim(';').Trim(' '); ;
                 string cuerpo = @"
                     <!DOCTYPE html>
                     <html lang='es'>
@@ -572,9 +605,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 //ejecutar el procedimiento almacenado que envia el correo 
                 EnviarCorreoReproceso(destinatarios, cuerpo, Aplicacion);
 
-              
+                CargarDropDownList();
+
+                txObservacion.InnerText = "";
             }
-            
+
 
         }
 
@@ -591,7 +626,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
                     // Definir los parámetros del procedimiento almacenado
                     command.Parameters.AddWithValue("@Destinatarios", destinatarios);
-                    command.Parameters.AddWithValue("@asunto", "Observacion: " + aplicacion + " APL: " + tbOT.Text + "-" +tbPedido.Text);
+                    command.Parameters.AddWithValue("@asunto", "Observacion: " + aplicacion + " APL: " + tbOT.Text + "-" + tbPedido.Text);
                     command.Parameters.AddWithValue("@cuerpo", cuerpo);
                     command.Parameters.AddWithValue("@adjuntos", "");
                     command.Parameters.AddWithValue("@usuario", Session["usuariologueado"].ToString());
@@ -619,7 +654,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         {
             bool valido = true;
 
-            if(ddlTipoObservacion.SelectedValue == " ")
+            if (ddlTipoObservacion.SelectedValue == " ")
             {
                 // Mensaje de alerta
                 string script1 = "alert('Por favor seleccione el tipo de observación.');";
@@ -627,7 +662,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 valido = false;
             }
 
-            if(txObservacion.InnerText == "")
+            if (txObservacion.InnerText == "")
             {
                 // Mensaje de alerta
                 string script1 = "alert('Por favor escriba  la justificaci{on de la observación.');";
@@ -635,7 +670,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 valido = false;
             }
 
-            if (tbOT.Text == "" )
+            if (tbOT.Text == "")
             {
                 // Mensaje de alerta
                 string script1 = "alert('No se ha seleccionado una OT o una Solicitud Especial para generar una observacion');";
@@ -646,7 +681,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             return valido;
         }
-  
+
         public string ConsultarAreaAplicacion()
         {
             string areaAplicacion = "";
@@ -668,7 +703,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     }
                     catch (Exception ex)
                     {
-                      
+
                     }
                 }
             }
@@ -715,21 +750,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 string Nombre = row.Cells[2].Text;
                 string mailAgregar = row.Cells[3].Text;
                 string cedula = row.Cells[4].Text;
-              
+
 
                 // Tomamos los mail ya agregados y las cedulas agregadas
                 string MailAgregados = tbReceptorCorreo.Text;
                 string cedulaAgregadas = tbCedulaRecp.Text;
-                string NombreAgregado =  tbNombreRecp.Text;
+                string NombreAgregado = tbNombreRecp.Text;
 
                 if (!MailAgregados.Contains(mailAgregar))
                 {
                     //Agregamos el correo del  receptor
-                    tbReceptorCorreo.Text =MailAgregados + ";" + mailAgregar;
+                    tbReceptorCorreo.Text = MailAgregados + ";" + mailAgregar;
 
                     // Agregamos la cedula del Receptor 
 
-                    if(tbCedulaRecp.Text != "")
+                    if (tbCedulaRecp.Text != "")
                     {
                         tbCedulaRecp.Text = cedulaAgregadas + ";" + cedula;
                         tbNombreRecp.Text = NombreAgregado + ";" + Nombre;
@@ -739,7 +774,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         tbCedulaRecp.Text = cedula;
                         tbNombreRecp.Text = Nombre;
                     }
-               
+
 
                     //se usa Para darle un color a la fila seleccionada  
                     e.Item.CssClass = "fila-seleccionada";
@@ -747,22 +782,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 else
                 {
                     // Eliminamos el correo del receptor  
-                    tbReceptorCorreo.Text = MailAgregados.Replace( ";"+mailAgregar , "");
+                    tbReceptorCorreo.Text = MailAgregados.Replace(";" + mailAgregar, "");
 
                     // Eliminamos la cedula del receptor 
-                    tbCedulaRecp.Text = cedulaAgregadas.Replace(cedula, "").TrimEnd(';').Replace(";;",";");
+                    tbCedulaRecp.Text = cedulaAgregadas.Replace(cedula, "").TrimEnd(';').Replace(";;", ";");
 
                     // Eliminamos el  nombre  del receptor 
                     tbNombreRecp.Text = NombreAgregado.Replace(Nombre, "").TrimEnd(';').Replace(";;", ";");
-                   
+
 
                     e.Item.CssClass = "fila-seleccionada1";
                 }
 
-             
-               
+
+
             }
-               
+
         }
 
         public void InsertarObservacion()
@@ -785,13 +820,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     command.Parameters.AddWithValue("@fechaObsercion", DateTime.Now);
                     command.Parameters.AddWithValue("@Emisor", Session["CedulaLogeada"].ToString());
                     command.Parameters.AddWithValue("@Nombre_Emisor", Session["usuariologueado"].ToString());
-                    command.Parameters.AddWithValue("@ID_TipoObservacion",ddlTipoObservacion.SelectedValue);
-                    command.Parameters.AddWithValue("@FechaAnteriorDespacho", DateTime.Now); 
+                    command.Parameters.AddWithValue("@ID_TipoObservacion", ddlTipoObservacion.SelectedValue);
+                    command.Parameters.AddWithValue("@FechaAnteriorDespacho", DateTime.Now);
                     command.Parameters.AddWithValue("@FechaNuevaDespacho", DateTime.Now);
                     command.Parameters.AddWithValue("@CedulaAsesor", Session["CedulaLogeada"].ToString());
                     command.Parameters.AddWithValue("@FechaActividad", tbfechaActividad.Text);
                     command.Parameters.AddWithValue("@Destinatarios", tbReceptorCorreo.Text);
-               
+
 
                     try
                     {
@@ -846,7 +881,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     command.Parameters.AddWithValue("@ID_Observacion", Id_Observacion);
                     command.Parameters.AddWithValue("@CedulaRecep", cedula);
                     command.Parameters.AddWithValue("@NombreReceptor", nombre);
-         
+
                     try
                     {
                         connection.Open();
@@ -860,6 +895,50 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 }
             }
         }
+
+        protected void ddlTipoObservacion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string CorreoTipoObser = ConsultarCorreoPorTipoObservacion();
+
+            tbRecepTipoObs.Text = "";
+            tbRecepTipoObs.Text = CorreoTipoObser;
+
+        }
+
+        protected string ConsultarCorreoPorTipoObservacion()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+            string correo = "";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT DestinatarioPorDefecto FROM tblTipoObservacion " +
+                                   "WHERE UsoEspecifico = 0 AND Activa = 1 AND ID_TipoObservacion = @IdObservacion";
+
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@IdObservacion", ddlTipoObservacion.SelectedValue);
+
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        correo = reader["DestinatarioPorDefecto"].ToString();
+                    }
+
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejo de errores, por ejemplo, loguear el error
+                // También puedes lanzar una excepción o devolver un mensaje de error
+            }
+
+            return correo;
+        }
+
 
     }
 }
