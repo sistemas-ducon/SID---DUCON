@@ -1419,6 +1419,24 @@
                             </div>
                         </div>
 
+                          <div class="modal fade" id="NITvacio" data-backdrop="static" data-bs-keyboard="false">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">VALIDAR NIT</h5>
+                                    </div>
+                                    <div class="modal-body form-control-sm">
+                                        <p>
+                                   La información relacionada con el NIT no ha sido proporcionada. Por favor, asegúrate de completar todos los campos requeridos antes de continuar.
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                                        <asp:Button runat="server" Text="Aceptar" OnClick="Redireccion_Nit_Click" CssClass="btn btn-sm btn-outline-dark" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                          <div class="modal fade" id="GuardarNIT" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -1432,7 +1450,7 @@
                                         </p>
                                     </div>
                                     <div class="modal-footer  d-flex align-items-center justify-content-center">
-                                         <asp:Button runat="server" Text="Si" OnClick="HaabilitarTextbox_click" CssClass="btn btn-sm btn-outline-dark" data-bs-dismiss="modal" aria-label="Close"/>
+                                         <asp:Button runat="server" Text="Si" CssClass="btn btn-sm btn-outline-dark" data-bs-dismiss="modal" aria-label="Close"/>
                                           <asp:Button runat="server" class="btn btn-sm btn-outline-dark" Text="No" data-bs-dismiss="modal" aria-label="Close"/>
                                     </div>
                                 </div>
@@ -2664,15 +2682,7 @@
         }
     </script>
 
-      <script type="text/javascript">
-          function openModal2() {
-              var myModal = new bootstrap.Modal(document.getElementById('GuardarNIT'), {
-                  keyboard: false
-              });
-              myModal.show();
-
-          }
-      </script>
+    
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

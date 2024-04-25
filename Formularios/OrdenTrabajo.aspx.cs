@@ -185,8 +185,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             {
                                 if (Session["NuevaOTEjecutada"] == null)
                                 {
-                                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "setTimeout(function() { openModal2(); }, 1500);", true);
                                     BotonesModificar();
+
+                                    HabilitarTodosLosTextBoxes();
                                 }        
                             }
                         }
@@ -286,7 +287,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             tbOT.Enabled = false;
 
-            Nit.Enabled = true;
+            Nit.Enabled = false;
 
             cbxComisionCompart.Enabled = true;
       
@@ -1070,12 +1071,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-        protected void HaabilitarTextbox_click(object sender, EventArgs e)
-        {
-            HabilitarTodosLosTextBoxes();
-
-            Nit.Enabled = false;      
-        }
+     
 
         public void DeshabilitarDropDownLists(List<DropDownList> dropDownLists)
         {
@@ -3509,7 +3505,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
-                //MODAL VACIO
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#NITvacio').modal('show');", true);
             }
         }
 
