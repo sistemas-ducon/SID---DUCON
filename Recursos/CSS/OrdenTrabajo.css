@@ -322,11 +322,11 @@
     color: #333;
 }
 
-/* Personalizar el estilo del spinner */
+/*  spinner */
 #loadingModal1 .spinner-border {
     width: 3rem;
     height: 3rem;
-    color: #007bff; /* Color azul - puedes cambiarlo a tu preferencia */
+    color: #007bff; 
 }
 
 #loadingModalExcel .modal-content {
@@ -341,11 +341,11 @@
     color: #333;
 }
 
-/* Personalizar el estilo del spinner */
+/*Spinner Excel*/
 #loadingModalExcel .spinner-border {
     width: 3rem;
     height: 3rem;
-    color: #007bff; /* Color azul - puedes cambiarlo a tu preferencia */
+    color: #007bff; 
 }
 
 #OkCargando .modal-content {
@@ -360,14 +360,21 @@
     color: #333;
 }
 
-/* Personalizar el estilo del spinner */
+/*  Spinner boton OK */
 #OkCargando .spinner-border {
     width: 3rem;
     height: 3rem;
-    color: #007bff; /* Color azul - puedes cambiarlo a tu preferencia */
+    color: #007bff;
 }
 
+.bi-printer-imprime {
+    font-size: 3rem !important; /*Para hacer mas grande el boton de imprimir en el modal*/
+}
 
-
+.Tam {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
 
 

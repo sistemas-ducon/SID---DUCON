@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../../Recursos/CSS/OrdenTrabajo.css" />
     <title>Ordenes de Trabajo</title>
     <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
- 
+
 
     <script>
         // Mostrar y Ocultar  acabados plano
@@ -169,6 +169,35 @@
             };
         };
     </script>
+
+    <script type="text/javascript">
+        function imprimirDatos() {
+
+            // Ocultar el LinkButton antes de imprimir
+            document.getElementById('<%= imprimirDatos.ClientID %>').style.display = 'none';
+
+            // Imprimir
+            window.print();
+
+            $('#modalImprimir').modal('hide');
+
+        }
+    </script>
+
+    <script type="text/javascript">
+        function imprimirDatos2() {
+
+            // Ocultar el LinkButton antes de imprimir
+            document.getElementById('<%= btnImprimir2.ClientID %>').style.display = 'none';
+
+            // Imprimir
+            window.print();
+
+            $('#modalImprimir2').modal('hide');
+
+        }
+    </script>
+
 </head>
 
 <body translate="no">
@@ -352,6 +381,864 @@
                                 </div>
                             </div>
 
+                            <!--Modal Imprimir Info General OT -->
+                            <div class="modal fade" id="modalImprimir" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-fullscreen">
+                                    <div class="modal-content">
+
+
+                                        <div class="modal-body">
+
+                                            <!--contenedor  para cuando la OT no le han dado boton de Ventas -->
+                                            <div class="container-fluid p-3" runat="server" id="divImprOTAbierta">
+
+                                                <div class="row">
+                                                    <div class="input-group input-group-sm justify-content-end gap-4">
+                                                        <asp:LinkButton runat="server" title="Imprimir Información General de la OT" ID="imprimirDatos" CssClass=" font-size:2rem;" OnClientClick="imprimirDatos();">
+                                                          <i class="bi bi-printer bi-printer-imprime"></i>
+                                                        </asp:LinkButton>
+
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row pb-2">
+                                                    <div class="col-12">
+
+                                                        <div class="row justify-content-center">
+                                                            <div class="border rounded p-2">
+                                                                <div class="table-responsive">
+                                                                    <h5 class="datagrid-header text-center fw-bold">Ducuon S.A.S</h5>
+                                                                    <table class="table table-hover table-bordered table-sm border">
+
+                                                                        <tbody>
+
+                                                                            <tr>
+                                                                                <td style="white-space: nowrap;">
+                                                                                    <div class="input-group input-group-sm gap-4">
+
+                                                                                        <label class="fw-bold">Orden Trabajo:  </label>
+                                                                                        <label runat="server" id="lbOrdenTrabjo"></label>
+
+                                                                                        <label class=" fw-bold ">Pedido:</label>
+                                                                                        <label runat="server" id="lbPedido"></label>
+
+                                                                                        <label class="fw-bold">Tipo Pedido:</label>
+                                                                                        <label runat="server" id="lbTipoPed"></label>
+
+
+                                                                                    </div>
+                                                                                </td>
+
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <td style="white-space: nowrap;">
+                                                                                    <div class="input-group input-group-sm gap-4">
+
+                                                                                        <label class="fw-bold">Vendedor:  </label>
+                                                                                        <label runat="server" id="lbVendedor"></label>
+
+                                                                                        <label class="fw-bold">Cliente:</label>
+                                                                                        <label runat="server" id="lbCliente"></label>
+
+                                                                                    </div>
+
+                                                                                </td>
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <td style="white-space: nowrap;">
+                                                                                    <div class="input-group input-group-sm gap-4">
+
+                                                                                        <label class="fw-bold">Nombre de la Obra:  </label>
+                                                                                        <label runat="server" id="lbNombreObra"></label>
+
+                                                                                    </div>
+                                                                                </td>
+                                                                            </tr>
+
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+
+
+
+                                                </div>
+
+                                                <div class="row justify-content-center">
+                                                    <div class="border rounded p-2">
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-11">
+                                                                <div class="table-responsive  mb-2 gap-2" style="max-height: auto; overflow-x: auto;">
+                                                                    <h6 class="datagrid-header text-center">ACABADOS</h6>
+                                                                    <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid2" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="Acabado">
+                                                                        <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                                        <Columns>
+                                                                            <asp:BoundColumn DataField="AcabadoVentas" HeaderText="Descripción" />
+                                                                        </Columns>
+                                                                    </asp:DataGrid><asp:SqlDataSource runat="server" ID="Acabado" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="select AcabadoVentas from tblOTAcabados where Id_OT = @OT AND Consecutivo_Pedido =  @pedido">
+                                                                        <SelectParameters>
+                                                                            <asp:ControlParameter ControlID="tbOT" Name="OT"></asp:ControlParameter>
+                                                                            <asp:ControlParameter ControlID="ddlNumbers" Name="pedido"></asp:ControlParameter>
+                                                                        </SelectParameters>
+                                                                    </asp:SqlDataSource>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row pt-3 mt-3">
+                                                    <div class="col-12">
+                                                        <div class="input-group input-group-sm gap-2">
+                                                            <label class="fw-bold">Se produce por: </label>
+                                                            <label runat="server" id="lbProduce"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row pt-2" style="height: 15rem;">
+                                                    <div class="col-12">
+                                                        <p runat="server" id="pObservaciones"></p>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+
+                                            <div class="row" id="espacio" runat="server">
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+
+                                            </div>
+
+                                            <div class="row" id="espacio1" runat="server">
+                                                <br />
+                                                <br />
+                                                <br />
+
+                                            </div>
+
+                                            <div class="modal-footer d-flex flex-column align-items-stretch pt-3 ">
+                                                <div class="row ">
+                                                    <div class="col-12">
+
+                                                        <div class="row justify-content-center">
+
+                                                            <div class="table-responsive ">
+                                                                <table class="table table-hover table-bordered border table-sm">
+
+                                                                    <tbody>
+
+                                                                        <tr>
+                                                                            <td colspan="2" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm gap-5">
+
+                                                                                    <label class="fw-bold">Dirección :  </label>
+                                                                                    <label runat="server" id="lbDir"></label>
+                                                                                    <label runat="server" id="lbCiuDep"></label>
+                                                                                    <label runat="server" id="lbPai"></label>
+
+                                                                                </div>
+                                                                            </td>
+
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                            <td colspan="2" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm gap-5">
+
+                                                                                    <label class="fw-bold">Recibe:  </label>
+                                                                                    <label runat="server" id="lbReci"></label>
+
+                                                                                    <label class="fw-bold">Contacto:  </label>
+                                                                                    <label runat="server" id="lbconta"></label>
+
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                            <td colspan="2" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm gap-5">
+
+                                                                                    <label class="fw-bold">Teléfono:  </label>
+                                                                                    <label runat="server" id="lbTel"></label>
+
+                                                                                    <label class="fw-bold">Mail:  </label>
+                                                                                    <label runat="server" id="lbMail"></label>
+
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                            <td style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm gap-5">
+
+                                                                                    <label class="fw-bold">F. Confir Venta:  </label>
+                                                                                    <label runat="server" id="lbFecConVenta"></label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm gap-5">
+
+
+                                                                                    <label class="fw-bold">F. Entrega Dib y Desp:  </label>
+                                                                                    <label runat="server" id="lbFecDibDes"></label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                            <td style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm gap-5">
+
+                                                                                    <label class="fw-bold">F. Entrega a Producción:  </label>
+                                                                                    <label runat="server" id="lbFecEntreProd"></label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm gap-5">
+
+                                                                                    <label class="fw-bold">F. Empaque:  </label>
+                                                                                    <label runat="server" id="lbFecEmpaq"></label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                            <td style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm gap-5">
+
+                                                                                    <label class="fw-bold">F. Real Despacho:  </label>
+                                                                                    <label runat="server" id="Label7"></label>
+                                                                                </div>
+
+                                                                            </td>
+
+                                                                            <td style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm gap-5">
+
+                                                                                    <label class="fw-bold">F. Instalación:  </label>
+                                                                                    <label runat="server" id="lbFecIns"></label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                            <td colspan="2" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm gap-5">
+
+                                                                                    <label class="fw-bold">Plano :  </label>
+                                                                                    <label runat="server" id="lbPlan"></label>
+
+                                                                                    <label class="fw-bold">Dibuja y Despieza :  </label>
+                                                                                    <label runat="server" id="lbDibDes"></label>
+
+
+                                                                                </div>
+                                                                            </td>
+
+                                                                        </tr>
+
+
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+
+                                                        </div>
+
+
+                                                    </div>
+
+
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Modal Imprimir Info Contable OT  -->
+                            <div class="modal fade" id="modalImprimir2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-fullscreen">
+                                    <div class="modal-content">
+
+
+                                        <div class="modal-body">
+
+                                            <!--contenedor  para cuando la OT no le han dado boton de Ventas -->
+                                            <div class="container-fluid p-3" runat="server" id="div1">
+
+                                                <div class="row">
+                                                    <div class="input-group input-group-sm justify-content-end gap-4">
+                                                        <asp:LinkButton runat="server" title="Imprimir Información Contable de la OT" ID="btnImprimir2" CssClass=" font-size:2rem;" OnClientClick="imprimirDatos2();">
+                                                          <i class="bi bi-printer bi-printer-imprime"></i>
+                                                        </asp:LinkButton>
+
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row pb-2">
+                                                    <div class="col-12">
+
+                                                        <div class="row justify-content-center">
+                                                            <div class="border rounded p-2">
+                                                                <div class="table-responsive">
+                                                                    <h5 class="datagrid-header text-center fw-bold">CARTA CONFIRMACIÓN PEDIDO</h5>
+                                                                    <table class="table table-hover table-bordered table-sm border">
+
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td colspan="2" style="width: 2rem;">
+                                                                                    <div class="input-group input-group-sm gap-4">
+
+                                                                                        <label class="fw-bold ">Orden Trabajo:  </label>
+                                                                                        <label runat="server" class="fw-bold" id="lbOt2"></label>
+
+                                                                                        <label class="fw-bold ">Pedido:</label>
+                                                                                        <label runat="server" class="fw-bold" id="lbPed2"></label>
+
+                                                                                        <label class=" fw-bold">Tipo Pedido:</label>
+                                                                                        <label runat="server" class="fw-bold" id="lbTipoPed2"></label>
+
+
+                                                                                    </div>
+                                                                                </td>
+
+                                                                                <td colspan="1">
+                                                                                    <div class="input-group input-group-sm gap-2">
+                                                                                        <label class="fw-bold">F. Pedido: </label>
+                                                                                        <asp:Label ID="lbFPed" runat="server"></asp:Label>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <td colspan="1" style="white-space: nowrap;">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label>Asesor Comercial:  </label>
+
+                                                                                    </div>
+                                                                                </td>
+
+                                                                                <td colspan="1" style="white-space: nowrap;">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label runat="server" id="lbAse2"></label>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                                <td colspan="1" style="white-space: nowrap;">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label>F. Despacho: </label>
+                                                                                        <label runat="server" id="lbFecDes1"></label>
+                                                                                    </div>
+                                                                                </td>
+
+
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <td colspan="1" style="white-space: nowrap;">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label>Nombre Cliente :  </label>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                                <td colspan="1" style="white-space: nowrap;">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label id="lbClie2" runat="server"></label>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                                <td colspan="1" style="white-space: nowrap;">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label>Cot N°: </label>
+                                                                                        <label id="lbCot1" runat="server"></label>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <td colspan="1">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label>Dirección Cliente: </label>
+
+                                                                                    </div>
+                                                                                </td>
+
+                                                                                <td colspan="1">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label id="lbDir1" runat="server"></label>
+
+                                                                                    </div>
+                                                                                </td>
+
+                                                                                <td colspan="1">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label>Nit: </label>
+                                                                                        <label id="lbNit1" runat="server"></label>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <td colspan="1">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label>Contacto Cliente: </label>
+
+                                                                                    </div>
+                                                                                </td>
+
+                                                                                <td colspan="1">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label id="lbCont" runat="server"></label>
+
+                                                                                    </div>
+                                                                                </td>
+
+                                                                                <td colspan="1">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label>Tel: </label>
+                                                                                        <label id="lbTel1" runat="server"></label>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <td colspan="1">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label class="fw-bold">Nombre Obra: </label>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                                <td colspan="1">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label id="lbNomObra" class="fw-bold" runat="server"></label>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                                <td colspan="1">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label>Altura: </label>
+                                                                                        <label id="lbAlt1" runat="server"></label>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <td colspan="1">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label>Dir. Despacho: </label>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                                <td colspan="2">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label id="lbDirDes1" runat="server"></label>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <td colspan="1">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label>Contacto Obra: </label>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                                <td colspan="1">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label id="lbContaObr" runat="server"></label>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                                <td colspan="1">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label>Teléfono: </label>
+                                                                                        <label id="lbTel3" runat="server"></label>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <td colspan="1">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label>Recibe Mercancia: </label>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                                <td colspan="1">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label id="lbCont3" runat="server"></label>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                                <td colspan="1">
+                                                                                    <div class="input-group input-group-sm gap-4">
+                                                                                        <label>Forma de Pago: </label>
+                                                                                        <label id="lbForPago" runat="server"></label>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                            </tr>
+
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+
+
+                                                </div>
+
+                                                <div class="row justify-content-center">
+                                                    <div class="border rounded p-2">
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-11">
+                                                                <div class="table-responsive  mb-2 gap-2" style="max-height: auto; overflow-x: auto;">
+                                                                    <h6 class="datagrid-header text-center">ACABADOS</h6>
+                                                                    <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGridAcabadoModal" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="Acabado2">
+                                                                        <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                                        <Columns>
+                                                                            <asp:BoundColumn DataField="AcabadoVentas" HeaderText="Descripción" />
+                                                                        </Columns>
+                                                                    </asp:DataGrid><asp:SqlDataSource runat="server" ID="Acabado2" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="select AcabadoVentas from tblOTAcabados where Id_OT = @OT AND Consecutivo_Pedido =  @pedido">
+                                                                        <SelectParameters>
+                                                                            <asp:ControlParameter ControlID="tbOT" Name="OT"></asp:ControlParameter>
+                                                                            <asp:ControlParameter ControlID="ddlNumbers" Name="pedido"></asp:ControlParameter>
+                                                                        </SelectParameters>
+                                                                    </asp:SqlDataSource>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row pt-3 mt-3">
+                                                    <div class="col-12">
+                                                        <div class="input-group input-group-sm gap-2">
+                                                            <h6>Se produce por: </h6>
+                                                            <label runat="server" id="lbProd2"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row pt-2" style="height: 15rem;">
+                                                    <div class="col-12">
+                                                        <p runat="server" id="observaciones2"></p>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row" id="esp1" runat="server">
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                            </div>
+
+                                            <div class="row" id="esp2" runat="server">
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                            </div>
+
+                                            <div class="modal-footer d-flex flex-column align-items-stretch pt-3 ">
+
+                                                <div class="row ">
+                                                    <div class="col-12">
+
+                                                        <div class="row justify-content-center">
+
+                                                            <div class="table-responsive ">
+                                                                <table class="table table-hover table-bordered border table-sm">
+
+                                                                    <tbody>
+
+                                                                        <tr>
+                                                                            <td colspan="1" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm ">
+                                                                                    <label>Plano</label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="1" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <label class="fw-bold">NO</label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="1" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <label>D. Troquel</label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="1" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <label class="fw-bold">NO</label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="1" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <label>Espesor Sup</label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="1" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <label class="fw-bold">NO</label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="1" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <label>PVC</label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="1" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <label class="fw-bold">NO</label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="1" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <label>P. Cables</label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="1" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm">
+                                                                                    <label class="fw-bold">NO</label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                            <td colspan="1" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm ">
+                                                                                    <label>Sujeción</label>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td colspan="1" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm ">
+                                                                                    <label class="fw-bold">NO</label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="1" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm ">
+                                                                                    <label>Cheq. Med</label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="1" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm ">
+                                                                                    <label class="fw-bold">NO</label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="1" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm ">
+                                                                                    <label>Cotización</label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="1" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm ">
+                                                                                    <label class="fw-bold">NO</label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="1" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm ">
+                                                                                    <label>O. Compra</label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="1" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm ">
+                                                                                    <label class="fw-bold">NO</label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="1" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm ">
+                                                                                    <label>Bitácora</label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="1" style="white-space: nowrap;">
+                                                                                <div class="input-group input-group-sm ">
+                                                                                    <label class="fw-bold">NO</label>
+                                                                                </div>
+                                                                            </td>
+
+
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                            <td colspan="6" rowspan="6">
+                                                                                <div class=" input-group-sm ">
+                                                                                    <label class="fw-bold"> Observaciones Contables</label>
+                                                                                    <br />
+                                                                                    <label id="ObsConta" runat="server"></label>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                            <td colspan="2">
+                                                                                <div class="input-group input-group-sm ">
+                                                                                    <label class="fw-bold">Total Obra</label>
+                                                                                   
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="2">
+                                                                                <div class="input-group input-group-sm justify-content-end">
+                                                                                    <label id="lbValorTotObra" class="fw-bold" runat="server"></label>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                            <td colspan="2">
+                                                                                <div class="input-group input-group-sm justify-content-between ">
+                                                                                    <label class="fw-bold">Dto(%)</label>
+                                                                                    <label id="lbPorDto" class="fw-bold" runat="server"></label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="2">
+                                                                                <div class="input-group input-group-sm justify-content-end">
+                                                                                    <label id="lbValorDto" class="fw-bold" runat="server"></label>
+                                                                                </div>
+                                                                            </td>
+
+
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                            <td colspan="2">
+                                                                                <div class="input-group input-group-sm ">
+                                                                                    <label class="fw-bold">Sub Total</label>
+
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="2">
+                                                                                <div class="input-group input-group-sm justify-content-end ">
+                                                                                    <label id="lbSubTo" class="fw-bold" runat="server"></label>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                            <td colspan="2">
+                                                                                <div class="input-group input-group-sm justify-content-between ">
+                                                                                    <label class="fw-bold">Iva: </label>
+                                                                                    <label id="lbPorIva" class="fw-bold">16 %</label>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="2">
+                                                                                <div class="input-group input-group-sm justify-content-end ">
+                                                                                    <label id="lbValorIva" class="fw-bold" runat="server"></label>
+                                                                                </div>
+                                                                            </td>
+
+
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                            <td colspan="2">
+                                                                                <div class="input-group input-group-sm ">
+                                                                                    <label class="fw-bold">Gran Total</label>
+
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td colspan="2">
+                                                                                <div class="input-group input-group-sm justify-content-end">
+                                                                                    <label id="lbGranTot" class="fw-bold" runat="server"></label>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+
+                                                        </div>
+
+
+                                                    </div>
+
+
+
+                                                </div>
+
+
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <!--Nav iconos OTs-->
                             <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
@@ -400,7 +1287,7 @@
                                                      <i class="bi bi-printer"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Reimprimir Información Contable" ID="ReimprimirOt">
+                                                <asp:LinkButton runat="server" title="Reimprimir Información Contable" ID="ReimprimirOt" OnClick="ReimprimirOt_Click">
                                                          <i class="bi bi-printer-fill"></i>
                                                 </asp:LinkButton>
 
@@ -1409,7 +2296,7 @@
                                     <div class="modal-body form-control-sm">
                                         <p>
                                             Antes de proceder, por favor completa los campos de NIT.<br />
-                                          Haz clic en "Aceptar" para ingresar al NIT y continuar.
+                                            Haz clic en "Aceptar" para ingresar al NIT y continuar.
                                         </p>
                                     </div>
                                     <div class="modal-footer  d-flex align-items-center justify-content-center">
@@ -1443,10 +2330,10 @@
                                     <div class="modal-header bg-dark">
                                         <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID</h5>
                                     </div>
-                                   <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
                                         <p>
-                                          ¿Deseas realizar más cambios en esta Orden de Trabajo?<br />
-                                             Si tienes más ajustes por hacer, puedes indicarlo aquí.
+                                            ¿Deseas realizar más cambios en esta Orden de Trabajo?<br />
+                                            Si tienes más ajustes por hacer, puedes indicarlo aquí.
                                         </p>
                                     </div>
                                     <div class="modal-footer  d-flex align-items-center justify-content-center">
@@ -1457,21 +2344,21 @@
                             </div>
                         </div>
 
-                        
+
                         <div class="modal fade" id="LlenarNITModificar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-dark">
                                         <h5 class="modal-title d-flex align-items-center justify-content-center text-white">NIT</h5>
                                     </div>
-                                  <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
                                         <p>
-                                          Desea modificar el NIT?
+                                            Desea modificar el NIT?
                                         </p>
                                     </div>
                                     <div class="modal-footer  d-flex align-items-center justify-content-center">
                                         <asp:Button runat="server" Text="Si" OnClick="Redireccion_Nit" CssClass="btn btn-sm btn-outline-dark"/>
-                                         <asp:Button runat="server" class="btn btn-sm btn-outline-dark" Text="No" data-bs-dismiss="modal" aria-label="Close" OnClick="NoModificarNIT_Click" />
+                                        <asp:Button runat="server" class="btn btn-sm btn-outline-dark" Text="No" data-bs-dismiss="modal" aria-label="Close" OnClick="NoModificarNIT_Click" />
                                     </div>
                                 </div>
                             </div>
@@ -1998,7 +2885,7 @@
                                                             <Columns>
                                                                 <asp:TemplateColumn HeaderText="...">
                                                                     <ItemTemplate>
-                                                                        <asp:LinkButton ID="lnkView" runat="server" CommandName="VerPlano" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>"
+                                                                        <asp:LinkButton ID="lnkView" runat="server" CssClass="Tam" CommandName="VerPlano" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>"
                                                                             Visible='<%# !string.IsNullOrEmpty(Eval("ID")?.ToString()) %>' />
                                                                     </ItemTemplate>
                                                                 </asp:TemplateColumn>
@@ -2053,7 +2940,7 @@
                                                         <Columns>
                                                             <asp:TemplateColumn HeaderText="...">
                                                                 <ItemTemplate>
-                                                                    <asp:LinkButton ID="lnkView" runat="server" CommandName="VerAcabado" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
+                                                                    <asp:LinkButton ID="lnkView" runat="server" CssClass="Tam" CommandName="VerAcabado" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
                                                                 </ItemTemplate>
                                                             </asp:TemplateColumn>
                                                             <asp:BoundColumn DataField="Id_Modulo" HeaderText="Módulo" ItemStyle-CssClass="auto-width-column" />
@@ -2274,7 +3161,7 @@
                                                         <Columns>
                                                             <asp:TemplateColumn HeaderText="...">
                                                                 <ItemTemplate>
-                                                                    <asp:LinkButton ID="lnkObjetoDetallado" runat="server" CommandName="VerObjetoDet" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
+                                                                    <asp:LinkButton ID="lnkObjetoDetallado" CssClass="Tam" runat="server" CommandName="VerObjetoDet" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
                                                                 </ItemTemplate>
                                                             </asp:TemplateColumn>
 
@@ -2369,7 +3256,7 @@
                                                         <Columns>
                                                             <asp:TemplateColumn HeaderText="...">
                                                                 <ItemTemplate>
-                                                                    <asp:LinkButton ID="lnkView2" runat="server" CommandName="VerModulo" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
+                                                                    <asp:LinkButton ID="lnkView2" CssClass="Tam" runat="server" CommandName="VerModulo" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
                                                                 </ItemTemplate>
                                                             </asp:TemplateColumn>
                                                             <asp:BoundColumn DataField="Num_Fila" HeaderText="Item" ItemStyle-CssClass="auto-width-column" />
