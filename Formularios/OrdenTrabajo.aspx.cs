@@ -4275,7 +4275,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-
+                int pedidoBaseValue = ObtenerPedidoBaseValue();
 
                 string[] valoresDDL = ddlCiudad.SelectedValue.Split('-');
 
@@ -4319,6 +4319,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@ValorViatico", txtVvia.Text);
                         command.Parameters.AddWithValue("@Fecha_Empaque", dtpEmpaque.Text);
                         command.Parameters.AddWithValue("@OrdendeCompra", txtOrdenCompra.Text);
+                        command.Parameters.AddWithValue("@PedidoBase", pedidoBaseValue);
 
                         connection.Open();
                         int rowsAffected = command.ExecuteNonQuery();
