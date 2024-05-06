@@ -35,11 +35,13 @@
             var asesorAsignar = '<%= Session["AsesorDiseño"] %>';
             var NombreAsesor = '<%= Session["AsesorDiseñoNombre"] %>';
             var cedulalogueada = '<%= Session["CedulaLogeada"] %>';
+            var permisoCliente = $('#ControlCliente').prop('checked');
 
             if (tbCedulaAsesorValue !== "") {
 
-                if (cedulalogueada !== tbCedulaAsesorValue)
+                if (cedulalogueada !== tbCedulaAsesorValue && permisoCliente == false)
                 {
+                    alert(permisoCliente);
                     alert("No tienes permisos para modificar este  cliente");
                     return false;
                 }
@@ -111,7 +113,7 @@
 
                                                         <asp:TemplateColumn HeaderText="...">
                                                             <ItemTemplate>
-                                                                <asp:LinkButton ID="lnkClie" runat="server" CommandName="VerCliente" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>" />
+                                                                <asp:LinkButton ID="lnkClie" CssClass="Tam" runat="server" CommandName="VerCliente" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>" />
                                                             </ItemTemplate>
                                                         </asp:TemplateColumn>
 
@@ -204,6 +206,13 @@
                                             ON tblDepartamentoPais.Id_Departamento_Auto = tblCiudad.Id_Departamento 
                                             ORDER BY CONCAT(tblCiudad.NombreCiudad , ' - ' , tblDepartamentoPais.NombreDepartamento)"></asp:SqlDataSource>
                                     </div>
+                                </div>
+
+                                <div class="col-3">                                 
+                                    <asp:DropDownList ID="ddlAsesorC" CssClass="form-control form-control-sm" ToolTip="Lista Asesor Asignar" runat="server" DataTextField="NombreCompleto" DataValueField="Cedula" DataSourceID="AsesoresC" OnDataBound="ddlAsesorC_DataBound">
+
+                                    </asp:DropDownList><asp:SqlDataSource runat="server" ID="AsesoresC" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT Cedula, CONCAT(Nombre, ' ', Apellidos) AS NombreCompleto FROM tblAsesorComercial WHERE activo =1 order by Nombre"></asp:SqlDataSource>
+                                    <asp:CheckBox ID="ControlCliente" runat="server" Visible="false" />
                                 </div>
                             </div>
 
@@ -395,7 +404,7 @@
 
                                                         <asp:TemplateColumn HeaderText="...">
                                                             <ItemTemplate>
-                                                                <asp:LinkButton ID="lnkContacto" runat="server" CommandName="VerContacto" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>"  />
+                                                                <asp:LinkButton ID="lnkContacto" runat="server" CssClass="Tam" CommandName="VerContacto" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>"  />
                                                             </ItemTemplate>
                                                         </asp:TemplateColumn>
 
@@ -527,8 +536,6 @@
 
 
                             </div>
-
-
 
                         </div>
                     </ContentTemplate>
@@ -670,7 +677,7 @@
                                 <div class="border rounded p-2">
                                     <div class="row pt-2">
                                         <div class="col-12">
-                                            <div class=" table-responsive mb-2 gap-2" style="max-height: 20rem; overflow-x: auto;">
+                                            <div class=" table-responsive mb-2 gap-2" style="max-height: 30rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-center">Clientes </h5>
                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridClienteFecha" runat="server" DataSourceID="ClientexFecha" AutoGenerateColumns="false">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
@@ -781,9 +788,6 @@
 
         }
     </script>
-
-
-
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

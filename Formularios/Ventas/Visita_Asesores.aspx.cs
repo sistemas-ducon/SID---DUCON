@@ -1174,7 +1174,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (!IsPostBack)
             {
-                if (!string.IsNullOrEmpty(Session["VisitasPor_Session"]?.ToString()) || !string.IsNullOrEmpty(Session["Cotizacion_Session"]?.ToString()) || !string.IsNullOrEmpty(Session["Observacion_Session"]?.ToString()) )
+                if (!string.IsNullOrEmpty(Session["VisitasPor_Session"]?.ToString()) && !string.IsNullOrEmpty(Session["Cotizacion_Session"]?.ToString()) && !string.IsNullOrEmpty(Session["Observacion_Session"]?.ToString()) && !string.IsNullOrEmpty(Session["FechaVisitaSession"]?.ToString()) && !string.IsNullOrEmpty(Session["Observacion_Session"]?.ToString()))
                 {
 
 

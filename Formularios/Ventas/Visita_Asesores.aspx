@@ -361,7 +361,7 @@
                                                         <Columns>
                                                             <asp:TemplateColumn HeaderText="...">
                                                                 <ItemTemplate>
-                                                                    <asp:LinkButton ID="lnkVisita" runat="server" CommandName="VerVisita" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
+                                                                    <asp:LinkButton ID="lnkVisita" CssClass="Tam" runat="server" CommandName="VerVisita" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
                                                                 </ItemTemplate>
                                                             </asp:TemplateColumn>
 
@@ -521,7 +521,7 @@
                                                         <Columns>
                                                             <asp:TemplateColumn HeaderText="...">
                                                                 <ItemTemplate>
-                                                                    <asp:LinkButton ID="lnkView" runat="server" CommandName="VerDetalle" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>" />
+                                                                    <asp:LinkButton ID="lnkView" runat="server" CssClass="Tam" CommandName="VerDetalle" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>" />
                                                                 </ItemTemplate>
                                                             </asp:TemplateColumn>
                                                             <asp:BoundColumn DataField="CodigoAsesor" HeaderText="Codigo Asesor" ItemStyle-CssClass="auto-width-column" />

@@ -20,7 +20,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
     {
         // Variable de control de insercion o actualizacion de un cliente 
         private bool GuardarCliente = false;
-        private bool isModalVisible = false;     
+        private bool isModalVisible = false;
         // Crea una clase para representar los nombres de los asesores
         public class Asesor
         {
@@ -33,6 +33,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         {
             if (Session["usuariologueado"] != null)
             {
+
+
+                ddlAsesorC.Enabled = false;
+                ddlAsesorC.CssClass = "form-control form-control-sm";
+
 
             }
             else
@@ -76,12 +81,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     {
                         reader.Close();
                         // Data arrived.
-                        int permiso = (Int16)command.ExecuteScalar();                    
+                        int permiso = (Int16)command.ExecuteScalar();
                         return permiso;
                     }
                     else
                     {
-                       
+
                         return 0;
                     }
                 }
@@ -167,13 +172,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 int Permiso = PermisoEmpleado();
 
-                if (Permiso == 22 || campos[7] == Session["CedulaLogeada"].ToString() || CompartidoCon.Contains(Session["usuariologueado"].ToString())   )
+                if (Permiso == 22 || campos[7] == Session["CedulaLogeada"].ToString() || CompartidoCon.Contains(Session["usuariologueado"].ToString()))
                 {
                     // Habilita el botón "Modificar"
                     Button btnModificar = FindControl("Modificar") as Button;
                     if (btnModificar != null)
                     {
                         btnModificar.Enabled = true;
+                        ddlAsesorC.Enabled = true;
+                        ddlAsesorC.CssClass = "form-control form-control-sm";
+                        ControlCliente.Checked = true;
                     }
 
 
@@ -194,7 +202,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
 
 
-                    // Habilita el botón "Nuevo"
+                    // Habilita el botón "Nuevo Contacto"
                     Button btnNuevo = FindControl("btnNuevoContacto") as Button;
                     if (btnNuevo != null)
                     {
@@ -208,8 +216,39 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         btnCancelar.Enabled = true;
                     }
                 }
+                else
+                {
+                    DataGridContacto.DataBind();
+                    DataGridCotizacion.DataBind();
+                    DataGridVisita.DataBind();
 
+                    //Deshabilitar el botón Modificar
+                    Button btnModificar = FindControl("Modificar") as Button;
+                    btnModificar.Enabled = false;
 
+                    // Deshabilitar el botón "Eliminar"
+                    Button btnEliminar = FindControl("Eliminar") as Button;
+                    btnEliminar.Enabled = false;
+
+              
+                    ddlAsesorC.Enabled = false;
+                    ddlAsesorC.CssClass = "form-control form-control-sm";
+                    ControlCliente.Checked = false;
+
+                    // Deshabilita el botón "Nuevo contacto"
+                    Button btnNuevo = FindControl("btnNuevoContacto") as Button;
+                    if (btnNuevo != null)
+                    {
+                        btnNuevo.Enabled = false;
+                    }
+
+                    //Deshabilita el botón "Cancelar"
+                    Button btnCancelar = FindControl("btnCancelar") as Button;
+                    if (btnCancelar != null)
+                    {
+                        btnCancelar.Enabled = false;
+                    }
+                }
 
                 //Deshabilitamos la edicion de los campos 
                 tbNit.ReadOnly = true;
@@ -218,8 +257,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 tbDireccion.ReadOnly = true;
 
                 ddlprocedencia.Enabled = false;
-
-
+                ddlprocedencia.CssClass = "form-control";
             }
 
         }
@@ -441,7 +479,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             tbNombreCliente.ReadOnly = false;
             tbTelefono.ReadOnly = false;
             tbDireccion.ReadOnly = false;
-          
+
             ddlprocedencia.Enabled = true;
 
 
@@ -513,6 +551,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             DataGridAsesorCompart.DataSource = asesores;
             DataGridAsesorCompart.DataBind();
 
+            ddlAsesorC.Enabled = true;
+            ddlAsesorC.CssClass = "form-control form-control-sm";
 
 
 
@@ -593,13 +633,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
 
                         string sSqlInsert = "INSERT INTO tblCliente(Id_Cliente,NombreCompañía,teléfono,asesor,IdProcedencia,Fecha_Creacion,Dirección) " +
-                                            "VALUES ('" + tbNit.Text.Trim() + "','" + tbNombreCliente.Text.Trim() + "','" + tbTelefono.Text.Trim() + "'," + Session["AsesorDiseño"].ToString() + "," + ddlprocedencia.SelectedValue + ",'" + DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "','" + tbDireccion.Text.Trim() + "')";
+                                            "VALUES ('" + tbNit.Text.Trim() + "','" + tbNombreCliente.Text.Trim() + "','" + tbTelefono.Text.Trim() + "'," + ddlAsesorC.SelectedValue + "," + ddlprocedencia.SelectedValue + ",'" + DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "','" + tbDireccion.Text.Trim() + "')";
 
                         SqlCommand commandInsert = new SqlCommand(sSqlInsert, connection);
                         commandInsert.ExecuteNonQuery();
 
 
-
+                        DataGridCliente.DataBind();
                         // Mensaje de éxito
                         string mensajePersonalizado = "El cliente " + tbNombreCliente.Text.Trim() + " ha sido agregado  exitosamente.";
                         string urlRedireccion = "Ventas/Clientes.aspx";
@@ -640,7 +680,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                     string sSql = "UPDATE tblCliente SET Id_Cliente='" + tbNit.Text.Trim() + "', NombreCompañía='" + tbNombreCliente.Text.Trim() + "'," +
                      " Teléfono='" + tbTelefono.Text.Trim() + "', IdProcedencia='" + ddlprocedencia.SelectedValue + "', Dirección='" + tbDireccion.Text.Trim() + "'," +
-                     " asesor=" + Session["AsesorDiseño"] + " WHERE Id_Cliente='" + Session["Id_ClienteBD"] + "'";
+                     " asesor=" + ddlAsesorC.SelectedValue + " WHERE Id_Cliente='" + Session["Id_ClienteBD"] + "'";
 
                     string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                     using (SqlConnection connection = new SqlConnection(connectionString))
@@ -667,6 +707,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         }
                     }
 
+                    DataGridCliente.DataBind();
                     // Mostrar mensaje de éxito
                     string mensajeExito = "El cliente " + tbNombreCliente.Text.Trim() + " ha sido Moficado  exitosamente.";
                     string scriptExito = "alert('" + mensajeExito + "');";
@@ -680,7 +721,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 {
                     string sSql = "UPDATE tblCliente SET Id_Cliente='" + tbNit.Text.Trim() + "', NombreCompañía='" + tbNombreCliente.Text.Trim() + "'," +
                     " Teléfono='" + tbTelefono.Text.Trim() + "', IdProcedencia='" + ddlprocedencia.SelectedValue + "', Dirección='" + tbDireccion.Text.Trim() + "'," +
-                    " asesor=" + Session["AsesorDiseño"] + " WHERE Id_Cliente='" + Session["Id_ClienteBD"] + "'";
+                    " asesor=" + ddlAsesorC.SelectedValue + " WHERE Id_Cliente='" + Session["Id_ClienteBD"] + "'";
 
                     string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                     using (SqlConnection connection = new SqlConnection(connectionString))
@@ -707,7 +748,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         }
                     }
                     // Mostrar mensaje de éxito           
-
+                    DataGridCliente.DataBind();
                     string mensajePersonalizado = "El cliente " + tbNombreCliente.Text.Trim() + " ha sido Moficado  exitosamente.";
                     string urlRedireccion = "Ventas/Clientes.aspx";
                     Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
@@ -717,6 +758,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 }
 
             }
+
+            ddlAsesorC.DataBind();
 
         }
 
@@ -1139,7 +1182,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     // se valida si es el segundo click en la misma fila 
                     if (clickCount == 2)
                     {
-                        
+
                         // Llamar el script que recarga el formulario padre de donde salio la pagina 
                         string script = "<script>enviarFormulario();</script>";
                         ScriptManager.RegisterStartupScript(this, GetType(), "enviarFormulario", script, false);
@@ -1391,7 +1434,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 isModalVisible = false;
             }
         }
+        protected void ddlAsesorC_DataBound(object sender, EventArgs e)
+        {
+            // Seleccionamos por defeco al asesor Logueado 
+            ddlAsesorC.SelectedValue = Session["CedulaLogeada"].ToString();
+        }
 
-
+      
     }
 }

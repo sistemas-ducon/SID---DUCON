@@ -918,11 +918,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BtnObservaciones_Click(object sender, EventArgs e)
         {
+            if(tbOT.Text.Trim() != "")
+            {
+                if(ddlNumbers.Items.Count > 0 && ddlNumbers.SelectedItem != null)
+                {
+                    Session["Id_OT"] = tbOT.Text;
+                    Session["pedido"] = ddlNumbers.SelectedItem.Text;    
+                }
 
+            }
             string url = "FormExtPrin/ObservacionesOT.aspx";
             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
             ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
-
         }
 
 
