@@ -1365,6 +1365,12 @@
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="OT" runat="server" ID="lblOT"></asp:Label>
                                         <asp:TextBox ID="tbOT" runat="server" CssClass="form-control" OnTextChanged="ObtenerInfoOt" AutoPostBack="true" placeholder ="Escriba número de OT" ></asp:TextBox>
+                                        <%--Activa el textbox de las OT cuando carga el formulario listo para escribir caracteres--%>
+                                        <script type="text/javascript">
+                                            window.onload = function () {
+                                                document.getElementById('<%= tbOT.ClientID %>').focus();
+                                            };
+                                        </script>
 
                                     </div>
                                 </div>
