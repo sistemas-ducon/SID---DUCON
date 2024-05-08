@@ -1431,7 +1431,7 @@
                                         </p>
                                     </div>
                                     <div class="modal-footer  d-flex align-items-center justify-content-center">
-                                        <asp:Button runat="server" Text="Aceptar" OnClick="Redireccion_Nit_Click" CssClass="btn btn-sm btn-outline-dark" />
+                                        <asp:Button runat="server" Text="Aceptar" CssClass="btn btn-sm btn-outline-dark" data-bs-dismiss="modal" aria-label="Close"/>
                                     </div>
                                 </div>
                             </div>
@@ -1456,8 +1456,7 @@
                                 </div>
                             </div>
                         </div>
-
-                        
+       
                         <div class="modal fade" id="LlenarNITModificar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -1466,7 +1465,7 @@
                                     </div>
                                   <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
                                         <p>
-                                          Desea modificar el NIT?
+                                          ¿Desea modificar la información contable?
                                         </p>
                                     </div>
                                     <div class="modal-footer  d-flex align-items-center justify-content-center">
@@ -2578,14 +2577,14 @@
         <div id="ErrorPermiso" class="modal" tabindex="-1" style="display: none;">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Error</h5>
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white" id="modallLabel">SID_DUCON</h5>
 
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
                         <p>No tiene permisos para realizar esta accion</p>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer  d-flex align-items-center justify-content-center">
                     </div>
                 </div>
             </div>

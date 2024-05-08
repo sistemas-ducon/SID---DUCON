@@ -260,6 +260,40 @@
                                                 </div>
                                             </div>
 
+                                            <div class="modal fade" id="llenarClienteDib" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header bg-dark">
+                                                            <h5 class="modal-title d-flex align-items-center justify-content-center text-white">llenar cliente</h5>
+                                                        </div>
+                                                        <div class="modal-body form-control-sm">
+                                                            <p>¿Desea modificar la información del cliente?</p>
+                                                        </div>
+                                                        <div class="modal-footer  d-flex align-items-center justify-content-center">
+                                                               <asp:Button runat="server" type="button" class="btn btn-sm btn-outline-dark" data-bs-dismiss="modal" aria-label="Close" Text="Si"></asp:Button>
+                                                            <asp:Button runat="server" type="button" class="btn btn-sm btn-outline-dark" data-bs-dismiss="modal" aria-label="Close" Text="No"></asp:Button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="modal" id="NumeroDiseñoNoValido" tabindex="-1">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header bg-dark">
+                                                            <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID_DUCON</h5>
+
+                                                        </div>
+                                                        <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                                                            <p>Parece que aún no tienes un diseño definido. Por favor, completa la información del diseño y luego podrás acceder a la documentación.</p>
+                                                        </div>
+                                                        <div class="modal-footer d-flex align-items-center justify-content-center">
+                                                            <asp:Button runat="server" type="button" class="btn btn-sm btn-outline-dark" data-bs-dismiss="modal" aria-label="Close" Text="Aceptar"></asp:Button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
 
                                             <asp:LinkButton runat="server" title="Grabar Diseño" ID="Grabar" Enabled="false" OnClick="btnInsertar_Click">
                                                <i class="bi-floppy-fill"></i>
@@ -897,7 +931,7 @@
                                                         <%-- DATAGRID--%>
 
                                                         <div class="table-responsive mb-2 gap-2" style="max-height: 212px; overflow-x: auto;">
-                                                            <asp:DataGrid CssClass="table table-bordered table-hover table-sm form-control-sm" ID="DataGrid1" runat="server" DataSourceID="SqlDataSource1"
+                                                            <asp:DataGrid CssClass="table table-bordered table-hover table-sm form-control-sm" ID="DataGrid1" runat="server"
                                                                 AutoGenerateColumns="false" OnItemDataBound="DataGrid1_ItemDataBound">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                 <Columns>
@@ -916,7 +950,7 @@
                                                                     </asp:TemplateColumn>
                                                                     <asp:BoundColumn DataField="Id_OT" HeaderText="OT" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Consecutivo_Pedido" HeaderText="Ped" ItemStyle-CssClass="auto-width-column" />
-                                                                    <asp:BoundColumn DataField="Nombre_Obra" HeaderText="Nombre de la Obra" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                                    <asp:BoundColumn DataField="Nombre_Obra" HeaderText="Nombre de la Obra" ItemStyle-CssClass="auto-width-column2"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Nombre_Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Fecha_Entrega_Dibujo_Despiece" HeaderText="F.Ingreso" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:TemplateColumn HeaderText="F.Entrega" ItemStyle-CssClass="auto-width-column">
@@ -935,14 +969,7 @@
                                                                     <asp:BoundColumn DataField="Cedula" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                                 </Columns>
                                                             </asp:DataGrid>
-                                                            <asp:SqlDataSource runat="server" ID="SqlDataSource1" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
-                                                                SelectCommand="sp_ProBitacoraOTs" SelectCommandType="StoredProcedure">
-                                                                <SelectParameters>
-
-                                                                    <asp:SessionParameter Name="Cedula" SessionField="CedulaLogeada" Type="String" DefaultValue="ValorPorDefecto" />
-
-                                                                </SelectParameters>
-                                                            </asp:SqlDataSource>
+                                                       
 
                                                         </div>
 
@@ -953,13 +980,7 @@
                                         <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
                                             <div class="row">
                                                 <div class="col-lg-12 col-md-3 col-sm-3 col-xs-12">
-                                                    <asp:LinkButton ID="LinkButton8" runat="server"
-                                                        OnClick="Button88_Click">
-                                                       <i class="bi bi-arrow-clockwise text-dark"></i>
-                                                    </asp:LinkButton>
-
-
-
+                                                  
                                                 </div>
                                             </div>
 
@@ -1046,7 +1067,7 @@
                                                                 <div class="row">
                                                                     <div class="border rounded">
                                                                         <div class="table-responsive" style="max-height: 400px">
-                                                                            <asp:DataGrid Class="table table-bordered table-hover table-sm" ID="DataGrid3" runat="server" AutoGenerateColumns="false" DataSourceID="SqlDataSource4">
+                                                                            <asp:DataGrid Class="table table-bordered table-hover table-sm" ID="DataGrid3" runat="server" AutoGenerateColumns="false">
                                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                                 <Columns>
                                                                                     <asp:BoundColumn HeaderText="Dibujante" DataField="RealizadoPor" ItemStyle-CssClass="auto-width-column" />
@@ -1057,9 +1078,7 @@
                                                                                     <asp:BoundColumn HeaderText="Total" DataField="Total" ItemStyle-CssClass="auto-width-column" />
                                                                                 </Columns>
                                                                             </asp:DataGrid>
-
-                                                                            <asp:SqlDataSource runat="server" ID="SqlDataSource4" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
-                                                                                SelectCommand="sp_ResumenDibujante" SelectCommandType="StoredProcedure"></asp:SqlDataSource>
+                                                                            
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1088,7 +1107,7 @@
                                                     <div class="border rounded p-1 special-border" style="height: auto; min-height: 212px;">
                                                         <%-- DATAGRID--%>
                                                         <div class="table-responsive mb-2 gap-2" style="max-height: 212px; overflow-x: auto;">
-                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid2" runat="server" DataSourceID="DataGridDiseño" AutoGenerateColumns="false"
+                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid2" runat="server"  AutoGenerateColumns="false"
                                                                 OnItemDataBound="DataGrid2_ItemDataBound" OnItemCommand="DataGridDise_ItemCommand">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                 <Columns>
@@ -1106,7 +1125,7 @@
                                                                         </ItemTemplate>
                                                                     </asp:TemplateColumn>
                                                                     <asp:BoundColumn DataField="Numero_Diseño" HeaderText="Diseño" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                    <asp:BoundColumn HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn HeaderText="Descripción" ItemStyle-CssClass="auto-width-column2" />
                                                                     <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="UltimaActivacion" HeaderText="Ult.Act" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Fecha_Programada_Entrega" HeaderText="F.Entrega" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
@@ -1168,7 +1187,7 @@
                                                         <%-- DATAGRID--%>
                                                         <div class="table-responsive mb-2 gap-2" style="max-height: 212px; overflow-x: auto;">
                                                             <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGridDiseños" runat="server"
-                                                                DataSourceID="DataGridDiseñosPorFecha" AutoGenerateColumns="false" OnItemDataBound="DataGrid3_ItemDataBound" OnItemCommand="DataGridSC">
+                                                                AutoGenerateColumns="false" OnItemDataBound="DataGrid3_ItemDataBound" OnItemCommand="DataGridSC">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                 <Columns>
                                                                       <asp:TemplateColumn>
@@ -1185,7 +1204,7 @@
                                                                         </ItemTemplate>
                                                                     </asp:TemplateColumn>
                                                                     <asp:BoundColumn DataField="Numero_Diseño" HeaderText="Diseño" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                    <asp:BoundColumn HeaderText="Descripcion-ShowCase" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                                    <asp:BoundColumn HeaderText="Descripcion-ShowCase" ItemStyle-CssClass="auto-width-column2"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="SC_Fecha" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="SC_Hora" HeaderText="Hora" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
@@ -1233,7 +1252,7 @@
                                                         <%-- DATAGRID--%>
                                                         <div class="table-responsive mb-2 gap-2" style="max-height: 212px; overflow-x: auto;">
                                                             <asp:DataGrid CssClass="table table-bordered table-hover table-sm form-control-sm" ID="DataGridRender" runat="server"
-                                                                DataSourceID="DataGridRenderPorFechaYAsesor" AutoGenerateColumns="false" OnItemDataBound="DataGrid4_ItemDataBound">
+                                                                 AutoGenerateColumns="false" OnItemDataBound="DataGrid4_ItemDataBound">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                 <Columns>
                                                                        <asp:TemplateColumn>
@@ -1250,7 +1269,7 @@
                                                                         </ItemTemplate>
                                                                     </asp:TemplateColumn>
                                                                     <asp:BoundColumn DataField="Id_Render" HeaderText="ID" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                    <asp:BoundColumn HeaderText="Nombre-Render" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                                    <asp:BoundColumn HeaderText="Nombre-Render" ItemStyle-CssClass="auto-width-column2"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="UltimaActivacion" HeaderText="Activado" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Fecha_Programada_Entrega" HeaderText="Entrega" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
@@ -1266,7 +1285,7 @@
                                                             <asp:SqlDataSource runat="server" ID="DataGridRenderPorFechaYAsesor" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="sp_ProBitacoraRender" SelectCommandType="StoredProcedure">
                                                                 <SelectParameters>
 
-                                                                    <asp:SessionParameter Name="Cedula" SessionField="CedulaLogeada" Type="String" DefaultValue="ValorPorDefecto" />
+                                                                    <asp:SessionParameter Name="Zona" SessionField="ZonaLogeada" Type="String" DefaultValue="ValorPorDefecto" />
 
                                                                 </SelectParameters>
                                                             </asp:SqlDataSource>
@@ -1449,7 +1468,7 @@
                    </div>
                    <div class="modal-footer">
                      <asp:Button runat="server" Text="Si" OnClick="ProgramarDiseño_Click" CssClass="btn btn-sm btn-outline-dark"/>
-                       <asp:Button runat="server" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-dark"/>
+                       <asp:Button runat="server" Text="No" data-bs-dismiss="modal" aria-label="Close" OnClick="NOProgramarDiseño_Click" CssClass="btn btn-sm btn-outline-dark"/>
                    </div>
                </div>
            </div>

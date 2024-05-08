@@ -1694,7 +1694,7 @@ WHERE
 
                     Session["Cotizacion2"] = textCotizacion.Text;
 
-                    string mensajePersonalizado = "Se inserto la cotizacion exitosamente!";
+                    string mensajePersonalizado = "Se Actualizo la cotizacion exitosamente!";
                     string urlRedireccion = "/Formularios/Recepcion/IngresarCotizacion.aspx";
                     Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                 }

@@ -115,8 +115,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
 
             switch (btn.CommandName)
             {
-                case "PersonaCliente":
-                    pageURL = "Ventas/Empleado.aspx";
+                case "BitacoraDiseno":
+                    //Session["Diseno"] = "Diseño";
+                    pageURL = "Ventas/Diseño_Venta.aspx";
                     break;
                 default:
                     // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí

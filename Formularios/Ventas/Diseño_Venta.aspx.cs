@@ -57,17 +57,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     string tipoAccion = Session["Diseno"] as string;
                     if (tipoAccion == "Ventas")
                     {
-                        string usuariologueado = Session["usuariologueado"].ToString();
-                        DataGridDiseñosPorFecha.SelectParameters["NombreUsuario"].DefaultValue = usuariologueado;
-
-                        Page_LoadDise();
-
+                        Page_LoadVentas();
                     }
                     else if (tipoAccion == "Recepcion")
                     {
                         Page_LoadRecep();
                     }
-
+                    else if (tipoAccion == "Diseño")
+                    {
+                        Page_LoadDiseño();
+                    }
                 }
             }
             else
@@ -78,14 +77,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void cargarSiempre()
         {
-
-            if (Session["CedulaLogeada"] != null)
+            if (Session["ZonaLogeada"] != null)
             {
-                string cedulaLogeada = Session["CedulaLogeada"].ToString();
-                SqlDataSource1.SelectParameters["Cedula"].DefaultValue = cedulaLogeada;
-                DataGridDiseño.SelectParameters["Cedula"].DefaultValue = cedulaLogeada;
-                DataGridRenderPorFechaYAsesor.SelectParameters["Cedula"].DefaultValue = cedulaLogeada;
-                SqlDataSource4.SelectParameters.Add("CodigoAsesor", cedulaLogeada);
+                string zonaLogeada = Session["ZonaLogeada"].ToString();
+                DropDownListOptions.SelectedValue = zonaLogeada;     
             }
             ChecUrgent.Enabled = false;
             ApplyButtonStyles();
@@ -114,33 +109,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             LinkButton2.Enabled = false;
             LinkButton2.CssClass = "btn btn-sm button-disabled";
 
+            Session.Remove("EventoItemCommandEjecutado");
+
         }
 
-        protected void Page_LoadDise()
+        protected void Page_LoadVentas()
         {
             elementosllenosalcargarlapagina();
 
             if (Session["NumeroDiseño2"] != null && !string.IsNullOrEmpty(Session["NumeroDiseño2"].ToString()))
-            {
-              
-
-                if (Session["Documentacion"] != null && (bool)Session["Documentacion"])
-                {
-                    // Realizar las acciones necesarias cuando Documentacion es true
-
+            {                 
                     AccionesAlCargarDiseño();
-
-                    ProcesarNumeroDiseño2(null);
-                }
-                else
-                {
-                    // Si Documentacion es false, ejecutar solo estos métodos
-                    
-                    AccionesAlCargarDiseño();
-                    ProcesarNumeroDiseño2(null);
-                }
-
-                scripTabDise();
+                    ProcesarNumeroDiseño2(null);     
+                    scripTabDise();
             }
             else
             {
@@ -152,31 +133,314 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (Session["ID_ContactoBD"] != null && !string.IsNullOrEmpty(Session["ID_ContactoBD"].ToString()))
                 {
-                    scripTabDise();
+                        scripTabDise();
 
-                    NuevoLimpiar();
-                }
+                        NuevoLimpiar();
+                    }
                 else
                 {
                     Session.Remove("Id_ClienteBD");
 
                     elementosllenosalcargarlapagina();
+
+                    Session.Remove("lnkClieClicked");
+                    Session.Remove("lnkClieeClicked");
                 }
             }
             else
             {
-
+                Session.Remove("lnkClieClicked");
+                Session.Remove("lnkClieeClicked");
             }
 
             CargarClienteYContacto();
 
-            // Eliminar la variable de sesión "NumeroDiseño" después de usarla
+            CargarDatagridVentas();
+
+            Session.Remove("NumeroDiseño5");
             Session.Remove("NumeroDiseño2");
             Session.Remove("SelectedIdOT");
             Session.Remove("SelectedFileName");
             Session.Remove("Documentacion");
-            Session.Remove("lnkClieClicked");
-            Session.Remove("lnkClieeClicked");
+          
+        }
+
+        protected void CargarDatagridDise()
+        {
+            DataGridOTsDise();
+            DataGridDiseD();
+            DataGridSCDise();
+            DataGridRenderDise();
+            ResumenDibujanteDibujo();
+            UpdateDataGrids();
+        }
+
+        protected void DataGridOTsDise()
+        {
+            DataTable dataTable = new DataTable();
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("sp_ProBitacoraOTs", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                // Agregar parámetro de zona si es necesario
+                string selectedValue = DropDownListOptions.SelectedValue;
+                if (!string.IsNullOrEmpty(selectedValue) && selectedValue != "%")
+                {
+                    command.Parameters.AddWithValue("@Zona", selectedValue);
+                }
+
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(dataTable);
+            }
+            DataGrid1.DataSource = dataTable;
+            DataGrid1.DataBind();
+        }
+
+        protected void DataGridDiseD()
+        {
+            DataTable dataTable = new DataTable();
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = @"SELECT [Numero_Diseño], [Cliente], [Nombre_Diseño], [Asesor],
+                            [UltimaActivacion], [Fecha_Programada_Entrega], [RealizadoPor],
+                            A.[Zona], [PactodeEntrega], [ProgramadoVentas], [PasarACotizar], [TerminadoDibujo], [Pausado], B.[Cedula], A.[id_CiudadProyecto], A.[Urgente]
+                        FROM [tblDiseño] AS A 
+                            INNER JOIN tblAsesorComercial AS B ON (B.Nombre +' '+ B.Apellidos) = A.Asesor
+                        WHERE ProgramadoVentas = '1' AND TerminadoDibujo = '0' AND B.Zona LIKE @Zona
+                        ORDER BY [UltimaActivacion] ASC";
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                // Agregar parámetro de zona si es necesario
+                string selectedValue = DropDownListOptions.SelectedValue;
+                if (!string.IsNullOrEmpty(selectedValue) && selectedValue != "%")
+                {
+                    command.Parameters.AddWithValue("@Zona", selectedValue);
+                }
+                else
+                {
+                    // En caso de que no se seleccione ninguna zona específica, se usa '%' para que coincida con todas las zonas
+                    command.Parameters.AddWithValue("@Zona", "%");
+                }
+
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(dataTable);
+            }
+            DataGrid2.DataSource = dataTable;
+        }
+
+        protected void DataGridSCDise()
+        {
+
+            DataTable dataTable = new DataTable();
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("sp_ProBitacoraShowCase", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                // Agregar parámetro de zona si es necesario
+                string selectedValue = DropDownListOptions.SelectedValue;
+                if (!string.IsNullOrEmpty(selectedValue) && selectedValue != "%")
+                {
+                    command.Parameters.AddWithValue("@Zona", selectedValue);
+                }
+
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(dataTable);
+            }
+            DataGridDiseños.DataSource = dataTable;
+        }
+
+        protected void DataGridRenderDise()
+        {
+            DataTable dataTable = new DataTable();
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("sp_ProBitacoraRender", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                // Agregar parámetro de zona si es necesario
+                string selectedValue = DropDownListOptions.SelectedValue;
+                if (!string.IsNullOrEmpty(selectedValue) && selectedValue != "%")
+                {
+                    command.Parameters.AddWithValue("@Zona", selectedValue);
+                }
+
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(dataTable);
+            }
+            DataGridRender.DataSource = dataTable;
+        }
+
+        protected void ResumenDibujanteDibujo()
+        {
+            DataTable dataTable = new DataTable();
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                            string query = @"SELECT D.RealizadoPor, 
+                       COALESCE(O.CantidadOt, 0) AS CantidadOt, 
+                       COALESCE(C.CantidadRepeticiones, 0) AS CantidadRepeticiones,
+                       COALESCE(O.CantidadOt, 0) + COALESCE(C.CantidadRepeticiones, 0) AS Total
+                FROM (SELECT DISTINCT RealizadoPor FROM tblDiseño) D
+                LEFT JOIN
+                (SELECT ot.RealizadoPor, COUNT(*) AS CantidadOt
+                    FROM tblOT ot
+                    INNER JOIN tblAsesorComercial ac ON ot.Codigo_Asesor = ac.Cedula
+                    WHERE ot.Terminado_Diseño = '0' 
+                      AND ot.Terminado_Ventas = '1' 
+                      AND ot.Anulada = '0'
+                     AND OT.Zona = @Zona
+                    GROUP BY ot.RealizadoPor) O
+                ON D.RealizadoPor = O.RealizadoPor
+                LEFT JOIN
+                (SELECT A.RealizadoPor, COUNT(*) AS CantidadRepeticiones
+                    FROM [tblDiseño] AS A
+                    INNER JOIN tblAsesorComercial AS B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor
+                    WHERE ProgramadoVentas = '1' and TerminadoDibujo = '0' AND A.Zona LIKE @Zona
+                    GROUP BY A.RealizadoPor) C
+                ON D.RealizadoPor = C.RealizadoPor
+                ORDER BY Total DESC;";
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                // Agregar parámetro de zona si es necesario
+                string selectedValue = DropDownListOptions.SelectedValue;
+                if (!string.IsNullOrEmpty(selectedValue) && selectedValue != "%")
+                {
+                    command.Parameters.AddWithValue("@Zona", selectedValue);
+                }
+                else
+                {
+                    // En caso de que no se seleccione ninguna zona específica, se usa '%' para que coincida con todas las zonas
+                    command.Parameters.AddWithValue("@Zona", "%");
+                }
+
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(dataTable);
+            }
+            DataGrid3.DataSource = dataTable;
+            DataGrid3.DataBind();
+        }
+
+        protected void DataGridOts(string cedula)
+        {
+            DataTable dataTable = new DataTable();
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("sp_ProBitacoraOTs", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                // Agregar parámetro @Cedula y asignarle el valor proporcionado
+                command.Parameters.AddWithValue("@Cedula", cedula);
+
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(dataTable);
+            }
+            DataGrid1.DataSource = dataTable;
+        }
+
+        protected void DataGridDise(string cedula)
+        {
+            DataTable dataTable = new DataTable();
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("sp_ProBitacoraDise", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                // Agregar parámetro @Cedula y asignarle el valor proporcionado
+                command.Parameters.AddWithValue("@Cedula", cedula);
+
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(dataTable);
+            }
+            DataGrid2.DataSource = dataTable;
+     
+        }
+
+        protected void DataGridRenderF(string cedula)
+        {
+            DataTable dataTable = new DataTable();
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("sp_ProBitacoraRender", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                // Agregar parámetro @Cedula y asignarle el valor proporcionado
+                command.Parameters.AddWithValue("@Cedula", cedula);
+
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(dataTable);
+            }
+            DataGridRender.DataSource = dataTable;
+
+        }
+
+        protected void CargarDatagridVentas()
+        {
+            string cedula = Session["CedulaLogeada"].ToString();
+            string usuariologueado = Session["usuariologueado"].ToString();
+
+            DataGridOts(cedula);
+            DataGridDise(cedula);
+            DataGridSC(usuariologueado);
+            DataGridRenderF(cedula);
+            ResumenDibujanteVentas(cedula);
+            UpdateDataGrids();  
+        }
+
+        protected void ResumenDibujanteVentas(string cedula)
+        {
+            DataTable dataTable = new DataTable();
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("sp_ResumenDibujante", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                // Agregar parámetro @Cedula y asignarle el valor proporcionado
+                command.Parameters.AddWithValue("@CodigoAsesor", cedula);
+
+                // Agregar parámetro de zona si es necesario
+                string selectedValue = DropDownListOptions.SelectedValue;
+                if (!string.IsNullOrEmpty(selectedValue) && selectedValue != "%")
+                {
+                    command.Parameters.AddWithValue("@Zona", selectedValue);
+                }
+
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(dataTable);
+            }
+            DataGrid3.DataSource = dataTable;
+            DataGrid3.DataBind();
+        }
+
+        protected void DataGridSC(string usuariologueado)
+        {
+            DataTable dataTable = new DataTable();
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("sp_ProBitacoraShowCase", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                // Agregar parámetro @Cedula y asignarle el valor proporcionado
+                command.Parameters.AddWithValue("@NombreUsuario", usuariologueado);
+
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(dataTable);
+            }
+            DataGridDiseños.DataSource = dataTable;
+            DataGridDiseños.DataBind();
+
         }
 
         protected void scripTabDise()
@@ -218,6 +482,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     ProcesarNumeroDiseño2(null);                       
             }
 
+        }
+
+        protected void Page_LoadDiseño()
+        {
+            elementosllenosalcargarlapagina();
+            CargarDatagridDise();
+            BtnProgramar.Text = "TERMINAR";
+
+            if (Session["NumeroDiseño2"] != null && !string.IsNullOrEmpty(Session["NumeroDiseño2"].ToString()))
+            {
+                ProcesarNumeroDiseño2(null);
+            }
         }
 
         protected void AccionesAlCargarDiseño()
@@ -316,15 +592,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void ProgramarDiseño_Click(object sender, EventArgs e)
         {
-          
-
-                // Obtener la fecha programada de entrega desde el TextBox TextEntrega
-                DateTime fechaActual = DateTime.Now;
-
-                // Obtener el valor del número de diseño desde el label
-                string numeroDiseño = lblNumDise.Text;
 
 
+            // Obtener la fecha programada de entrega desde el TextBox TextEntrega
+            DateTime fechaActual = DateTime.Now;
+
+            // Obtener el valor del número de diseño desde el label
+            string numeroDiseño = lblNumDise.Text;
+
+            if (ValidarExistenciaDiseño(numeroDiseño))
+            {
                 DateTime fechaIngresoDiseño = DateTime.Parse(TextIngDis.Text);
 
                 // Obtener la fecha de activación desde el TextBox TextUltAc
@@ -376,7 +653,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                             // Si se actualizaron filas, se deshabilita el botón y se cambia su clase CSS
                             BtnProgramar.Enabled = false;
-                            BtnProgramar.CssClass = "button-disabled form-control";
+                            BtnProgramar.CssClass = "button-disabled form-control fw-bold";
                         }
                         else
                         {
@@ -385,13 +662,49 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                             // Si no se actualizaron filas, se mantiene el botón habilitado y se cambia su clase CSS
                             BtnProgramar.Enabled = true;
-                            BtnProgramar.CssClass = "button-enabled form-control";
+                            BtnProgramar.CssClass = "button-enabled form-control fw-bold";
                         }
-                    
+
+                    }
+
                 }
 
             }
-           
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
+            }
+        }
+
+        protected void NOProgramarDiseño_Click(object sender, EventArgs e)
+        {
+            string numeroDiseño = lblNumDise.Text;
+
+            Session["NumeroDiseño2"] = numeroDiseño;
+
+
+            string mensajePersonalizado = "El diseño no fue programardo";
+            string urlRedireccion = "Ventas/Diseño_Venta.aspx";
+            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+        }
+
+        private bool ValidarExistenciaDiseño(string numeroDiseño)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string selectQuery = "SELECT COUNT(*) FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseño";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(selectQuery, connection))
+                {
+                    cmd.Parameters.AddWithValue("@NumeroDiseño", numeroDiseño);
+                    connection.Open();
+                    int rowCount = (int)cmd.ExecuteScalar();
+
+                    return rowCount > 0; // Retorna true si el diseño existe, false de lo contrario
+                }
+            }
         }
 
         protected void ProgramarDiseñoCotizacion_Click(object sender, EventArgs e)
@@ -421,7 +734,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         // Si se actualizaron filas, se deshabilita el botón y se cambia su clase CSS
                         BtnProgramar.Enabled = false;
-                        BtnProgramar.CssClass = "button-disabled form-control";
+                        BtnProgramar.CssClass = "button-disabled form-control fw-bold";
                     }
                     else
                     {
@@ -555,7 +868,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             TextFecOkDib.CssClass = "form-control form-control-sm";
 
             BtnProgramar.Enabled = false;
-            BtnProgramar.CssClass = "form-control form-control-sm";
+            BtnProgramar.CssClass = "form-control form-control-sm fw-bold";
 
             TextFec.Enabled = false;
             TextFec.CssClass = "form-control form-control-sm";
@@ -594,7 +907,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void NoButton_Click(object sender, EventArgs e)
         {
+            string diseño = lblNumDise.Text;
 
+            Session["NumeroDiseño5"] = diseño;
 
             // Obtener la fecha y hora actual
             DateTime now = DateTime.Now;
@@ -645,7 +960,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             TextFecOkDib.CssClass = "form-control form-control-sm";
 
             BtnProgramar.Enabled = false;
-            BtnProgramar.CssClass = "form-control form-control-sm";
+            BtnProgramar.CssClass = "form-control form-control-sm fw-bold";
 
             TextFec.Enabled = false;
             TextFec.CssClass = "form-control form-control-sm";
@@ -673,8 +988,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             TextCliente.Enabled = false;
             TextCliente.CssClass = "form-control form-control-sm";
-
-            Session["EventoNoButtonEjecutado"] = true;
 
         }
 
@@ -809,7 +1122,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             DateTime fechaMenos5Dias = fechaActual.AddDays(7);
             Texty.Text = fechaMenos5Dias.ToString("yyyy-MM-dd");
 
-            BtnProgramar.CssClass = "btn btn-warning shadow btn-sm";
+            BtnProgramar.CssClass = "btn btn-warning shadow btn-sm fw-bold";
 
 
             TextTel.Text = ("2889898");
@@ -1328,44 +1641,92 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void NuevoDisBit_Click(object sender, EventArgs e)
         {
+           Session["CrudDise"] = "Insertar";
+
             bool lnkClieClicked = Session["lnkClieClicked"] as bool? ?? false;
             bool lnkClieeClicked = Session["lnkClieeClicked"] as bool? ?? false;
 
-            if (lnkClieClicked || lnkClieeClicked)
+            if (int.TryParse(lblNumDise.Text, out _))
             {
-                // Mostrar el modal si se hizo clic en lnkClie o lnkCliee
+                // Mostrar el modal si el valor del label es numerico
                 ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modall').modal('show');", true);
-
-
             }
             else
             {
-                NuevoLimpiar();
-
-                
-
+                NuevoLimpiar(); 
             }
 
             TextObsVen.Disabled = false;
             CheckEsyMat.Enabled = true;
 
-            Session["NuevoDisBitEjecutado"] = true;
+            
 
-
-        }
+            }
 
         protected void NuevoLimpiar()
         {
-            // Deshabilitar el botón "NuevoDisBit"
-            NuevoDisBit.Enabled = false;
+            string tipoAccion = Session["CrudDise"] as string;
+            if (tipoAccion == "Insertar")
+            {
+                ComportamientoNuevo();
+            }
+
+            if (tipoAccion == "Actualizar")
+            {
+                ComportamientoActualizar();
+            }
+
+        }
+
+        protected void ComportamientoActualizar()
+        {
+            BtnProgramar.Enabled = false;
+            BtnProgramar.CssClass = "btn btn-sm shadow button-disabled fw-bold";
 
             Modificar.Enabled = false;
-
-            // Aplicar clases CSS para botones deshabilitados
-            NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
             Modificar.CssClass = "btn btn-sm shadow button-disabled";
 
+            ActualizarDiseno.Enabled = false;
+            ActualizarDiseno.CssClass = "btn btn-sm shadow button-disabled";
+
             // Habilitar el botón "Grabar"
+            Grabar.Enabled = true;
+            Grabar.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+            DocBitacora.Enabled = true;
+            DocBitacora.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+            // Habilitar el div y su contenido
+            HabilitarDivYContenido(miDiv);
+
+            TextIngDis.Enabled = false;
+            TextUltAc.Enabled = false;
+
+            TextFecOkDib.Enabled = false;
+
+            Button9.Enabled = false;
+            Button10.Enabled = false;
+
+            // Cambiar el color del Label lblCotizar
+            lblCotizar.CssClass = "col-form-label-sm text-danger";
+            lblCotizar.Font.Bold = true;
+
+            // Deshabilitar el botón "NuevoDisBit"
+            NuevoDisBit.Enabled = false;
+            NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
+
+            TextCliente.Enabled = false;
+            TextCliente.CssClass = "form-control form-control-sm";
+        }
+
+        protected void ComportamientoNuevo()
+        {
+            NuevoDisBit.Enabled = false;
+            NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
+
+            Modificar.Enabled = false;
+            Modificar.CssClass = "btn btn-sm shadow button-disabled";
+
             Grabar.Enabled = true;
             Grabar.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
@@ -1398,6 +1759,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             TextCliente.Enabled = false;
             TextCliente.CssClass = "form-control form-control-sm";
 
+            BtnProgramar.Enabled = false;
+            BtnProgramar.CssClass = "btn btn-sm shadow button-disabled fw-bold";
+
             if (Session["ZonaLogeada"] != null)
             {
                 string zonaLogeada = Session["ZonaLogeada"].ToString();
@@ -1416,7 +1780,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
                 else
                 {
-                  
+
                     DropDownList1.SelectedValue = "";
                 }
             }
@@ -1425,8 +1789,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 //NO SE ENCONTRO LA VIABLE DE SESSION ZONALOGEADA
             }
-
-
         }
 
         protected void CheckBox21_CheckedChanged(object sender, EventArgs e)
@@ -1475,12 +1837,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string tipoAccion = Session["Diseno"] as string;
             if (tipoAccion == "Ventas")
             {
-                // Verifica si la variable de sesión "Modificado" está establecida como true.
-                bool modificado = Session["ModificarEjecutado"] as bool? ?? false;
 
-                if (modificado)
+                string tipoAccionCrud = Session["CrudDise"] as string;
+                if (tipoAccionCrud == "Actualizar")
                 {
-                    // Si se hizo clic en Modificar antes, realiza las acciones necesarias para volver al estado anterior.
+                    // Si se hizo clic en Modificar antes, realiza las s necesarias para volver al estado anterior.
                     NuevoDisBit.Enabled = false;
                     NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
 
@@ -1571,9 +1932,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     Modificar.CssClass = "btn btn-sm shadow button-enabled";
                 }
 
-                // Limpia la variable de sesión "Modificado" después de utilizarla.
-                Session["ModificarEjecutado"] = false;
-
+                Session.Remove("NumeroDiseño5");
             }
             else if (tipoAccion == "Recepcion")
             {
@@ -1606,11 +1965,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
                 }
             }
-
-
-
             AccionesAlCargarDiseño();
-
 
         }
 
@@ -1639,6 +1994,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                             // Ajustar la propiedad Enabled del botón BtnProgramar
                             BtnProgramar.Enabled = (programadoVentas == 0);
+                            BtnProgramar.CssClass = "btn btn-sm shadow btn-warning fw-bold";
 
 
                         }
@@ -1675,6 +2031,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                             // Ajustar la propiedad Enabled del botón BtnProgramar
                             BtnProgramar.Enabled = (programadoVentas == 0);
+                            BtnProgramar.CssClass = "btn btn-sm shadow btn-warning fw-bold";
 
                             // Si el botón está habilitado, actualizar los TextBox con las fechas
                             if (BtnProgramar.Enabled)
@@ -2080,14 +2437,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             TextObsVen.Disabled = false;
             CheckEsyMat.Enabled = true;
 
-            Session["ModificarEjecutado"] = true;
+            Session["CrudDise"] = "Actualizar";
 
         }
 
         protected void BtnModificarNo_Click(object sender, EventArgs e)
-        {
+        { 
             BtnProgramar.Enabled = false;
-            BtnProgramar.CssClass = "btn btn-sm shadow button-disabled";
+            BtnProgramar.CssClass = "btn btn-sm shadow button-disabled fw-bold";
 
             Modificar.Enabled = false;
             Modificar.CssClass = "btn btn-sm shadow button-disabled";
@@ -2128,7 +2485,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void BtnModificarSi_Click(object sender, EventArgs e)
         {
             BtnProgramar.Enabled = false;
-            BtnProgramar.CssClass = "btn btn-sm shadow button-disabled";
+            BtnProgramar.CssClass = "btn btn-sm shadow button-disabled fw-bold";
 
             Modificar.Enabled = false;
             Modificar.CssClass = "btn btn-sm shadow button-disabled";
@@ -2307,6 +2664,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             TextCiuPro.CssClass = "form-control form-control-sm";
 
             BtnProgramar.Enabled = false;
+            BtnProgramar.CssClass = "btn btn-warning shadow btn-sm fw-bold";
 
             lblConCab.Enabled = false;
             lblCiuPro.CssClass = "form-label";
@@ -2639,22 +2997,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void btnInsertar_Click(object sender, EventArgs e)
         {
 
-
-            // Verifica si "NuevoDisBit" se ejecutó previamente
-            bool nuevoDisBitEjecutado = Session["NuevoDisBitEjecutado"] != null && (bool)Session["NuevoDisBitEjecutado"];
-
-
             // Realiza la validación de campos
             string campoFaltante = ValidarCampos();
 
             if (string.IsNullOrEmpty(campoFaltante))
             {
-                if (nuevoDisBitEjecutado)
+                string tipoAccion = Session["CrudDise"] as string;
+                if (tipoAccion == "Insertar")
                 {
                     // Realiza la inserción
                     if (RealizarInsercion())
                     {
-                        Session.Remove("NuevoDisBitEjecutado");
+                        Session.Remove("CrudDise");
 
                         string mensajePersonalizado = "Las Fechas: Ingreso del diseño, Ultima Activación y Entrega, se ajustaran cuando programe el diseño";
                         string urlRedireccion = "Ventas/Diseño_Venta.aspx";
@@ -2662,49 +3016,41 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                     else
                     {
-                        Session.Remove("NuevoDisBitEjecutado");
+                        Session.Remove("CrudDise");
 
                         string mensajePersonalizado = "No se afecto ninguna fila";
                         string urlRedireccion = "Ventas/Diseño_Venta.aspx";
                         Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                     }
-
-
                 }
-                else
+                else if (tipoAccion == "Actualizar")
                 {
-                    // Realiza solo la actualización 
-                    if (Session["ModificarEjecutado"] != null && (bool)Session["ModificarEjecutado"])
+                    // Realiza la actualización
+                    if (RealizarActualizacion())
                     {
-                        // Realiza la actualización
-                        if (RealizarActualizacion())
-                        {
-                            Session.Remove("ModificarEjecutado");
+                        Session.Remove("CrudDise");
 
 
 
-                            string mensajePersonalizado = "Las Fechas: Ingreso del diseño, Ultima Activación y Entrega, se ajustaran cuando programe el diseño";
-                            string urlRedireccion = "Ventas/Diseño_Venta.aspx";
-                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                        string mensajePersonalizado = "Las Fechas: Ingreso del diseño, Ultima Activación y Entrega, se ajustaran cuando programe el diseño";
+                        string urlRedireccion = "Ventas/Diseño_Venta.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
 
 
-
-                        }
-                        else
-                        {
-                            Session.Remove("ModificarEjecutado");
-
-                            string mensajePersonalizado = "El Diseño ya fue aprobado para Dibujo y Despiece, este departamento lo debe habilitar para ser modificado";
-                            string urlRedireccion = "Ventas/Diseño_Venta.aspx";
-                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-                        }
 
                     }
                     else
                     {
+                        Session.Remove("CrudDise");
 
+                        string mensajePersonalizado = "El Diseño ya fue aprobado para Dibujo y Despiece, este departamento lo debe habilitar para ser modificado";
+                        string urlRedireccion = "Ventas/Diseño_Venta.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                     }
                 }
+
+                
+        
             }
             else
             {
@@ -3230,13 +3576,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             {
                                 // ProgramadoVentas es 1, deshabilitar los botones
                                 BtnProgramar.Enabled = false;
+                                BtnProgramar.CssClass = "btn btn-warning shadow btn-sm fw-bold";
 
                             }
                             else
                             {
                                 // ProgramadoVentas es 0, habilitar los botones
                                 BtnProgramar.Enabled = true;
-
+                                BtnProgramar.CssClass = "btn btn-warning shadow btn-sm fw-bold";
                             }
                         }
                         else if (tipoAccion == "Recepcion")
@@ -3457,13 +3804,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             {
                                 // ProgramadoVentas es 1, deshabilitar los botones
                                 BtnProgramar.Enabled = false;
+                                BtnProgramar.CssClass = "btn btn-warning shadow btn-sm fw-bold";
 
                             }
                             else
                             {
                                 // ProgramadoVentas es 0, habilitar los botones
                                 BtnProgramar.Enabled = true;
-
+                                BtnProgramar.CssClass = "btn btn-warning shadow btn-sm fw-bold";
                             }
                         }
                         else if (tipoAccion == "Recepcion")
@@ -3672,6 +4020,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DataGrid1.DataBind();
             DataGrid2.DataBind();
+            DataGrid3.DataBind();
             DataGridDiseños.DataBind();
             DataGridRender.DataBind();
             UpdatePanel1.Update();
@@ -3679,36 +4028,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void DropDownListOptions_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedValue = DropDownListOptions.SelectedValue;
-
-            if (selectedValue == "01")
+            string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Ventas")
             {
-                SqlDataSource1.FilterExpression = "Zona = '01'";
-                DataGridDiseño.FilterExpression = "Zona = '01'";
-                DataGridDiseñosPorFecha.FilterExpression = "Zona = '01'";
-                DataGridRenderPorFechaYAsesor.FilterExpression = "Zona = '01'";
+                CargarDatagridVentas();
             }
-            else if (selectedValue == "02")
+            else if (tipoAccion == "Diseño")
             {
-                SqlDataSource1.FilterExpression = "Zona = '02'";
-                DataGridDiseño.FilterExpression = "Zona = '02'";
-                DataGridDiseñosPorFecha.FilterExpression = "Zona = '02'";
-                DataGridRenderPorFechaYAsesor.FilterExpression = "Zona = '02'";
-            }
-            else
-            {
-                SqlDataSource1.FilterExpression = "";
-                DataGridDiseño.FilterExpression = "";
-                DataGridDiseñosPorFecha.FilterExpression = "";
-                DataGridRenderPorFechaYAsesor.FilterExpression = "";
-            }
-
-            UpdateDataGrids();
-        }
-
-        protected void Button88_Click(object sender, EventArgs e)
-        {
-            UpdateDataGrids();
+                CargarDatagridDise();
+            } 
         }
 
         //DATAGRID SHOWCASE
@@ -3967,13 +4295,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             string lblText = lblNumDise.Text;
 
-            Session["NumeroDiseño"] = lblText;
+            if (int.TryParse(lblText, out int numDise))
+            {
+                // Si el contenido es un número, puedes proceder con la lógica
+                Session["NumeroDiseño"] = lblText;
 
-            //DocBitacora.CssClass = "btn btn-sm shadow button-enabled linkButtonClicked";
+                //DocBitacora.CssClass = "btn btn-sm shadow button-enabled linkButtonClicked";
 
-            string url = "DocumentacionDise.aspx";
-            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
-            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+                string url = "DocumentacionDise.aspx";
+                string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#NumeroDiseñoNoValido').modal('show');", true);
+            }
+
         }
 
         protected void lnkSelectRowRender_Click(object sender, EventArgs e)
@@ -3983,7 +4320,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void CargarVSC_Click(object sender, EventArgs e)
         {
-            Session["AsesorDiseño"] = Session["CedulaLogeada"].ToString();
+            if (Session["NumeroDiseño5"] != null && !string.IsNullOrEmpty(Session["NumeroDiseño5"].ToString()))
+            {
+                Session["NumeroDiseño2"] = Session["NumeroDiseño5"];
+
+                Session["AsesorDiseño"] = Session["CedulaLogeada"].ToString();
+            }
+            else if (int.TryParse(lblNumDise.Text, out _))
+            {
+                // Si el valor del label es numérico
+                string diseño = lblNumDise.Text;
+
+                Session["NumeroDiseño2"] = diseño;
+
+                Session["AsesorDiseño"] = Session["CedulaLogeada"].ToString();
+            }
+            else
+            {
+                Session["AsesorDiseño"] = Session["CedulaLogeada"].ToString();
+
+            }
+
         }
 
         protected void ChecConDeCab_CheckedChanged(object sender, EventArgs e)
@@ -5739,7 +6096,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                             // Si se actualizaron filas, se deshabilita el botón y se cambia su clase CSS
                             BtnProgramar.Enabled = false;
-                            BtnProgramar.CssClass = "button-disabled form-control";
+                            BtnProgramar.CssClass = "button-disabled form-control fw-bold";
                         }
                         else
                         {
