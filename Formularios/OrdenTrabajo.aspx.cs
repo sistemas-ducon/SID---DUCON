@@ -202,7 +202,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
 
                     CargarVariablesDeSesionContable();
-         
+
 
                 }
 
@@ -290,8 +290,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Nit.Enabled = false;
 
             cbxComisionCompart.Enabled = true;
-      
-                
+
+
 
         }
 
@@ -590,7 +590,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void NuevaOTDespuesDeCargarNIT()
         {
-       
+
 
             if (Session["BtnModificarEjecutado"] == null)
             {
@@ -756,7 +756,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
             }
-          
+
             txtAsesor.Enabled = false;
             Nit.Enabled = false;
             Nit.CssClass = "btn btn-sm shadow button-disabled";
@@ -788,16 +788,148 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void ImprimirOt_Click(object sender, EventArgs e)
         {
+            
+                // Se Cargan  los datos de la OT en el modal 
+                lbOrdenTrabjo.InnerText = tbOT.Text;
+                lbPedido.InnerText = ddlNumbers.SelectedItem.Text;
+                lbTipoPed.InnerText = dtacboTipoPedido.SelectedItem.Text;
 
+                lbVendedor.InnerText = ddlAsesor.SelectedItem.Text;
+                lbCliente.InnerText = txtNombreEmp.Text;
+
+
+                lbNombreObra.InnerText = tbObra.Text;
+
+                lbProduce.InnerText = ddlFabrica1.SelectedItem.Text;
+
+                pObservaciones.InnerText = txObs1.InnerText;
+
+                lbDir.InnerText = tbDir.Text + " " + ddlCiudad.SelectedItem.Text.Replace(" - ","/") + "/" + tbPais.Text;
+
+                lbReci.InnerText = tbRecibe.Text;
+
+                lbconta.InnerText = tbContac.Text;
+
+                lbTel.InnerText = tbTel.Text;
+                lbMail.InnerText = tbEmail.Text;
+
+                lbFecConVenta.InnerText = tbVenta.Text;
+
+                lbFecDibDes.InnerText = dtpFechaEntregaDibujoDespiece.Text;
+
+                lbFecEntreProd.InnerText = dtpFechaEntregaProduccion.Text;
+
+                lbFecEmpaq.InnerText = dtpEmpaque.Text;
+
+                lbPlan.InnerText = txtPlano.Text;
+
+                lbDibDes.InnerText = txtDibuja.Text;
+
+
+                // Validamos si tiene acabados o no para el espacio del medio 
+                if (DataGrid2.Items.Count > 0)
+                {
+                    espacio.Visible = false;
+                    espacio1.Visible = true;
+                }
+                else
+                {
+                    espacio.Visible = true;
+                    espacio1.Visible = false;
+                }
+
+                // mostramos el modal con la informacion a imprimir 
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalImprimir').modal('show');", true);          
+        }
+
+        protected void ReimprimirOt_Click(object sender, EventArgs e)
+        {
+            //Se Cargan  los datos de la OT en el modal
+            lbOt2.InnerText = tbOT.Text;
+            lbPed2.InnerText = ddlNumbers.SelectedItem.Text;
+            lbTipoPed2.InnerText = dtacboTipoPedido.SelectedItem.Text;
+
+            lbFPed.Text = dtpFechaEntregaDibujoDespiece.Text;
+            lbAse2.InnerText = txtAsesor.Text + " - " + ddlAsesor.SelectedItem.Text;
+
+            lbClie2.InnerText = txtNombreEmp.Text;
+            lbCot1.InnerText = txtCotizacion.Text;
+
+
+
+            lbDir1.InnerText = txtDireccion.Text;
+            lbNit1.InnerText = txtNit.Text;
+
+            lbCont.InnerText = txtcontacto.Text;
+            lbTel1.InnerText = txtTelefono.Text;
+
+            lbNomObra.InnerText = tbObra.Text;
+            lbAlt1.InnerText = tbHTotal.Text;
+
+            lbDirDes1.InnerText = tbDir.Text + "/" + ddlCiudad.SelectedItem.Text.Replace(" - ", "/") + "/" + tbPais.Text;
+
+            lbContaObr.InnerText = tbContac.Text;
+            lbTel3.InnerText = tbCel.Text;
+
+            lbCont3.InnerText = tbRecibe.Text;
+            lbForPago.InnerText = TextTNegociacion.InnerText;
+
+            observaciones2.InnerText = txObs1.InnerText;
+
+            ObsConta.InnerText = ObservacionCont.InnerText;
+
+            int Descuento = Convert.ToInt32(txtDcto.Text);
+
+            lbPorDto.InnerText = Descuento.ToString() + " %";
+
+            int Venta = Convert.ToInt32(txtVenta.Text);
+            lbValorTotObra.InnerText = Venta.ToString("N0");
+
+             int ValoDescuento = (Venta * Descuento)/100;
+             lbValorDto.InnerText = ValoDescuento.ToString("N0");
+
+            int SubTotal = Venta - ValoDescuento;
+            lbSubTo.InnerText = SubTotal.ToString("N0");
+
+            int ValorIva = (SubTotal * 16) / 100;
+            lbValorIva.InnerText = ValorIva.ToString("N0");
+
+            int Total = SubTotal + ValorIva;
+            lbGranTot.InnerText = Total.ToString("N0");
+
+
+
+
+            // Validamos si tiene acabados o no para el espacio del medio 
+            if (DataGrid2.Items.Count > 0)
+            {
+                esp1.Visible = false;
+                esp2.Visible = true;
+            }
+            else
+            {
+                esp2.Visible = true;
+                esp1.Visible = false;
+            }
+
+            // mostramos el modal con la informacion a imprimir 
+            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalImprimir2').modal('show');", true);
         }
 
         protected void BtnObservaciones_Click(object sender, EventArgs e)
         {
+            if(tbOT.Text.Trim() != "")
+            {
+                if(ddlNumbers.Items.Count > 0 && ddlNumbers.SelectedItem != null)
+                {
+                    Session["Id_OT"] = tbOT.Text;
+                    Session["pedido"] = ddlNumbers.SelectedItem.Text;    
+                }
 
+            }
             string url = "FormExtPrin/ObservacionesOT.aspx";
             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
             ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
-
         }
 
 
@@ -2156,9 +2288,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         txtSaldo.Text = leer["Saldo"].ToString();
                         txtDiseño.Text = leer["Diseño"].ToString();
 
-                       
-                         txtVenta.Text = leer["Saldo"].ToString();
-                        
+
+                        txtVenta.Text = leer["Saldo"].ToString();
+
                         txtDcto.Text = leer["Descuento"].ToString();
                         txtComision.Text = leer["DescuentoComision"].ToString();
 
@@ -3251,7 +3383,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
-              
+
                 Session["Id_OT2"] = tbOT.Text;
 
                 Session["pedido2"] = ddlNumbers.SelectedItem.Text;
@@ -3425,7 +3557,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Verificar si se ha ejecutado el evento BtnModificar_Click
                 else if (Session["BtnModificarEjecutado"] != null && (bool)Session["BtnModificarEjecutado"])
                 {
-                    MostrarModalModificar();       
+                    MostrarModalModificar();
                 }
 
                 else if (Session["NuevoPedido"] != null && (bool)Session["NuevoPedido"])
@@ -3454,7 +3586,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ValidarUsuario();
         }
 
-   
+
         protected void ValidarMesesDesdeUltimaVenta()
         {
             // Obtener el valor del NIT desde el TextBox
@@ -4143,7 +4275,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-
+                int pedidoBaseValue = ObtenerPedidoBaseValue();
 
                 string[] valoresDDL = ddlCiudad.SelectedValue.Split('-');
 
@@ -4187,6 +4319,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@ValorViatico", txtVvia.Text);
                         command.Parameters.AddWithValue("@Fecha_Empaque", dtpEmpaque.Text);
                         command.Parameters.AddWithValue("@OrdendeCompra", txtOrdenCompra.Text);
+                        command.Parameters.AddWithValue("@PedidoBase", pedidoBaseValue);
 
                         connection.Open();
                         int rowsAffected = command.ExecuteNonQuery();
@@ -4216,7 +4349,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BtnModificar_Click(object sender, EventArgs e)
         {
-          
+
             ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#LlenarNITModificar').modal('show');", true);
 
             Session["BtnModificarEjecutado"] = true;
@@ -4271,14 +4404,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             ddlFabrica1.Enabled = false;
 
-         
+
 
             cbxComisionCompart.Enabled = true;
         }
 
         protected void NoModificarNIT_Click(object sender, EventArgs e)
         {
-           
+
             HabilitarTodosLosTextBoxes();
 
             Nit.Enabled = false;
@@ -11315,7 +11448,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 return valorPedido;
             }
         }
-
+     
     }
 
 }

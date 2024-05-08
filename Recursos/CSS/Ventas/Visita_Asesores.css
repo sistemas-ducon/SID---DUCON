@@ -112,3 +112,9 @@ a.icong.enabled {
     background-color: black; /* Cambia el color de fondo según tus preferencias */
     color: white;
 }
+
+.Tam {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
