@@ -90,8 +90,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         if (rowsAffected > 0)
                         {                        
                             CargarDatos();
-                        }
-                        else
+                        TextBox1.Text = string.Empty;
+                        Label3.Text = string.Empty;
+                        Label8.Text = string.Empty;
+                        Label5.Text = string.Empty;
+
+
+
+                    }
+                    else
                         {
 
                         }
