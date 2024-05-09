@@ -41,25 +41,24 @@
 
 
 </head>
-<body>
-    <form id="Form1" runat="server">
+<body >
+    <form id="Form1" runat="server" >
        <asp:ScriptManager runat="server" />
 
-        <header style="background-color: #CCCCCC">
+        <header style="background-color: #081a2c ">
 
-            <img src="https://www.ducon.com.co/images/logo_ducon.png" style="margin: 2rem" />
+           <%--<img src="https://i.ibb.co/c8cmwQ0/Actuallogo-SIDOKblanco.png" style="margin: 0rem" width="160px" height="40" />--%>
 
         </header>
         <asp:UpdatePanel ID="PanelModulo" runat="server">
-            <ContentTemplate>
-
-                <nav class="navbar navbar-expand-lg navbar-light bg-light shadow p-3 mb-5 bg-body form-control-sm">
-                    <div class="container-fluid rounded-3" style="background-color: #081a2c">
+            <ContentTemplate >
+                <nav class="navbar navbar-expand-lg navbar-light bg-light shadow p-3 mb-5 bg-body form-control-sm" >
+                    <div class="container-fluid rounded-3" style="background-color: #101321">
                         <a class="navbar-brand" href="#"></a>
                         <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon form-control-sm"></span>
                         </button>
-
+                        <img src="https://i.ibb.co/c8cmwQ0/Actuallogo-SIDOKblanco.png" style="margin: 0rem" width="160px" height="40" /> <%---Logo de la aplicacion---%>
                         <div class="collapse navbar-collapse navbar-expand" id="navbarScroll">
                             <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
                                 <li class="nav-item dropdown">
@@ -262,7 +261,7 @@
 
                             <hr class="text-white-50" />
                             <asp:Label ID="lblBienvenida" runat="server" ForeColor="White"></asp:Label>
-                            <asp:Button class="btn btn-light" type="button" ID="BtnCerrar" runat="server" Text="Cerrar" OnClick="BtnCerrar_Click" BackColor="#081a2c" BorderColor="#081a2c" ForeColor="White" />
+                            <asp:Button class="btn btn-light" type="button" ID="BtnCerrar" runat="server" Text="Cerrar" OnClick="BtnCerrar_Click" BackColor="#101321" BorderColor="#101321" ForeColor="White" />
 
                         </div>
                     </div>
