@@ -2523,19 +2523,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Cargar_Plano(id, pedido);
             Cargar_Despiece_Plano();
 
+            ddlNumbers.Enabled = true;
 
 
             if (Session["NuevoPedido"] != null && (bool)Session["NuevoPedido"])
             {
 
                 BotonesNuevoPedido();
+                ddlNumbers.Enabled = false;
 
             }
 
             string valorTextBox = tbObra.Text.Trim(); // Obtener el valor del TextBox
 
-            ddlNumbers.Enabled = true;
-
+           
             // Guardar el valor en una variable de sesión
             Session["ValorDeObra"] = valorTextBox;
 
@@ -3647,11 +3648,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             }
                             else
                             {
-                                Session.Remove("NuevoPedido");
-
-                                string mensajePersonalizado = "Por favor actualizar el registro de clientes.";
-                                string urlRedireccion = "OrdenTrabajo.aspx";
-                                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ActualizarCliente').modal('show');", true);
                             }
                         }
                     }
