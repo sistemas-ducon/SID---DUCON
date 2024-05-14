@@ -2740,6 +2740,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             BotonesNuevoPedido();
             LimpiarCamposCotizacion();
+
+            // Verificar el contenido del TextBox tbOT
+            if (tbOT.Text == "0209700" || tbOT.Text == "0102000" || tbOT.Text == "0109700")
+            {
+                // Mostrar el modal solo si el contenido del TextBox coincide con los valores esperados
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#LlenarNITModificar').modal('show');", true);
+            }
         }
 
         protected void BtnNoNuevoPedido_Click(object sender, EventArgs e)
@@ -2749,6 +2756,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             txObs1.Value = "Altura Total: \r\nLínea: \r\nTipo de Sujeción: \r\nPerfil Refuerzo Superior: \r\nTipo y Color de Sillas: \r\nObservaciones: \r\n\r\nALMACEN:\r\nCORTE: \r\nMOLDURADO: \r\nCARPINTERIA: \r\nTAPIZADO: \r\nENSAMBLE VIDRIO: \r\nENSAMBLE: \r\nEMPAQUE:  ";
             txObs2.Value = "Altura Total: \r\nLínea: \r\nTipo de Sujeción: \r\nPerfil Refuerzo Superior: \r\nTipo y Color de Sillas: \r\nObservaciones: \r\n\r\nALMACEN:\r\nCORTE: \r\nMOLDURADO: \r\nCARPINTERIA: \r\nTAPIZADO: \r\nENSAMBLE VIDRIO: \r\nENSAMBLE: \r\nEMPAQUE:  ";
+
+            // Verificar el contenido del TextBox tbOT
+            if (tbOT.Text == "0209700" || tbOT.Text == "0102000" || tbOT.Text == "0109700")
+            {
+                // Mostrar el modal solo si el contenido del TextBox coincide con los valores esperados
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#LlenarNITModificar').modal('show');", true);
+            }
         }
 
 
@@ -3569,9 +3583,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 else
                 {
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ErrorPermiso').modal('show');", true);
-                }
+                    Session.Remove("NuevoPedido");
 
+                    string mensajePersonalizado = "No fue posible terminar la accion requerida, por favor intentelo nuevamente.";
+                    string urlRedireccion = "OrdenTrabajo.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                }
+                
                 Session.Remove("NuevoPedido");
             }
             else
@@ -3629,7 +3647,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             }
                             else
                             {
-                                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ActualizarCliente').modal('show');", true);
+                                Session.Remove("NuevoPedido");
+
+                                string mensajePersonalizado = "Por favor actualizar el registro de clientes.";
+                                string urlRedireccion = "OrdenTrabajo.aspx";
+                                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                             }
                         }
                     }
@@ -3844,6 +3866,32 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return pedidoBaseValue;
         }
 
+        private int ObtenerPedidoBaseValueModificar()
+        {
+            int pedidoBaseValue = 1; // Valor predeterminado
+
+            // Obtener el valor de ObtenerConsecutivoPedido y sumar 1
+            int consecutivoPedido = ObtenerConsecutivoPedidoSinSuma();
+
+            // Verificar si cboPedidoBase tiene datos y si el valor es un número
+            if (!string.IsNullOrEmpty(cboPedidoBase.SelectedValue) && int.TryParse(cboPedidoBase.SelectedValue, out int cboValue))
+            {
+                pedidoBaseValue = cboValue;
+            }
+            else
+            {
+                if (consecutivoPedido != 0)
+                {
+                    pedidoBaseValue = consecutivoPedido;
+                }
+                else
+                {
+
+                }
+            }
+
+            return pedidoBaseValue;
+        }
 
         protected int ObtenerConsecutivoPedido()
         {
@@ -3868,6 +3916,36 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     {
                         // Convertir el resultado a entero
                         nuevoConsecutivo = Convert.ToInt32(result) + 1;
+                    }
+                }
+            }
+
+            return nuevoConsecutivo;
+        }
+
+        protected int ObtenerConsecutivoPedidoSinSuma()
+        {
+            int nuevoConsecutivo = 0;
+
+            // Utilizar un bloque using para garantizar la liberación de recursos
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                connection.Open();
+
+                // Crear un nuevo comando SQL
+                using (SqlCommand command = new SqlCommand("SELECT MAX(Consecutivo_Pedido) FROM tblOT WHERE Id_OT = LTRIM(RTRIM(@Id_OT));", connection))
+                {
+                    // Añadir parámetro
+                    command.Parameters.AddWithValue("@Id_OT", tbOT.Text);
+
+                    // Ejecutar la consulta y obtener el resultado
+                    object result = command.ExecuteScalar();
+
+                    // Verificar si el resultado no es nulo
+                    if (result != null && result != DBNull.Value)
+                    {
+                        // Convertir el resultado a entero
+                        nuevoConsecutivo = Convert.ToInt32(result);
                     }
                 }
             }
@@ -4275,7 +4353,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                int pedidoBaseValue = ObtenerPedidoBaseValue();
+                int pedidoBaseValue = ObtenerPedidoBaseValueModificar();
 
                 string[] valoresDDL = ddlCiudad.SelectedValue.Split('-');
 
@@ -4600,7 +4678,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
 
                 Session["NuevaOTEjecutada"] = false;
+                Session["CopiarInfOTEjecutada"] = false;
 
+                string mensajePersonalizado = "La cédula del usuario no coincide. No tiene permisos para realizar esta acción.";
+                string urlRedireccion = "OrdenTrabajo.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
             }
 
             tbVenta.Text = DateTime.Now.ToString("yyyy-MM-dd");

@@ -3453,21 +3453,7 @@
             </div>
         </div>
 
-        <div class="modal" id="miModalError" tabindex="-1" style="display: none;">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Error</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>La cédula del usuario no coincide. No tiene permisos para realizar esta acción.</p>
-                    </div>
-                    <div class="modal-footer">
-                    </div>
-                </div>
-            </div>
-        </div>
+     
 
         <div id="ErrorPermiso" class="modal" tabindex="-1" style="display: none;">
             <div class="modal-dialog modal-dialog-centered">

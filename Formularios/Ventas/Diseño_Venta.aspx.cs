@@ -494,6 +494,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 ProcesarNumeroDiseño2(null);
             }
+
+            DesabilitarTextBox();
+        }
+
+        protected void DesabilitarTextBox()
+        {
+            TextContacto.Visible = false;
+          
+          
+            TextTel.Visible = false;
+           
+            TextCel.Visible = false;
+           
+            TextMail.Visible = false;
+          
+            TextDir.Visible = false;
         }
 
         protected void AccionesAlCargarDiseño()
@@ -1221,35 +1237,64 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private void DeshabilitarDivYContenido(System.Web.UI.Control container)
         {
+            string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Ventas")
+            {
+
+                BtnDesRen.Enabled = false;
+                BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                BtnTrabRen.Enabled = false;
+                BtnTrabRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                BtnDesSC.Enabled = false;
+                BtnDesSC.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                BtnTrabShoCas.Enabled = false;
+                BtnTrabShoCas.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                BtnDesDis.Enabled = false;
+                BtnDesDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                BtnTrabDis.Enabled = false;
+                BtnTrabDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                BtnTrabPed.Enabled = false;
+                BtnTrabPed.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                BtnDesPed.Enabled = false;
+                BtnDesPed.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+            }
+            if (tipoAccion == "Diseño")
+            {
+                BtnTrabPed.Enabled = true;
+                BtnTrabPed.CssClass = "btn btn-sm button-enabled shadow linkButtonClicked2 full-width-btn";
+
+                BtnDesPed.Enabled = true;
+                BtnDesPed.CssClass = "btn btn-sm button-enabled shadow linkButtonClicked2 full-width-btn";
+
+                BtnTrabDis.Enabled = true;
+                BtnTrabDis.CssClass = "btn btn-sm button-enabled shadow linkButtonClicked2 full-width-btn";
+
+                BtnDesDis.Enabled = true;
+                BtnDesDis.CssClass = "btn btn-sm button-enabled shadow linkButtonClicked2 full-width-btn";
+
+                BtnTrabShoCas.Enabled = true;
+                BtnTrabShoCas.CssClass = "btn btn-sm button-enabled shadow linkButtonClicked2 full-width-btn";
+
+                BtnDesSC.Enabled = true;
+                BtnDesSC.CssClass = "btn btn-sm button-enabled shadow linkButtonClicked2 full-width-btn";
+
+                BtnTrabRen.Enabled = true;
+                BtnTrabRen.CssClass = "btn btn-sm button-enabled shadow linkButtonClicked2 full-width-btn";
+
+                BtnDesRen.Enabled = true;
+                BtnDesRen.CssClass = "btn btn-sm button-enabled shadow linkButtonClicked2 full-width-btn";
+            }
+
             TextPla.Enabled = false;
             TextPla.CssClass = "form-control form-control-sm";
-
-            Button16.Enabled = false;
-            Button16.CssClass = "form-control form-control-sm";
-
-            Button15.Enabled = false;
-            Button15.CssClass = "form-control form-control-sm";
-
-            Button12.Enabled = false;
-            Button12.CssClass = "form-control form-control-sm";
-
-            Button13.Enabled = false;
-            Button13.CssClass = "form-control form-control-sm";
-
-            Button14.Enabled = false;
-            Button14.CssClass = "form-control form-control-sm";
-
-            Button11.Enabled = false;
-            Button11.CssClass = "form-control form-control-sm";
-
-            Button9.Enabled = false;
-            Button9.CssClass = "form-control form-control-sm";
-
-            Button10.Enabled = false;
-            Button10.CssClass = "form-control form-control-sm";
-
-
-
 
             TextCliente.Enabled = false;
             TextCliente.CssClass = "form-control form-control-sm";
@@ -1704,8 +1749,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             TextFecOkDib.Enabled = false;
 
-            Button9.Enabled = false;
-            Button10.Enabled = false;
+            BtnTrabPed.Enabled = false;
+            BtnDesPed.Enabled = false;
 
             // Cambiar el color del Label lblCotizar
             lblCotizar.CssClass = "col-form-label-sm text-danger";
@@ -2467,8 +2512,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             TextFecOkDib.Enabled = false;
 
-            Button9.Enabled = false;
-            Button10.Enabled = false;
+            BtnTrabPed.Enabled = false;
+            BtnDesPed.Enabled = false;
 
             // Cambiar el color del Label lblCotizar
             lblCotizar.CssClass = "col-form-label-sm text-danger";
@@ -2512,30 +2557,29 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             TextPla.Enabled = false;
             TextPla.CssClass = "form-control form-control-sm";
+            BtnDesRen.Enabled = false;
+            BtnDesRen.CssClass = "btn-outline-dark btn btn-white btn-sm btn full-width-btn";
 
-            Button16.Enabled = false;
-            Button16.CssClass = "form-control form-control-sm";
+            BtnTrabRen.Enabled = false;
+            BtnTrabRen.CssClass = "btn-outline-dark btn btn-white btn-sm btn full-width-btn";
 
-            Button15.Enabled = false;
-            Button15.CssClass = "form-control form-control-sm";
+            BtnDesSC.Enabled = false;
+            BtnDesSC.CssClass = "btn-outline-dark btn btn-white btn-sm btn full-width-btn";
 
-            Button12.Enabled = false;
-            Button12.CssClass = "form-control form-control-sm";
+            BtnTrabShoCas.Enabled = false;
+            BtnTrabShoCas.CssClass = "btn-outline-dark btn btn-white btn-sm btn full-width-btn";
 
-            Button13.Enabled = false;
-            Button13.CssClass = "form-control form-control-sm";
+            BtnDesDis.Enabled = false;
+            BtnDesDis.CssClass = "btn-outline-dark btn btn-white btn-sm btn full-width-btn";
 
-            Button14.Enabled = false;
-            Button14.CssClass = "form-control form-control-sm";
+            BtnTrabDis.Enabled = false;
+            BtnTrabDis.CssClass = "btn-outline-dark btn btn-white btn-sm btn full-width-btn";
 
-            Button11.Enabled = false;
-            Button11.CssClass = "form-control form-control-sm";
+            BtnTrabPed.Enabled = false;
+            BtnTrabPed.CssClass = "btn-outline-dark btn btn-white btn-sm btn full-width-btn";
 
-            Button9.Enabled = false;
-            Button9.CssClass = "form-control form-control-sm";
-
-            Button10.Enabled = false;
-            Button10.CssClass = "form-control form-control-sm";
+            BtnDesPed.Enabled = false;
+            BtnDesPed.CssClass = "btn-outline-dark btn btn-white btn-sm btn full-width-btn";
 
 
 
