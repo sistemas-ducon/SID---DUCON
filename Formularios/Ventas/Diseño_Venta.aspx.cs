@@ -3222,7 +3222,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
                         command.Parameters.AddWithValue("@PasarACotizar", valorCheckBox23);
-                        command.Parameters.AddWithValue("@Urgente", valorCheckBox24);
+                        command.Parameters.AddWithValue("@Urgente", 0);
                         command.Parameters.AddWithValue("@PlanoBitacora", TextPla.Text);
                         command.Parameters.AddWithValue("@Nombre_Diseño", TextProyecto.Text);
 
