@@ -3844,6 +3844,32 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return pedidoBaseValue;
         }
 
+        private int ObtenerPedidoBaseValueModificar()
+        {
+            int pedidoBaseValue = 1; // Valor predeterminado
+
+            // Obtener el valor de ObtenerConsecutivoPedido y sumar 1
+            int consecutivoPedido = ObtenerConsecutivoPedidoSinSuma();
+
+            // Verificar si cboPedidoBase tiene datos y si el valor es un número
+            if (!string.IsNullOrEmpty(cboPedidoBase.SelectedValue) && int.TryParse(cboPedidoBase.SelectedValue, out int cboValue))
+            {
+                pedidoBaseValue = cboValue;
+            }
+            else
+            {
+                if (consecutivoPedido != 0)
+                {
+                    pedidoBaseValue = consecutivoPedido;
+                }
+                else
+                {
+
+                }
+            }
+
+            return pedidoBaseValue;
+        }
 
         protected int ObtenerConsecutivoPedido()
         {
@@ -3868,6 +3894,36 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     {
                         // Convertir el resultado a entero
                         nuevoConsecutivo = Convert.ToInt32(result) + 1;
+                    }
+                }
+            }
+
+            return nuevoConsecutivo;
+        }
+
+        protected int ObtenerConsecutivoPedidoSinSuma()
+        {
+            int nuevoConsecutivo = 0;
+
+            // Utilizar un bloque using para garantizar la liberación de recursos
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                connection.Open();
+
+                // Crear un nuevo comando SQL
+                using (SqlCommand command = new SqlCommand("SELECT MAX(Consecutivo_Pedido) FROM tblOT WHERE Id_OT = LTRIM(RTRIM(@Id_OT));", connection))
+                {
+                    // Añadir parámetro
+                    command.Parameters.AddWithValue("@Id_OT", tbOT.Text);
+
+                    // Ejecutar la consulta y obtener el resultado
+                    object result = command.ExecuteScalar();
+
+                    // Verificar si el resultado no es nulo
+                    if (result != null && result != DBNull.Value)
+                    {
+                        // Convertir el resultado a entero
+                        nuevoConsecutivo = Convert.ToInt32(result);
                     }
                 }
             }
@@ -4275,7 +4331,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                int pedidoBaseValue = ObtenerPedidoBaseValue();
+                int pedidoBaseValue = ObtenerPedidoBaseValueModificar();
 
                 string[] valoresDDL = ddlCiudad.SelectedValue.Split('-');
 

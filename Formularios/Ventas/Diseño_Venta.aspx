@@ -921,13 +921,13 @@
 
                         <div class="container-fluid m-2">
                             <div class="row justify-content-center">
-                                <div class="border rounded p-1 special-border col-11" style="height: auto; min-height: 880px;">
+                                <div class="border shadow rounded p-1 special-border col-11" style="height: auto; min-height: 880px;">
 
                                     <div class="row">
                                         <div class="col-lg-10 col-md-9 col-sm-9 col-xs-12">
                                             <div class="container-fluid m-1">
                                                 <div class="row justify-content-center">
-                                                    <div class="border rounded p-1 special-border" style="height: auto; min-height: 212px;">
+                                                    <div class="border rounded p-1 special-border shadow" style="height: auto; min-height: 212px;">
                                                         <%-- DATAGRID--%>
 
                                                         <div class="table-responsive mb-2 gap-2" style="max-height: 212px; overflow-x: auto;">
@@ -988,7 +988,7 @@
                                                 <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                                                     <div class="input-group input-group-sm mt-1 gap-2">
                                                         <asp:Label ID="lbZona" runat="server" class="col-form-label-sm">Zona</asp:Label>
-                                                        <asp:DropDownList ID="DropDownListOptions" runat="server" CssClass="form-control-sm form-control" OnSelectedIndexChanged="DropDownListOptions_SelectedIndexChanged" AutoPostBack="true">
+                                                        <asp:DropDownList ID="DropDownListOptions" runat="server" CssClass="form-control-sm form-control shadow-sm linkButtonClicked2" OnSelectedIndexChanged="DropDownListOptions_SelectedIndexChanged" AutoPostBack="true">
                                                             <asp:ListItem Text="%" Value="%" />
                                                             <asp:ListItem Text="01" Value="01" />
                                                             <asp:ListItem Text="02" Value="02" />
@@ -1058,6 +1058,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                  </div>
 
                                                 <div id="modal2" class="modal fade" tabindex="-1" role="dialog">
                                                     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -1089,22 +1090,22 @@
 
                                                 <div class="row">
                                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-1">
-                                                        <asp:Button ID="Button9" runat="server" Text="Trabajar Pedido" CssClass="btn-outline-dark btn btn-white btn-sm btn" OnClick="Button9_Click" />
+                                                        <asp:Button ID="BtnTrabPed" runat="server" Text="Trabajar Pedido" CssClass="btn-outline-dark btn btn-white btn-sm btn full-width-btn" OnClick="Button9_Click" />
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-1">
-                                                        <asp:Button ID="Button10" runat="server" Text="Trabajar Pedido" CssClass="btn-outline-dark btn btn-white btn-sm btn" OnClick="Button10_Click" />
+                                                <div class="row mt-2">
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                        <asp:Button ID="BtnDesPed" runat="server" Text="Desprogramar" CssClass="btn-outline-dark btn btn-white btn-sm btn full-width-btn" OnClick="Button10_Click" />
                                                     </div>
                                                 </div>
-                                            </div>
+                                          
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-10 col-md-9 col-sm-9 col-xs-12">
                                             <div class="container-fluid m-1">
                                                 <div class="row justify-content-center">
-                                                    <div class="border rounded p-1 special-border" style="height: auto; min-height: 212px;">
+                                                    <div class="border rounded p-1 special-border shadow" style="height: auto; min-height: 212px;">
                                                         <%-- DATAGRID--%>
                                                         <div class="table-responsive mb-2 gap-2" style="max-height: 212px; overflow-x: auto;">
                                                             <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid2" runat="server"  AutoGenerateColumns="false"
@@ -1164,17 +1165,17 @@
                                             <div class="row">
                                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-1">
                                                     <asp:Label runat="server" class="col-form-label-sm" Enabled="true">Pacto de entrega</asp:Label>
-                                                    <asp:TextBox ID="TextBox37" runat="server" CssClass="form-control-sm form-control" type="Date"></asp:TextBox>
+                                                    <asp:TextBox ID="TextBox37" runat="server" CssClass="form-control-sm form-control full-width-btn linkButtonClicked2 shadow-sm" type="Date"></asp:TextBox>
                                                 </div>
-                                                <div class="row">
+                                                 </div>
+                                                <div class="row mt-2">
                                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-1">
-                                                        <asp:Button ID="Button11" runat="server" Text="Trabajar Diseño" class="btn-outline-dark btn btn-white btn-sm btn animate__animated animate__pulse" />
+                                                        <asp:Button ID="BtnTrabDis" runat="server" Text="Trabajar Diseño" class="btn-outline-dark btn btn-white btn-sm btn full-width-btn" />
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row">
+                                            <div class="row mt-2">
                                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-1">
-                                                    <asp:Button ID="Button14" runat="server" Text="Desprogramar" class="btn-outline-dark btn btn-white btn-sm btn animate__animated animate__pulse" />
+                                                    <asp:Button ID="BtnDesDis" runat="server" Text="Desprogramar" class="btn-outline-dark btn btn-white btn-sm btn full-width-btn" />
                                                 </div>
                                             </div>
                                         </div>
@@ -1183,7 +1184,7 @@
                                         <div class="col-lg-10 col-md-9 col-sm-9 col-xs-12">
                                             <div class="container-fluid m-1">
                                                 <div class="row justify-content-center">
-                                                    <div class="border rounded p-1 special-border" style="height: auto; min-height: 212px;">
+                                                    <div class="border rounded p-1 special-border shadow" style="height: auto; min-height: 212px;">
                                                         <%-- DATAGRID--%>
                                                         <div class="table-responsive mb-2 gap-2" style="max-height: 212px; overflow-x: auto;">
                                                             <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGridDiseños" runat="server"
@@ -1233,13 +1234,13 @@
                                         </div>
                                         <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
                                             <div class="row">
-                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-1">
-                                                    <asp:Button ID="Button13" runat="server" Text="Trabajar ShowCase" class="btn-outline-dark btn btn-white btn-sm btn animate__animated animate__pulse" />
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <asp:Button ID="BtnTrabShoCas" runat="server" Text="Trabajar ShowCase" class="btn-outline-dark btn btn-white btn-sm btn full-width-btn" />
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-1">
-                                                    <asp:Button ID="Button12" runat="server" Text="Desprogramar" class="btn-outline-dark btn btn-white btn-sm btn animate__animated animate__pulse" />
+                                            <div class="row mt-2">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <asp:Button ID="BtnDesSC" runat="server" Text="Desprogramar" class="btn-outline-dark btn btn-white btn-sm btn full-width-btn" />
                                                 </div>
                                             </div>
                                         </div>
@@ -1248,7 +1249,7 @@
                                         <div class="col-lg-10 col-md-9 col-sm-9 col-xs-12">
                                             <div class="container-fluid m-1">
                                                 <div class="row justify-content-center">
-                                                    <div class="border rounded p-1 special-border" style="height: auto; min-height: 212px;">
+                                                    <div class="border rounded p-1 special-border shadow" style="height: auto; min-height: 212px;">
                                                         <%-- DATAGRID--%>
                                                         <div class="table-responsive mb-2 gap-2" style="max-height: 212px; overflow-x: auto;">
                                                             <asp:DataGrid CssClass="table table-bordered table-hover table-sm form-control-sm" ID="DataGridRender" runat="server"
@@ -1297,12 +1298,12 @@
                                         <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
                                             <div class="row">
                                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                    <asp:Button ID="Button15" runat="server" Text="Trabajar Render" class="btn-outline-dark btn btn-white btn-sm btn animate__animated animate__pulse" />
+                                                    <asp:Button ID="BtnTrabRen" runat="server" Text="Trabajar Render" class="btn-outline-dark btn btn-white btn-sm btn full-width-btn" />
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row mt-2">
                                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                    <asp:Button ID="Button16" runat="server" Text="Desprogramar" class="btn-outline-dark btn btn-white btn-sm btn animate__animated animate__pulse" />
+                                                    <asp:Button ID="BtnDesRen" runat="server" Text="Desprogramar" class="btn-outline-dark btn btn-white btn-sm btn full-width-btn" />
                                                 </div>
                                             </div>
                                         </div>

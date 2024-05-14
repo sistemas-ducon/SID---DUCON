@@ -188,4 +188,6 @@
     overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
     text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
 }
-
+.full-width-btn{
+    width: 90%;
+}
