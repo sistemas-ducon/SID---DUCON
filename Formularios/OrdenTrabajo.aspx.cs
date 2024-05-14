@@ -2884,7 +2884,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 SqlCommand command = new SqlCommand("cta_Plano_Paneles", connection);
                 command.CommandType = CommandType.StoredProcedure;
 
-                command.Parameters.Add("@Plan", SqlDbType.VarChar, 30).Value = txtPlano.Text;
+                command.Parameters.Add("@Plan", SqlDbType.VarChar, 100).Value = txtPlano.Text;
 
 
                 SqlDataAdapter adapter = new SqlDataAdapter(command);

@@ -133,26 +133,28 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 {
                     SqlCommand command = new SqlCommand("sp_DatoModulo", connection);
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add("@Id_PanelNum", SqlDbType.VarChar, 30).Value = IdPanelNum;
+                    command.Parameters.Add("@Id_PanelNum", SqlDbType.VarChar, 100).Value = IdPanelNum;
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
                     adapter.Fill(DatosModulo);
                 }
 
-                string Id_Modulo = DatosModulo.Rows[0]["Id_Modulo"].ToString();
-                Session["Id_ModuloSession"] = Id_Modulo;
+                if (DatosModulo.Rows.Count > 0)
+                {
+                    string Id_Modulo = DatosModulo.Rows[0]["Id_Modulo"].ToString();
+                    Session["Id_ModuloSession"] = Id_Modulo;
 
-                tbObj.Text = DatosModulo.Rows[0]["Id_Panel"].ToString();
-                tbDiv.Text = DatosModulo.Rows[0]["Divisiones"].ToString();
-                tbLinea.Text = DatosModulo.Rows[0]["Descripcion_Linea"].ToString();
-                tbGrupo.Text = DatosModulo.Rows[0]["Descripcion_Grupo"].ToString(); ;
-                tbAncho.Text = DatosModulo.Rows[0]["Ancho"].ToString() + " Cms";
-                tbAltura.Text = DatosModulo.Rows[0]["Altura"].ToString() + " Cms";
-                tbProfunididad.Text = DatosModulo.Rows[0]["Profundidad"].ToString();
-                tbHolgura.Text = DatosModulo.Rows[0]["Holgura"].ToString();
-                tbDesSid.Text = DatosModulo.Rows[0]["Descripcion_Panel"].ToString();
-                tbValor.Text = ""; // Este Valor no esta en la consulta 
-                chxEsc.Checked =Convert.ToBoolean( DatosModulo.Rows[0]["Escalable"].ToString());
-
+                    tbObj.Text = DatosModulo.Rows[0]["Id_Panel"].ToString();
+                    tbDiv.Text = DatosModulo.Rows[0]["Divisiones"].ToString();
+                    tbLinea.Text = DatosModulo.Rows[0]["Descripcion_Linea"].ToString();
+                    tbGrupo.Text = DatosModulo.Rows[0]["Descripcion_Grupo"].ToString(); ;
+                    tbAncho.Text = DatosModulo.Rows[0]["Ancho"].ToString() + " Cms";
+                    tbAltura.Text = DatosModulo.Rows[0]["Altura"].ToString() + " Cms";
+                    tbProfunididad.Text = DatosModulo.Rows[0]["Profundidad"].ToString();
+                    tbHolgura.Text = DatosModulo.Rows[0]["Holgura"].ToString();
+                    tbDesSid.Text = DatosModulo.Rows[0]["Descripcion_Panel"].ToString();
+                    tbValor.Text = ""; // Este Valor no esta en la consulta 
+                    chxEsc.Checked = Convert.ToBoolean(DatosModulo.Rows[0]["Escalable"].ToString());
+                }
 
                 DataGridObjetos.DataSource = DatosModulo;
                 DataGridObjetos.DataBind();
@@ -178,7 +180,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     SqlCommand command = new SqlCommand("ctaModulo_Insumos", connection);
                     command.CommandType = CommandType.StoredProcedure;
 
-                    command.Parameters.Add("@Modulo", SqlDbType.VarChar, 30).Value = IdModulo;
+                    command.Parameters.Add("@Modulo", SqlDbType.VarChar, 100).Value = IdModulo;
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
                     adapter.Fill(DatosModulo1);
 
@@ -242,7 +244,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 {
                     SqlCommand command = new SqlCommand("SELECT  tblPanel.Id_Numerico, tblGrupoObjeto.FactorMODucon, tblGrupoObjeto.FactorImprevistoDucon FROM tblPanel INNER JOIN tblGrupoObjeto ON tblPanel.Id_GrupoObjeto = tblGrupoObjeto.ID_GrupoObjeto   Where tblPanel.Id_Numerico = @Id_PanelNum", connection);
                     command.CommandType = CommandType.Text;
-                    command.Parameters.Add("@Id_PanelNum", SqlDbType.VarChar, 30).Value = IdPanelNum;
+                    command.Parameters.Add("@Id_PanelNum", SqlDbType.VarChar, 100).Value = IdPanelNum;
                     DataTable DatosDespieceModulo = new DataTable();
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
                     adapter.Fill(Factores);
@@ -272,7 +274,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     SqlCommand command = new SqlCommand("DespieceObjeto", connection);
                     command.CommandType = CommandType.StoredProcedure;
 
-                    command.Parameters.Add("@P", SqlDbType.VarChar, 30).Value = IdPanelNum;
+                    command.Parameters.Add("@P", SqlDbType.VarChar, 100).Value = IdPanelNum;
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
                     adapter.Fill(DatosModulo1);
 
