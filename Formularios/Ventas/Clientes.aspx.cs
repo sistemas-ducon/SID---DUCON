@@ -218,6 +218,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 }
                 else
                 {
+
+                    LlenarDataGridCotizacion(Nit);
+                    LlenarDataGridVisita(Nit);
+
                     DataGridContacto.DataBind();
                     DataGridCotizacion.DataBind();
                     DataGridVisita.DataBind();
