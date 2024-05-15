@@ -2743,7 +2743,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             LimpiarCamposCotizacion();
 
             // Verificar el contenido del TextBox tbOT
-            if (tbOT.Text == "0209700" || tbOT.Text == "0102000" || tbOT.Text == "0109700")
+            if (tbOT.Text == "0209700" || tbOT.Text == "0102000" || tbOT.Text == "0109700" || tbOT.Text == "0202000")
             {
                 // Mostrar el modal solo si el contenido del TextBox coincide con los valores esperados
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#LlenarNITModificar').modal('show');", true);
@@ -2759,7 +2759,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             txObs2.Value = "Altura Total: \r\nLínea: \r\nTipo de Sujeción: \r\nPerfil Refuerzo Superior: \r\nTipo y Color de Sillas: \r\nObservaciones: \r\n\r\nALMACEN:\r\nCORTE: \r\nMOLDURADO: \r\nCARPINTERIA: \r\nTAPIZADO: \r\nENSAMBLE VIDRIO: \r\nENSAMBLE: \r\nEMPAQUE:  ";
 
             // Verificar el contenido del TextBox tbOT
-            if (tbOT.Text == "0209700" || tbOT.Text == "0102000" || tbOT.Text == "0109700")
+            if (tbOT.Text == "0209700" || tbOT.Text == "0102000" || tbOT.Text == "0109700" || tbOT.Text == "0202000")
             {
                 // Mostrar el modal solo si el contenido del TextBox coincide con los valores esperados
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#LlenarNITModificar').modal('show');", true);
