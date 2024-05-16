@@ -32,12 +32,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
 
         protected void bOrdeDeTraba_Click(object sender, EventArgs e)
         {
-            
-		}
-		protected void TreeView1_SelectedNodeChanged(object sender, EventArgs e)
-		{
 
-		}
+        }
+        protected void TreeView1_SelectedNodeChanged(object sender, EventArgs e)
+        {
+
+        }
 
         protected void GerenciaComercial_Click(object sender, EventArgs e)
         {
@@ -87,6 +87,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
                 case "PersonaCliente":
                     pageURL = "Ventas/Empleado.aspx";
                     break;
+                case "BitacoraDesarrollo":
+                    pageURL = "Ventas/Solicitud_Especial.aspx";
+                    break;
                 default:
                     // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí
                     break;
@@ -133,7 +136,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
             }
             else
             {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalPendiente').modal('show');", true);
+
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewPage", "window.open('" + pageURL + "', '_blank');", true);
+                //ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalPendiente').modal('show');", true);
 
                 //ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewTab", "window.open('" + pageURL + "', '_blank');", true);
             }
@@ -265,7 +270,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
 
         protected void Recepcion_Click(object sender, EventArgs e)
         {
-            
+
 
             LinkButton btn = (LinkButton)sender;
 
@@ -276,11 +281,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
                 case "IngresarCotizacion":
                     pageURL = "Recepcion/IngresarCotizacion.aspx";
                     break;
-               case "TablaDiseños":
+                case "TablaDiseños":
                     Session["Diseno"] = "Recepcion";
                     pageURL = "Ventas/Diseño_Venta.aspx";
                     break;
-            
+
                 default:
                     // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí
                     break;
@@ -366,7 +371,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
 
         protected void ValidarPermiso_Ventas(object sender, EventArgs e)
         {
-           
+
 
             LinkButton btn = (LinkButton)sender;
 

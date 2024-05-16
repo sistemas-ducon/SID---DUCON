@@ -138,9 +138,32 @@
                 }
             }
 
+
+            var Visita = '<%= Session["InsertUpdateVisita"] %>';
+
+            if (Visita === "Insertar") {
+                // Habilitar enlaces 
+                document.getElementById("GrabarVisita").classList.add("enabled");
+                document.getElementById("CancelarVisita").classList.add("enabled");
+                // Deshabilitar enlaces
+                document.getElementById("NuevaVisita").classList.remove("enabled");
+                document.getElementById("NuevaVisita").classList.add("disabled");
+
+
+            } else if (Visita === "Actualizar") {
+                // Habilitar enlaces 
+                document.getElementById("GrabarVisita").classList.add("enabled");
+                document.getElementById("CancelarVisita").classList.add("enabled");
+                // Deshabilitar enlaces
+                document.getElementById("NuevaVisita").classList.remove("enabled");
+                document.getElementById("ModificarVisita").classList.remove("enabled");
+                document.getElementById("ModificarVisita").classList.add("disabled");
+                document.getElementById("Exportar").classList.add("disabled");
+
+
+            }
+
         }
-
-
         function Estadistica() {
             var boton1 = document.getElementById("<%= Button2.ClientID %>");
             boton1.disabled = true;
@@ -703,12 +726,35 @@
         document.getElementById("fecha6").value = fechaFormateada;
 
 
-        // Habilitar enlace Nueva Visita 
-        document.getElementById("NuevaVisita").classList.add("enabled");
+       
         document.getElementById("btnCliente").disabled = true;
 
+        var MN_Vis = '<%= Session["MN_Vis"] %>';
 
+        if (MN_Vis === "1" || MN_Vis === "2")
+        {
+            // Habilitar enlace Nueva Visita 
+            document.getElementById("NuevaVisita").classList.remove("enabled");
+  
+            $.ajax({
+                type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                url: "Visita_Asesores.aspx/MN_Vis", // La URL debe apuntar al método en el servidor
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                },
+                error: function (error) {
+                    // Manejar errores si los hay
+                }
+            });
+        } else
+        {
+            document.getElementById("NuevaVisita").classList.add("enabled");
 
+        }
+       
+       
         // Ocultar el div con clase "contenedor-icono" cuando se activa la pestaña "Info-content" 
         $(document).ready(function () {
             $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -821,7 +867,18 @@
             var fecha2 = document.getElementById("<%= fecha2.ClientID %>");
             fecha2.disabled = false;
 
-
+            $.ajax({
+                type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                url: "Visita_Asesores.aspx/Cancelar", // La URL debe apuntar al método en el servidor
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                },
+                error: function (error) {
+                    // Manejar errores si los hay
+                }
+            });
         }
 
         function ModificarVisita() {
