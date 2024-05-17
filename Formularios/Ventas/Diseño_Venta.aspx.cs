@@ -67,6 +67,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     {
                         Page_LoadDiseño();
                     }
+
+                    TextPacEnt.Text = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
                 }
             }
             else
@@ -92,7 +94,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             DeshabilitarDivYContenido(miDiv);
             CheckBox22.Checked = isModalVisible;
 
-
+            
 
             LinkButton1.Enabled = false;
             LinkButton1.CssClass = "btn btn-sm button-disabled";
@@ -110,7 +112,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             LinkButton2.CssClass = "btn btn-sm button-disabled";
 
             Session.Remove("EventoItemCommandEjecutado");
-
+            Session.Remove("ClickCount");
+            Session.Remove("NumDis1");
+            Session.Remove("Id_OTdise1");
+            Session.Remove("Id_OTdise2");
+            Session.Remove("NumSC");
         }
 
         protected void Page_LoadVentas()
@@ -542,42 +548,103 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session["lnkClieClicked"] = true;
         }
 
-        protected void CargarOT_Click(object sender, EventArgs e)
+        protected void DataGrid1_ItemCommand(object source, DataGridCommandEventArgs e)
         {
-            Session.Remove("lnkClieClicked");
-            Session.Remove("lnkClieeClicked");
 
-            // Obtén el LinkButton que se hizo clic
-            LinkButton lnkSelectRow = (LinkButton)sender;
-
-            // Obtén el índice de fila desde el CommandArgument
-            int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
-
-            // Accede a la fila seleccionada en el DataGrid
-            DataGridItem selectedRow = DataGrid1.Items[rowIndex];
-
-            // Almacena el valor de Id_OT en una variable de sesión
-            Session["Id_OT2"] = selectedRow.Cells[2].Text;
-
-            // Almacena el nombre del archivo en la variable de sesión
-            Session["pedido2"] = selectedRow.Cells[3].Text;
-
-            // Deselecciona todas las filas previamente seleccionadas
-            foreach (DataGridItem item in DataGrid1.Items)
+            if (e.CommandName == "Id_OT")
             {
-                if (item != selectedRow)
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGrid1.Items[rowIndex];
+
+                // Se utiliza para darle el color solo a la fila seleccionada 
+                foreach (DataGridItem item in DataGrid1.Items)
                 {
-                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+                //se usa Para darle un color a la fila seleccionada  anderson
+                e.Item.CssClass = "fila-seleccionada1";
+
+
+
+                Session["Id_OT2"] = row.Cells[2].Text;
+                Session["pedido2"] = row.Cells[3].Text;
+
+                string tipoAccion = Session["Diseno"] as string;
+                if (tipoAccion == "Diseño")
+                {
+                    // Se compara si el click es en la misma fila
+                    if (row.Cells[2].Text == Session["Id_OTdise1"]?.ToString() && (row.Cells[3].Text == Session["Id_OTdise2"]?.ToString()))
+                    {
+                        // Incrementar la variable de sesión "ClickCount" en el servidor
+                        int clickCount = Convert.ToInt32(Session["ClickCount"]) + 1;
+                        Session["ClickCount"] = clickCount;
+
+                        // se valida si es el segundo click en la misma fila 
+                        if (clickCount == 2)
+                        {
+
+                            Session.Remove("lnkClieClicked");
+                            Session.Remove("lnkClieeClicked");
+
+
+
+                            string mensajePersonalizado = "Se cargara la OT seleccionada";
+                            string urlRedireccion = "OrdenTrabajo.aspx";
+                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+                            Session.Remove("ClickCount");
+                            Session.Remove("Id_OTdise1");
+                            Session.Remove("Id_OTdise2");
+                        }
+
+                    }
+                    else
+                    {
+                        // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
+                        Session["ClickCount"] = 1;
+                        Session["Id_OTdise1"] = row.Cells[2].Text;
+                        Session["Id_OTdise2"] = row.Cells[3].Text;
+
+                        BtnTrabPed.Enabled = true;
+                        BtnTrabPed.CssClass = "btn btn-sm button-enabled linkButtonClicked2 shadow-sm full-width-btn";
+
+                        BtnDesPed.Enabled = true;
+                        BtnDesPed.CssClass = "btn btn-sm button-enabled linkButtonClicked2 shadow-sm full-width-btn";
+
+                        BtnTrabDis.Enabled = false;
+                        BtnTrabDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                        BtnDesDis.Enabled = false;
+                        BtnDesDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                        BtnTrabShoCas.Enabled = false;
+                        BtnTrabShoCas.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                        BtnDesSC.Enabled = false;
+                        BtnDesSC.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                        BtnTrabRen.Enabled = false;
+                        BtnTrabRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                        BtnDesRen.Enabled = false;
+                        BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                    }
+                }
+                if(tipoAccion == "Ventas")
+                {
+                    Session.Remove("lnkClieClicked");
+                    Session.Remove("lnkClieeClicked");
+
+                    string mensajePersonalizado = "Se cargara la OT seleccionada";
+                    string urlRedireccion = "OrdenTrabajo.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                 }
             }
-
-            // Aplica la clase CSS a la fila seleccionada
-            selectedRow.CssClass = "selected-row";
-
-            string mensajePersonalizado = "Se cargara la OT seleccionada";
-            string urlRedireccion = "OrdenTrabajo.aspx";
-            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-
 
 
         }
@@ -1237,9 +1304,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private void DeshabilitarDivYContenido(System.Web.UI.Control container)
         {
-            string tipoAccion = Session["Diseno"] as string;
-            if (tipoAccion == "Ventas")
-            {
+          
 
                 BtnDesRen.Enabled = false;
                 BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
@@ -1265,53 +1330,26 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 BtnDesPed.Enabled = false;
                 BtnDesPed.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-            }
-            if (tipoAccion == "Diseño")
-            {
-                BtnTrabPed.Enabled = true;
-                BtnTrabPed.CssClass = "btn btn-sm button-enabled shadow linkButtonClicked2 full-width-btn";
-
-                BtnDesPed.Enabled = true;
-                BtnDesPed.CssClass = "btn btn-sm button-enabled shadow linkButtonClicked2 full-width-btn";
-
-                BtnTrabDis.Enabled = true;
-                BtnTrabDis.CssClass = "btn btn-sm button-enabled shadow linkButtonClicked2 full-width-btn";
-
-                BtnDesDis.Enabled = true;
-                BtnDesDis.CssClass = "btn btn-sm button-enabled shadow linkButtonClicked2 full-width-btn";
-
-                BtnTrabShoCas.Enabled = true;
-                BtnTrabShoCas.CssClass = "btn btn-sm button-enabled shadow linkButtonClicked2 full-width-btn";
-
-                BtnDesSC.Enabled = true;
-                BtnDesSC.CssClass = "btn btn-sm button-enabled shadow linkButtonClicked2 full-width-btn";
-
-                BtnTrabRen.Enabled = true;
-                BtnTrabRen.CssClass = "btn btn-sm button-enabled shadow linkButtonClicked2 full-width-btn";
-
-                BtnDesRen.Enabled = true;
-                BtnDesRen.CssClass = "btn btn-sm button-enabled shadow linkButtonClicked2 full-width-btn";
-            }
 
             TextPla.Enabled = false;
-            TextPla.CssClass = "form-control form-control-sm";
+            TextPla.CssClass = "form-control form-control-sm linkButtonClicked";
 
             TextCliente.Enabled = false;
-            TextCliente.CssClass = "form-control form-control-sm";
+            TextCliente.CssClass = "form-control form-control-sm linkButtonClicked";
 
             Button1.Enabled = false;
 
             TextDir.Enabled = false;
-            TextDir.CssClass = "form-control form-control-sm";
+            TextDir.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblDir.Enabled = false;
             lblDir.CssClass = "col-form-label-sm";
 
             TextDes.Enabled = false;
-            TextDes.CssClass = "form-control form-control-sm";
+            TextDes.CssClass = "form-control form-control-sm linkButtonClicked";
 
             TextIngDis.Enabled = false;
-            TextIngDis.CssClass = "form-control form-control-sm";
+            TextIngDis.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblDescuento.Enabled = false;
             lblDescuento.CssClass = "col-form-label-sm";
@@ -1323,13 +1361,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblUltAct.CssClass = "col-form-label-sm";
 
             TextUltAc.Enabled = false;
-            TextUltAc.CssClass = "form-control form-control-sm";
+            TextUltAc.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblPro.Enabled = false;
             lblPro.CssClass = "col-form-label-sm";
 
             TextProyecto.Enabled = false;
-            TextProyecto.CssClass = "form-control form-control-sm";
+            TextProyecto.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblPla.Enabled = false;
             lblPla.CssClass = "col-form-label-sm";
@@ -1348,25 +1386,25 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblEnt.CssClass = "col-form-label-sm";
 
             TextEntrega.Enabled = false;
-            TextEntrega.CssClass = "form-control form-control-sm";
+            TextEntrega.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblEntDib.Enabled = false;
             lblEntDib.CssClass = "col-form-label-sm";
 
             TextFecOkDib.Enabled = false;
-            TextFecOkDib.CssClass = "form-control form-control-sm";
+            TextFecOkDib.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblZon.Enabled = false;
             lblZon.CssClass = "col-form-label-sm";
 
             TextZona.Enabled = false;
-            TextZona.CssClass = "form-control form-control-sm";
+            TextZona.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblCon.Enabled = false;
             lblCon.CssClass = "col-form-label-sm";
 
             TextContacto.Enabled = false;
-            TextContacto.CssClass = "form-control form-control-sm";
+            TextContacto.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblTel.Enabled = false;
             lblNumDise.CssClass = "col-form-label-sm";
@@ -1394,30 +1432,31 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblAse.CssClass = "col-form-label-sm";
 
             DropDownList1.Enabled = false;
+            DropDownList1.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblPre.Enabled = false;
             lblPre.CssClass = "col-form-label-sm";
 
             TextPre.Enabled = false;
-            TextPre.CssClass = "form-control form-control-sm";
+            TextPre.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblCel.Enabled = false;
             lblCel.CssClass = "col-form-label-sm";
 
             TextCel.Enabled = false;
-            TextCel.CssClass = "form-control form-control-sm";
+            TextCel.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblMai.Enabled = false;
             lblMai.CssClass = "col-form-label-sm";
 
             TextMail.Enabled = false;
-            TextMail.CssClass = "form-control form-control-sm";
+            TextMail.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblCiuPro.Enabled = false;
             lblCiuPro.CssClass = "col-form-label-sm";
 
             TextCiuPro.Enabled = false;
-            TextCiuPro.CssClass = "form-control form-control-sm";
+            TextCiuPro.CssClass = "form-control form-control-sm linkButtonClicked";
 
 
 
@@ -1480,6 +1519,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblHTotCms.CssClass = "col-form-label-sm";
 
             TexHTot.Enabled = false;
+            TexHTot.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblEsyMat.Enabled = false;
             lblEsyMat.CssClass = "col-form-label-sm";
@@ -1488,19 +1528,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblLin.CssClass = "col-form-label-sm";
 
             TextLin.Enabled = false;
-            TextLin.CssClass = "form-control form-control-sm";
+            TextLin.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblMos.Enabled = false;
             lblMos.CssClass = "col-form-label-sm";
 
             TextMos.Enabled = false;
-            TextMos.CssClass = "form-control form-control-sm";
+            TextMos.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblSup.Enabled = false;
             lblSup.CssClass = "col-form-label-sm";
 
             TextSup.Enabled = false;
-            TextSup.CssClass = "form-control form-control-sm";
+            TextSup.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblBal.Enabled = false;
             lblBal.CssClass = "col-form-label-sm";
@@ -1511,49 +1551,49 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblSop.CssClass = "col-form-label-sm";
 
             TextSop.Enabled = false;
-            TextSop.CssClass = "form-control form-control-sm";
+            TextSop.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblGav.Enabled = false;
             lblGav.CssClass = "col-form-label-sm";
 
             TextGav.Enabled = false;
-            TextGav.CssClass = "form-control form-control-sm";
+            TextGav.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblPan.Enabled = false;
             lblPan.CssClass = "col-form-label-sm";
 
             TextPan.Enabled = false;
-            TextPan.CssClass = "form-control form-control-sm";
+            TextPan.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblTPie.Enabled = false;
             lblTPie.CssClass = "col-form-label-sm";
 
             TextTapPie.Enabled = false;
-            TextTapPie.CssClass = "form-control form-control-sm";
+            TextTapPie.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblRep.Enabled = false;
             lblRep.CssClass = "col-form-label-sm";
 
             TextRep.Enabled = false;
-            TextRep.CssClass = "form-control form-control-sm";
+            TextRep.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblTipVid.Enabled = false;
             lblTipVid.CssClass = "col-form-label-sm";
 
             TextTipVid.Enabled = false;
-            TextTipVid.CssClass = "form-control form-control-sm";
+            TextTipVid.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblPant.Enabled = false;
             lblPant.CssClass = "col-form-label-sm";
 
             TextPant.Enabled = false;
-            TextPant.CssClass = "form-control form-control-sm";
+            TextPant.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblArc.Enabled = false;
             lblArc.CssClass = "col-form-label-sm";
 
             TextArch.Enabled = false;
-            TextArch.CssClass = "form-control form-control-sm";
+            TextArch.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblMue.Enabled = false;
             lblMue.CssClass = "col-form-label-sm";
@@ -1564,19 +1604,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblCoc.CssClass = "col-form-label-sm";
 
             TextCoc.Enabled = false;
-            TextCoc.CssClass = "form-control form-control-sm";
+            TextCoc.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblEntr.Enabled = false;
             lblEntr.CssClass = "col-form-label-sm";
 
             TextEnt.Enabled = false;
-            TextEnt.CssClass = "form-control form-control-sm";
+            TextEnt.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblPuer.Enabled = false;
             lblPuer.CssClass = "col-form-label-sm";
 
             TextPuer.Enabled = false;
-            TextPuer.CssClass = "form-control form-control-sm";
+            TextPuer.CssClass = "form-control form-control-sm linkButtonClicked";
 
             CheckBox18.Enabled = false;
 
@@ -1599,10 +1639,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblTieRea.CssClass = "col-form-label-sm";
 
             TextFec.Enabled = false;
-            TextFec.CssClass = "form-control form-control-sm";
+            TextFec.CssClass = "form-control form-control-sm linkButtonClicked";
 
             TextFech.Enabled = false;
-            TextFech.CssClass = "form-control form-control-sm";
+            TextFech.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblUbi.Enabled = false;
             TextUbi.CssClass = "col-form-label-sm";
@@ -1863,8 +1903,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     if (control != BtnProgramar)
                     {
                         // Si el control no es el botón BtnProgramar, habilitarlo
-                        ((System.Web.UI.WebControls.WebControl)control).Enabled = true;
+                        ((System.Web.UI.WebControls.WebControl)control).Enabled = true;            
                     }
+
+                    if (control is System.Web.UI.WebControls.TextBox)
+                    {
+                        // Si el control es un TextBox, agregar la clase CSS deseada
+                        ((System.Web.UI.WebControls.TextBox)control).CssClass += "form-control form-control-sm linkButtonClicked2 shadow-sm";
+                    }
+                    if (control is System.Web.UI.WebControls.DropDownList)
+                    {
+                        // Si el control es un DropDownList, agregar la clase CSS deseada
+                        ((System.Web.UI.WebControls.DropDownList)control).CssClass += " form-control form-control-sm linkButtonClicked2 shadow-sm";
+                    }
+
                 }
 
                 // Si el control es un contenedor, llamar recursivamente a la función
@@ -2002,14 +2054,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Almacena el nombre del archivo en la variable de sesión
             Session["NumeroDiseño"] = selectedRow.Cells[2].Text;
 
-            // Deselecciona todas las filas previamente seleccionadas
-            foreach (DataGridItem item in DataGrid2.Items)
-            {
-                if (item != selectedRow)
-                {
-                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
-                }
-            }
+           
             AccionesAlCargarDiseño();
 
         }
@@ -2585,21 +2630,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             TextCliente.Enabled = false;
-            TextCliente.CssClass = "form-control form-control-sm";
+            TextCliente.CssClass = "form-control form-control-sm linkButtonClicked";
 
             Button1.Enabled = false;
 
             TextDir.Enabled = false;
-            TextDir.CssClass = "form-control form-control-sm";
+            TextDir.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblDir.Enabled = false;
             lblDir.CssClass = "col-form-label-sm";
 
             TextDes.Enabled = false;
-            TextDes.CssClass = "form-control form-control-sm";
+            TextDes.CssClass = "form-control form-control-sm linkButtonClicked";
 
             TextIngDis.Enabled = false;
-            TextIngDis.CssClass = "form-control form-control-sm";
+            TextIngDis.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblDescuento.Enabled = false;
             lblDescuento.CssClass = "col-form-label-sm";
@@ -2611,13 +2656,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblUltAct.CssClass = "col-form-label-sm";
 
             TextUltAc.Enabled = false;
-            TextUltAc.CssClass = "form-control form-control-sm";
+            TextUltAc.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblPro.Enabled = false;
             lblPro.CssClass = "col-form-label-sm";
 
             TextProyecto.Enabled = false;
-            TextProyecto.CssClass = "form-control form-control-sm";
+            TextProyecto.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblPla.Enabled = false;
             lblPla.CssClass = "col-form-label-sm";
@@ -2636,31 +2681,31 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblEnt.CssClass = "col-form-label-sm";
 
             TextEntrega.Enabled = false;
-            TextEntrega.CssClass = "form-control form-control-sm";
+            TextEntrega.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblEntDib.Enabled = false;
             lblEntDib.CssClass = "col-form-label-sm";
 
             TextFecOkDib.Enabled = false;
-            TextFecOkDib.CssClass = "form-control form-control-sm";
+            TextFecOkDib.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblZon.Enabled = false;
             lblZon.CssClass = "col-form-label-sm";
 
             TextZona.Enabled = false;
-            TextZona.CssClass = "form-control form-control-sm";
+            TextZona.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblCon.Enabled = false;
             lblCon.CssClass = "col-form-label-sm";
 
             TextContacto.Enabled = false;
-            TextContacto.CssClass = "form-control form-control-sm";
+            TextContacto.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblTel.Enabled = false;
             lblNumDise.CssClass = "col-form-label-sm";
 
             TextTel.Enabled = false;
-            TextTel.CssClass = "form-control form-control-sm";
+            TextTel.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblMaiTer.Enabled = false;
             lblMaiTer.CssClass = "col-form-label-sm";
@@ -2682,30 +2727,31 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblAse.CssClass = "col-form-label-sm";
 
             DropDownList1.Enabled = false;
+            DropDownList1.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblPre.Enabled = false;
             lblPre.CssClass = "col-form-label-sm";
 
             TextPre.Enabled = false;
-            TextPre.CssClass = "form-control form-control-sm";
+            TextPre.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblCel.Enabled = false;
             lblCel.CssClass = "col-form-label-sm";
 
             TextCel.Enabled = false;
-            TextCel.CssClass = "form-control form-control-sm";
+            TextCel.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblMai.Enabled = false;
             lblMai.CssClass = "col-form-label-sm";
 
             TextMail.Enabled = false;
-            TextMail.CssClass = "form-control form-control-sm";
+            TextMail.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblCiuPro.Enabled = false;
             lblCiuPro.CssClass = "col-form-label-sm";
 
             TextCiuPro.Enabled = false;
-            TextCiuPro.CssClass = "form-control form-control-sm";
+            TextCiuPro.CssClass = "form-control form-control-sm linkButtonClicked";
 
             BtnProgramar.Enabled = false;
             BtnProgramar.CssClass = "btn btn-warning shadow btn-sm fw-bold";
@@ -2769,6 +2815,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblHTotCms.CssClass = "col-form-label-sm";
 
             TexHTot.Enabled = false;
+            TexHTot.CssClass = "form-control form-control-sm linkButtonClicked";
 
             lblEsyMat.Enabled = true;
             lblEsyMat.CssClass = "col-form-label-sm";
@@ -2777,19 +2824,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblLin.CssClass = "col-form-label-sm";
 
             TextLin.Enabled = true;
-            TextLin.CssClass = "form-control form-control-sm";
+            TextLin.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
 
             lblMos.Enabled = true;
             lblMos.CssClass = "col-form-label-sm";
 
             TextMos.Enabled = true;
-            TextMos.CssClass = "form-control form-control-sm";
+            TextMos.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
 
             lblSup.Enabled = true;
             lblSup.CssClass = "col-form-label-sm";
 
             TextSup.Enabled = true;
-            TextSup.CssClass = "form-control form-control-sm";
+            TextSup.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
 
             lblBal.Enabled = true;
             lblBal.CssClass = "col-form-label-sm";
@@ -2800,49 +2847,49 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblSop.CssClass = "col-form-label-sm";
 
             TextSop.Enabled = true;
-            TextSop.CssClass = "form-control form-control-sm";
+            TextSop.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
 
             lblGav.Enabled = true;
             lblGav.CssClass = "col-form-label-sm";
 
             TextGav.Enabled = true;
-            TextGav.CssClass = "form-control form-control-sm";
+            TextGav.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
 
             lblPan.Enabled = true;
             lblPan.CssClass = "col-form-label-sm";
 
             TextPan.Enabled = true;
-            TextPan.CssClass = "form-control form-control-sm";
+            TextPan.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
 
             lblTPie.Enabled = true;
             lblTPie.CssClass = "col-form-label-sm";
 
             TextTapPie.Enabled = true;
-            TextTapPie.CssClass = "form-control form-control-sm";
+            TextTapPie.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
 
             lblRep.Enabled = true;
             lblRep.CssClass = "col-form-label-sm";
 
             TextRep.Enabled = true;
-            TextRep.CssClass = "form-control form-control-sm";
+            TextRep.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
 
             lblTipVid.Enabled = true;
             lblTipVid.CssClass = "col-form-label-sm";
 
             TextTipVid.Enabled = true;
-            TextTipVid.CssClass = "form-control form-control-sm";
+            TextTipVid.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
 
             lblPant.Enabled = true;
             lblPant.CssClass = "col-form-label-sm";
 
             TextPant.Enabled = true;
-            TextPant.CssClass = "form-control form-control-sm";
+            TextPant.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
 
             lblArc.Enabled = true;
             lblArc.CssClass = "col-form-label-sm";
 
             TextArch.Enabled = true;
-            TextArch.CssClass = "form-control form-control-sm";
+            TextArch.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
 
             lblMue.Enabled = true;
             lblMue.CssClass = "col-form-label-sm";
@@ -2853,19 +2900,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblCoc.CssClass = "col-form-label-sm";
 
             TextCoc.Enabled = true;
-            TextCoc.CssClass = "form-control form-control-sm";
+            TextCoc.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
 
             lblEntr.Enabled = true;
             lblEntr.CssClass = "col-form-label-sm";
 
             TextEnt.Enabled = true;
-            TextEnt.CssClass = "form-control form-control-sm";
+            TextEnt.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
 
             lblPuer.Enabled = true;
             lblPuer.CssClass = "col-form-label-sm";
 
             TextPuer.Enabled = true;
-            TextPuer.CssClass = "form-control form-control-sm";
+            TextPuer.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
 
             CheckBox18.Enabled = true;
 
@@ -2888,13 +2935,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             lblTieRea.CssClass = "col-form-label-sm";
 
             TextFec.Enabled = true;
-            TextFec.CssClass = "form-control form-control-sm";
+            TextFec.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
 
             TextFech.Enabled = true;
-            TextFech.CssClass = "form-control form-control-sm";
+            TextFech.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
 
             lblUbi.Enabled = true;
-            TextUbi.CssClass = "col-form-label-sm";
+            TextUbi.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
 
 
         }
@@ -3490,15 +3537,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-        protected void Button9_Click(object sender, EventArgs e)
-        {
-            // Lógica para el botón Button9
-        }
-
-        protected void Button10_Click(object sender, EventArgs e)
-        {
-            // Lógica para el botón Button10
-        }
+      
 
         //DATAGRID DISEÑO
         protected void DataGrid2_ItemDataBound(object sender, DataGridItemEventArgs e)
@@ -3512,45 +3551,45 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string FechaEntrega = DataBinder.Eval(e.Item.DataItem, "Fecha_Programada_Entrega").ToString();
                 string urgente = DataBinder.Eval(e.Item.DataItem, "Urgente").ToString();
 
-                if (DateTime.TryParse(FechaEntrega, out DateTime fechaEntrega))
-                {
-                    if (fechaEntrega < DateTime.Now && programadoVentas == "True" && terminadoDibujo == "False" && pausado == "False")
-                    {
+                DateTime fechaActual = DateTime.Now.Date;
 
-                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868"); /* Rojo */
-                        e.Item.ForeColor = System.Drawing.Color.White;
-                    }
-                    else if (programadoVentas == "True" && terminadoDibujo == "False" && pausado == "False" && urgente == "False")
+                if (DateTime.TryParse(FechaEntrega, out DateTime fechaEntrega))
+                {  
+                    if (fechaEntrega >= fechaActual &&  programadoVentas == "True" && terminadoDibujo == "False" && pausado == "False" && urgente == "False")
                     {
                         e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#ead97b"); /* Amarillo */
                         e.Item.ForeColor = System.Drawing.Color.Black;
                     }
-                    else if (programadoVentas == "True" && pasarACotizar == "True" && terminadoDibujo == "True")
+                    if (programadoVentas == "True" && pasarACotizar == "True" && terminadoDibujo == "True")
                     {
                         e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#673f8b"); /* Violeta */
                         e.Item.ForeColor = System.Drawing.Color.White;
                     }
-                    else if (programadoVentas == "False")
+                    if (programadoVentas == "False")
                     {
                         e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#819cba"); /* Azul */
                         e.Item.ForeColor = System.Drawing.Color.White;
                     }
-                    else if (programadoVentas == "True" && pasarACotizar == "False")
+                    if (programadoVentas == "True" && pasarACotizar == "False")
                     {
                         e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#be94b9"); /* Rosado */
                         e.Item.ForeColor = System.Drawing.Color.White;
                     }
-                    else if (pausado == "True")
+                    if (pausado == "True")
                     {
                         e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#74bec6"); /* Celeste */
                         e.Item.ForeColor = System.Drawing.Color.Black;
                     }
-                    else if (urgente == "True" && programadoVentas == "True" && terminadoDibujo == "False" && pausado == "False")
+                    if (urgente == "True" && programadoVentas == "True" && terminadoDibujo == "False" && pausado == "False")
                     {
                         e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#e9a270"); /* Naranja */
                         e.Item.ForeColor = System.Drawing.Color.Black;
                     }
-
+                    if (fechaEntrega < fechaActual && programadoVentas == "True" && terminadoDibujo == "False" && pausado == "False")
+                    {
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868"); /* Rojo */
+                        e.Item.ForeColor = System.Drawing.Color.White;
+                    }
 
 
 
@@ -3571,10 +3610,83 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void DataGridDise_ItemCommand(object source, DataGridCommandEventArgs e)
         {
+            string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Diseño")
+            {
 
-            ProcesarNumeroDiseño(e);
+                if (e.CommandName == "Numero_Diseño")
+                {
+                    int rowIndex = Convert.ToInt32(e.CommandArgument);
+                    DataGridItem row = DataGrid2.Items[rowIndex];
 
-        }
+                    // capturamos los campos de la fila del datagrid 
+                    foreach (DataGridItem item in DataGrid2.Items)
+                    {
+                        if (item != row)
+                        {
+                            item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                        }
+                    }
+
+                    e.Item.CssClass = "fila-seleccionada1";
+
+                    // Se compara si el click es en la misma fila
+                    if (row.Cells[2].Text == Session["NumDis1"]?.ToString())
+                    {
+                        // Incrementar la variable de sesión "ClickCount" en el servidor
+                        int clickCount = Convert.ToInt32(Session["ClickCount"]) + 1;
+                        Session["ClickCount"] = clickCount;
+
+                        // se valida si es el segundo click en la misma fila 
+                        if (clickCount == 2)
+                        {
+                            ScriptManager.RegisterStartupScript(this, GetType(), "ActivarTabScript", "activarTab('BitacoraDesarrollo-content');", true);
+                            ProcesarNumeroDiseño(e);
+
+                            Session.Remove("ClickCount");
+                            Session.Remove("NumDis1");
+                        }
+
+                    }
+                    else
+                    {
+                        // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
+                        Session["ClickCount"] = 1;
+                        Session["NumDis1"] = row.Cells[2].Text;
+
+                        BtnTrabPed.Enabled = false;
+                        BtnTrabPed.CssClass = "btn btn-sm button-disabled linkButtonClicked shadow-sm full-width-btn";
+
+                        BtnDesPed.Enabled = false;
+                        BtnDesPed.CssClass = "btn btn-sm button-disabled linkButtonClicked shadow-sm full-width-btn";
+
+                        BtnTrabDis.Enabled = true;
+                        BtnTrabDis.CssClass = "btn btn-sm button-enabled linkButtonClicked2 full-width-btn";
+
+                        BtnDesDis.Enabled = true;
+                        BtnDesDis.CssClass = "btn btn-sm button-enabled linkButtonClicked2 full-width-btn";
+
+                        BtnTrabShoCas.Enabled = false;
+                        BtnTrabShoCas.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                        BtnDesSC.Enabled = false;
+                        BtnDesSC.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                        BtnTrabRen.Enabled = false;
+                        BtnTrabRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                        BtnDesRen.Enabled = false;
+                        BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                    }
+                }
+            }
+             if (tipoAccion == "Ventas")
+             {
+                ScriptManager.RegisterStartupScript(this, GetType(), "ActivarTabScript", "activarTab('BitacoraDesarrollo-content');", true);
+                ProcesarNumeroDiseño(e);
+             }
+            }
 
         private void ProcesarNumeroDiseño(DataGridCommandEventArgs e)
         {
@@ -4037,10 +4149,89 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void DataGridSC(object source, DataGridCommandEventArgs e)
         {
-            if (e.CommandName == "Numero_Diseño")
+            string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Diseño")
             {
-                ProcesarNumeroDiseño(e);
+
+                if (e.CommandName == "Numero_Diseño")
+                {
+                    int rowIndex = Convert.ToInt32(e.CommandArgument);
+                    DataGridItem row = DataGridDiseños.Items[rowIndex];
+
+                    // capturamos los campos de la fila del datagrid 
+                    foreach (DataGridItem item in DataGridDiseños.Items)
+                    {
+                        if (item != row)
+                        {
+                            item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                        }
+                    }
+
+                    e.Item.CssClass = "fila-seleccionada1";
+
+                    // Se compara si el click es en la misma fila
+                    if (row.Cells[2].Text == Session["NumSC"]?.ToString())
+                    {
+                        // Incrementar la variable de sesión "ClickCount" en el servidor
+                        int clickCount = Convert.ToInt32(Session["ClickCount"]) + 1;
+                        Session["ClickCount"] = clickCount;
+
+                        // se valida si es el segundo click en la misma fila 
+                        if (clickCount == 2)
+                        {
+                           
+                            ProcesarNumeroDiseño(e);
+                            ScriptManager.RegisterStartupScript(this, GetType(), "ActivarTabScript", "activarTab('BitacoraDesarrollo-content');", true);
+
+                            Session.Remove("ClickCount");
+                            Session.Remove("NumSC");
+                        }
+
+                    }
+                    else
+                    {
+                        // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
+                        Session["ClickCount"] = 1;
+                        Session["NumSC"] = row.Cells[2].Text;
+
+                        BtnTrabPed.Enabled = false;
+                        BtnTrabPed.CssClass = "btn btn-sm button-disabled linkButtonClicked shadow-sm full-width-btn";
+
+                        BtnDesPed.Enabled = false;
+                        BtnDesPed.CssClass = "btn btn-sm button-disabled linkButtonClicked shadow-sm full-width-btn";
+
+                        BtnTrabDis.Enabled = false;
+                        BtnTrabDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                        BtnDesDis.Enabled = false;
+                        BtnDesDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                        BtnTrabShoCas.Enabled = true;
+                        BtnTrabShoCas.CssClass = "btn btn-sm button-enabled linkButtonClicked2 full-width-btn";
+
+                        BtnDesSC.Enabled = true;
+                        BtnDesSC.CssClass = "btn btn-sm button-enabled linkButtonClicked2 full-width-btn";
+
+                        BtnTrabRen.Enabled = false;
+                        BtnTrabRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                        BtnDesRen.Enabled = false;
+                        BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                    }
+                }
             }
+            if (tipoAccion == "Ventas")
+            {
+                if (e.CommandName == "Numero_Diseño")
+                {
+                    ProcesarNumeroDiseño(e);
+                    ScriptManager.RegisterStartupScript(this, GetType(), "ActivarTabScript", "activarTab('BitacoraDesarrollo-content');", true);
+                }
+              
+            }
+
+           
         }
 
         protected void DataGridBusDise_ItemCommand(object source, DataGridCommandEventArgs e)
@@ -4048,6 +4239,61 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (e.CommandName == "Numero_Diseño")
             {
                 ProcesarNumeroDiseño(e);
+            }
+        }
+
+        protected void DatagridRender_ItemDataBound(object source, DataGridCommandEventArgs e)
+        {
+
+            if (e.CommandName == "Id_Render")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGridRender.Items[rowIndex];
+
+                // capturamos los campos de la fila del datagrid 
+                foreach (DataGridItem item in DataGridRender.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+                e.Item.CssClass = "fila-seleccionada1";
+
+                string tipoAccion = Session["Diseno"] as string;
+                if (tipoAccion == "Diseño")
+                {
+                        BtnTrabPed.Enabled = false;
+                        BtnTrabPed.CssClass = "btn btn-sm button-disabled linkButtonClicked shadow-sm full-width-btn";
+
+                        BtnDesPed.Enabled = false;
+                        BtnDesPed.CssClass = "btn btn-sm button-disabled linkButtonClicked shadow-sm full-width-btn";
+
+                        BtnTrabDis.Enabled = false;
+                        BtnTrabDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                        BtnDesDis.Enabled = false;
+                        BtnDesDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                        BtnTrabShoCas.Enabled = false;
+                        BtnTrabShoCas.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                        BtnDesSC.Enabled = false;
+                        BtnDesSC.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+                        BtnTrabRen.Enabled = true;
+                        BtnTrabRen.CssClass = "btn btn-sm button-enabled linkButtonClicked2 full-width-btn";
+
+                        BtnDesRen.Enabled = true;
+                        BtnDesRen.CssClass = "btn btn-sm button-enabled linkButtonClicked2 full-width-btn";
+
+                    
+                }
+                if (tipoAccion == "Ventas")
+                {
+                  
+                }
             }
         }
 
@@ -4357,10 +4603,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-        protected void lnkSelectRowRender_Click(object sender, EventArgs e)
-        {
-
-        }
+     
 
         protected void CargarVSC_Click(object sender, EventArgs e)
         {
@@ -6152,8 +6395,197 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }        
         }
 
-     
+        protected void BtnTrabPed_Click(object sender, EventArgs e)
+        {
+            string nombreUsuario = Session["usuariologueado"].ToString();
+            string IdOT = Session["Id_OT2"].ToString();
+            string pedido = Session["pedido2"].ToString();
 
+            using (SqlConnection conection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            {
+                conection.Open();
+
+                string update = "Update tblOT set RealizadoPor = @NombreUsuario where ID_OT= @Id_OT and Consecutivo_Pedido= @pedido";
+                using (SqlCommand Command = new SqlCommand(update, conection))
+                {
+                    Command.Parameters.AddWithValue("@NombreUsuario", nombreUsuario);
+                    Command.Parameters.AddWithValue("@Id_OT", IdOT);
+                    Command.Parameters.AddWithValue("@pedido", pedido);
+                    int rowsAffected = Command.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        CargarDatagridDise();
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
+        }
+
+        protected void BtnDesPed_Click(object sender, EventArgs e)
+        {
+            string IdOT = Session["Id_OT2"].ToString();
+            string pedido = Session["pedido2"].ToString();
+
+            using (SqlConnection conection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            {
+                conection.Open();
+
+                string update = "Update tblOT set RealizadoPor = 'PENDIENTE' where ID_OT= @Id_OT and Consecutivo_Pedido= @pedido";
+                using (SqlCommand Command = new SqlCommand(update, conection))
+                {
+                    Command.Parameters.AddWithValue("@Id_OT", IdOT);
+                    Command.Parameters.AddWithValue("@pedido", pedido);
+                    int rowsAffected = Command.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        CargarDatagridDise();
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
+        }
+
+        protected bool PuedeTrabajarDiseno(string numeroDiseno)
+        {
+            bool puedeTrabajar = false;
+
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            string query = "SELECT RealizadoPor FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseno";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@NumeroDiseno", numeroDiseno);
+                    connection.Open();
+
+                    // Ejecuta la consulta y obtiene el valor de RealizadoPor
+                    object realizadoPor = command.ExecuteScalar();
+
+                    // Comprueba si el valor obtenido es igual a "PENDIENTE"
+                    if (realizadoPor != null && realizadoPor.ToString() == "PENDIENTE")
+                    {
+                        puedeTrabajar = true;
+                    }
+                }
+            }
+
+            return puedeTrabajar;
+        }
+
+        protected void BtnTrabDis_Click(object sender, EventArgs e)
+        {
+            string numeroDise = Session["NumeroDiseño"].ToString();
+            bool puedeTrabajar = PuedeTrabajarDiseno(numeroDise);
+
+            if (puedeTrabajar)
+            {
+                // Verifica si la fecha de entrega es posterior a la fecha actual
+                if (EsFechaPosteriorActual(TextPacEnt.Text))
+                {
+                    // Si la fecha es válida, muestra el modal de confirmación
+                    string pactoDeEntrega = TextPacEnt.Text;
+                    string contenidoModalOT = "Desea trabajar el diseño: " + numeroDise + " y comprometerse para el " + pactoDeEntrega + " ? ";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ConfimacionTrabajarDise').modal('show'); $('#contenidoConfirmacionTrabDise').text('" + contenidoModalOT + "');", true);
+                }
+                else
+                {
+                    // Si la fecha no es válida, muestra un mensaje de error
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ValidarPactoDeEntrega').modal('show');", true);
+                }
+            }
+            else
+            {
+                // Muestra un mensaje de error si no se puede trabajar en el diseño
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ValidarDiseñoPendiente').modal('show');", true);
+            }
+        }
+
+        protected bool EsFechaPosteriorActual(string fecha)
+        {
+            DateTime fechaSeleccionada;
+            if (DateTime.TryParse(fecha, out fechaSeleccionada))
+            {
+                return fechaSeleccionada > DateTime.Now;
+            }
+            return false; // Devuelve false si la fecha no se puede convertir o es anterior a la actual
+        }
+
+        protected void SiTrabajarDise(object sender, EventArgs e)
+        {
+            string nombreUsuario = Session["usuariologueado"].ToString();
+            string pactoDeEntregaString = TextPacEnt.Text;
+            DateTime pactoDeEntrega;
+
+            // Intenta convertir el valor de cadena en un objeto DateTime
+            if (DateTime.TryParse(pactoDeEntregaString, out pactoDeEntrega))
+            {
+                string numeroDise = Session["NumeroDiseño"].ToString();
+
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+                {
+                    connection.Open();
+
+                    string update = "UPDATE tblDiseño SET RealizadoPor = @NombreUsuario, PactodeEntrega = @PactoDeEntrega WHERE Numero_Diseño = @NumeroDise";
+
+                    using (SqlCommand command = new SqlCommand(update, connection))
+                    {
+                        command.Parameters.AddWithValue("@NombreUsuario", nombreUsuario);
+                        command.Parameters.AddWithValue("@PactoDeEntrega", pactoDeEntrega);
+                        command.Parameters.AddWithValue("@NumeroDise", numeroDise);
+
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            CargarDatagridDise();
+                        }
+                        else
+                        {
+                            // Maneja el caso en el que no se actualizaron filas, si es necesario
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // Maneja el caso en el que la conversión de cadena a DateTime falla
+            }
+        }
+
+        //protected void BtnDesDis_Click(object sender, EventArgs e)
+        //{
+        //    string IdOT = Session["Id_OT2"].ToString();
+
+        //    using (SqlConnection conection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+        //    {
+        //        conection.Open();
+
+        //        string update = "Update tblDiseño set RealizadoPor = 'PENDIENTE' where Numero_Diseño= @Id_OT";
+        //        using (SqlCommand Command = new SqlCommand(update, conection))
+        //        {
+        //            Command.Parameters.AddWithValue("@Id_OT", IdOT);   
+        //            int rowsAffected = Command.ExecuteNonQuery();
+
+        //            if (rowsAffected > 0)
+        //            {
+        //                CargarDatagridDise();
+        //            }
+        //            else
+        //            {
+
+        //            }
+        //        }
+        //    }
+        //}
 
     }
 

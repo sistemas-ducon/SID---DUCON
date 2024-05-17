@@ -921,7 +921,7 @@ WHERE
                     {
                         // Determinar el tipo de archivo Excel
                         if (Path.GetExtension(filePath).Equals(".xls"))
-                        {
+                            {
                             workbook = new HSSFWorkbook(fs); // Para archivos .xls (Excel 97-2003)
                         }
                         else if (Path.GetExtension(filePath).Equals(".xlsx"))
@@ -1152,19 +1152,29 @@ WHERE
                     IRow row = sheet.GetRow(i);
                     if (row != null)
                     {
-                        foreach (ICell cell in row.Cells)
+                        // Obtener la celda en la columna 'A' (índice 0)
+                        ICell cellColumnaA = row.GetCell(0);
+                        if (cellColumnaA != null)
                         {
-                            if (cell.ToString().IndexOf(textoABuscar, StringComparison.OrdinalIgnoreCase) >= 0)
+                            // Verificar si el textoABuscar está presente en la celda de la columna 'A'
+                            if (cellColumnaA.ToString().IndexOf(textoABuscar, StringComparison.OrdinalIgnoreCase) >= 0)
                             {
                                 ICell cellColumnaF = row.GetCell(5); // Columna 'F' (índice 5)
                                 if (cellColumnaF != null)
                                 {
-                                    if (workbook is HSSFWorkbook)
+                                    // Verificar si la celda contiene una fórmula
+                                    if (cellColumnaF.CellType == CellType.Formula)
                                     {
-                                        HSSFFormulaEvaluator formulaEvaluator = new HSSFFormulaEvaluator(workbook as HSSFWorkbook);
-                                        formulaEvaluator.EvaluateInCell(cellColumnaF);
+                                        // Obtener el valor numérico resultante de la fórmula
+                                        double valorNumerico = cellColumnaF.NumericCellValue;
+                                        // Devolver el valor numérico como una cadena formateada
+                                        return valorNumerico.ToString();
                                     }
-                                    return cellColumnaF.ToString();
+                                    else
+                                    {
+                                        // Si la celda no contiene una fórmula, devolver el valor numérico original
+                                        return cellColumnaF.ToString();
+                                    }
                                 }
                             }
                         }
@@ -1223,12 +1233,19 @@ WHERE
                                 ICell cellColumnaF = row.GetCell(5);
                                 if (cellColumnaF != null)
                                 {
-                                    if (workbook is HSSFWorkbook)
+                                    // Verificar si la celda contiene una fórmula
+                                    if (cellColumnaF.CellType == CellType.Formula)
                                     {
-                                        HSSFFormulaEvaluator formulaEvaluator = new HSSFFormulaEvaluator(workbook as HSSFWorkbook);
-                                        formulaEvaluator.EvaluateInCell(cellColumnaF);
+                                        // Obtener el valor numérico resultante de la fórmula
+                                        double valorNumerico = cellColumnaF.NumericCellValue;
+                                        // Agregar el valor numérico a la lista
+                                        valoresColumnaF.Add(valorNumerico.ToString());
                                     }
-                                    valoresColumnaF.Add(cellColumnaF.ToString());
+                                    else
+                                    {
+                                        // Si la celda no contiene una fórmula, agregar el valor numérico original a la lista
+                                        valoresColumnaF.Add(cellColumnaF.ToString());
+                                    }
                                 }
                             }
                         }

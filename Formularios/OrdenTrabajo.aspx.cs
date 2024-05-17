@@ -1433,12 +1433,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (cerrada)
             {
-                DateTime fechaCierre = (DateTime)leer["Fecha_Cierre"];
-                LabelOTCerrada.Visible = true;
-                LabelOTCerrada.Text = "OT cerrada el día " + fechaCierre.ToString("dd/MM/yyyy");
-                LiteralFechaCierre.Text = fechaCierre.ToString("dd/MM/yyyy");
-                // Esperar 1 segundo antes de abrir el modal
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "setTimeout(function() { openModal(); }, 1000);", true);
+                if (!leer.IsDBNull(leer.GetOrdinal("Fecha_Cierre")))
+                {
+                    DateTime fechaCierre = (DateTime)leer["Fecha_Cierre"];
+                    LabelOTCerrada.Visible = true;
+                    LabelOTCerrada.Text = "OT cerrada el día " + fechaCierre.ToString("dd/MM/yyyy");
+                    LiteralFechaCierre.Text = fechaCierre.ToString("dd/MM/yyyy");
+                    // Esperar 1 segundo antes de abrir el modal
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "setTimeout(function() { openModal(); }, 1000);", true);
+                }
             }
             else
             {
