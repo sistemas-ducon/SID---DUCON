@@ -3158,7 +3158,7 @@
                                     <div class="border rounded p-1 m-1">
                                         <div class="row">
                                             <div class="col-12">
-                                                <div class="table-responsive mb-1" style="max-height: 20rem; overflow-x: auto;">
+                                                <div class="table-responsive mb-1" style="max-height: 14rem; height:14rem; overflow-x: auto;">
 
                                                     <h5 class="datagrid-header text-center">Objeto</h5>
 
@@ -3255,7 +3255,7 @@
                                     <div class="border rounded pt-3 mt-3">
                                         <div class="row">
                                             <div class="col-12">
-                                                <div class="table-responsive mb-1" style="max-height: 11rem; overflow-x: auto;">
+                                                <div class="table-responsive mb-1" style="max-height: 9rem; height:9rem; overflow-x: auto;">
                                                     <h5 class="datagrid-header text-center">Modulo del Objeto</h5>
                                                     <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridModuloObjetos" runat="server">
                                                         <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />

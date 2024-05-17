@@ -38,7 +38,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 ddlAsesorC.Enabled = false;
                 ddlAsesorC.CssClass = "form-control form-control-sm";
 
+                if (Session["CompartirClientes"]?.ToString() == "Activo")
+                {
+                    CargarAsesoresCompartidos();
+                    // Esperar 1 segundo antes de abrir el modal
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "setTimeout(function() { mostrarModal(); }, 1000);", true);
 
+                    CargarDatosCliente(Session["NitCliComp"].ToString());
+                    DataGridCliente.DataSourceID = "ListarClientes";
+                    DataGridCliente.DataBind();
+
+                    Session.Remove("CompartirClientes");
+                    Session.Remove("AseComp");
+                    Session.Remove("NitCliComp");
+
+                }
             }
             else
             {
@@ -165,7 +179,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 tbCompartido.Text = campos[6];
                 tbCedulaAsesor.Text = campos[7];
                 Session["Id_ClienteBD"] = campos[0];
-
+               
 
                 // hay que validar que el usuario que se logeó sea el mismo asesor de ese cliente para darle aceeso a la admismitracion de ese cliente 
                 // Variable se Sesion de Usuario de Login  para traer la cedula de ese usuario  y compararla con la cedula del asesore de ese cliente 
@@ -218,6 +232,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 }
                 else
                 {
+
+                    LlenarDataGridCotizacion(Nit);
+                    LlenarDataGridVisita(Nit);
+
                     DataGridContacto.DataBind();
                     DataGridCotizacion.DataBind();
                     DataGridVisita.DataBind();
@@ -1014,6 +1032,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     // Cerrar el modal después de agregar el asesor
                     ScriptManager.RegisterStartupScript(this, GetType(), "CloseModal", "$('#myModal').modal('hide');", true);
 
+                    //Activamos la variables para cargar nuevamente el modal despues de agregar  
+                    Session["CompartirClientes"] = "Activo";
+                    Session["AseComp"] = cadenaActual;
+                    Session["NitCliComp"] = tbNit.Text;
+
                     // Refrescar la página después de cerrar el modal
                     ScriptManager.RegisterStartupScript(this, GetType(), "RefreshPage", "window.location.reload();", true);
 
@@ -1103,9 +1126,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         command.ExecuteNonQuery();
                     }
                 }
-
+             
                 // Cerrar el modal después de agregar el asesor
                 ScriptManager.RegisterStartupScript(this, GetType(), "CloseModal", "$('#myModal').modal('hide');", true);
+
+
+                //Activamos la variables para cargar nuevamente el modal despues de eliminar 
+                Session["CompartirClientes"] = "Activo";
+                Session["AseComp"] = cadenaActual;
+                Session["NitCliComp"] = tbNit.Text;
 
                 // Refrescar la página después de cerrar el modal
                 ScriptManager.RegisterStartupScript(this, GetType(), "RefreshPage", "window.location.reload();", true);
@@ -1120,6 +1149,88 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
 
 
+        }
+
+        private void CargarAsesoresCompartidos()
+        {
+            // Obtiene la cadena de nombres Asesores Compartidos
+            string nombresAsesores = Session["AseComp"].ToString();
+
+            // Dividir la cadena en un arreglo de nombres
+            string[] arregloNombres = nombresAsesores.Split(';');
+
+            // Crea una lista de objetos Asesor y agrega los nombres
+            List<Asesor> asesores = new List<Asesor>();
+            foreach (string nombre in arregloNombres)
+            {
+                asesores.Add(new Asesor { Nombre = nombre });
+            }
+
+            // Asigna la lista como origen de datos para el DataGrid
+            DataGridAsesorCompart.DataSource = asesores;
+            DataGridAsesorCompart.DataBind();
+        }
+
+        private void CargarDatosCliente(string nit)
+        {
+            // Realiza la conexión a la base de datos y ejecuta la consulta SQL con el parámetro
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = @" SELECT a.Id_Cliente AS Nit, a.NombreCompañía AS Nombre_Compañia, 
+                                a.Teléfono, x.IdProcedencia, a.Dirección,a.CompartidoCon   FROM   tblCliente AS a 
+                                INNER JOIN  tblProcedenciaCliente AS x ON x.IdProcedencia = a.IdProcedencia 
+                                 INNER JOIN tblAsesorComercial AS b ON b.Cedula = a.Asesor 
+                                WHERE  a.Id_Cliente LIKE '%' +@nit+ '%' ";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@nit", nit);
+
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+
+                    if(dataTable.Rows.Count > 0)
+                    {
+                        DataRow row = dataTable.Rows[0]; // Obtiene la primera fila de resultados
+
+
+                        tbNit.Text = row["Nit"].ToString();
+                        tbNitBuscar.Text = row["Nit"].ToString();
+                        tbNombreCliente.Text = row["Nombre_Compañia"].ToString();
+                        tbTelefono.Text = row["Teléfono"].ToString();
+                        tbDireccion.Text = row["Dirección"].ToString();
+                       
+                        ddlprocedencia.DataBind();
+
+                        if (!string.IsNullOrEmpty(row["IdProcedencia"].ToString()))
+                        {
+                            ListItem item = ddlprocedencia.Items.FindByValue(row["IdProcedencia"].ToString());
+                            if (item != null)
+                            {
+                                ddlprocedencia.ClearSelection();
+                                item.Selected = true;
+                            }
+                            else
+                            {
+
+                                ddlprocedencia.ClearSelection(); // Deseleccionar en este caso
+                            }
+                        }
+                        else
+                        {
+                            ddlprocedencia.ClearSelection(); // Valor nulo, deseleccionar
+                        }
+                        tbCompartido.Text = row["CompartidoCon"].ToString();
+                        
+                        
+                    }
+                   
+                }
+            }
         }
 
 
@@ -1426,14 +1537,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         {
             if (CheckBox1.Checked)
             {
-                isModalVisible = true;
+                isModalVisible = true;               
                 ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#myModal').modal('show');", true);
+
             }
             else
             {
                 isModalVisible = false;
             }
         }
+
         protected void ddlAsesorC_DataBound(object sender, EventArgs e)
         {
             // Seleccionamos por defeco al asesor Logueado 

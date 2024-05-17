@@ -53,12 +53,12 @@
         <asp:UpdatePanel ID="PanelModulo" runat="server">
             <ContentTemplate >
                 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow p-2 mb-5 bg-body form-control-sm" >
-                    <div class="container-fluid rounded-3" style="background-color: #101321">
+                    <div class="container-fluid rounded-3 d-flex justify-content-start" style="background-color: #101321">
                         <a class="navbar-brand" href="#"></a>
                         <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon form-control-sm"></span>
                         </button>
-                        <img src="https://i.ibb.co/c8cmwQ0/Actuallogo-SIDOKblanco.png" style="margin: 0.5rem" width="160px" height="40" /> <%---Logo de la aplicacion---%>
+                        <img src="https://i.ibb.co/c8cmwQ0/Actuallogo-SIDOKblanco.png" style="margin: 0.5rem; width:10rem; height:2.5rem;"/> <%---Logo de la aplicacion---%>
                        
                         <div class="collapse navbar-collapse navbar-expand" id="navbarScroll">
                             <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="margin-left: 2.0rem;">

@@ -105,7 +105,7 @@
                                 <div class="border rounded p-2">
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="table-responsive mb-2 gap-2" style="max-height: 25rem; overflow-x: auto;">
+                                            <div class="table-responsive mb-2 gap-2" style="max-height: 25rem; height:25rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-center">Clientes </h5>
                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridCliente" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemCommand="DataGridCliente_ItemCommand" DataSourceID="ListarClientes">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header p-2" />
@@ -239,7 +239,7 @@
                                 <div class="col-3">
                                     <div class="input-group input-group-sm  mb-2 gap-4">
                                         <asp:Label ID="lbNitBscar" class="form-label" Text="Nit" runat="server"></asp:Label>
-                                        <asp:TextBox ID="tbNitBuscar" type="text" class="form-control " runat="server"></asp:TextBox>
+                                        <asp:TextBox ID="tbNitBuscar" type="text" class="form-control " placeHolder="Digite Nit" runat="server"></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -247,7 +247,7 @@
                                 <div class="col-3">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbNombreBuscar" class="form-label" Text="Nombre" runat="server"></asp:Label>
-                                        <asp:TextBox ID="tbNombreBuscar" type="text" class="form-control " runat="server"></asp:TextBox>
+                                        <asp:TextBox ID="tbNombreBuscar" type="text" class="form-control " placeHolder="Digite Nombre del Cliente" runat="server"></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -292,7 +292,7 @@
 
                             </div>
 
-                            <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="myModal" tabindex="-1"  aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"  aria-labelledby="staticBackdropLabel">
                                 <div class="modal-dialog modal-xl ">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -311,7 +311,7 @@
                                                                     <Columns>
                                                                         <asp:TemplateColumn HeaderText="...">
                                                                             <ItemTemplate>
-                                                                                <a href="#" class="btn btn-link" onclick="compartirAsesor(<%# Container.ItemIndex %>); return false;">
+                                                                                <a href="#" class="btn btn-link Tam" onclick="compartirAsesor(<%# Container.ItemIndex %>); return false;">
                                                                                     <i class="bi bi-pencil-square"></i>
                                                                                 </a>
                                                                             </ItemTemplate>
@@ -333,7 +333,7 @@
                                                                         <asp:TemplateColumn HeaderText="...">
                                                                             <ItemTemplate>
                                                                                 <a href="#" class="btn btn-link" onclick="compartirAsesor1(<%# Container.ItemIndex %>); return false;">
-                                                                                    <i class="bi bi-pencil-square"></i>
+                                                                                    <i class="bi bi-pencil-square Tam"></i>
                                                                                 </a>
                                                                             </ItemTemplate>
                                                                         </asp:TemplateColumn>
@@ -396,7 +396,7 @@
                                 <div class="border rounded p-2">
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="table-responsive mb-2 gap-2" style="max-height: 25rem; overflow-x: auto;">
+                                            <div class="table-responsive mb-2 gap-2" style="max-height: 20rem; height:20rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-center">Nombres Contactos Cliente </h5>
                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridContacto" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemCommand="DataGridContacto_ItemCommand">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header p-2" />
@@ -741,6 +741,29 @@
 
             document.getElementById("btnElimnarCompartir").classList.add("disabled");
             document.getElementById("btnGuardarCompartir").classList.remove("disabled");
+
+
+                     // Obtén todas las filas del DataGrid
+            var rows = document.querySelectorAll('#<%= DataGridCompartirAsesor.ClientID %> tr');
+
+            // Elimina la clase 'selected-row' de todas las filas
+            rows.forEach(function(row) {
+                row.classList.remove('fila-seleccionada');
+            });
+
+            // Obtén la fila seleccionada
+            var selectedRow = rows[rowIndex + 1]; // Ajusta el índice para omitir la fila de encabezado
+
+            // Agrega la clase 'selected-row' a la fila seleccionada
+            selectedRow.classList.add('fila-seleccionada');
+
+            var rows2 = document.querySelectorAll('#<%= DataGridAsesorCompart.ClientID %> tr');
+
+             // Elimina la clase 'selected-row' de todas las filas
+                rows2.forEach(function(row) {
+                    row.classList.remove('fila-seleccionada');
+                });
+
         }
 
         function compartirAsesor1(rowIndex) {
@@ -756,6 +779,29 @@
 
             document.getElementById("btnGuardarCompartir").classList.add("disabled");
             document.getElementById("btnElimnarCompartir").classList.remove("disabled");
+
+
+                         // Obtén todas las filas del DataGrid
+                var rows = document.querySelectorAll('#<%= DataGridAsesorCompart.ClientID  %> tr');
+
+                // Elimina la clase 'selected-row' de todas las filas
+                rows.forEach(function(row) {
+                    row.classList.remove('fila-seleccionada');
+                });
+
+                // Obtén la fila seleccionada
+                var selectedRow = rows[rowIndex + 1]; // Ajusta el índice para omitir la fila de encabezado
+
+                // Agrega la clase 'selected-row' a la fila seleccionada
+                selectedRow.classList.add('fila-seleccionada');
+
+                  // Obtén todas las filas del DataGrid
+            var rows2 = document.querySelectorAll('#<%= DataGridCompartirAsesor.ClientID %> tr');
+
+             // Elimina la clase 'selected-row' de todas las filas
+                rows2.forEach(function(row) {
+                    row.classList.remove('fila-seleccionada');
+                });
 
         }
 
@@ -788,6 +834,16 @@
 
         }
     </script>
+
+      <script>
+          // Mostrar y Ocultar  acabados plano
+          function mostrarModal() {
+              $('#myModal').modal('show');
+          }
+          function ocultarModal() {
+              $('#myModal').modal('hide');
+          }
+      </script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

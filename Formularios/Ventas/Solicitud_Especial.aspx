@@ -109,8 +109,6 @@
             return result; // Devolver el resultado de la confirmación
         }
 
-
-
     </script>
 
     <script>
@@ -124,7 +122,7 @@
             return result; // Devolver el resultado de la confirmación
         }
 
-        function ActivarBotonDetalle() {
+        function ActiBotDetalleVentas() {
             //habilitar enlaces de Detalle
             document.getElementById("NuevoDetalle").classList.add("enabled");
             document.getElementById("ImportarDetalle").classList.add("enabled");
@@ -190,8 +188,8 @@
                                 <i class="bi bi-wrench"></i>
                             </a>
 
-                            <a class="icong disabled" href="#" title="Observaciones" id="Observaciones"  onclick="abrirObservaciones();">
-                               <i class="bi bi-eye"></i>
+                            <a class="icong disabled" href="#" title="Observaciones" id="Observaciones" onclick="abrirObservaciones();">
+                                <i class="bi bi-eye"></i>
                             </a>
 
                             <asp:LinkButton class="icong disabled" title="Devolver Solicitud a Ventas" ID="DevolverSolicitud" runat="server">
@@ -225,6 +223,7 @@
 
 
         <div class="tab-content">
+
             <div class="tab-pane fade  show active" id="BitacoraDesarrollo-content">
                 <asp:UpdatePanel ID="PanelBitacora" runat="server">
                     <ContentTemplate>
@@ -367,7 +366,6 @@
                                     </div>
                                 </div>
 
-
                                 <div class="col-3">
                                     <div class=" input-group input-group-sm  mb-2 gap-4">
                                         <asp:Label ID="lbDesarrollado" class="col-form-label-sm" Text="Desarrolado Por" runat="server"></asp:Label>
@@ -387,7 +385,6 @@
                                     </div>
                                 </div>
 
-
                                 <div class="col-3">
                                     <div class=" input-group input-group-sm  mb-2 gap-2 justify-content-center">
                                         <asp:Label ID="lbDireccion" class="col-form-label-sm" Text="Dirección" runat="server"></asp:Label>
@@ -405,19 +402,17 @@
 
                                 <div class="col-3">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
-                                        <asp:CheckBox ID="chxDesComplejo" runat="server" Enabled="false" />
+                                        <asp:CheckBox ID="chxDesComplejo" CssClass="pt-1" runat="server" Enabled="false" />
                                         <asp:Label ID="lb" class=" col-form-label-sm" Text="Desarrollo Complejo" runat="server"></asp:Label>
                                         <asp:Button ID="ConfirmarComplejo" CssClass="btn btn-outline-secondary" runat="server" Text="Confirmar Complejo" />
                                     </div>
                                 </div>
 
-
-
                             </div>
 
                         </div>
 
-                        <div class="container-fluid Principal-centro pt-1 mt-1 gap-1 ">
+                        <div class="container-fluid Principal-centro pt-1 mt-1 gap-1 p-2 ">
 
                             <div class="container-fluid  izq">
                                 <h6 class="p-0 m-0">Producto</h6>
@@ -428,7 +423,6 @@
                                             <textarea class="form-control form-control-sm" id="txDescProduc" runat="server" cols="25" rows="3" maxlength="99" placeholder="Escriba máximo 99 caracteres" disabled="disabled"></textarea>
                                         </div>
                                     </div>
-
                                 </div>
 
                                 <div class="row">
@@ -495,7 +489,7 @@
                                 <div class="row">
                                     <div class=" col-6-sm">
                                         <div class=" input-group-sm  mb-2 gap-2">
-                                            <textarea class="form-control form-control-sm" id="txEspGen" runat="server" cols="25" rows="10" disabled="disabled"></textarea>
+                                            <textarea class="form-control form-control-sm" id="txEspGen" runat="server" cols="25" rows="11" disabled="disabled"></textarea>
                                         </div>
                                     </div>
 
@@ -504,6 +498,7 @@
                             </div>
 
                             <div class="container-fluid  Der">
+
                                 <h6 class="p-0 m-0">Observacion Compra</h6>
                                 <div class="row">
                                     <div class=" col-6-sm">
@@ -521,7 +516,6 @@
                                             <textarea class="form-control form-control-sm" id="txObsDesarrollo" runat="server" cols="25" rows="2" disabled="disabled"></textarea>
                                         </div>
                                     </div>
-
                                 </div>
 
                                 <div class="row ">
@@ -529,7 +523,13 @@
                                     <div class="col-4">
                                         <div class=" input-group input-group-sm  mb-2 gap-2">
                                             <asp:CheckBox ID="chxUrgente" runat="server" Enabled="false" />
-                                            <asp:Label ID="lbUrgente" class="form-label" Text="Urgente" runat="server"></asp:Label>
+                                            <asp:Label ID="lbUrgente" class="form-label pt-1" Text="Urgente" runat="server"></asp:Label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-4">
+                                        <div class=" input-group input-group-sm  ">
+                                            <asp:Button ID="btnConUrgente" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Confirmar Urgente" />
                                         </div>
                                     </div>
 
@@ -544,13 +544,77 @@
                                     </div>
                                     <div class="col-6">
                                         <div class=" input-group input-group-sm   gap-2">
-                                            <asp:TextBox ID="tbPrecioSugerido" type="text" class="form-control form-control-lg PrecioSugerido " runat="server" disabled="disabled"></asp:TextBox>
+                                            <asp:TextBox ID="tbPrecioSugerido" type="text" class="form-control PrecioSugerido " runat="server" disabled="disabled"></asp:TextBox>
                                         </div>
                                     </div>
 
-
-
                                 </div>
+
+
+                            </div>
+
+                            <div class="container-fluid  DerCompras" runat="server" id="DerCompras">
+
+                                <div class="border p-1">
+                                    <h6 class="p-0 m-0">Compras</h6>
+                                    <hr class="p-0 m-0 mb-3 w-50" />
+
+                                    <div class="row pb-2 ">
+                                        <div class="col-6">
+                                            <div class="input-group-sm gap-1">
+                                                <asp:Label ID="lbCosto" runat="server" Text="Costo"></asp:Label>
+                                                <asp:TextBox CssClass="form-control form-control-sm" ID="tbCostoC" runat="server" disabled="disabled"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="input-group-sm gap-1">
+                                                <asp:Label ID="lbFactor" runat="server" Text="Factor"></asp:Label>
+                                                <asp:TextBox CssClass="form-control" ID="tbFactorC" runat="server" disabled="disabled"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row pb-2">
+                                        <div class="col-12">
+                                            <div class="input-group input-group-sm gap-2">
+                                                <asp:Label ID="lbProve" runat="server" Text="Proveedor"></asp:Label>
+                                                <asp:TextBox CssClass="form-control form-control-sm" ID="tbProve" runat="server" disabled="disabled"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="border p-1 ">
+                                    <h6 class="p-0 m-0">Desarrollo Producto</h6>
+                                    <hr class="p-0 m-0 mb-2 w-50" />
+
+                                    <div class="row pb-2">
+
+                                        <div class="col-6">
+                                            <div class="input-group-sm gap-1">
+                                                <asp:Label ID="lbCostoD" runat="server" Text="Costo"></asp:Label>
+                                                <asp:TextBox CssClass="form-control form-control-sm" ID="tbCostoD" runat="server" disabled="disabled"></asp:TextBox>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <div class="input-group-sm gap-1">
+                                                <asp:Label ID="lbFactorD" runat="server" Text="Factor"></asp:Label>
+                                                <asp:TextBox CssClass="form-control form-control-sm" ID="tbFactorD" runat="server" disabled="disabled"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row pb-2">
+                                        <div class="col-12">
+                                            <div class="input-group input-group-sm gap-2">
+                                                <asp:Label ID="lbCatego" runat="server" Text="Categoria"></asp:Label>
+                                                <asp:DropDownList ID="ddlCatego" CssClass="form-control form-control-sm" runat="server" disabled="disabled"></asp:DropDownList>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
 
 
                             </div>
@@ -601,7 +665,13 @@
                                                         <asp:BoundColumn DataField="Urgente" Visible="false" />
                                                         <asp:BoundColumn DataField="InformacionDetalleOrigen" Visible="false" />
 
-
+                                                        <%-- Campos de Compras y Desarrollo --%>
+                                                        <asp:BoundColumn DataField="CostoCompras" Visible="false" />
+                                                        <asp:BoundColumn DataField="FactorCompras" Visible="false" />
+                                                        <asp:BoundColumn DataField="Costo" Visible="false" />
+                                                        <asp:BoundColumn DataField="Factor" Visible="false" />
+                                                        <asp:BoundColumn DataField="Categoria" Visible="false" />
+                                                        <asp:BoundColumn DataField="Proveedor" Visible="false" />
 
                                                     </Columns>
                                                 </asp:DataGrid>
@@ -673,11 +743,11 @@
                                                         </asp:LinkButton>
 
 
-                                                        <asp:LinkButton class="icong disabled" title="Carrito" ID="Carrito" runat="server">
+                                                        <asp:LinkButton class="icong disabled" title="RedirigirCompras" ID="RedirigirCompras" runat="server">
                                                          <i class="bi bi-cart4"></i>
                                                         </asp:LinkButton>
 
-                                                        <asp:LinkButton class="icong disabled" title="Carrito" ID="OkCompras" runat="server">
+                                                        <asp:LinkButton class="icong disabled" title="Ok compras" ID="OkCompras" runat="server">
                                                         <i class="bi bi-arrow-down-left-circle"></i>
                                                         </asp:LinkButton>
 
@@ -707,7 +777,7 @@
 
                         </div>
 
-                            <!--Modal confirmar Importar -->
+                        <!--Modal confirmar Importar -->
                         <div id="confirmarImportar" class="modal" tabindex="-1" style="display: none;">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -761,13 +831,13 @@
 
                                 <div class="col-2">
                                     <div class=" input-group input-group-sm  mb-2 gap-2">
-                                        <asp:Button ID="btnTrabajarSolicitud" CssClass="btn btn-outline-secondary" runat="server" Text="Trabajar Solicitud" />
+                                        <asp:Button ID="btnTrabajarSolicitud" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Trabajar Solicitud" />
                                     </div>
                                 </div>
 
                                 <div class="col-2">
                                     <div class=" input-group input-group-sm  mb-2 gap-2">
-                                        <asp:Button ID="btnDesprogramar" CssClass="btn btn-outline-secondary" runat="server" Text="Desprogramar" />
+                                        <asp:Button ID="btnDesprogramar" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Desprogramar" />
                                     </div>
                                 </div>
 
@@ -850,16 +920,16 @@
 
                             </div>
 
-                            <div class="row pb-lg-2 mb-lg-2 justify-content-center">
+                            <div class="row pb-lg-2 mb-lg-2 p-2 justify-content-center">
                                 <div class="border rounded p-2">
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="table-responsive mb-2 gap-2" style="max-height: 12rem; overflow-x: auto;">
+                                            <div class="table-responsive mb-2 gap-2" style="max-height: 15rem; overflow-x: auto;">
                                                 <h6 class="datagrid-header text-start">Desarrollo</h6>
                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid1" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="CargarDesarrollos" OnItemDataBound="DataGridDesarrollo_ItemDataBound" OnItemCommand="DataGridSolicitudPE_LinkButton">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                     <Columns>
-                                                        <asp:TemplateColumn HeaderText="...">
+                                                        <asp:TemplateColumn HeaderText=". . .">
                                                             <ItemTemplate>
                                                                 <asp:LinkButton ID="lnkView" runat="server" CommandName="VerDesarrollo" CssClass="Tam" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>"
                                                                     OnClientClick="activarTab('BitacoraDesarrollo-content');" />
@@ -890,6 +960,8 @@
                                                         <asp:BoundColumn DataField="Mail" Visible="false" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="Direccion" Visible="false" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="SeguimientoPausa" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="DesarrolloComplejo" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Urgente" Visible="false" ItemStyle-CssClass="auto-width-column" />
 
                                                     </Columns>
                                                 </asp:DataGrid>
@@ -918,18 +990,23 @@
                             <%-- cotizaciones--%>
                             <h4 style="border-radius: 0.5rem; height: 2.5rem" class="text-center" title="Listado  Correspondiente a Cotizaciones">Cotizaciones</h4>
 
-                            <div class="row">
-                                <div class="col-3 text-center">
+                            <div class="row pb-2">
+
+                                <div class="col-1"></div>
+
+                                <div class="col-2 text-center">
                                     <div class=" input-group input-group-sm  mb-2 gap-2">
-                                        <asp:Button ID="btnTrbajarCotizacion" CssClass="btn btn-outline-secondary" runat="server" Text="Trabajar Cotización" />
+                                        <asp:Button ID="btnTrbajarCotizacion" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Trabajar Cotización" />
                                     </div>
                                 </div>
 
-                                <div class="col-3">
+                                <div class="col-2">
                                     <div class=" input-group input-group-sm  mb-2 gap-2">
-                                        <asp:Button ID="btnDesprogramar1" CssClass="btn btn-outline-secondary" runat="server" Text="Desprogramar" />
+                                        <asp:Button ID="btnDesprogramar1" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Desprogramar" />
                                     </div>
                                 </div>
+
+                                <div class="col-1"></div>
 
                                 <div class="col-3">
                                     <div class="input-group  input-group-sm  mb-2 gap-2">
@@ -945,12 +1022,12 @@
                                 <div class="border rounded p-2">
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="table-responsive mb-2 gap-2" style="max-height: 12rem; overflow-x: auto;">
+                                            <div class="table-responsive mb-2 gap-2" style="max-height: 15rem; overflow-x: auto;">
                                                 <h6 class="datagrid-header text-start">Cotizacion</h6>
                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid2" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="CargarCotizaciones" OnItemDataBound="DataGridCotizacion_ItemDataBound" OnItemCommand="DataGridSolicitudPE_LinkButton">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                     <Columns>
-                                                        <asp:TemplateColumn HeaderText="...">
+                                                        <asp:TemplateColumn HeaderText=". . .">
                                                             <ItemTemplate>
                                                                 <asp:LinkButton ID="lnkView" runat="server" CommandName="VerCotizacion" CssClass="Tam" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>"
                                                                     OnClientClick="activarTab('BitacoraDesarrollo-content');" />
@@ -982,6 +1059,8 @@
                                                         <asp:BoundColumn DataField="Mail" Visible="false" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="Direccion" Visible="false" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="SeguimientoPausa" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="DesarrolloComplejo" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Urgente" Visible="false" ItemStyle-CssClass="auto-width-column" />
                                                     </Columns>
                                                 </asp:DataGrid>
                                                 <asp:SqlDataSource runat="server" ID="Cotizaciones" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="spObtenerSolicitudCotizaciones" SelectCommandType="StoredProcedure">
@@ -1017,7 +1096,7 @@
             <div class="tab-pane fade " id="BuscarDesarrollo-content">
                 <asp:UpdatePanel ID="PanelBuscar" runat="server">
                     <ContentTemplate>
-                        <div class="container">
+                        <div class="container-fluid">
 
                             <%-- Buscar Diseño Especial --%>
 
@@ -1079,10 +1158,8 @@
                                 </div>
                             </div>
 
-                            <%-- Pendiente por añadir Convenciones al buscador --%>
 
-
-                            <div class="row justify-content-center pt-3">
+                            <div class="row justify-content-center pt-3 p-2">
                                 <div class="border rounded p-2">
                                     <div class="row">
                                         <div class="col-12">
@@ -1126,6 +1203,8 @@
                                                         <asp:BoundColumn DataField="Mail" Visible="false" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="Direccion" Visible="false" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="SeguimientoPausa" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="DesarrolloComplejo" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Urgente" Visible="false" ItemStyle-CssClass="auto-width-column" />
                                                     </Columns>
 
                                                 </asp:DataGrid>
@@ -1193,12 +1272,63 @@
 
 
     <script>
-        // se Habilitan enlaces Iniciales 
-        document.getElementById("NuevaSolicitud").classList.add("enabled");
-        document.getElementById("Observaciones").classList.add("enabled");
-        document.getElementById("CancelarSolicitud").classList.add("enabled");
 
 
+        // Validamos el Área del Usuario 
+        var AreaDepar = '<%= Session["Departamento"] %>';
+
+
+        if (AreaDepar.toUpperCase() === "VENTAS") {
+            // se Habilitan enlaces Iniciales 
+            document.getElementById("NuevaSolicitud").classList.add("enabled");
+            document.getElementById("Observaciones").classList.add("enabled");
+            document.getElementById("CancelarSolicitud").classList.add("enabled");
+
+            // Control del boton  nuevo y modificar 
+            var nuevasol = '<%= Session["nuevaSol"] %>';
+
+            if (nuevasol === "1") {
+                NuevaSolicitud1();
+
+                $.ajax({
+                    type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                    url: "Solicitud_Especial.aspx/NuevaSolicitud1", // La URL debe apuntar al método en el servidor
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                    },
+                    error: function (error) {
+                        // Manejar errores si los hay
+                    }
+                });
+            }
+            else if (nuevasol === "2") {
+                ModificarSolicitud();
+                $.ajax({
+                    type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                    url: "Solicitud_Especial.aspx/ModificarSolicitud1", // La URL debe apuntar al método en el servidor
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                    },
+                    error: function (error) {
+                        // Manejar errores si los hay
+                    }
+                });;
+            }
+
+
+        }
+        else if (AreaDepar.toUpperCase() === "DISEÑO" || AreaDepar.toUpperCase() === "DESARROLLO DE PRODUCTO") {
+            // se Habilitan enlaces Iniciales 
+            document.getElementById("PausarSolicitud").classList.add("enabled");
+            document.getElementById("Observaciones").classList.add("enabled");
+            document.getElementById("CancelarSolicitud").classList.add("enabled");
+
+
+        }
 
 
         // Obtener la fecha actual
@@ -1218,40 +1348,6 @@
 
         document.getElementById("btnCliente").disabled = true;
 
-        //Conuevo control del boton  nuevo y modificar 
-        var nuevasol = '<%= Session["nuevaSol"] %>';
-
-        if (nuevasol === "1") {
-            NuevaSolicitud();
-
-            $.ajax({
-                type: "POST", // Puede ser "GET" o "POST" según tus necesidades
-                url: "Solicitud_Especial.aspx/NuevaSolicitud1", // La URL debe apuntar al método en el servidor
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
-                },
-                error: function (error) {
-                    // Manejar errores si los hay
-                }
-            });
-        }
-        else if (nuevasol === "2") {
-            ModificarSolicitud();
-            $.ajax({
-                type: "POST", // Puede ser "GET" o "POST" según tus necesidades
-                url: "Solicitud_Especial.aspx/ModificarSolicitud1", // La URL debe apuntar al método en el servidor
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
-                },
-                error: function (error) {
-                    // Manejar errores si los hay
-                }
-            });;
-        }
 
 
 
@@ -1262,10 +1358,7 @@
             for (var j = 0; j < dropDownLists.length; j++) {
 
                 if (dropDownLists[j].id != "ddlZona") {
-                    if (dropDownLists[j].id != "ddlZona2") {
-                        dropDownLists[j].disabled = false;
-
-                    }
+                    dropDownLists[j].disabled = false;
                 }
 
             }
@@ -1342,6 +1435,106 @@
             var label = document.getElementById("lbNumeroSolicitud");
             label.textContent = "";
 
+
+
+            $.ajax({
+                type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                url: "Solicitud_Especial.aspx/NuevaSolicitud", // La URL debe apuntar al método en el servidor
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                },
+                error: function (error) {
+                    // Manejar errores si los hay
+                }
+            });
+
+        }
+
+        function NuevaSolicitud1() {
+
+
+            var dropDownLists = document.querySelectorAll("select");
+            for (var j = 0; j < dropDownLists.length; j++) {
+
+                if (dropDownLists[j].id != "ddlZona") {
+                    dropDownLists[j].disabled = false;
+                }
+
+            }
+
+            // Habilitar o deshabilitar los TextBox Type text
+            var textBoxes = document.querySelectorAll("input[type='text']");
+            for (var i = 0; i < textBoxes.length; i++) {
+
+                if (textBoxes[i].id !== "tbProveedor" && textBoxes[i].id !== "tbAncho" && textBoxes[i].id !== "tbAltura" && textBoxes[i].id !== "tbProfundidad"
+                    && textBoxes[i].id !== "tbMaterial" && textBoxes[i].id !== "tbCliente" && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbTelefono"
+                    && textBoxes[i].id !== "tbCelular" && textBoxes[i].id !== "tbMail" && textBoxes[i].id !== "tbDireccion" && textBoxes[i].id !== "tbPrecioSugerido"
+                    && textBoxes[i].id !== "tbCantidad" && textBoxes[i].id !== "tbDesarrollaPor") {
+                    textBoxes[i].disabled = false;
+
+
+                }
+
+            }
+
+            var checkBoxesToEnable = ["chxViaticos"];
+
+            for (var i = 0; i < checkBoxesToEnable.length; i++) {
+                var checkBoxId = checkBoxesToEnable[i];
+                var checkBox = document.getElementById(checkBoxId);
+
+                if (checkBox) {
+                    checkBox.disabled = false; // Habilita el CheckBox
+                }
+            }
+
+
+            // Obtén la fecha actual
+            var fechaActual = new Date();
+            // Formatea las fechas en el formato deseado (por ejemplo, YYYY-MM-DD)
+            var fechaActualFormateada = fechaActual.toISOString().split('T')[0];
+
+            var FechaActualAnio = new Date();
+
+            // Establece la fecha al primer día del año actual
+            FechaActualAnio.setMonth(0); // Establece el mes a enero (0)
+            FechaActualAnio.setDate(1); // Establece el día al primero (1)
+            // Formatea la fecha en el formato deseado (por ejemplo, YYYY-MM-DD)
+            var fechaFormateada2 = FechaActualAnio.toISOString().split('T')[0];
+
+
+
+
+            // Asigna las fechas a los TextBox correspondientes por su ID
+            document.getElementById("tbFechaIngreso").value = fechaActualFormateada;
+            document.getElementById("tbFechaIngresoServidor").value = fechaActualFormateada;
+
+            document.getElementById("tbFechaEntrega").value = fechaFormateada2;
+            document.getElementById("tbFechaEntregaServidor").value = fechaFormateada2;
+
+            document.getElementById("tbFechaRespuesta").value = fechaFormateada2;
+            document.getElementById("tbFechaRespuestaServidor").value = fechaFormateada2;
+
+
+            // Deshabilitar enlaces 
+            document.getElementById("NuevaSolicitud").classList.remove("enabled");
+            document.getElementById("ModificarSolicitud").classList.remove("enabled");
+
+
+            // Habilitar enlaces
+            document.getElementById("GrabarSolicitud").classList.add("enabled");
+
+
+            //Habilitar
+            var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
+            boton1.disabled = false;
+
+
+
+
+
             $.ajax({
                 type: "POST", // Puede ser "GET" o "POST" según tus necesidades
                 url: "Solicitud_Especial.aspx/NuevaSolicitud", // La URL debe apuntar al método en el servidor
@@ -1372,10 +1565,8 @@
             for (var j = 0; j < dropDownLists.length; j++) {
 
                 if (dropDownLists[j].id != "ddlZona") {
-                    if (dropDownLists[j].id != "ddlZona2") {
-                        dropDownLists[j].disabled = true;
-                        dropDownLists[j].value = "";
-                    }
+                    dropDownLists[j].disabled = true;
+                    dropDownLists[j].value = "";
                 }
 
             }
@@ -1429,6 +1620,22 @@
 
             var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
             boton1.disabled = true;
+
+            $.ajax({
+                type: "POST",
+                url: "Solicitud_Especial.aspx/Cancelar",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                },
+                error: function (error) {
+
+                }
+            });
+
+
+
 
         }
 
@@ -1491,7 +1698,7 @@
 
         }
 
-        function HabilitarEnlaces1() {
+        function HabilEnla1Ventas() {
 
             // Habilitar enlaces de Detalle
             document.getElementById("NuevoDetalle").classList.add("enabled");
@@ -1510,11 +1717,7 @@
             for (var j = 0; j < dropDownLists.length; j++) {
 
                 if (dropDownLists[j].id != "ddlZona") {
-                    if (dropDownLists[j].id != "ddlZona2") {
-                        dropDownLists[j].disabled = true;
-
-                    }
-
+                    dropDownLists[j].disabled = true;
                 }
             }
 
@@ -1522,6 +1725,81 @@
 
             var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
             boton1.disabled = true;
+
+        }
+
+        function HabEnlDiseño() {
+
+            // Habilitar botones de DevolverSolicitud , btnProgramarSolicitud , ConfirmarComplejo,btnConUrgente
+            document.getElementById("DevolverSolicitud").classList.add("enabled");
+
+            document.getElementById("DetenerPE").classList.remove("enabled");
+
+
+            // Se habilitan los CheckBox Urgente y Desarrollo complejo
+
+
+
+
+            // Se controla el boton de cliente
+            var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
+            boton1.disabled = true;
+
+            // Controlamos los dropdownlist
+
+            // Habilitar o deshabilitar los DropDownList
+            var dropDownLists = document.querySelectorAll("select");
+            for (var j = 0; j < dropDownLists.length; j++) {
+
+                if (dropDownLists[j].id != "ddlZona") {
+                    dropDownLists[j].disabled = true;
+                }
+            }
+
+
+        }
+
+        function HabEnlDiseño2() {
+
+            // para controlar los botones cuando se traen los datos del datagrid
+            document.getElementById("DetenerPE").classList.add("enabled");
+
+            document.getElementById("DevolverSolicitud").classList.remove("enabled");
+
+            // Habilitar o deshabilitar los DropDownList
+            var dropDownLists = document.querySelectorAll("select");
+            for (var j = 0; j < dropDownLists.length; j++) {
+
+                if (dropDownLists[j].id != "ddlZona") {
+                    dropDownLists[j].disabled = true;
+                }
+            }
+
+            // Se controla el boton de cliente
+            var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
+            boton1.disabled = true;
+
+        }
+
+        function HabEnlDiseño3() {
+
+            document.getElementById("DevolverSolicitud").classList.remove("enabled");
+            document.getElementById("DetenerPE").classList.remove("enabled");
+
+
+            // Se controla el boton de cliente
+            var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
+            boton1.disabled = true;
+
+
+            // Habilitar o deshabilitar los DropDownList
+            var dropDownLists = document.querySelectorAll("select");
+            for (var j = 0; j < dropDownLists.length; j++) {
+
+                if (dropDownLists[j].id != "ddlZona") {
+                    dropDownLists[j].disabled = true;
+                }
+            }
 
         }
 
@@ -1544,10 +1822,7 @@
             for (var j = 0; j < dropDownLists.length; j++) {
 
                 if (dropDownLists[j].id != "ddlZona") {
-                    if (dropDownLists[j].id != "ddlZona2") {
-                        dropDownLists[j].disabled = true;
-
-                    }
+                    dropDownLists[j].disabled = true;
                 }
 
             }
@@ -1563,10 +1838,7 @@
             for (var j = 0; j < dropDownLists.length; j++) {
 
                 if (dropDownLists[j].id != "ddlZona") {
-                    if (dropDownLists[j].id != "ddlZona2") {
-                        dropDownLists[j].disabled = true;
-
-                    }
+                    dropDownLists[j].disabled = true;
                 }
 
             }
@@ -1588,10 +1860,7 @@
             for (var j = 0; j < dropDownLists.length; j++) {
 
                 if (dropDownLists[j].id != "ddlZona") {
-                    if (dropDownLists[j].id != "ddlZona2") {
-                        dropDownLists[j].disabled = true;
-
-                    }
+                    dropDownLists[j].disabled = true;
                 }
 
             }
@@ -1766,7 +2035,7 @@
 
 
         function abrirObservaciones() {
-          
+
             // Obtener los valores de los textbox del DOM
             var solicitud1 = document.getElementById("lbNumeroSolicitud").innerText;
             var cliente1 = document.getElementById("tbClienteServidor").value;
@@ -1793,7 +2062,7 @@
             });
 
 
-           
+
 
         }
 
@@ -1904,6 +2173,16 @@
             return isValid;
         }
 
+        function HabilitarBotDetalleD() {
+
+            // Habilitar enlaces
+            document.getElementById("Documentacion").classList.add("enabled");
+            // Habilitar enlaces
+            document.getElementById("ModificarDetalle").classList.add("enabled");
+            // Habilitar enlaces
+            document.getElementById("RedirigirCompras").classList.add("enabled");
+        }
+
     </script>
 
     <script>
@@ -1941,15 +2220,29 @@
             }
         });
 
+    </script>
 
+    <script>
+        // Escuchar el evento keydown en el documento
+        document.addEventListener('keydown', function (event) {
+            // Verificar si la tecla presionada es "Enter" (código de tecla 13)
+            if (event.key === "Enter") {
+                // Obtener el elemento que tiene el foco actualmente
+                var focusedElement = document.activeElement;
 
+                // Verificar si el elemento enfocado no es un textarea
+                if (focusedElement.tagName !== 'TEXTAREA') {
+                    // Prevenir la acción predeterminada del evento
+                    event.preventDefault();
+                    document.getElementById('<%= btnConsultar.ClientID %>').click();
+              }
+          }
+      });
     </script>
 
 
 
 </body>
-
-
 
 
 </html>

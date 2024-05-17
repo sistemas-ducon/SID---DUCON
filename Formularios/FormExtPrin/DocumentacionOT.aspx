@@ -93,9 +93,7 @@
 
                     <div class="row text-center pb-1 mb-1">
                         <div class="col-6">
-                            <asp:Label CssClass=" alert-danger" ID="lbMensajeEspecial" runat="server" Text="Estimado usuario! Recuerde,
-                                para adjuntar el archivo de Excel generado por dibujo para desarrollo especial, debe validar el documento primero. ¡Gracias! "
-                                Visible="true" onclick="ocultarMensaje()"></asp:Label>
+                          
                         </div>
                         <div class="col-6" style="font-size: 1.1rem;">
                             <asp:Label CssClass=" alert-success" ID="mensaje" runat="server" Text="" Visible="false"></asp:Label>
@@ -237,6 +235,31 @@
 
                 </div>
 
+                <!--Modal Informativo Documentacion Especial -->
+                <div id="ModalInfoEspecial" class="modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" style="display: none;">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header bg-danger text-white">
+                                <h5 class="modal-title text-center">Documentación Especial</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                            </div>
+                            <div class="modal-body border rounded">
+                                <div class="container-fluid">
+                                    <h5>!Estimado usuario! Recuerde...</h5>
+                                    <h6>Para adjuntar el archivo de excel generado por dibujo para desarrollo especial, debe validar el documento primero.  ¡Gracias!</h6>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
             </ContentTemplate>
 
@@ -252,26 +275,6 @@
 
     </form>
 
-    <script>
-        // Función para ocultar el label después de 8 segundos
-        function ocultarLabel() {
-            var lbMensajeEspecial = document.getElementById('<%= lbMensajeEspecial.ClientID %>');
-            setTimeout(function () {
-                lbMensajeEspecial.style.display = 'none';
-            }, 8000);
-        }
-
-        // Llamar a la función para ocultar el label cuando la página se haya cargado completamente
-        window.onload = ocultarLabel;
-    </script>
-
-    <script>  
-        // Función para ocultar el mensaje al hacer clic en él
-        function ocultarMensaje() {
-            var lbMensaje = document.getElementById('<%= lbMensajeEspecial.ClientID %>');
-            lbMensaje.style.display = 'none';
-        }
-    </script>
 
     <script>
         //funcion para validar la cantidad al copiar un documento especial 
@@ -331,22 +334,41 @@
 
     <script type="text/javascript">
 
-        //funcion oara cambio de documento y ocultar Validar Especial si no es necesario 
+        //funcion para cambio de documento y ocultar Validar Especial si no es necesario 
         function ddlTipoDocChanged() {
 
             var ddlTipoDoc = document.getElementById('<%= ddlTipoDoc.ClientID %>');
             var validarEspecial = document.getElementById('<%= ValidarEspecial.ClientID %>');
-            var mensajeEspecial = document.getElementById('<%= lbMensajeEspecial.ClientID %>');
-
+          
             if (ddlTipoDoc.value !== '') {
                 validarEspecial.style.display = 'none';
-                mensajeEspecial.style.display = 'none';
+              
             } else {
                 validarEspecial.style.display = 'block';
-                mensajeEspecial.style.display = 'block';
+              
             }
         }
     </script>
+
+    <script>
+        // Mostrar y Ocultar  acabados plano
+        function mostrarModal() {
+            $('#ModalInfoEspecial').modal('show');
+        }
+        function ocultarModal() {
+            $('#ModalInfoEspecial').modal('hide');
+        }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (!sessionStorage.getItem('modalShown')) {
+                setTimeout(function () { mostrarModal(); }, 500);
+                sessionStorage.setItem('modalShown', 'true');
+            }
+        });
+    </script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 

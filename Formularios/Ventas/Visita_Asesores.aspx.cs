@@ -1053,7 +1053,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             Session["ContactoVisSession"] = tbContactoServidor.Text;
                             Session["MailVisSession"] = tbMailContServidor.Text;
 
-
+                            Session.Remove("MN_Vis");
                             string mensajePersonalizado = "La Visita ha sido ingresada con éxito";
                             string urlRedireccion = "Ventas/Visita_Asesores.aspx";
                             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
@@ -1113,6 +1113,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             Session["ContactoVisSession"] = tbContactoServidor.Text;
                             Session["MailVisSession"] = tbMailContServidor.Text;
 
+                            Session.Remove("MN_Vis");
                             // Define el mensaje personalizado
                             string mensajePersonalizado = "La visita ha sido actualizada con éxito";
                             // Define la URL de redirección
@@ -1130,10 +1131,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
 
 
-
-
-                   
-
                 }
 
             }
@@ -1148,15 +1145,31 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         public static void NuevaVisita()
         {
             HttpContext.Current.Session["InsertUpdateVisita"] = "Insertar";
+            HttpContext.Current.Session["MN_Vis"] = "1";
         }
 
-        [WebMethod] // Cambiar estado de variable de Session cuando dan click en NuevaSolicitud 
+        [WebMethod] // Cambiar estado de variable de Session cuando dan click en modificar 
         public static void ModificarVisita()
         {
             HttpContext.Current.Session["InsertUpdateVisita"] = "Actualizar";
-           
+            HttpContext.Current.Session["MN_Vis"] = "2";
+
         }
 
+        [WebMethod] 
+        public static void MN_Vis()
+        {
+
+            HttpContext.Current.Session["MN_Vis"] = "-1";
+
+        }
+
+        [WebMethod] // Cambiar estado de variable de Session cuando dan click en NuevaSolicitud 
+        public static void Cancelar()
+        {
+            HttpContext.Current.Session.Remove("MN_Vis");
+            HttpContext.Current.Session.Remove("InsertUpdateVisita");
+        }
 
         // posible codigo que debo eliminar ya que no es necesario 
         protected void GuardarDatosSesion(object sender, EventArgs e)
@@ -1174,27 +1187,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (!IsPostBack)
             {
-                if (!string.IsNullOrEmpty(Session["VisitasPor_Session"]?.ToString()) && !string.IsNullOrEmpty(Session["Cotizacion_Session"]?.ToString()) && !string.IsNullOrEmpty(Session["Observacion_Session"]?.ToString()) && !string.IsNullOrEmpty(Session["FechaVisitaSession"]?.ToString()) && !string.IsNullOrEmpty(Session["Observacion_Session"]?.ToString()))
+                if (tbCliente.Text != "")
                 {
 
 
-                    string fechaVisitaSession = Session["FechaVisitaSession"].ToString();
+                    string fechaVisitaSession = Session["FechaVisitaSession"]?.ToString();
                     DateTime fechaVisitaSessionFo = DateTime.Parse(fechaVisitaSession);
                     fecha.Text = fechaVisitaSessionFo.ToString("yyyy-MM-dd");
-                    tbCotizacion.Text = Session["Cotizacion_Session"].ToString();
-                    txObs.InnerText = Session["Observacion_Session"].ToString();
+                    tbCotizacion.Text = Session["Cotizacion_Session"]?.ToString();
+                    txObs.InnerText = Session["Observacion_Session"]?.ToString();
 
                     ddlVisitasPor.DataBind();
                     foreach (ListItem item in ddlVisitasPor.Items)
                     {
-                        if (item.Text == Session["VisitasPor_Session"].ToString())
+                        if (item.Text == Session["VisitasPor_Session"]?.ToString())
                         {
                             ddlVisitasPor.ClearSelection();
                             item.Selected = true;
                             break;
                         }
                     }
-                    tbIdVisita.Text = Session["Id_VisitaSesion"].ToString();
+                    tbIdVisita.Text = Session["Id_VisitaSesion"]?.ToString();
 
 
 

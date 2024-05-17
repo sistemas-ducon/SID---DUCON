@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Office.Word;
+using DocumentFormat.OpenXml.Packaging;
 using MathNet.Numerics;
 using Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json;
@@ -42,7 +43,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 if (Session["usuariologueado"] != null)
                 {
-                    Session["ProVenSolicitud"] = false;
+                    // Para todos los usuarios 
                     NombreAsesorLogeado();
                     CargarAsesoresEnDropDownList();
                     CargarClienteYContacto();
@@ -51,88 +52,85 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     CargarSession();
                     CargarVariablesDeSesion();
 
+                    // Para Ventas y Asesor 
 
-                    if (ConsultarTerminado())
+                    if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
                     {
-                        // Programar es para varios departamento
-                        Button btnProgramarRender = FindControl("btnProgramarSolicitud") as Button;
-                        if (btnProgramarRender != null)
+                        Session["ProVenSolicitud"] = false;
+                        if (ConsultarTerminadoVentas())
                         {
-                            btnProgramarRender.Enabled = true;
-                            btnProgramarRender.CssClass = "btn btn-warning";
+                            // Programar es para varios departamento
+                            Button btnProgramarRender = FindControl("btnProgramarSolicitud") as Button;
+                            if (btnProgramarRender != null)
+                            {
+                                btnProgramarRender.Enabled = true;
+                                btnProgramarRender.CssClass = "btn btn-sm  btn-warning";
+
+                            }
+
+                            string script = @"ActiBotDetalleVentas();";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "ActiBotDetalleVentas", script, true);
 
                         }
+                        else
+                        {
+                            // Programar es para varios departamento
+                            Button btnProgramarRender = FindControl("btnProgramarSolicitud") as Button;
+                            if (btnProgramarRender != null)
+                            {
+                                btnProgramarRender.Enabled = false;
+                                btnProgramarRender.CssClass = "btn btn-sm btn-warning";
 
-                        string script = @"ActivarBotonDetalle();";
-                        ScriptManager.RegisterStartupScript(this, GetType(), "ActivarBotonDetalle", script, true);
+                            }
+                        }
+
+                        //Disposicion Botones para Ventas 
+                        ControlBotonesVentas();
+
+
+                        //Se oculta Compas para ventas 
+                        DerCompras.Visible = false;
+
 
                     }
-                    else
+                    else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
                     {
-                        // Programar es para varios departamento
-                        Button btnProgramarRender = FindControl("btnProgramarSolicitud") as Button;
-                        if (btnProgramarRender != null)
+                        // Se le cambia el texto al boton programar 
+                        btnProgramarSolicitud.Text = "Terminar";
+
+                        // Se crea la variable de control del TerminadoDiseño
+                        Session["ProDiSolicitud"] = false;
+                        if (ConsultarTerminadoDiseño())
                         {
-                            btnProgramarRender.Enabled = false;
-                            btnProgramarRender.CssClass = "btn btn-warning";
+                            // Programar es para varios departamento
+                            Button btnProgramarRender = FindControl("btnProgramarSolicitud") as Button;
+                            if (btnProgramarRender != null)
+                            {
+                                btnProgramarRender.Enabled = true;
+                                btnProgramarRender.CssClass = "btn btn-sm btn-warning";
+
+                            }
 
                         }
-                    }
+                        else
+                        {
+                            // Programar es para varios departamento
+                            Button btnProgramarRender = FindControl("btnProgramarSolicitud") as Button;
+                            if (btnProgramarRender != null)
+                            {
+                                btnProgramarRender.Enabled = false;
+                                btnProgramarRender.CssClass = "btn  btn-sm btn-warning";
 
-                    //Solo para el departamento de Desarrollo
-                    Button btnConUrgente = FindControl("btnConUrgente") as Button;
-                    if (btnConUrgente != null)
-                    {
-                        btnConUrgente.Enabled = false;
-                        btnConUrgente.CssClass = "btn-sm btn-outline-secondary";
+                            }
+                        }
 
-                    }
+                        //Disposicion Botones para Dibujo                        
+                        ControlBotonesDiseño();
 
-                    //Solo para el departamento de Desarrollo
-                    Button btnComplejo = FindControl("ConfirmarComplejo") as Button;
-                    if (btnComplejo != null)
-                    {
-                        btnComplejo.Enabled = false;
-                        btnComplejo.CssClass = "btn-sm btn-outline-secondary";
-
-                    }
-
-                    //Solo para el departamento de Desarrollo
-                    Button btnTrabajarSolicitud = FindControl("btnTrabajarSolicitud") as Button;
-                    if (btnTrabajarSolicitud != null)
-                    {
-                        btnTrabajarSolicitud.Enabled = false;
-                        btnTrabajarSolicitud.CssClass = "btn-sm btn-outline-secondary";
+                        // Se Cargan los DataGrid con los Datos para Dibujo 
+                        CargarDesarrollos_Cotizaciones();
 
                     }
-
-                    //Solo para el departamento de Desarrollo
-                    Button btnDesprogramar = FindControl("btnDesprogramar") as Button;
-                    if (btnDesprogramar != null)
-                    {
-                        btnDesprogramar.Enabled = false;
-                        btnDesprogramar.CssClass = "btn-sm btn-outline-secondary";
-
-                    }
-
-                    //Solo para el departamento de Desarrollo
-                    Button btnTrbajarCotizacion = FindControl("btnTrbajarCotizacion") as Button;
-                    if (btnTrbajarCotizacion != null)
-                    {
-                        btnTrbajarCotizacion.Enabled = false;
-                        btnTrbajarCotizacion.CssClass = "btn-sm btn-outline-secondary";
-
-                    }
-
-                    //Solo para el departamento de Desarrollo
-                    Button btnDesprogramar1 = FindControl("btnDesprogramar1") as Button;
-                    if (btnDesprogramar1 != null)
-                    {
-                        btnDesprogramar1.Enabled = false;
-                        btnDesprogramar1.CssClass = "btn-sm btn-outline-secondary";
-
-                    }
-
 
                 }
                 else
@@ -144,6 +142,121 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
 
+        }
+
+        private void ControlBotonesVentas()
+        {
+            //Solo para el departamento de Desarrollo
+            Button btnComplejo = FindControl("ConfirmarComplejo") as Button;
+            if (btnComplejo != null)
+            {
+                btnComplejo.Enabled = false;
+                btnComplejo.CssClass = "btn btn-sm btn-outline-secondary";
+
+            }
+
+            //Solo para el departamento de Desarrollo
+            Button btnTrabajarSolicitud = FindControl("btnTrabajarSolicitud") as Button;
+            if (btnTrabajarSolicitud != null)
+            {
+                btnTrabajarSolicitud.Enabled = false;
+                btnTrabajarSolicitud.CssClass = "btn btn-sm btn-outline-secondary";
+
+            }
+
+            //Solo para el departamento de Desarrollo
+            Button btnDesprogramar = FindControl("btnDesprogramar") as Button;
+            if (btnDesprogramar != null)
+            {
+                btnDesprogramar.Enabled = false;
+                btnDesprogramar.CssClass = "btn btn-sm btn-outline-secondary";
+
+            }
+
+            //Solo para el departamento de Desarrollo
+            Button btnTrbajarCotizacion = FindControl("btnTrbajarCotizacion") as Button;
+            if (btnTrbajarCotizacion != null)
+            {
+                btnTrbajarCotizacion.Enabled = false;
+                btnTrbajarCotizacion.CssClass = "btn btn-sm btn-outline-secondary";
+
+            }
+
+            //Solo para el departamento de Desarrollo
+            Button btnDesprogramar1 = FindControl("btnDesprogramar1") as Button;
+            if (btnDesprogramar1 != null)
+            {
+                btnDesprogramar1.Enabled = false;
+                btnDesprogramar1.CssClass = "btn btn-sm btn-outline-secondary";
+
+            }
+
+            // Para Dibujo y Despiece 
+            //Solo para el departamento de Desarrollo
+            Button btnConUrgente = FindControl("btnConUrgente") as Button;
+            if (btnConUrgente != null)
+            {
+                btnConUrgente.Enabled = false;
+                btnConUrgente.CssClass = "btn btn-sm btn-outline-secondary";
+
+            }
+        }
+        private void ControlBotonesDiseño()
+        {
+            //Deshablitamos el Boton confirmar Complejo
+            Button btnComplejo = FindControl("ConfirmarComplejo") as Button;
+            if (btnComplejo != null)
+            {
+                btnComplejo.Enabled = false;
+                btnComplejo.CssClass = "btn btn-sm btn-outline-secondary";
+
+            }
+
+            //Activar el Boton Trabajar en Solicitud 
+            Button btnTrabajarSolicitud = FindControl("btnTrabajarSolicitud") as Button;
+            if (btnTrabajarSolicitud != null)
+            {
+                btnTrabajarSolicitud.Enabled = true;
+                btnTrabajarSolicitud.CssClass = "btn btn-sm btn-outline-secondary";
+
+            }
+
+            //Activar el Boton Trabajar en Desprogramar  
+            Button btnDesprogramar = FindControl("btnDesprogramar") as Button;
+            if (btnDesprogramar != null)
+            {
+                btnDesprogramar.Enabled = true;
+                btnDesprogramar.CssClass = "btn btn-sm btn-outline-secondary";
+
+            }
+
+            //Activar el Boton Trabajar en TrabajarCotizacion 
+            Button btnTrbajarCotizacion = FindControl("btnTrbajarCotizacion") as Button;
+            if (btnTrbajarCotizacion != null)
+            {
+                btnTrbajarCotizacion.Enabled = true;
+                btnTrbajarCotizacion.CssClass = "btn btn-sm btn-outline-secondary";
+
+            }
+
+            //Activar el Boton Trabajar en Desprogramar1 
+            Button btnDesprogramar1 = FindControl("btnDesprogramar1") as Button;
+            if (btnDesprogramar1 != null)
+            {
+                btnDesprogramar1.Enabled = true;
+                btnDesprogramar1.CssClass = "btn btn-sm btn-outline-secondary";
+
+            }
+
+            // Para Dibujo y Despiece 
+            //Solo para el departamento de Desarrollo
+            Button btnConUrgente = FindControl("btnConUrgente") as Button;
+            if (btnConUrgente != null)
+            {
+                btnConUrgente.Enabled = false;
+                btnConUrgente.CssClass = "btn btn-sm btn-outline-secondary";
+
+            }
         }
 
         public void CargarVariablesDeSesion()
@@ -539,136 +652,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 int pausado = pausadoObj != DBNull.Value ? (bool)pausadoObj ? 1 : 0 : 0;
                 int terminado = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "Terminado"));
                 int Urgente = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "Urgente"));
+                int DesComplejo = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "DesarrolloComplejo"));
                 // Obtener la fecha programada
                 DateTime fechaProgramada = Convert.ToDateTime(DataBinder.Eval(e.Item.DataItem, "Fecha_Programada_Entrega"));
 
 
-                if (terminado == 1)
-                {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#57F525"); //Verde
-                }
-                else if (Urgente == 1 && programadoVentas == 1)
-                {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#FA721E");    //Naranja 
-                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
-                }
-                else if (programadoVentas == 1 && pausado == 1)
-                {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#08F4E2");    // Aqua
 
-                }
-                else if (fechaProgramada <= DateTime.Now && programadoVentas == 1 )
+                if (DesComplejo == 1 && programadoVentas == 1)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F71A27");    //rojo 
-                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
-                }
-
-                else if (programadoVentas == 0)
-                {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#673f8b");    //Morado 
-                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
-                }
-                else
-                {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F1FF43");//amarillo 
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#57F525");    //Verde 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
                 }
-
-
-            }
-
-
-        }
-
-
-        public void CambioZona(object sender, EventArgs e)
-        {
-            string valorSeleccionado = ddlZona.SelectedValue;
-
-            CambiarSqlDataSource(valorSeleccionado);
-
-
-
-
-        }
-
-
-        private void CambiarSqlDataSource(string valorSeleccionado)
-        {
-            if (valorSeleccionado == "01" || valorSeleccionado == "02")
-            {
-                DataGrid1.DataSourceID = "Desarrollo";
-            }
-            else
-            {
-                DataGrid1.DataSourceID = "CargarDesarrollos";
-            }
-            string script = "<script>ControlBtnCliente();</script>";
-            ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, false);
-            DataGrid1.DataBind();
-
-        }
-
-
-        public void CambioZona2(object sender, EventArgs e)
-        {
-            string valorSeleccionado = ddlZona.SelectedValue;
-
-            CambiarSqlDataSource2(valorSeleccionado);
-
-        }
-
-
-        private void CambiarSqlDataSource2(string valorSeleccionado)
-        {
-
-            if (valorSeleccionado == "01" || valorSeleccionado == "02")
-            {
-                DataGrid2.DataSourceID = "Cotizaciones";
-            }
-            else
-            {
-                DataGrid2.DataSourceID = "CargarCotizaciones";
-            }
-
-            string script = "<script>ControlBtnCliente();</script>";
-            ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, false);
-            DataGrid2.DataBind();
-
-        }
-
-
-
-        protected void DataGridCotizacion_ItemDataBound(object sender, DataGridItemEventArgs e)
-        {
-
-
-            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-            {
-
-                // Aplica la clase "fila-clickeable" a todas las filas
-                e.Item.CssClass += " fila-clickeable";
-
-
-                // Obtener los valores de las columnas ocultas
-                int programadoVentas = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "ProgramadoVentas"));
-                object pausadoObj = DataBinder.Eval(e.Item.DataItem, "Pausado");
-                int pausado = pausadoObj != DBNull.Value ? (bool)pausadoObj ? 1 : 0 : 0;
-                int terminado = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "Terminado"));
-                int Urgente = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "Urgente"));
-                // Obtener la fecha programada
-                DateTime fechaProgramada = Convert.ToDateTime(DataBinder.Eval(e.Item.DataItem, "Fecha_Programada_Entrega"));
-
-
-                if (terminado == 1)
-                {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#57F525"); //Verde
-                }
                 else if (Urgente == 1 && programadoVentas == 1)
                 {
                     e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#FA721E");    //Naranja 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
+
                 else if (programadoVentas == 1 && pausado == 1)
                 {
                     e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#08F4E2");    // Aqua
@@ -698,34 +698,287 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
 
+        public void CambioZona(object sender, EventArgs e)
+        {
+            string valorSeleccionado = ddlZona.SelectedValue;
+
+            CambiarSqlDataSource(valorSeleccionado);
+            CambiarSqlDataSource2(valorSeleccionado);
+        }
+
+
+        private void CambiarSqlDataSource(string valorSeleccionado)
+        {
+            if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
+            {
+                if (valorSeleccionado == "01" || valorSeleccionado == "02")
+                {
+                    // Actualizar el DataGrid para que use este SqlDataSource
+                    DataGrid1.DataSourceID = "Desarrollo";
+                    DataGrid1.DataBind();
+                }
+                else
+                {
+                    DataGrid1.DataSourceID = "CargarDesarrollos";
+                }
+            }
+            else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+            {
+                if (valorSeleccionado == "01" || valorSeleccionado == "02")
+                {
+                    Desarrollo.SelectCommand = "spObteSoliEspeDiseño";
+
+                    // Limpiar los parámetros existentes si es necesario
+                    Desarrollo.SelectParameters.Clear();
+
+                    // Agregar el parámetro Zona
+                    Desarrollo.SelectParameters.Add("Zona", ddlZona.SelectedValue);
+
+                    // Actualizar el DataGrid para que use este SqlDataSource
+                    DataGrid1.DataSourceID = "Desarrollo";
+                    DataGrid1.DataBind();
+                }
+                else
+                {
+                    // Cargar Desarrollos
+
+                    CargarDesarrollos.SelectCommand = " SELECT * FROM tblSoliciDiseEspe  " +
+                                                                   " WHERE Terminado = 0 AND Dirigidoa='DESARROLLO DE PRODUCTO'AND  ProgramadoVentas = 1  " +
+                                                                   " AND TipoSolicitud ='DESARROLLO' ORDER BY Fecha_Ingreso ASC ";
+
+                    DataGrid1.DataSourceID = "CargarDesarrollos";
+                    DataGrid1.DataBind();
+                }
+
+            }
+
+
+
+            string script = "<script>ControlBtnCliente();</script>";
+            ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, false);
+            DataGrid1.DataBind();
+
+        }
+
+
+        // Este metodo es por si desean cambiar el la zona por separado
+        public void CambioZona2(object sender, EventArgs e)
+        {
+            string valorSeleccionado = ddlZona.SelectedValue;
+
+            CambiarSqlDataSource2(valorSeleccionado);
+
+        }
+
+
+        private void CambiarSqlDataSource2(string valorSeleccionado)
+        {
+
+            if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
+            {
+                if (valorSeleccionado == "01" || valorSeleccionado == "02")
+                {
+                    // Actualizar el DataGrid para que use este SqlDataSource
+                    DataGrid2.DataSourceID = "Cotizaciones";
+                    DataGrid2.DataBind();
+                }
+                else
+                {
+                    DataGrid2.DataSourceID = "CargarCotizaciones";
+                }
+            }
+            else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+            {
+                if (valorSeleccionado == "01" || valorSeleccionado == "02")
+                {
+                    Cotizaciones.SelectCommand = "spObteSoliEspeCotDiseño";
+
+                    // Limpiar los parámetros existentes si es necesario
+                    Cotizaciones.SelectParameters.Clear();
+
+                    // Agregar el parámetro Zona
+                    Cotizaciones.SelectParameters.Add("Zona", ddlZona.SelectedValue);
+
+                    // Actualizar el DataGrid para que use este SqlDataSource
+                    DataGrid2.DataSourceID = "Cotizaciones";
+                    DataGrid2.DataBind();
+                }
+                else
+                {
+                    // Cargar Cotizaciones 
+
+                    CargarCotizaciones.SelectCommand = "SELECT * FROM tblSoliciDiseEspe " +
+                                                       "WHERE Terminado = 0 AND TipoSolicitud ='COTIZACIÓN' AND Dirigidoa = 'DESARROLLO DE PRODUCTO' " +
+                                                       "AND ProgramadoVentas = 1 ORDER BY Fecha_Ingreso ASC;";
+
+
+
+                    DataGrid2.DataSourceID = "CargarCotizaciones";
+                    DataGrid2.DataBind();
+                }
+
+            }
+
+
+            string script = "<script>ControlBtnCliente();</script>";
+            ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, false);
+            DataGrid2.DataBind();
+
+        }
+
+
+
+        protected void DataGridCotizacion_ItemDataBound(object sender, DataGridItemEventArgs e)
+        {
+
+
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+
+                // Aplica la clase "fila-clickeable" a todas las filas
+                e.Item.CssClass += " fila-clickeable";
+
+
+                // Obtener los valores de las columnas ocultas
+                int programadoVentas = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "ProgramadoVentas"));
+                object pausadoObj = DataBinder.Eval(e.Item.DataItem, "Pausado");
+                int pausado = pausadoObj != DBNull.Value ? (bool)pausadoObj ? 1 : 0 : 0;
+                int terminado = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "Terminado"));
+                int Urgente = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "Urgente"));
+                int DesComplejo = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "DesarrolloComplejo"));
+                // Obtener la fecha programada
+                DateTime fechaProgramada = Convert.ToDateTime(DataBinder.Eval(e.Item.DataItem, "Fecha_Programada_Entrega"));
+
+
+
+                if (DesComplejo == 1 && programadoVentas == 1)
+                {
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#57F525");    //Verde 
+                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
+                }
+                else if (Urgente == 1 && programadoVentas == 1)
+                {
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#FA721E");    //Naranja 
+                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
+                }
+
+                else if (programadoVentas == 1 && pausado == 1)
+                {
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#08F4E2");    // Aqua
+
+                }
+                else if (fechaProgramada <= DateTime.Now && programadoVentas == 1)
+                {
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F71A27");    //rojo 
+                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
+                }
+
+                else if (programadoVentas == 0)
+                {
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#673f8b");    //Morado 
+                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
+                }
+                else
+                {
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F1FF43");//amarillo 
+                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
+                }
+
+            }
+
+
+        }
+
+
         protected void ConsultarSolicitud(object sender, EventArgs e)
         {
 
-            // Validamos si el campo esta vacio para ejecurar un sqldatasource sino usamoos el otr 
-            if (tbFechaIni.Text != "" && tbFechaFin.Text != "" && tbSolicitud1.Text != "")
+
+            if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
             {
-                BuscarDesarrollo.DataSourceID = "SolicitudXID";
-                BuscarDesarrollo.DataBind();
-            }
-            else if (tbFechaIni.Text != "" && tbFechaFin.Text != "" && tbProyectoX.Text != "")
-            {
-                BuscarDesarrollo.DataSourceID = "SolicXProyecto";
-                BuscarDesarrollo.DataBind();
+                // Validamos si el campo esta vacio para ejecurar un sqldatasource sino usamoos el otr 
+                if (tbFechaIni.Text != "" && tbFechaFin.Text != "" && tbSolicitud1.Text != "")
+                {
+                    BuscarDesarrollo.DataSourceID = "SolicitudXID";
+                    BuscarDesarrollo.DataBind();
+                }
+                else if (tbFechaIni.Text != "" && tbFechaFin.Text != "" && tbProyectoX.Text != "")
+                {
+                    BuscarDesarrollo.DataSourceID = "SolicXProyecto";
+                    BuscarDesarrollo.DataBind();
+
+                }
+                else if (tbFechaIni.Text != "" && tbFechaFin.Text != "" && tbClienteX.Text != "")
+                {
+                    BuscarDesarrollo.DataSourceID = "solicitudXCliente";
+                    BuscarDesarrollo.DataBind();
+                }
+                else
+                {
+                    BuscarDesarrollo.DataSourceID = "SolicXFecha";
+                    BuscarDesarrollo.DataBind();
+                }
+
+                string script = "<script>HabilEnla1Ventas();</script>";
+                ScriptManager.RegisterStartupScript(this, GetType(), "HabilEnla1Ventas", script, false);
 
             }
-            else if (tbFechaIni.Text != "" && tbFechaFin.Text != "" && tbClienteX.Text != "")
+            else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO" /* || ControlDeDiseño() */)
             {
-                BuscarDesarrollo.DataSourceID = "solicitudXCliente";
-                BuscarDesarrollo.DataBind();
-            }
-            else
-            {
-                BuscarDesarrollo.DataSourceID = "SolicXFecha";
-                BuscarDesarrollo.DataBind();
+                // Validamos si el campo esta vacio para ejecurar un sqldatasource sino usamoos el otr 
+                if (tbFechaIni.Text != "" && tbFechaFin.Text != "" && tbSolicitud1.Text != "")
+                {
+                    SolicitudXID.SelectCommand = "SELECT *  FROM tblSoliciDiseEspe " +
+                                             " WHERE  ID_Solicitud  LIKE '%' + @Solicitud + '%' " +
+                                             "AND Fecha_Ingreso between @FechaIni and @FechaFin  ";
+
+
+                    BuscarDesarrollo.DataSourceID = "SolicitudXID";
+                    BuscarDesarrollo.DataBind();
+                }
+                else if (tbFechaIni.Text != "" && tbFechaFin.Text != "" && tbProyectoX.Text != "")
+                {
+
+                    SolicXProyecto.SelectCommand = "SELECT * FROM tblSoliciDiseEspe  WHERE " +
+                                                   "Proyecto  LIKE '%' + @Proyecto + '%' " +
+                                                   "AND Fecha_Ingreso between @FechaIni and @FechaFin  ";
+
+
+                    BuscarDesarrollo.DataSourceID = "SolicXProyecto";
+                    BuscarDesarrollo.DataBind();
+
+                }
+                else if (tbFechaIni.Text != "" && tbFechaFin.Text != "" && tbClienteX.Text != "")
+                {
+
+                    solicitudXCliente.SelectCommand = " SELECT *  FROM tblSoliciDiseEspe " +
+                                                      "  WHERE  Cliente  LIKE '%' + @Cliente + '%' " +
+                                                      "  AND Fecha_Ingreso between @FechaIni and @FechaFin ";
+
+                    BuscarDesarrollo.DataSourceID = "solicitudXCliente";
+                    BuscarDesarrollo.DataBind();
+                }
+                else
+                {
+                    SolicXFecha.SelectCommand = "SELECT * FROM tblSoliciDiseEspe  " +
+                                                "WHERE  Fecha_Ingreso between @FechaIni and @FechaFin  ";
+
+
+
+                    BuscarDesarrollo.DataSourceID = "SolicXFecha";
+                    BuscarDesarrollo.DataBind();
+                }
+
+
+                // Control de la activacion del boton de cliente 
+                string script = "<script>ControlBtnCliente();</script>";
+                ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, false);
+
+
             }
 
-            string script = "<script>HabilitarEnlaces1();</script>";
-            ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces1", script, false);
+
+
 
         }
 
@@ -737,26 +990,32 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
 
 
-
                 // Obtener los valores de las columnas ocultas
                 int programadoVentas = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "ProgramadoVentas"));
                 object pausadoObj = DataBinder.Eval(e.Item.DataItem, "Pausado");
                 int pausado = pausadoObj != DBNull.Value ? (bool)pausadoObj ? 1 : 0 : 0;
                 int terminado = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "Terminado"));
                 int Urgente = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "Urgente"));
+                int DesComplejo = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "DesarrolloComplejo"));
                 // Obtener la fecha programada
                 DateTime fechaProgramada = Convert.ToDateTime(DataBinder.Eval(e.Item.DataItem, "Fecha_Programada_Entrega"));
 
 
-                if (terminado == 1)
+                if (terminado == 1 && programadoVentas == 1)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#57F525"); //Verde
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFFFF");
+                }
+                else if (DesComplejo == 1 && programadoVentas == 1)
+                {
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#57F525");    //Verde 
+                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
                 }
                 else if (Urgente == 1 && programadoVentas == 1)
                 {
                     e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#FA721E");    //Naranja 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
+
                 else if (programadoVentas == 1 && pausado == 1)
                 {
                     e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#08F4E2");    // Aqua
@@ -788,13 +1047,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void DataGridSolicitudPE_LinkButton(object source, DataGridCommandEventArgs e)
         {
-            //Este Codigo se puede optimizar para no repetir el mismo proceso , solo cambiaria el Datagrid con otros metodos ma pequeños 
 
             if (e.CommandName == "VerDesarrollo")
             {
-
-
-
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGrid1.Items[rowIndex];
 
@@ -806,7 +1061,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
                     }
                 }
-
 
                 //se usa Para darle un color a la fila seleccionada  anderson
                 e.Item.CssClass = "fila-seleccionada1";
@@ -823,11 +1077,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string Tipo = row.Cells[6].Text;
                 string RealizadoPor = row.Cells[7].Text;
                 string termiVenta = row.Cells[8].Text;
-                Session["ProVenSolicitud"] = termiVenta;
-
-
-
-
+                string TermiDiseño = row.Cells[10].Text;
                 string FechaEntrega = row.Cells[11].Text;
                 DateTime FechaEntregaForm = DateTime.Parse(FechaEntrega);
                 string FechaRespuesta = row.Cells[12].Text;
@@ -843,6 +1093,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string Mail = row.Cells[21].Text;
                 string Direccion = row.Cells[22].Text;
                 string SegPausa = row.Cells[23].Text;
+                string DesComplejo = row.Cells[24].Text;
+                string Urgente = row.Cells[25].Text;
 
                 lbNumeroSolicitud.Text = IdSolicitud;
                 tbProyecto.Text = NombreProyecto;
@@ -884,7 +1136,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 tbFechaRespuestaServidor.Text = FechaRespuestaForm.ToString("yyyy-MM-dd");
                 tbSolicitudOrigen.Text = SoliOrigen;
 
-
                 foreach (ListItem item in ddlCiudad.Items)
                 {
                     if (item.Text == Ciudad)
@@ -894,6 +1145,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         break;
                     }
                 }
+
                 if (Viatico == "True")
                 {
                     chxViaticos.Checked = true;
@@ -902,6 +1154,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     chxViaticos.Checked = false;
                 }
+
                 tbCotizacionEsp.Text = Cotizacion;
                 tbCliente.Text = Cliente;
                 tbClienteServidor.Text = Cliente;
@@ -925,35 +1178,92 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     txSegPausa.InnerText = SegPausa;
                 }
-                txDescProduc.InnerText = "";
-                tbProveedor.Text = "";
-                tbAncho.Text = "";
-                tbAltura.Text = "";
-                tbProfundidad.Text = "";
-                tbMaterial.Text = "";
-                tbCantidad.Text = "";
-                txEspGen.InnerText = "";
-                txobsCompras.InnerText = "";
-                txObsDesarrollo.InnerText = "";
-                chxUrgente.Checked = false;
+                chxUrgente.Checked = Convert.ToBoolean(Urgente);
+                chxDesComplejo.Checked = Convert.ToBoolean(DesComplejo);
+
+                //Limpiamos Campos de Detalle 
+                LimpiarCamposDetalle();
+
+               
 
 
-                if (termiVenta != "True")
+                if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
                 {
-                    btnProgramarSolicitud.Enabled = true;
-                    btnProgramarSolicitud.CssClass = "btn btn btn-warning";
+                    if (termiVenta != "True")
+                    {
 
-                    string script = "<script>HabilitarEnlaces1();</script>";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces1", script, false);
+                        Session["ProVenSolicitud"] = termiVenta;
+
+                        btnProgramarSolicitud.Enabled = true;
+                        btnProgramarSolicitud.CssClass = "btn btn-sm btn-warning";
+
+                        string script = "<script>HabilEnla1Ventas();</script>";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "HabilEnla1Ventas", script, false);
+                    }
+                    else
+                    {
+
+                        btnProgramarSolicitud.Enabled = false;
+                        btnProgramarSolicitud.CssClass = "btn btn btn-warning";
+
+                        string script = "<script>HabilitarEnlaces4();</script>";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces4", script, false);
+                    }
+
                 }
-                else
+                else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
                 {
+                    if (TermiDiseño != "True")
+                    {
 
-                    btnProgramarSolicitud.Enabled = false;
-                    btnProgramarSolicitud.CssClass = "btn btn btn-warning";
+                        Session["ProDiSolicitud"] = TermiDiseño;
 
-                    string script = "<script>HabilitarEnlaces4();</script>";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces4", script, false);
+                        btnProgramarSolicitud.Enabled = true;
+                        btnProgramarSolicitud.CssClass = "btn btn-sm btn-warning";
+
+                        ConfirmarComplejo.Enabled = true;
+                        ConfirmarComplejo.CssClass = "btn btn-sm btn-outline-primary";
+
+                        btnConUrgente.Enabled = true;
+                        btnConUrgente.CssClass = "btn btn-sm btn-outline-primary";
+
+                        chxDesComplejo.Enabled = true;
+                        chxUrgente.Enabled = true;
+
+                        if (termiVenta == "True")
+                        {
+                            string script = "<script>HabEnlDiseño();</script>";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+                        }
+                        else
+                        {
+                            string script = "<script>HabEnlDiseño3();</script>";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño2", script, false);
+                        }
+
+                    }
+                    else
+                    {
+                        Session["ProDiSolicitud"] = TermiDiseño;
+
+                        btnProgramarSolicitud.Enabled = false;
+                        btnProgramarSolicitud.CssClass = "btn btn-sm btn-warning";
+
+
+                        ConfirmarComplejo.Enabled = false;
+                        ConfirmarComplejo.CssClass = "btn btn-sm btn-outline-secondary";
+
+                        btnConUrgente.Enabled = false;
+                        btnConUrgente.CssClass = "btn btn-sm btn-outline-secondary";
+
+                        chxDesComplejo.Enabled = false;
+                        chxUrgente.Enabled = false;
+
+                        string script = "<script>HabEnlDiseño2();</script>";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño2", script, false);
+
+
+                    }
                 }
 
 
@@ -961,7 +1271,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (e.CommandName == "VerCotizacion")
             {
-
 
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGrid2.Items[rowIndex];
@@ -975,7 +1284,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
 
-
                 //se usa Para darle un color a la fila seleccionada  anderson
                 e.Item.CssClass = "fila-seleccionada1";
 
@@ -989,9 +1297,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string Tipo = row.Cells[6].Text;
                 string RealizadoPor = row.Cells[7].Text;
                 string termiVenta = row.Cells[8].Text;
-                Session["ProVenSolicitud"] = termiVenta;
-
-
+                string TermiDiseño = row.Cells[10].Text;
                 string FechaEntrega = row.Cells[11].Text;
                 DateTime FechaEntregaForm = DateTime.Parse(FechaEntrega);
                 string FechaRespuesta = row.Cells[12].Text;
@@ -1007,6 +1313,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string Mail = row.Cells[21].Text;
                 string Direccion = row.Cells[22].Text;
                 string SegPausa = row.Cells[23].Text;
+                string DesComplejo = row.Cells[24].Text;
+                string Urgente = row.Cells[25].Text;
 
                 lbNumeroSolicitud.Text = IdSolicitud;
                 tbProyecto.Text = NombreProyecto;
@@ -1058,6 +1366,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         break;
                     }
                 }
+
                 if (Viatico == "True")
                 {
                     chxViaticos.Checked = true;
@@ -1066,6 +1375,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     chxViaticos.Checked = false;
                 }
+
                 tbCotizacionEsp.Text = Cotizacion;
                 tbCliente.Text = Cliente;
                 tbClienteServidor.Text = Cliente;
@@ -1079,6 +1389,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 tbMailServidor.Text = Mail;
                 tbDireccion.Text = Direccion;
                 tbDireccionServidor.Text = Direccion;
+
                 if (SegPausa == "&nbsp;")
                 {
                     string SegPausaRep = SegPausa.Replace("&nbsp;", "");
@@ -1088,37 +1399,91 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     txSegPausa.InnerText = SegPausa;
                 }
+                chxUrgente.Checked = Convert.ToBoolean(Urgente);
+                chxDesComplejo.Checked = Convert.ToBoolean(DesComplejo);
 
-                txDescProduc.InnerText = "";
-                tbProveedor.Text = "";
-                tbAncho.Text = "";
-                tbAltura.Text = "";
-                tbProfundidad.Text = "";
-                tbMaterial.Text = "";
-                tbCantidad.Text = "";
-                txEspGen.InnerText = "";
-                txobsCompras.InnerText = "";
-                txObsDesarrollo.InnerText = "";
-                chxUrgente.Checked = false;
+                //Limpiamos Campos de Detalle 
+                LimpiarCamposDetalle();
 
 
-
-                if (termiVenta != "True")
+                if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
                 {
-                    btnProgramarSolicitud.Enabled = true;
-                    btnProgramarSolicitud.CssClass = "btn btn btn-warning";
+                    if (termiVenta != "True")
+                    {
 
-                    string script = "<script>HabilitarEnlaces1();</script>";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces1", script, false);
+                        Session["ProVenSolicitud"] = termiVenta;
+
+                        btnProgramarSolicitud.Enabled = true;
+                        btnProgramarSolicitud.CssClass = "btn btn-sm btn-warning";
+
+                        string script = "<script>HabilEnla1Ventas();</script>";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "HabilEnla1Ventas", script, false);
+                    }
+                    else
+                    {
+
+                        btnProgramarSolicitud.Enabled = false;
+                        btnProgramarSolicitud.CssClass = "btn btn btn-warning";
+
+                        string script = "<script>HabilitarEnlaces4();</script>";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces4", script, false);
+                    }
+
                 }
-                else
+                else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
                 {
+                    if (TermiDiseño != "True")
+                    {
 
-                    btnProgramarSolicitud.Enabled = false;
-                    btnProgramarSolicitud.CssClass = "btn btn btn-warning";
+                        Session["ProDiSolicitud"] = TermiDiseño;
 
-                    string script = "<script>HabilitarEnlaces4();</script>";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces4", script, false);
+                        btnProgramarSolicitud.Enabled = true;
+                        btnProgramarSolicitud.CssClass = "btn btn-sm btn-warning";
+
+                        ConfirmarComplejo.Enabled = true;
+                        ConfirmarComplejo.CssClass = "btn btn-sm btn-outline-primary";
+
+                        btnConUrgente.Enabled = true;
+                        btnConUrgente.CssClass = "btn btn-sm btn-outline-primary";
+
+                        chxDesComplejo.Enabled = true;
+                        chxUrgente.Enabled = true;
+
+                        if (termiVenta == "True")
+                        {
+                            string script = "<script>HabEnlDiseño();</script>";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+                        }
+                        else
+                        {
+                            string script = "<script>HabEnlDiseño3();</script>";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño2", script, false);
+                        }
+
+                    }
+                    else
+                    {
+
+                        Session["ProDiSolicitud"] = TermiDiseño;
+
+                        btnProgramarSolicitud.Enabled = false;
+                        btnProgramarSolicitud.CssClass = "btn btn-sm btn-warning";
+
+
+                        ConfirmarComplejo.Enabled = false;
+                        ConfirmarComplejo.CssClass = "btn btn-sm btn-outline-secondary";
+
+                        btnConUrgente.Enabled = false;
+                        btnConUrgente.CssClass = "btn btn-sm btn-outline-secondary";
+
+                        chxDesComplejo.Enabled = false;
+                        chxUrgente.Enabled = false;
+
+                        string script = "<script>HabEnlDiseño2();</script>";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño2", script, false);
+
+
+                    }
                 }
 
 
@@ -1128,7 +1493,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (e.CommandName == "VerBuscado")
             {
-
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = BuscarDesarrollo.Items[rowIndex];
 
@@ -1154,9 +1518,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string Tipo = row.Cells[6].Text;
                 string RealizadoPor = row.Cells[7].Text;
                 string termiVenta = row.Cells[8].Text;
-                Session["ProVenSolicitud"] = termiVenta;
-
-
+                string TermiDiseño = row.Cells[10].Text;
                 string FechaEntrega = row.Cells[11].Text;
                 DateTime FechaEntregaForm = DateTime.Parse(FechaEntrega);
                 string FechaRespuesta = row.Cells[12].Text;
@@ -1172,6 +1534,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string Mail = row.Cells[21].Text;
                 string Direccion = row.Cells[22].Text;
                 string SegPausa = row.Cells[23].Text;
+                string DesComplejo = row.Cells[24].Text;
+                string Urgente = row.Cells[25].Text;
 
                 lbNumeroSolicitud.Text = IdSolicitud;
                 tbProyecto.Text = NombreProyecto;
@@ -1222,6 +1586,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         break;
                     }
                 }
+
                 if (Viatico == "True")
                 {
                     chxViaticos.Checked = true;
@@ -1230,6 +1595,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     chxViaticos.Checked = false;
                 }
+
                 tbCotizacionEsp.Text = Cotizacion;
                 tbCliente.Text = Cliente;
                 tbClienteServidor.Text = Cliente;
@@ -1243,6 +1609,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 tbMailServidor.Text = Mail;
                 tbDireccion.Text = Direccion;
                 tbDireccionServidor.Text = Direccion;
+
                 if (SegPausa == "&nbsp;")
                 {
                     string SegPausaRep = SegPausa.Replace("&nbsp;", "");
@@ -1252,44 +1619,116 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     txSegPausa.InnerText = SegPausa;
                 }
+                chxUrgente.Checked = Convert.ToBoolean(Urgente);
+                chxDesComplejo.Checked = Convert.ToBoolean(DesComplejo);
 
-                txDescProduc.InnerText = "";
-                tbProveedor.Text = "";
-                tbAncho.Text = "";
-                tbAltura.Text = "";
-                tbProfundidad.Text = "";
-                tbMaterial.Text = "";
-                tbCantidad.Text = "";
-                txEspGen.InnerText = "";
-                txobsCompras.InnerText = "";
-                txObsDesarrollo.InnerText = "";
-                chxUrgente.Checked = false;
+                //Limpiamos Campos de Detalle 
+                LimpiarCamposDetalle();
 
-                if (termiVenta != "True")
+
+                if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
                 {
-                    btnProgramarSolicitud.Enabled = true;
-                    btnProgramarSolicitud.CssClass = "btn btn btn-warning";
+                    if (termiVenta != "True")
+                    {
 
-                    string script = "<script>HabilitarEnlaces1();</script>";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces1", script, false);
+                        Session["ProVenSolicitud"] = termiVenta;
+
+                        btnProgramarSolicitud.Enabled = true;
+                        btnProgramarSolicitud.CssClass = "btn btn-sm btn-warning";
+
+                        string script = "<script>HabilEnla1Ventas();</script>";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "HabilEnla1Ventas", script, false);
+                    }
+                    else
+                    {
+
+                        btnProgramarSolicitud.Enabled = false;
+                        btnProgramarSolicitud.CssClass = "btn btn btn-warning";
+
+                        string script = "<script>HabilitarEnlaces4();</script>";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces4", script, false);
+                    }
+
                 }
-                else
+                else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
                 {
+                    if (TermiDiseño != "True")
+                    {
 
-                    btnProgramarSolicitud.Enabled = false;
-                    btnProgramarSolicitud.CssClass = "btn btn btn-warning";
+                        Session["ProDiSolicitud"] = TermiDiseño;
 
-                    string script = "<script>HabilitarEnlaces4();</script>";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces4", script, false);
+                        btnProgramarSolicitud.Enabled = true;
+                        btnProgramarSolicitud.CssClass = "btn btn-sm btn-warning";
+
+                        ConfirmarComplejo.Enabled = true;
+                        ConfirmarComplejo.CssClass = "btn btn-sm btn-outline-primary";
+
+                        btnConUrgente.Enabled = true;
+                        btnConUrgente.CssClass = "btn btn-sm btn-outline-primary";
+
+                        chxDesComplejo.Enabled = true;
+                        chxUrgente.Enabled = true;
+
+                        if (termiVenta == "True")
+                        {
+                            string script = "<script>HabEnlDiseño();</script>";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+                        }
+                        else
+                        {
+                            string script = "<script>HabEnlDiseño3();</script>";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño2", script, false);
+                        }
+
+                    }
+                    else
+                    {
+
+                        Session["ProDiSolicitud"] = TermiDiseño;
+
+                        btnProgramarSolicitud.Enabled = false;
+                        btnProgramarSolicitud.CssClass = "btn btn-sm btn-warning";
+
+
+                        ConfirmarComplejo.Enabled = false;
+                        ConfirmarComplejo.CssClass = "btn btn-sm btn-outline-secondary";
+
+                        btnConUrgente.Enabled = false;
+                        btnConUrgente.CssClass = "btn btn-sm btn-outline-secondary";
+
+                        chxDesComplejo.Enabled = false;
+                        chxUrgente.Enabled = false;
+
+                        string script = "<script>HabEnlDiseño2();</script>";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño2", script, false);
+
+
+                    }
                 }
-
-
-
-
 
             }
 
+        }
 
+
+        private void LimpiarCamposDetalle()
+        {
+            txDescProduc.InnerText = "";
+            tbProveedor.Text = "";
+            tbAncho.Text = "";
+            tbAltura.Text = "";
+            tbProfundidad.Text = "";
+            tbMaterial.Text = "";
+            tbCantidad.Text = "";
+            txEspGen.InnerText = "";
+            txobsCompras.InnerText = "";
+            txObsDesarrollo.InnerText = "";
+            tbCostoC.Text = "";
+            tbFactorC.Text = "";
+            tbProve.Text = "";
+            tbCostoD.Text = "";
+            tbFactorD.Text = "";
+            tbPrecioSugerido.Text = "";
         }
 
 
@@ -1378,7 +1817,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 Session["AsesorSolSession"] = ddlAsesor.SelectedItem.Text;
                                 Session["numeroSolicitudSession"] = IdSolicitud;
 
-                                Session["ScriptEspecifico"] = "ActivarBotonDetalle();";
+                                Session["ScriptEspecifico"] = "ActiBotDetalleVentas();";
 
                                 string mensajePersonalizado = "La solicitud ha sido ingresada con éxito.";
                                 string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
@@ -1404,7 +1843,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 // Validar si la solicitud ya ha sido a aprobada por Ventas(validacion Boton de modificar )
 
-                if (!ConsultarTerminado())
+                if (!ConsultarTerminadoVentas())
                 {
                     string mensajePersonalizado = "La solicitud ya ha sido programda para ventas y no puede ser modificada.";
                     string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
@@ -1476,7 +1915,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             Session["AsesorSolSession"] = ddlAsesor.SelectedItem.Text;
                             Session["numeroSolicitudSession"] = lbNumeroSolicitud.Text;
 
-                            Session["ScriptEspecifico"] = "ActivarBotonDetalle();";
+                            Session["ScriptEspecifico"] = "ActiBotDetalleVentas();";
 
                             string mensajePersonalizado = "La solicitud  ha sido actualizada con éxito";
                             string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
@@ -1519,7 +1958,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session["Id_Solicitud_Pantalla"] = lbNumeroSolicitud.Text;
 
         }
-
 
         private void CargarSession()
         {
@@ -1594,7 +2032,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     lbNumeroSolicitud.Text = NumeroSolPantalla;
 
 
-                    if (tbCliente.Text != "" )
+                    if (tbCliente.Text != "")
                     {
                         Session.Remove("ProyectoSession");
                         Session.Remove("SolicitudOrigen");
@@ -1932,6 +2370,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             HttpContext.Current.Session["nuevaSol"] = null;
         }
 
+        [WebMethod]  // Cambiar estado de variable de Session cuando dan click en Modificarsolicitud 
+        public static void Cancelar()
+        {
+
+            HttpContext.Current.Session.Remove("nuevaSol");
+            HttpContext.Current.Session.Remove("Insertar");
+        }
+
         // Detalle solicitud
 
         protected void DataGridDetalleSolicitud_LinkButton(object source, DataGridCommandEventArgs e)
@@ -1939,8 +2385,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (e.CommandName == "VerDetalleSolicitud")
             {
-
-
 
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGridDetalleSolicitud.Items[rowIndex];
@@ -1960,8 +2404,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string IdDetalle = row.Cells[1].Text;
                 string DescripProducto = row.Cells[2].Text;
                 string precioSugerido = row.Cells[5].Text;
+                string RedirigidoaCompras = row.Cells[6].Text;
+                string OkCompras = row.Cells[8].Text;
                 string numeroFormateado = string.Format("{0:N0}", double.Parse(precioSugerido));
-                string Proveedor = row.Cells[13].Text;
+                string ProveedorVenta = row.Cells[13].Text;
                 string Ancho = row.Cells[14].Text;
                 string Alto = row.Cells[15].Text;
                 string Profundidad = row.Cells[16].Text;
@@ -1972,6 +2418,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string ObsDesarrollo = row.Cells[21].Text;
                 string Urgente = row.Cells[22].Text;
                 string InfoDetOrigen = row.Cells[23].Text;
+                string CostoCompras = row.Cells[24].Text;
+                string FactorCompra = row.Cells[25].Text;
+                string Costo = row.Cells[26].Text;
+                string Factor = row.Cells[27].Text;
+                string Categoria = row.Cells[28].Text; // Pendiente por establecer en el ddl
+                string Prove2 = row.Cells[29].Text;
+
+
 
 
                 // Cargamos el id de Detalle para la documentacion 
@@ -1986,7 +2440,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 tbAltura.Text = Alto;
                 tbProfundidad.Text = Profundidad;
 
-                tbProveedor.Text = Proveedor;
+                tbProveedor.Text = ProveedorVenta;
                 txDescProduc.InnerText = DescripProducto;
                 tbMaterial.Text = Material;
                 tbCantidad.Text = Cantidad;
@@ -2023,24 +2477,55 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
 
                 txInformacionDetalle.InnerText = InfoDetOrigen;
+                tbCostoC.Text = CostoCompras;
+                tbFactorC.Text = FactorCompra;
+                tbCostoD.Text = Costo;
+                tbFactorD.Text = Factor;
+                tbProve.Text = Prove2.Replace("&nbsp;", "");
 
 
-                if (Session["ProVenSolicitud"].ToString() != "True")
+                if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
                 {
-                    string script = "<script>HabilitarEnlaces2();</script>";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces2", script, false);
-                }
-                else
-                {
-                    string script = "<script>HabilitarEnlaces3();</script>";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces3", script, false);
-                }
+                    if (Session["ProVenSolicitud"].ToString() != "True")
+                    {
+                        string script = "<script>HabilitarEnlaces2();</script>";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces2", script, false);
+                    }
+                    else
+                    {
+                        string script = "<script>HabilitarEnlaces3();</script>";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces3", script, false);
+                    }
 
+                }
+                else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+                {
+                    if (Session["ProDiSolicitud"].ToString() != "True")
+                    {
+                        if (RedirigidoaCompras.ToUpper() == "NO")
+                        {
+                            string script = "<script>HabilitarBotDetalleD();</script>";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarBotDetalleD", script, false);
+                        }
+                        else
+                        {
+                            if(OkCompras.ToUpper() == "SI")
+                            {
+                                string script = "<script>HabilitarEnlaces3();</script>";
+                                ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarBotDetalleD", script, false);
+                            }
+                        
+                        }
+                    }
+                    else
+                    {
+                        string script = "<script>HabilitarEnlaces3();</script>";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarBotDetalleD", script, false);
+                    }
+                }
 
 
             }
-
-
         }
 
         protected void DataGridDetalleSolicitud_ItemDataBound(object sender, DataGridItemEventArgs e)
@@ -2062,7 +2547,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void EliminarDetalle(object sender, EventArgs e)
         {
-            if (!ConsultarTerminado())
+            if (!ConsultarTerminadoVentas())
             {
                 string mensajePersonalizado = "La solicitud ya ha sido programda para ventas y no puede ser modificada.";
                 string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
@@ -2271,12 +2756,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
-            else if(Session["InsertUpdateDetalle"]?.ToString() == "Actualizar")
+            else if (Session["InsertUpdateDetalle"]?.ToString() == "Actualizar")
             {
 
                 //CalcularFechaEntregaSolicitudEspecial() de momento se envia fecha del primer dia del año  !!!!IMPORTANTE !!!!
 
-                if (!ConsultarTerminado())
+                if (!ConsultarTerminadoVentas())
                 {
                     string mensajePersonalizado = "La solicitud ya ha sido programda para ventas y no puede ser modificada.";
                     string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
@@ -2392,7 +2877,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             HttpContext.Current.Session["ScriptEspecifico"] = null;
         }
 
-        public bool ConsultarTerminado()
+        public bool ConsultarTerminadoVentas()
         {
             string consultaActual = "select ProgramadoVentas from tblSoliciDiseEspe where ID_Solicitud = @solicitud";
 
@@ -2428,6 +2913,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#confirmarImportar').modal('show');", true);
         }
+
         protected void btnImportar_Si_Click(object sender, EventArgs e)
         {
 
@@ -2472,6 +2958,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         }
+
         public DataTable ConsultarInfoDetalle()
         {
             DataTable DetallesOrigen = new DataTable();
@@ -2493,6 +2980,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             return DetallesOrigen;
         }
+
         private bool ValidarDetalle(string IdDetalle)
         {
 
@@ -2525,6 +3013,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
+
         private int ConsultarConsecutivoDetalle()
         {
             int numDetalle = 0; // Se inicializa como 0 en caso de que no haya resultados en la consulta
@@ -2549,6 +3038,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             return numDetalle;
         }
+
         private void InsertarDetalle(DataTable DatosDetalle, int ID_DetalleNuevo)
         {
             if (DatosDetalle.Rows.Count > 0)
@@ -2646,6 +3136,66 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             HttpContext.Current.Session["ValorDeObra"] = cliente + " " + proyecto;
         }
 
+
+
+        // Metodos para Rol Diseño 
+        public bool ConsultarTerminadoDiseño()
+        {
+            string consultaActual = "select Terminado from tblSoliciDiseEspe where ID_Solicitud = @solicitud";
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(consultaActual, connection))
+                {
+                    cmd.Parameters.AddWithValue("@solicitud", lbNumeroSolicitud.Text);
+                    object result = cmd.ExecuteScalar();
+
+                    // Verificar si el resultado es null o no
+                    if (result != null)
+                    {
+                        bool rowCount = Convert.ToBoolean(result);
+                        // Si rowCount es igual a 1, retornamos true; de lo contrario, retornamos false
+                        return rowCount == false;
+                    }
+                    else
+                    {
+                        // Si no se encontraron filas, retornamos false
+                        return false;
+                    }
+                }
+            }
+        }
+        private void CargarDesarrollos_Cotizaciones()
+        {
+            // Cargar Desarrollos 
+
+            CargarDesarrollos.SelectCommand = " SELECT * FROM tblSoliciDiseEspe  " +
+                                                           " WHERE Terminado = 0 AND Dirigidoa='DESARROLLO DE PRODUCTO'AND  ProgramadoVentas = 1  " +
+                                                           " AND TipoSolicitud ='DESARROLLO' ORDER BY Fecha_Ingreso ASC ";
+
+
+
+            DataGrid1.DataSourceID = "CargarDesarrollos";
+            DataGrid1.DataBind();
+
+            // Cargar Cotizaciones 
+
+            CargarCotizaciones.SelectCommand = "SELECT * FROM tblSoliciDiseEspe " +
+                                               "WHERE Terminado = 0 AND TipoSolicitud ='COTIZACIÓN' AND Dirigidoa = 'DESARROLLO DE PRODUCTO' " +
+                                               "AND ProgramadoVentas = 1 ORDER BY Fecha_Ingreso ASC;";
+
+
+
+            DataGrid2.DataSourceID = "CargarCotizaciones";
+            DataGrid2.DataBind();
+
+
+
+        }
 
     }
 }

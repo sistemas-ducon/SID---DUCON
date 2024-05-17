@@ -141,7 +141,8 @@
 
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="table-responsive mb-1" style="max-height: 20rem; overflow-x: auto;">
+                                            <div class="table-responsive mb-1" style="max-height: 20rem; height:10rem; overflow-x: auto;">
+                                                     <h5 class="datagrid-header text-center">Módulo </h5>
                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridObjetos" runat="server">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
@@ -166,7 +167,8 @@
 
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="table-responsive mb-1" style="max-height: 20rem; overflow-x: auto;">
+                                            <div class="table-responsive mb-1" style="max-height: 20rem; height:20rem; overflow-x: auto;">
+                                                 <h5 class="datagrid-header text-center">Descripción </h5>
                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDespieceModulo" runat="server" OnItemDataBound="DataGridDespieceModulo_ItemDataBound">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
@@ -218,7 +220,7 @@
                                 <div class="border rounded  m-2">
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="table-responsive mb-1" style="max-height: 26rem; overflow-x: auto;">
+                                            <div class="table-responsive mb-1" style="max-height: 26rem; height:26rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-center">Despiece y Precios </h5>
                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDespieceAsesor" runat="server" OnItemDataBound="DataGridDespieceAsesor_ItemDataBound">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
