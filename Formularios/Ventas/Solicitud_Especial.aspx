@@ -188,7 +188,7 @@
                                 <i class="bi bi-wrench"></i>
                             </a>
 
-                            <a class="icong disabled" href="#" title="Observaciones" id="Observaciones"  onclick="abrirObservaciones();">
+                            <a class="icong disabled" href="#" title="Observaciones" id="Observaciones" onclick="abrirObservaciones();">
                                 <i class="bi bi-eye"></i>
                             </a>
 
@@ -2227,14 +2227,19 @@
         document.addEventListener('keydown', function (event) {
             // Verificar si la tecla presionada es "Enter" (código de tecla 13)
             if (event.key === "Enter") {
-                // Prevenir la acción predeterminada del evento              
-                event.preventDefault();
-                document.getElementById('<%= btnConsultar.ClientID %>').click();
+                // Obtener el elemento que tiene el foco actualmente
+                var focusedElement = document.activeElement;
 
-            }
-        });
-
+                // Verificar si el elemento enfocado no es un textarea
+                if (focusedElement.tagName !== 'TEXTAREA') {
+                    // Prevenir la acción predeterminada del evento
+                    event.preventDefault();
+                    document.getElementById('<%= btnConsultar.ClientID %>').click();
+              }
+          }
+      });
     </script>
+
 
 
 </body>
