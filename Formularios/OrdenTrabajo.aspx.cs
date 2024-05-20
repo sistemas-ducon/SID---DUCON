@@ -3870,8 +3870,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             int pedidoBaseValue = 1; // Valor predeterminado
 
-            // Obtener el valor de ObtenerConsecutivoPedido y sumar 1
-            int consecutivoPedido = ObtenerConsecutivoPedidoSinSuma();
+            int numeroPedido = int.Parse(ddlNumbers.Text);
 
             // Verificar si cboPedidoBase tiene datos y si el valor es un número
             if (!string.IsNullOrEmpty(cboPedidoBase.SelectedValue) && int.TryParse(cboPedidoBase.SelectedValue, out int cboValue))
@@ -3880,14 +3879,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
-                if (consecutivoPedido != 0)
+                if (numeroPedido != 0)
                 {
-                    pedidoBaseValue = consecutivoPedido;
+                    pedidoBaseValue = numeroPedido;
                 }
-                else
-                {
-
-                }
+                
             }
 
             return pedidoBaseValue;

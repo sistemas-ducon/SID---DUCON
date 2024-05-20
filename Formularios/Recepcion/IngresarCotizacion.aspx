@@ -407,7 +407,7 @@
                 <asp:UpdatePanel runat="server" ID="UpdateResumenCotizaciones" UpdateMode="Conditional">
                     <ContentTemplate>
 
-                        <h6>BIENVENIDO</h6>
+                    
 
                     </ContentTemplate>
                 </asp:UpdatePanel>

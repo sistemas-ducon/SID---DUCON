@@ -272,7 +272,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     }
                     else
                     {
-                        
+                        DataGrid1.DataSource = dataTable;
+                        DataGrid1.DataBind();
                     }
                 }
             }

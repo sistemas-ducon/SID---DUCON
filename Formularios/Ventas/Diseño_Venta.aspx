@@ -42,12 +42,6 @@
                         <a class="nav-link text-dark" id="Buscar-tab" data-bs-toggle="tab" href="#Buscar-content" style="display: none;">Buscar Diseño</a>
                     </li>
 
-
-
-
-
-
-
                 </ul>
             </div>
         </nav>
@@ -1177,7 +1171,7 @@
                                                 </div>
                                             <div class="row mt-2">
                                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-1">
-                                                    <asp:Button ID="BtnDesDis" runat="server" Text="Desprogramar" class="btn-outline-dark btn btn-white btn-sm btn full-width-btn" />
+                                                    <asp:Button ID="BtnDesDis" runat="server" Text="Desprogramar" class="btn-outline-dark btn btn-white btn-sm btn full-width-btn" OnClick="btndesdis_click" />
                                                 </div>
                                             </div>
                                         </div>
@@ -1211,7 +1205,7 @@
                                                                     <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="SC_Fecha" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="SC_Hora" HeaderText="Hora" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                    <asp:BoundColumn DataField="RealizadoPor" HeaderText="Dibujante" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                                    <asp:BoundColumn DataField="SC_Dibujante" HeaderText="Dibujante" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="SC_Ubicacion" HeaderText="Ubicación" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Zona" HeaderText="Zona" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="SC_Imagenes" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
@@ -1237,12 +1231,12 @@
                                         <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
                                             <div class="row">
                                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                    <asp:Button ID="BtnTrabShoCas" runat="server" Text="Trabajar ShowCase" class="btn-outline-dark btn btn-white btn-sm btn full-width-btn" />
+                                                    <asp:Button ID="BtnTrabShoCas" runat="server" Text="Trabajar ShowCase" class="btn-outline-dark btn btn-white btn-sm btn full-width-btn" OnClick="TrabSC_Click"/>
                                                 </div>
                                             </div>
                                             <div class="row mt-2">
                                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                    <asp:Button ID="BtnDesSC" runat="server" Text="Desprogramar" class="btn-outline-dark btn btn-white btn-sm btn full-width-btn" />
+                                                    <asp:Button ID="BtnDesSC" runat="server" Text="Desprogramar" class="btn-outline-dark btn btn-white btn-sm btn full-width-btn" OnClick="BtnDesSC_Click"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -1255,7 +1249,7 @@
                                                         <%-- DATAGRID--%>
                                                         <div class="table-responsive mb-2 gap-2" style="max-height: 212px; overflow-x: auto;">
                                                             <asp:DataGrid CssClass="table table-bordered table-hover table-sm form-control-sm" ID="DataGridRender" runat="server"
-                                                                 AutoGenerateColumns="false" OnItemDataBound="DataGrid4_ItemDataBound" OnItemCommand="DatagridRender_ItemDataBound">
+                                                                 AutoGenerateColumns="false" OnItemDataBound="DataGrid4_ItemDataBound" OnItemCommand="DatagridRender_ItemCommand">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                 <Columns>
                                                                        <asp:TemplateColumn>
@@ -1287,9 +1281,7 @@
                                                             </asp:DataGrid>
                                                             <asp:SqlDataSource runat="server" ID="DataGridRenderPorFechaYAsesor" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="sp_ProBitacoraRender" SelectCommandType="StoredProcedure">
                                                                 <SelectParameters>
-
                                                                     <asp:SessionParameter Name="Zona" SessionField="ZonaLogeada" Type="String" DefaultValue="ValorPorDefecto" />
-
                                                                 </SelectParameters>
                                                             </asp:SqlDataSource>
                                                         </div>
@@ -1300,7 +1292,7 @@
                                         <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
                                             <div class="row">
                                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                    <asp:Button ID="BtnTrabRen" runat="server" Text="Trabajar Render" class="btn-outline-dark btn btn-white btn-sm btn full-width-btn" />
+                                                    <asp:Button ID="BtnTrabRen" runat="server" Text="Trabajar Render" class="btn-outline-dark btn btn-white btn-sm btn full-width-btn" OnClick="BntTrabRender_Click" />
                                                 </div>
                                             </div>
                                             <div class="row mt-2">

@@ -82,7 +82,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (Session["ZonaLogeada"] != null)
             {
                 string zonaLogeada = Session["ZonaLogeada"].ToString();
-                DropDownListOptions.SelectedValue = zonaLogeada;     
+                DropDownListOptions.SelectedValue = zonaLogeada;
             }
             ChecUrgent.Enabled = false;
             ApplyButtonStyles();
@@ -94,7 +94,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             DeshabilitarDivYContenido(miDiv);
             CheckBox22.Checked = isModalVisible;
 
-            
+
 
             LinkButton1.Enabled = false;
             LinkButton1.CssClass = "btn btn-sm button-disabled";
@@ -124,10 +124,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             elementosllenosalcargarlapagina();
 
             if (Session["NumeroDiseño2"] != null && !string.IsNullOrEmpty(Session["NumeroDiseño2"].ToString()))
-            {                 
-                    AccionesAlCargarDiseño();
-                    ProcesarNumeroDiseño2(null);     
-                    scripTabDise();
+            {
+                AccionesAlCargarDiseño();
+                ProcesarNumeroDiseño2(null);
+                scripTabDise();
             }
             else
             {
@@ -139,10 +139,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (Session["ID_ContactoBD"] != null && !string.IsNullOrEmpty(Session["ID_ContactoBD"].ToString()))
                 {
-                        scripTabDise();
+                    scripTabDise();
 
-                        NuevoLimpiar();
-                    }
+                    NuevoLimpiar();
+                }
                 else
                 {
                     Session.Remove("Id_ClienteBD");
@@ -168,7 +168,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session.Remove("SelectedIdOT");
             Session.Remove("SelectedFileName");
             Session.Remove("Documentacion");
-          
+
         }
 
         protected void CargarDatagridDise()
@@ -289,7 +289,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                            string query = @"SELECT D.RealizadoPor, 
+                string query = @"SELECT D.RealizadoPor, 
                        COALESCE(O.CantidadOt, 0) AS CantidadOt, 
                        COALESCE(C.CantidadRepeticiones, 0) AS CantidadRepeticiones,
                        COALESCE(O.CantidadOt, 0) + COALESCE(C.CantidadRepeticiones, 0) AS Total
@@ -368,7 +368,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 adapter.Fill(dataTable);
             }
             DataGrid2.DataSource = dataTable;
-     
+
         }
 
         protected void DataGridRenderF(string cedula)
@@ -400,7 +400,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             DataGridSC(usuariologueado);
             DataGridRenderF(cedula);
             ResumenDibujanteVentas(cedula);
-            UpdateDataGrids();  
+            UpdateDataGrids();
         }
 
         protected void ResumenDibujanteVentas(string cedula)
@@ -484,8 +484,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ValidarBotonTerminarRecep();
 
             if (Session["NumeroDiseño2"] != null && !string.IsNullOrEmpty(Session["NumeroDiseño2"].ToString()))
-            {           
-                    ProcesarNumeroDiseño2(null);                       
+            {
+                ProcesarNumeroDiseño2(null);
             }
 
         }
@@ -507,14 +507,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void DesabilitarTextBox()
         {
             TextContacto.Visible = false;
-          
-          
+
+
             TextTel.Visible = false;
-           
+
             TextCel.Visible = false;
-           
+
             TextMail.Visible = false;
-          
+
             TextDir.Visible = false;
         }
 
@@ -635,7 +635,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     }
                 }
-                if(tipoAccion == "Ventas")
+                if (tipoAccion == "Ventas")
                 {
                     Session.Remove("lnkClieClicked");
                     Session.Remove("lnkClieeClicked");
@@ -669,7 +669,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ProgramarDiseñoCotizacion').modal('show'); $('#ProgramarDiseñoCotizacion2').text('" + contenidoModalOT + "');", true);
             }
 
-          
+
 
         }
 
@@ -803,7 +803,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Numero_Diseño", diseño);
-                    connection.Open();            
+                    connection.Open();
                     int rowsAffected = command.ExecuteNonQuery();
 
                     if (rowsAffected > 0)
@@ -1304,31 +1304,31 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private void DeshabilitarDivYContenido(System.Web.UI.Control container)
         {
-          
 
-                BtnDesRen.Enabled = false;
-                BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-                BtnTrabRen.Enabled = false;
-                BtnTrabRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+            BtnDesRen.Enabled = false;
+            BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-                BtnDesSC.Enabled = false;
-                BtnDesSC.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+            BtnTrabRen.Enabled = false;
+            BtnTrabRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-                BtnTrabShoCas.Enabled = false;
-                BtnTrabShoCas.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+            BtnDesSC.Enabled = false;
+            BtnDesSC.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-                BtnDesDis.Enabled = false;
-                BtnDesDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+            BtnTrabShoCas.Enabled = false;
+            BtnTrabShoCas.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-                BtnTrabDis.Enabled = false;
-                BtnTrabDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+            BtnDesDis.Enabled = false;
+            BtnDesDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-                BtnTrabPed.Enabled = false;
-                BtnTrabPed.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+            BtnTrabDis.Enabled = false;
+            BtnTrabDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-                BtnDesPed.Enabled = false;
-                BtnDesPed.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+            BtnTrabPed.Enabled = false;
+            BtnTrabPed.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+            BtnDesPed.Enabled = false;
+            BtnDesPed.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
 
             TextPla.Enabled = false;
@@ -1726,7 +1726,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void NuevoDisBit_Click(object sender, EventArgs e)
         {
-           Session["CrudDise"] = "Insertar";
+            Session["CrudDise"] = "Insertar";
 
             bool lnkClieClicked = Session["lnkClieClicked"] as bool? ?? false;
             bool lnkClieeClicked = Session["lnkClieeClicked"] as bool? ?? false;
@@ -1738,15 +1738,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
-                NuevoLimpiar(); 
+                NuevoLimpiar();
             }
 
             TextObsVen.Disabled = false;
             CheckEsyMat.Enabled = true;
 
-            
 
-            }
+
+        }
 
         protected void NuevoLimpiar()
         {
@@ -1903,7 +1903,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     if (control != BtnProgramar)
                     {
                         // Si el control no es el botón BtnProgramar, habilitarlo
-                        ((System.Web.UI.WebControls.WebControl)control).Enabled = true;            
+                        ((System.Web.UI.WebControls.WebControl)control).Enabled = true;
                     }
 
                     if (control is System.Web.UI.WebControls.TextBox)
@@ -1934,112 +1934,121 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string tipoAccion = Session["Diseno"] as string;
             if (tipoAccion == "Ventas")
             {
-
-                string tipoAccionCrud = Session["CrudDise"] as string;
-                if (tipoAccionCrud == "Actualizar")
-                {
-                    // Si se hizo clic en Modificar antes, realiza las s necesarias para volver al estado anterior.
-                    NuevoDisBit.Enabled = false;
-                    NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
-
-                    Modificar.Enabled = true;
-                    Modificar.CssClass = "btn btn-sm shadow button-enabled";
-
-                    ActualizarDiseno.Enabled = false;
-                    ActualizarDiseno.CssClass = "btn btn-sm shadow button-disabled";
-
-
-                    // Resto de las acciones para volver al estado anterior...
-                }
-                else
-                {
-                    // Si no se hizo clic en Modificar antes, simplemente restablece todo como estaba antes de Cancelar.
-                    Grabar.Enabled = false;
-                    Grabar.CssClass = "btn btn-sm shadow button-disabled";
-
-                    NuevoDisBit.Enabled = true;
-                    NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
-
-                    ActualizarDiseno.Enabled = true;
-                    ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
-
-                    Modificar.Enabled = false;
-                    Modificar.CssClass = "btn btn-sm shadow button-disabled";
-                }
-
-
-
-                // Deshabilitar el botón "Grabar"
-                Grabar.Enabled = false;
-                Grabar.CssClass = "btn btn-sm shadow button-disabled";
-
-                // Habilitar el botón "NuevoDisBit"
-                NuevoDisBit.Enabled = true;
-
-                // Habilitar el botón "ActualizarDiseno"
-                ActualizarDiseno.Enabled = true;
-                NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
-
-                // Ocultar el div y su contenido
-                DeshabilitarDivYContenido(miDiv);
-
-
-                lblCotizar.CssClass = "col-form-label-sm text-dark";
-                lblCotizar.Font.Bold = false;
-
-                // Manejo del evento DataGridDise_ItemCommand
-                bool eventoItemCommandEjecutado = Session["EventoItemCommandEjecutado"] as bool? ?? false;
-
-                if (eventoItemCommandEjecutado)
-                {
-                    // Si el evento DataGridDise_ItemCommand se ejecutó correctamente,
-                    // obtener el valor de la variable de sesión "NumeroDisenoSession" y asignarlo a lblNumDise
-                    int numeroDiseno = Session["NumeroDisenoSession"] as int? ?? 0;
-                    lblNumDise.Text = numeroDiseno.ToString();
-
-                    Modificar.Enabled = true;
-                    Modificar.CssClass = "btn btn-sm shadow button-enabled";
-                }
-                else
-                {
-                    Grabar.Enabled = false;
-                    Grabar.CssClass = "btn btn-sm shadow button-disabled";
-
-                    NuevoDisBit.Enabled = true;
-                    NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
-
-                    ActualizarDiseno.Enabled = true;
-                    ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
-
-                    lblNumDise.Text = "Numero";
-
-
-
-                    // Limpia la variable de sesión "EventoItemCommandEjecutado" después de utilizarla.
-                    Session["EventoItemCommandEjecutado"] = false;
-                }
-
-                // Manejo del evento DataGridDise_ItemCommand
-                bool eventoNoButtonEjecutado = Session["EventoNoButtonEjecutado"] as bool? ?? false;
-
-
-                if (eventoNoButtonEjecutado)
-                {
-                    Modificar.Enabled = true;
-                    Modificar.CssClass = "btn btn-sm shadow button-enabled";
-                }
-
-                Session.Remove("NumeroDiseño5");
+                MetodoCancelar();
+            }
+            if (tipoAccion == "Diseño")
+            {
+                MetodoCancelar();
             }
             else if (tipoAccion == "Recepcion")
             {
-               
+
             }
 
             TextObsVen.Disabled = true;
             CheckEsyMat.Enabled = false;
         }
 
+        protected void MetodoCancelar()
+        {
+            string tipoAccionCrud = Session["CrudDise"] as string;
+            if (tipoAccionCrud == "Actualizar")
+            {
+                // Si se hizo clic en Modificar antes, realiza las s necesarias para volver al estado anterior.
+                NuevoDisBit.Enabled = false;
+                NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
+
+                Modificar.Enabled = true;
+                Modificar.CssClass = "btn btn-sm shadow button-enabled";
+
+                ActualizarDiseno.Enabled = false;
+                ActualizarDiseno.CssClass = "btn btn-sm shadow button-disabled";
+
+
+                // Resto de las acciones para volver al estado anterior...
+            }
+            else
+            {
+                // Si no se hizo clic en Modificar antes, simplemente restablece todo como estaba antes de Cancelar.
+                Grabar.Enabled = false;
+                Grabar.CssClass = "btn btn-sm shadow button-disabled";
+
+                NuevoDisBit.Enabled = true;
+                NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
+
+                ActualizarDiseno.Enabled = true;
+                ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+                Modificar.Enabled = false;
+                Modificar.CssClass = "btn btn-sm shadow button-disabled";
+            }
+
+
+
+            // Deshabilitar el botón "Grabar"
+            Grabar.Enabled = false;
+            Grabar.CssClass = "btn btn-sm shadow button-disabled";
+
+            // Habilitar el botón "NuevoDisBit"
+            NuevoDisBit.Enabled = true;
+
+            // Habilitar el botón "ActualizarDiseno"
+            ActualizarDiseno.Enabled = true;
+            NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
+
+            // Ocultar el div y su contenido
+            DeshabilitarDivYContenido(miDiv);
+
+
+            lblCotizar.CssClass = "col-form-label-sm text-dark";
+            lblCotizar.Font.Bold = false;
+
+            // Manejo del evento DataGridDise_ItemCommand
+            bool eventoItemCommandEjecutado = Session["EventoItemCommandEjecutado"] as bool? ?? false;
+
+            if (eventoItemCommandEjecutado)
+            {
+                // Si el evento DataGridDise_ItemCommand se ejecutó correctamente,
+                // obtener el valor de la variable de sesión "NumeroDisenoSession" y asignarlo a lblNumDise
+                int numeroDiseno = Session["NumeroDisenoSession"] as int? ?? 0;
+                lblNumDise.Text = numeroDiseno.ToString();
+
+                Modificar.Enabled = true;
+                Modificar.CssClass = "btn btn-sm shadow button-enabled";
+            }
+            else
+            {
+                Grabar.Enabled = false;
+                Grabar.CssClass = "btn btn-sm shadow button-disabled";
+
+                NuevoDisBit.Enabled = true;
+                NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
+
+                ActualizarDiseno.Enabled = true;
+                ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+                lblNumDise.Text = "Numero";
+
+
+
+                // Limpia la variable de sesión "EventoItemCommandEjecutado" después de utilizarla.
+                Session["EventoItemCommandEjecutado"] = false;
+            }
+
+            // Manejo del evento DataGridDise_ItemCommand
+            bool eventoNoButtonEjecutado = Session["EventoNoButtonEjecutado"] as bool? ?? false;
+
+
+            if (eventoNoButtonEjecutado)
+            {
+                Modificar.Enabled = true;
+                Modificar.CssClass = "btn btn-sm shadow button-enabled";
+            }
+
+            Session.Remove("NumeroDiseño5");
+        }
+    
+    
         protected void lnkClie_Click(object sender, EventArgs e)
         {
             // Obtén el LinkButton que se hizo clic
@@ -4242,7 +4251,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-        protected void DatagridRender_ItemDataBound(object source, DataGridCommandEventArgs e)
+        protected void DatagridRender_ItemCommand(object source, DataGridCommandEventArgs e)
         {
 
             if (e.CommandName == "Id_Render")
@@ -4260,6 +4269,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
 
                 e.Item.CssClass = "fila-seleccionada1";
+
+                Session["Id_Render"] = row.Cells[2].Text;
 
                 string tipoAccion = Session["Diseno"] as string;
                 if (tipoAccion == "Diseño")
@@ -6561,32 +6572,121 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-        //protected void BtnDesDis_Click(object sender, EventArgs e)
-        //{
-        //    string IdOT = Session["Id_OT2"].ToString();
+        protected void btndesdis_click(object sender, EventArgs e)
+        {
+            string numeroDise = Session["NumeroDiseño"].ToString();
 
-        //    using (SqlConnection conection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
-        //    {
-        //        conection.Open();
+            using (SqlConnection conection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            {
+                conection.Open();
 
-        //        string update = "Update tblDiseño set RealizadoPor = 'PENDIENTE' where Numero_Diseño= @Id_OT";
-        //        using (SqlCommand Command = new SqlCommand(update, conection))
-        //        {
-        //            Command.Parameters.AddWithValue("@Id_OT", IdOT);   
-        //            int rowsAffected = Command.ExecuteNonQuery();
+                string update = "Update tblDiseño set RealizadoPor = 'PENDIENTE' where Numero_Diseño= @numeroDise";
+                using (SqlCommand Command = new SqlCommand(update, conection))
+                {
+                    Command.Parameters.AddWithValue("@numeroDise", numeroDise);
+                    int rowsAffected = Command.ExecuteNonQuery();
 
-        //            if (rowsAffected > 0)
-        //            {
-        //                CargarDatagridDise();
-        //            }
-        //            else
-        //            {
+                    if (rowsAffected > 0)
+                    {
+                        CargarDatagridDise();
+                    }
+                    else
+                    {
 
-        //            }
-        //        }
-        //    }
-        //}
+                    }
+                }
+            }
+        }
 
+
+        protected void TrabSC_Click(object sender, EventArgs e)
+        {
+            string nombreUsuario = Session["usuariologueado"].ToString();
+
+            string numeroDise = Session["NumeroDiseño"].ToString();
+
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+                {
+                    connection.Open();
+
+                    string update = "UPDATE tblDiseño SET SC_Dibujante = @NombreUsuario WHERE Numero_Diseño = @NumeroDise";
+
+                    using (SqlCommand command = new SqlCommand(update, connection))
+                    {
+                        command.Parameters.AddWithValue("@NombreUsuario", nombreUsuario);
+                        command.Parameters.AddWithValue("@NumeroDise", numeroDise);
+
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            CargarDatagridDise();
+                        }
+                        else
+                        {
+                            // Maneja el caso en el que no se actualizaron filas, si es necesario
+                        }
+                    }
+                }
+        }
+
+        protected void BtnDesSC_Click(object sender, EventArgs e)
+        {
+            string numeroDise = Session["NumeroDiseño"].ToString();
+
+            using (SqlConnection conection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            {
+                conection.Open();
+
+                string update = "Update tblDiseño set SC_Dibujante = 'PENDIENTE' where Numero_Diseño= @numeroDise";
+                using (SqlCommand Command = new SqlCommand(update, conection))
+                {
+                    Command.Parameters.AddWithValue("@numeroDise", numeroDise);
+                    int rowsAffected = Command.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        CargarDatagridDise();
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
+        }
+
+        protected void BntTrabRender_Click(object sender, EventArgs e)
+        {
+            string nombreUsuario = Session["usuariologueado"].ToString();
+
+            string idRender = Session["Id_Render"].ToString();
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            {
+                connection.Open();
+
+                string update = "UPDATE tblRender SET RealizadoPor = @NombreUsuario WHERE Id_Render = @Id_Render";
+
+                using (SqlCommand command = new SqlCommand(update, connection))
+                {
+                    command.Parameters.AddWithValue("@NombreUsuario", nombreUsuario);
+                    command.Parameters.AddWithValue("@Id_Render", idRender);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        CargarDatagridDise();
+                    }
+                    else
+                    {
+                        // Maneja el caso en el que no se actualizaron filas, si es necesario
+                    }
+                }
+            }
+        }
     }
 
 

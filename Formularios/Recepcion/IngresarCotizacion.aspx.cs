@@ -625,7 +625,7 @@ WHERE
                             TextBox4.Text = double.Parse(reader["Valor"].ToString()).ToString("#,##0");
                             TextBox5.Text = double.Parse(reader["DescuentoComision"].ToString()).ToString("#,##0");
                             TextBox11.Text = double.Parse(reader["Descuento"].ToString()).ToString("#,##0");
-                            TextBox6.Text = double.Parse(reader["ValorMO"].ToString()).ToString("#,##0");
+                            TextBox6.Text = reader["ValorMO"] != DBNull.Value ? double.Parse(reader["ValorMO"].ToString()).ToString("#,##0") : "0";
                             TextBox7.Text = double.Parse(reader["VCCD"].ToString()).ToString("#,##0");
                             TextBox8.Text = double.Parse(reader["ValorTteVia"].ToString()).ToString("#,##0");
                             TextBox9.Text = double.Parse(reader["ValorViatico"].ToString()).ToString("#,##0");
@@ -955,11 +955,23 @@ WHERE
                     {
 
                     }
-                    // Calcular el valor de TextBox10
-                    double valorTextBox7 = double.Parse(TextBox7.Text);
-                    double valorTextBox8 = double.Parse(TextBox8.Text);
-                    double valorTextBox9 = double.Parse(TextBox9.Text);
-                    double valorTextBox10 = valorTextBox7 + valorTextBox8 + valorTextBox9;
+                    // Intentamos convertir los textos de los TextBox a números double
+                    double valorTextBox7, valorTextBox8, valorTextBox9, valorTextBox10;
+                    bool isParsed7 = double.TryParse(TextBox7.Text, out valorTextBox7);
+                    bool isParsed8 = double.TryParse(TextBox8.Text, out valorTextBox8);
+                    bool isParsed9 = double.TryParse(TextBox9.Text, out valorTextBox9);
+
+                    // Formateamos los valores si la conversión fue exitosa, de lo contrario, asignamos "0"
+                    TextBox7.Text = isParsed7 ? valorTextBox7.ToString("#,##0.##") : "0";
+                    TextBox8.Text = isParsed8 ? valorTextBox8.ToString("#,##0.##") : "0";
+                    TextBox9.Text = isParsed9 ? valorTextBox9.ToString("#,##0.##") : "0";
+
+                    // Calculamos la suma de los valores
+                    valorTextBox10 = valorTextBox7 + valorTextBox8 + valorTextBox9;
+
+                    // Asignamos el resultado formateado al TextBox correspondiente
+                    TextBox10.Text = valorTextBox10.ToString("#,##0.##");
+
                     TextBox10.Text = valorTextBox10.ToString("N0");
 
                     TextBox5.Text = "0";
