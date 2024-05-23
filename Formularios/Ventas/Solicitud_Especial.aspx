@@ -905,7 +905,7 @@
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-danger  text-white">
-                                        <h5 class="modal-title text-center"><i class="bi bi-exclamation-circle" style="font-size: 1.5rem;"></i> Observación no gravada </h5>
+                                        <h5 class="modal-title text-center"><i class="bi bi-exclamation-circle" style="font-size: 1.5rem;"></i> Observación no grabada </h5>
                                     </div>
                                     <div class="modal-body border rounded">
                                         <div class="container-fluid">
