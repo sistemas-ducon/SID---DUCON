@@ -116,6 +116,11 @@ a.icong.enabled {
     color: white !important;
 }
 
+.fila-seleccionada2 {
+    background-color: white !important; /*Se Cambia el color de la fila Seleccionada  */
+    color: black !important;
+}
+
 
 .Tam {
     display: block;

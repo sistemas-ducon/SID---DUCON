@@ -924,7 +924,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         FROM tblCotización AS a 
                         INNER JOIN tblEstado_Cotización AS b ON b.Id_Estado = a.Estado
                         INNER JOIN tblAsesorComercial AS c ON c.CodigoAsesor = a.Asesor
-                        WHERE Cliente = @IdCliente";
+                        WHERE Cliente = @IdCliente ORDER BY Fecha_Cotización DESC";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -957,7 +957,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         INNER JOIN tblClienteContacto AS b ON b.Id_ClienteContacto = a.Id_ClienteContacto
                         INNER JOIN tblAsesorComercial AS c ON c.Cedula = a.Asesor
                         INNER JOIN tblCausaVisita AS d ON d.Id_Causa = a.Causa
-                        WHERE b.Id_Cliente = @IdCliente";
+                        WHERE b.Id_Cliente = @IdCliente ORDER BY FechaVisita DESC";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
