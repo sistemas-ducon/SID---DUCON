@@ -1257,13 +1257,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.TextBox tbNombreAsesor;
 
         /// <summary>
-        /// Control lbNum_Sol.
+        /// Control BusDesDiv.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbNum_Sol;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl BusDesDiv;
 
         /// <summary>
         /// Control ID_Sol_Dib.
@@ -1273,6 +1273,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox ID_Sol_Dib;
+
+        /// <summary>
+        /// Control BuscarSol.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton BuscarSol;
 
         /// <summary>
         /// Control filaAntior.
@@ -1383,15 +1392,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.SqlDataSource Zona;
 
         /// <summary>
-        /// Control BuscarSol.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton BuscarSol;
-
-        /// <summary>
         /// Control DataGrid1.
         /// </summary>
         /// <remarks>
@@ -1464,13 +1464,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.TextBox tbPactoEntrega;
 
         /// <summary>
-        /// Control Label1.
+        /// Control BusCotDiv.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label1;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl BusCotDiv;
 
         /// <summary>
         /// Control ID_Cot_Dib.

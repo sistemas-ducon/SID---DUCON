@@ -61,6 +61,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
                     {
+                        BusCotDiv.Visible = false;
+                        BusDesDiv.Visible = false;
 
                         Session["ProVenSolicitud"] = false;
                         if (ConsultarTerminadoVentas())
@@ -1210,6 +1212,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                     else
                     {
+                        Session["ProVenSolicitud"] = termiVenta;
 
                         btnProgramarSolicitud.Enabled = false;
                         btnProgramarSolicitud.CssClass = "btn btn btn-warning";
@@ -2431,8 +2434,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string Cantidad = row.Cells[18].Text;
                 string EspGenerales = row.Cells[19].Text;
                 string ObsCompra = row.Cells[20].Text;
-                string ObsDesarrollo = row.Cells[21].Text;
-                string Urgente = row.Cells[22].Text;
+                string ObsDesarrollo = row.Cells[21].Text;              
                 string InfoDetOrigen = row.Cells[23].Text;
                 string CostoCompras = row.Cells[24].Text;
                 string FactorCompra = row.Cells[25].Text;
@@ -2483,15 +2485,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     txObsDesarrollo.InnerText = ObsDesarrollo;
                 }
-                if (Urgente == "True")
-                {
-                    chxUrgente.Checked = true;
-                }
-                else
-                {
-                    chxUrgente.Checked = false;
-                }
-
                 txInformacionDetalle.InnerText = InfoDetOrigen;
                 tbCostoC.Text = CostoCompras;
                 tbFactorC.Text = FactorCompra;
@@ -3392,45 +3385,51 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         // Buscar Desarrollo 
         protected void ID_Sol_Dib_TextChanged(object sender, EventArgs e)
         {
-
-            ContadorClic.Text = "";
-
-            if (ID_Sol_Dib.Text == "")
+            if (Session["Departamento"].ToString() == "DESARROLLO DE PRODUCTO" || Session["Departamento"].ToString() == "DISEÑO")
             {
-                CargarDesarrollos_Cotizaciones();
-            }
-            else
-            {
-                BuscarSol_Click(sender, e);
-            }
-        }
+                ContadorClic.Text = "";
 
-        protected void BuscarSol_Click(object sender, EventArgs e)
-        {
-            // Se limpia contador de Click
-            ContadorClic.Text = "";
-
-
-            if (ID_Sol_Dib.Text != "")
-            {
-                if (ValidarExisteSolicitud(ID_Sol_Dib.Text))
+                if (ID_Sol_Dib.Text == "")
                 {
-                    DataGrid1.DataSourceID = "SolUnica";
-                    DataGrid1.DataBind();
+                    CargarDesarrollos_Cotizaciones();
                 }
                 else
                 {
-                    string mensajeExito = "El desarrollo buscado no existe";
-                    string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
+                    BuscarSol_Click(sender, e);
                 }
             }
-            else
+
+        }
+        protected void BuscarSol_Click(object sender, EventArgs e)
+        {
+
+            if (Session["Departamento"].ToString() == "DESARROLLO DE PRODUCTO" || Session["Departamento"].ToString() == "DISEÑO")
             {
-                string mensajeExito = "Por favor, digite una solicitud  o seleccione una de la tabla de desarrollo.";
-                string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
-                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
-                CargarDesarrollos_Cotizaciones();
+                // Se limpia contador de Click
+                ContadorClic.Text = "";
+
+
+                if (ID_Sol_Dib.Text != "")
+                {
+                    if (ValidarExisteSolicitud(ID_Sol_Dib.Text))
+                    {
+                        DataGrid1.DataSourceID = "SolUnica";
+                        DataGrid1.DataBind();
+                    }
+                    else
+                    {
+                        string mensajeExito = "El desarrollo buscado no existe";
+                        string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
+                    }
+                }
+                else
+                {
+                    string mensajeExito = "Por favor, digite una solicitud  o seleccione una de la tabla de desarrollo.";
+                    string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
+                    CargarDesarrollos_Cotizaciones();
+                }
             }
 
         }
@@ -3439,40 +3438,47 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         // Buscar Cotizacion  
         protected void ID_Cot_Dib_TextChanged(object sender, EventArgs e)
         {
-            if (ID_Cot_Dib.Text == "")
+            if (Session["Departamento"].ToString() == "DESARROLLO DE PRODUCTO" || Session["Departamento"].ToString() == "DISEÑO")
             {
-                CargarDesarrollos_Cotizaciones();
-            }
-            else
-            {
-                BuscarCot_Click(sender, e);
-            }
-        }
-        protected void BuscarCot_Click(object sender, EventArgs e)
-        {
-            // Se limpiar contador Click
-            ContadorClic.Text = "";
-
-            if (ID_Cot_Dib.Text != "")
-            {
-                if (ValidarExisteSolicitud(ID_Cot_Dib.Text))
+                if (ID_Cot_Dib.Text == "")
                 {
-                    DataGrid2.DataSourceID = "CotUnica";
-                    DataGrid2.DataBind();
+                    CargarDesarrollos_Cotizaciones();
                 }
                 else
                 {
-                    string mensajeExito = "La cotización buscada no existe";
-                    string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
+                    BuscarCot_Click(sender, e);
                 }
             }
-            else
+           
+        }
+        protected void BuscarCot_Click(object sender, EventArgs e)
+        {
+            if (Session["Departamento"].ToString() == "DESARROLLO DE PRODUCTO" || Session["Departamento"].ToString() == "DISEÑO")
             {
-                string mensajeExito = "Por favor, digite una solicitud  o seleccione una de la tabla de cotizaciones.";
-                string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
-                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
-                CargarDesarrollos_Cotizaciones();
+                // Se limpiar contador Click
+                ContadorClic.Text = "";
+
+                if (ID_Cot_Dib.Text != "")
+                {
+                    if (ValidarExisteSolicitud(ID_Cot_Dib.Text))
+                    {
+                        DataGrid2.DataSourceID = "CotUnica";
+                        DataGrid2.DataBind();
+                    }
+                    else
+                    {
+                        string mensajeExito = "La cotización buscada no existe";
+                        string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
+                    }
+                }
+                else
+                {
+                    string mensajeExito = "Por favor, digite una solicitud  o seleccione una de la tabla de cotizaciones.";
+                    string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
+                    CargarDesarrollos_Cotizaciones();
+                }
             }
 
         }
@@ -3565,8 +3571,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         // Confirmar Solicitud Especial Complejo 
         protected void ConfirmarComplejo_Click(object sender, EventArgs e)
         {
-            SpanId_sol.InnerText = lbNumeroSolicitud.Text;
-            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#confirDesCompl').modal('show');", true);
+            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+            {
+                SpanId_sol.InnerText = lbNumeroSolicitud.Text;
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#confirDesCompl').modal('show');", true);
+            }
+            else
+            {
+                string mensajePersonalizado = "No cuentas con los permisos necesarios para cambiar una solicitud a desarrolo complejo.";
+                string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            }
 
         }
         protected void btnConfComlplejo_SI_Click(object sender, EventArgs e)
@@ -3676,8 +3691,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         // Confirmar Solicitud Especial Urgente 
         protected void btnConUrgente_Click(object sender, EventArgs e)
         {
-            SpanId_Sol_Urg.InnerText = lbNumeroSolicitud.Text;
-            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#confirSolUrgente').modal('show');", true);
+            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+            {
+                SpanId_Sol_Urg.InnerText = lbNumeroSolicitud.Text;
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#confirSolUrgente').modal('show');", true);
+            }
+            else
+            {
+                string mensajePersonalizado = "No cuentas con los permisos necesarios para cambiar una solicitud a urgente.";
+                string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            }
+           
         }
         protected void btnConUrg_Click(object sender, EventArgs e)
         {
@@ -3796,27 +3821,39 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         // Devolver Solicitud a Proceso de Ventas 
         protected void btnDevolverSolicitud_SI_Click(object sender, EventArgs e)
         {
-            // Se ponen las variables en los textbox del modal 
-            string IdSolicitud = lbNumeroSolicitud.Text;
-            tbObra.Text = tbCliente.Text + "-" + tbProyecto.Text;
-            tbOt.Text = "SPE" + IdSolicitud;
-            tbPed.Text = "0";
+            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+            {
+                // Se ponen las variables en los textbox del modal 
+                string IdSolicitud = lbNumeroSolicitud.Text;
+                tbObra.Text = tbCliente.Text + "-" + tbProyecto.Text;
+                tbOt.Text = "SPE" + IdSolicitud;
+                tbPed.Text = "0";
+
+                // Agregamod vacio en ddlTipoObservacion 
+                ddlTipoObservacion.Items.Insert(0, new System.Web.UI.WebControls.ListItem(" "));
+                ddlTipoObservacion.SelectedIndex = 0;
+
+                // Ponemos la fecha del dia por defecto 
+                DateTime Fecha = DateTime.Now;
+                tbfechaActividad.Text = Fecha.ToString("yyyy-MM-dd");
+                tbfechaActividad.Enabled = false;
+
+                // Consultamos el correo por defecto de la solicitud especial 
+                ConsultarCorreo(IdSolicitud);
+
+
+                // Se abre el modal de la observacion 
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolver').modal('show');", true);
+            }
+            else
+            {
+                string mensajePersonalizado = "No cuentas con los permisos necesarios para devolver una solicitud.";
+                string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            }
+
+
            
-            // Agregamod vacio en ddlTipoObservacion 
-            ddlTipoObservacion.Items.Insert(0, new System.Web.UI.WebControls.ListItem(" "));
-            ddlTipoObservacion.SelectedIndex = 0;
-
-            // Ponemos la fecha del dia por defecto 
-            DateTime Fecha = DateTime.Now;
-            tbfechaActividad.Text = Fecha.ToString("yyyy-MM-dd");
-            tbfechaActividad.Enabled = false;
-
-            // Consultamos el correo por defecto de la solicitud especial 
-            ConsultarCorreo(IdSolicitud);
-
-
-            // Se abre el modal de la observacion 
-            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolver').modal('show');", true);
         }
         private void ConsultarCorreo(string ID_Solicitud)
         {
@@ -3826,24 +3863,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 connection.Open();
 
-                    string query = "SELECT E.Mail  FROM tblSoliciDiseEspe AS  SE INNER JOIN tblEmpleado AS E " +
-                                   " ON  E.Nombre + ' ' + Apellidos =  SE.Asesor WHERE SE.ID_Solicitud = @Id_Solicitud";
+                string query = "SELECT E.Mail  FROM tblSoliciDiseEspe AS  SE INNER JOIN tblEmpleado AS E " +
+                               " ON  E.Nombre + ' ' + Apellidos =  SE.Asesor WHERE SE.ID_Solicitud = @Id_Solicitud";
 
-                    SqlCommand command = new SqlCommand(query, connection);
-                    command.Parameters.AddWithValue("@Id_Solicitud", ID_Solicitud);
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Id_Solicitud", ID_Solicitud);
 
-                    SqlDataReader reader = command.ExecuteReader();
+                SqlDataReader reader = command.ExecuteReader();
 
-                    // Verificar si hay filas devueltas por la consulta
-                    if (reader.Read())
-                    {
-                        string mail = reader["Mail"].ToString();
-                        tbReceptorCorreo.Text = mail; // Asignar el valor a TextBox3
-                    }
-                    else
-                    {
-                        tbReceptorCorreo.Text = string.Empty; // Si no hay resultados, establecer el TextBox3 como vacío
-                    }
+                // Verificar si hay filas devueltas por la consulta
+                if (reader.Read())
+                {
+                    string mail = reader["Mail"].ToString();
+                    tbReceptorCorreo.Text = mail; // Asignar el valor a TextBox3
+                }
+                else
+                {
+                    tbReceptorCorreo.Text = string.Empty; // Si no hay resultados, establecer el TextBox3 como vacío
+                }
 
             }
 

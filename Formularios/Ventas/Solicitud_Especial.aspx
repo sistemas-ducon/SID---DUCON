@@ -848,7 +848,7 @@
                             </div>
                         </div>
 
-                        <!--Modal confirmar Urgene  -->
+                        <!--Modal confirmar Urgente  -->
                         <div id="confirSolUrgente" class="modal" tabindex="-1" style="display: none;">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -905,7 +905,7 @@
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-danger  text-white">
-                                        <h5 class="modal-title text-center"><i class="bi bi-exclamation-circle" style="font-size: 1.5rem;"></i> Observación no grabada </h5>
+                                        <h5 class="modal-title text-center"><i class="bi bi-exclamation-circle" style="font-size: 1.5rem;"></i>Observación no grabada </h5>
                                     </div>
                                     <div class="modal-body border rounded">
                                         <div class="container-fluid">
@@ -977,7 +977,7 @@
                                                             <div class="col-11">
                                                                 <div class="input-group input-group-sm gap-2">
 
-                                                                    <asp:TextBox ID="tbObra" CssClass="form-control form-control-sm"  ReadOnly="true" runat="server"></asp:TextBox>
+                                                                    <asp:TextBox ID="tbObra" CssClass="form-control form-control-sm" ReadOnly="true" runat="server"></asp:TextBox>
                                                                 </div>
 
                                                             </div>
@@ -996,16 +996,14 @@
                                                                 <div class="input-group input-group-sm gap-2">
 
                                                                     <asp:DropDownList ID="ddlTipoObservacion" runat="server" CssClass="form-control form-control-sm" DataTextField="Descripcion" DataValueField="Id_TipoObservacion" DataSourceID="TipoObservacion" OnSelectedIndexChanged="ddlTipoObservacion_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
-                                                                   
+
                                                                     <asp:SqlDataSource runat="server" ID="TipoObservacion" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL %>" SelectCommand="SELECT 
                                                                                         Id_TipoObservacion, Aplicacion,Descripcion, Aplicacion + ' - ' + Descripcion as TipoObservacion,
                                                                                         DestinatarioPorDefecto,Programable, AlDirectorComercial
                                                                                         FROM tblTipoObservacion 
                                                                                         WHERE Aplicacion Like '%DEVOLUCIÓN SOLICITUD PE%' 
                                                                                         AND Activa = 1
-                                                                                        ORDER BY Aplicacion ASC , Descripcion ASC">
-
-                                                                    </asp:SqlDataSource>
+                                                                                        ORDER BY Aplicacion ASC , Descripcion ASC"></asp:SqlDataSource>
 
                                                                 </div>
                                                             </div>
@@ -1132,24 +1130,25 @@
 
                             <%-- Desarrollo--%>
 
-                            <div class="row">
-
-                                <div class="col-4"></div>
+                            <div class="row pb-2">
 
                                 <div class="col-3 text-end">
-                                    <h4 style="border-radius: 0.5rem; height: 2.5rem" class="text-center pb-2 mb-2" title="Listado de Ordenes de Trabajo (OT) Correspondiente a Desarrollo">Desarrollos</h4>
+
                                     <asp:TextBox ID="tbNombreAsesor" type="text" class="form-control form-control-sm" CssClass="hidden-textBox" runat="server"></asp:TextBox>
                                 </div>
 
-                                <div class="col-2"></div>
+                                <div class="col-6"></div>
 
-                                <div class="col-1 ">
-                                    <asp:Label ID="lbNum_Sol" CssClass="fw-bold" runat="server" Text="N°" Style="display: flex; justify-content: end"></asp:Label>
+                                <div class="col-3" style="width: 15rem;" id="BusDesDiv" runat="server">
+                                    <div class="input-group input-group-sm gap-2">
+                                        <asp:TextBox ID="ID_Sol_Dib" CssClass="form-control form-control-sm  text-center fw-bold" placeHolder="N° Desarrollo" ToolTip="Digite la solcitud que desea buscar " runat="server" OnTextChanged="ID_Sol_Dib_TextChanged"></asp:TextBox>
+                                        <asp:LinkButton runat="server" Text="Buscar" ID="BuscarSol" title="Buscar Solicitud" Style="padding-right: 2rem; font-size: 1rem;" OnClick="BuscarSol_Click">
+                                                        <i class="bi bi-search"></i>
+                                        </asp:LinkButton>
+                                    </div>
                                 </div>
 
-                                <div class="col-1">
-                                    <asp:TextBox ID="ID_Sol_Dib" CssClass="form-control form-control-sm fw-bold text-center" runat="server" OnTextChanged="ID_Sol_Dib_TextChanged"></asp:TextBox>
-                                </div>
+                                
 
                             </div>
 
@@ -1203,7 +1202,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-2">
+                                <div class="col-2" style="padding-right: 4rem;">
                                     <div class="input-group  input-group-sm  mb-2 gap-4">
                                         <asp:Label ID="lbZona" class="form-label" Text="Zona" runat="server"></asp:Label>
                                         <asp:DropDownList class="form-control" ID="ddlZona" runat="server" DataSourceID="Zona" DataTextField="Zona" DataValueField="Zona" OnSelectedIndexChanged="CambioZona" AutoPostBack="true" OnDataBound="ddlZona_DataBound"></asp:DropDownList>
@@ -1222,12 +1221,8 @@
                                             <div class="row">
                                             </div>
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 15rem; height: 15rem; overflow-x: auto;">
-                                                <div class=" input-group input-group-sm justify-content-between">
-                                                    <h6 class="datagrid-header text-start">Desarrollo</h6>
-                                                    <asp:LinkButton runat="server" Text="Buscar" ID="BuscarSol" title="Buscar Solicitud" Style="padding-right: 2rem; font-size: 1rem;" OnClick="BuscarSol_Click">
-                                                        <i class="bi bi-search"></i>
-                                                    </asp:LinkButton>
-                                                </div>
+
+                                                <h5 class="datagrid-header text-Start" style="padding-left: 1rem;">Desarrollos</h5>
 
                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid1" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="CargarDesarrollos" OnItemDataBound="DataGridDesarrollo_ItemDataBound" OnItemCommand="DataGridSolicitudPE_LinkButton">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
@@ -1239,7 +1234,7 @@
                                                             </ItemTemplate>
                                                         </asp:TemplateColumn>
 
-                                                        <asp:BoundColumn DataField="ID_Solicitud" HeaderText="ID"  ItemStyle-CssClass="auto-width-column"/>
+                                                        <asp:BoundColumn DataField="ID_Solicitud" HeaderText="ID" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="Proyecto" HeaderText="Proyecto" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="Fecha_Ingreso" HeaderText="Ingreso" ItemStyle-CssClass="auto-width-column" />
@@ -1304,32 +1299,21 @@
 
                             <%-- cotizaciones--%>
 
-                            <div class="row">
-
-                                <div class="col-4"></div>
-
-                                <div class="col-3 text-end">
-                                    <h4 style="border-radius: 0.5rem; height: 2.5rem" class="text-center" title="Listado  Correspondiente a Cotizaciones">Cotizaciones</h4>
-                                </div>
-
-                            </div>
-
-                            <div class="row pb-2">
+                            <div class="row pb-2 pt-3">
 
                                 <div class="col-2 text-center" style="padding-left: 3rem;">
                                     <div class=" input-group input-group-sm  mb-2 gap-2">
                                         <asp:Button ID="btnTrbajarCotizacion" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Trabajar Cotización" OnClick="btnTrbajarCotizacion_Click" />
                                     </div>
                                 </div>
-                                 <div class="col-1"></div>
+
+                                <div class="col-1"></div>
 
                                 <div class="col-2">
                                     <div class=" input-group input-group-sm  mb-2 gap-2">
                                         <asp:Button ID="btnDesprogramar1" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Desprogramar" OnClick="btnDesprogramar1_Click" />
                                     </div>
                                 </div>
-
-                                <div class="col-1"></div>
 
                                 <div class="col-3">
                                     <div class="input-group  input-group-sm  mb-2 gap-2">
@@ -1339,15 +1323,20 @@
                                     </div>
                                 </div>
 
-                                
+                                <div class="col-1"></div>
 
-                                <div class="col-1 ">
-                                    <asp:Label ID="Label1" CssClass="fw-bold" runat="server" Text="N°" Style="display: flex; justify-content: end"></asp:Label>
+                                <div class="col-3" style="width: 15rem;" id="BusCotDiv" runat="server">
+                                    <div class="input-group input-group-sm gap-2">
+                                        <asp:TextBox ID="ID_Cot_Dib" CssClass="form-control form-control-sm fw-bold  text-center" placeHolder="N° Cotización" ToolTip="Digite la solcitud que desea buscar " runat="server" OnTextChanged="ID_Cot_Dib_TextChanged"></asp:TextBox>
+                                        <asp:LinkButton runat="server" Text="Buscar" ID="BuscarCot" title="Buscar Solicitud" Style="padding-right: 2rem; font-size: 1rem;" OnClick="BuscarCot_Click">
+                                                        <i class="bi bi-search"></i>
+                                        </asp:LinkButton>
+
+                                    </div>
+
                                 </div>
 
-                                <div class="col-1">
-                                    <asp:TextBox ID="ID_Cot_Dib" CssClass="form-control form-control-sm fw-bold text-center" runat="server" OnTextChanged="ID_Cot_Dib_TextChanged"></asp:TextBox>
-                                </div>
+
 
                             </div>
 
@@ -1356,13 +1345,7 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 15rem; height: 15rem; overflow-x: auto;">
-
-                                                <div class=" input-group input-group-sm justify-content-between">
-                                                    <h6 class="datagrid-header text-start">Cotizacion</h6>
-                                                    <asp:LinkButton runat="server" Text="Buscar" ID="BuscarCot" title="Buscar Solicitud" Style="padding-right: 2rem; font-size: 1rem;" OnClick="BuscarCot_Click">
-                                                        <i class="bi bi-search"></i>
-                                                    </asp:LinkButton>
-                                                </div>
+                                                <h5 class="datagrid-header text-start" style="padding-left: 1rem;">Cotizaciones</h5>
 
                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid2" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="CargarCotizaciones" OnItemDataBound="DataGridCotizacion_ItemDataBound" OnItemCommand="DataGridSolicitudPE_LinkButton">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
@@ -1432,7 +1415,6 @@
                                     </div>
                                 </div>
                             </div>
-
 
 
                             <!--Modal Trabajar en Desarrollo  -->
@@ -1840,7 +1822,7 @@
             document.getElementById("Observaciones").classList.add("enabled");
             document.getElementById("CancelarSolicitud").classList.add("enabled");
 
-          
+
             //Control de Dropdownlist
             var Lista = ["ddlDirigido", "ddlCiudad", "ddlTipo", "ddlAsesor"];
             ControlDesplegables(Lista)
@@ -2823,7 +2805,7 @@
             $('#ConfirmarDevolSoli').modal('hide');
         }
 
- 
+
     </script>
 
 
