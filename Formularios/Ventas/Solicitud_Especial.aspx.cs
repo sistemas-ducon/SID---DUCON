@@ -1659,6 +1659,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                     else
                     {
+                        Session["ProVenSolicitud"] = termiVenta;
 
                         btnProgramarSolicitud.Enabled = false;
                         btnProgramarSolicitud.CssClass = "btn btn btn-warning";
