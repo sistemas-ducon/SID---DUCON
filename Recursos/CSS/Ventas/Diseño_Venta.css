@@ -13,6 +13,15 @@
 }
 
 
+.grande-small {
+    font-size: 10px;
+}
+
+.grande {
+    font-size: 28px;
+}
+
+
 .border {
     border: 1px solid black;
     border-radius: 4px;
@@ -151,7 +160,7 @@
 }
 
 .fila-seleccionada1 {
-    background-color: black !important;
+    background-color: #243451 !important;
     color: white !important;
 }
 

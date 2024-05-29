@@ -30,6 +30,7 @@ using NPOI.SS.UserModel;
 using NPOI.SS.Util;
 using System.Text;
 using NPOI.XSSF.UserModel;
+using DocumentFormat.OpenXml.Vml.Presentation;
 
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
@@ -90,6 +91,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             DropDownList1.Items.Insert(0, new ListItem(""));
             TextCiuPro.DataBind();
             TextCiuPro.Items.Insert(0, new ListItem(""));
+            DropAsesor.DataBind();
+            DropAsesor.Items.Insert(0, new ListItem(""));
+            DropBib.DataBind();
+            DropBib.Items.Insert(0, new ListItem(""));
             habilitarbotonesDise();
             DeshabilitarDivYContenido(miDiv);
             CheckBox22.Checked = isModalVisible;
@@ -99,11 +104,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             LinkButton1.Enabled = false;
             LinkButton1.CssClass = "btn btn-sm button-disabled";
 
-            LinkButton3.Enabled = false;
-            LinkButton3.CssClass = "btn btn-sm button-disabled";
+            BtnDespiece.Enabled = false;
+            BtnDespiece.CssClass = "btn btn-sm button-disabled";
 
-            LinkButton5.Enabled = false;
-            LinkButton5.CssClass = "btn btn-sm button-disabled";
+            BtnPlano.Enabled = false;
+            BtnPlano.CssClass = "btn btn-sm button-disabled";
 
             LinkButton4.Enabled = false;
             LinkButton4.CssClass = "btn btn-sm button-disabled";
@@ -169,6 +174,38 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session.Remove("SelectedFileName");
             Session.Remove("Documentacion");
 
+        }
+
+        protected void Page_LoadRecep()
+        {
+            elementosllenosalcargarlapagina();
+            scripTabDise();
+            habilitarbotonesRece();
+            BtnProgramar.Text = "TERMINAR";
+            ValidarBotonTerminarRecep();
+
+            if (Session["NumeroDiseño2"] != null && !string.IsNullOrEmpty(Session["NumeroDiseño2"].ToString()))
+            {
+                ProcesarNumeroDiseño2(null);
+            }
+
+        }
+
+        protected void Page_LoadDiseño()
+        {
+            elementosllenosalcargarlapagina();
+            CargarDatagridDise();
+            BtnProgramar.Text = "TERMINAR";
+
+            if (Session["NumeroDiseño2"] != null && !string.IsNullOrEmpty(Session["NumeroDiseño2"].ToString()))
+            {
+                ProcesarNumeroDiseño2(null);
+            }
+
+            DesabilitarTextBox();
+
+            // Limpia las variables de sesión
+            Session.Remove("PrimerClicTime");
         }
 
         protected void CargarDatagridDise()
@@ -475,39 +512,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Page.ClientScript.RegisterStartupScript(this.GetType(), "SwitchToDesiredTab", script);
         }
 
-        protected void Page_LoadRecep()
-        {
-            elementosllenosalcargarlapagina();
-            scripTabDise();
-            habilitarbotonesRece();
-            BtnProgramar.Text = "TERMINAR";
-            ValidarBotonTerminarRecep();
-
-            if (Session["NumeroDiseño2"] != null && !string.IsNullOrEmpty(Session["NumeroDiseño2"].ToString()))
-            {
-                ProcesarNumeroDiseño2(null);
-            }
-
-        }
-
-        protected void Page_LoadDiseño()
-        {
-            elementosllenosalcargarlapagina();
-            CargarDatagridDise();
-            BtnProgramar.Text = "TERMINAR";
-
-            if (Session["NumeroDiseño2"] != null && !string.IsNullOrEmpty(Session["NumeroDiseño2"].ToString()))
-            {
-                ProcesarNumeroDiseño2(null);
-            }
-
-            DesabilitarTextBox();
-        }
-
         protected void DesabilitarTextBox()
         {
             TextContacto.Visible = false;
-
 
             TextTel.Visible = false;
 
@@ -516,6 +523,35 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             TextMail.Visible = false;
 
             TextDir.Visible = false;
+
+            DisposicionInicialBtnCrudPla();
+        }
+
+        protected void DisposicionInicialBtnCrudPla()
+        {
+            TextPlano.Enabled = false;
+            TextLecDes.Enabled = false;
+            DropBib.Enabled = false;
+            DropAsesor.Enabled = false;
+            TextAreaArea.Disabled = true;
+
+            BtnNuePlano.Enabled = true;
+            BtnNuePlano.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm button-enabled";
+
+            BtnGrabPlano.Enabled = false;
+            BtnGrabPlano.CssClass = "form-control form-control-sm linkButtonClicked2 button-disabled";
+
+            BtnModificarPlano.Enabled = false;
+            BtnModificarPlano.CssClass = "form-control form-control-sm linkButtonClicked2 button-disabled";
+
+            BtnCancelarPlano.Enabled = true;
+            BtnCancelarPlano.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm button-enabled";
+
+            BtnEliminarPlano.Enabled = false;
+            BtnEliminarPlano.CssClass = "form-control form-control-sm linkButtonClicked2 button-disabled";
+
+            BtnAsiPlaDis.Enabled = false;
+            BtnAsiPlaDis.CssClass = "form-control form-control-sm linkButtonClicke2d button-disabled";
         }
 
         protected void AccionesAlCargarDiseño()
@@ -550,7 +586,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void DataGrid1_ItemCommand(object source, DataGridCommandEventArgs e)
         {
-
             if (e.CommandName == "Id_OT")
             {
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
@@ -565,88 +600,163 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
 
-                //se usa Para darle un color a la fila seleccionada  anderson
+                // Se usa Para darle un color a la fila seleccionada
                 e.Item.CssClass = "fila-seleccionada1";
 
-
-
+                // Actualiza las sesiones con los valores seleccionados
                 Session["Id_OT2"] = row.Cells[2].Text;
                 Session["pedido2"] = row.Cells[3].Text;
 
                 string tipoAccion = Session["Diseno"] as string;
                 if (tipoAccion == "Diseño")
                 {
-                    // Se compara si el click es en la misma fila
-                    if (row.Cells[2].Text == Session["Id_OTdise1"]?.ToString() && (row.Cells[3].Text == Session["Id_OTdise2"]?.ToString()))
+                    DateTime? primerClicTime = Session["PrimerClicTime"] as DateTime?;
+                    if (primerClicTime != null && (DateTime.Now - primerClicTime.Value).TotalSeconds <= 1)
                     {
-                        // Incrementar la variable de sesión "ClickCount" en el servidor
-                        int clickCount = Convert.ToInt32(Session["ClickCount"]) + 1;
-                        Session["ClickCount"] = clickCount;
-
-                        // se valida si es el segundo click en la misma fila 
-                        if (clickCount == 2)
+                        // Se compara si el click es en la misma fila
+                        if (row.Cells[2].Text == Session["Id_OTdise1"]?.ToString() && row.Cells[3].Text == Session["Id_Peddise2"]?.ToString())
                         {
+                            // Incrementar la variable de sesión "ClickCount" en el servidor
+                            int clickCount = Convert.ToInt32(Session["ClickCount"]) + 1;
+                            Session["ClickCount"] = clickCount;
 
-                            Session.Remove("lnkClieClicked");
-                            Session.Remove("lnkClieeClicked");
+                            // se valida si es el segundo click en la misma fila 
+                            if (clickCount == 2)
+                            {
+                                Session.Remove("lnkClieClicked");
+                                Session.Remove("lnkClieeClicked");
 
+                                string mensajePersonalizado = "Se cargará la OT seleccionada";
+                                string urlRedireccion = "OrdenTrabajo.aspx";
+                                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
 
-
-                            string mensajePersonalizado = "Se cargara la OT seleccionada";
-                            string urlRedireccion = "OrdenTrabajo.aspx";
-                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-
-                            Session.Remove("ClickCount");
-                            Session.Remove("Id_OTdise1");
-                            Session.Remove("Id_OTdise2");
+                                Session.Remove("ClickCount");
+                                Session.Remove("Id_OTdise1");
+                                Session.Remove("Id_Peddise2");
+                            }
                         }
 
+                        // Limpia las variables de sesión
+                        Session.Remove("PrimerClicTime");
                     }
                     else
                     {
                         // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
                         Session["ClickCount"] = 1;
                         Session["Id_OTdise1"] = row.Cells[2].Text;
-                        Session["Id_OTdise2"] = row.Cells[3].Text;
+                        Session["Id_Peddise2"] = row.Cells[3].Text;
 
-                        BtnTrabPed.Enabled = true;
-                        BtnTrabPed.CssClass = "btn btn-sm button-enabled linkButtonClicked2 shadow-sm full-width-btn";
+                        primerClic();
 
-                        BtnDesPed.Enabled = true;
-                        BtnDesPed.CssClass = "btn btn-sm button-enabled linkButtonClicked2 shadow-sm full-width-btn";
-
-                        BtnTrabDis.Enabled = false;
-                        BtnTrabDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
-
-                        BtnDesDis.Enabled = false;
-                        BtnDesDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
-
-                        BtnTrabShoCas.Enabled = false;
-                        BtnTrabShoCas.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
-
-                        BtnDesSC.Enabled = false;
-                        BtnDesSC.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
-
-                        BtnTrabRen.Enabled = false;
-                        BtnTrabRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
-
-                        BtnDesRen.Enabled = false;
-                        BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+                        // Llama al método para recargar y ordenar el DataGrid
+                        DatagridDiseOrderBy();
 
                     }
                 }
-                if (tipoAccion == "Ventas")
+                else if (tipoAccion == "Ventas")
                 {
                     Session.Remove("lnkClieClicked");
                     Session.Remove("lnkClieeClicked");
 
-                    string mensajePersonalizado = "Se cargara la OT seleccionada";
+                    string mensajePersonalizado = "Se cargará la OT seleccionada";
                     string urlRedireccion = "OrdenTrabajo.aspx";
                     Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                 }
             }
+        }
+
+        protected void primerClic()
+        {
+
+            Session["PrimerClicTime"] = DateTime.Now;
+
+            // Actualiza los botones según la lógica de tu aplicación
+            BtnTrabPed.Enabled = true;
+            BtnTrabPed.CssClass = "btn btn-sm button-enabled linkButtonClicked2 shadow-sm full-width-btn";
+
+            BtnDesPed.Enabled = true;
+            BtnDesPed.CssClass = "btn btn-sm button-enabled linkButtonClicked2 shadow-sm full-width-btn";
+
+            BtnTrabDis.Enabled = false;
+            BtnTrabDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+            BtnDesDis.Enabled = false;
+            BtnDesDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+            BtnTrabShoCas.Enabled = false;
+            BtnTrabShoCas.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+            BtnDesSC.Enabled = false;
+            BtnDesSC.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+            BtnTrabRen.Enabled = false;
+            BtnTrabRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+
+            BtnDesRen.Enabled = false;
+            BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
 
+        }
+
+
+        protected void DatagridDiseOrderBy()
+        {
+
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            string IdOT = Session["Id_OT2"].ToString();
+            string pedido = Session["pedido2"].ToString();
+            string valorZona = DropDownListOptions.SelectedValue;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = @"
+            SELECT 
+                ot.Id_OT,
+                ot.Consecutivo_Pedido,
+                ot.Nombre_Obra,
+                CONCAT(ac.Nombre, ' ', ac.Apellidos) AS Nombre_Asesor,
+                ot.Fecha_Entrega_Dibujo_Despiece,
+                ot.RealizadoPor,
+                ot.Fecha_Despacho_Produccion,
+                ot.Zona,
+                ac.Cedula
+            FROM 
+                tblOT ot
+            INNER JOIN 
+                tblAsesorComercial ac ON ot.Codigo_Asesor = ac.Cedula
+            WHERE 
+                ot.Terminado_Diseño = '0' 
+                AND ot.Terminado_Ventas = '1' 
+                AND ot.Anulada = '0'
+                AND ot.Zona = @Zona 
+            ORDER BY 
+                CASE WHEN ot.Id_OT = @Id_OT THEN 0 ELSE 1 END, 
+                CASE WHEN ot.Consecutivo_Pedido = @pedido THEN 0 ELSE 1 END,
+                ot.Fecha_Entrega_Dibujo_Despiece";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id_OT", string.IsNullOrEmpty(IdOT) ? (object)DBNull.Value : IdOT);
+                    command.Parameters.AddWithValue("@pedido", string.IsNullOrEmpty(pedido) ? (object)DBNull.Value : pedido);
+                    command.Parameters.AddWithValue("@Zona", string.IsNullOrEmpty(valorZona) ? (object)DBNull.Value : valorZona);
+
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+
+
+                    DataGrid1.DataSource = dt;  // Vincula el DataTable a tu DataGrid
+                    DataGrid1.DataBind();       // Realiza el DataBind para mostrar los datos
+                    UpdatePanel1.Update();      // Actualiza el UpdatePanel si es necesario
+
+                    if (DataGrid1.Items.Count > 0)
+                    {
+                        DataGridItem firstRow = DataGrid1.Items[0];
+                        firstRow.CssClass = "fila-seleccionada1";
+                    }
+                }
+            }
         }
 
         protected void BtnProgramar_Click(object sender, EventArgs e)
@@ -1726,7 +1836,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void NuevoDisBit_Click(object sender, EventArgs e)
         {
-            Session["CrudDise"] = "Insertar";
+            Session["CrudVentas"] = "Insertar";
 
             bool lnkClieClicked = Session["lnkClieClicked"] as bool? ?? false;
             bool lnkClieeClicked = Session["lnkClieeClicked"] as bool? ?? false;
@@ -1750,7 +1860,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void NuevoLimpiar()
         {
-            string tipoAccion = Session["CrudDise"] as string;
+            string tipoAccion = Session["CrudVentas"] as string;
             if (tipoAccion == "Insertar")
             {
                 ComportamientoNuevo();
@@ -1951,7 +2061,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void MetodoCancelar()
         {
-            string tipoAccionCrud = Session["CrudDise"] as string;
+            string tipoAccionCrud = Session["CrudVentas"] as string;
             if (tipoAccionCrud == "Actualizar")
             {
                 // Si se hizo clic en Modificar antes, realiza las s necesarias para volver al estado anterior.
@@ -2046,26 +2156,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
             Session.Remove("NumeroDiseño5");
-        }
-    
-    
-        protected void lnkClie_Click(object sender, EventArgs e)
-        {
-            // Obtén el LinkButton que se hizo clic
-            LinkButton lnkSelectRow = (LinkButton)sender;
-
-            // Obtén el índice de fila desde el CommandArgument
-            int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
-
-            // Accede a la fila seleccionada en el DataGrid
-            DataGridItem selectedRow = DataGrid2.Items[rowIndex];
-
-            // Almacena el nombre del archivo en la variable de sesión
-            Session["NumeroDiseño"] = selectedRow.Cells[2].Text;
-
-           
-            AccionesAlCargarDiseño();
-
         }
 
         protected void ValidarBotonOk()
@@ -2180,7 +2270,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void lnkCliee_Click(object sender, EventArgs e)
         {
-            
+
             string tipoAccion = Session["Diseno"] as string;
             if (tipoAccion == "Ventas")
             {
@@ -2214,7 +2304,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 DeshabilitarDivYContenido(miDiv);
             }
-            else if (tipoAccion == "Recepcion")
+            if (tipoAccion == "Recepcion")
             {
 
                 // Obtén el LinkButton que se hizo clic
@@ -2250,8 +2340,42 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 ValidarBotonVisualizarCotActual();
             }
+            if (tipoAccion == "Diseño")
+            {
+                // Obtén el LinkButton que se hizo clic
+                LinkButton lnkSelectRow = (LinkButton)sender;
 
-          
+                // Obtén el índice de fila desde el CommandArgument
+                int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
+
+                // Accede a la fila seleccionada en el DataGrid
+                DataGridItem selectedRow = DataGrid4.Items[rowIndex];
+
+                // Almacena el nombre del archivo en la variable de sesión
+                Session["NumeroDiseño"] = selectedRow.Cells[2].Text;
+
+                // Deselecciona todas las filas previamente seleccionadas
+                foreach (DataGridItem item in DataGrid4.Items)
+                {
+                    if (item != selectedRow)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+                Session["lnkClieeClicked"] = true;
+
+                BotonesCargarDise();
+
+                ValidarBotonOk();
+
+
+                DeshabilitarDivYContenido(miDiv);
+
+
+
+            }
+
 
         }
 
@@ -2282,13 +2406,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             // Si hay resultados, habilitar el botón BtnProgramar
                             BtnProgramar.Enabled = true;
-                            BtnProgramar.CssClass = "btn btn-sm shadow btn-warning fw-bold";      
+                            BtnProgramar.CssClass = "btn btn-sm shadow btn-warning fw-bold";
                         }
                         else
                         {
                             // Si no hay resultados, deshabilitar el botón BtnProgramar
                             BtnProgramar.Enabled = false;
-                            BtnProgramar.CssClass = "btn btn-sm shadow btn-warning fw-bold";       
+                            BtnProgramar.CssClass = "btn btn-sm shadow btn-warning fw-bold";
                         }
 
                         // Cerrar la conexión y liberar recursos
@@ -2296,7 +2420,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         conexion.Close();
                     }
                 }
-            }       
+            }
         }
 
         protected void ValidarBotonVisualizarCotActual()
@@ -2323,12 +2447,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         // Verificar si la consulta arrojó resultados
                         if (reader.HasRows)
-                        {       
+                        {
                             LinkButton2.Enabled = true;
                             LinkButton2.CssClass = "btn btn-sm shadow button-enabled";
                         }
                         else
-                        {        
+                        {
                             LinkButton2.Enabled = false;
                             LinkButton2.CssClass = "btn btn-sm shadow button-disabled";
                         }
@@ -2423,7 +2547,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Habilitar el botón "ActualizarDiseno"
                 ActualizarDiseno.Enabled = true;
                 ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
-         
+
 
                 // Habilitar el botón "Modificar"
                 Modificar.Enabled = false;
@@ -2533,52 +2657,122 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ShowCase').modal('show');", true);
 
-            TextObsVen.Disabled = false;
             CheckEsyMat.Enabled = true;
+            TextObsVen.Disabled = true;
 
-            Session["CrudDise"] = "Actualizar";
+            string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Ventas")
+            {
+                Session["CrudVentas"] = "Actualizar";
+            }
+            if (tipoAccion == "Diseño")
+            {
+                Session["CrudDiseno"] = "Actualizar";
+            }
 
         }
 
         protected void BtnModificarNo_Click(object sender, EventArgs e)
-        { 
-            BtnProgramar.Enabled = false;
-            BtnProgramar.CssClass = "btn btn-sm shadow button-disabled fw-bold";
+        {
+            string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Ventas")
+            {
 
-            Modificar.Enabled = false;
-            Modificar.CssClass = "btn btn-sm shadow button-disabled";
+                TextObsVen.Disabled = false;
+                BtnProgramar.Enabled = false;
+                BtnProgramar.CssClass = "btn btn-sm shadow button-disabled fw-bold";
 
-            ActualizarDiseno.Enabled = false;
-            ActualizarDiseno.CssClass = "btn btn-sm shadow button-disabled";
+                Modificar.Enabled = false;
+                Modificar.CssClass = "btn btn-sm shadow button-disabled";
 
-            // Habilitar el botón "Grabar"
-            Grabar.Enabled = true;
-            Grabar.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+                ActualizarDiseno.Enabled = false;
+                ActualizarDiseno.CssClass = "btn btn-sm shadow button-disabled";
 
-            DocBitacora.Enabled = true;
-            DocBitacora.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+                // Habilitar el botón "Grabar"
+                Grabar.Enabled = true;
+                Grabar.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
-            // Habilitar el div y su contenido
-            HabilitarDivYContenido(miDiv);
+                DocBitacora.Enabled = true;
+                DocBitacora.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
-            TextIngDis.Enabled = false;
-            TextUltAc.Enabled = false;
+                // Habilitar el div y su contenido
+                HabilitarDivYContenido(miDiv);
 
-            TextFecOkDib.Enabled = false;
+                TextIngDis.Enabled = false;
+                TextUltAc.Enabled = false;
 
-            BtnTrabPed.Enabled = false;
-            BtnDesPed.Enabled = false;
+                TextFecOkDib.Enabled = false;
 
-            // Cambiar el color del Label lblCotizar
-            lblCotizar.CssClass = "col-form-label-sm text-danger";
-            lblCotizar.Font.Bold = true;
+                BtnTrabPed.Enabled = false;
+                BtnDesPed.Enabled = false;
 
-            // Deshabilitar el botón "NuevoDisBit"
-            NuevoDisBit.Enabled = false;
-            NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
+                // Cambiar el color del Label lblCotizar
+                lblCotizar.CssClass = "col-form-label-sm text-danger";
+                lblCotizar.Font.Bold = true;
 
-            TextCliente.Enabled = false;
-            TextCliente.CssClass = "form-control form-control-sm";
+                // Deshabilitar el botón "NuevoDisBit"
+                NuevoDisBit.Enabled = false;
+                NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
+
+                TextCliente.Enabled = false;
+                TextCliente.CssClass = "form-control form-control-sm";
+
+                BtnPlano.Enabled = false;
+                BtnPlano.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnDespiece.Enabled = false;
+                BtnDespiece.CssClass = "btn btn-sm shadow button-disabled";
+
+                LinkButton2.Enabled = false;
+                LinkButton2.CssClass = "btn btn-sm shadow button-disabled"; 
+
+
+            }
+            if (tipoAccion == "Diseño")
+            {
+                BtnProgramar.Enabled = false;
+                BtnProgramar.CssClass = "btn btn-sm shadow button-disabled fw-bold";
+
+                Modificar.Enabled = false;
+                Modificar.CssClass = "btn btn-sm shadow button-disabled";
+
+                ActualizarDiseno.Enabled = false;
+                ActualizarDiseno.CssClass = "btn btn-sm shadow button-disabled";
+
+                // Habilitar el botón "Grabar"
+                Grabar.Enabled = true;
+                Grabar.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+                DocBitacora.Enabled = true;
+                DocBitacora.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+                // Habilitar el div y su contenido
+                HabilitarDivYContenido(miDiv);
+
+                TextIngDis.Enabled = false;
+                TextUltAc.Enabled = false;
+
+                TextFecOkDib.Enabled = false;
+
+                BtnTrabPed.Enabled = false;
+                BtnDesPed.Enabled = false;
+
+                // Cambiar el color del Label lblCotizar
+                lblCotizar.CssClass = "col-form-label-sm text-danger";
+                lblCotizar.Font.Bold = true;
+
+                // Deshabilitar el botón "NuevoDisBit"
+                NuevoDisBit.Enabled = false;
+                NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
+
+                TextCliente.Enabled = false;
+                TextCliente.CssClass = "form-control form-control-sm";
+
+                BtnPlano.Enabled = true;
+                BtnPlano.CssClass = "btn btn-sm button-enabled";
+
+                TextObsDibDes.Attributes.Remove("readonly");
+            }
         }
 
         protected void BtnModificarSi_Click(object sender, EventArgs e)
@@ -3102,13 +3296,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (string.IsNullOrEmpty(campoFaltante))
             {
-                string tipoAccion = Session["CrudDise"] as string;
+                string tipoAccion = Session["CrudVentas"] as string;
                 if (tipoAccion == "Insertar")
                 {
                     // Realiza la inserción
                     if (RealizarInsercion())
                     {
-                        Session.Remove("CrudDise");
+                        Session.Remove("CrudVentas");
 
                         string mensajePersonalizado = "Las Fechas: Ingreso del diseño, Ultima Activación y Entrega, se ajustaran cuando programe el diseño";
                         string urlRedireccion = "Ventas/Diseño_Venta.aspx";
@@ -3116,7 +3310,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                     else
                     {
-                        Session.Remove("CrudDise");
+                        Session.Remove("CrudVentas");
 
                         string mensajePersonalizado = "No se afecto ninguna fila";
                         string urlRedireccion = "Ventas/Diseño_Venta.aspx";
@@ -3128,7 +3322,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     // Realiza la actualización
                     if (RealizarActualizacion())
                     {
-                        Session.Remove("CrudDise");
+                        Session.Remove("CrudVentas");
 
 
 
@@ -3141,7 +3335,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                     else
                     {
-                        Session.Remove("CrudDise");
+                        Session.Remove("CrudVentas");
 
                         string mensajePersonalizado = "El Diseño ya fue aprobado para Dibujo y Despiece, este departamento lo debe habilitar para ser modificado";
                         string urlRedireccion = "Ventas/Diseño_Venta.aspx";
@@ -3149,8 +3343,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
 
-                
-        
+
+
             }
             else
             {
@@ -3563,8 +3757,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 DateTime fechaActual = DateTime.Now.Date;
 
                 if (DateTime.TryParse(FechaEntrega, out DateTime fechaEntrega))
-                {  
-                    if (fechaEntrega >= fechaActual &&  programadoVentas == "True" && terminadoDibujo == "False" && pausado == "False" && urgente == "False")
+                {
+                    if (fechaEntrega >= fechaActual && programadoVentas == "True" && terminadoDibujo == "False" && pausado == "False" && urgente == "False")
                     {
                         e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#ead97b"); /* Amarillo */
                         e.Item.ForeColor = System.Drawing.Color.Black;
@@ -3579,11 +3773,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#819cba"); /* Azul */
                         e.Item.ForeColor = System.Drawing.Color.White;
                     }
-                    if (programadoVentas == "True" && pasarACotizar == "False")
+
+                    if (terminadoDibujo == "True" && pasarACotizar == "False")
                     {
                         e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#be94b9"); /* Rosado */
                         e.Item.ForeColor = System.Drawing.Color.White;
                     }
+
                     if (pausado == "True")
                     {
                         e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#74bec6"); /* Celeste */
@@ -3619,43 +3815,55 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void DataGridDise_ItemCommand(object source, DataGridCommandEventArgs e)
         {
-            string tipoAccion = Session["Diseno"] as string;
-            if (tipoAccion == "Diseño")
+            if (e.CommandName == "Numero_Diseño")
             {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGrid2.Items[rowIndex];
 
-                if (e.CommandName == "Numero_Diseño")
+                // capturamos los campos de la fila del datagrid 
+                foreach (DataGridItem item in DataGrid2.Items)
                 {
-                    int rowIndex = Convert.ToInt32(e.CommandArgument);
-                    DataGridItem row = DataGrid2.Items[rowIndex];
-
-                    // capturamos los campos de la fila del datagrid 
-                    foreach (DataGridItem item in DataGrid2.Items)
+                    if (item != row)
                     {
-                        if (item != row)
-                        {
-                            item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
-                        }
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
                     }
+                }
 
-                    e.Item.CssClass = "fila-seleccionada1";
+                e.Item.CssClass = "fila-seleccionada1";
 
-                    // Se compara si el click es en la misma fila
-                    if (row.Cells[2].Text == Session["NumDis1"]?.ToString())
+
+
+                // Almacena el nombre del archivo en la variable de sesión
+                Session["NumeroDiseño"] = row.Cells[2].Text;
+
+                string tipoAccion = Session["Diseno"] as string;
+                if (tipoAccion == "Diseño")
+                {
+
+
+                    AccionesAlCargarDiseño();
+                    DateTime? primerClicTime = Session["PrimerClicTime"] as DateTime?;
+                    if (primerClicTime != null && (DateTime.Now - primerClicTime.Value).TotalSeconds <= 1)
                     {
-                        // Incrementar la variable de sesión "ClickCount" en el servidor
-                        int clickCount = Convert.ToInt32(Session["ClickCount"]) + 1;
-                        Session["ClickCount"] = clickCount;
 
-                        // se valida si es el segundo click en la misma fila 
-                        if (clickCount == 2)
+                        // Se compara si el click es en la misma fila
+                        if (row.Cells[2].Text == Session["NumDis1"]?.ToString())
                         {
-                            ScriptManager.RegisterStartupScript(this, GetType(), "ActivarTabScript", "activarTab('BitacoraDesarrollo-content');", true);
-                            ProcesarNumeroDiseño(e);
+                            // Incrementar la variable de sesión "ClickCount" en el servidor
+                            int clickCount = Convert.ToInt32(Session["ClickCount"]) + 1;
+                            Session["ClickCount"] = clickCount;
 
-                            Session.Remove("ClickCount");
-                            Session.Remove("NumDis1");
+                            // se valida si es el segundo click en la misma fila 
+                            if (clickCount == 2)
+                            {
+                                ScriptManager.RegisterStartupScript(this, GetType(), "ActivarTabScript", "activarTab('BitacoraDesarrollo-content');", true);
+                                ProcesarNumeroDiseño(e);
+
+                                Session.Remove("ClickCount");
+                                Session.Remove("NumDis1");
+                            }
+
                         }
-
                     }
                     else
                     {
@@ -3663,17 +3871,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         Session["ClickCount"] = 1;
                         Session["NumDis1"] = row.Cells[2].Text;
 
+                        Session["PrimerClicTime"] = DateTime.Now;
+
+                        // Actualiza los botones según la lógica de tu aplicación
                         BtnTrabPed.Enabled = false;
-                        BtnTrabPed.CssClass = "btn btn-sm button-disabled linkButtonClicked shadow-sm full-width-btn";
+                        BtnTrabPed.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
                         BtnDesPed.Enabled = false;
-                        BtnDesPed.CssClass = "btn btn-sm button-disabled linkButtonClicked shadow-sm full-width-btn";
+                        BtnDesPed.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
                         BtnTrabDis.Enabled = true;
-                        BtnTrabDis.CssClass = "btn btn-sm button-enabled linkButtonClicked2 full-width-btn";
+                        BtnTrabDis.CssClass = "btn btn-sm button-enabled linkButtonClicked2 shadow-sm full-width-btn";
 
                         BtnDesDis.Enabled = true;
-                        BtnDesDis.CssClass = "btn btn-sm button-enabled linkButtonClicked2 full-width-btn";
+                        BtnDesDis.CssClass = "btn btn-sm button-enabled linkButtonClicked2 shadow-sm full-width-btn";
 
                         BtnTrabShoCas.Enabled = false;
                         BtnTrabShoCas.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
@@ -3687,15 +3898,61 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         BtnDesRen.Enabled = false;
                         BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
+                        CargarDatagridDiseOrderBy();
+
+                    }
+                }
+
+                if (tipoAccion == "Ventas")
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(), "ActivarTabScript", "activarTab('BitacoraDesarrollo-content');", true);
+                    ProcesarNumeroDiseño(e);
+                }
+            }
+        }
+    
+        protected void CargarDatagridDiseOrderBy()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            string numeroDise = Session["NumeroDiseño"].ToString();
+            string valorZona = DropDownListOptions.SelectedValue;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = @"
+           	SELECT [Numero_Diseño], [Cliente], [Nombre_Diseño], [Asesor],
+                            [UltimaActivacion], [Fecha_Programada_Entrega], [RealizadoPor],
+                            A.[Zona], [PactodeEntrega], [ProgramadoVentas], [PasarACotizar], [TerminadoDibujo], [Pausado], B.[Cedula], A.[id_CiudadProyecto], A.[Urgente]
+                        FROM [tblDiseño] AS A 
+                            INNER JOIN tblAsesorComercial AS B ON (B.Nombre +' '+ B.Apellidos) = A.Asesor
+                        WHERE ProgramadoVentas = '1' AND TerminadoDibujo = '0' AND A.Zona = @Zona 
+                        ORDER BY
+						CASE WHEN Numero_Diseño = @NumDise THEN 0 ELSE 1 END,
+						[UltimaActivacion] ASC";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@NumDise", string.IsNullOrEmpty(numeroDise) ? (object)DBNull.Value : numeroDise);
+                    command.Parameters.AddWithValue("@Zona", string.IsNullOrEmpty(valorZona) ? (object)DBNull.Value : valorZona);
+
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+
+
+                    DataGrid2.DataSource = dt;  // Vincula el DataTable a tu DataGrid
+                    DataGrid2.DataBind();       // Realiza el DataBind para mostrar los datos
+                    UpdatePanel1.Update();      // Actualiza el UpdatePanel si es necesario
+
+                    if (DataGrid2.Items.Count > 0)
+                    {
+                        DataGridItem firstRow = DataGrid2.Items[0];
+                        firstRow.CssClass = "fila-seleccionada1";
                     }
                 }
             }
-             if (tipoAccion == "Ventas")
-             {
-                ScriptManager.RegisterStartupScript(this, GetType(), "ActivarTabScript", "activarTab('BitacoraDesarrollo-content');", true);
-                ProcesarNumeroDiseño(e);
-             }
-            }
+        }
 
         private void ProcesarNumeroDiseño(DataGridCommandEventArgs e)
         {
@@ -4156,7 +4413,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session.Remove("NumeroDiseño2");
         }
 
-        protected void DataGridSC(object source, DataGridCommandEventArgs e)
+        protected void DataGridSC_ItemCommand(object source, DataGridCommandEventArgs e)
         {
             string tipoAccion = Session["Diseno"] as string;
             if (tipoAccion == "Diseño")
@@ -4178,30 +4435,38 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     e.Item.CssClass = "fila-seleccionada1";
 
-                    // Se compara si el click es en la misma fila
-                    if (row.Cells[2].Text == Session["NumSC"]?.ToString())
+                    AccionesAlCargarDiseño();
+                    DateTime? primerClicTime = Session["PrimerClicTime"] as DateTime?;
+                    if (primerClicTime != null && (DateTime.Now - primerClicTime.Value).TotalSeconds <= 1)
                     {
-                        // Incrementar la variable de sesión "ClickCount" en el servidor
-                        int clickCount = Convert.ToInt32(Session["ClickCount"]) + 1;
-                        Session["ClickCount"] = clickCount;
 
-                        // se valida si es el segundo click en la misma fila 
-                        if (clickCount == 2)
+                        // Se compara si el click es en la misma fila
+                        if (row.Cells[2].Text == Session["NumSC"]?.ToString())
                         {
-                           
-                            ProcesarNumeroDiseño(e);
-                            ScriptManager.RegisterStartupScript(this, GetType(), "ActivarTabScript", "activarTab('BitacoraDesarrollo-content');", true);
+                            // Incrementar la variable de sesión "ClickCount" en el servidor
+                            int clickCount = Convert.ToInt32(Session["ClickCount"]) + 1;
+                            Session["ClickCount"] = clickCount;
 
-                            Session.Remove("ClickCount");
-                            Session.Remove("NumSC");
+                            // se valida si es el segundo click en la misma fila 
+                            if (clickCount == 2)
+                            {
+
+                                ProcesarNumeroDiseño(e);
+                                ScriptManager.RegisterStartupScript(this, GetType(), "ActivarTabScript", "activarTab('BitacoraDesarrollo-content');", true);
+
+                                Session.Remove("ClickCount");
+                                Session.Remove("NumSC");
+                            }
+
                         }
-
                     }
                     else
                     {
                         // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
                         Session["ClickCount"] = 1;
                         Session["NumSC"] = row.Cells[2].Text;
+
+                        Session["PrimerClicTime"] = DateTime.Now;
 
                         BtnTrabPed.Enabled = false;
                         BtnTrabPed.CssClass = "btn btn-sm button-disabled linkButtonClicked shadow-sm full-width-btn";
@@ -4227,6 +4492,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         BtnDesRen.Enabled = false;
                         BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
+                        CargarDatagridSCOrderBy();
+
                     }
                 }
             }
@@ -4243,11 +4510,54 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
            
         }
 
+        protected void CargarDatagridSCOrderBy()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            string numeroDise = Session["NumeroDiseño"].ToString();
+            string valorZona = DropDownListOptions.SelectedValue;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = @"
+                             SELECT * 
+                                FROM tblDiseño 
+                                WHERE SC_Terminado = 0 
+                                AND (SC_Tiemporeal = 1 OR SC_Imagenes = 1 OR SC_Presentacionppt = 1) 
+                                AND  Zona = @Zona
+                                ORDER BY
+                                  CASE WHEN Numero_Diseño = @NumDise THEN 0 ELSE 1 END, 
+                                  SC_Fecha ASC;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@NumDise", string.IsNullOrEmpty(numeroDise) ? (object)DBNull.Value : numeroDise);
+                    command.Parameters.AddWithValue("@Zona", string.IsNullOrEmpty(valorZona) ? (object)DBNull.Value : valorZona);
+
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+
+
+                    DataGridDiseños.DataSource = dt;  // Vincula el DataTable a tu DataGrid
+                    DataGridDiseños.DataBind();       // Realiza el DataBind para mostrar los datos
+                    UpdatePanel1.Update();      // Actualiza el UpdatePanel si es necesario
+
+                    if (DataGridDiseños.Items.Count > 0)
+                    {
+                        DataGridItem firstRow = DataGridDiseños.Items[0];
+                        firstRow.CssClass = "fila-seleccionada1";
+                    }
+                }
+            }
+        }
+
         protected void DataGridBusDise_ItemCommand(object source, DataGridCommandEventArgs e)
         {
             if (e.CommandName == "Numero_Diseño")
             {
                 ProcesarNumeroDiseño(e);
+                AccionesAlCargarDiseño();
             }
         }
 
@@ -4299,11 +4609,56 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         BtnDesRen.Enabled = true;
                         BtnDesRen.CssClass = "btn btn-sm button-enabled linkButtonClicked2 full-width-btn";
 
+                    CargarDatagridRenderOrderBy();
+
                     
                 }
                 if (tipoAccion == "Ventas")
                 {
                   
+                }
+            }
+        }
+
+        protected void CargarDatagridRenderOrderBy()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            string idRender = Session["Id_Render"].ToString();
+            string valorZona = DropDownListOptions.SelectedValue;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = @"
+          SELECT Id_Render, Cliente, Nombre_Render, UltimaActivacion,
+           Fecha_Programada_Entrega, Asesor, RealizadoPor, A.[Zona], TerminadoRender, Pausado, ProgramadoVentas, b.Cedula
+    FROM tblRender as A
+	inner join tblAsesorComercial As B on (B.Nombre +' '+ B.Apellidos) = A.Asesor
+    WHERE TerminadoRender = '0' AND  A.Zona = @Zona
+      ORDER BY
+	  CASE WHEN Id_Render = @Id_Render THEN 0 ELSE 1 END, 
+	  UltimaActivacion
+";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id_Render", string.IsNullOrEmpty(idRender) ? (object)DBNull.Value : idRender);
+                    command.Parameters.AddWithValue("@Zona", string.IsNullOrEmpty(valorZona) ? (object)DBNull.Value : valorZona);
+
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+
+
+                    DataGridRender.DataSource = dt;  // Vincula el DataTable a tu DataGrid
+                    DataGridRender.DataBind();       // Realiza el DataBind para mostrar los datos
+                    UpdatePanel1.Update();      // Actualiza el UpdatePanel si es necesario
+
+                    if (DataGridRender.Items.Count > 0)
+                    {
+                        DataGridItem firstRow = DataGridRender.Items[0];
+                        firstRow.CssClass = "fila-seleccionada1";
+                    }
                 }
             }
         }
@@ -6427,6 +6782,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     if (rowsAffected > 0)
                     {
                         CargarDatagridDise();
+                        DatagridDiseOrderBy();
+
                     }
                     else
                     {
@@ -6455,6 +6812,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     if (rowsAffected > 0)
                     {
                         CargarDatagridDise();
+                        DatagridDiseOrderBy();
                     }
                     else
                     {
@@ -6557,7 +6915,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         if (rowsAffected > 0)
                         {
-                            CargarDatagridDise();
+                    
+                            CargarDatagridDiseOrderBy();
                         }
                         else
                         {
@@ -6588,7 +6947,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     if (rowsAffected > 0)
                     {
-                        CargarDatagridDise();
+              
+                        CargarDatagridDiseOrderBy();
                     }
                     else
                     {
@@ -6597,7 +6957,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
-
 
         protected void TrabSC_Click(object sender, EventArgs e)
         {
@@ -6620,8 +6979,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         if (rowsAffected > 0)
                         {
-                            CargarDatagridDise();
-                        }
+                        CargarDatagridSCOrderBy();
+                    }
                         else
                         {
                             // Maneja el caso en el que no se actualizaron filas, si es necesario
@@ -6646,7 +7005,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     if (rowsAffected > 0)
                     {
-                        CargarDatagridDise();
+                        CargarDatagridSCOrderBy();
 
                     }
                     else
@@ -6657,7 +7016,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-        protected void BntTrabRender_Click(object sender, EventArgs e)
+        protected void BtnTrabRender_Click(object sender, EventArgs e)
         {
             string nombreUsuario = Session["usuariologueado"].ToString();
 
@@ -6678,7 +7037,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     if (rowsAffected > 0)
                     {
-                        CargarDatagridDise();
+                        CargarDatagridRenderOrderBy();
                     }
                     else
                     {
@@ -6687,6 +7046,728 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
+
+        protected void BtnBuscarPlano_Click(object sender, EventArgs e)
+        {
+            string query = string.Empty;
+
+            if (!string.IsNullOrEmpty(TextBuscarClientePlano.Text) || !string.IsNullOrEmpty(TextBuscarPlano.Text))
+            {
+                query = "SELECT tblplano.* " +
+                        "FROM tblplano " +
+                        "WHERE tblplano.Plano IS NOT NULL " +
+                        "AND tblplano.Nombre_Cliente LIKE @Cliente " +
+                        "AND tblplano.Id_OT = 'Nula' " +
+                        "AND tblplano.Plano LIKE @Plano " +
+                        "ORDER BY tblplano.Fecha_Termino_Diseño";
+            }
+            else
+            {
+                query = "SELECT TOP 500 tblplano.* " +
+                        "FROM tblplano " +
+                        "ORDER BY tblplano.Fecha_Termino_Diseño";
+            }
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    if (!string.IsNullOrEmpty(TextBuscarClientePlano.Text) || !string.IsNullOrEmpty(TextBuscarPlano.Text))
+                    {
+                        command.Parameters.AddWithValue("@Cliente", "%" + TextBuscarClientePlano.Text + "%");
+                        command.Parameters.AddWithValue("@Plano", "%" + TextBuscarPlano.Text + "%");
+                    }
+
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+
+                    DataGridPlano.DataSource = dataTable;
+                    DataGridPlano.DataBind();
+                }
+            }
+        }
+
+        protected void CargarDatosInsertados()
+        {
+            string query = string.Empty;
+
+
+                query = "SELECT tblplano.* " +
+                        "FROM tblplano " +
+                        "WHERE tblplano.Plano IS NOT NULL " +
+                        "AND tblplano.Id_OT = 'Nula' " +
+                        "AND tblplano.Plano LIKE @Plano " +
+                        "ORDER BY tblplano.Fecha_Termino_Diseño";
+
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    if (!string.IsNullOrEmpty(TextPlano.Text))
+                    {
+                        command.Parameters.AddWithValue("@Plano", "%" + TextPlano.Text + "%");
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@Plano", "%" + TextBuscarPlano.Text + "%");
+                    }
+
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+
+                    DataGridPlano.DataSource = dataTable;
+                    DataGridPlano.DataBind();
+                }
+            }
+        }
+
+        protected  void NuevoPlano_Click(object sender, EventArgs e)
+        {
+            BtnNuePlano.Enabled = false;
+            BtnNuePlano.CssClass = "form-control form-control-sm linkButtonClicked button-disabled";
+
+            BtnGrabPlano.Enabled = true;
+            BtnGrabPlano.CssClass = "form-control form-control-sm linkButtonClicked2 button-enabled ";
+
+            BtnModificarPlano.Enabled = false;
+            BtnModificarPlano.CssClass = "form-control form-control-sm linkButtonClicked button-disabled";
+
+            BtnCancelarPlano.Enabled = true;
+            BtnCancelarPlano.CssClass = "form-control form-control-sm linkButtonClicked2 button-enabled shadow-sm";
+
+            BtnEliminarPlano.Enabled = false;
+            BtnEliminarPlano.CssClass = "form-control form-control-sm linkButtonClicked button-disabled";
+
+            BtnAsiPlaDis.Enabled = false;
+            BtnAsiPlaDis.CssClass = "form-control form-control-sm linkButtonClicked button-disabled";
+
+            DropAsesor.SelectedValue = DropDownList1.SelectedItem.Text;
+            TextContactoPlano.Text = TextContacto.Text;
+
+            TextClienteDise.Text = TextCliente.Text;
+
+            TextPlano.Text = string.Empty;
+
+            TextAreaArea.Value = string.Empty;
+
+            TextPlano.Enabled = true;
+            TextLecDes.Enabled = false;
+            DropBib.Enabled = true;
+            DropAsesor.Enabled = true;
+            TextAreaArea.Disabled = false;
+
+
+
+            Session["CRUDPlano"] = "Insertar";
+        }
+
+        protected void ModificarPlano_Click(object sender, EventArgs e)
+        {
+            BtnNuePlano.Enabled = false;
+            BtnNuePlano.CssClass = "form-control form-control-sm linkButtonClicked button-disabled";
+
+            BtnGrabPlano.Enabled = true;
+            BtnGrabPlano.CssClass = "form-control form-control-sm linkButtonClicked button-enabled ";
+
+            BtnModificarPlano.Enabled = false;
+            BtnModificarPlano.CssClass = "form-control form-control-sm linkButtonClicked2 button-disabled";
+
+            BtnCancelarPlano.Enabled = true;
+            BtnCancelarPlano.CssClass = "form-control form-control-sm linkButtonClicked2 button-enabled shadow-sm";
+
+            BtnEliminarPlano.Enabled = false;
+            BtnEliminarPlano.CssClass = "form-control form-control-sm linkButtonClicked button-disabled";
+
+            BtnAsiPlaDis.Enabled = false;
+            BtnAsiPlaDis.CssClass = "form-control form-control-sm linkButtonClicked button-disabled";
+
+            TextPlano.Enabled = true;
+            TextLecDes.Enabled = false;
+            DropBib.Enabled = true;
+            DropAsesor.Enabled = true;
+            TextAreaArea.Disabled = false;
+
+            TextClienteDise.Text = TextCliente.Text;
+
+            Session["PlanoDatagridDise"] = TextPlano.Text;
+
+            Session["CRUDPlano"] = "Modificar";
+        }
+
+        protected void CancelarPlano_Click(object sender, EventArgs e)
+        {
+            TextPlano.Text = string.Empty;
+
+            DropAsesor.DataBind();
+            DropAsesor.Items.Insert(0, new ListItem(""));
+            DropBib.DataBind();
+            DropBib.Items.Insert(0, new ListItem(""));
+
+            TextAreaArea.Value = string.Empty;
+
+            DisposicionInicialBtnCrudPla();
+
+        }
+
+        protected void EliminarPlanoDise_Click(object sender, EventArgs e)
+        {
+            string plano = TextPlano.Text.Trim();
+            string contenidoModalPlano = "Esta seguro que desea eliminar el plano: " + plano + " ?";
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ConfirEliminacionPlano').modal('show'); $('#ConfirEliminacionPlano2').text('" + contenidoModalPlano + "');", true);
+
+        }
+
+        protected void ConfirmarEliminarPlano(object sender, EventArgs e)
+        {
+            string plano = TextPlano.Text.Trim(); // Asegúrate de que TextPlano tiene el valor correcto
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            {
+                connection.Open();
+
+                // Actualizar tblDiseño para establecer Plano a Null donde coincida el plano
+                string updateSql = "UPDATE tblDiseño SET Plano = NULL WHERE Plano = @plano";
+                using (SqlCommand updateCommand = new SqlCommand(updateSql, connection))
+                {
+                    updateCommand.Parameters.AddWithValue("@plano", plano);
+                    updateCommand.ExecuteNonQuery();
+                }
+
+                // Eliminar el plano de tblPlano
+                string deleteSql = "DELETE FROM tblPlano WHERE Plano = @plano";
+                using (SqlCommand deleteCommand = new SqlCommand(deleteSql, connection))
+                {
+                    deleteCommand.Parameters.AddWithValue("@plano", plano);
+                    int rowsAffected = deleteCommand.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        TextPlano.Text = string.Empty;
+
+                        DropAsesor.DataBind();
+                        DropAsesor.Items.Insert(0, new ListItem(""));
+                        DropBib.DataBind();
+                        DropBib.Items.Insert(0, new ListItem(""));
+
+                        TextAreaArea.Value = string.Empty;
+
+                        DisposicionInicialBtnCrudPla();
+                        CargarDatosInsertados();
+
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#PlanoEliminadoExito').modal('show');", true);
+                    }
+                    else
+                    {
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ErrorPlano').modal('show');", true);
+                    }
+                }
+            }
+        }
+
+
+        protected void GrabarPlanoDise_Click(object sender, EventArgs e)
+        {
+            string campoFaltante = ValidarCamposPlano();
+            if (string.IsNullOrEmpty(campoFaltante))
+            {
+                string tipoAccion = Session["CRUDPlano"] as string;
+                if (tipoAccion == "Insertar")
+                {
+                    LogicaParaInsertar();
+                }
+                if (tipoAccion == "Modificar")
+                {
+                    LogicaParaModificar();
+                }
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#campoFaltantePlano').modal('show'); $('#campoFaltantePlano2').text('" + campoFaltante + "');", true);
+            }
+        }
+
+        private string ValidarCamposPlano()
+        {
+            string campoFaltante = string.Empty;
+
+            if (string.IsNullOrEmpty(TextPlano.Text))
+            {
+                campoFaltante = "Plano";
+            }
+            else if (DropBib.SelectedValue == null)
+            {
+                campoFaltante = "Dibujante";
+            }
+            else if (DropAsesor.SelectedItem == null)
+            {
+                campoFaltante = "Asesor";
+            }
+            else if (string.IsNullOrEmpty(TextClienteDise.Text))
+            {
+                campoFaltante = "Cliente";
+            }
+            else if (string.IsNullOrEmpty(TextAreaArea.InnerText))
+            {
+                campoFaltante = "Area";
+            }
+            return campoFaltante;
+        }
+
+        protected void LogicaParaInsertar()
+        {
+            // Verificar si el plano ya existe
+            string plano = TextPlano.Text.Trim();
+            string sSql = "SELECT * FROM tblPlano WHERE plano = @plano";
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(sSql, connection))
+                {
+                    command.Parameters.AddWithValue("@plano", plano);
+
+                    bool planoExiste = false;
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            planoExiste = true;
+                        }
+                    }
+
+                    if (!planoExiste)
+                    {
+                        // Llamar al método InsertarPlano y pasarle la conexión
+                        InsertarPlano(plano, connection);
+                    }
+                    else
+                    {
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#PlanoExistente').modal('show');", true);
+                    }
+                }
+            }
+        }
+
+        protected void LogicaParaModificar()
+        {
+            // Lógica de actualización
+            string nuevoPlano = TextPlano.Text.Trim();
+            string originalPlano = Session["PlanoDatagridDise"] as string;
+
+            if (nuevoPlano != originalPlano)
+            {
+                string sSql = "SELECT * FROM tblPlano WHERE plano = @plano";
+
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(sSql, connection))
+                    {
+                        command.Parameters.AddWithValue("@plano", nuevoPlano);
+
+                        bool planoExiste = false;
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                planoExiste = true;
+                            }
+                        }
+
+                        if (!planoExiste)
+                        {
+
+                            string contenidoModalPlano = "Esta seguro de moficar el plano " + originalPlano + " ?";
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ConfirmarModificarPlanoDise').modal('show'); $('#ConfirmarModificarPlanoDise2').text('" + contenidoModalPlano + "');", true);
+
+                        }
+                        else
+                        {
+                            // Mostrar mensaje de error si el nuevo plano ya existe
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#PlanoExistenteModificar').modal('show');", true);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                ActualizarCamposSinNombre(originalPlano);
+            } 
+        }
+
+        protected void InsertarPlano(string plano, SqlConnection connection)
+        {
+            // Insertar nuevo plano
+            string insertSql = "INSERT INTO tblPlano (Plano, Nombre_Cliente, Contacto_Cliente, area, RealizadoPor, AsesorComercial, Fecha_Entrega_Bitacora, PlaFechalecturaDespiece) " +
+                               "VALUES (@plano, @cliente, @contacto, @area, @dibujante, @asesor, GETDATE(), GETDATE())";
+     
+            using (SqlCommand insertCommand = new SqlCommand(insertSql, connection))
+            {
+                insertCommand.Parameters.AddWithValue("@plano", plano);
+                insertCommand.Parameters.AddWithValue("@cliente", TextClienteDise.Text.Trim());
+                insertCommand.Parameters.AddWithValue("@contacto", TextContactoPlano.Text.Trim());
+                insertCommand.Parameters.AddWithValue("@area", TextAreaArea.Value.Trim());
+                insertCommand.Parameters.AddWithValue("@dibujante", DropBib.SelectedValue);
+                insertCommand.Parameters.AddWithValue("@asesor", DropAsesor.SelectedValue);
+
+                int rowsAffected = insertCommand.ExecuteNonQuery();
+
+                if (rowsAffected > 0)
+                {
+                    DisposicionInicialBtnCrudPla();
+                    CargarDatosInsertados();
+                    string contenidoModaPlano = "El plano " + plano + " se inserto exitosamente";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#InsercionExitosaPlano').modal('show'); $('#InsercionExitosaPlano2').text('" + contenidoModaPlano + "');", true);
+                }
+                else
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ErrorPlano').modal('show');", true);
+                }
+            }
+        }
+
+        protected void ActualizarCamposSinNombre(string originalPlano)
+        {
+            // Actualizar los demás campos sin cambiar el nombre del plano
+            string updateSql = "UPDATE tblPlano SET Nombre_Cliente = @cliente, Contacto_Cliente = @contacto, area = @area, RealizadoPor = @dibujante, AsesorComercial = @asesor WHERE Plano = @originalPlano";
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand updateCommand = new SqlCommand(updateSql, connection))
+                {
+                    updateCommand.Parameters.AddWithValue("@cliente", TextClienteDise.Text.Trim());
+                    updateCommand.Parameters.AddWithValue("@contacto", TextContactoPlano.Text.Trim());
+                    updateCommand.Parameters.AddWithValue("@area", TextAreaArea.Value.Trim());
+                    updateCommand.Parameters.AddWithValue("@dibujante", DropBib.SelectedValue);
+                    updateCommand.Parameters.AddWithValue("@asesor", DropAsesor.SelectedValue);
+                    updateCommand.Parameters.AddWithValue("@originalPlano", originalPlano);
+
+                    int rowsAffected = updateCommand.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        DisposicionInicialBtnCrudPla();
+                        CargarDatosInsertados();
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ActualizacionExitosaPlano').modal('show');", true);
+                    }
+                    else
+                    {
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ErrorPlano').modal('show');", true);
+                    }
+                }
+            }
+        }
+
+        protected void SiModificarPlanoDise_Click(object sender, EventArgs e)
+        {
+            string originalPlano = Session["PlanoDatagridDise"] as string;
+            if (originalPlano == null)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#PlanoOriginalNoEncontrado').modal('show');", true);
+                return;
+            }
+
+            string nuevoPlano = TextPlano.Text.Trim();
+            string cliente = TextClienteDise.Text.Trim();
+            string contacto = TextContactoPlano.Text.Trim();
+            string area = TextAreaArea.Value.Trim();
+            string dibujante = DropBib.SelectedValue;
+            string asesor = DropAsesor.SelectedValue;
+
+            string updateSql = "UPDATE tblPlano SET Plano = @nuevoPlano, Nombre_Cliente = @cliente, Contacto_Cliente = @contacto, area = @area, RealizadoPor = @dibujante, AsesorComercial = @asesor WHERE Plano = @originalPlano";
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand updateCommand = new SqlCommand(updateSql, connection))
+                {
+                    updateCommand.Parameters.AddWithValue("@nuevoPlano", nuevoPlano);
+                    updateCommand.Parameters.AddWithValue("@cliente", cliente);
+                    updateCommand.Parameters.AddWithValue("@contacto", contacto);
+                    updateCommand.Parameters.AddWithValue("@area", area);
+                    updateCommand.Parameters.AddWithValue("@dibujante", dibujante);
+                    updateCommand.Parameters.AddWithValue("@asesor", asesor);
+                    updateCommand.Parameters.AddWithValue("@originalPlano", originalPlano);
+
+                    int rowsAffected = updateCommand.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        DisposicionInicialBtnCrudPla();
+                        CargarDatosInsertados();
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ActualizacionExitosaPlano').modal('show');", true);
+                    }
+                    else
+                    {
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ErrorPlano').modal('show');", true);
+                    }
+                }
+            }
+        }
+
+        protected void DatagridPlano_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+         if(e.CommandName == "SelectPlano")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem  row = DataGridPlano.Items[rowIndex];
+
+                foreach (DataGridItem item in DataGridPlano.Items)
+                {
+                    if(item != row)
+                    {
+                        item.CssClass = "";
+                    }
+                }
+
+                e.Item.CssClass = "fila-seleccionada1";
+
+                DropAsesor.DataBind();
+                DropAsesor.Items.Insert(0, new ListItem(""));
+                DropBib.DataBind();
+                DropBib.Items.Insert(0, new ListItem(""));
+
+                TextPlano.Text = row.Cells[1].Text;
+                TextLecDes.Text = row.Cells[7].Text;
+                // Verificar si el valor de DropBib existe
+                string bibValue = row.Cells[6].Text;
+                if (DropBib.Items.FindByValue(bibValue) != null)
+                {
+                    DropBib.SelectedValue = bibValue;
+                }
+                else
+                {
+                    DropBib.SelectedIndex = -1; // Dejar vacío si no existe
+                }
+
+                // Verificar si el valor de DropAsesor existe
+                string asesorValue = row.Cells[8].Text;
+                if (DropAsesor.Items.FindByValue(asesorValue) != null)
+                {
+                    DropAsesor.SelectedValue = asesorValue;
+                }
+                else
+                {
+                    DropAsesor.SelectedIndex = -1; // Dejar vacío si no existe
+                }
+
+                TextAreaArea.Value = row.Cells[3].Text;
+
+                DisposicionInicialBtnCrudPla();
+
+                BtnModificarPlano.Enabled = true;
+                BtnModificarPlano.CssClass = "form-control form-control-sm linkButtonClicked2 button-enabled";
+                BtnEliminarPlano.Enabled = true;
+                BtnEliminarPlano.CssClass = "form-control form-control-sm linkButtonClicked2 button-enabled";
+                BtnAsiPlaDis.Enabled = true;
+                BtnAsiPlaDis.CssClass = "form-control form-control-sm button-enabled linkButtonClicked2 shadow-sm";
+
+            }
+        }
+
+        protected void BtnPlano_Click(object sender, EventArgs e)
+        {
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarTabPlanoScript", "mostrarTabPlano();", true);
+          
+        }
+
+        protected void BtnDespiece_Click(object sender, EventArgs e)
+        {
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarTabDespieceScript", "mostrarTabDespiece();", true);
+        }
+
+        protected void Datagrid5_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Diseño")
+            {
+                if (e.CommandName == "id_PlanoDiseno")
+                {
+                    int rowIndex = Convert.ToInt32(e.CommandArgument);
+                    DataGridItem row = Datagrid5.Items[rowIndex];
+
+                    // capturamos los campos de la fila del datagrid 
+                    foreach (DataGridItem item in Datagrid5.Items)
+                    {
+                        if (item != row)
+                        {
+                            item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                        }
+                    }
+
+                    e.Item.CssClass = "fila-seleccionada1";
+
+
+
+                    BtnDespiece.Enabled = true;
+                    BtnDespiece.CssClass = "btn btn-sm button-enabled";
+
+                    BtnPlano.Enabled = true;
+                    BtnPlano.CssClass = "btn btn-sm button-enabled";
+
+
+                }
+            }
+            if (tipoAccion == "Ventas")
+            {
+
+            }
+        }
+
+        protected void DataGrid5_ItemDataBound(object sender, DataGridItemEventArgs e)
+        {
+          
+        }
+
+        private string ValidarCamposAsignarPlano()
+        {
+            string campoFaltante = string.Empty;
+
+            if (string.IsNullOrEmpty(TextPlano.Text))
+            {
+                campoFaltante = "Plano";
+            }
+            else if (DropDownList2.SelectedValue == "")
+            {
+                campoFaltante = "Opcion";
+            }
+            else if (string.IsNullOrEmpty(TextCanDes.Text) || !int.TryParse(TextCanDes.Text, out int cantidad) || cantidad <= 0)
+            {
+                campoFaltante = "Cantidad";
+            }
+            return campoFaltante;
+        }
+
+
+        protected void BtnAsiPlaDis_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string plano = TextPlano.Text.Trim();
+                string opcion = DropDownList2.SelectedValue;  // Assuming cboOpcion is a DropDownList
+                string campoFaltante = ValidarCamposAsignarPlano();
+
+                if (string.IsNullOrEmpty(campoFaltante))
+                {
+                    int cantidad = int.Parse(TextCanDes.Text); // Inicializa y asigna la cantidad aquí
+
+                    string numeroDiseno = lblNumDise.Text;
+                    string observaciones = TextAreaObsPla.InnerText.Trim();
+                    string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
+
+                        // Verificar si el plano ya existe
+                        string sSql = "SELECT * FROM tblPlanoDiseño WHERE plano = @plano AND Numero_Diseño = @numeroDiseno AND Opcion = @opcion";
+                        using (SqlCommand command = new SqlCommand(sSql, connection))
+                        {
+                            command.Parameters.AddWithValue("@plano", plano);
+                            command.Parameters.AddWithValue("@numeroDiseno", numeroDiseno);
+                            command.Parameters.AddWithValue("@opcion", opcion);
+
+                            using (SqlDataReader reader = command.ExecuteReader())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    string contenidoModalPlano = "El diseño: " + numeroDiseno + " - con la opción: " + opcion + " ya contiene el plano: " + plano;
+                                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#PlanoYaAsignado').modal('show'); $('#PlanoYaAsignado2').text('" + contenidoModalPlano + "');", true);
+                                    return;
+                                }
+                            }
+                        }
+
+                        // Insertar el plano
+                        sSql = "INSERT INTO tblPlanoDiseño (Plano, Numero_Diseño, Observacion, Opcion, Cantidad) VALUES (@plano, @numeroDiseno, @observacion, @opcion, @cantidad)";
+                        using (SqlCommand insertCommand = new SqlCommand(sSql, connection))
+                        {
+                            insertCommand.Parameters.AddWithValue("@plano", plano);
+                            insertCommand.Parameters.AddWithValue("@numeroDiseno", numeroDiseno);
+                            insertCommand.Parameters.AddWithValue("@observacion", observaciones);
+                            insertCommand.Parameters.AddWithValue("@opcion", opcion);
+                            insertCommand.Parameters.AddWithValue("@cantidad", cantidad);
+
+                            insertCommand.ExecuteNonQuery();
+                        }
+
+                        // Calcular SubTotalZona
+                        sSql = "SELECT ISNULL(SUM(tblPlano_Panel.Precio_Venta * tblPlano_Panel.Cantidad), 0) AS SubTotalZona " +
+                               "FROM tblDiseño " +
+                               "INNER JOIN tblPlanoDiseño ON tblDiseño.Numero_Diseño = tblPlanoDiseño.Numero_Diseño " +
+                               "INNER JOIN tblPlano_Panel ON tblPlanoDiseño.Plano = tblPlano_Panel.Id_Plano " +
+                               "INNER JOIN tblPanel ON tblPlano_Panel.Id_PanelNum = tblPanel.Id_Numerico " +
+                               "INNER JOIN tblGrupoObjeto ON tblPanel.Id_GrupoObjeto = tblGrupoObjeto.ID_GrupoObjeto " +
+                               "WHERE tblGrupoObjeto.Cotizar = 1 " +
+                               "GROUP BY tblDiseño.Numero_Diseño, tblDiseño.Nombre_Diseño, tblDiseño.Asesor, tblPlanoDiseño.Plano, tblPlanoDiseño.Opcion " +
+                               "HAVING tblDiseño.Numero_Diseño = @numeroDiseno AND tblPlanoDiseño.Plano = @plano AND tblPlanoDiseño.Opcion = @opcion";
+
+                        double totalDespiece = 0;
+                        using (SqlCommand totalCommand = new SqlCommand(sSql, connection))
+                        {
+                            totalCommand.Parameters.AddWithValue("@numeroDiseno", numeroDiseno);
+                            totalCommand.Parameters.AddWithValue("@plano", plano);
+                            totalCommand.Parameters.AddWithValue("@opcion", opcion);
+
+                            using (SqlDataReader reader = totalCommand.ExecuteReader())
+                            {
+                                if (reader.Read())
+                                {
+                                    totalDespiece = reader.GetDouble(reader.GetOrdinal("SubTotalZona"));
+                                }
+                            }
+                        }
+
+                        // Actualizar tblPlanoDiseño con SubTotalZona y otros datos
+                        sSql = "UPDATE tblPlanoDiseño " +
+                               "SET SubTotalZona = @totalDespiece, " +
+                               "Composicion = dbo.fn_Composicion_Plano(@plano), " +
+                               "FechalecturaDespiece = GETDATE() " +
+                               "WHERE Numero_Diseño = @numeroDiseno AND Plano = @plano AND Opcion = @opcion";
+
+                        using (SqlCommand updateCommand = new SqlCommand(sSql, connection))
+                        {
+                            updateCommand.Parameters.AddWithValue("@totalDespiece", totalDespiece);
+                            updateCommand.Parameters.AddWithValue("@plano", plano);
+                            updateCommand.Parameters.AddWithValue("@numeroDiseno", numeroDiseno);
+                            updateCommand.Parameters.AddWithValue("@opcion", opcion);
+
+                            updateCommand.ExecuteNonQuery();
+                        }
+
+                        // Cargar los planos del diseño (implementa este método según tus necesidades)
+                        CargarPlanosDelDiseno(numeroDiseno);
+                    }
+
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#AsignadoConExito').modal('show');", true);
+                }
+                else
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#campoFaltantePlano').modal('show'); $('#campoFaltantePlano2').text('" + campoFaltante + "');", true);
+                }
+            }
+            catch (Exception ex)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ErrorPlano').modal('show');", true);
+            }
+        }
+
+        private void CargarPlanosDelDiseno(string numeroDiseno)
+        {
+            // Implementa la lógica para cargar los planos del diseño
+        }
+
+
     }
 
 
