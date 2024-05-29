@@ -665,7 +665,7 @@
                                 </div>
 
                                 <div class="col-1">
-                                    <asp:LinkButton ID="CrearExelClientes" runat="server" OnClick="CrearExcel" OnClientClick="mostrarModal(); return true; ocultaModal();return false; ">
+                                    <asp:LinkButton ID="CrearExelClientes" runat="server" OnClick="CrearExcel">
                                       <i class="custom-icon2"></i>
                                     </asp:LinkButton>
                                 </div>
@@ -716,6 +716,9 @@
 
                         </div>
                     </ContentTemplate>
+                    <Triggers>
+                        <asp:PostBackTrigger ControlID="CrearExelClientes"/>
+                    </Triggers>
                 </asp:UpdatePanel>
 
             </div>

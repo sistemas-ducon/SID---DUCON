@@ -1,8 +1,11 @@
-﻿using System;
+﻿using OfficeOpenXml.Style;
+using OfficeOpenXml;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
@@ -179,7 +182,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 tbCompartido.Text = campos[6];
                 tbCedulaAsesor.Text = campos[7];
                 Session["Id_ClienteBD"] = campos[0];
-               
+
 
                 // hay que validar que el usuario que se logeó sea el mismo asesor de ese cliente para darle aceeso a la admismitracion de ese cliente 
                 // Variable se Sesion de Usuario de Login  para traer la cedula de ese usuario  y compararla con la cedula del asesore de ese cliente 
@@ -248,7 +251,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     Button btnEliminar = FindControl("Eliminar") as Button;
                     btnEliminar.Enabled = false;
 
-              
+
                     ddlAsesorC.Enabled = false;
                     ddlAsesorC.CssClass = "form-control form-control-sm";
                     ControlCliente.Checked = false;
@@ -289,42 +292,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         {
             try
             {
-                // Mostrar el modal de carga
-                ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "ShowLoadingModal", "mostrarModal();", true);
+                // Crear un nuevo paquete de Excel
+                ExcelPackage excelPackage = new ExcelPackage();
 
-                // Crear una nueva instancia de Excel
-                var excelApp = new Excel.Application();
+                // Agregar una hoja de trabajo al paquete
+                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Clientes Nuevos");
 
-                if (excelApp == null)
-                {
-                    Console.WriteLine("Excel no está instalado en esta máquina.");
-                    return;
-                }
-                // Crear un nuevo libro y hoja de Excel
-                var workbook = excelApp.Workbooks.Add();
-                var worksheet = (Excel.Worksheet)workbook.ActiveSheet;
+                // Definir el título y el subtítulo
+                worksheet.Cells["B1:K1"].Merge = true;
+                worksheet.Cells["B1"].Value = "Clientes Nuevos (" + FechaI.Text + ") - (" + FechaF.Text + ")";
+                worksheet.Cells["B1"].Style.Font.Size = 14;
+                worksheet.Cells["B1"].Style.Font.Bold = true;
+                worksheet.Cells["B1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-                // Agregar título a la tabla
-                var tableTitle = "Clientes Nuevos (" + FechaI.Text + ") (" + FechaF.Text + ")";
-                var titleRange = worksheet.Range["B1", "G1"];
-                titleRange.Merge(); // Fusionar celdas para el título
-                titleRange.Value = tableTitle;
-                titleRange.Font.Size = 16;  // Tamaño de fuente
-                titleRange.Font.Bold = true;  // Texto en negrita
-                titleRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;  // Centrar el título
-                titleRange.EntireRow.Font.Color = System.Drawing.Color.Black;  // Cambiar el color de fuente
-
-                titleRange.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
-                titleRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
-                titleRange.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
-                titleRange.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
-
-
-
-
-
-                int rowIndexx = 3;
-
+                int rowIndex = 3; // Comenzar a escribir la tabla a partir de la fila 4
 
                 // Escribir el encabezado de la tabla
                 int colIndex = 1; // Columna 1 en Excel
@@ -334,19 +315,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     if (colIndex != 1)
                     {
                         // Escribe el valor del encabezado en la hoja de Excel
-                        worksheet.Cells[rowIndexx - 1, colIndex] = column.HeaderText;
-                        // Obtener el rango de la celda de encabezado
-                        var headerCell = (Excel.Range)worksheet.Cells[rowIndexx - 1, colIndex];
-                        headerCell.Font.Bold = true;  // Establecer el texto en negrita
-                        headerCell.Interior.Color = System.Drawing.Color.LightGray;  // Cambiar el color de fondo
-
-                        // Aplicar bordes a la celda de encabezado
-                        headerCell.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
-                        headerCell.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
-                        headerCell.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
-                        headerCell.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
-
-
+                        worksheet.Cells[rowIndex - 1, colIndex].Value = column.HeaderText;
+                        worksheet.Cells[rowIndex - 1, colIndex].Style.Font.Bold = true;                             
+                        worksheet.Cells[rowIndex - 1, colIndex].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                     }
                     colIndex++;
                 }
@@ -360,36 +331,30 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         if (colIndex != 1)
                         {
 
-                            // Verificar si el valor de la celda es igual a "&nbsp;"
-                            if (cell.Text != "&nbsp;")
-                            {
-                                // Escribe el valor de la celda en la hoja de Excel
-                                worksheet.Cells[rowIndexx, colIndex] = cell.Text;
-                            }
-
-                            // Obtener el rango de la celda actual
-                            var cellRange = (Excel.Range)worksheet.Cells[rowIndexx, colIndex];
-
-                            // Aplicar bordes a la celda actual
-                            cellRange.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
-                            cellRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
-                            cellRange.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
-                            cellRange.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
+                            // Si no es numérico, escribirlo como texto
+                            worksheet.Cells[rowIndex, colIndex].Value = cell.Text;
+                            worksheet.Cells[rowIndex, colIndex].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                         }
                         colIndex++;
                     }
-                    rowIndexx++;
+                    rowIndex++;
                 }
 
-                // Refrescar la página después de cerrar el modal
-                ScriptManager.RegisterStartupScript(this, GetType(), "RefreshPage", "window.location.reload();", true);
+                // Ajustar el ancho de las columnas
+                worksheet.Cells.AutoFitColumns();
 
+                // Guardar el archivo de Excel
+                string filePath = Path.GetTempFileName() + ".xlsx";
+                FileStream fileStream = new FileStream(filePath, FileMode.Create);
+                excelPackage.SaveAs(fileStream);
+                fileStream.Close();
 
-                worksheet.Columns.AutoFit();
-                // Mostrar la aplicación de Excel
-                excelApp.Visible = true;
-
-
+                // Descargar el archivo de Excel
+                Response.Clear();
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("content-disposition", "attachment; filename=ClientesNuevos.xlsx");
+                Response.TransmitFile(filePath);
+                Response.End();
             }
             catch (Exception ex)
             {
@@ -924,7 +889,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         FROM tblCotización AS a 
                         INNER JOIN tblEstado_Cotización AS b ON b.Id_Estado = a.Estado
                         INNER JOIN tblAsesorComercial AS c ON c.CodigoAsesor = a.Asesor
-                        WHERE Cliente = @IdCliente";
+                        WHERE Cliente = @IdCliente ORDER BY Fecha_Cotización DESC";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -957,7 +922,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         INNER JOIN tblClienteContacto AS b ON b.Id_ClienteContacto = a.Id_ClienteContacto
                         INNER JOIN tblAsesorComercial AS c ON c.Cedula = a.Asesor
                         INNER JOIN tblCausaVisita AS d ON d.Id_Causa = a.Causa
-                        WHERE b.Id_Cliente = @IdCliente";
+                        WHERE b.Id_Cliente = @IdCliente ORDER BY FechaVisita DESC";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -1126,7 +1091,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         command.ExecuteNonQuery();
                     }
                 }
-             
+
                 // Cerrar el modal después de agregar el asesor
                 ScriptManager.RegisterStartupScript(this, GetType(), "CloseModal", "$('#myModal').modal('hide');", true);
 
@@ -1203,7 +1168,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         tbNombreCliente.Text = row["Nombre_Compañia"].ToString();
                         tbTelefono.Text = row["Teléfono"].ToString();
                         tbDireccion.Text = row["Dirección"].ToString();
-                       
+
                         ddlprocedencia.DataBind();
 
                         if (!string.IsNullOrEmpty(row["IdProcedencia"].ToString()))
@@ -1225,10 +1190,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                             ddlprocedencia.ClearSelection(); // Valor nulo, deseleccionar
                         }
                         tbCompartido.Text = row["CompartidoCon"].ToString();
-                        
-                        
+
+
                     }
-                   
+
                 }
             }
         }
@@ -1537,7 +1502,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         {
             if (CheckBox1.Checked)
             {
-                isModalVisible = true;               
+                isModalVisible = true;
                 ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#myModal').modal('show');", true);
 
             }
@@ -1553,6 +1518,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             ddlAsesorC.SelectedValue = Session["CedulaLogeada"].ToString();
         }
 
-      
+
     }
 }
