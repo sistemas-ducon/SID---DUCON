@@ -138,10 +138,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
             else
             {
 
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewPage", "window.open('" + pageURL + "', '_blank');", true);
-                //ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalPendiente').modal('show');", true);
-
-                //ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewTab", "window.open('" + pageURL + "', '_blank');", true);
+                //ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewPage", "window.open('" + pageURL + "', '_blank');", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalPendiente').modal('show');", true);
             }
         }
 
