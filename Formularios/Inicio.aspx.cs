@@ -116,7 +116,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
             switch (btn.CommandName)
             {
                 case "BitacoraDiseno":
-                    //Session["Diseno"] = "Diseño";
+                    Session["Diseno"] = "Diseño";
                     pageURL = "Ventas/Diseño_Venta.aspx";
                     break;
                 default:
@@ -138,8 +138,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
             else
             {
 
-                //ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewPage", "window.open('" + pageURL + "', '_blank');", true);
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalPendiente').modal('show');", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "openNewPage", "window.open('" + pageURL + "', '_blank');", true);
+                //ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalPendiente').modal('show');", true);
             }
         }
 

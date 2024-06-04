@@ -1763,70 +1763,156 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         //BUSCAR DISE
         protected void But_Click(object sender, EventArgs e)
         {
-            string consulta = "SELECT tblDiseño.*, tblDiseño.Fecha_Ingreso, tblDiseño.Nombre_Diseño FROM tblDiseño";
-
-            string whereClause = "";
-
-            if (!string.IsNullOrEmpty(TextFechDeIng.Text) && !string.IsNullOrEmpty(Texty.Text))
+            string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Ventas")
             {
+                // Obtén el valor de la variable de sesión
+                string cedulaLogeada = Session["CedulaLogeada"] as string;
 
-                if (!string.IsNullOrEmpty(TextBox3.Text) && !string.IsNullOrEmpty(TextBox4.Text) && !string.IsNullOrEmpty(TextBox5.Text))
+                if (string.IsNullOrEmpty(cedulaLogeada))
                 {
-                    // Agregar la cláusula AND a la consulta
-                    whereClause += " AND Fecha_Ingreso BETWEEN '" + TextFechDeIng.Text + "' AND '" + Texty.Text + "'";
-                }
-                else
-                {
-
-                    // Agregar la cláusula WHERE a la consulta
-                    whereClause += " WHERE Fecha_Ingreso BETWEEN '" + TextFechDeIng.Text + "' AND '" + Texty.Text + "'";
+                    // Maneja el caso en que la cédula no esté disponible en la sesión
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#mensajeError').modal('show'); $('#mensajeError2').text('No se encontró la cédula en la sesión.');", true);
+                    return;
                 }
 
+                // Consulta base con INNER JOIN
+                string consulta = @"SELECT A.*, A.Fecha_Ingreso, A.Nombre_Diseño 
+                        FROM [tblDiseño] AS A 
+                        INNER JOIN tblAsesorComercial AS B 
+                        ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor 
+                        WHERE B.Cedula = @CedulaLogeada";
+
+                // Inicializa la cláusula WHERE
+                string whereClause = "";
+
+                // Agrega la condición de fecha de ingreso si se proporciona
+                if (!string.IsNullOrEmpty(TextFechDeIng.Text) && !string.IsNullOrEmpty(Texty.Text))
+                {
+                    whereClause += " AND A.Fecha_Ingreso BETWEEN @FechaInicio AND @FechaFin";
+                }
+
+                // Agrega la condición de número de diseño si se proporciona
+                if (!string.IsNullOrEmpty(TextBox3.Text))
+                {
+                    whereClause += " AND A.Numero_Diseño LIKE @NumeroDiseno";
+                }
+
+                // Agrega la condición de cliente si se proporciona
+                if (!string.IsNullOrEmpty(TextBox4.Text))
+                {
+                    whereClause += " AND A.Cliente LIKE @Cliente";
+                }
+
+                // Agrega la condición de nombre de diseño si se proporciona
+                if (!string.IsNullOrEmpty(TextBox5.Text))
+                {
+                    whereClause += " AND A.Nombre_Diseño LIKE @NombreDiseno";
+                }
+
+                // Combina la consulta base con la cláusula WHERE
+                consulta += whereClause;
+
+                // Asigna la consulta al control SqlDataSource3
+                SqlDataSource3.SelectCommand = consulta;
+
+                // Limpia los parámetros existentes
+                SqlDataSource3.SelectParameters.Clear();
+
+                // Añade los parámetros a la consulta
+                SqlDataSource3.SelectParameters.Add("CedulaLogeada", cedulaLogeada);
+
+                if (!string.IsNullOrEmpty(TextFechDeIng.Text) && !string.IsNullOrEmpty(Texty.Text))
+                {
+                    SqlDataSource3.SelectParameters.Add("FechaInicio", DbType.String, TextFechDeIng.Text);
+                    SqlDataSource3.SelectParameters.Add("FechaFin", DbType.String, Texty.Text);
+                }
+                if (!string.IsNullOrEmpty(TextBox3.Text))
+                {
+                    SqlDataSource3.SelectParameters.Add("NumeroDiseno", DbType.String, "%" + TextBox3.Text + "%");
+                }
+                if (!string.IsNullOrEmpty(TextBox4.Text))
+                {
+                    SqlDataSource3.SelectParameters.Add("Cliente", DbType.String, "%" + TextBox4.Text + "%");
+                }
+                if (!string.IsNullOrEmpty(TextBox5.Text))
+                {
+                    SqlDataSource3.SelectParameters.Add("NombreDiseno", DbType.String, "%" + TextBox5.Text + "%");
+                }
+
+                // Vincula el DataGrid al SqlDataSource y actualiza su contenido
+                DataGrid4.DataSourceID = "SqlDataSource3";
+                DataGrid4.DataBind();
             }
 
-            if (!string.IsNullOrEmpty(TextBox3.Text))
+
+            if (tipoAccion == "Diseño")
             {
-                if (string.IsNullOrEmpty(whereClause))
+                string consulta = "SELECT tblDiseño.*, tblDiseño.Fecha_Ingreso, tblDiseño.Nombre_Diseño FROM tblDiseño";
+
+                string whereClause = "";
+
+                if (!string.IsNullOrEmpty(TextFechDeIng.Text) && !string.IsNullOrEmpty(Texty.Text))
                 {
-                    whereClause += " WHERE Numero_Diseño LIKE '%" + TextBox3.Text + "%'";
+
+                    if (!string.IsNullOrEmpty(TextBox3.Text) && !string.IsNullOrEmpty(TextBox4.Text) && !string.IsNullOrEmpty(TextBox5.Text))
+                    {
+                        // Agregar la cláusula AND a la consulta
+                        whereClause += " AND Fecha_Ingreso BETWEEN '" + TextFechDeIng.Text + "' AND '" + Texty.Text + "'";
+                    }
+                    else
+                    {
+
+                        // Agregar la cláusula WHERE a la consulta
+                        whereClause += " WHERE Fecha_Ingreso BETWEEN '" + TextFechDeIng.Text + "' AND '" + Texty.Text + "'";
+                    }
+
                 }
-                else
+
+                if (!string.IsNullOrEmpty(TextBox3.Text))
                 {
-                    whereClause += " AND Numero_Diseño LIKE '%" + TextBox3.Text + "%'";
+                    if (string.IsNullOrEmpty(whereClause))
+                    {
+                        whereClause += " WHERE Numero_Diseño LIKE '%" + TextBox3.Text + "%'";
+                    }
+                    else
+                    {
+                        whereClause += " AND Numero_Diseño LIKE '%" + TextBox3.Text + "%'";
+                    }
                 }
+                if (!string.IsNullOrEmpty(TextBox4.Text))
+                {
+                    if (string.IsNullOrEmpty(whereClause))
+                    {
+                        whereClause += " WHERE Cliente LIKE '%" + TextBox4.Text + "%'";
+                    }
+                    else
+                    {
+                        whereClause += " AND Cliente LIKE '%" + TextBox4.Text + "%'";
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(TextBox5.Text))
+                {
+                    if (string.IsNullOrEmpty(whereClause))
+                    {
+                        whereClause += " WHERE Nombre_Diseño LIKE '%" + TextBox5.Text + "%'";
+                    }
+                    else
+                    {
+                        whereClause += " AND Nombre_Diseño LIKE '%" + TextBox5.Text + "%'";
+                    }
+                }
+
+                consulta += whereClause;
+
+                // Asigna la consulta al control SqlDataSource1
+                SqlDataSource3.SelectCommand = consulta;
+
+                // Vincula el DataGrid al SqlDataSource y actualiza su contenido
+                DataGrid4.DataSourceID = "SqlDataSource3";
+                DataGrid4.DataBind();
             }
-            if (!string.IsNullOrEmpty(TextBox4.Text))
-            {
-                if (string.IsNullOrEmpty(whereClause))
-                {
-                    whereClause += " WHERE Cliente LIKE '%" + TextBox4.Text + "%'";
-                }
-                else
-                {
-                    whereClause += " AND Cliente LIKE '%" + TextBox4.Text + "%'";
-                }
-            }
-
-            if (!string.IsNullOrEmpty(TextBox5.Text))
-            {
-                if (string.IsNullOrEmpty(whereClause))
-                {
-                    whereClause += " WHERE Nombre_Diseño LIKE '%" + TextBox5.Text + "%'";
-                }
-                else
-                {
-                    whereClause += " AND Nombre_Diseño LIKE '%" + TextBox5.Text + "%'";
-                }
-            }
-
-            consulta += whereClause;
-
-            // Asigna la consulta al control SqlDataSource1
-            SqlDataSource3.SelectCommand = consulta;
-
-            // Vincula el DataGrid al SqlDataSource y actualiza su contenido
-            DataGrid4.DataSourceID = "SqlDataSource3";
-            DataGrid4.DataBind();
         }
 
         protected void ddlCiudadX_DataBound(object sender, EventArgs e)
@@ -7267,7 +7353,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
         protected void GrabarPlanoDise_Click(object sender, EventArgs e)
         {
             string campoFaltante = ValidarCamposPlano();
@@ -7583,7 +7668,110 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BtnDespiece_Click(object sender, EventArgs e)
         {
+            BindDataGrid(); // Llamar al método para llenar el DataGrid
+
             ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarTabDespieceScript", "mostrarTabDespiece();", true);
+
+           
+        }
+
+        private void BindDataGrid()
+        {
+            // Obtener el valor de la variable de sesión Id_PlanoDise
+            string idPlano = Session["Id_PlanoDise"] as string;
+
+            // Verificar si la variable de sesión tiene un valor
+            if (!string.IsNullOrEmpty(idPlano))
+            {
+                string connString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(connString))
+                {
+                    using (SqlCommand cmd = new SqlCommand("cta_Plano_Paneles", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@Plan", idPlano); // Usar el valor de la variable de sesión como parámetro
+
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+
+                        // Crear un nuevo DataTable para manipular los datos
+                        DataTable dtWithEmptyRows = new DataTable();
+                        dtWithEmptyRows.Columns.Add("Id_Numerico");
+                        dtWithEmptyRows.Columns.Add("Descripcion_Grupo");
+                        dtWithEmptyRows.Columns.Add("Ancho");
+                        dtWithEmptyRows.Columns.Add("Cantidad");
+                        dtWithEmptyRows.Columns.Add("Precio_Venta");
+                        dtWithEmptyRows.Columns.Add("ValorActual"); 
+                        dtWithEmptyRows.Columns.Add("RevisadoDibujo");
+                        dtWithEmptyRows.Columns.Add("IsGroupRow", typeof(bool)); // Nueva columna para identificar filas de grupo
+
+                        // Usar un HashSet para llevar un seguimiento de las Descripcion_Grupo ya agregadas
+                        HashSet<string> gruposAgregados = new HashSet<string>();
+
+                        // Variable para almacenar la suma de "Cantidad"
+                        int totalCantidad = 0;
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string descripcionGrupo = row["Descripcion_Grupo"].ToString();
+
+                            // Verificar si la Descripcion_Grupo ya ha sido agregada
+                            if (!gruposAgregados.Contains(descripcionGrupo))
+                            {
+                                // Agregar una fila vacía con el valor de Descripcion_Grupo
+                                DataRow emptyRow = dtWithEmptyRows.NewRow();
+                                emptyRow["Descripcion_Grupo"] = "<b>" + descripcionGrupo + "</b>"; // Poner en negrita
+                                emptyRow["IsGroupRow"] = true;
+                                dtWithEmptyRows.Rows.Add(emptyRow);
+
+                                // Añadir el grupo al HashSet
+                                gruposAgregados.Add(descripcionGrupo);
+                            }
+
+                            // Agregar la fila original
+                            DataRow newRow = dtWithEmptyRows.NewRow();
+                            newRow["Id_Numerico"] = row["Id_Numerico"];
+                            newRow["Descripcion_Grupo"] = row["Descripcion_Panel"]; // Usar Descripcion_Panel en esta fila
+                            newRow["Ancho"] = row["Ancho"];
+                            newRow["Cantidad"] = row["Cantidad"];
+                            newRow["Precio_Venta"] = row["Precio_Venta"];
+                            newRow["ValorActual"] = row["ValorActual"];
+                            newRow["RevisadoDibujo"] = row["RevisadoDibujo"];
+                            newRow["IsGroupRow"] = false;
+                            dtWithEmptyRows.Rows.Add(newRow);
+
+                            // Sumar el valor de "Cantidad"
+                            totalCantidad += Convert.ToInt32(row["Cantidad"]);
+
+                        }
+
+                        // Agregar una fila para "Total Objetos"
+                        DataRow totalObjetosRow = dtWithEmptyRows.NewRow();
+                        totalObjetosRow["Descripcion_Grupo"] = "<b>Total Objetos</b>"; // Poner en negrita
+                        totalObjetosRow["Cantidad"] = totalCantidad; // Agregar el total de "Cantidad"
+                        dtWithEmptyRows.Rows.Add(totalObjetosRow);
+
+                        // Agregar una fila vacía
+                        DataRow emptyRowAfterTotal = dtWithEmptyRows.NewRow();
+                        dtWithEmptyRows.Rows.Add(emptyRowAfterTotal);
+
+                        // Agregar una fila con el texto "Plano:"
+                        DataRow planoRow = dtWithEmptyRows.NewRow();
+                        planoRow["Descripcion_Grupo"] = "<b>Plano:</b>"; // Poner en negrita
+                        dtWithEmptyRows.Rows.Add(planoRow);
+
+                        DataGridDespiece.DataSource = dtWithEmptyRows;
+                        DataGridDespiece.DataBind();
+                        UpdatePanel4.Update();
+                    }
+                }
+            }
+            else
+            {
+                // Manejar el caso en el que la variable de sesión no tenga un valor asignado
+                // Por ejemplo, mostrar un mensaje de error o redirigir a otra página
+            }
         }
 
         protected void Datagrid5_ItemCommand(object source, DataGridCommandEventArgs e)
@@ -7607,13 +7795,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     e.Item.CssClass = "fila-seleccionada1";
 
+                    Session["Id_PlanoDise"] = row.Cells[2].Text;
 
 
                     BtnDespiece.Enabled = true;
                     BtnDespiece.CssClass = "btn btn-sm button-enabled";
 
-                    BtnPlano.Enabled = true;
-                    BtnPlano.CssClass = "btn btn-sm button-enabled";
+
 
 
                 }
@@ -7647,7 +7835,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             return campoFaltante;
         }
-
 
         protected void BtnAsiPlaDis_Click(object sender, EventArgs e)
         {
@@ -7767,8 +7954,112 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Implementa la lógica para cargar los planos del diseño
         }
 
+        protected void BtnHiddenUpload_Click(object sender, EventArgs e)
+        {
+            if (FileUpload1.HasFile)
+            {
+                string fileName = Path.GetFileName(FileUpload1.PostedFile.FileName);
+                string filePath = Server.MapPath("~/Uploads/") + fileName;
+                FileUpload1.SaveAs(filePath);
+                // Lógica adicional para manejar el archivo subido
+            }
+        }
+
+        protected void Objetos_Click(object sender, EventArgs e)
+        {
+            string url = "/Formularios/FormExtPrin/Objetos.aspx";
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+        }
+
+        protected void DataGridDespiece_ItemDataBound(object sender, DataGridItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                string RevisadoDibujo = DataBinder.Eval(e.Item.DataItem, "RevisadoDibujo").ToString();
+
+                if (RevisadoDibujo == "True")
+                {
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#1a7c3c"); /*Verde*/
+                    e.Item.ForeColor = System.Drawing.Color.White;
+                }
+
+            }
+          }
+
+        protected void DataGridDespiece_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            if (e.CommandName == "Id_Numerico")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGridDespiece.Items[rowIndex];
+
+                // capturamos los campos de la fila del datagrid 
+                foreach (DataGridItem item in DataGridDespiece.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+                e.Item.CssClass = "fila-seleccionada1";
+
+                // Obtener el Id_Numerico de la fila seleccionada
+                int idNumerico = Convert.ToInt32(DataGridDespiece.DataKeys[rowIndex]);
+
+                // Cargar el segundo DataGrid
+                LoadDataGrid6(idNumerico);
+            }
+        }
+
+        private void LoadDataGrid6(int idNumerico)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string query = @"
+                SELECT 
+                    ROW_NUMBER() OVER (ORDER BY tblPanel_Modulo.Ubicacion_Modulo) AS Num_Fila, 
+                    tblModulo.*, 
+                    tblPanel_Modulo.Cantidad, 
+                    tblPanel_Modulo.Ubicacion_Modulo, 
+                    tblPanel_Modulo.Lado, 
+                    tblPanel_Modulo.Observaciones, 
+                    tblPanel_Modulo.Id_PanelNum, 
+                    tblPanel_Modulo.PanModResponsable, 
+                    tblFamiliaModulo.Descripcion_Familia, 
+                    tblTipoModulo.Descripcion_TipoModulo
+                FROM 
+                    tblTipoModulo 
+                INNER JOIN 
+                    (tblFamiliaModulo 
+                INNER JOIN 
+                    tblModulo ON tblFamiliaModulo.ID_Familia = tblModulo.ID_Familia) 
+                ON 
+                    tblTipoModulo.Id_TipoModulo = tblModulo.Id_TipoModulo 
+                INNER JOIN 
+                    tblPanel_Modulo 
+                ON 
+                    tblModulo.Id_Modulo = tblPanel_Modulo.Id_Modulo
+                WHERE 
+                    tblPanel_Modulo.Id_PanelNum = @IdNumerico
+                ORDER BY 
+                    tblPanel_Modulo.Ubicacion_Modulo;";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@IdNumerico", idNumerico);
+                    conn.Open();
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    DataGrid6.DataSource = dt;
+                    DataGrid6.DataBind();
+                }
+            }
+        }
+
 
     }
-
-
 }

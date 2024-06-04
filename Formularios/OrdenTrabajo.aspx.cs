@@ -311,23 +311,30 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 // Establecer el texto del TextBox
                 txtCotizacion.Text = "NO TIENE";
+                txtCotizacion.Enabled = false;
+                txtOrdenCompra.Enabled = false;
                 txtOrdenCompra.Text = "NA";
                 cbxComisionCompart.Enabled = false;
 
                 // Invocar manualmente el evento OnTextChanged
                 EventArgs args = new EventArgs();
                 txtCotizacion_TextChanged(txtCotizacion, args);
+
             }
             else
             {
                 txtCotizacion.Text = "";
+                txtCotizacion.Enabled = true;
                 txtOrdenCompra.Text = "";
+                txtOrdenCompra.Enabled = true;
                 cbxComisionCompart.Enabled = true;
             }
 
             cboPedidoBase.DataBind();
             cboPedidoBase.Items.Insert(0, new ListItem(" "));
         }
+
+
 
         protected void cbxComisionCompart_CheckedChanged(object sender, EventArgs e)
         {
@@ -764,6 +771,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             AsesorPorDefecto();
 
             cbxComisionCompart.Enabled = true;
+
+            EventArgs args = new EventArgs();
+            dtacboTipoPedido_SelectedIndexChanged(dtacboTipoPedido, args);
         }
 
         protected void LimpiarTextAreayDropDownList()
@@ -1562,7 +1572,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         txtDiseño.Text = "0";
                         txtSaldo.Text = "0";
                         txtDctoValor.Text = "0";
-                        txtGtotal.Text = "0";
+                        txtGtotal.Text = "0";             
                     }
 
                     drcot.Close();
@@ -4290,10 +4300,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
 
             // Obtener la cédula ingresada en el TextBox txtAsesor
-            string cedulaTextBox = txtAsesor.Text;
+            string cedulaOT = ObtenerCodigoAsesor();
 
             // Verificar si las cédulas son iguales
-            if (cedulaLogueada == cedulaTextBox)
+            if (cedulaLogueada == cedulaOT)
             {
 
                 ActualizarDatos();
@@ -4305,6 +4315,46 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
         }
+
+        private string ObtenerCodigoAsesor()
+        {
+            string codigoAsesor = string.Empty;
+
+            string idOT = tbOT.Text; 
+            string consecutivoPedido = ddlNumbers.SelectedValue; 
+  
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            // Definir la consulta SQL
+            string query = "SELECT Codigo_Asesor FROM tblOT WHERE Id_OT = @IdOT AND Consecutivo_Pedido = @ConsecutivoPedido";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@IdOT", idOT);
+                    command.Parameters.AddWithValue("@ConsecutivoPedido", consecutivoPedido);
+
+                    try
+                    {
+                        connection.Open();
+                        object result = command.ExecuteScalar();
+                        if (result != null)
+                        {
+                            codigoAsesor = result.ToString();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejar excepciones (logging, rethrowing, etc.)
+                        throw new Exception("Error al obtener el código del asesor: " + ex.Message);
+                    }
+                }
+            }
+
+            return codigoAsesor;
+        }
+
 
         protected void ValidarPermiso()
         {
@@ -4331,7 +4381,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                     else
                     {
-                        string mensajePersonalizado = "Se modifico exitosamente la Orden de trabajo";
+                        string mensajePersonalizado = "Este usuario no cuenta con los permisos para modificar esta OT";
                         string urlRedireccion = "OrdenTrabajo.aspx";
                         Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                     }
@@ -4488,6 +4538,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             HabilitarTodosLosTextBoxes();
 
+            EventArgs args = new EventArgs();
+            dtacboTipoPedido_SelectedIndexChanged(dtacboTipoPedido, args);
+
             Nit.Enabled = false;
             Nit.CssClass = "btn btn-sm shadow button-disabled";
         }
@@ -4503,16 +4556,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (fechaSeleccionada < fechaMinima)
                 {
-
-
                     DateTime fechaActuall = DateTime.Now.AddDays(10);
 
                     // Establecer el valor en el TextBox
                     dtpEmpaque.Text = fechaActuall.ToString("yyyy-MM-dd");
 
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModallll').modal('show');", true);
-
-
                 }
                 else
                 {
