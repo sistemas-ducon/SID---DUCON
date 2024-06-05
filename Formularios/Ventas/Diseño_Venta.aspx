@@ -27,9 +27,6 @@
         document.getElementById('<%= BtnHiddenUpload.ClientID %>').click();
     });
   </script>
-
-
-
 </head>
 <body translate="no">
     <form id="form1" runat="server" enctype="multipart/form-data">
@@ -69,7 +66,7 @@
                         <div class="container p-1 mt-3 border shadow">
                             <div class="row">
                                 <!-- Primera columna -->
-                                <div class="col-lg-7 col-md-6 col-sm-12">
+                                <div class="col-lg-7 col-md-6 col-sm-12" id="primeraColumna">
                                     <div class="p-3 m-2 shadow-sm" style="min-height: 50rem;">
                                         <h6>Despiece: DA-09 - MESA GERENCIA</h6>
                                         <div class="table-responsive mb-2 gap-2" style="max-height: 48rem; overflow-x: auto;">
@@ -85,7 +82,7 @@
                                                     </asp:TemplateColumn>
                                                     
                                                     <asp:BoundColumn DataField="Id_Numerico" HeaderText="ID" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                    <asp:TemplateColumn HeaderText="Descripcion" ItemStyle-CssClass="auto-width-column">
+                                                    <asp:TemplateColumn HeaderText="Descripcion" ItemStyle-CssClass="auto-width-column2">
                                                         <ItemTemplate>
                                                             <asp:Label ID="lblDescripcion" runat="server" Text='<%# Eval("Descripcion_Grupo") %>' Font-Bold='<%# Eval("IsGroupRow").ToString() == "True" ? true : false %>'></asp:Label>
                                                         </ItemTemplate>
@@ -95,6 +92,7 @@
                                                     <asp:BoundColumn DataField="Precio_Venta" HeaderText="V.Unitario" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     <asp:BoundColumn DataField="ValorActual" HeaderText="Sub Total" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                      <asp:BoundColumn DataField="RevisadoDibujo" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                     <asp:BoundColumn DataField="ID_GrupoObjeto" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                    
                                                 </Columns>
                                             </asp:DataGrid>  
@@ -102,7 +100,7 @@
                                     </div>
                                 </div>
                                 <!-- Segunda columna -->
-                                <div class="col-lg-5 col-md-6 col-sm-12">
+                                <div class="col-lg-5 col-md-6 col-sm-12" id="segundaColumna">
                                     <div class="p-3 m-2" style="max-height: 50rem; min-height: 50rem;">
                                         <div class="row p-3">
                                             <div class="col-12 d-flex align-items-center">
@@ -132,15 +130,16 @@
                                 <div class="col-12">
                                     <h6>Módulos del panel</h6>
                                        <div class="table-responsive mb-2 gap-2" style="max-height: 16rem; overflow-x: auto;">
-                                            <asp:DataGrid CssClass="table table-bordered table-hover table-sm form-control-sm" ID="DataGrid6" runat="server" AutoGenerateColumns="false">
+                                            <asp:DataGrid CssClass="table table-bordered table-hover table-sm form-control-sm" ID="DataGrid6" runat="server" AutoGenerateColumns="false"  OnItemCommand="DataGrid6_ItemCommand">
                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                 <Columns>
                                                     <asp:TemplateColumn ItemStyle-CssClass="auto-width-column">
                                                         <ItemTemplate>
-                                                            <asp:LinkButton ID="BtnSelec2" runat="server" CommandArgument='<%# Container.ItemIndex %>'
+                                                            <asp:LinkButton ID="BtnSelec2" runat="server" CommandName="Id_Modulo" CommandArgument='<%# Container.ItemIndex %>'
                                                             Text="<i class='bi bi-pencil-square'></i>"/>
                                                         </ItemTemplate>
                                                     </asp:TemplateColumn>     
+                                                      <asp:BoundColumn DataField="Id_Modulo" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                     <asp:BoundColumn DataField="Descripcion_Modulo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     <asp:BoundColumn DataField="Ubicacion_Modulo" HeaderText="P" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     <asp:BoundColumn DataField="Altura" HeaderText="H" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
@@ -158,7 +157,7 @@
                             <div class="row align-items-center">
                                 <div class="col-lg-6 col-md-4 col-sm-12 mb-2">
                                     <div class="input-group input-group-sm">
-                                        <asp:CheckBox runat="server" ID="CheckBox2" CssClass="form-check"/>
+                                        <asp:CheckBox runat="server" ID="CheckBox2" CssClass="form-check" onchange="cambiarAnchoColumnas(this)"/>
                                         <asp:Label runat="server" ID="Label20" class="form-label ms-2" Text="Ampliar Modulos"></asp:Label>
                                     </div>
                                 </div>
@@ -530,7 +529,7 @@
                                         <p>El plano ha sido asignado exitosamente al diseño.</p>
                                     </div>
                                     <div class="modal-footer  d-flex align-items-center justify-content-center">
-                                        <asp:Button runat="server" type="button" class="btn btn-sm btn-outline-dark" data-bs-dismiss="modal" Text="Aceptar" aria-label="Close"></asp:Button>
+                                        <asp:Button runat="server" type="button" class="btn btn-sm btn-outline-dark" data-bs-dismiss="modal" Text="Aceptar" aria-label="Close" OnClick="AcutlizarDatagrid5_Click1"></asp:Button>
                                     </div>
                                 </div>
                             </div>
@@ -2218,12 +2217,47 @@
 
     </script>
 
+     <script type="text/javascript">
+         function cerrarTab() {
+
+             var tabElementt = document.getElementById('Despiece-tab');
+             
+                // Oculta el tab
+                 tabElementt.style.display = 'none';
+
+         }
+
+     </script>
+
     <script>
         function abrirOtraPestaña() {
             // Utiliza window.open para abrir "Formulario2.aspx" en otra pestaña
             window.open('Clientes.aspx', '_blank');
         }
     </script>
+
+<script>
+    function cambiarAnchoColumnas() {
+        var primeraColumna = document.getElementById('primeraColumna');
+        var segundaColumna = document.getElementById('segundaColumna');
+
+        if (document.getElementById('<%= CheckBox2.ClientID %>').checked) {
+            primeraColumna.classList.remove('col-lg-7');
+            primeraColumna.classList.add('col-lg-6');
+
+            segundaColumna.classList.remove('col-lg-5');
+            segundaColumna.classList.add('col-lg-6');
+        } else {
+            primeraColumna.classList.remove('col-lg-6');
+            primeraColumna.classList.add('col-lg-7');
+
+            segundaColumna.classList.remove('col-lg-6');
+            segundaColumna.classList.add('col-lg-5');
+        }
+    }
+</script>
+
+  
      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

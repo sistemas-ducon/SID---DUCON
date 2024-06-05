@@ -1254,16 +1254,16 @@
 
 
                                                 <asp:LinkButton runat="server" title="Nueva OT" ID="NuevaOt" OnClick="NuevaOT_Click">
-                                                      <i class="bi bi-file-earmark"></i>
+                                                 <img src="https://i.ibb.co/8863p6b/icons8-hoja-en-blanco-color-120.png" style="width: 23px; height: 20px;" />
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Copiar Información en una Nueva OT" ID="CopiarOt" OnClick="BtnCopInfNueOT_Click">
-                                                   <i class="bi bi-files"></i>
+                                                  <img src="https://i.ibb.co/FYxpVCY/icons8-copiar-96.png" style="width: 23px; height: 20px;" />
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Grabar Orden de Trabajo" ID="GrabarOt" OnClick="BtnGrabar_Click">
                                                 
-                                                 <i class="bi bi-floppy"></i>
+                                              <img src="https://i.ibb.co/SrmpN4c/icons8-guardar-96.png" style="width: 23px; height: 20px;" />
 
                                                 </asp:LinkButton>
 

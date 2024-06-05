@@ -7702,8 +7702,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         dtWithEmptyRows.Columns.Add("Ancho");
                         dtWithEmptyRows.Columns.Add("Cantidad");
                         dtWithEmptyRows.Columns.Add("Precio_Venta");
-                        dtWithEmptyRows.Columns.Add("ValorActual"); 
+                        dtWithEmptyRows.Columns.Add("ValorActual");
                         dtWithEmptyRows.Columns.Add("RevisadoDibujo");
+                        dtWithEmptyRows.Columns.Add("ID_GrupoObjeto");
                         dtWithEmptyRows.Columns.Add("IsGroupRow", typeof(bool)); // Nueva columna para identificar filas de grupo
 
                         // Usar un HashSet para llevar un seguimiento de las Descripcion_Grupo ya agregadas
@@ -7711,6 +7712,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         // Variable para almacenar la suma de "Cantidad"
                         int totalCantidad = 0;
+                        double totalDespieceVenta = 0;
 
                         foreach (DataRow row in dt.Rows)
                         {
@@ -7735,21 +7737,53 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             newRow["Descripcion_Grupo"] = row["Descripcion_Panel"]; // Usar Descripcion_Panel en esta fila
                             newRow["Ancho"] = row["Ancho"];
                             newRow["Cantidad"] = row["Cantidad"];
-                            newRow["Precio_Venta"] = row["Precio_Venta"];
-                            newRow["ValorActual"] = row["ValorActual"];
+
+                            // Calcular o asignar el precio de venta
+                            float precioVenta = 0;
+                            float peso = 0;
+                            if (row["Precio_Venta"] == DBNull.Value || Convert.ToSingle(row["Precio_Venta"]) == 0)
+                            {
+                                CalcularPrecioVentaObjeto(Convert.ToInt32(row["Id_Numerico"]), out precioVenta, out peso);
+
+                                // Actualizar la base de datos con el nuevo precio
+                                string updateQuery = "UPDATE tblPLano_Panel SET Precio_Venta = @PrecioVenta WHERE Id_Plano = @IdPlano AND Id_PanelNum = @IdNumerico";
+                                using (SqlCommand updateCmd = new SqlCommand(updateQuery, conn))
+                                {
+                                    updateCmd.Parameters.AddWithValue("@PrecioVenta", precioVenta);
+                                    updateCmd.Parameters.AddWithValue("@IdPlano", idPlano);
+                                    updateCmd.Parameters.AddWithValue("@IdNumerico", row["Id_Numerico"]);
+                                    conn.Open();
+                                    updateCmd.ExecuteNonQuery();
+                                    conn.Close();
+                                }
+                            }
+                            else
+                            {
+                                precioVenta = Convert.ToSingle(row["Precio_Venta"]);
+                            }
+
+                            newRow["Precio_Venta"] = precioVenta.ToString("N2"); // Formatear con separadores de miles y dos decimales
+                            newRow["ValorActual"] = (precioVenta * Convert.ToInt32(row["Cantidad"])).ToString("N2"); // Formatear con separadores de miles y dos decimales
                             newRow["RevisadoDibujo"] = row["RevisadoDibujo"];
+                            newRow["ID_GrupoObjeto"] = row["ID_GrupoObjeto"];
                             newRow["IsGroupRow"] = false;
                             dtWithEmptyRows.Rows.Add(newRow);
 
                             // Sumar el valor de "Cantidad"
                             totalCantidad += Convert.ToInt32(row["Cantidad"]);
 
+                            // Sumar el valor al total de despiece de venta
+                            if (Convert.ToBoolean(row["Cotizar"]))
+                            {
+                                totalDespieceVenta += precioVenta * Convert.ToInt32(row["Cantidad"]);
+                            }
                         }
 
                         // Agregar una fila para "Total Objetos"
                         DataRow totalObjetosRow = dtWithEmptyRows.NewRow();
                         totalObjetosRow["Descripcion_Grupo"] = "<b>Total Objetos</b>"; // Poner en negrita
-                        totalObjetosRow["Cantidad"] = totalCantidad; // Agregar el total de "Cantidad"
+                        totalObjetosRow["Cantidad"] = "<b>" + totalCantidad.ToString() + "</b>"; // Agregar el total de "Cantidad" en negrita
+                        totalObjetosRow["ValorActual"] = "<b>" + totalDespieceVenta.ToString("N2") + "</b>"; // Agregar el total de "Sub Total" en negrita y con formato
                         dtWithEmptyRows.Rows.Add(totalObjetosRow);
 
                         // Agregar una fila vacía
@@ -7773,6 +7807,47 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Por ejemplo, mostrar un mensaje de error o redirigir a otra página
             }
         }
+
+
+
+
+        private void CalcularPrecioVentaObjeto(int idPanelNumerico, out float precioVenta, out float peso)
+        {
+            precioVenta = 0;
+            peso = 0;
+            string connString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                // Ejecutar el procedimiento almacenado para actualizar el precio del objeto
+                string actualizarPrecioQuery = "Exec sp_ActualizarPrecioObjeto @IdPanelNumerico";
+                using (SqlCommand cmd = new SqlCommand(actualizarPrecioQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@IdPanelNumerico", idPanelNumerico);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+
+                // Obtener el precio de venta y el peso del objeto
+                string obtenerInfoQuery = "SELECT Precio_Venta, PesoKG FROM tblPanel WHERE Id_Numerico = @IdPanelNumerico";
+                using (SqlCommand cmd = new SqlCommand(obtenerInfoQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@IdPanelNumerico", idPanelNumerico);
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            precioVenta = reader["Precio_Venta"] != DBNull.Value ? Convert.ToSingle(reader["Precio_Venta"]) : 0;
+                            peso = reader["PesoKG"] != DBNull.Value ? Convert.ToSingle(reader["PesoKG"]) : 0;
+                        }
+                    }
+                    conn.Close();
+                }
+            }
+        }
+
 
         protected void Datagrid5_ItemCommand(object source, DataGridCommandEventArgs e)
         {
@@ -7801,7 +7876,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     BtnDespiece.Enabled = true;
                     BtnDespiece.CssClass = "btn btn-sm button-enabled";
 
-
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "OcultarTabDespieceScript", "cerrarTab();", true);
 
 
                 }
@@ -7976,16 +8051,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-                string RevisadoDibujo = DataBinder.Eval(e.Item.DataItem, "RevisadoDibujo").ToString();
+                // Obtener el valor de RevisadoDibujo y ID_GrupoObjeto
+                string revisadoDibujo = DataBinder.Eval(e.Item.DataItem, "RevisadoDibujo").ToString();
+                string idGrupoObjeto = DataBinder.Eval(e.Item.DataItem, "ID_GrupoObjeto").ToString();
 
-                if (RevisadoDibujo == "True")
+                // Verificar si RevisadoDibujo es "True"
+                if (revisadoDibujo == "True")
                 {
+                    // Cambiar el color de fondo de la fila a verde
                     e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#1a7c3c"); /*Verde*/
                     e.Item.ForeColor = System.Drawing.Color.White;
                 }
 
+                // Verificar si ID_GrupoObjeto es igual a '6'
+                if (idGrupoObjeto == "6")
+                {
+                    // Cambiar el color de fondo de la fila a rojo
+                    e.Item.BackColor = System.Drawing.Color.Red;
+                    e.Item.ForeColor = System.Drawing.Color.White; // Opcional: cambiar el color del texto a blanco para mejorar la legibilidad
+                }
             }
-          }
+        }
 
         protected void DataGridDespiece_ItemCommand(object source, DataGridCommandEventArgs e)
         {
@@ -8010,6 +8096,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 // Cargar el segundo DataGrid
                 LoadDataGrid6(idNumerico);
+            }
+        }
+
+        protected void DataGrid6_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            if (e.CommandName == "Id_Modulo")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGrid6.Items[rowIndex];
+
+                // capturamos los campos de la fila del datagrid 
+                foreach (DataGridItem item in DataGrid6.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+                e.Item.CssClass = "fila-seleccionada1";
+
             }
         }
 
@@ -8060,6 +8167,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
+        protected void AcutlizarDatagrid5_Click1(object sender, EventArgs e)
+        {
+            Datagrid5.DataBind();
+            UpdateDiseñoBitacora.Update();
+        }
     }
 }
