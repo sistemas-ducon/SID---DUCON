@@ -3898,7 +3898,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         command.Parameters.AddWithValue("@ValorViatico", txtVvia.Text);
                         command.Parameters.AddWithValue("@Fecha_Empaque", dtpEmpaque.Text);
-                        command.Parameters.AddWithValue("@Fecha_Real_Empaque", dtpRealEmpaque.Text);
+                        command.Parameters.AddWithValue("@Fecha_Real_Empaque", dtpEmpaque.Text);
                         command.Parameters.AddWithValue("@OrdendeCompra", txtOrdenCompra.Text);
 
                         int rowsAffected = command.ExecuteNonQuery();
@@ -4518,7 +4518,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@ValorTteVia", txtVtte.Text);
                         command.Parameters.AddWithValue("@ValorViatico", txtVvia.Text);
                         command.Parameters.AddWithValue("@Fecha_Empaque", dtpEmpaque.Text);
-
+                        command.Parameters.AddWithValue("@Fecha_Real_Empaque", dtpEmpaque.Text);
                         command.Parameters.AddWithValue("@OrdendeCompra", txtOrdenCompra.Text);
                         command.Parameters.AddWithValue("@PedidoBase", pedidoBaseValue);
 
