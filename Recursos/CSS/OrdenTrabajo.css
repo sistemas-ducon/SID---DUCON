@@ -38,6 +38,21 @@
     border-right: 2px solid #ccc; /* Borde en el lado derecho */
 }
 
+
+.linkButtonClicked {
+    border-top: 2px solid #ccc; /* Borde en la parte superior */
+    border-left: 2px solid #ccc; /* Borde en el lado izquierdo */
+    border-bottom: none; /* Elimina el borde inferior */
+    border-right: none; /* Elimina el borde derecho */
+}
+
+.linkButtonClicked2 {
+    border-top: none; /* Borde en la parte superior */
+    border-left: none; /* Borde en el lado izquierdo */
+    border-bottom: 2px solid #ccc; /* Elimina el borde inferior */
+    border-right: 2px solid #ccc; /* Elimina el borde derecho */
+}
+
 .Observacion {
     display: flex;
 }
@@ -377,4 +392,23 @@
     height: 100%;
 }
 
+.ColorAzulActivo {
+    color: #0863a4;
+}
+
+.AzulClaro {
+    color: #bfdef5;
+}
+
+.GrisClaro {
+    color: #9da2ad;
+}
+
+.RojoCancelar {
+    color: #b94747
+}
+
+.ColorCrema {
+    color: #ae9458;
+}
 

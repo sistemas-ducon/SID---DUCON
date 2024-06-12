@@ -1240,6 +1240,7 @@
                                 </div>
                             </div>
 
+
                             <!--Nav iconos OTs-->
                             <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
                                 <div class="container-fluid">
@@ -1254,25 +1255,23 @@
 
 
                                                 <asp:LinkButton runat="server" title="Nueva OT" ID="NuevaOt" OnClick="NuevaOT_Click">
-                                                 <img src="https://i.ibb.co/8863p6b/icons8-hoja-en-blanco-color-120.png" style="width: 23px; height: 20px;" />
+                                                    <i class="bi bi-file-earmark-fill"></i>
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Copiar Información en una Nueva OT" ID="CopiarOt" OnClick="BtnCopInfNueOT_Click">
-                                                  <img src="https://i.ibb.co/FYxpVCY/icons8-copiar-96.png" style="width: 23px; height: 20px;" />
+                                                  <i class="bi bi-stickies-fill"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Grabar Orden de Trabajo" ID="GrabarOt" OnClick="BtnGrabar_Click">
-                                                
-                                              <img src="https://i.ibb.co/SrmpN4c/icons8-guardar-96.png" style="width: 23px; height: 20px;" />
-
+                                                <asp:LinkButton runat="server" title="Grabar Orden de Trabajo" ID="GrabarOt" OnClick="BtnGrabar_Click">               
+                                                 <i class="bi bi-floppy-fill"></i>
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Modificar Orden de Trabajo" ID="ModificarOt" OnClick="BtnModificar_Click">
-                                                   <i class="bi bi-wrench"></i>
+                                                  <i class="bi bi-wrench-adjustable"></i>
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Anular o Eliminar un Pedido" ID="AnularPedido">
-                                                 <i class="bi bi-file-earmark-excel"></i>
+                                                <i class="bi bi-trash3-fill"></i>
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Documentación OT" ID="DocumentacionOt" OnClick="DocumentacionOt_Click">
@@ -1280,7 +1279,7 @@
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Observaciones OT" ID="ObservacionesOt" OnClick="BtnObservaciones_Click">
-                                                     <i class="bi bi-eye"></i>
+                                                    <i class="bi bi-binoculars-fill"></i>
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Imprimir Informacion General de la OT" ID="imprimirOt" OnClick="ImprimirOt_Click">
@@ -1292,19 +1291,19 @@
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Consultar Bolsa" ID="ConsultarBolsa" OnClick="ConsultarBolsa1">
-                                                     <i class="bi bi-coin"></i>
+                                                    <i class="bi bi-currency-exchange"></i>
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Cancelar" ID="Cancelar" OnClick="Cancelar_Click">
-                                                 <i class="bi bi-x-lg"></i>
+                                                <i class="bi bi-x-circle-fill"></i>
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Visualizar OT Pendientes" ID="OtPendientes" OnClick="OtPendientes_Click">
-                                                     <i class="bi bi-eyeglasses"></i>
+                                                    <i class="bi bi-sunglasses"></i>
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Actualizar Pedidos Importados" ID="ActPedImp">
-                                                  <i class="bi bi-check-square"></i>
+                                               <i class="bi bi-check-circle-fill"></i>
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Importar Pedido Asesor" ID="ImpPedAse">
@@ -1324,7 +1323,7 @@
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Indicador Obra Reactivada" ID="ObraReactivada">
-                                                 <i class="bi bi-bar-chart-line"></i>
+                                                 <i class="bi bi-tools"></i>
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Registrar Pedido en el Sistema Administrativo" ID="RegPedSisAdm">
@@ -1358,7 +1357,8 @@
 
                                 </div>
                             </nav>
-
+                            </div>
+                         <div class="container-fluid p-3 shadow-sm bg-light">
                             <div class="row">
 
                                 <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
@@ -1551,7 +1551,7 @@
 
                         </div>
 
-                        <div class="container-fluid pt-2 Observacion ">
+                        <div class="container-fluid p-3 Observacion shadow-sm bg-light mt-2">
 
                             <div class="Obs1">
                                 <div class="row">
@@ -1676,7 +1676,7 @@
 
                         </div>
 
-                        <div class="container-fluid pt-2 Observacion ">
+                        <div class="container-fluid p-3 Observacion shadow-sm bg-light mt-2">
 
                             <div class="Obs1">
                                 <div class="row">
@@ -1790,6 +1790,8 @@
                             </div>
 
                         </div>
+
+                          <div class="container-fluid p-3 shadow-sm bg-light mt-2">
 
                         <h5 class="p-0 m-0 mb-1 text-center">Informacion Contable </h5>
 
@@ -2164,6 +2166,8 @@
                             </div>
 
                         </div>
+
+                              </div>
 
                         <!--Modal Confirmacion Boton OK-->
                         <div id="BotonOk" class="modal" tabindex="-1" style="display: none;">

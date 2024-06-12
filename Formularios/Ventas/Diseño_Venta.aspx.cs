@@ -3922,12 +3922,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Almacena el nombre del archivo en la variable de sesión
                 Session["NumeroDiseño"] = row.Cells[2].Text;
 
+                AccionesAlCargarDiseño();
+
                 string tipoAccion = Session["Diseno"] as string;
                 if (tipoAccion == "Diseño")
                 {
 
 
-                    AccionesAlCargarDiseño();
+                   
                     DateTime? primerClicTime = Session["PrimerClicTime"] as DateTime?;
                     if (primerClicTime != null && (DateTime.Now - primerClicTime.Value).TotalSeconds <= 1)
                     {
@@ -7679,6 +7681,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             // Obtener el valor de la variable de sesión Id_PlanoDise
             string idPlano = Session["Id_PlanoDise"] as string;
+            string realizadoPor = Session["RealizadoPorDise"] as string;
 
             // Verificar si la variable de sesión tiene un valor
             if (!string.IsNullOrEmpty(idPlano))
@@ -7792,7 +7795,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         // Agregar una fila con el texto "Plano:"
                         DataRow planoRow = dtWithEmptyRows.NewRow();
-                        planoRow["Descripcion_Grupo"] = "<b>Plano:</b>"; // Poner en negrita
+                        planoRow["Descripcion_Grupo"] = "<b>" + "Plano: " + idPlano  + "     Dibuja y despieza: " + realizadoPor + "</b>"; // Poner en negrita
                         dtWithEmptyRows.Rows.Add(planoRow);
 
                         DataGridDespiece.DataSource = dtWithEmptyRows;
@@ -7807,9 +7810,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Por ejemplo, mostrar un mensaje de error o redirigir a otra página
             }
         }
-
-
-
 
         private void CalcularPrecioVentaObjeto(int idPanelNumerico, out float precioVenta, out float peso)
         {
@@ -7848,7 +7848,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
         protected void Datagrid5_ItemCommand(object source, DataGridCommandEventArgs e)
         {
             string tipoAccion = Session["Diseno"] as string;
@@ -7870,8 +7869,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     e.Item.CssClass = "fila-seleccionada1";
 
-                    Session["Id_PlanoDise"] = row.Cells[2].Text;
+                    string planoDise = row.Cells[2].Text;
 
+                    Session["Id_PlanoDise"] = planoDise;
+
+                    Session["RealizadoPorDise"] = row.Cells[9].Text;
+                    string planoDiseAreaV = row.Cells[3].Text;
+
+                    Session["OpcionDiseDes"] = row.Cells[7].Text;
+
+                    PlanoDiseArea.Text = "<b>" + "Despiece: " + planoDise + " - " + planoDiseAreaV + "</b>";
 
                     BtnDespiece.Enabled = true;
                     BtnDespiece.CssClass = "btn btn-sm button-enabled";
@@ -8091,6 +8098,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 e.Item.CssClass = "fila-seleccionada1";
 
+                Session["Id_NumericoDise"] = row.Cells[1].Text;
+
+
+
                 // Obtener el Id_Numerico de la fila seleccionada
                 int idNumerico = Convert.ToInt32(DataGridDespiece.DataKeys[rowIndex]);
 
@@ -8171,6 +8182,158 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             Datagrid5.DataBind();
             UpdateDiseñoBitacora.Update();
+        }
+
+        protected void ModaldeConfirmacionCambiarCantidad_Click(object sender, EventArgs e)
+        {
+            string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Diseño")
+            {
+                if (string.IsNullOrEmpty(TextCamCan.Text) || int.Parse(TextCamCan.Text) == 0)
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#DigitarCantidad').modal('show');", true);
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(Session["Id_PlanoDise"] as string) || string.IsNullOrEmpty(Session["Id_NumericoDise"] as string))
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#SeleccionFila').modal('show');", true);
+                    return;
+                }
+
+                string idPanelNum = Session["Id_NumericoDise"].ToString();
+
+                // Obtener el valor de "Ancho" desde la base de datos
+                string anchoSeleccionado = GetAnchoByIdNumerico(idPanelNum);
+
+                string Plano = Session["Id_PlanoDise"].ToString();
+                string contenidoModalOT = "¿Esta seguro de cambiar la cantidad de objeto " + Plano + " con ancho de " + anchoSeleccionado + " ?";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ModaldeConfirmacionCambiarCantidad').modal('show'); $('#ModaldeConfirmacionCambiarCantidad2').text('" + contenidoModalOT + "');", true);
+            }
+
+            if (tipoAccion == "Ventas")
+            {
+            }
+          }
+
+        private string GetAnchoByIdNumerico(string idNumerico)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            string ancho = "";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT Ancho FROM tblPanel WHERE Id_Numerico = @Id_Numerico";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id_Numerico", idNumerico);
+                    object result = command.ExecuteScalar();
+                    if (result != null)
+                    {
+                        ancho = result.ToString();
+                    }
+                }
+            }
+
+            return ancho;
+        }
+
+
+        protected void BtnCambiarCantidad_Click(object sender, EventArgs e)
+        {
+            string opcionDise = Session["OpcionDiseDes"].ToString();
+
+          
+
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string idPlano = Session["Id_PlanoDise"].ToString();
+                string idPanelNum = Session["Id_NumericoDise"].ToString();
+
+                // Actualizar tblPlano_Panel
+                string sSql = "UPDATE tblPlano_Panel SET Cantidad = @Cantidad WHERE ID_Plano = @ID_Plano AND Id_PanelNum = @Id_PanelNum";
+                using (SqlCommand command = new SqlCommand(sSql, connection))
+                {
+                    command.Parameters.AddWithValue("@Cantidad", TextCamCan.Text);
+                    command.Parameters.AddWithValue("@ID_Plano", idPlano);
+                    command.Parameters.AddWithValue("@Id_PanelNum", idPanelNum);
+                    command.ExecuteNonQuery();
+                }
+
+                // Implementar lógica de CargarDespiece
+
+                // Obtener TotalDespiece
+                sSql = @"SELECT ISNULL(SUM(tblPlano_Panel.Precio_Venta * tblPlano_Panel.Cantidad), 0) AS SubTotalZona
+                     FROM tblDiseño 
+                     INNER JOIN tblPlanoDiseño ON tblDiseño.Numero_Diseño = tblPlanoDiseño.Numero_Diseño
+                     INNER JOIN tblPlano_Panel ON tblPlanoDiseño.Plano = tblPlano_Panel.Id_Plano
+                     INNER JOIN tblPanel ON tblPlano_Panel.Id_PanelNum = tblPanel.Id_Numerico
+                     INNER JOIN tblGrupoObjeto ON tblPanel.Id_GrupoObjeto = tblGrupoObjeto.ID_GrupoObjeto
+                     WHERE tblGrupoObjeto.Cotizar = 1
+                     GROUP BY tblDiseño.Numero_Diseño, tblDiseño.Nombre_Diseño, tblDiseño.Asesor, tblPlanoDiseño.Plano, tblPlanoDiseño.Opcion
+                     HAVING tblDiseño.Numero_Diseño = @Numero_Diseño AND tblPlanoDiseño.Plano = @Plano AND tblPlanoDiseño.Opcion = @Opcion";
+
+                double totalDespiece;
+                using (SqlCommand command = new SqlCommand(sSql, connection))
+                {
+                    command.Parameters.AddWithValue("@Numero_Diseño", lblNumDise.Text);
+                    command.Parameters.AddWithValue("@Plano", idPlano);
+                    command.Parameters.AddWithValue("@Opcion", opcionDise);
+                    totalDespiece = (double)command.ExecuteScalar();
+                }
+
+                // Actualizar tblPlanoDiseño
+                sSql = @"UPDATE tblPlanoDiseño 
+                     SET SubTotalZona = @SubTotalZona, Composicion = dbo.fn_Composicion_Plano(@Plano), FechalecturaDespiece = GETDATE() 
+                     WHERE Numero_Diseño = @Numero_Diseño AND Plano = @Plano";
+
+                using (SqlCommand command = new SqlCommand(sSql, connection))
+                {
+                    command.Parameters.AddWithValue("@SubTotalZona", totalDespiece);
+                    command.Parameters.AddWithValue("@Numero_Diseño", lblNumDise.Text);
+                    command.Parameters.AddWithValue("@Plano", idPlano);
+                    command.ExecuteNonQuery();
+                }
+
+                // Actualizar tblPlano
+                sSql = "UPDATE tblPlano SET PlaFechalecturaDespiece = GETDATE() WHERE Plano = @Plano";
+                using (SqlCommand command = new SqlCommand(sSql, connection))
+                {
+                    command.Parameters.AddWithValue("@Plano", idPlano);
+                    command.ExecuteNonQuery();
+                }
+
+              
+
+                // Refrescar la vista del DataGrid
+                BindDataGrid();           
+            }
+        }
+
+        protected void BtnNueObjDes_Click(object sender, EventArgs e)
+        {
+            string url = "~/Formularios/DiseñoYDesarrollo/ObjetosDibujo.aspx";
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+        }
+
+        protected void BtnAdiMod_Click(object sender, EventArgs e)
+        {
+            string url = "~/Formularios/DiseñoYDesarrollo/ObjetosDibujo.aspx";
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+        }
+
+        protected void BtnConObjDes_Click(object sender, EventArgs e)
+        {
+            string url = "~/Formularios/DiseñoYDesarrollo/ObjetosDibujo.aspx";
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
         }
     }
 }

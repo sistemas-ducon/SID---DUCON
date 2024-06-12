@@ -214,6 +214,7 @@
     <Content Include="Formularios\Administrativo\EstadisticasVentas.aspx" />
     <Content Include="Formularios\Consultas\DocumentacionReproceso.aspx" />
     <Content Include="Formularios\Consultas\Reproceso.aspx" />
+    <Content Include="Formularios\DiseñoYDesarrollo\ObjetosDibujo.aspx" />
     <Content Include="Formularios\FormExtPrin\AcabadosOT.aspx" />
     <Content Include="Formularios\FormExtPrin\DocumentacionOT.aspx" />
     <Content Include="Formularios\FormExtPrin\NitOTs.aspx" />
@@ -250,6 +251,7 @@
     </Content>
     <Content Include="Recursos\CSS\Administrativo\EstadisticaVenta.css" />
     <Content Include="Recursos\CSS\Consultas\Reproceso.css" />
+    <Content Include="Recursos\CSS\DiseñoYDesarrollo\ObjetosDibujo.css" />
     <Content Include="Recursos\CSS\FormExtPrin\AcabadosOT.css" />
     <Content Include="Recursos\CSS\FormExtPrin\NitOts.css" />
     <Content Include="Recursos\CSS\FormExtPrin\ObjetoDespiece.css" />
@@ -319,6 +321,13 @@
     </Compile>
     <Compile Include="Formularios\Consultas\Reproceso.aspx.designer.cs">
       <DependentUpon>Reproceso.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\DiseñoYDesarrollo\ObjetosDibujo.aspx.cs">
+      <DependentUpon>ObjetosDibujo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\DiseñoYDesarrollo\ObjetosDibujo.aspx.designer.cs">
+      <DependentUpon>ObjetosDibujo.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\FormExtPrin\AcabadosOT.aspx.cs">
       <DependentUpon>AcabadosOT.aspx</DependentUpon>
@@ -551,9 +560,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Formularios\DiseñoYDesarrollo\" />
     <Folder Include="JavaScript\" />
-    <Folder Include="Recursos\CSS\DiseñoYDesarrollo\" />
     <Folder Include="Recursos\IMG\" />
   </ItemGroup>
   <ItemGroup>

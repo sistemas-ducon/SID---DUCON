@@ -68,7 +68,7 @@
                                 <!-- Primera columna -->
                                 <div class="col-lg-7 col-md-6 col-sm-12" id="primeraColumna">
                                     <div class="p-3 m-2 shadow-sm" style="min-height: 50rem;">
-                                        <h6>Despiece: DA-09 - MESA GERENCIA</h6>
+                                       <asp:Label runat="server" ID="PlanoDiseArea"></asp:Label>
                                         <div class="table-responsive mb-2 gap-2" style="max-height: 48rem; overflow-x: auto;">
                                             <asp:DataGrid CssClass="table table-bordered table-hover table-sm form-control-sm" ID="DataGridDespiece" runat="server" AutoGenerateColumns="false"
                                                 OnItemDataBound="DataGridDespiece_ItemDataBound" OnItemCommand="DataGridDespiece_ItemCommand"  DataKeyField="Id_Numerico">
@@ -117,8 +117,8 @@
                                     <div class="p-3 m-2" style="min-height: 8rem;">
                                         <div class="input-group input-group-sm gap-2">
                                             <asp:Label runat="server" ID="Label18" class="col-form-label-sm">Cantidad</asp:Label>
-                                            <asp:TextBox ID="TextBox1" runat="server" CssClass="form-control form-control-sm linkButtonClicked2 shadow-sm"></asp:TextBox>
-                                            <asp:Button runat="server" ID="Button2" Text="Cambiar" CssClass="form-control form-control-sm linkButtonClicked2 shadow-sm" />
+                                            <asp:TextBox ID="TextCamCan" runat="server" CssClass="form-control form-control-sm linkButtonClicked2 shadow-sm"></asp:TextBox>
+                                            <asp:Button runat="server" ID="BtnCambiarCantidad" Text="Cambiar" CssClass="form-control form-control-sm linkButtonClicked2 shadow-sm" OnClick="ModaldeConfirmacionCambiarCantidad_Click"/>
                                         </div>
                                     </div>
                                 </div>
@@ -164,13 +164,13 @@
                                 <div class="col-lg-2 col-md-4 col-sm-12 mb-2"></div>
                                 <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
                                     <div class="d-flex justify-content-end gap-2">
-                                        <asp:LinkButton runat="server" title="Nuevo objeto" ID="LinkButton3" CssClass="btn btn-sm shadow button-enabled">
+                                        <asp:LinkButton runat="server" title="Nuevo objeto" ID="BtnNueObjDes" CssClass="btn btn-sm shadow button-enabled" OnClick="BtnNueObjDes_Click">
                                             <i class="bi bi-file-earmark-fill GrisClaro"></i>
                                         </asp:LinkButton>
-                                        <asp:LinkButton runat="server" title="Adicionar Modulo" ID="LinkButton5" CssClass="btn btn-sm shadow button-enabled">
+                                        <asp:LinkButton runat="server" title="Adicionar Modulo" ID="BtnAdiModDes" CssClass="btn btn-sm shadow button-enabled" OnClick="BtnAdiMod_Click">
                                              <img src="https://i.ibb.co/xCpDzy1/icons8-documentos-96.png" alt="Nuevo plano" style="width: 15px; height: 18px;" />
                                         </asp:LinkButton>                    
-                                        <asp:LinkButton runat="server" title="Configurar Objeto" ID="LinkButton6" CssClass="btn btn-sm shadow button-enabled">
+                                        <asp:LinkButton runat="server" title="Configurar Objeto" ID="BtnConObjDes" CssClass="btn btn-sm shadow button-enabled" OnClick="BtnConObjDes_Click">
                                          <i class="bi bi-wrench-adjustable GrisClaro"></i>
                                         </asp:LinkButton> 
                                     </div>
@@ -207,6 +207,61 @@
                 </div>
             </div>
                      </div>
+
+
+                        
+                        <div class="modal fade" id="DigitarCantidad" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Despiece</h5>
+
+                                    </div>
+                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                                        <p>Por favor digita la cantidad que deseas cambiar</p>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                                        <asp:Button runat="server" type="button" class="btn btn-sm btn-outline-dark" data-bs-dismiss="modal" Text="Aceptar" aria-label="Close"></asp:Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                          <div class="modal fade" id="SeleccionFila" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Despiece</h5>
+
+                                    </div>
+                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                                        <p>Selecciona la fila donde deseas aplicar el cambio</p>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                                        <asp:Button runat="server" type="button" class="btn btn-sm btn-outline-dark" data-bs-dismiss="modal" Text="Aceptar" aria-label="Close"></asp:Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="ModaldeConfirmacionCambiarCantidad" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Despiece</h5>
+
+                                    </div>
+                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                                        <p><span id="ModaldeConfirmacionCambiarCantidad2"></span></p>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                                        <asp:Button runat="server" type="button" class="btn btn-sm btn-outline-dark" data-bs-dismiss="modal" Text="Si" aria-label="Close" OnClick="BtnCambiarCantidad_Click"></asp:Button>
+                                        <asp:Button runat="server" type="button" class="btn btn-sm btn-outline-dark" data-bs-dismiss="modal" Text="No" aria-label="Close"></asp:Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </div>

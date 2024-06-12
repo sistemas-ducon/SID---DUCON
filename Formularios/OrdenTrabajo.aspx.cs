@@ -226,7 +226,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             CopiarOt.CssClass = "btn btn-sm shadow button-disabled";
 
             GrabarOt.Enabled = true;
-            GrabarOt.CssClass = "btn btn-sm shadow button-enabled";
+            GrabarOt.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
             ModificarOt.Enabled = false;
             ModificarOt.CssClass = "btn btn-sm shadow button-disabled";
@@ -253,7 +253,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ObraReactivada.CssClass = "btn btn-sm shadow button-enabled";
 
             Cancelar.Enabled = true;
-            Cancelar.CssClass = "btn btn-sm shadow button-enabled";
+            Cancelar.CssClass = "btn btn-sm shadow button-enabled RojoCancelar";
 
             btnNuevoPedido.Enabled = false;
             btnNuevoPedido.CssClass = "btn btn-sm shadow button-disabled";
@@ -454,11 +454,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Cancelar.Enabled = false;
                 Cancelar.CssClass = "btn btn-sm shadow button-disabled";
                 NuevaOt.Enabled = true;
-                NuevaOt.CssClass = "btn btn-sm shadow button-enabled";
+                NuevaOt.CssClass = "btn btn-sm shadow button-enabled linkButtonClicked2 AzulClaro";
                 ObservacionesOt.Enabled = true;
                 ObservacionesOt.CssClass = "btn btn-sm shadow button-enabled";
                 OtPendientes.Enabled = true;
-                OtPendientes.CssClass = "btn btn-sm shadow button-enabled";
+                OtPendientes.CssClass = "btn btn-sm shadow button-enabled ColorCrema";
 
                 tbOT.Text = string.Empty;
 
@@ -500,10 +500,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (tbOT.Text == "Por Asig")
             {
                 NuevaOt.Enabled = true;
-                NuevaOt.CssClass = "btn btn-sm shadow button-enabled";
+                NuevaOt.CssClass = "btn btn-sm shadow button-enabled linkButtonClicked2 AzulClaro";
 
                 CopiarOt.Enabled = true;
-                CopiarOt.CssClass = "btn btn-sm shadow button-enabled";
+                CopiarOt.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
 
                 ModificarOt.Enabled = true;
                 ModificarOt.CssClass = "btn btn-sm shadow button-enabled";
@@ -524,7 +524,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ConsultarBolsa.CssClass = "btn btn-sm shadow button-enabled";
 
                 OtPendientes.Enabled = true;
-                OtPendientes.CssClass = "btn btn-sm shadow button-enabled";
+                OtPendientes.CssClass = "btn btn-sm shadow button-enabled ColorCrema";
 
                 GrabarOt.Enabled = false;
                 GrabarOt.CssClass = "btn btn-sm shadow button-disabled";
@@ -619,9 +619,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             OtPendientes.Enabled = false;
                             OtPendientes.CssClass = "btn btn-sm shadow button-disabled";
                             GrabarOt.Enabled = true;
-                            GrabarOt.CssClass = "btn btn-sm shadow button-enabled";
+                            GrabarOt.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
                             Cancelar.Enabled = true;
-                            Cancelar.CssClass = "btn btn-sm shadow button-enabled";
+                            Cancelar.CssClass = "btn btn-sm shadow button-enabled RojoCancelar";
 
                             tbOT.Text = "Por Asig.";
                         }
@@ -648,9 +648,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             ExportarPedido.Enabled = false;
                             ExportarPedido.CssClass = "btn btn-sm shadow button-disabled";
                             GrabarOt.Enabled = true;
-                            GrabarOt.CssClass = "btn btn-sm shadow button-enabled";
+                            GrabarOt.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
                             Cancelar.Enabled = true;
-                            Cancelar.CssClass = "btn btn-sm shadow button-enabled";
+                            Cancelar.CssClass = "btn btn-sm shadow button-enabled RojoCancelar";
                             ObraReactivada.Enabled = true;
                             ObraReactivada.CssClass = "btn btn-sm shadow button-enabled";
                             ModificarOt.Enabled = false;
@@ -741,9 +741,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         OtPendientes.Enabled = false;
                         OtPendientes.CssClass = "btn btn-sm shadow button-disabled";
                         GrabarOt.Enabled = true;
-                        GrabarOt.CssClass = "btn btn-sm shadow button-enabled";
+                        GrabarOt.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
                         Cancelar.Enabled = true;
-                        Cancelar.CssClass = "btn btn-sm shadow button-enabled";
+                        Cancelar.CssClass = "btn btn-sm shadow button-enabled RojoCancelar";
 
 
                         HabilitarTodosLosTextBoxes();
@@ -946,13 +946,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void habilitarbotones()
         {
             NuevaOt.Enabled = true;
-            NuevaOt.CssClass = "btn btn-sm shadow button-enabled";
+            NuevaOt.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
 
             ObservacionesOt.Enabled = true;
             ObservacionesOt.CssClass = "btn btn-sm shadow button-enabled";
 
             OtPendientes.Enabled = true;
-            OtPendientes.CssClass = "btn btn-sm shadow button-enabled";
+            OtPendientes.CssClass = "btn btn-sm shadow button-enabled ColorCrema";
 
         }
 
@@ -998,6 +998,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     linkButton.CssClass = cssClass;
                 }
             }
+
+            CopiarOt.CssClass = "btn btn-sm shadow button-disabled";
 
         }
 
@@ -1106,12 +1108,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                        textBox == txtVtte || textBox == txtVvia)
                     {
                         textBox.Enabled = false;
-                        textBox.CssClass = "form-control text-end fw-bold";
+                        textBox.CssClass = "form-control text-end fw-bold linkButtonClicked";
                     }
                     else
                     {
                         textBox.Enabled = false;
-                        textBox.CssClass = "form-control text-end ";
+                        textBox.CssClass = "form-control text-end linkButtonClicked";
                     }
 
 
@@ -1121,7 +1123,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 else
                 {
                     textBox.Enabled = false;
-                    textBox.CssClass = "form-control ";
+                    textBox.CssClass = "form-control linkButtonClicked";
                 }
 
             }
@@ -1151,13 +1153,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             dtpEmpaque.Enabled = true;
 
             ddlAsesor.Enabled = true;
-            ddlAsesor.CssClass = "form-control";
+            ddlAsesor.CssClass = "form-control linkButtonClicked2";
 
             tbOT.Enabled = false;
-            tbOT.CssClass = "form-control";
+            tbOT.CssClass = "form-control linkButtonClicked";
 
             ddlNumbers.Enabled = false;
-            ddlNumbers.CssClass = "form-control";
+            ddlNumbers.CssClass = "form-control linkButtonClicked";
 
             txtCotizacion.Enabled = true;
 
@@ -1175,35 +1177,35 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             // Asignar estilos de CSS si es necesario
-            ddlFabrica1.CssClass = "form-control";
-            ddlInstala.CssClass = "form-control";
-            ddlCiudad.CssClass = "form-control";
-            DtaCboTipoAprobacion.CssClass = "form-control";
-            dtacboTipoPedido.CssClass = "form-control";
-            tbObra.CssClass = "form-control";
-            tbDir.CssClass = "form-control";
-            tbContac.CssClass = "form-control";
-            tbEmail.CssClass = "form-control";
-            tbRecibe.CssClass = "form-control";
-            tbTel.CssClass = "form-control";
-            tbCel.CssClass = "form-control";
-            tbPais.CssClass = "form-control";
-            tbHTotal.CssClass = "form-control";
-            tbVenta.CssClass = "form-control";
-            dtpFechaEntregaDibujoDespiece.CssClass = "form-control";
-            dtpFechaEntregaProduccion.CssClass = "form-control";
-            dtpEmpaque.CssClass = "form-control";
-            dtpRealEmpaque.CssClass = "form-control";
-            tbSupervisor.CssClass = "form-control";
-            tbBolsa.CssClass = "form-control";
-            tbValorPedido.CssClass = "form-control";
-            txtNit.CssClass = "form-control";
-            txtNombreEmp.CssClass = "form-control";
+            ddlFabrica1.CssClass = "form-control linkButtonClicked2";
+            ddlInstala.CssClass = "form-control linkButtonClicked2";
+            ddlCiudad.CssClass = "form-control linkButtonClicked2";
+            DtaCboTipoAprobacion.CssClass = "form-control linkButtonClicked2";
+            dtacboTipoPedido.CssClass = "form-control linkButtonClicked2";
+            tbObra.CssClass = "form-control linkButtonClicked2";
+            tbDir.CssClass = "form-control linkButtonClicked2";
+            tbContac.CssClass = "form-control linkButtonClicked2";
+            tbEmail.CssClass = "form-control linkButtonClicked2";
+            tbRecibe.CssClass = "form-control linkButtonClicked2";
+            tbTel.CssClass = "form-control linkButtonClicked2";
+            tbCel.CssClass = "form-control linkButtonClicked2";
+            tbPais.CssClass = "form-control linkButtonClicked2";
+            tbHTotal.CssClass = "form-control linkButtonClicked2";
+            tbVenta.CssClass = "form-control linkButtonClicked2";
+            dtpFechaEntregaDibujoDespiece.CssClass = "form-control linkButtonClicked2";
+            dtpFechaEntregaProduccion.CssClass = "form-control linkButtonClicked2";
+            dtpEmpaque.CssClass = "form-control linkButtonClicked2";
+            dtpRealEmpaque.CssClass = "form-control linkButtonClicked2";
+            tbSupervisor.CssClass = "form-control linkButtonClicked2";
+            tbBolsa.CssClass = "form-control linkButtonClicked2";
+            tbValorPedido.CssClass = "form-control linkButtonClicked2";
+            txtNit.CssClass = "form-control linkButtonClicked2";
+            txtNombreEmp.CssClass = "form-control linkButtonClicked2";
 
-            txtCotizacion.CssClass = "form-control";
+            txtCotizacion.CssClass = "form-control linkButtonClicked2";
 
-            txtOrdenCompra.CssClass = "form-control";
-            txtAsesor.CssClass = "form-control";
+            txtOrdenCompra.CssClass = "form-control linkButtonClicked2";
+            txtAsesor.CssClass = "form-control linkButtonClicked2";
 
             txObs1.Disabled = false;
             txObs2.Disabled = true;
@@ -1220,7 +1222,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             foreach (DropDownList dropDownList in dropDownLists)
             {
                 dropDownList.Enabled = false;
-                dropDownList.CssClass = "form-control";
+                dropDownList.CssClass = "form-control linkButtonClicked";
             }
         }
 
@@ -1678,7 +1680,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             CopiarOt.Enabled = true;
-            CopiarOt.CssClass = "btn btn-sm shadow button-enabled";
+            CopiarOt.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
 
             DocumentacionOt.Enabled = true;
             DocumentacionOt.CssClass = "btn btn-sm shadow button-enabled";
@@ -1778,7 +1780,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             CopiarOt.Enabled = true;
-            CopiarOt.CssClass = "btn btn-sm shadow button-enabled";
+            CopiarOt.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
 
             DocumentacionOt.Enabled = true;
             DocumentacionOt.CssClass = "btn btn-sm shadow button-enabled";
@@ -1880,7 +1882,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             CopiarOt.Enabled = true;
-            CopiarOt.CssClass = "btn btn-sm shadow button-enabled";
+            CopiarOt.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
 
             DocumentacionOt.Enabled = true;
             DocumentacionOt.CssClass = "btn btn-sm shadow button-enabled";
@@ -2577,7 +2579,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             NuevaOt.CssClass = "btn btn-sm shadow button-disabled";
 
             GrabarOt.Enabled = true;
-            GrabarOt.CssClass = "btn btn-sm shadow button-enabled";
+            GrabarOt.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
             ModificarOt.Enabled = false;
             ModificarOt.CssClass = "btn btn-sm shadow button-disabled";
@@ -2589,7 +2591,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             imprimirOt.CssClass = "btn btn-sm shadow button-disabled";
 
             Cancelar.Enabled = true;
-            Cancelar.CssClass = "btn btn-sm shadow button-enabled";
+            Cancelar.CssClass = "btn btn-sm shadow button-enabled RojoCancelar";
 
             btnNuevoPedido.Enabled = false;
             btnNuevoPedido.CssClass = "btn btn-sm shadow button-disabled";
@@ -3822,7 +3824,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         command.Parameters.AddWithValue("@ValorViatico", txtVvia.Text);
                         command.Parameters.AddWithValue("@Fecha_Empaque", dtpEmpaque.Text);
-                        command.Parameters.AddWithValue("@Fecha_Real_Empaque", dtpEmpaque.Text);
+                        command.Parameters.AddWithValue("@Fecha_Real_Empaque", dtpRealEmpaque.Text);
                         command.Parameters.AddWithValue("@OrdendeCompra", txtOrdenCompra.Text);
 
                         int rowsAffected = command.ExecuteNonQuery();
@@ -4442,7 +4444,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@ValorTteVia", txtVtte.Text);
                         command.Parameters.AddWithValue("@ValorViatico", txtVvia.Text);
                         command.Parameters.AddWithValue("@Fecha_Empaque", dtpEmpaque.Text);
-                        command.Parameters.AddWithValue("@Fecha_Real_Empaque", dtpEmpaque.Text);
+
                         command.Parameters.AddWithValue("@OrdendeCompra", txtOrdenCompra.Text);
                         command.Parameters.AddWithValue("@PedidoBase", pedidoBaseValue);
 
@@ -4489,7 +4491,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             CopiarOt.CssClass = "btn btn-sm shadow button-disabled";
 
             GrabarOt.Enabled = true;
-            GrabarOt.CssClass = "btn btn-sm shadow button-enabled";
+            GrabarOt.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
             ModificarOt.Enabled = false;
             ModificarOt.CssClass = "btn btn-sm shadow button-disabled";
@@ -4516,7 +4518,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ObraReactivada.CssClass = "btn btn-sm shadow button-enabled";
 
             Cancelar.Enabled = true;
-            Cancelar.CssClass = "btn btn-sm shadow button-enabled";
+            Cancelar.CssClass = "btn btn-sm shadow button-enabled RojoCancelar";
 
             btnNuevoPedido.Enabled = false;
             btnNuevoPedido.CssClass = "btn btn-sm shadow button-disabled";
@@ -4652,7 +4654,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 btnNuevoPedido,
             };
 
-            string cssClass = "btn btn-sm shadow button-disabled";
+            string cssClass = "btn btn-sm shadow button-disabled linkButtonClicked2";
 
             foreach (System.Web.UI.Control boton in botones)
             {
@@ -4664,6 +4666,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
+           
+
 
             TiposDePedidos.SelectCommand = "SELECT Descripcion_TipoPedido, Id_TipoPedido, EstadisticaVenta FROM tblTipoPedido WHERE Activo = '1' AND EstadisticaVenta = '1' ORDER BY Descripcion_TipoPedido";
 
@@ -4674,10 +4678,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             txtOrdenCompra.Text = string.Empty;
 
             GrabarOt.Enabled = true;
-            GrabarOt.CssClass = "btn btn-sm shadow button-enabled";
+            GrabarOt.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
             Cancelar.Enabled = true;
-            Cancelar.CssClass = "btn btn-sm shadow button-enabled";
+            Cancelar.CssClass = "btn btn-sm shadow button-enabled RojoCancelar";
 
             Nit.Enabled = false;
             Nit.CssClass = "btn btn-sm shadow button-disabled";
@@ -4904,7 +4908,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session["CargarOTsEjecutada"] = true;
 
             NuevaOt.Enabled = true;
-            NuevaOt.CssClass = "btn btn-sm shadow button-enabled";
+            NuevaOt.CssClass = "btn btn-sm shadow button-enabled AzulClaro linkButtonClicked2";
 
             ModificarOt.Enabled = true;
             ModificarOt.CssClass = "btn btn-sm shadow button-enabled";
@@ -4919,7 +4923,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ConsultarBolsa.CssClass = "btn btn-sm shadow button-enabled";
 
             OtPendientes.Enabled = true;
-            OtPendientes.CssClass = "btn btn-sm shadow button-enabled";
+            OtPendientes.CssClass = "btn btn-sm shadow button-enabled ColorCrema";
 
             GrabarOt.Enabled = false;
             GrabarOt.CssClass = "btn btn-sm shadow button-disabled";
