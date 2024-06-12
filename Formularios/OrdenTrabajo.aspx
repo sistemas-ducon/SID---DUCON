@@ -31,6 +31,16 @@
         function ocultarModalArchivo() {
             $('#ModalArchivo').modal('hide');
         }
+
+        // Mostrar y ocultar  modal para cargar archivo y leer  TXT
+        function mostrarModal_TXT_XY() {
+            $('#modalArchivoAcad_XY').modal('show');
+        }
+        function ocultarModal_TXT_XY() {
+            $('#modalArchivoAcad_XY').modal('hide');
+        }
+
+
     </script>
 
     <script type="text/javascript">
@@ -198,6 +208,68 @@
         }
     </script>
 
+    <script>
+        function activarPestana(pestanaId, contenidoId) {
+            // Desactivar la pestaña actualmente activa
+            document.querySelector(".nav-link.active").classList.remove("active");
+            document.querySelector(".tab-pane.show.active").classList.remove("show", "active");
+
+            // Activar la nueva pestaña
+            document.getElementById(pestanaId).classList.add("active");
+            document.getElementById(contenidoId).classList.add("show", "active");
+
+        }
+
+        function MostralModalObjetosNo() {
+            //Mostrar Modal de Objetos no Existentes 
+            $('#modalObjNoExistente').modal('show');
+        }
+
+        function mostrarModalExito() {
+            //Mostrar Modal de Objetos no Existentes 
+            $('#ModalExito').modal('show');
+        }
+
+    </script>
+
+
+    <script>
+        $(document).ready(function () {
+            $('#<%= btnCargarTXT_XY.ClientID %>').on('click', function () {
+               showProgressBar();
+           });
+       });
+
+        function showProgressBar() {
+            var progressBar = $('#progressBar');
+            var progressMessage = $('#progressMessage');
+            progressBar.css('width', '0%');
+            progressBar.attr('aria-valuenow', 0);
+
+            // Array de mensajes
+            var messages = ["Cargando...", "Por favor, espere...", "Estamos procesando su solicitud...", "Gracias por su paciencia..."];
+            var messageIndex = 0;
+
+            // Simular progreso
+            var interval = setInterval(function () {
+                var currentWidth = parseInt(progressBar.attr('aria-valuenow'));
+                if (currentWidth >= 100) {
+                    // Reiniciar la barra de progreso
+                    currentWidth = 0;
+                    messageIndex = (messageIndex + 1) % messages.length; // Cambiar el mensaje
+                } else {
+                    currentWidth += 3;
+                }
+                progressBar.css('width', currentWidth + '%');
+                progressBar.attr('aria-valuenow', currentWidth);
+                progressMessage.text(messages[messageIndex]); // Actualizar el mensaje
+            }, 500);
+        }
+    </script>
+
+
+
+
 </head>
 
 <body translate="no">
@@ -317,52 +389,6 @@
                                                                         <asp:ControlParameter ControlID="tbOT" PropertyName="Text" Name="Ot"></asp:ControlParameter>
                                                                     </SelectParameters>
                                                                 </asp:SqlDataSource>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-
-                                        </div>
-
-                                        <div class="modal-footer">
-
-                                            <!--espacio del footer del modaa-->
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!--Modal Objetos no existentes pendiente implementacion -->
-                            <div class="modal fade" id="modalNoExistentes" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-xl ">
-                                    <div class="modal-content">
-
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="NoExistentes">Objetos No Existentes:</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-
-                                        <div class="modal-body">
-
-                                            <div class="row justify-content-center mb-3">
-                                                <div class="border rounded p-2">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="table-responsive mb-1 gap-2" style="max-height: 20rem; overflow-x: auto;">
-                                                                <h5 class="datagrid-header text-center">Objetos No Existentes</h5>
-                                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGrid1" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="DataBolsa" OnItemDataBound="DataGridBolsa_ItemDataBound">
-                                                                    <Columns>
-                                                                        <asp:BoundColumn DataField="" HeaderText="Items" ItemStyle-CssClass="auto-width-column" />
-                                                                        <asp:BoundColumn DataField="" HeaderText="Objeto" ItemStyle-CssClass="auto-width-column" />
-                                                                        <asp:BoundColumn DataField="" HeaderText="Ancho" ItemStyle-CssClass="auto-width-column" />
-                                                                        <asp:BoundColumn DataField="" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column" />
-                                                                        <asp:BoundColumn DataField="" HeaderText="Observación" ItemStyle-CssClass="auto-width-column" />
-
-                                                                    </Columns>
-                                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="ObjNoExistentes"></asp:SqlDataSource>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1142,7 +1168,7 @@
                                                                             <td colspan="2">
                                                                                 <div class="input-group input-group-sm ">
                                                                                     <label class="fw-bold">Total Obra</label>
-                                                                                   
+
                                                                                 </div>
                                                                             </td>
 
@@ -1406,7 +1432,7 @@
 
                                 <div class="col-lg-1 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
-                                        <asp:Label class="form-label" Text="P.Base" runat="server" ID="lblPedBase" ></asp:Label>
+                                        <asp:Label class="form-label" Text="P.Base" runat="server" ID="lblPedBase"></asp:Label>
                                         <asp:DropDownList ID="cboPedidoBase" runat="server" class="form-control" DataSourceID="PedidoBase" DataTextField="Consecutivo_Pedido" DataValueField="Consecutivo_Pedido" ToolTip="Pedido Base"></asp:DropDownList>
                                         <asp:SqlDataSource ID="PedidoBase" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT Consecutivo_Pedido, EstadisticaVenta
                                                                 FROM tblTipoPedido
@@ -1977,7 +2003,7 @@
                                             <div class="col-12">
                                                 <div class="input-group input-group-sm gap-2 ">
                                                     <asp:Label ID="Label4" CssClass=" form-label shadow" runat="server">$</asp:Label>
-                                                    <asp:TextBox type="text" class="form-control text-end" runat="server" ID="txtValorSugerido" style="text-align: left !important;"></asp:TextBox>
+                                                    <asp:TextBox type="text" class="form-control text-end" runat="server" ID="txtValorSugerido" Style="text-align: left !important;"></asp:TextBox>
                                                 </div>
                                             </div>
 
@@ -2000,7 +2026,7 @@
                                             <div class="col-12">
                                                 <div class="input-group input-group-sm gap-2 ">
                                                     <asp:Label ID="Label5" CssClass=" form-label shadow" runat="server">$</asp:Label>
-                                                    <asp:TextBox type="text" class="form-control text-end" runat="server" ID="txtVcsd"  style="text-align: left !important;"></asp:TextBox>
+                                                    <asp:TextBox type="text" class="form-control text-end" runat="server" ID="txtVcsd" Style="text-align: left !important;"></asp:TextBox>
                                                 </div>
                                             </div>
 
@@ -2024,7 +2050,7 @@
                                             <div class="col-12">
                                                 <div class="input-group input-group-sm gap-2 ">
                                                     <asp:Label ID="Label6" CssClass=" form-label shadow" runat="server">$</asp:Label>
-                                                    <asp:TextBox type="text" class="form-control text-end" runat="server" ID="txtVccd"  style="text-align: left !important;"></asp:TextBox>
+                                                    <asp:TextBox type="text" class="form-control text-end" runat="server" ID="txtVccd" Style="text-align: left !important;"></asp:TextBox>
                                                 </div>
                                             </div>
 
@@ -2316,7 +2342,7 @@
                             </div>
                         </div>
 
-                          <div class="modal fade" id="NITvacio" data-backdrop="static" data-bs-keyboard="false">
+                        <div class="modal fade" id="NITvacio" data-backdrop="static" data-bs-keyboard="false">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-dark">
@@ -2324,7 +2350,7 @@
                                     </div>
                                     <div class="modal-body form-control-sm">
                                         <p>
-                                   La información relacionada con el NIT no ha sido proporcionada. Por favor, asegúrate de completar todos los campos requeridos antes de continuar.
+                                            La información relacionada con el NIT no ha sido proporcionada. Por favor, asegúrate de completar todos los campos requeridos antes de continuar.
                                         </p>
                                     </div>
                                     <div class="modal-footer  d-flex align-items-center justify-content-center">
@@ -2334,7 +2360,7 @@
                             </div>
                         </div>
 
-                         <div class="modal fade" id="GuardarNIT" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal fade" id="GuardarNIT" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-dark">
@@ -2347,13 +2373,12 @@
                                         </p>
                                     </div>
                                     <div class="modal-footer  d-flex align-items-center justify-content-center">
-                                         <asp:Button runat="server" Text="Si" CssClass="btn btn-sm btn-outline-dark" data-bs-dismiss="modal" aria-label="Close"/>
-                                          <asp:Button runat="server" class="btn btn-sm btn-outline-dark" Text="No" data-bs-dismiss="modal" aria-label="Close"/>
+                                        <asp:Button runat="server" Text="Si" CssClass="btn btn-sm btn-outline-dark" data-bs-dismiss="modal" aria-label="Close"/>
+                                        <asp:Button runat="server" class="btn btn-sm btn-outline-dark" Text="No" data-bs-dismiss="modal" aria-label="Close"/>
                                     </div>
                                 </div>
                             </div>
                         </div>
-       
 
 
                         <div class="modal fade" id="LlenarNITModificar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -2364,7 +2389,7 @@
                                     </div>
                                     <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
                                         <p>
-                                          ¿Desea modificar la información contable?
+                                            ¿Desea modificar la información contable?
                                         </p>
                                     </div>
                                     <div class="modal-footer  d-flex align-items-center justify-content-center">
@@ -2567,7 +2592,7 @@
                                         </div>
                                         <div class="modal-body border rounded">
                                             <div class="container-fluid">
-                                                <h6>Esta seguro que desea eliminar los objetos del Plnao <span id="planoEliminar"></span></h6>
+                                                <h6>Esta seguro que desea eliminar los objetos del plano <span id="planoEliminar"></span></h6>
                                             </div>
 
                                         </div>
@@ -2627,6 +2652,54 @@
                                         <div class="modal-footer justify-content-center">
                                             <asp:Button ID="btnTerminarDescarga" class="btn btn-primary" runat="server" disabled="disabled" Text="Terminar Descarga" OnClick="Terminar" />
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!--Modal Objetos no existentes -->
+                            <div class="modal fade" id="modalObjNoExistente" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
+                                <div class="modal-dialog modal-lg modal-dialog-centered ">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header pb-2 bg-primary">
+                                            <h6 class="text-white m-0">Objetos no existentes</h6>
+                                            <button type="button" class="btn-close" style="color: white!important;" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+
+                                        <div class="modal-body">
+
+                                            <div class="row justify-content-center mb-3">
+                                                <div class="border rounded p-2">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="table-responsive mb-1 gap-2" style="max-height: 20rem; overflow-x: auto;">
+                                                                <h5 class="datagrid-header text-center">Objetos</h5>
+                                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridObjNoExiste" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemDataBound="DataGridObjNoExiste_ItemDataBound">
+                                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                                    <Columns>
+                                                                        <asp:BoundColumn DataField="" HeaderText="Item" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="ID_Objeto" HeaderText="Objeto" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="Ancho" HeaderText="Ancho" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="Alto" HeaderText="Altura" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="Observacion" HeaderText="Observación" ItemStyle-CssClass="auto-width-column" />
+
+                                                                    </Columns>
+                                                                </asp:DataGrid>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="modal-footer">
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -2700,7 +2773,7 @@
                                                     <i class="bi bi-bag-plus"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Objetos no Existentes" ID="BtnObjNoExi">
+                                                <asp:LinkButton runat="server" title="Objetos no Existentes" ID="BtnObjNoExi" OnClick="BtnObjNoExi_Click">
                                                     <i class="bi bi-text-indent-left"></i>
                                                 </asp:LinkButton>
 
@@ -2888,7 +2961,7 @@
                                         <div class="border rounded p-1 m-1">
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <div class="table-responsive mb-1" style="max-height: 29rem; overflow-x: auto;">
+                                                    <div class="table-responsive mb-1" style="max-height: 28rem; height: 28rem; overflow-x: auto;">
                                                         <h5 class="datagrid-header text-center">Despiece</h5>
                                                         <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDespiecePlano" runat="server" OnItemDataBound="DataGridDespiecePlano_ItemDataBound" OnItemCommand="DataGridDespiecePlano_LinkButton">
                                                             <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
@@ -2901,7 +2974,7 @@
                                                                     </ItemTemplate>
                                                                 </asp:TemplateColumn>
 
-                                                                <asp:TemplateColumn ItemStyle-Width="250px">
+                                                                <asp:TemplateColumn ItemStyle-Width="250px" ItemStyle-CssClass="auto-width-column">
                                                                     <HeaderTemplate>
                                                                         <asp:Label ID="lblHeader" runat="server" Visible="true">Grupo </asp:Label>
                                                                     </HeaderTemplate>
@@ -3457,8 +3530,6 @@
             </div>
         </div>
 
-     
-
         <div id="ErrorPermiso" class="modal" tabindex="-1" style="display: none;">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -3475,7 +3546,7 @@
             </div>
         </div>
 
-        <!--Modal para cargar archivo para leer ACAD txt -->
+        <!--Modal para cargar archivo para leer ACAD TXT -->
         <div class="modal fade" id="ModalArchivo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg ">
                 <div class="modal-content">
@@ -3490,7 +3561,7 @@
                         <div class="row">
 
                             <div class="col-8">
-                                <asp:FileUpload CssClass="form-control " ID="LeerAcad" runat="server" />
+                                <asp:FileUpload CssClass="form-control " ID="LeerAcad" runat="server" accept=".txt, .xls" />
                             </div>
 
                             <div class="col-4 text-center">
@@ -3520,7 +3591,6 @@
         </div>
 
 
-
         <!--Modal de carga para el proceso de Boton OK-->
         <div class="modal fade" id="OkCargando" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered ">
@@ -3540,6 +3610,87 @@
                 </div>
             </div>
         </div>
+
+        <!--Modal para cargar archivo para leer ACAD TXT_XY -->
+        <div class="modal fade" id="modalArchivoAcad_XY" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
+            <div class="modal-dialog modal-lg modal-dialog-centered  ">
+                <div class="modal-content">
+
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title">Leer Archivo Autocad</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <div class="row pb-3">
+                            <div class="col-12">
+                                <div class="progress">
+                                    <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                        <span id="progressMessage">Cargando...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row pb-3">
+                            <div class="col-6">
+                                <h6>Por favor, cargue el archivo TXT para realizar el despiece.</h6>
+                                <hr class="pt-0 mt-0 mb-2" />
+                            </div>
+
+                            <div class="col-1"></div>
+
+                            <div class="col-5">
+                                <div class="input-group input-group-sm gap-2">
+                                    <asp:CheckBox ID="chkElemExit" CssClass="form-check" runat="server" ToolTip="Seleccione la casilla si desea cargar los elementos existentes." />
+                                    <asp:Label ID="Label8" runat="server" Text="Cargar Elementos Existentes" ToolTip="Seleccione la casilla si desea cargar los elementos existentes."></asp:Label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row pt-3">
+
+                            <div class="col-8">
+                                <asp:FileUpload CssClass="form-control " ID="LeerAcad_XY" runat="server" accept=".txt, .xls" />
+                            </div>
+
+                            <div class="col-4 text-center">
+                                <asp:Button ID="btnCargarTXT_XY" runat="server" Text="Cargar" CssClass="btn btn-group-lg btn-outline-secondary" OnClick="btnCargarTXT_XY_Click" />
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!--Modal exito carga TXT -->
+        <div id="ModalExito" class="modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title text-center" runat="server" id="tituloExito"></h5>
+
+                    </div>
+                    <div class="modal-body border rounded">
+                        <div class="container-fluid">
+                            <h6 runat="server" id="mensajeExito"></h6>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                            <asp:Button runat="server" ID="AceptarError" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-outline-secondary" Style="width: 5rem;" OnClick="AceptarError_Click" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
 
     </form>
@@ -3565,8 +3716,6 @@
             }, 1000);
         }
     </script>
-
-    
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

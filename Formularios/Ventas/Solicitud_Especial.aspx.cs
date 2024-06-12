@@ -3386,7 +3386,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         // Buscar Desarrollo 
         protected void ID_Sol_Dib_TextChanged(object sender, EventArgs e)
         {
-            if (Session["Departamento"].ToString() == "DESARROLLO DE PRODUCTO" || Session["Departamento"].ToString() == "DISEÑO")
+            if (Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO" || Session["Departamento"].ToString().ToUpper() == "DISEÑO")
             {
                 ContadorClic.Text = "";
 
@@ -3404,7 +3404,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void BuscarSol_Click(object sender, EventArgs e)
         {
 
-            if (Session["Departamento"].ToString() == "DESARROLLO DE PRODUCTO" || Session["Departamento"].ToString() == "DISEÑO")
+            if (Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO" || Session["Departamento"].ToString().ToUpper() == "DISEÑO")
             {
                 // Se limpia contador de Click
                 ContadorClic.Text = "";
@@ -3439,7 +3439,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         // Buscar Cotizacion  
         protected void ID_Cot_Dib_TextChanged(object sender, EventArgs e)
         {
-            if (Session["Departamento"].ToString() == "DESARROLLO DE PRODUCTO" || Session["Departamento"].ToString() == "DISEÑO")
+            if (Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO" || Session["Departamento"].ToString().ToUpper() == "DISEÑO")
             {
                 if (ID_Cot_Dib.Text == "")
                 {
@@ -3454,7 +3454,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         protected void BuscarCot_Click(object sender, EventArgs e)
         {
-            if (Session["Departamento"].ToString() == "DESARROLLO DE PRODUCTO" || Session["Departamento"].ToString() == "DISEÑO")
+            if (Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO" || Session["Departamento"].ToString().ToUpper() == "DISEÑO")
             {
                 // Se limpiar contador Click
                 ContadorClic.Text = "";
@@ -3572,7 +3572,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         // Confirmar Solicitud Especial Complejo 
         protected void ConfirmarComplejo_Click(object sender, EventArgs e)
         {
-            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+            if (Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO" || Session["Departamento"].ToString().ToUpper() == "DISEÑO")
             {
                 SpanId_sol.InnerText = lbNumeroSolicitud.Text;
                 ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#confirDesCompl').modal('show');", true);
@@ -3692,7 +3692,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         // Confirmar Solicitud Especial Urgente 
         protected void btnConUrgente_Click(object sender, EventArgs e)
         {
-            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+            if (Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO" || Session["Departamento"].ToString().ToUpper() == "DISEÑO")
             {
                 SpanId_Sol_Urg.InnerText = lbNumeroSolicitud.Text;
                 ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#confirSolUrgente').modal('show');", true);
@@ -3822,7 +3822,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         // Devolver Solicitud a Proceso de Ventas 
         protected void btnDevolverSolicitud_SI_Click(object sender, EventArgs e)
         {
-            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+            if (Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO" || Session["Departamento"].ToString().ToUpper() == "DISEÑO")
             {
                 // Se ponen las variables en los textbox del modal 
                 string IdSolicitud = lbNumeroSolicitud.Text;

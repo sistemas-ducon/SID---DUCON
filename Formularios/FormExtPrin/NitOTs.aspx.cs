@@ -484,6 +484,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             tbCod.Enabled = false;
             tbCod.CssClass = "form-control";
 
+            string script = @"cambioNaturalezaCliente();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "cambioNaturalezaCliente", script, true);
+
         }
 
 

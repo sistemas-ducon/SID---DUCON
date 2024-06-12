@@ -9,7 +9,7 @@
     <title>Clientes</title>
     <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="../../Recursos/CSS/Ventas/Clientes.css" />
 
@@ -29,36 +29,51 @@
     <script>
         function validarAsesores() {
 
+            // Cedula Asesor que actual  del cliente  
             var tbCedulaAsesorValue = $('#tbCedulaAsesor').val();
 
-
-            var asesorAsignar = '<%= Session["AsesorDiseño"] %>';
-            var NombreAsesor = '<%= Session["AsesorDiseñoNombre"] %>';
+            // Cedula del usuario logueado 
             var cedulalogueada = '<%= Session["CedulaLogeada"] %>';
+
+            //check de control de cliente 
             var permisoCliente = $('#ControlCliente').prop('checked');
+
+            // Variable para poner el nombre 
+            var NombreAsesorSeleccionado = $('#ddlAsesorC option:selected').text();
+            var CedulaAsesorSeleccionada = $('#ddlAsesorC option:selected').val();
 
             if (tbCedulaAsesorValue !== "") {
 
-                if (cedulalogueada !== tbCedulaAsesorValue && permisoCliente == false)
-                {
-                    alert(permisoCliente);
-                    alert("No tienes permisos para modificar este  cliente");
-                    return false;
+                if (cedulalogueada == tbCedulaAsesorValue) {
+                    if (tbCedulaAsesorValue !== CedulaAsesorSeleccionada) {
+                        var confirmacion1 = confirm("Este cliente pertenece a otro Asesor. ¿Desea asignarlo al asesor " + NombreAsesorSeleccionado + "?");
+
+                        if (!confirmacion1) {
+                            // Aquí puedes realizar acciones adicionales si el usuario no confirma
+                            return false; // Detiene el envío del formulario
+                        }
+                    } else
+                    {
+                        return true;
+                    }
                 }
-                else
-                {
-                    if (tbCedulaAsesorValue !== asesorAsignar) {
-                        var confirmacion = confirm("Este cliente pertenece a otro Asesor. ¿Desea asignarlo al asesor " + NombreAsesor + "?");
+                else {
+                    if (tbCedulaAsesorValue !== cedulalogueada && permisoCliente == true) {
+                        var confirmacion = confirm("Este cliente pertenece a otro Asesor. ¿Desea asignarlo al asesor " + NombreAsesorSeleccionado + "?");
 
                         if (!confirmacion) {
                             // Aquí puedes realizar acciones adicionales si el usuario no confirma
                             return false; // Detiene el envío del formulario
                         }
                     }
+                    else {
+                        alert("No tienes permisos para modificar este  cliente");
+                        return false;
+                    }
                 }
 
             }
-            return true; // Permite el envío del formulario si no se cumple la condición
+
         }
     </script>
 
@@ -165,7 +180,7 @@
                                 <div class="col-3">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbNombreCliente" class="form-label" Text="Cliente" runat="server"></asp:Label>
-                                        <asp:TextBox ID="tbNombreCliente" type="text" class="form-control " placeHolder="Max 39 caracteres" maxlength="39" runat="server" ReadOnly="true"></asp:TextBox>
+                                        <asp:TextBox ID="tbNombreCliente" type="text" class="form-control " placeHolder="Max 39 caracteres" MaxLength="39" runat="server" ReadOnly="true"></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -190,7 +205,7 @@
                                 <div class="col-6">
                                     <div class="input-group input-group-sm  mb-2 gap-4">
                                         <asp:Label ID="lbDireccion" class="form-label" Text="Direccion" runat="server"></asp:Label>
-                                        <asp:TextBox ID="tbDireccion" type="text" class="form-control " placeHolder="Max 149 caracteres" maxlength="149" runat="server" ReadOnly="true"></asp:TextBox>
+                                        <asp:TextBox ID="tbDireccion" type="text" class="form-control " placeHolder="Max 149 caracteres" MaxLength="149" runat="server" ReadOnly="true"></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -208,11 +223,10 @@
                                     </div>
                                 </div>
 
-                                <div class="col-3">                                 
+                                <div class="col-3">
                                     <asp:DropDownList ID="ddlAsesorC" CssClass="form-control form-control-sm" ToolTip="Lista Asesor Asignar" runat="server" DataTextField="NombreCompleto" DataValueField="Cedula" DataSourceID="AsesoresC" OnDataBound="ddlAsesorC_DataBound">
-
                                     </asp:DropDownList><asp:SqlDataSource runat="server" ID="AsesoresC" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT Cedula, CONCAT(Nombre, ' ', Apellidos) AS NombreCompleto FROM tblAsesorComercial WHERE activo =1 order by Nombre"></asp:SqlDataSource>
-                                    <asp:CheckBox ID="ControlCliente" runat="server" Visible="false" />
+                                    <asp:CheckBox ID="ControlCliente" runat="server" Style="display: none" />
                                 </div>
                             </div>
 
@@ -221,13 +235,13 @@
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbCompartido" class="form-label" Text="Compartido Con:" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbCompartido" type="text" class="form-control " runat="server" ReadOnly="true"></asp:TextBox>
-                                        <asp:TextBox ID="tbCedulaAsesor" class="form-control " runat="server" ReadOnly="true" Style="display: none;"></asp:TextBox>
+                                        <asp:TextBox ID="tbCedulaAsesor" class="form-control " runat="server" Style="display: none"></asp:TextBox>
                                     </div>
                                 </div>
 
                                 <div class="col-5">
                                     <div class="input-group input-group-sm  mb-2 gap-2 text-end ">
-                                        <asp:CheckBox ID="CheckBox1" CssClass="form-check " runat="server" Enabled="false" OnCheckedChanged="CheckBox1_CheckedChanged" AutoPostBack="true"/>
+                                        <asp:CheckBox ID="CheckBox1" CssClass="form-check " runat="server" Enabled="false" OnCheckedChanged="CheckBox1_CheckedChanged" AutoPostBack="true" />
 
 
                                         <asp:Label ID="chxCompartir" class="form-label" Text="Compartir:" runat="server"></asp:Label>
@@ -292,7 +306,7 @@
 
                             </div>
 
-                            <div class="modal fade" id="myModal" tabindex="-1"  aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"  aria-labelledby="staticBackdropLabel">
+                            <div class="modal fade" id="myModal" tabindex="-1"  aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
                                 <div class="modal-dialog modal-xl ">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -746,7 +760,7 @@
             document.getElementById("btnGuardarCompartir").classList.remove("disabled");
 
 
-                     // Obtén todas las filas del DataGrid
+            // Obtén todas las filas del DataGrid
             var rows = document.querySelectorAll('#<%= DataGridCompartirAsesor.ClientID %> tr');
 
             // Elimina la clase 'selected-row' de todas las filas
@@ -762,10 +776,10 @@
 
             var rows2 = document.querySelectorAll('#<%= DataGridAsesorCompart.ClientID %> tr');
 
-             // Elimina la clase 'selected-row' de todas las filas
-                rows2.forEach(function(row) {
-                    row.classList.remove('fila-seleccionada');
-                });
+            // Elimina la clase 'selected-row' de todas las filas
+            rows2.forEach(function(row) {
+                row.classList.remove('fila-seleccionada');
+            });
 
         }
 
@@ -784,27 +798,27 @@
             document.getElementById("btnElimnarCompartir").classList.remove("disabled");
 
 
-                         // Obtén todas las filas del DataGrid
-                var rows = document.querySelectorAll('#<%= DataGridAsesorCompart.ClientID  %> tr');
+            // Obtén todas las filas del DataGrid
+            var rows = document.querySelectorAll('#<%= DataGridAsesorCompart.ClientID  %> tr');
 
-                // Elimina la clase 'selected-row' de todas las filas
-                rows.forEach(function(row) {
-                    row.classList.remove('fila-seleccionada');
-                });
+            // Elimina la clase 'selected-row' de todas las filas
+            rows.forEach(function(row) {
+                row.classList.remove('fila-seleccionada');
+            });
 
-                // Obtén la fila seleccionada
-                var selectedRow = rows[rowIndex + 1]; // Ajusta el índice para omitir la fila de encabezado
+            // Obtén la fila seleccionada
+            var selectedRow = rows[rowIndex + 1]; // Ajusta el índice para omitir la fila de encabezado
 
-                // Agrega la clase 'selected-row' a la fila seleccionada
-                selectedRow.classList.add('fila-seleccionada');
+            // Agrega la clase 'selected-row' a la fila seleccionada
+            selectedRow.classList.add('fila-seleccionada');
 
-                  // Obtén todas las filas del DataGrid
+            // Obtén todas las filas del DataGrid
             var rows2 = document.querySelectorAll('#<%= DataGridCompartirAsesor.ClientID %> tr');
 
-             // Elimina la clase 'selected-row' de todas las filas
-                rows2.forEach(function(row) {
-                    row.classList.remove('fila-seleccionada');
-                });
+            // Elimina la clase 'selected-row' de todas las filas
+            rows2.forEach(function(row) {
+                row.classList.remove('fila-seleccionada');
+            });
 
         }
 
@@ -838,15 +852,15 @@
         }
     </script>
 
-      <script>
-          // Mostrar y Ocultar  acabados plano
-          function mostrarModal() {
-              $('#myModal').modal('show');
-          }
-          function ocultarModal() {
-              $('#myModal').modal('hide');
-          }
-      </script>
+    <script>
+        // Mostrar y Ocultar  acabados plano
+        function mostrarModal() {
+            $('#myModal').modal('show');
+        }
+        function ocultarModal() {
+            $('#myModal').modal('hide');
+        }
+    </script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
