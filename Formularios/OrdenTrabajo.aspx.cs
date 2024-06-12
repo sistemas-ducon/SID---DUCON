@@ -1210,7 +1210,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             dtpEmpaque.Enabled = true;
 
             ddlAsesor.Enabled = true;
-            ddlAsesor.CssClass = "form-control linkButtonClicked2";
+            ddlAsesor.CssClass = "form-control linkButtonClicked2 shadow-sm";
 
             tbOT.Enabled = false;
             tbOT.CssClass = "form-control linkButtonClicked";
@@ -1234,35 +1234,35 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             // Asignar estilos de CSS si es necesario
-            ddlFabrica1.CssClass = "form-control linkButtonClicked2";
-            ddlInstala.CssClass = "form-control linkButtonClicked2";
-            ddlCiudad.CssClass = "form-control linkButtonClicked2";
-            DtaCboTipoAprobacion.CssClass = "form-control linkButtonClicked2";
-            dtacboTipoPedido.CssClass = "form-control linkButtonClicked2";
-            tbObra.CssClass = "form-control linkButtonClicked2";
-            tbDir.CssClass = "form-control linkButtonClicked2";
-            tbContac.CssClass = "form-control linkButtonClicked2";
-            tbEmail.CssClass = "form-control linkButtonClicked2";
-            tbRecibe.CssClass = "form-control linkButtonClicked2";
-            tbTel.CssClass = "form-control linkButtonClicked2";
-            tbCel.CssClass = "form-control linkButtonClicked2";
-            tbPais.CssClass = "form-control linkButtonClicked2";
-            tbHTotal.CssClass = "form-control linkButtonClicked2";
-            tbVenta.CssClass = "form-control linkButtonClicked2";
-            dtpFechaEntregaDibujoDespiece.CssClass = "form-control linkButtonClicked2";
-            dtpFechaEntregaProduccion.CssClass = "form-control linkButtonClicked2";
-            dtpEmpaque.CssClass = "form-control linkButtonClicked2";
-            dtpRealEmpaque.CssClass = "form-control linkButtonClicked2";
-            tbSupervisor.CssClass = "form-control linkButtonClicked2";
-            tbBolsa.CssClass = "form-control linkButtonClicked2";
-            tbValorPedido.CssClass = "form-control linkButtonClicked2";
-            txtNit.CssClass = "form-control linkButtonClicked2";
-            txtNombreEmp.CssClass = "form-control linkButtonClicked2";
+            ddlFabrica1.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            ddlInstala.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            ddlCiudad.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            DtaCboTipoAprobacion.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            dtacboTipoPedido.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            tbObra.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            tbDir.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            tbContac.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            tbEmail.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            tbRecibe.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            tbTel.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            tbCel.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            tbPais.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            tbHTotal.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            tbVenta.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            dtpFechaEntregaDibujoDespiece.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            dtpFechaEntregaProduccion.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            dtpEmpaque.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            dtpRealEmpaque.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            tbSupervisor.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            tbBolsa.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            tbValorPedido.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            txtNit.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            txtNombreEmp.CssClass = "form-control linkButtonClicked2 shadow-sm";
 
-            txtCotizacion.CssClass = "form-control linkButtonClicked2";
+            txtCotizacion.CssClass = "form-control linkButtonClicked2 shadow-sm";
 
-            txtOrdenCompra.CssClass = "form-control linkButtonClicked2";
-            txtAsesor.CssClass = "form-control linkButtonClicked2";
+            txtOrdenCompra.CssClass = "form-control linkButtonClicked2 shadow-sm";
+            txtAsesor.CssClass = "form-control linkButtonClicked2 shadow-sm";
 
             txObs1.Disabled = false;
             txObs2.Disabled = true;

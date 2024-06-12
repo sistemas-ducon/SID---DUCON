@@ -1848,71 +1848,81 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (tipoAccion == "Diseño")
             {
-                string consulta = "SELECT tblDiseño.*, tblDiseño.Fecha_Ingreso, tblDiseño.Nombre_Diseño FROM tblDiseño";
-
-                string whereClause = "";
-
-                if (!string.IsNullOrEmpty(TextFechDeIng.Text) && !string.IsNullOrEmpty(Texty.Text))
-                {
-
-                    if (!string.IsNullOrEmpty(TextBox3.Text) && !string.IsNullOrEmpty(TextBox4.Text) && !string.IsNullOrEmpty(TextBox5.Text))
-                    {
-                        // Agregar la cláusula AND a la consulta
-                        whereClause += " AND Fecha_Ingreso BETWEEN '" + TextFechDeIng.Text + "' AND '" + Texty.Text + "'";
-                    }
-                    else
-                    {
-
-                        // Agregar la cláusula WHERE a la consulta
-                        whereClause += " WHERE Fecha_Ingreso BETWEEN '" + TextFechDeIng.Text + "' AND '" + Texty.Text + "'";
-                    }
-
-                }
-
-                if (!string.IsNullOrEmpty(TextBox3.Text))
-                {
-                    if (string.IsNullOrEmpty(whereClause))
-                    {
-                        whereClause += " WHERE Numero_Diseño LIKE '%" + TextBox3.Text + "%'";
-                    }
-                    else
-                    {
-                        whereClause += " AND Numero_Diseño LIKE '%" + TextBox3.Text + "%'";
-                    }
-                }
-                if (!string.IsNullOrEmpty(TextBox4.Text))
-                {
-                    if (string.IsNullOrEmpty(whereClause))
-                    {
-                        whereClause += " WHERE Cliente LIKE '%" + TextBox4.Text + "%'";
-                    }
-                    else
-                    {
-                        whereClause += " AND Cliente LIKE '%" + TextBox4.Text + "%'";
-                    }
-                }
-
-                if (!string.IsNullOrEmpty(TextBox5.Text))
-                {
-                    if (string.IsNullOrEmpty(whereClause))
-                    {
-                        whereClause += " WHERE Nombre_Diseño LIKE '%" + TextBox5.Text + "%'";
-                    }
-                    else
-                    {
-                        whereClause += " AND Nombre_Diseño LIKE '%" + TextBox5.Text + "%'";
-                    }
-                }
-
-                consulta += whereClause;
-
-                // Asigna la consulta al control SqlDataSource1
-                SqlDataSource3.SelectCommand = consulta;
-
-                // Vincula el DataGrid al SqlDataSource y actualiza su contenido
-                DataGrid4.DataSourceID = "SqlDataSource3";
-                DataGrid4.DataBind();
+                BuscarDiseRecepYDise();
             }
+            if (tipoAccion == "Recepcion")
+            {
+                BuscarDiseRecepYDise();
+            }
+
+        }
+
+        protected void BuscarDiseRecepYDise()
+        {
+            string consulta = "SELECT tblDiseño.*, tblDiseño.Fecha_Ingreso, tblDiseño.Nombre_Diseño FROM tblDiseño";
+
+            string whereClause = "";
+
+            if (!string.IsNullOrEmpty(TextFechDeIng.Text) && !string.IsNullOrEmpty(Texty.Text))
+            {
+
+                if (!string.IsNullOrEmpty(TextBox3.Text) && !string.IsNullOrEmpty(TextBox4.Text) && !string.IsNullOrEmpty(TextBox5.Text))
+                {
+                    // Agregar la cláusula AND a la consulta
+                    whereClause += " AND Fecha_Ingreso BETWEEN '" + TextFechDeIng.Text + "' AND '" + Texty.Text + "'";
+                }
+                else
+                {
+
+                    // Agregar la cláusula WHERE a la consulta
+                    whereClause += " WHERE Fecha_Ingreso BETWEEN '" + TextFechDeIng.Text + "' AND '" + Texty.Text + "'";
+                }
+
+            }
+
+            if (!string.IsNullOrEmpty(TextBox3.Text))
+            {
+                if (string.IsNullOrEmpty(whereClause))
+                {
+                    whereClause += " WHERE Numero_Diseño LIKE '%" + TextBox3.Text + "%'";
+                }
+                else
+                {
+                    whereClause += " AND Numero_Diseño LIKE '%" + TextBox3.Text + "%'";
+                }
+            }
+            if (!string.IsNullOrEmpty(TextBox4.Text))
+            {
+                if (string.IsNullOrEmpty(whereClause))
+                {
+                    whereClause += " WHERE Cliente LIKE '%" + TextBox4.Text + "%'";
+                }
+                else
+                {
+                    whereClause += " AND Cliente LIKE '%" + TextBox4.Text + "%'";
+                }
+            }
+
+            if (!string.IsNullOrEmpty(TextBox5.Text))
+            {
+                if (string.IsNullOrEmpty(whereClause))
+                {
+                    whereClause += " WHERE Nombre_Diseño LIKE '%" + TextBox5.Text + "%'";
+                }
+                else
+                {
+                    whereClause += " AND Nombre_Diseño LIKE '%" + TextBox5.Text + "%'";
+                }
+            }
+
+            consulta += whereClause;
+
+            // Asigna la consulta al control SqlDataSource1
+            SqlDataSource3.SelectCommand = consulta;
+
+            // Vincula el DataGrid al SqlDataSource y actualiza su contenido
+            DataGrid4.DataSourceID = "SqlDataSource3";
+            DataGrid4.DataBind();
         }
 
         protected void ddlCiudadX_DataBound(object sender, EventArgs e)
