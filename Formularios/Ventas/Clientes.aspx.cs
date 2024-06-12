@@ -653,7 +653,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 // Variables para Verificar si el cliente es de diferente Asesor 
                 string AsesorAsignado = tbCedulaAsesor.Text;
-                string AsesorAsignar = Session["AsesorDiseño"].ToString();
+                string AsesorAsignar = ddlAsesorC.SelectedValue; 
 
 
                 // Bloque para cuando el Asesor sea Diferente
