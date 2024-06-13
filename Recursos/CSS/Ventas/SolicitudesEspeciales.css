@@ -13,8 +13,8 @@
     }
 
 .contenedor-icono i {
-    font-size: 24px;
-    margin: 5px;
+    font-size: 1.2rem;
+    margin: 0.4rem;
 }
 
 
@@ -33,14 +33,19 @@
 /*Para deshabilitar o habilitar  los iconos*/
 
 a.icong1.disabled {
-    pointer-events: none;
-    color: black; /* Cambia el color a negro para enlaces deshabilitados */
-    opacity: 0.5;
+    background-color: #ededed; /* Color de fondo para botones deshabilitados */
+    cursor: not-allowed; /* Cambia el cursor al estilo "no permitido" */
+    border-bottom: 2px solid #ccc; /* Borde en la parte inferior */
+    border-right: 2px solid #ccc; /* Borde en el lado derecho */
+    padding: 0;
 }
 
 a.icong1.enabled {
-    pointer-events: auto;
-    color: blue; /* Cambia el color a azul para enlaces habilitados */
+    background-color: #fff; /* Color de fondo para botones habilitados */  
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    border-bottom: 2px solid #ccc; /* Borde en la parte inferior */
+    border-right: 2px solid #ccc; /* Borde en el lado derecho */
+    padding: 0;
 }
 
 
@@ -48,14 +53,19 @@ a.icong1.enabled {
 /*Para deshabilitar o habilitar  los iconos*/
 
 a.icong.disabled {
-    pointer-events: none;
-    color: black; /* Cambia el color a negro para enlaces deshabilitados */
-    opacity: 0.5;
+    background-color: #ededed; /* Color de fondo para botones deshabilitados */  
+    cursor: not-allowed; /* Cambia el cursor al estilo "no permitido" */
+    border-bottom: 2px solid #ccc; /* Borde en la parte inferior */
+    border-right: 2px solid #ccc; /* Borde en el lado derecho */
+    padding: 0;
 }
 
 a.icong.enabled {
-    pointer-events: auto;
-    color: blue; /* Cambia el color a azul para enlaces habilitados */
+    background-color: #fff; /* Color de fondo para botones habilitados */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    border-bottom: 2px solid #ccc; /* Borde en la parte inferior */
+    border-right: 2px solid #ccc; /* Borde en el lado derecho */
+    padding: 0;
 }
 
 .lbDesarrolloNumero {
@@ -121,9 +131,38 @@ a.icong.enabled {
     color: black !important;
 }
 
-
+/*Control Tamaño botones de datagrid*/
 .Tam {
     display: block;
     width: 100%;
     height: 100%;
 }
+
+.AzulActivo {
+    color: #0863a4;
+}
+
+.AzulDesactivado {
+    color: #bfdef5;
+}
+
+.RojoCancelar {
+    color: #b94747
+}
+
+/* Dispositivos pequeños (teléfonos, menos de 768px) */
+@media (max-width: 767.98px) {
+    .Principal-centro{
+        display:flex;
+        flex-direction:column;
+    }
+
+    .Bajo1 {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+
+
+

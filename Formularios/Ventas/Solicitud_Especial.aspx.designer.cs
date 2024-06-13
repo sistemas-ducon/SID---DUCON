@@ -30,7 +30,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton PausarSolicitud;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor PausarSolicitud;
 
         /// <summary>
         /// Control GrabarSolicitud.
@@ -1032,13 +1032,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.Button btnDevolverSolicitud_SI;
 
         /// <summary>
-        /// Control Button8.
+        /// Control btnDevolver_NO.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button8;
+        protected global::System.Web.UI.WebControls.Button btnDevolver_NO;
 
         /// <summary>
         /// Control btnRedireccionar_Sol.
@@ -1237,6 +1237,33 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button BtnGrabarObservacion;
+
+        /// <summary>
+        /// Control Span_Id_Sol2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl Span_Id_Sol2;
+
+        /// <summary>
+        /// Control btnPausar_Si.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnPausar_Si;
+
+        /// <summary>
+        /// Control btnPausar_No.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnPausar_No;
 
         /// <summary>
         /// Control PanelProgamacion.

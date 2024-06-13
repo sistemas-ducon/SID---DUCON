@@ -553,7 +553,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 string Aplicacion = ConsultarAreaAplicacion();
 
                 //Enviar la notificacion por Correo 
-                string destinatarios = (tbReceptorCorreo.Text + ";" + tbRecepTipoObs.Text).Trim(';').Trim(' '); ;
+                string destinatarios = (tbReceptorCorreo.Text + ";" + tbRecepTipoObs.Text).Trim(';').Trim(' ');
                 string cuerpo = @"
                     <!DOCTYPE html>
                     <html lang='es'>
@@ -794,6 +794,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     e.Item.CssClass = "fila-seleccionada1";
                 }
 
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
+                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
 
 
             }

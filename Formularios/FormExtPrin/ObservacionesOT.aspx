@@ -17,6 +17,20 @@
     <link type="text/css" href="../../Recursos/CSS/FormExtPrin/ObservacionesOT.css" rel="stylesheet" />
 
     <title>Observaciones OT</title>
+
+   <script>
+       function focusAndScrollToRow(rowId) {
+           var row = document.getElementById(rowId);
+           if (row) {
+               row.setAttribute('tabindex', '-1'); // Make it focusable
+               row.focus();
+               row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+           }
+       }
+   </script>
+
+
+
 </head>
 <body>
     <form id="form1" runat="server">
@@ -45,6 +59,7 @@
                 </ul>
             </div>
         </nav>
+
         <div class="tab-content" id="myTabContent">
 
             <div class="tab-pane fade show active" id="Observaciones-content">
