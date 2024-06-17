@@ -23,13 +23,11 @@
         <asp:ScriptManager ID="ScriptManager1" runat="server" />
         <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
             <ContentTemplate>
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="p-3 m-2 border" style="height: 28rem;">
-                                <h6 class="datagrid-header text-center">Acabados</h6>
+                <div class="container mt-3 shadow p-3">
+                            <div class="p-3 m-2 border shadow-sm" style="height: 22rem;">
+                                <h5 class="datagrid-header text-center">Acabados</h5>
 
-                                <div class="table-responsive mb-2 gap-2" style="height: 20rem; overflow-x: auto;">
+                                <div class="table-responsive mb-2 gap-2" style="height: 15.1rem; overflow-x: auto;">
                                     <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm"
                                         ID="DataGrid1" runat="server" AutoGenerateColumns="false" >
 
@@ -68,18 +66,16 @@
 
 
                             </div>
-                        </div>
-                    </div>
-                    <div class="container-fluid m-2">
+                             
                         <div class="row justify-content-center">
-                            <div class="border rounded p-2" style="height: 25rem;">
+                            <div class="p-3 m-2" style="height: 25rem;">
                                 <div class="row">
                                     <div class="col-12">
 
                                         <div class="d-flex">
 
                                             <div class="col-4">
-                                                <div class="p-1 m-1 border" style="height: 14rem;">
+                                                <div class="p-1 m-1 border shadow-sm" style="height: 14rem;">
                                                     <h6>Aplicar Acabado a:</h6>
 
                                                     <div class="mb-2 gap-2" style="max-height: 11.5rem; overflow-x: auto;">
@@ -110,27 +106,27 @@
                                                 </div>
                                             </div>
                                             <div class="col-4">
-                                                <div class="p-1 m-1 border" style="height: 14rem;">
-                                                    <h6>Grupo de Acabado:</h6> 
-                                                    
-                                                     <asp:Label ID="Label1" runat="server" Text="Label" Visible="false" CssClass="form-control-sm"></asp:Label>
+                                                <div class="p-1 m-1 border shadow-sm" style="height: 14rem;">
+                                                    <h6>Grupo de Acabado:</h6>
+
+                                                    <asp:Label ID="Label1" runat="server" Text="Label" Visible="false" CssClass="form-control-sm"></asp:Label>
 
                                                     <div class="mb-2 gap-2" style="max-height: 11.5rem; overflow-x: auto;">
-                                                    <asp:DataGrid CssClass="form-control-sm form-control border-white" ID="DataGrid4" runat="server" AutoGenerateColumns="false" ShowHeader="false" DataSourceID="SqlDataSource4" visible="false">
-                                                        <Columns>
-                                                            <asp:TemplateColumn>
+                                                        <asp:DataGrid CssClass="form-control-sm form-control border-white" ID="DataGrid4" runat="server" AutoGenerateColumns="false" ShowHeader="false" DataSourceID="SqlDataSource4" Visible="false">
+                                                            <Columns>
+                                                                <asp:TemplateColumn>
                                                                     <ItemTemplate>
                                                                         <asp:LinkButton ID="lnkSelectRoww" runat="server" OnClick="lnkSelectRow4_Click" CommandName="Select" CommandArgument='<%# Container.ItemIndex %>'
                                                                             Text="<i class='bi bi-pencil-square text-dark'></i>" />
                                                                     </ItemTemplate>
                                                                 </asp:TemplateColumn>
-                                                            <asp:BoundColumn DataField="ID_GrupoObjetoparaAcabado" ItemStyle-CssClass="auto-width-column" Visible="false" />
-                                                            <asp:BoundColumn DataField="ID_GrupoAcabado" ItemStyle-CssClass="auto-width-column" visible="false"/>
-                                                            <asp:BoundColumn DataField="Descripcion_Grupo" ItemStyle-CssClass="auto-width-column" />
-                                                        </Columns>
-                                                    </asp:DataGrid>
-                                                    <asp:SqlDataSource ID="SqlDataSource4" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
-                                                        SelectCommand="SELECT
+                                                                <asp:BoundColumn DataField="ID_GrupoObjetoparaAcabado" ItemStyle-CssClass="auto-width-column" Visible="false" />
+                                                                <asp:BoundColumn DataField="ID_GrupoAcabado" ItemStyle-CssClass="auto-width-column" Visible="false" />
+                                                                <asp:BoundColumn DataField="Descripcion_Grupo" ItemStyle-CssClass="auto-width-column" />
+                                                            </Columns>
+                                                        </asp:DataGrid>
+                                                        <asp:SqlDataSource ID="SqlDataSource4" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
+                                                            SelectCommand="SELECT
                                                                 tblGrupoObjetoParaAcabado.ID_GrupoObjetoparaAcabado,
                                                                 tblGrupodeAcabado.ID_GrupoAcabado,
                                                                 tblGrupodeAcabado.Descripcion_Grupo
@@ -142,14 +138,14 @@
                                                                 tblGrupoObjetoParaAcabado ON tblGrupoAcab_GrupoObjtAcab.ID_GrupoObjetoparaAcabado = tblGrupoObjetoParaAcabado.ID_GrupoObjetoparaAcabado
                                                             WHERE
                                                                 tblGrupoObjetoParaAcabado.ID_GrupoObjetoparaAcabado = '';">
-                                                        <SelectParameters>
-                                                        </SelectParameters>
-                                                    </asp:SqlDataSource>
-                                                          </div>
+                                                            <SelectParameters>
+                                                            </SelectParameters>
+                                                        </asp:SqlDataSource>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-4">
-                                                <div class="p-1 m-1 border" style="height: 14rem;">
+                                                <div class="p-1 m-1 border shadow-sm" style="height: 14rem;">
                                                     <h6>Acabado Definitivo:</h6>
                                                     <div class="mb-2 gap-2" style="max-height: 11.5rem; overflow-x: auto;">
 
@@ -157,7 +153,7 @@
                                                             ID="DataGrid3" runat="server" AutoGenerateColumns="false" DataSourceID="SqlDataSource3"
                                                             ShowHeader="false">
                                                             <Columns>
-                                                                 <asp:TemplateColumn>
+                                                                <asp:TemplateColumn>
                                                                     <ItemTemplate>
                                                                         <asp:LinkButton ID="lnkSelectRoww3" runat="server" OnClick="lnkSelectRow3_Click" CommandName="Select" CommandArgument='<%# Container.ItemIndex %>'
                                                                             Text="<i class='bi bi-pencil-square text-dark'></i>" />
@@ -165,9 +161,9 @@
                                                                 </asp:TemplateColumn>
                                                                 <asp:BoundColumn DataField="Acab" ItemStyle-CssClass="auto-width-column2"></asp:BoundColumn>
                                                                 <asp:BoundColumn DataField="Id_GrupoAcabado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
-                                                                 <asp:BoundColumn DataField="ID_Acabado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
-                                                                 <asp:BoundColumn DataField="Descripcion_Acabado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
-                                                                 <asp:BoundColumn DataField="DeLinea" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                                <asp:BoundColumn DataField="ID_Acabado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                                <asp:BoundColumn DataField="Descripcion_Acabado" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
+                                                                <asp:BoundColumn DataField="DeLinea" ItemStyle-CssClass="auto-width-column" Visible="false"></asp:BoundColumn>
                                                             </Columns>
                                                         </asp:DataGrid>
 
@@ -183,59 +179,59 @@
                                                 </div>
                                             </div>
                                         </div>
-                                 <div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex">
-                <div class="col-11">
-                    <div class="row">
-                        <div class="col-10">
-                            <asp:Label ID="Label2" runat="server" Text="Aplicar Acabado a:" CssClass="col-form-label-sm"></asp:Label>
-                            <asp:Label ID="Label3" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
-                            <asp:Label ID="Label8" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
-                        </div>
-                        <div class="col-2">
-                            <asp:Label ID="Label9" runat="server" Text="Copiar Acab. del ped" CssClass="fw-bold"></asp:Label>
-                        </div>
-                    </div>
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="d-flex">
+                                                        <div class="col-11">
+                                                            <div class="row">
+                                                                <div class="col-10">
+                                                                    <asp:Label ID="Label2" runat="server" Text="Aplicar Acabado a:" CssClass="col-form-label-sm"></asp:Label>
+                                                                    <asp:Label ID="Label3" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
+                                                                    <asp:Label ID="Label8" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <asp:Label ID="Label9" runat="server" Text="Copiar Acab. del ped" CssClass="fw-bold"></asp:Label>
+                                                                </div>
+                                                            </div>
 
-                    <div class="row">
-                        <div class="col-12">
-                            <asp:Label ID="Label4" runat="server" Text="Acabado Definitivo:" CssClass="col-form-label-sm"></asp:Label>
-                            <asp:Label ID="Label5" CssClass="form-control-sm" runat="server" Text="" Visible="false"></asp:Label>
-                            <asp:Label ID="Label10" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
-                        </div>
-                    </div>
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <asp:Label ID="Label4" runat="server" Text="Acabado Definitivo:" CssClass="col-form-label-sm"></asp:Label>
+                                                                    <asp:Label ID="Label5" CssClass="form-control-sm" runat="server" Text="" Visible="false"></asp:Label>
+                                                                    <asp:Label ID="Label10" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
+                                                                </div>
+                                                            </div>
 
-                    <div class="row">
-                        <div class="col-10">
-                            <div class="input-group input-group-sm gap-2">
-                                <asp:Label ID="Label6" runat="server" Text="Detalle Adicional" CssClass="col-form-label-sm"></asp:Label>
-                                <asp:TextBox ID="TextBox1" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>                      
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <asp:Button ID="Button3" runat="server" Text="Grabar Acabado" CssClass="btn btn-dark btn-sm" Enabled="false" OnClick="BtnGrabar_Click" />              
-                        </div>
-                    </div>
-                </div>
-             <div class="col-1 m-3">
-    <div class="row">
-        <div class="col-6">
-            
-            <asp:TextBox ID="TextBox2" runat="server" CssClass="form-control shadow grande linkButtonClicked2" MaxLength="4"></asp:TextBox>
-        </div>
-        <div class="col-6">
-        <asp:LinkButton runat="server" ID="BtnCopAca" CssClass="btn shadow btn-light linkButtonClicked grande" OnClick="BtnCopAca_Click">
-    <i class="bi-floppy-fill" style="color: #0863a4;"></i>
-</asp:LinkButton>
+                                                            <div class="row">
+                                                                <div class="col-10">
+                                                                    <div class="input-group input-group-sm gap-2">
+                                                                        <asp:Label ID="Label6" runat="server" Text="Detalle Adicional" CssClass="col-form-label-sm"></asp:Label>
+                                                                        <asp:TextBox ID="TextBox1" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <asp:Button ID="Button3" runat="server" Text="Grabar Acabado" CssClass="btn btn-dark btn-sm" Enabled="false" OnClick="BtnGrabar_Click" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-1 m-1">
+                                                            <div class="d-flex flex-wrap">
+                                                                <div class="col-8 p-2">
 
-        </div>
-    </div>
-</div>
+                                                                    <asp:TextBox ID="TextBox2" runat="server" CssClass="form-control shadow grande linkButtonClicked2" MaxLength="4"></asp:TextBox>
+                                                                </div>
+                                                                <div class="col-4 p-2">
+                                                                    <asp:LinkButton runat="server" ID="BtnCopAca" CssClass="btn shadow btn-light linkButtonClicked grande" OnClick="BtnCopAca_Click">
+                                                                        <i class="bi-floppy-fill" style="color: #0863a4;"></i>
+                                                                    </asp:LinkButton>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
 
-            </div>
+                                                    </div>
         </div>
     </div>
 </div>
@@ -248,7 +244,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                   
                 </div>
 
         <div class="modal" id="miModalll" tabindex="-1" style="display: none;">

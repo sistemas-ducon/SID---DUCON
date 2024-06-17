@@ -379,10 +379,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
             else
-            {
-                txtCotizacion.Text = "";
+            {           
                 txtCotizacion.Enabled = true;
-                txtOrdenCompra.Text = "";
                 txtOrdenCompra.Enabled = true;
                 cbxComisionCompart.Enabled = true;
             }
@@ -4431,7 +4429,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return codigoAsesor;
         }
 
-
         protected void ValidarPermiso()
         {
             // Obtener la cédula del usuario logueado de la variable de sesión
@@ -4919,8 +4916,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
-
-
 
         protected void CargarOtInsertada3()
         {

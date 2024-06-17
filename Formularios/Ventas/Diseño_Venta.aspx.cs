@@ -45,6 +45,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private string CadenaConexionSSF = "BD_SSF";
 
         private bool isModalVisible = false;
+
+        public class PanelInfo
+        {
+            public string DescripcionPanel { get; set; }
+            public string Ancho { get; set; }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["usuariologueado"] != null)
@@ -8213,42 +8220,52 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 string idPanelNum = Session["Id_NumericoDise"].ToString();
 
-                // Obtener el valor de "Ancho" desde la base de datos
-                string anchoSeleccionado = GetAnchoByIdNumerico(idPanelNum);
+                // Obtener el valor de "Ancho" y "Descripcion_Panel" desde la base de datos
+                PanelInfo panelInfo = GetPanelInfoByIdNumerico(idPanelNum);
 
-                string Plano = Session["Id_PlanoDise"].ToString();
-                string contenidoModalOT = "¿Esta seguro de cambiar la cantidad de objeto " + Plano + " con ancho de " + anchoSeleccionado + " ?";
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ModaldeConfirmacionCambiarCantidad').modal('show'); $('#ModaldeConfirmacionCambiarCantidad2').text('" + contenidoModalOT + "');", true);
+                if (panelInfo != null)
+                {
+                    string anchoSeleccionado = panelInfo.Ancho;
+                    string descripcionPanel = panelInfo.DescripcionPanel;
+                    string contenidoModalOT = $"¿Esta seguro de cambiar la cantidad de objeto {descripcionPanel} con ancho de {anchoSeleccionado} ?";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ModaldeConfirmacionCambiarCantidad').modal('show'); $('#ModaldeConfirmacionCambiarCantidad2').text('" + contenidoModalOT + "');", true);
+                }
             }
 
             if (tipoAccion == "Ventas")
             {
+                // Código para "Ventas" aquí
             }
-          }
+        }
 
-        private string GetAnchoByIdNumerico(string idNumerico)
+        private PanelInfo GetPanelInfoByIdNumerico(string idNumerico)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
-            string ancho = "";
+            PanelInfo panelInfo = null;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT Ancho FROM tblPanel WHERE Id_Numerico = @Id_Numerico";
+                string query = "SELECT Descripcion_Panel, Ancho FROM tblPanel WHERE Id_Numerico = @Id_Numerico";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id_Numerico", idNumerico);
-                    object result = command.ExecuteScalar();
-                    if (result != null)
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        ancho = result.ToString();
+                        if (reader.Read())
+                        {
+                            panelInfo = new PanelInfo
+                            {
+                                DescripcionPanel = reader["Descripcion_Panel"].ToString(),
+                                Ancho = reader["Ancho"].ToString()
+                            };
+                        }
                     }
                 }
             }
 
-            return ancho;
+            return panelInfo;
         }
-
 
         protected void BtnCambiarCantidad_Click(object sender, EventArgs e)
         {
