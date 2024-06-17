@@ -2,15 +2,18 @@
 using DocumentFormat.OpenXml.Office.Word;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using MathNet.Numerics;
 using Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json;
 using NPOI.SS.Formula.Functions;
+using SISTEMA_INTEGRAL_DUCON.Formularios.Ventas;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -140,6 +143,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         // Se Cargan los DataGrid con los Datos para Dibujo 
                         CargarDesarrollos_Cotizaciones();
+
+
+                        if (Session["CargarSolicitud"]?.ToString() == "1")
+                        {
+                            CargarSolictudEspecial(Session["CargarSolicitud_ID"].ToString());
+
+                            Session.Remove("CargarSolicitud_ID");
+                            Session.Remove("CargarSolicitud");
+                        }
 
                     }
 
@@ -2398,6 +2410,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             HttpContext.Current.Session.Remove("Insertar");
         }
 
+
         // Detalle solicitud
 
         protected void DataGridDetalleSolicitud_LinkButton(object source, DataGridCommandEventArgs e)
@@ -2534,7 +2547,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
 
-
+               
             }
         }
 
@@ -3819,7 +3832,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
 
-        // Devolver Solicitud a Proceso de Ventas 
+        // Devolver Solicitud a Proceso de Ventas      
         protected void btnDevolverSolicitud_SI_Click(object sender, EventArgs e)
         {
             if (Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO" || Session["Departamento"].ToString().ToUpper() == "DISEÑO")
@@ -3856,6 +3869,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
            
         }
+        protected void btnDevolver_NO_Click(object sender, EventArgs e)
+        {
+
+            Session["CargarSolicitud"] = "1";
+            Session["CargarSolicitud_ID"] = lbNumeroSolicitud.Text;
+            Response.Redirect("Solicitud_Especial.aspx");
+        }
+        protected void btnCerrarDevolver_Click(object sender, EventArgs e)
+        {
+            // Refrescar la página después de cerrar el modal        
+            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalCerrarDev').modal('show');", true);
+        }
+
+        // Metodos cargar observacion en modal 
         private void ConsultarCorreo(string ID_Solicitud)
         {
             // Realizar la conexión y la consulta a la base de datos
@@ -3885,12 +3912,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
 
-        }
-        protected void btnCerrarDevolver_Click(object sender, EventArgs e)
-        {
-            // Refrescar la página después de cerrar el modal        
-            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalCerrarDev').modal('show');", true);
-        }
+        }  
         protected void DataGridReceptorMail_ItemCommand(object source, DataGridCommandEventArgs e)
         {
             if (e.CommandName == "VerMail")
@@ -3944,17 +3966,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     e.Item.CssClass = "fila-seleccionada2";
                 }
-
+               
 
                 ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolver').modal('show');", true);
 
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
+                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
+
 
             }
-        }
-        protected void btnRedireccionar_Sol_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("Solicitud_Especial.aspx");
-        }
+        }   
         protected void ddlTipoObservacion_SelectedIndexChanged(object sender, EventArgs e)
         {
             // metodo por si en algun momento agregan correos por defecto para devoluciones a  verntas 
@@ -3999,6 +4023,570 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             return correo;
         }
+        protected void btnRedireccionar_Sol_Click(object sender, EventArgs e)
+        {
+            Session["CargarSolicitud"] = "1";
+            Session["CargarSolicitud_ID"] = lbNumeroSolicitud.Text;
+            Response.Redirect("Solicitud_Especial.aspx");
+        }
 
+        // Grabar observacion y devolver solicitud 
+        protected void BtnGrabarObservacion_Click(object sender, EventArgs e)
+        {
+            // Validar que tenga los campos necesarios
+            if (ValidarCamposRequeridos())
+            {
+                InsertarObservacion();
+
+                string ID_Solicitud = tbOt.Text;
+                if (ID_Solicitud.StartsWith("SPE"))
+                {
+                    ID_Solicitud = ID_Solicitud.Substring(3).TrimStart();
+                }
+
+                // Traemos el Id_MaxObservacion 
+                string Id_Observacion = ConsultarId_Observacion();
+
+                // Se valida si hay receptores seleccionados             
+                if (tbCedulaRecp.Text != "")
+                {
+                    string cedulasNotificar = tbCedulaRecp.Text.Trim(';');
+                    string NombresNotificar = tbNombreRecp.Text.Trim(';');
+
+                    string[] CedNot = cedulasNotificar.Split(';');
+                    string[] NomNot = NombresNotificar.Split(';');
+
+                    for (int i = 0; i < CedNot.Length; i++)
+                    {
+                        // Llamamos al método InsertarObservacionReceptores con la cédula y el nombre actuales
+                        InsertarObservacionReceptores(Id_Observacion, CedNot[i], NomNot[i]);
+
+                    }
+                }
+
+                //Consultamos el area de aplicacion  con el codigo del ddlTipoObservacion              
+                string Aplicacion = ConsultarAreaAplicacion();
+
+                //Enviar la notificacion por Correo 
+                string destinatarios = (tbReceptorCorreo.Text + ";" + tbRecepTipoObs.Text).Trim(';').Trim(' ');
+                string cuerpo = @"
+                    <!DOCTYPE html>
+                    <html lang='es'>
+                    <head>
+                        <meta charset='UTF-8'>
+                        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+                        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                        <style>
+                            body {
+                                font-family: Arial, sans-serif;
+                                font-size: 14px;
+                                line-height: 1.6;
+                                margin: 0;
+                                padding: 0;
+                                background-color: #f9f9f9;
+                            }
+                            .container {
+                                max-width: 37rem;
+                                margin: 20px auto;
+                                padding: 20px;
+                                border: 1px solid #ccc;
+                                border-radius: 5px;
+                                background-color: #fff;
+                            }
+                            h2 {
+                                color: #333;
+                                font-size: 24px;
+                                margin-bottom: 20px;
+                            }
+                            p {
+                                margin-bottom: 10px;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class='container'>
+                            <h3>Notificación de Observación: </h3>
+                            <p> <strong> Fecha de Observación: </strong> " + DateTime.Now.ToString() + @"</p>
+                            <p><strong> Emisor : </strong> <strong> " + Session["usuariologueado"].ToString() + @"</strong></p>
+                            <p><strong>Nombre de la Obra: </strong> " + tbObra.Text + @"</p>
+                            <p><strong>Tipo Observacion : </strong> " + ddlTipoObservacion.SelectedItem.Text + @"</p>
+                            <p><strong>Detalle Observación: </strong> " + txObservacion.InnerText + @"</p>
+                            <p><strong>Fin Observación </strong> </p>
+                           
+                        </div>
+                    </body>
+                    </html>";
+
+                //ejecutar el procedimiento almacenado que envia el correo 
+                EnviarCorreoDevolucionPE(destinatarios, cuerpo, Aplicacion);
+
+                DevolverSolicitudaVentas(ID_Solicitud);
+
+
+                string mensajePersonalizado = "La solicitud se devolvió con éxito y se notificó por correo electrónico.";
+                string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+            }
+        }
+
+        private bool ValidarCamposRequeridos()
+        {
+            bool valido = true;
+
+            if (ddlTipoObservacion.SelectedValue == " ")
+            {
+                // Mensaje de alerta
+                string script1 = "alert('Por favor seleccione el tipo de observación.');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", script1, true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolver').modal('show');", true);
+                valido = false;
+            }
+
+            if (txObservacion.InnerText.Trim() == "")
+            {
+                // Mensaje de alerta
+                string script1 = "alert('Por favor escriba  la justificaci{on de la observación.');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", script1, true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolver').modal('show');", true);
+                valido = false;
+            }
+
+            if (tbOt.Text == "")
+            {
+                // Mensaje de alerta
+                string script1 = "alert('No se ha seleccionado una OT o una Solicitud Especial para generar una observacion');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", script1, true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolver').modal('show');", true);
+                valido = false;
+
+            }
+
+
+            return valido;
+        }
+        public void InsertarObservacion()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "INSERT INTO tblOtObservacion (Id_OT,Consecutivo_Pedido,Nombre_Obra,Observacion,FechaObservacion,Emisor,Nombre_Emisor," +
+                               "ID_TipoObservacion,FechaAnteriorDespacho,FechaNuevaDespacho,CedulaAsesor, FechaActividad,  Destinatarios) " +
+                               "VALUES(@OT, @Pedido, @NombreObra, @Observacion, @fechaObsercion,@Emisor, @Nombre_Emisor, @ID_TipoObservacion," +
+                               " @FechaAnteriorDespacho,@FechaNuevaDespacho, @CedulaAsesor, @FechaActividad,@Destinatarios)";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@OT", tbOt.Text);
+                    command.Parameters.AddWithValue("@Pedido", tbPed.Text);
+                    command.Parameters.AddWithValue("@NombreObra", tbObra.Text);
+                    command.Parameters.AddWithValue("@Observacion", txObservacion.InnerText);
+                    command.Parameters.AddWithValue("@fechaObsercion", DateTime.Now);
+                    command.Parameters.AddWithValue("@Emisor", Session["CedulaLogeada"].ToString());
+                    command.Parameters.AddWithValue("@Nombre_Emisor", Session["usuariologueado"].ToString());
+                    command.Parameters.AddWithValue("@ID_TipoObservacion", ddlTipoObservacion.SelectedValue);
+                    command.Parameters.AddWithValue("@FechaAnteriorDespacho", DateTime.Now);
+                    command.Parameters.AddWithValue("@FechaNuevaDespacho", DateTime.Now);
+                    command.Parameters.AddWithValue("@CedulaAsesor", Session["CedulaLogeada"].ToString());
+                    command.Parameters.AddWithValue("@FechaActividad", tbfechaActividad.Text);
+                    command.Parameters.AddWithValue("@Destinatarios", tbReceptorCorreo.Text);
+
+
+                    try
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Cambiar el mensaje de error
+                        //Console.WriteLine("Error al insertar datos: " + ex.Message);
+                    }
+                }
+            }
+        }
+        public string ConsultarId_Observacion()
+        {
+            string Id_Observacion = "";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "select max(id_Observacion) from tblOTObservacion";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    try
+                    {
+                        connection.Open();
+                        Id_Observacion = Convert.ToString(command.ExecuteScalar());
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejar la excepción 
+                        //Console.WriteLine("Error al ejecutar la consulta: " + ex.Message);
+                    }
+                }
+            }
+
+            return Id_Observacion;
+        }
+        public void InsertarObservacionReceptores(string Id_Observacion, string cedula, string nombre)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "INSERT INTO tblOTObservacion_Receptor (Id_Observacion,Receptor,Nombre_Receptor) Values(@ID_Observacion, @CedulaRecep , @NombreReceptor)";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ID_Observacion", Id_Observacion);
+                    command.Parameters.AddWithValue("@CedulaRecep", cedula);
+                    command.Parameters.AddWithValue("@NombreReceptor", nombre);
+
+                    try
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Cambiar el mensaje de error
+                        // Console.WriteLine("Error al insertar datos: " + ex.Message);
+                    }
+                }
+            }
+        }
+        public string ConsultarAreaAplicacion()
+        {
+            string areaAplicacion = "";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT Aplicacion FROM tblTipoObservacion WHERE UsoEspecifico=1  AND  Activa=1  AND  Aplicacion like '%' AND ID_TipoObservacion = @TipoObs";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+
+                    command.Parameters.AddWithValue("@TipoObs", ddlTipoObservacion.SelectedValue);
+
+
+                    try
+                    {
+                        connection.Open();
+                        areaAplicacion = Convert.ToString(command.ExecuteScalar());
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+            }
+
+            return areaAplicacion;
+        }
+        public void EnviarCorreoDevolucionPE(string destinatarios, string cuerpo, string aplicacion)
+        {
+            string nombreProcedimiento = "duc_sp_Correo";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(nombreProcedimiento, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Definir los parámetros del procedimiento almacenado
+                    command.Parameters.AddWithValue("@Destinatarios", destinatarios);
+                    command.Parameters.AddWithValue("@asunto", "Observacion: " + aplicacion + " APL: " + tbOt.Text + "-" + tbPed.Text);
+                    command.Parameters.AddWithValue("@cuerpo", cuerpo);
+                    command.Parameters.AddWithValue("@adjuntos", "");
+                    command.Parameters.AddWithValue("@usuario", Session["usuariologueado"].ToString());
+
+                    try
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+
+                    }
+                    catch (SqlException ex)
+                    {
+                        // Manejar la excepción (opcional)
+                        //error.Visible = true;
+                        // error.Text = ex.Message;
+                    }
+                }
+            }
+        }
+
+        private void DevolverSolicitudaVentas(string ID_Solicitud)
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "UPDATE tblSoliciDiseEspe SET ProgramadoVentas=0, Terminado=0, FechaRespuesta= @fecha WHERE id_Solicitud= @ID_Solicitud";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@fecha", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@ID_Solicitud", ID_Solicitud);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                    DevolverDetallesSolicitudaVentas(ID_Solicitud);
+                }
+
+            }
+        }
+        private void DevolverDetallesSolicitudaVentas(string ID_Solicitud)
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "Update tblSoliciDiseEspeDeta set ComprasOk=0 where Id_Solicitud= @ID_Solicitud";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@ID_Solicitud", ID_Solicitud);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+        // Metodo para cargar la solicitud si tiene ID_Solicitud 
+        private void CargarSolictudEspecial(string idSolcitud)
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT * FROM tblSoliciDiseEspe WHERE ID_Solicitud = @IdSolcitud ORDER BY Fecha_Ingreso ASC";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@IdSolcitud", idSolcitud);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                string IdSolicitud = row["ID_Solicitud"].ToString();
+                Session["Id_Solicitud"] = IdSolicitud;
+                ID_Sol_Dib.Text = IdSolicitud;
+                string NombreProyecto = row["Proyecto"].ToString();
+                string Asesor = row["Asesor"].ToString();
+                string FechaIngreso = row["Fecha_Ingreso"].ToString();
+                DateTime FechaIngresoForm = DateTime.Parse(FechaIngreso);
+                string Dirigidoa = row["Dirigidoa"].ToString();
+                string Tipo = row["TipoSolicitud"].ToString();
+                string RealizadoPor = row["RealizadoPor"].ToString();
+                string termiVenta = row["ProgramadoVentas"].ToString();
+                string TermiDiseño = row["Terminado"].ToString();
+                string FechaEntrega = row["Fecha_Programada_Entrega"].ToString();
+                DateTime FechaEntregaForm = DateTime.Parse(FechaEntrega);
+                string FechaRespuesta = row["FechaRespuesta"].ToString();
+                DateTime FechaRespuestaForm = DateTime.Parse(FechaRespuesta);
+                string SoliOrigen = row["id_SolicitudOrigen"].ToString();
+                string Ciudad = row["CiudadProyecto"].ToString();
+                string Viatico = row["CotizarViaTte"].ToString();
+                string Cotizacion = row["Cotizacion"].ToString();
+                string Cliente = row["Cliente"].ToString();
+                string Contacto = row["Contacto"].ToString();
+                string Telefono = row["Telefono"].ToString();
+                string Celular = row["Celular"].ToString();
+                string Mail = row["Mail"].ToString();
+                string Direccion = row["Direccion"].ToString();
+                string SegPausa = row["SeguimientoPausa"].ToString();
+                string DesComplejo = row["DesarrolloComplejo"].ToString();
+                string Urgente = row["Urgente"].ToString();
+
+                lbNumeroSolicitud.Text = IdSolicitud;
+                tbProyecto.Text = NombreProyecto;
+                tbProyectoServidor.Text = NombreProyecto;
+
+                foreach (ListItem item in ddlAsesor.Items)
+                {
+                    if (item.Text == Asesor)
+                    {
+                        ddlAsesor.ClearSelection();
+                        item.Selected = true;
+                        break;
+                    }
+                }
+                tbFechaIngreso.Text = FechaIngresoForm.ToString("yyyy-MM-dd");
+                tbFechaIngresoServidor.Text = FechaIngresoForm.ToString("yyyy-MM-dd");
+                foreach (ListItem item in ddlDirigido.Items)
+                {
+                    if (item.Text == Dirigidoa)
+                    {
+                        ddlDirigido.ClearSelection();
+                        item.Selected = true;
+                        break;
+                    }
+                }
+                foreach (ListItem item in ddlTipo.Items)
+                {
+                    if (item.Text == Tipo)
+                    {
+                        ddlTipo.ClearSelection();
+                        item.Selected = true;
+                        break;
+                    }
+                }
+                tbDesarrollaPor.Text = RealizadoPor;
+                tbFechaEntrega.Text = FechaEntregaForm.ToString("yyyy-MM-dd");
+                tbFechaEntregaServidor.Text = FechaEntregaForm.ToString("yyyy-MM-dd");
+                tbFechaRespuesta.Text = FechaRespuestaForm.ToString("yyyy-MM-dd");
+                tbFechaRespuestaServidor.Text = FechaRespuestaForm.ToString("yyyy-MM-dd");
+                tbSolicitudOrigen.Text = SoliOrigen;
+
+                foreach (ListItem item in ddlCiudad.Items)
+                {
+                    if (item.Text == Ciudad)
+                    {
+                        ddlCiudad.ClearSelection();
+                        item.Selected = true;
+                        break;
+                    }
+                }
+
+                chxViaticos.Checked = Viatico == "True";
+                tbCotizacionEsp.Text = Cotizacion;
+                tbCliente.Text = Cliente;
+                tbClienteServidor.Text = Cliente;
+                tbContacto.Text = Contacto;
+                tbContactoServidor.Text = Contacto;
+                tbTelefono.Text = Telefono;
+                tbTelefonoServidor.Text = Telefono;
+                tbCelular.Text = Celular;
+                tbCelularServidor.Text = Celular;
+                tbMail.Text = Mail;
+                tbMailServidor.Text = Mail;
+                tbDireccion.Text = Direccion;
+                tbDireccionServidor.Text = Direccion;
+
+                if (SegPausa == "&nbsp;")
+                {
+                    string SegPausaRep = SegPausa.Replace("&nbsp;", "");
+                    txObsDesarrollo.InnerText = SegPausaRep;
+                }
+                else
+                {
+                    txSegPausa.InnerText = SegPausa;
+                }
+                chxUrgente.Checked = Convert.ToBoolean(Urgente);
+                chxDesComplejo.Checked = Convert.ToBoolean(DesComplejo);
+
+                LimpiarCamposDetalle();
+
+                if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
+                {
+                    if (termiVenta != "True")
+                    {
+                        Session["ProVenSolicitud"] = termiVenta;
+
+                        btnProgramarSolicitud.Enabled = true;
+                        btnProgramarSolicitud.CssClass = "btn btn-sm btn-warning";
+
+                        string script = "<script>setTimeout(function() { HabilEnla1Ventas(); }, 100);</script>";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "HabilEnla1Ventas", script, false);
+                    }
+                    else
+                    {
+                        Session["ProVenSolicitud"] = termiVenta;
+
+                        btnProgramarSolicitud.Enabled = false;
+                        btnProgramarSolicitud.CssClass = "btn btn btn-warning";
+
+                        string script = "<script>setTimeout(function() { HabilitarEnlaces4(); }, 100);</script>";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces4", script, false);
+                    }
+                }
+                else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+                {
+                    CargarSolicitudPrimerafilaDesarrollo();
+
+                    if (TermiDiseño != "True")
+                    {
+                        Session["ProDiSolicitud"] = TermiDiseño;
+
+                        btnProgramarSolicitud.Enabled = true;
+                        btnProgramarSolicitud.CssClass = "btn btn-sm btn-warning";
+
+                        ConfirmarComplejo.Enabled = true;
+                        ConfirmarComplejo.CssClass = "btn btn-sm btn-outline-primary";
+
+                        btnConUrgente.Enabled = true;
+                        btnConUrgente.CssClass = "btn btn-sm btn-outline-primary";
+
+                        chxDesComplejo.Enabled = true;
+                        chxUrgente.Enabled = true;
+
+                        if (termiVenta == "True")
+                        {
+                            string script = "<script>setTimeout(function() { HabEnlDiseño(); }, 100);</script>";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+                        }
+                        else
+                        {
+                            string script = "<script>setTimeout(function() { HabEnlDiseño3(); }, 100);</script>";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño3", script, false);
+                        }
+                    }
+                    else
+                    {
+                        Session["ProDiSolicitud"] = TermiDiseño;
+
+                        btnProgramarSolicitud.Enabled = false;
+                        btnProgramarSolicitud.CssClass = "btn btn-sm btn-warning";
+
+                        ConfirmarComplejo.Enabled = false;
+                        ConfirmarComplejo.CssClass = "btn btn-sm btn-outline-secondary";
+
+                        btnConUrgente.Enabled = false;
+                        btnConUrgente.CssClass = "btn btn-sm btn-outline-secondary";
+
+                        chxDesComplejo.Enabled = false;
+                        chxUrgente.Enabled = false;
+
+                        string script = "<script>setTimeout(function() { HabEnlDiseño2(); }, 100);</script>";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño2", script, false);
+                    }
+                }
+            }
+        }
+
+
+        // Pausar Solicitud Especial
+        protected void btnPausar_Si_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnPausar_No_Click(object sender, EventArgs e)
+        {
+            Session["CargarSolicitud"] = "1";
+            Session["CargarSolicitud_ID"] = lbNumeroSolicitud.Text;
+            Response.Redirect("Solicitud_Especial.aspx");
+        }
+
+       
     }
 }
