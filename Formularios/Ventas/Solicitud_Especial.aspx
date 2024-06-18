@@ -93,7 +93,7 @@
 
             // Habilitar enlaces
             document.getElementById("GrabarSolicitud").classList.remove("disabled");
-            document.getElementById("GrabarSolicitud").classList.add("enabled","AzulActivo");
+            document.getElementById("GrabarSolicitud").classList.add("enabled", "AzulActivo");
 
 
         }
@@ -134,6 +134,13 @@
 
             document.getElementById("ModificarSolicitud").classList.remove("disabled");
             document.getElementById("ModificarSolicitud").classList.add("enabled", "AzulActivo");
+
+            document.getElementById("GrabarSolicitud").classList.remove("enabled", "AzulActivo");
+            document.getElementById("GrabarSolicitud").classList.add("disabled");
+
+            document.getElementById("NuevaSolicitud").classList.remove("disabled");
+            document.getElementById("NuevaSolicitud").classList.add("enabled", "AzulActivo");
+
         }
 
         function ControlDesplegables(elementIds) {
@@ -212,9 +219,11 @@
                             </a>
 
                             <a class="icong disabled shadow-sm btn btn-sm" title="Pausar Solicitud" id="PausarSolicitud" runat="server" onclick="mostralMoldalPausar();">
-                                                              <i class="bi bi-pause-circle-fill"></i>
+                                <i class="bi bi-pause-circle-fill"></i>
                             </a>
-
+                             <a class="icong disabled shadow-sm btn btn-sm " runat="server" title="Despausar" id="DespausarSolicitud" style="display:none;" onclick="mostralMoldalDespausar();">                                 
+                                                             <i class="bi bi-play-circle-fill"></i>
+                            </a>
                             <asp:LinkButton class="icong disabled shadow-sm btn btn-sm " runat="server" title="Guardar Solicitud" ID="GrabarSolicitud" OnClick="GuardarModificarSolicitud" OnClientClick="return validarFormularioSolicitud();">                                 
                                                                <i class="bi bi-floppy-fill"></i>
                             </asp:LinkButton>
@@ -822,7 +831,7 @@
                             </div>
 
                             <!--Modal confirmar Importar -->
-                            <div id="confirmarImportar" class="modal" tabindex="-1" style="display: none;">
+                            <div id="confirmarImportar" class="modal" tabindex="-1" style="display: none;"  aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header bg-success text-white">
@@ -838,7 +847,7 @@
                                         <div class="modal-footer">
                                             <div class="container-fluid d-flex justify-content-center gap-5 p-0">
                                                 <asp:Button runat="server" ID="btnImportar" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-success" Style="width: 5rem;" OnClick="btnImportar_Si_Click" />
-                                                <asp:Button runat="server" ID="btnClose" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                                <asp:Button runat="server" ID="btnClose" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" OnClick="btnClose_Click" />
                                             </div>
 
                                         </div>
@@ -940,7 +949,7 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer justify-content-center">
-                                            <asp:Button runat="server" ID="btnRedireccionar_Sol" Text="Aceptar" data-bs-dismiss="modal"  aria-label="Close" CssClass="btn btn-outline-danger " Style="width: 5rem;" OnClick="btnRedireccionar_Sol_Click" />
+                                            <asp:Button runat="server" ID="btnRedireccionar_Sol" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-outline-danger " Style="width: 5rem;" OnClick="btnRedireccionar_Sol_Click" />
                                         </div>
                                     </div>
                                 </div>
@@ -1138,24 +1147,57 @@
                                 </div>
                             </div>
 
-                             <!--Modal confirmar Pausar Solicitud  -->
-                            <div id="ConfirmarPausarSol" class="modal" tabindex="-1" style="display: none;">
-                                <div class="modal-dialog modal-dialog-centered">
+                            <!--Modal confirmar Pausar Solicitud  -->
+                            <div id="ConfirmarPausarSol" class="modal" tabindex="-1" style="display: none;"  aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header bg-primary text-white">
-                                            <h5 class="modal-title text-center">Devolver Solicitud </h5>
-
+                                            <h5 class="modal-title text-center">Pausar desarrollo  </h5>
                                         </div>
                                         <div class="modal-body border rounded">
                                             <div class="container-fluid">
-                                                <h6>¿ Desea pausar la solicitud N°  <span runat="server" id="Span_Id_Sol2"></span> ?</h6>
+                                                <div class="row pb-2">
+                                                    <div class="col-sm-12">
+                                                        <div class="input-group-sm gap-2">
+                                                            <asp:Label ID="lbJusti" runat="server" Text="Razón de la pausa:"></asp:Label>
+                                                            <textarea class="form-control form-control-sm" id="txJustificacionPausa" runat="server" cols="25" rows="5"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                               
+                                                <h6> Por favor justifique la causa de la pausa de la solicitid y presione aceptar </h6>
                                             </div>
 
                                         </div>
                                         <div class="modal-footer">
                                             <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                                <asp:Button runat="server" ID="btnPausar_Si" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnPausar_Si_Click"  />
-                                                <asp:Button runat="server" ID="btnPausar_No" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;"  OnClick="btnPausar_No_Click" />
+                                                <asp:Button runat="server" ID="btnPausar_Si" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnPausar_Si_Click"/>
+                                                <asp:Button runat="server" ID="btnPausar_No" Text="Cancelar" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" OnClick="btnPausar_No_Click"  />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                             <!--Modal confirmar Despausar Solicitud  -->
+                            <div id="ConfirmarDespausarSol" class="modal" tabindex="-1" style="display: none;">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-primary text-white">
+                                            <h5 class="modal-title text-center">Despausar Solicitud </h5>
+
+                                        </div>
+                                        <div class="modal-body border rounded">
+                                            <div class="container-fluid">
+                                                <h6>¿ Desea Despausar la solicitud N°  <span runat="server" id="Span_Id_Sol3"></span>?</h6>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                                <asp:Button runat="server" ID="Button1" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" />
+                                                <asp:Button runat="server" ID="Button8" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;"  />
                                             </div>
 
                                         </div>
@@ -1257,7 +1299,7 @@
                             </div>
 
                             <div class="row pb-lg-2 mb-lg-2 p-2 justify-content-center">
-                                <div class="border rounded p-2">
+                                <div class="border border-2 rounded p-2">
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="row">
@@ -1376,7 +1418,7 @@
                             </div>
 
                             <div class="row justify-content-center p-2">
-                                <div class="border rounded p-2">
+                                <div class="border border-2 rounded p-2">
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 15rem; height: 15rem; overflow-x: auto;">
@@ -1821,29 +1863,48 @@
             document.getElementById("CancelarSolicitud").classList.add("enabled", "RojoCancelar");
 
             // Control del boton  nuevo y modificar 
-            var nuevasol = '<%= Session["nuevaSol"] %>';
+            var controlBotones = '<%= Session["controlBotones"] %>';
 
-            if (nuevasol === "1") {
-                NuevaSolicitud1();
+            if (controlBotones === "1") {
 
+                // Control del boton  nuevo y modificar 
+                var nuevasol = '<%= Session["nuevaSol"] %>';
+
+                if (nuevasol === "1") {
+                    NuevaSolicitud1();
+
+                    $.ajax({
+                        type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                        url: "Solicitud_Especial.aspx/NuevaSolicitud1", // La URL debe apuntar al método en el servidor
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                        },
+                        error: function (error) {
+                            // Manejar errores si los hay
+                        }
+                    });
+                }
+                else if (nuevasol === "2") {
+                    ModificarSolicitud();
+                    $.ajax({
+                        type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                        url: "Solicitud_Especial.aspx/ModificarSolicitud1", // La URL debe apuntar al método en el servidor
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                        },
+                        error: function (error) {
+                            // Manejar errores si los hay
+                        }
+                    });;
+                }
+            } else {
                 $.ajax({
                     type: "POST", // Puede ser "GET" o "POST" según tus necesidades
-                    url: "Solicitud_Especial.aspx/NuevaSolicitud1", // La URL debe apuntar al método en el servidor
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
-                    },
-                    error: function (error) {
-                        // Manejar errores si los hay
-                    }
-                });
-            }
-            else if (nuevasol === "2") {
-                ModificarSolicitud();
-                $.ajax({
-                    type: "POST", // Puede ser "GET" o "POST" según tus necesidades
-                    url: "Solicitud_Especial.aspx/ModificarSolicitud1", // La URL debe apuntar al método en el servidor
+                    url: "Solicitud_Especial.aspx/LimpiarSessionError", // La URL debe apuntar al método en el servidor
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
@@ -1856,12 +1917,11 @@
             }
 
 
+
         }
         else if (AreaDepar.toUpperCase() === "DISEÑO" || AreaDepar.toUpperCase() === "DESARROLLO DE PRODUCTO") {
 
             // se Habilitan enlaces Iniciales
-            document.getElementById("PausarSolicitud").classList.remove("disabled");
-            document.getElementById("PausarSolicitud").classList.add("enabled", "AzulActivo");
 
             document.getElementById("Observaciones").classList.remove("disabled");
             document.getElementById("Observaciones").classList.add("enabled", "AzulActivo");
@@ -1877,7 +1937,7 @@
             // Control Boton cliente 
             ControlBtnCliente();
 
-           
+
 
 
         }
@@ -1899,9 +1959,6 @@
         document.getElementById("tbFechaFin").value = fechaFormateada;
 
         document.getElementById("btnCliente").disabled = true;
-
-
-
 
         function NuevaSolicitud() {
 
@@ -2080,7 +2137,7 @@
             document.getElementById("ModificarSolicitud").classList.add("disabled");
 
             document.getElementById("GrabarSolicitud").classList.remove("disabled",);
-            document.getElementById("GrabarSolicitud").classList.add("enabled", "AzulActivado");
+            document.getElementById("GrabarSolicitud").classList.add("enabled", "AzulActivo");
 
 
             //Habilitar
@@ -2198,64 +2255,67 @@
         }
 
         function ModificarSolicitud() {
-            // Habilitar enlaces deshabilitar enlaces
-            document.getElementById("GrabarSolicitud").classList.remove("disabled");
-            document.getElementById("GrabarSolicitud").classList.add("enabled", "AzulActivo");
 
-            document.getElementById("NuevaSolicitud").classList.remove("enabled", "AzulActivo");
-            document.getElementById("NuevaSolicitud").classList.add("disabled");
+           
+                // Habilitar enlaces deshabilitar enlaces
+                document.getElementById("GrabarSolicitud").classList.remove("disabled");
+                document.getElementById("GrabarSolicitud").classList.add("enabled", "AzulActivo");
 
-            document.getElementById("ModificarSolicitud").classList.remove("enabled", "AzulActivo");
-            document.getElementById("ModificarSolicitud").classList.add("disabled");
+                document.getElementById("NuevaSolicitud").classList.remove("enabled", "AzulActivo");
+                document.getElementById("NuevaSolicitud").classList.add("disabled");
 
-            // Habilitar o deshabilitar los DropDownList
-            var dropDownLists = document.querySelectorAll("select");
-            for (var j = 0; j < dropDownLists.length; j++) {
-                dropDownLists[j].disabled = false;
+                document.getElementById("ModificarSolicitud").classList.remove("enabled", "AzulActivo");
+                document.getElementById("ModificarSolicitud").classList.add("disabled");
 
-            }
-
-            // Habilitar o deshabilitar los TextBox Type text
-            var textBoxes = document.querySelectorAll("input[type='text']");
-            for (var i = 0; i < textBoxes.length; i++) {
-
-                if (textBoxes[i].id !== "tbProveedor" && textBoxes[i].id !== "tbAncho" && textBoxes[i].id !== "tbAltura" && textBoxes[i].id !== "tbProfundidad"
-                    && textBoxes[i].id !== "tbMaterial" && textBoxes[i].id !== "tbCliente" && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbTelefono"
-                    && textBoxes[i].id !== "tbCelular" && textBoxes[i].id !== "tbMail" && textBoxes[i].id !== "tbDireccion" && textBoxes[i].id !== "tbPrecioSugerido"
-                    && textBoxes[i].id !== "tbCantidad" && textBoxes[i].id !== "tbDesarrollaPor") {
-                    textBoxes[i].disabled = false;
-
+                // Habilitar o deshabilitar los DropDownList
+                var dropDownLists = document.querySelectorAll("select");
+                for (var j = 0; j < dropDownLists.length; j++) {
+                    dropDownLists[j].disabled = false;
 
                 }
 
-            }
-            var checkBoxesToEnable = ["chxViaticos"];
+                // Habilitar o deshabilitar los TextBox Type text
+                var textBoxes = document.querySelectorAll("input[type='text']");
+                for (var i = 0; i < textBoxes.length; i++) {
 
-            for (var i = 0; i < checkBoxesToEnable.length; i++) {
-                var checkBoxId = checkBoxesToEnable[i];
-                var checkBox = document.getElementById(checkBoxId);
+                    if (textBoxes[i].id !== "tbProveedor" && textBoxes[i].id !== "tbAncho" && textBoxes[i].id !== "tbAltura" && textBoxes[i].id !== "tbProfundidad"
+                        && textBoxes[i].id !== "tbMaterial" && textBoxes[i].id !== "tbCliente" && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbTelefono"
+                        && textBoxes[i].id !== "tbCelular" && textBoxes[i].id !== "tbMail" && textBoxes[i].id !== "tbDireccion" && textBoxes[i].id !== "tbPrecioSugerido"
+                        && textBoxes[i].id !== "tbCantidad" && textBoxes[i].id !== "tbDesarrollaPor") {
+                        textBoxes[i].disabled = false;
 
-                if (checkBox) {
-                    checkBox.disabled = false; // Habilita el CheckBox
+
+                    }
+
                 }
-            }
+                var checkBoxesToEnable = ["chxViaticos"];
 
-            var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
-            boton1.disabled = false;
+                for (var i = 0; i < checkBoxesToEnable.length; i++) {
+                    var checkBoxId = checkBoxesToEnable[i];
+                    var checkBox = document.getElementById(checkBoxId);
 
-
-            $.ajax({
-                type: "POST", // Puede ser "GET" o "POST" según tus necesidades
-                url: "Solicitud_Especial.aspx/ModificarSolicitud", // La URL debe apuntar al método en el servidor
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
-                },
-                error: function (error) {
-                    // Manejar errores si los hay
+                    if (checkBox) {
+                        checkBox.disabled = false; // Habilita el CheckBox
+                    }
                 }
-            });
+
+                var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
+                boton1.disabled = false;
+
+
+                $.ajax({
+                    type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                    url: "Solicitud_Especial.aspx/ModificarSolicitud", // La URL debe apuntar al método en el servidor
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                    },
+                    error: function (error) {
+                        // Manejar errores si los hay
+                    }
+                });
+           
 
         }
 
@@ -2295,13 +2355,16 @@
         }
 
         function HabEnlDiseño() {
-            
+
             // Habilitar botones de DevolverSolicitud , btnProgramarSolicitud , ConfirmarComplejo,btnConUrgente
             document.getElementById("DevolverSolicitud").classList.remove("disabled");
             document.getElementById("DevolverSolicitud").classList.add("enabled", "AzulActivo");
 
             document.getElementById("DetenerPE").classList.remove("disabled");
             document.getElementById("DetenerPE").classList.add("enabled", "AzulActivo");
+
+            document.getElementById("PausarSolicitud").classList.remove("disabled");
+            document.getElementById("PausarSolicitud").classList.add("enabled", "AzulActivo")
 
 
             // Se habilitan los CheckBox Urgente y Desarrollo complejo
@@ -2324,7 +2387,67 @@
                 }
             }
 
+            // Mostrar el LinkButton "PausarSolicitud"
+            var DespausarSolicitud = document.getElementById("<%= DespausarSolicitud.ClientID %>");
+            var PausarSolicitud = document.getElementById("<%= PausarSolicitud.ClientID %>");
+            if (DespausarSolicitud) {
+                DespausarSolicitud.style.display = 'none';
+            }
+
+
+            if (PausarSolicitud) {
+                PausarSolicitud.style.display = '';
+            }
+
+
         }
+
+        function HabEnlDiseñoPausado() {
+
+            // Habilitar botones de DevolverSolicitud , btnProgramarSolicitud , ConfirmarComplejo,btnConUrgente
+            document.getElementById("DevolverSolicitud").classList.remove("disabled");
+            document.getElementById("DevolverSolicitud").classList.add("enabled", "AzulActivo");
+
+            document.getElementById("DetenerPE").classList.remove("disabled");
+            document.getElementById("DetenerPE").classList.add("enabled", "AzulActivo");
+
+            document.getElementById("DespausarSolicitud").classList.remove("disabled");
+            document.getElementById("DespausarSolicitud").classList.add("enabled", "AzulActivo")
+
+            // Se habilitan los CheckBox Urgente y Desarrollo complejo
+
+
+
+
+            // Se controla el boton de cliente
+            var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
+              boton1.disabled = true;
+
+              // Controlamos los dropdownlist
+
+              // Habilitar o deshabilitar los DropDownList
+              var dropDownLists = document.querySelectorAll("select");
+              for (var j = 0; j < dropDownLists.length; j++) {
+
+                  if (dropDownLists[j].id != "ddlZona") {
+                      dropDownLists[j].disabled = true;
+                  }
+              }
+
+              // Mostrar el LinkButton "PausarSolicitud"
+            var DespausarSolicitud = document.getElementById("<%= DespausarSolicitud.ClientID %>");
+            var PausarSolicitud = document.getElementById("<%= PausarSolicitud.ClientID %>");
+
+            if (DespausarSolicitud) {
+                  DespausarSolicitud.style.display = '';
+            }
+
+            if (PausarSolicitud) {
+                PausarSolicitud.style.display = 'none';
+            }
+
+
+          }
 
         function HabEnlDiseño2() {
 
@@ -2334,6 +2457,14 @@
 
             document.getElementById("DevolverSolicitud").classList.remove("enabled", "AzulActivo");
             document.getElementById("DevolverSolicitud").classList.add("disabled");
+
+
+            document.getElementById("PausarSolicitud").classList.remove("enabled", "AzulActivo");
+            document.getElementById("PausarSolicitud").classList.add("disabled");
+
+            document.getElementById("DespausarSolicitud").classList.remove("enabled", "AzulActivo");
+            document.getElementById("DespausarSolicitud").classList.add("disabled");
+
             // Habilitar o deshabilitar los DropDownList
             var dropDownLists = document.querySelectorAll("select");
             for (var j = 0; j < dropDownLists.length; j++) {
@@ -2358,6 +2489,8 @@
             document.getElementById("DetenerPE").classList.remove("enabled", "AzulActivo");
             document.getElementById("DetenerPE").classList.add("disabled");
 
+            document.getElementById("PausarSolicitud").classList.remove("disabled");
+            document.getElementById("PausarSolicitud").classList.add("enabled", "AzulActivo")
 
             // Se controla el boton de cliente
             var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
@@ -2373,7 +2506,55 @@
                 }
             }
 
+            var DespausarSolicitud = document.getElementById("<%= DespausarSolicitud.ClientID %>");
+            if (DespausarSolicitud) {
+                DespausarSolicitud.style.display = 'none';
+            }
+
+
+
         }
+
+        function HabEnlDiseño3Pausado() {
+
+            document.getElementById("DevolverSolicitud").classList.remove("enabled", "AzulActivo");
+            document.getElementById("DevolverSolicitud").classList.add("disabled");
+
+            document.getElementById("DetenerPE").classList.remove("enabled", "AzulActivo");
+            document.getElementById("DetenerPE").classList.add("disabled");
+
+            document.getElementById("DespausarSolicitud").classList.remove("disabled");
+            document.getElementById("DespausarSolicitud").classList.add("enabled", "AzulActivo")
+
+            // Se controla el boton de cliente
+            var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
+            boton1.disabled = true;
+
+
+            // Habilitar o deshabilitar los DropDownList
+            var dropDownLists = document.querySelectorAll("select");
+            for (var j = 0; j < dropDownLists.length; j++) {
+
+                if (dropDownLists[j].id != "ddlZona") {
+                    dropDownLists[j].disabled = true;
+                }
+            }
+
+            // Mostrar el LinkButton "PausarSolicitud"
+            var DespausarSolicitud = document.getElementById("<%= DespausarSolicitud.ClientID %>");
+            var PausarSolicitud = document.getElementById("<%= PausarSolicitud.ClientID %>");
+            if (DespausarSolicitud) {
+                DespausarSolicitud.style.display = 'none';
+            }
+
+
+            if (PausarSolicitud) {
+                PausarSolicitud.style.display = '';
+            }
+
+
+
+         }
 
         function ControlBtnCliente() {
             var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
@@ -2409,6 +2590,8 @@
 
             }
 
+            ControlBtnCliente();
+
         }
 
         function HabilitarEnlaces3() {
@@ -2426,7 +2609,7 @@
 
             }
 
-
+            ControlBtnCliente();
 
         }
 
@@ -2550,66 +2733,120 @@
 
         function ModificarDetalle() {
 
-            // Habilitar Enlaces de la  Solcitud
-            document.getElementById("GrabarDetalle").classList.remove("disabled");
-            document.getElementById("GrabarDetalle").classList.add("enabled", "AzulActivo");
+
+            if (AreaDepar.toUpperCase() === "VENTAS") {
+                // Habilitar Enlaces de la  Solcitud
+                document.getElementById("GrabarDetalle").classList.remove("disabled");
+                document.getElementById("GrabarDetalle").classList.add("enabled", "AzulActivo");
 
 
-            // Deshabilitar enlaces de la solicitud
+                // Deshabilitar enlaces de la solicitud
 
-            document.getElementById("NuevoDetalle").classList.remove("enabled", "AzulActivo");
-            document.getElementById("NuevoDetalle").classList.add("disabled");
+                document.getElementById("NuevoDetalle").classList.remove("enabled", "AzulActivo");
+                document.getElementById("NuevoDetalle").classList.add("disabled");
 
-            document.getElementById("ImportarDetalle").classList.remove("enabled", "AzulActivo");
-            document.getElementById("ImportarDetalle").classList.add("disabled");
+                document.getElementById("ImportarDetalle").classList.remove("enabled", "AzulActivo");
+                document.getElementById("ImportarDetalle").classList.add("disabled");
 
-            document.getElementById("ModificarDetalle").classList.remove("enabled", "AzulActivo");
-            document.getElementById("ModificarDetalle").classList.add("disabled");
+                document.getElementById("ModificarDetalle").classList.remove("enabled", "AzulActivo");
+                document.getElementById("ModificarDetalle").classList.add("disabled");
 
-            // Habilitar o deshabilitar los TextBox Type text
-            var textBoxes = document.querySelectorAll("input[type='text']");
-            for (var i = 0; i < textBoxes.length; i++) {
+              
 
-                if (textBoxes[i].id !== "tbProyecto" && textBoxes[i].id !== "tbSolicitudOrigen" && textBoxes[i].id !== "tbCotizacionEsp" && textBoxes[i].id !== "tbCliente"
-                    && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbTelefono" && textBoxes[i].id !== "tbTelefono"
-                    && textBoxes[i].id !== "tbCelular" && textBoxes[i].id !== "tbMail" && textBoxes[i].id !== "tbDireccion" && textBoxes[i].id !== "tbPrecioSugerido") {
+                // Habilitar o deshabilitar los TextBox Type text
+                var textBoxes = document.querySelectorAll("input[type='text']");
+                for (var i = 0; i < textBoxes.length; i++) {
+
+                    if (textBoxes[i].id !== "tbProyecto" && textBoxes[i].id !== "tbSolicitudOrigen" && textBoxes[i].id !== "tbCotizacionEsp" && textBoxes[i].id !== "tbCliente"
+                        && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbTelefono" && textBoxes[i].id !== "tbDesarrollaPor" 
+                        && textBoxes[i].id !== "tbCelular" && textBoxes[i].id !== "tbMail" && textBoxes[i].id !== "tbDireccion" && textBoxes[i].id !== "tbPrecioSugerido") {
+                        textBoxes[i].disabled = false;
+
+
+                    }
+                    tbDesarrollaPor
+                }
+
+
+                // Habilitar o deshabilitar los TextBox Type text
+                var textBoxes = document.querySelectorAll("input[type='number']");
+                for (var i = 0; i < textBoxes.length; i++) {
                     textBoxes[i].disabled = false;
+                }
 
+
+
+                var checkBoxesToEnable = ["chxUrgente"];
+
+                for (var i = 0; i < checkBoxesToEnable.length; i++) {
+                    var checkBoxId = checkBoxesToEnable[i];
+                    var checkBox = document.getElementById(checkBoxId);
+
+                    if (checkBox) {
+                        checkBox.disabled = true; // Habilita el CheckBox
+                    }
+                }
+
+
+                // Limpiar los TextArea
+                var textAreas = document.querySelectorAll("textarea");
+                for (var k = 0; k < textAreas.length; k++) {
+
+                    if (textAreas[k].id != "txobsCompras" && textAreas[k].id != "txObsDesarrollo" && textAreas[k].id != "txInformacionDetalle" && textAreas[k].id != "txSegPausa") {
+                        textAreas[k].disabled = false;
+                    }
+
+                }
+            } else if (AreaDepar.toUpperCase() === "DISEÑO" || AreaDepar.toUpperCase() === "DESARROLLO DE PRODUCTO") {
+
+
+                // Control de botones de detalle 
+
+                document.getElementById("GrabarDetalle").classList.remove("disabled");
+                document.getElementById("GrabarDetalle").classList.add("enabled", "AzulActivo");
+
+                document.getElementById("ModificarDetalle").classList.remove("enabled", "AzulActivo");
+                document.getElementById("ModificarDetalle").classList.add("disabled");
+
+                document.getElementById("RedirigirCompras").classList.remove("enabled", "AzulActivo");
+                document.getElementById("RedirigirCompras").classList.add("disabled");
+
+
+                // Constrol de Campos
+
+                // Limpiar los TextArea
+                var textAreas = document.querySelectorAll("textarea");
+                for (var k = 0; k < textAreas.length; k++) {
+
+                    if (textAreas[k].id != "txobsCompras" && textAreas[k].id != "txDescProduc" && textAreas[k].id != "txInformacionDetalle" && textAreas[k].id != "txSegPausa" && textAreas[k].id != "txEspGen") {
+                        textAreas[k].disabled = false;
+                    }
 
                 }
 
-            }
+                // Habilitar o deshabilitar los TextBox Type text
+                var textBoxes = document.querySelectorAll("input[type='text']");
+                for (var i = 0; i < textBoxes.length; i++) {
+
+                    if (textBoxes[i].id !== "tbProyecto" && textBoxes[i].id !== "tbSolicitudOrigen" && textBoxes[i].id !== "tbCotizacionEsp" && textBoxes[i].id !== "tbCliente"
+                        && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbTelefono" && textBoxes[i].id !== "tbPrecioSugerido" && textBoxes[i].id !== "tbDesarrollaPor"
+                        && textBoxes[i].id !== "tbCelular" && textBoxes[i].id !== "tbMail" && textBoxes[i].id !== "tbDireccion" && textBoxes[i].id !== "tbPrecioSugerido"
+                        && textBoxes[i].id !== "tbProveedor" && textBoxes[i].id !== "tbAncho" && textBoxes[i].id !== "tbAltura" && textBoxes[i].id !== "tbProfundidad"
+                        && textBoxes[i].id !== "tbMaterial" && textBoxes[i].id !== "tbCostoC" && textBoxes[i].id !== "tbFactorC" && textBoxes[i].id !== "tbProve") {
+                        textBoxes[i].disabled = false;
 
 
-            // Habilitar o deshabilitar los TextBox Type text
-            var textBoxes = document.querySelectorAll("input[type='number']");
-            for (var i = 0; i < textBoxes.length; i++) {
-                textBoxes[i].disabled = false;
-            }
+                    }
 
-
-
-            var checkBoxesToEnable = ["chxUrgente"];
-
-            for (var i = 0; i < checkBoxesToEnable.length; i++) {
-                var checkBoxId = checkBoxesToEnable[i];
-                var checkBox = document.getElementById(checkBoxId);
-
-                if (checkBox) {
-                    checkBox.disabled = true; // Habilita el CheckBox
-                }
-            }
-
-
-            // Limpiar los TextArea
-            var textAreas = document.querySelectorAll("textarea");
-            for (var k = 0; k < textAreas.length; k++) {
-
-                if (textAreas[k].id != "txobsCompras" && textAreas[k].id != "txObsDesarrollo" && textAreas[k].id != "txInformacionDetalle" && textAreas[k].id != "txSegPausa") {
-                    textAreas[k].disabled = false;
                 }
 
+
+                
             }
+
+
+
+            
 
 
             $.ajax({
@@ -2666,7 +2903,7 @@
 
         //Funcion para cuando seleccionan un desarrollo o una cotizacion nos lleva al formulario 
         function activarTab(tabId, IdSolicitud) {
-           
+
             var AreaDepar = '<%= Session["Departamento"] %>';
 
             if (AreaDepar.toUpperCase() === "VENTAS") {
@@ -2878,8 +3115,18 @@
                 if (focusedElement.tagName !== 'TEXTAREA') {
                     // Prevenir la acción predeterminada del evento
                     event.preventDefault();
-                    document.getElementById('<%= btnConsultar.ClientID %>').click();
+                  
                 }
+                // Verificar si el elemento cual  pestaña esta activa  activa
+                var activeTab = document.querySelector('.tab-content .tab-pane.active');
+                if (activeTab)
+                {
+                    if (focusedElement.id === "tbSolicitud1" || focusedElement.id === "tbClienteX" || focusedElement.id === "tbProyectoX" || focusedElement.id === "tbFechaIni" || focusedElement.id === "tbFechaFin") {
+                        document.getElementById('<%= btnConsultar.ClientID %>').click();
+                    } 
+                }
+
+
             }
         });
     </script>
@@ -2905,17 +3152,23 @@
         // Mostrar  modal pausar solicitud
         function mostralMoldalPausar() {
 
-            // Cambiamos el valor del span
-            // Obtén el valor del Label de ASP.NET
-            var lbNumeroSolicitud = document.getElementById('<%= lbNumeroSolicitud.ClientID %>').innerText;
-            // Actualiza el contenido del span con el valor del Label
-            document.getElementById('Span_Id_Sol2').innerText = lbNumeroSolicitud;
-
             $('#ConfirmarPausarSol').modal('show');
         }
 
         function CerrarModalDevolver() {
             $('#ConfirmarPausarSol').modal('hide');
+        }
+
+         // Mostrar  modal pausar solicitud
+        function mostralMoldalDespausar() {
+
+            // Cambiamos el valor del span
+            // Obtén el valor del Label de ASP.NET
+            var lbNumeroSolicitud = document.getElementById('<%= lbNumeroSolicitud.ClientID %>').innerText;
+            // Actualiza el contenido del span con el valor del Label
+            document.getElementById('Span_Id_Sol3').innerText = lbNumeroSolicitud;
+
+            $('#ConfirmarDespausarSol').modal('show');
         }
 
 

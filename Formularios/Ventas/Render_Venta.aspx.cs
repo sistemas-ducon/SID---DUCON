@@ -524,7 +524,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string script = "<script>HabilitarEnlaces1();</script>";
                 ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces1", script, false);
 
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
 
+                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
 
 
             }
@@ -1144,6 +1148,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Ejemplo el script para habilitar el enlace de moficar despues de selecionar la fila  usando RegisterStartupScript:
                 string script = "<script>HabilitarEnlaces1();</script>";
                 ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces1", script, false);
+
+                
+
 
                 PanelRender.Update();
 

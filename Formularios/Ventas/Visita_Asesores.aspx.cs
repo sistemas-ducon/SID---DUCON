@@ -38,7 +38,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private DateTime fechaFinSeleccionada;
         private string Fechas;
         private object filePath;
-       int permisoAcceso ;
+        int permisoAcceso;
 
         private string CadenaConexionSID = "BD_SIDSQL";
         protected void Page_Load(object sender, EventArgs e)
@@ -67,7 +67,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     if (permisoAcceso != 12)
                     {
-                        EstMensaje.Visible = true;                    
+                        EstMensaje.Visible = true;
                         Est1.Visible = false;
                         Est2.Visible = false;
                         Est3.Visible = false;
@@ -90,66 +90,69 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             if (!IsPostBack)
             {
-                string IdCLiente = Session["Id_ClienteBD"]?.ToString();
-                string IdContaco = Session["ID_ContactoBD"]?.ToString();
 
-                if (!string.IsNullOrEmpty(IdCLiente) && !string.IsNullOrEmpty(IdContaco))
+                if (Session["controlBotones"]?.ToString() == "1")
                 {
-                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
-                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    string IdCLiente = Session["Id_ClienteBD"]?.ToString();
+                    string IdContaco = Session["ID_ContactoBD"]?.ToString();
+
+                    if (!string.IsNullOrEmpty(IdCLiente) && !string.IsNullOrEmpty(IdContaco))
                     {
-                        string query = "SELECT X.NombreCompañía, X.Teléfono, Y.NombreContacto, Y.MailContacto " +
-                                       "FROM tblCliente AS X " +
-                                       "INNER JOIN tblClienteContacto AS Y ON Y.Id_Cliente = X.Id_Cliente " +
-                                       "WHERE X.Id_Cliente = @ParametroCliente AND Y.Id_ClienteContacto = @ParametroClienteContacto";
+                        string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
-                        using (SqlCommand command = new SqlCommand(query, connection))
+                        using (SqlConnection connection = new SqlConnection(connectionString))
                         {
-                            command.Parameters.AddWithValue("@ParametroCliente", IdCLiente);
-                            command.Parameters.AddWithValue("@ParametroClienteContacto", IdContaco);
+                            string query = "SELECT X.NombreCompañía, X.Teléfono, Y.NombreContacto, Y.MailContacto " +
+                                           "FROM tblCliente AS X " +
+                                           "INNER JOIN tblClienteContacto AS Y ON Y.Id_Cliente = X.Id_Cliente " +
+                                           "WHERE X.Id_Cliente = @ParametroCliente AND Y.Id_ClienteContacto = @ParametroClienteContacto";
 
-                            connection.Open();
-
-                            using (SqlDataReader reader = command.ExecuteReader())
+                            using (SqlCommand command = new SqlCommand(query, connection))
                             {
-                                if (reader.Read())
+                                command.Parameters.AddWithValue("@ParametroCliente", IdCLiente);
+                                command.Parameters.AddWithValue("@ParametroClienteContacto", IdContaco);
+
+                                connection.Open();
+
+                                using (SqlDataReader reader = command.ExecuteReader())
                                 {
-                                    if (!reader.IsDBNull(reader.GetOrdinal("NombreCompañía")))
+                                    if (reader.Read())
                                     {
-                                        tbCliente.Text = reader["NombreCompañía"].ToString();
-                                        tbClienteServidor.Text = reader["NombreCompañía"].ToString();
-                                    }
-                                    if (!reader.IsDBNull(reader.GetOrdinal("Teléfono")))
-                                    {
-                                        tbTelefono.Text = reader["Teléfono"].ToString();
-                                        tbTelefonoServidor.Text = reader["Teléfono"].ToString();
-                                    }
-                                    if (!reader.IsDBNull(reader.GetOrdinal("NombreContacto")))
-                                    {
-                                        tbContacto.Text = reader["NombreContacto"].ToString();
-                                        tbContactoServidor.Text = reader["NombreContacto"].ToString();
-                                    }
-                                    if (!reader.IsDBNull(reader.GetOrdinal("MailContacto")))
-                                    {
-                                        tbMailCont.Text = reader["MailContacto"].ToString();
-                                        tbMailContServidor.Text = reader["MailContacto"].ToString();
-                                    }
+                                        if (!reader.IsDBNull(reader.GetOrdinal("NombreCompañía")))
+                                        {
+                                            tbCliente.Text = reader["NombreCompañía"].ToString();
+                                            tbClienteServidor.Text = reader["NombreCompañía"].ToString();
+                                        }
+                                        if (!reader.IsDBNull(reader.GetOrdinal("Teléfono")))
+                                        {
+                                            tbTelefono.Text = reader["Teléfono"].ToString();
+                                            tbTelefonoServidor.Text = reader["Teléfono"].ToString();
+                                        }
+                                        if (!reader.IsDBNull(reader.GetOrdinal("NombreContacto")))
+                                        {
+                                            tbContacto.Text = reader["NombreContacto"].ToString();
+                                            tbContactoServidor.Text = reader["NombreContacto"].ToString();
+                                        }
+                                        if (!reader.IsDBNull(reader.GetOrdinal("MailContacto")))
+                                        {
+                                            tbMailCont.Text = reader["MailContacto"].ToString();
+                                            tbMailContServidor.Text = reader["MailContacto"].ToString();
+                                        }
 
-                                    Session["Id_Contacto"] = Session["ID_ContactoBD"]?.ToString();                              
-                                    Session.Remove("ID_ContactoBD");
-                                    Session.Remove("Id_ClienteBD");
-                                    
-                                   
+                                        Session["Id_Contacto"] = Session["ID_ContactoBD"]?.ToString();
+                                        Session.Remove("ID_ContactoBD");
+                                        Session.Remove("Id_ClienteBD");
 
+                                    }
                                 }
                             }
                         }
+
                     }
-
-                  
-
                 }
+
+
 
 
             }
@@ -157,7 +160,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         public void CargarVariablesDeSesion()
         {
-            Dictionary<string, Control> variablesDeSesionYControles = new Dictionary<string, Control>
+            if (Session["controlBotones"]?.ToString() == "1")
+            {
+
+                Dictionary<string, Control> variablesDeSesionYControles = new Dictionary<string, Control>
             {
                 { "AsesoVisSession", ddlAsesor },
                 { "VisitaPorSession", ddlVisitasPor },
@@ -169,58 +175,60 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 { "MailVisSession", tbMailContServidor }
             };
 
-           
 
-            foreach (var kvp in variablesDeSesionYControles)
-            {
-                string valorSesion = Session[kvp.Key] as string;
-            
-                if (!string.IsNullOrEmpty(valorSesion))
+
+                foreach (var kvp in variablesDeSesionYControles)
                 {
-                    if (kvp.Value is TextBox)
-                    {
-                        ((TextBox)kvp.Value).Text = valorSesion;
-                    }
-                    if (kvp.Key == "ClienteVisSession")
-                    {
+                    string valorSesion = Session[kvp.Key] as string;
 
-                        tbCliente.Text = valorSesion;
-                    }
-                    if (kvp.Key == "TelefonoVisSession")
+                    if (!string.IsNullOrEmpty(valorSesion))
                     {
+                        if (kvp.Value is TextBox)
+                        {
+                            ((TextBox)kvp.Value).Text = valorSesion;
+                        }
+                        if (kvp.Key == "ClienteVisSession")
+                        {
 
-                        tbTelefono.Text = valorSesion;
-                    }
-                    if (kvp.Key == "ContactoVisSession")
-                    {
+                            tbCliente.Text = valorSesion;
+                        }
+                        if (kvp.Key == "TelefonoVisSession")
+                        {
 
-                        tbContacto.Text = valorSesion;
-                    }
-                    if (kvp.Key == "MailVisSession")
-                    {
+                            tbTelefono.Text = valorSesion;
+                        }
+                        if (kvp.Key == "ContactoVisSession")
+                        {
 
-                        tbMailCont.Text = valorSesion;
-                    }
-                    else if (kvp.Value is DropDownList)
-                    {
-                        ddlVisitasPor.DataBind();
-                        ((DropDownList)kvp.Value).SelectedItem.Text = valorSesion;
-                    }
-                    else if (kvp.Value is CheckBox)
-                    {
-                        ((CheckBox)kvp.Value).Checked = Convert.ToBoolean(valorSesion);
-                    }
+                            tbContacto.Text = valorSesion;
+                        }
+                        if (kvp.Key == "MailVisSession")
+                        {
 
-                    Session.Remove(kvp.Key);
+                            tbMailCont.Text = valorSesion;
+                        }
+                        else if (kvp.Value is DropDownList)
+                        {
+                            ddlVisitasPor.DataBind();
+                            ((DropDownList)kvp.Value).SelectedItem.Text = valorSesion;
+                        }
+                        else if (kvp.Value is CheckBox)
+                        {
+                            ((CheckBox)kvp.Value).Checked = Convert.ToBoolean(valorSesion);
+                        }
+
+                        Session.Remove(kvp.Key);
+                    }
+                }
+
+                string ObVisita = Session["ObservacionVisitaSession"] as string;
+                if (!string.IsNullOrEmpty(ObVisita))
+                {
+                    txObs.InnerText = ObVisita;
+                    Session.Remove("ObservacionVisitaSession");
                 }
             }
 
-            string ObVisita = Session["ObservacionVisitaSession"] as string;
-            if (!string.IsNullOrEmpty(ObVisita))
-            {
-                txObs.InnerText = ObVisita;
-                Session.Remove("ObservacionVisitaSession");
-            }
 
         }
 
@@ -413,7 +421,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return 0; // Si cantidadFilas es 0, devolver 0 para evitar división por cero.
         }
 
-   
+
         protected void ConsultarEstadisticas(object sender, EventArgs e)
         {
 
@@ -594,10 +602,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 //se usa Para darle un color a la fila seleccionada  anderson
                 e.Item.CssClass = "fila-seleccionada";
 
-                string Cliente = row.Cells[1].Text;              
+                string Cliente = row.Cells[1].Text;
                 string contacto = row.Cells[2].Text;
                 string telefono = row.Cells[3].Text;
-                string mail = row.Cells[4].Text;         
+                string mail = row.Cells[4].Text;
                 string visitaPor = row.Cells[5].Text;
                 string FechaX = row.Cells[6].Text;
                 DateTime FechaForma = DateTime.Parse(FechaX);
@@ -611,7 +619,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 tbContacto.Text = contacto;
                 tbContactoServidor.Text = contacto;
                 tbTelefono.Text = telefono;
-                tbTelefonoServidor.Text= telefono;
+                tbTelefonoServidor.Text = telefono;
                 tbMailCont.Text = mail;
                 tbMailContServidor.Text = mail;
                 foreach (ListItem item in ddlVisitasPor.Items)
@@ -627,7 +635,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 tbCotizacion.Text = cotizacion;
                 txObs.InnerText = observacion;
                 tbIdVisita.Text = IdVisita;
-              
+
 
 
                 string script = "<script>HabilitarEnlaces1();</script>";
@@ -751,7 +759,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Response.TransmitFile(filePath);
                 Response.End();
 
-             
+
             }
             catch (Exception ex)
             {
@@ -1015,7 +1023,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string insertUpdate = Session["InsertUpdateVisita"] as string;
 
 
-            if( Session["InsertUpdateVisita"].ToString() == "Insertar")
+            if (Session["InsertUpdateVisita"].ToString() == "Insertar")
             {
                 string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
@@ -1035,8 +1043,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@Cotizacion", tbCotizacion.Text);
                         command.Parameters.AddWithValue("@Id_ClienteContacto", Session["Id_Contacto"].ToString());
                         command.Parameters.AddWithValue("@Asesor", ddlAsesor.SelectedValue);
-                      
-                        
+
+
 
                         int rowsAffected = command.ExecuteNonQuery();
                         if (rowsAffected > 0)
@@ -1067,10 +1075,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     }
 
-                   
-                   
-                   
-                   
+
+
+
+
 
 
                 }
@@ -1078,7 +1086,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
 
-            else if(Session["InsertUpdateVisita"].ToString() == "Actualizar")
+            else if (Session["InsertUpdateVisita"].ToString() == "Actualizar")
             {
                 string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
@@ -1099,7 +1107,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@Cotizacion", tbCotizacion.Text);
                         command.Parameters.AddWithValue("@IdVisita", tbIdVisita.Text);
                         command.Parameters.AddWithValue("@Id_ClienteContacto", Session["Id_Contacto"].ToString());
-                     
+
                         int rowsAffected = command.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
@@ -1135,12 +1143,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
 
-           
+
 
 
         }
 
-   
+
         [WebMethod] // Cambiar estado de variable de Session cuando dan click en NuevaSolicitud 
         public static void NuevaVisita()
         {
@@ -1156,7 +1164,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-        [WebMethod] 
+        [WebMethod]
         public static void MN_Vis()
         {
 
@@ -1171,12 +1179,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             HttpContext.Current.Session.Remove("InsertUpdateVisita");
         }
 
+        [WebMethod] // Cambiar estado de variable de Session cuando dan click en NuevaSolicitud 
+        public static void LimpiarVariablesControl()
+        {
+            HttpContext.Current.Session.Remove("MN_Vis");
+            HttpContext.Current.Session.Remove("controlBotones");
+        }
+
+
+
         // posible codigo que debo eliminar ya que no es necesario 
         protected void GuardarDatosSesion(object sender, EventArgs e)
         {
             Session["VisitasPor_Session"] = ddlVisitasPor.SelectedItem.Text;
             Session["Cotizacion_Session"] = tbCotizacion.Text;
-            Session["Observacion_Session"] = txObs.InnerText;          
+            Session["Observacion_Session"] = txObs.InnerText;
             Session["FechaVisitaSession"] = fecha.Text;
             Session["Id_VisitaSesion"] = tbIdVisita.Text;
         }
@@ -1189,42 +1206,45 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 if (tbCliente.Text != "")
                 {
-
-
-                    string fechaVisitaSession = Session["FechaVisitaSession"]?.ToString();
-                    DateTime fechaVisitaSessionFo = DateTime.Parse(fechaVisitaSession);
-                    fecha.Text = fechaVisitaSessionFo.ToString("yyyy-MM-dd");
-                    tbCotizacion.Text = Session["Cotizacion_Session"]?.ToString();
-                    txObs.InnerText = Session["Observacion_Session"]?.ToString();
-
-                    ddlVisitasPor.DataBind();
-                    foreach (ListItem item in ddlVisitasPor.Items)
+                    if (Session["controlBotones"]?.ToString() == "1")
                     {
-                        if (item.Text == Session["VisitasPor_Session"]?.ToString())
+                        string fechaVisitaSession = Session["FechaVisitaSession"]?.ToString();
+                        DateTime fechaVisitaSessionFo = DateTime.Parse(fechaVisitaSession);
+                        fecha.Text = fechaVisitaSessionFo.ToString("yyyy-MM-dd");
+                        tbCotizacion.Text = Session["Cotizacion_Session"]?.ToString();
+                        txObs.InnerText = Session["Observacion_Session"]?.ToString();
+
+                        ddlVisitasPor.DataBind();
+                        foreach (ListItem item in ddlVisitasPor.Items)
                         {
-                            ddlVisitasPor.ClearSelection();
-                            item.Selected = true;
-                            break;
+                            if (item.Text == Session["VisitasPor_Session"]?.ToString())
+                            {
+                                ddlVisitasPor.ClearSelection();
+                                item.Selected = true;
+                                break;
+                            }
                         }
-                    }
-                    tbIdVisita.Text = Session["Id_VisitaSesion"]?.ToString();
+                        tbIdVisita.Text = Session["Id_VisitaSesion"]?.ToString();
 
 
 
 
-                    if (tbCliente.Text != "")
-                    {
-                        Session.Remove("VisitasPor_Session");
-                        Session.Remove("FechaVisita_Session");
-                        Session.Remove("Cotizacion_Session");
-                        Session.Remove("Observacion_Session");
-                        Session.Remove("Id_Visita_Session");
-                       
+                        if (tbCliente.Text != "")
+                        {
+                            Session.Remove("VisitasPor_Session");
+                            Session.Remove("FechaVisita_Session");
+                            Session.Remove("Cotizacion_Session");
+                            Session.Remove("Observacion_Session");
+                            Session.Remove("Id_Visita_Session");
 
-                        GrabarVisita.Enabled = true;
-                        string script = "<script>MantenerCampos();</script>";
-                        ScriptManager.RegisterStartupScript(this, GetType(), "MantenerCampos", script, false);
 
+                            GrabarVisita.Enabled = true;
+                            string script = "<script>MantenerCampos();</script>";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "MantenerCampos", script, false);
+
+
+
+                        }
 
 
                     }

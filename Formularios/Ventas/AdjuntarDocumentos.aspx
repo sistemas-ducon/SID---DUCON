@@ -15,7 +15,7 @@
 <body translate="no">
     <form id="form1" runat="server">
 
-        <div class="container">
+        <div class="container border shadow mt-5 ">
 
             <h4 class="text-center p-3 m-3">
                 <asp:Literal runat="server" ID="TituloSolictud"></asp:Literal></h4>
@@ -24,14 +24,14 @@
                 <div class="border rounded p-2">
                     <div class="row">
                         <div class="col-12">
-                            <div class="table-responsive mb-2 gap-2" style="max-height: 12rem; overflow-x: auto;">
+                            <div class="table-responsive mb-2 gap-2" style="max-height: 12rem; height:12rem; overflow-x: auto;">
                                 <h6 class="datagrid-header text-start">Documentacion Detalle</h6>
                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGridDocumento" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemDataBound="DataGridDocumento_ItemDataBound" OnItemCommand="DataGridDocumentosPE_LinkButton">
                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                     <Columns>
                                         <asp:TemplateColumn HeaderText="...">
                                             <ItemTemplate>
-                                                <asp:LinkButton ID="lnkView" runat="server" ToolTip="Seleccionar Documento" CommandName="VerDocumento" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>" />
+                                                <asp:LinkButton ID="lnkView" runat="server" CssClass="Tam" ToolTip="Seleccionar Documento" CommandName="VerDocumento" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>" />
                                             </ItemTemplate>
                                         </asp:TemplateColumn>
 
@@ -104,7 +104,6 @@
 
 
     </form>
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 

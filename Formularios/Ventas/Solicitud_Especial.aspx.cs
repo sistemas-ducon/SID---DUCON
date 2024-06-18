@@ -103,6 +103,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         DerCompras.Visible = false;
 
 
+                        if (Session["CargarSolicitud"]?.ToString() == "1")
+                        {
+                            CargarSolictudEspecial(Session["CargarSolicitud_ID"].ToString());
+
+                            Session.Remove("CargarSolicitud_ID");
+                            Session.Remove("CargarSolicitud");
+                        }
+
+
                     }
                     else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
                     {
@@ -1099,6 +1108,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string Tipo = row.Cells[6].Text;
                 string RealizadoPor = row.Cells[7].Text;
                 string termiVenta = row.Cells[8].Text;
+                string pausado = row.Cells[9].Text;
                 string TermiDiseño = row.Cells[10].Text;
                 string FechaEntrega = row.Cells[11].Text;
                 DateTime FechaEntregaForm = DateTime.Parse(FechaEntrega);
@@ -1151,7 +1161,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         break;
                     }
                 }
-                tbDesarrollaPor.Text = RealizadoPor;
+                tbDesarrollaPor.Text = RealizadoPor.Replace("&nbsp;","PENDIENTE");
                 tbFechaEntrega.Text = FechaEntregaForm.ToString("yyyy-MM-dd");
                 tbFechaEntregaServidor.Text = FechaEntregaForm.ToString("yyyy-MM-dd");
                 tbFechaRespuesta.Text = FechaRespuestaForm.ToString("yyyy-MM-dd");
@@ -1257,13 +1267,30 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         if (termiVenta == "True")
                         {
-                            string script = "<script>HabEnlDiseño();</script>";
-                            ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+                            if (pausado == "True")
+                            {
+                                string script = "<script>HabEnlDiseñoPausado();</script>";
+                                ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+                            }
+                            else
+                            {
+                                string script = "<script>HabEnlDiseño();</script>";
+                                ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+                            }
+
                         }
                         else
                         {
-                            string script = "<script>HabEnlDiseño3();</script>";
-                            ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño2", script, false);
+                            if (pausado == "True")
+                            {
+                                string script = "<script>HabEnlDiseño3Pausado();</script>";
+                                ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+                            }
+                            else
+                            {
+                                string script = "<script>HabEnlDiseño3();</script>";
+                                ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño2", script, false);
+                            }
                         }
 
                     }
@@ -1323,6 +1350,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string Tipo = row.Cells[6].Text;
                 string RealizadoPor = row.Cells[7].Text;
                 string termiVenta = row.Cells[8].Text;
+                string pausado = row.Cells[9].Text;
                 string TermiDiseño = row.Cells[10].Text;
                 string FechaEntrega = row.Cells[11].Text;
                 DateTime FechaEntregaForm = DateTime.Parse(FechaEntrega);
@@ -1375,7 +1403,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         break;
                     }
                 }
-                tbDesarrollaPor.Text = RealizadoPor;
+                tbDesarrollaPor.Text = RealizadoPor.Replace("&nbsp;", "PENDIENTE");
                 tbFechaEntrega.Text = FechaEntregaForm.ToString("yyyy-MM-dd");
                 tbFechaEntregaServidor.Text = FechaEntregaForm.ToString("yyyy-MM-dd");
                 tbFechaRespuesta.Text = FechaRespuestaForm.ToString("yyyy-MM-dd");
@@ -1480,13 +1508,30 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         if (termiVenta == "True")
                         {
-                            string script = "<script>HabEnlDiseño();</script>";
-                            ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+                            if (pausado == "True")
+                            {
+                                string script = "<script>HabEnlDiseñoPausado();</script>";
+                                ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+                            }
+                            else
+                            {
+                                string script = "<script>HabEnlDiseño();</script>";
+                                ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+                            }
+
                         }
                         else
                         {
-                            string script = "<script>HabEnlDiseño3();</script>";
-                            ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño2", script, false);
+                            if (pausado == "True")
+                            {
+                                string script = "<script>HabEnlDiseño3Pausado();</script>";
+                                ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+                            }
+                            else
+                            {
+                                string script = "<script>HabEnlDiseño3();</script>";
+                                ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño2", script, false);
+                            }
                         }
 
                     }
@@ -1548,6 +1593,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string Tipo = row.Cells[6].Text;
                 string RealizadoPor = row.Cells[7].Text;
                 string termiVenta = row.Cells[8].Text;
+                string pausado = row.Cells[9].Text;
                 string TermiDiseño = row.Cells[10].Text;
                 string FechaEntrega = row.Cells[11].Text;
                 DateTime FechaEntregaForm = DateTime.Parse(FechaEntrega);
@@ -1599,7 +1645,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         break;
                     }
                 }
-                tbDesarrollaPor.Text = RealizadoPor;
+                tbDesarrollaPor.Text = RealizadoPor.Replace("&nbsp;", "PENDIENTE");
                 tbFechaEntrega.Text = FechaEntregaForm.ToString("yyyy-MM-dd");
                 tbFechaEntregaServidor.Text = FechaEntregaForm.ToString("yyyy-MM-dd");
                 tbFechaRespuesta.Text = FechaRespuestaForm.ToString("yyyy-MM-dd");
@@ -1703,13 +1749,30 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         if (termiVenta == "True")
                         {
-                            string script = "<script>HabEnlDiseño();</script>";
-                            ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+                            if (pausado == "True")
+                            {
+                                string script = "<script>HabEnlDiseñoPausado();</script>";
+                                ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+                            }
+                            else
+                            {
+                                string script = "<script>HabEnlDiseño();</script>";
+                                ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+                            }
+
                         }
                         else
                         {
-                            string script = "<script>HabEnlDiseño3();</script>";
-                            ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño2", script, false);
+                            if (pausado == "True")
+                            {
+                                string script = "<script>HabEnlDiseño3Pausado();</script>";
+                                ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+                            }
+                            else
+                            {
+                                string script = "<script>HabEnlDiseño3();</script>";
+                                ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño2", script, false);
+                            }
                         }
 
                     }
@@ -2101,6 +2164,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session.Remove("Dirigido");
             Session.Remove("Tipo");
             Session.Remove("AsesorSol");
+            Session.Remove("Id_Solicitud_Pantalla");
 
             Response.Redirect("~/Formularios/Ventas/Solicitud_Especial.aspx");
 
@@ -2393,6 +2457,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
 
             HttpContext.Current.Session["nuevaSol"] = null;
+            HttpContext.Current.Session.Remove("controlBotones");
         }
 
         [WebMethod]  // Cambiar estado de variable de Session cuando dan click en Modificarsolicitud 
@@ -2400,6 +2465,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
 
             HttpContext.Current.Session["nuevaSol"] = null;
+            HttpContext.Current.Session.Remove("controlBotones");
+
         }
 
         [WebMethod]  // Cambiar estado de variable de Session cuando dan click en Modificarsolicitud 
@@ -2410,6 +2477,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             HttpContext.Current.Session.Remove("Insertar");
         }
 
+        [WebMethod]  // Cambiar estado de variable de Session cuando dan click en Modificarsolicitud 
+        public static void LimpiarSessionError()
+        {
+            HttpContext.Current.Session.Remove("ProyectoSession");
+            HttpContext.Current.Session.Remove("SolicitudOrigen");
+            HttpContext.Current.Session.Remove("Cotizacion");
+            HttpContext.Current.Session.Remove("Desarrollado");
+            HttpContext.Current.Session.Remove("Ciudad");
+            HttpContext.Current.Session.Remove("Dirigido");
+            HttpContext.Current.Session.Remove("Tipo");
+            HttpContext.Current.Session.Remove("AsesorSol");
+            HttpContext.Current.Session.Remove("Id_Solicitud_Pantalla");
+
+        }
 
         // Detalle solicitud
 
@@ -2448,7 +2529,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string Cantidad = row.Cells[18].Text;
                 string EspGenerales = row.Cells[19].Text;
                 string ObsCompra = row.Cells[20].Text;
-                string ObsDesarrollo = row.Cells[21].Text;              
+                string ObsDesarrollo = row.Cells[21].Text;
                 string InfoDetOrigen = row.Cells[23].Text;
                 string CostoCompras = row.Cells[24].Text;
                 string FactorCompra = row.Cells[25].Text;
@@ -2547,7 +2628,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
 
-               
+
             }
         }
 
@@ -2971,6 +3052,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string scriptAgregado = "alert('Detalles Agregados.');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showAgregado", scriptAgregado, true);
 
+                string script = "<script>ControlBtnCliente();</script>";
+                ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, false);
 
             }
             else
@@ -2978,7 +3061,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // La solcitud de origen no tiene detalle para importar  (mensaje)
                 string scriptEncontrado = "alert('La solicitud de origen no tiene detalles para importar.');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showEncontrado", scriptEncontrado, true);
+
+                string script = "<script>ControlBtnCliente();</script>";
+                ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, false);
+
             }
+
+        }
+
+        protected void btnClose_Click(object sender, EventArgs e)
+        {
+            //string script = "<script>ControlBtnCliente();</script>";
+            //ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, false);
+
+            Session["CargarSolicitud"] = "1";
+            Session["CargarSolicitud_ID"] = lbNumeroSolicitud.Text;
+            Response.Redirect("Solicitud_Especial.aspx");
 
         }
 
@@ -3463,7 +3561,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     BuscarCot_Click(sender, e);
                 }
             }
-           
+
         }
         protected void BuscarCot_Click(object sender, EventArgs e)
         {
@@ -3716,7 +3814,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
             }
-           
+
         }
         protected void btnConUrg_Click(object sender, EventArgs e)
         {
@@ -3867,7 +3965,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
 
-           
+
         }
         protected void btnDevolver_NO_Click(object sender, EventArgs e)
         {
@@ -3912,7 +4010,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
 
-        }  
+        }
         protected void DataGridReceptorMail_ItemCommand(object source, DataGridCommandEventArgs e)
         {
             if (e.CommandName == "VerMail")
@@ -3966,7 +4064,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     e.Item.CssClass = "fila-seleccionada2";
                 }
-               
+
 
                 ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolver').modal('show');", true);
 
@@ -3978,7 +4076,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             }
-        }   
+        }
         protected void ddlTipoObservacion_SelectedIndexChanged(object sender, EventArgs e)
         {
             // metodo por si en algun momento agregan correos por defecto para devoluciones a  verntas 
@@ -4577,7 +4675,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         // Pausar Solicitud Especial
         protected void btnPausar_Si_Click(object sender, EventArgs e)
         {
+            string SeguimientoPausa = txJustificacionPausa.InnerText;
 
+            // Realizar la actualizacion 
+
+            // consultar a quien enviar notifcacion 
+
+            // Invocar metodo para enviar correo 
+
+            // mostrar mensaje de exito 
+
+            
         }
 
         protected void btnPausar_No_Click(object sender, EventArgs e)
@@ -4587,6 +4695,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Response.Redirect("Solicitud_Especial.aspx");
         }
 
-       
+        
     }
 }

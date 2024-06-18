@@ -258,15 +258,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.WebControls.Label chxCompartir;
 
         /// <summary>
-        /// Control lbNitBscar.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbNitBscar;
-
-        /// <summary>
         /// Control tbNitBuscar.
         /// </summary>
         /// <remarks>
@@ -274,15 +265,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox tbNitBuscar;
-
-        /// <summary>
-        /// Control lbNombreBuscar.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbNombreBuscar;
 
         /// <summary>
         /// Control tbNombreBuscar.
@@ -429,15 +411,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.WebControls.DataGrid DataGridContacto;
 
         /// <summary>
-        /// Control Label4.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label4;
-
-        /// <summary>
         /// Control tbNombreContacto.
         /// </summary>
         /// <remarks>
@@ -445,15 +418,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox tbNombreContacto;
-
-        /// <summary>
-        /// Control lbTelefonoContacto.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbTelefonoContacto;
 
         /// <summary>
         /// Control tbTelefonoContacto.
@@ -465,15 +429,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.WebControls.TextBox tbTelefonoContacto;
 
         /// <summary>
-        /// Control lbCelularContacto.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbCelularContacto;
-
-        /// <summary>
         /// Control tbCelularContacto.
         /// </summary>
         /// <remarks>
@@ -481,15 +436,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox tbCelularContacto;
-
-        /// <summary>
-        /// Control Label2.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label2;
 
         /// <summary>
         /// Control tbMailContacto.
@@ -517,15 +463,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox tbId_ContactoCliente;
-
-        /// <summary>
-        /// Control Label3.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label3;
 
         /// <summary>
         /// Control tbBuscarContacto.

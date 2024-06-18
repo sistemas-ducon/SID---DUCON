@@ -268,7 +268,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     if (btnCancelar != null)
                     {
                         btnCancelar.Enabled = false;
-                    }
+                    }   
                 }
 
                 //Deshabilitamos la edicion de los campos 
@@ -279,6 +279,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 ddlprocedencia.Enabled = false;
                 ddlprocedencia.CssClass = "form-control";
+
+
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
+                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
             }
 
         }
@@ -1258,6 +1265,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     // se valida si es el segundo click en la misma fila 
                     if (clickCount == 2)
                     {
+                        Session["controlBotones"] = "1";
 
                         // Llamar el script que recarga el formulario padre de donde salio la pagina 
                         string script = "<script>enviarFormulario();</script>";
@@ -1275,6 +1283,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
                     Session["ClickCount3"] = 1;
                     Session["ID_ContactoBD1"] = row.Cells[4].Text;
+
+                    // Asignar ID único a la fila
+                    row.Attributes["id"] = "row_" + rowIndex;
+
+                    // Llamar a la función JavaScript para enfocar y desplazar la fila
+                    ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
 
                 }
 
