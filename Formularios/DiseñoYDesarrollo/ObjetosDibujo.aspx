@@ -290,7 +290,11 @@
             <div class="p-1 m-2">
                 <div class="input-group input-group-sm gap-2">
                     <asp:Label runat="server" ID="Label17" CssClass="form-label" Text="Grupo"></asp:Label>
-                    <asp:DropDownList runat="server" ID="DropDownList4" CssClass="form-control form-control-sm"></asp:DropDownList>
+                  <asp:DropDownList runat="server" ID="DropDownList4" CssClass="form-control form-control-sm" DataSourceID="SqlDataSource3" DataValueField="ID_GrupoObjeto" DataTextField="Descripcion_Grupo" AppendDataBoundItems="True">
+    <asp:ListItem Text="%" Value="" />
+</asp:DropDownList>
+<asp:SqlDataSource ID="SqlDataSource3" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT ID_GrupoObjeto, Descripcion_Grupo FROM tblGrupoObjeto ORDER BY Descripcion_Grupo"></asp:SqlDataSource>
+
                 </div>
             </div>
         </div>
@@ -341,6 +345,31 @@
     <div class="row">
         <div class="col-lg-10 col-md-6 col-sm-12">
             <div class="p-3 m-2 border shadow-sm bg-light" style="min-height: 23rem; max-height: 23rem;">
+
+                  <asp:DataGrid Class="table table-bordered table-hover table-sm form-control-sm" ID="DataGridConfigurar" runat="server" 
+                                            AutoGenerateColumns="false">
+                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                            <Columns>
+                                                <asp:TemplateColumn>
+                                                    <ItemTemplate>
+
+                                                        <asp:LinkButton ID="lnkCliee" runat="server" CommandName="Id_Modulo"
+                                                            CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square text-white'></i>"/>
+                                                    </ItemTemplate>
+                                                </asp:TemplateColumn>
+                                                <asp:TemplateColumn HeaderText="Turno" ItemStyle-CssClass="auto-width-column">
+                                                    <ItemTemplate>
+                                                        <asp:LinkButton ID="lnkSelectRow" runat="server" CommandArgument='<%# Container.ItemIndex %>' Text='<%# Container.ItemIndex + 1 %>' CssClass="text-white text-decoration-none" />
+                                                    </ItemTemplate>
+                                                </asp:TemplateColumn>
+                                                <asp:BoundColumn DataField="Id_Modulo" HeaderText="Modulo" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="Descripcion_Modulo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="Descripcion_Familia" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="Descripcion_TipoModulo" HeaderText="Tipo Modulo" ItemStyle-CssClass="auto-width-column" />
+                                            </Columns>
+                                        </asp:DataGrid>                
+
             </div>
         </div>
         <div class="col-lg-2 col-md-6 col-sm-12">

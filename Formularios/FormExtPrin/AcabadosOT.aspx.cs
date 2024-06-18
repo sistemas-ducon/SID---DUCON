@@ -39,7 +39,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 Response.Redirect("~/Formularios/Login.aspx");
             }
 
-           
+
         }
 
         protected void BtnGrabar_Click(object sender, EventArgs e)
@@ -73,23 +73,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             string valorLabel = Label3.Text + ":" + Label5.Text + "-" + TextBox1.Text;
 
             // Verificar si algún campo está vacío o nulo
-            
-                // Realizar la inserción en la base de datos
-                string consultaInsert = "INSERT INTO tblOTAcabados (Id_OT, Consecutivo_Pedido, ID_Acabado, ID_GrupoObjetoparaAcabado, Detalle_Adicional, AcabadoVentas) " +
-                                        "VALUES ('" + idOT + "', '" + consecutivoPedido + "', " + valorIDAcabado + ", " + valorIDGrupoParaAcabado + ", '" + valorTextBox1 + "', '" + valorLabel + "');";
+
+            // Realizar la inserción en la base de datos
+            string consultaInsert = "INSERT INTO tblOTAcabados (Id_OT, Consecutivo_Pedido, ID_Acabado, ID_GrupoObjetoparaAcabado, Detalle_Adicional, AcabadoVentas) " +
+                                    "VALUES ('" + idOT + "', '" + consecutivoPedido + "', " + valorIDAcabado + ", " + valorIDGrupoParaAcabado + ", '" + valorTextBox1 + "', '" + valorLabel + "');";
 
             string cadenaConexion = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection conexion = new SqlConnection(cadenaConexion))
-                {
-                    conexion.Open(); // Abre la conexión a la base de datos
+            {
+                conexion.Open(); // Abre la conexión a la base de datos
 
-                    // Crea el comando SQL con la consulta de inserción y la conexión
-                    using (SqlCommand comando = new SqlCommand(consultaInsert, conexion))
-                    {                      
-                        int rowsAffected = comando.ExecuteNonQuery();
-                        if (rowsAffected > 0)
-                        {                        
-                            CargarDatos();
+                // Crea el comando SQL con la consulta de inserción y la conexión
+                using (SqlCommand comando = new SqlCommand(consultaInsert, conexion))
+                {
+                    int rowsAffected = comando.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        CargarDatos();
                         TextBox1.Text = string.Empty;
                         Label3.Text = string.Empty;
                         Label8.Text = string.Empty;
@@ -99,17 +99,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
                     }
                     else
-                        {
+                    {
 
-                        }
-                                            
                     }
 
-                    // Cierra la conexión
-                    conexion.Close();
                 }
 
-          
+                // Cierra la conexión
+                conexion.Close();
+            }
+
+
 
         }
 
@@ -122,11 +122,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         {
             string campoFaltante = string.Empty;
 
-        
-           if (string.IsNullOrEmpty(Label5.Text))
+
+            if (string.IsNullOrEmpty(Label5.Text))
             {
                 campoFaltante = "Acabado Definitivo";
-            }  
+            }
 
             return campoFaltante;
         }
@@ -181,7 +181,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             if (lnkSelectRow != null)
                             {
                                 lnkSelectRow.Enabled = true;
-                               
+
                             }
                         }
                     }
@@ -196,13 +196,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
         private bool VerificarCondicion(string idOT, string consecutivoPedido)
         {
-          
+
 
             bool condicionCumplida = false;
 
             try
             {
-               string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                 // Consulta SQL para verificar la condición en la base de datos
                 string consultaSQL = "SELECT COUNT(*) FROM tblOT " +
@@ -223,7 +223,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             }
             catch (Exception ex)
             {
-                
+
                 Response.Write("Error al verificar la condición desde la base de datos: " + ex.Message);
             }
 
@@ -279,9 +279,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             }
             catch (Exception ex)
             {
-              
+
             }
-     
+
         }
 
         protected void DespieceAcabados_Click(object sender, EventArgs e)
@@ -347,10 +347,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             Label1.Visible = true;
 
             Label10.Text = selectedRow.Cells[9].Text;
-           
+
 
             Label8.Text = selectedRow.Cells[6].Text;
-          
+
 
             Label5.Text = selectedRow.Cells[2].Text;
             Label5.Visible = true;
@@ -358,11 +358,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             Label3.Text = selectedRow.Cells[1].Text;
             Label3.Visible = true;
 
-          
+
 
             DataGrid4.Visible = false;
 
-           
+
 
         }
 
@@ -394,7 +394,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalError').modal('show');", true);
             }
 
-            
+
         }
 
         private string ValidarEli()
@@ -438,7 +438,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     }
                     else
                     {
-                       
+
                     }
                 }
             }
@@ -472,7 +472,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             // Accede a la fila seleccionada en el DataGrid
             DataGridItem selectedRow = DataGrid2.Items[rowIndex];
-     
+
 
             Session["Id_GrupoObjetoAcabadoSeleccionado2"] = selectedRow.Cells[2].Text;
 
@@ -491,7 +491,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             DataGridItem selectedRowDataGrid2 = DataGrid2.Items[rowIndex];
 
             // Obtén el valor de la columna ID_GrupoObjetoparaAcabado de la fila seleccionada en DataGrid2
-            string idGrupoObjeto = selectedRowDataGrid2.Cells[2].Text; 
+            string idGrupoObjeto = selectedRowDataGrid2.Cells[2].Text;
 
             // Modifica dinámicamente la consulta del SqlDataSource4 con el nuevo valor
             SqlDataSource4.SelectCommand = "SELECT tblGrupoObjetoParaAcabado.ID_GrupoObjetoparaAcabado, tblGrupodeAcabado.ID_GrupoAcabado, tblGrupodeAcabado.Descripcion_Grupo " +
@@ -503,21 +503,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             // Actualiza el DataGrid4
             DataGrid4.DataBind();
             DataGrid4.Visible = true;
-            
 
-           
-           
+
+
+
 
             // Establece la visibilidad de los Labels
             Label3.Visible = true;
-         
+
 
             // Obtén el valor de la columna "GrupoObjetoparaAcabado" de la fila seleccionada en DataGrid2
-            string grupoObjetoSeleccionado = selectedRowDataGrid2.Cells[1].Text; 
+            string grupoObjetoSeleccionado = selectedRowDataGrid2.Cells[1].Text;
             string idgrupoObjetoSeleccionado = selectedRowDataGrid2.Cells[2].Text;
 
             Label8.Text = idgrupoObjetoSeleccionado;
-           
+
 
             // Asigna el valor al Label3
             Label3.Text = grupoObjetoSeleccionado;
@@ -525,7 +525,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             Label1.Visible = false;
 
-         
+
 
         }
 
@@ -562,7 +562,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             DataGrid3.DataBind();
             Label5.Visible = false;
 
-            
+
 
         }
 
@@ -591,12 +591,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             // Aplica la clase CSS a la fila seleccionada
             selectedRow.CssClass = "selected-roww";
 
-          
-            
+
+
 
             // Establece la visibilidad de los Labels
-           
-          
+
+
 
             DataGridItem selectedRowDataGrid3 = DataGrid3.Items[rowIndex];
 
@@ -606,7 +606,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             // Asigna el valor al Label3
             Label10.Text = idAcabado;
-           
+
 
             // Asigna el valor al Label3
             Label5.Text = descripcionAcabado;
@@ -642,17 +642,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected void DataGrid1_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-           {
+            {
                 LinkButton lnkSelectRow = e.Item.FindControl("lnkSelectRow") as LinkButton;
 
                 if (lnkSelectRow != null)
-               {
+                {
                     // Aquí se deshabilita el LinkButton
                     lnkSelectRow.Enabled = false;
                     // Se almacena el estado del LinkButton en una variable de sesión
-                   Session["LinkButtonEnabled"] = false;
+                    Session["LinkButtonEnabled"] = false;
                 }
-           }
+            }
         }
 
         protected void BtnCopAca_Click(object sender, EventArgs e)
@@ -695,7 +695,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             }
             else
             {
-                    
+
             }
         }
 
@@ -761,6 +761,55 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             }
         }
 
-    }
+        protected void DataGrid2_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            if (e.CommandName == "Select")
+            {
 
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGrid2.Items[rowIndex];
+
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
+                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
+
+            }
+        }
+
+        protected void DataGrid4_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            if (e.CommandName == "Select")
+            {
+
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGrid4.Items[rowIndex];
+
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
+                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
+
+            }
+        }
+
+        protected void DataGrid3_ItemCommand1(object source, DataGridCommandEventArgs e)
+        {
+            if (e.CommandName == "Select")
+            {
+
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGrid3.Items[rowIndex];
+
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
+                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
+
+            }
+        }
+    }
 }

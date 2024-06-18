@@ -17,6 +17,17 @@
 
     <link type="text/css" href="../../Recursos/CSS/FormExtPrin/AcabadosOT.css" rel="stylesheet" />
     <title>Acabados</title>
+
+       <script>
+           function focusAndScrollToRow(rowId) {
+               var row = document.getElementById(rowId);
+               if (row) {
+                   row.setAttribute('tabindex', '-1'); // Make it focusable
+                   row.focus();
+                   row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+               }
+           }
+       </script>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -82,7 +93,7 @@
 
                                                         <asp:DataGrid CssClass="form-control-sm form-control border-white"
                                                             ID="DataGrid2" runat="server" AutoGenerateColumns="false" DataSourceID="SqlDataSource2"
-                                                            ShowHeader="false" OnItemDataBound="DataGrid1_ItemDataBound">
+                                                            ShowHeader="false" OnItemDataBound="DataGrid1_ItemDataBound" OnItemCommand="DataGrid2_ItemCommand">
                                                             <Columns>
                                                                 <asp:TemplateColumn>
                                                                     <ItemTemplate>
@@ -112,7 +123,7 @@
                                                     <asp:Label ID="Label1" runat="server" Text="Label" Visible="false" CssClass="form-control-sm"></asp:Label>
 
                                                     <div class="mb-2 gap-2" style="max-height: 11.5rem; overflow-x: auto;">
-                                                        <asp:DataGrid CssClass="form-control-sm form-control border-white" ID="DataGrid4" runat="server" AutoGenerateColumns="false" ShowHeader="false" DataSourceID="SqlDataSource4" Visible="false">
+                                                        <asp:DataGrid CssClass="form-control-sm form-control border-white" OnItemCommand="DataGrid4_ItemCommand" ID="DataGrid4" runat="server" AutoGenerateColumns="false" ShowHeader="false" DataSourceID="SqlDataSource4" Visible="false">
                                                             <Columns>
                                                                 <asp:TemplateColumn>
                                                                     <ItemTemplate>
@@ -150,7 +161,7 @@
                                                     <div class="mb-2 gap-2" style="max-height: 11.5rem; overflow-x: auto;">
 
                                                         <asp:DataGrid CssClass="form-control-sm form-control border-white"
-                                                            ID="DataGrid3" runat="server" AutoGenerateColumns="false" DataSourceID="SqlDataSource3"
+                                                            ID="DataGrid3" runat="server" AutoGenerateColumns="false" DataSourceID="SqlDataSource3" OnItemCommand="DataGrid3_ItemCommand1"
                                                             ShowHeader="false">
                                                             <Columns>
                                                                 <asp:TemplateColumn>
