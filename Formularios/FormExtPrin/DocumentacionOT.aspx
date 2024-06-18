@@ -22,32 +22,28 @@
         <asp:UpdatePanel ID="Panel_DocOt" runat="server" UpdateMode="Conditional" DefaultButton="btnSubmit">
             <ContentTemplate>
 
-                <div class=" container pb-3 mb-3  pt-1 mt-1 ">
-
-                    <div class="row text-center pt-2 mt-2">
-                        <h4>Documentos Orden de Trabajo</h4>
-                    </div>
+                <div class="container pb-3 mb-3  mt-5 border  shadow">
 
                     <!--Fila checkBox-->
                     <div class="row p-2 mt-2  text-end">
-                        <div class="col-12">
+                        <div class="col-sm-12">
                             <asp:CheckBox ID="chxDocumento" runat="server" OnCheckedChanged="chxDocumento_CheckedChanged" AutoPostBack="true" />
                             <asp:Label ID="Label4" runat="server" Text="Documentación completa"></asp:Label>
                         </div>
                     </div>
 
-                    <div class="row justify-content-center  pb-2 mb-2">
-                        <div class="border rounded p-1" style="margin-left: 2rem">
+                    <div class="row justify-content-center m-1  ">
+                        <div class="border rounded p-1">
                             <div class="row">
                                 <div class="col-12">
-                                    <div class="table-responsive mb-1 gap-2" style="max-height: 20rem; overflow-x: auto;">
-                                        <h5 class="datagrid-header text-center">Documentación</h5>
+                                    <div class="table-responsive mb-1 gap-2" style="max-height: 10rem; height: 10rem; overflow-x: auto;">
+                                        <h5 class="datagrid-header text-center">Documentación Orden Trabajo</h5>
                                         <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridDoc" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="DocumentacionFiltrada" OnItemCommand="DataGridDoc_ItemCommand" OnItemDataBound="DataGridDoc_ItemDataBound">
                                             <Columns>
 
-                                                <asp:TemplateColumn HeaderText="...">
+                                                <asp:TemplateColumn HeaderText=". . .">
                                                     <ItemTemplate>
-                                                        <asp:LinkButton ID="lnkView" runat="server" ToolTip="Seleccionar Documento" CommandName="VerDocumento" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>" />
+                                                        <asp:LinkButton ID="lnkView" CssClass="Tam" runat="server" ToolTip="Seleccionar Documento" CommandName="VerDocumento" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>" />
                                                     </ItemTemplate>
                                                 </asp:TemplateColumn>
 
@@ -63,9 +59,9 @@
                                                 <asp:BoundColumn DataField="Id_OT" Visible="false" ItemStyle-CssClass="auto-width-column" />
                                                 <asp:BoundColumn DataField="Pedido" Visible="false" ItemStyle-CssClass="auto-width-column" />
 
-                                                <asp:TemplateColumn HeaderText="...">
+                                                <asp:TemplateColumn HeaderText=". . .">
                                                     <ItemTemplate>
-                                                        <asp:LinkButton ID="lnkView1" ToolTip="VerDocumento" runat="server" CommandName="VerDocumento1" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-eye'></i>" />
+                                                        <asp:LinkButton ID="lnkView1" ToolTip="VerDocumento" CssClass="Tam" runat="server" CommandName="VerDocumento1" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-eye'></i>" />
                                                     </ItemTemplate>
                                                 </asp:TemplateColumn>
                                             </Columns>
@@ -93,7 +89,6 @@
 
                     <div class="row text-center pb-1 mb-1">
                         <div class="col-6">
-                          
                         </div>
                         <div class="col-6" style="font-size: 1.1rem;">
                             <asp:Label CssClass=" alert-success" ID="mensaje" runat="server" Text="" Visible="false"></asp:Label>
@@ -102,10 +97,9 @@
 
                     </div>
 
+                    <div class="row g-2  pb-1 mb-1 pt-1">
 
-                    <div class="row  pb-1 mb-1">
-
-                        <div class="col-5">
+                        <div class="col-sm-5">
                             <div class=" input-group input-group-sm gap-2  ">
                                 <asp:Label ID="Label1" class=" col-form-label-sm" Text="Tipo Documento" runat="server"></asp:Label>
                                 <asp:DropDownList class="form-control form-control-sm" ID="ddlTipoDoc" runat="server" onchange="ddlTipoDocChanged()">
@@ -121,7 +115,7 @@
                         <div class="col-1">
                         </div>
 
-                        <div class="col-6">
+                        <div class="col-sm-6">
                             <div class="input-group input-group-sm ">
                                 <asp:FileUpload CssClass="form-control" ID="DoctOT" runat="server" />
                                 <asp:Button ID="ValidarEspecial" CssClass="btn btn-outline-success" runat="server" Text="ValidarEspecial" OnClick="ValidarEspecial_Click" />
@@ -134,28 +128,28 @@
 
                     </div>
 
-                    <div class="row pb-1 mb-1">
+                    <div class="row g-2 pb-1 mb-1">
 
-                        <div class="col-3">
+                        <div class="col-sm-3">
                             <div class="input-group-sm gap-2  ">
                                 <asp:Label ID="lbObservacion" Text="Observación" runat="server"></asp:Label>
                                 <asp:TextBox ID="tbObservacion" type="Text" class="form-control " runat="server"></asp:TextBox>
                             </div>
                         </div>
 
-                        <div class="col-3">
+                        <div class="col-sm-3">
                             <div class="input-group-sm gap-2  ">
                                 <asp:Label ID="lbCategoria" Text="Categoría" runat="server"></asp:Label>
                                 <asp:TextBox ID="tbCategoria" type="Text" class="form-control " runat="server"></asp:TextBox>
                             </div>
                         </div>
 
-                        <div class="col-3 pt-4">
+                        <div class="col-sm-3 pt-4">
                             <asp:CheckBox ID="chxMespecial" runat="server" />
                             <asp:Label ID="lbMespecial" runat="server" Text="M. Especial"></asp:Label>
                         </div>
 
-                        <div class="col-3">
+                        <div class="col-sm-3">
                             <div class="input-group-sm gap-2  ">
                                 <asp:Label ID="lbCantidad" Text="Cantidad" runat="server"></asp:Label>
                                 <asp:TextBox ID="tbCantidad" type="number" class="form-control " runat="server"></asp:TextBox>
@@ -167,69 +161,68 @@
 
                 </div>
 
-                <div class="container pt-1 mt-1">
-
-                    <div class="row text-center pt-2 mt-2">
-                        <h4>Documentación Solicitudes Especiales</h4>
-                    </div>
+                <div class="container pt-1 mt-1 border  shadow">
 
                     <div class="row ">
-
-                        <div class="col-7">
-                            <div class="row justify-content-center pt-4  pb-1 mb-1">
-                                <div class="border rounded p-1" style="margin-left: 2rem">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="table-responsive mb-1 gap-2" style="max-height: 20rem; overflow-x: auto;">
-                                                <h5 class="datagrid-header text-center">Documentos Solicitudes Especiales </h5>
-                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridSolicitudEspecial" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="DocEspeciales" OnItemCommand="DataGridSolicitudEspecial_ItemCommand">
-                                                    <Columns>
-
-                                                        <asp:TemplateColumn HeaderText="...">
-                                                            <ItemTemplate>
-                                                                <asp:LinkButton ID="lnkView" runat="server" ToolTip="Seleccionar Documento" CommandName="VerDocumento3" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>" />
-                                                            </ItemTemplate>
-                                                        </asp:TemplateColumn>
+                        <div class="input-group input-group-sm gap-5">
 
 
-                                                        <asp:BoundColumn DataField="Archivo" HeaderText="Archivo" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="TipoDocumento" HeaderText="Tipo Archivo" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="" HeaderText="Subido" ItemStyle-CssClass="auto-width-column" />
-                                                    </Columns>
-                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="DocEspeciales" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="Select Archivo, TipoDocumento from tbldocumentacion where Id_OT like '%PE' + @solicitud +'-%' And TipoDocumento <> 'BOSQUEJO'">
-                                                    <SelectParameters>
-                                                        <asp:ControlParameter ControlID="tbSolicitud" PropertyName="Text" Name="solicitud"></asp:ControlParameter>
-                                                    </SelectParameters>
-                                                </asp:SqlDataSource>
+                            <div class="col-sm-7">
+                                <div class="row justify-content-center pt-4  pb-1 mb-1">
+                                    <div class="border rounded p-1" style="margin-left: 2rem">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="table-responsive mb-1 gap-2" style="max-height: 10rem; height: 10rem; overflow-x: auto;">
+                                                    <h5 class="datagrid-header text-center">Documentos Solicitudes Especiales </h5>
+                                                    <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridSolicitudEspecial" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="DocEspeciales" OnItemCommand="DataGridSolicitudEspecial_ItemCommand">
+                                                        <Columns>
+
+                                                            <asp:TemplateColumn HeaderText=". . .">
+                                                                <ItemTemplate>
+                                                                    <asp:LinkButton ID="lnkView" runat="server" CssClass="Tam" ToolTip="Seleccionar Documento" CommandName="VerDocumento3" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>" />
+                                                                </ItemTemplate>
+                                                            </asp:TemplateColumn>
+
+
+                                                            <asp:BoundColumn DataField="Archivo" HeaderText="Archivo" ItemStyle-CssClass="auto-width-column" />
+                                                            <asp:BoundColumn DataField="TipoDocumento" HeaderText="Tipo Archivo" ItemStyle-CssClass="auto-width-column" />
+                                                            <asp:BoundColumn DataField="" HeaderText="Subido" ItemStyle-CssClass="auto-width-column" />
+                                                        </Columns>
+                                                    </asp:DataGrid><asp:SqlDataSource runat="server" ID="DocEspeciales" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="Select Archivo, TipoDocumento from tbldocumentacion where Id_OT like '%PE' + @solicitud +'-%' And TipoDocumento <> 'BOSQUEJO'">
+                                                        <SelectParameters>
+                                                            <asp:ControlParameter ControlID="tbSolicitud" PropertyName="Text" Name="solicitud"></asp:ControlParameter>
+                                                        </SelectParameters>
+                                                    </asp:SqlDataSource>
 
 
 
+                                                </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div class="row pt-1 mt-1 pb-1 mb-1">
+                                    <div class="col-sm-8">
+                                        <div class="input-group-sm gap-2 ">
+                                            <asp:Label ID="lbSolicitud" class="form-check-label" Text="Solicitud" runat="server"></asp:Label>
+                                            <asp:TextBox ID="tbSolicitud" type="text" class="form-control" runat="server" AutoPostBack="true"></asp:TextBox>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="input-group input-group-sm pt-4">
+                                            <asp:Button ID="btnSubirAdjuntar" type="button" Text="Adjuntar Especial" class="btn btn-outline-secondary" runat="server" OnClick="btnSubirAdjuntar_Click" OnClientClick="return ValidarCantidad();"></asp:Button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-1"></div>
 
-                        <div class="col-4">
-                            <div class="row pt-1 mt-1 pb-1 mb-1">
-                                <div class="col-8">
-                                    <div class="input-group-sm gap-2 ">
-                                        <asp:Label ID="lbSolicitud" class="form-check-label" Text="Solicitud" runat="server"></asp:Label>
-                                        <asp:TextBox ID="tbSolicitud" type="text" class="form-control" runat="server" AutoPostBack="true"></asp:TextBox>
-
-                                    </div>
-                                </div>
-
-                                <div class="col-4">
-                                    <div class="input-group input-group-sm pt-4">
-                                        <asp:Button ID="btnSubirAdjuntar" type="button" Text="Adjuntar Especial" class="btn btn-outline-secondary" runat="server" OnClick="btnSubirAdjuntar_Click" OnClientClick="return ValidarCantidad();"></asp:Button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                     </div>
 
@@ -339,13 +332,13 @@
 
             var ddlTipoDoc = document.getElementById('<%= ddlTipoDoc.ClientID %>');
             var validarEspecial = document.getElementById('<%= ValidarEspecial.ClientID %>');
-          
+
             if (ddlTipoDoc.value !== '') {
                 validarEspecial.style.display = 'none';
-              
+
             } else {
                 validarEspecial.style.display = 'block';
-              
+
             }
         }
     </script>

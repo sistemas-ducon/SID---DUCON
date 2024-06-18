@@ -109,61 +109,91 @@
 
         function MantenerCampos() {
 
-            document.getElementById("GrabarVisita").classList.add("enabled");
+            
+            var controlBotones = '<%= Session["controlBotones"] %>';
 
-            // Habilitar o deshabilitar los DropDownList
-            var dropDownLists = document.querySelectorAll("select");
-            for (var j = 0; j < dropDownLists.length; j++) {
-                if (dropDownLists[j].id !== "ddlAsesor") {
-                    dropDownLists[j].disabled = !dropDownLists[j].disabled;
-                }
-            }
+            if (controlBotones === "1")
+            {
+               
+                var Visita = '<%= Session["InsertUpdateVisita"] %>';
 
-            // Habilitar los TextArea
-            var textAreas = document.querySelectorAll("textarea");
-            for (var k = 0; k < textAreas.length; k++) {
-                textAreas[k].disabled = !textAreas[k].disabled;
-            }
+                document.getElementById("GrabarVisita").classList.remove("disabled");
+                document.getElementById("GrabarVisita").classList.add("enabled", "AzulActivo");
 
-            // Habilitar o deshabilitar los TextBox Type text
-            var textBoxes = document.querySelectorAll("input[type='text']");
-            for (var i = 0; i < textBoxes.length; i++) {
-
-                if (textBoxes[i].id !== "tbCliente" && textBoxes[i].id !== "tbTelefono" && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbMailCont") {
-
-                    if (textBoxes[i].id !== "tbLicitacion1" && textBoxes[i].id != "tbIdVisita" && textBoxes[i].id != "tbClienteServidor" && textBoxes[i].id != "tbTelefonoServidor" && textBoxes[i].id != "tbContactoServidor" && textBoxes[i].id != "tbMailContServidor") {
-                        textBoxes[i].disabled = !textBoxes[i].disabled;
+                // Habilitar o deshabilitar los DropDownList
+                var dropDownLists = document.querySelectorAll("select");
+                for (var j = 0; j < dropDownLists.length; j++) {
+                    if (dropDownLists[j].id !== "ddlAsesor") {
+                        dropDownLists[j].disabled = !dropDownLists[j].disabled;
                     }
+                }
+
+                // Habilitar los TextArea
+                var textAreas = document.querySelectorAll("textarea");
+                for (var k = 0; k < textAreas.length; k++) {
+                    textAreas[k].disabled = !textAreas[k].disabled;
+                }
+
+                // Habilitar o deshabilitar los TextBox Type text
+                var textBoxes = document.querySelectorAll("input[type='text']");
+                for (var i = 0; i < textBoxes.length; i++) {
+
+                    if (textBoxes[i].id !== "tbCliente" && textBoxes[i].id !== "tbTelefono" && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbMailCont") {
+
+                        if (textBoxes[i].id !== "tbLicitacion1" && textBoxes[i].id != "tbIdVisita" && textBoxes[i].id != "tbClienteServidor" && textBoxes[i].id != "tbTelefonoServidor" && textBoxes[i].id != "tbContactoServidor" && textBoxes[i].id != "tbMailContServidor") {
+                            textBoxes[i].disabled = !textBoxes[i].disabled;
+                        }
+
+                    }
+                }
+
+
+                if (Visita === "Insertar") {
+                    // Habilitar enlaces 
+                    document.getElementById("GrabarVisita").classList.remove("disabled");
+                    document.getElementById("GrabarVisita").classList.add("enabled", "AzulActivo");
+
+                    document.getElementById("CancelarVisita").classList.remove("disabled");
+                    document.getElementById("CancelarVisita").classList.add("enabled", "RojoCancelar");
+
+                    document.getElementById("NuevaVisita").classList.remove("enabled", "AzulActivo");
+                    document.getElementById("NuevaVisita").classList.add("disabled");
+
+                    document.getElementById("NuevaVisita").classList.remove("enabled", "AzulActivo");
+                    document.getElementById("NuevaVisita").classList.add("disabled");
+
+
+                } else if (Visita === "Actualizar") {
+                    // Habilitar enlaces 
+                    document.getElementById("GrabarVisita").classList.remove("disabled");
+                    document.getElementById("GrabarVisita").classList.add("enabled", "AzulActivo");
+
+                    document.getElementById("CancelarVisita").classList.remove("disabled");
+                    document.getElementById("CancelarVisita").classList.add("enabled", "RojoCancelar");
+
+                    document.getElementById("NuevaVisita").classList.remove("enabled", "AzulActivo");
+                    document.getElementById("NuevaVisita").classList.add("disabled");
+
+                    document.getElementById("ModificarVisita").classList.remove("enabled", "AzulActivo");
+                    document.getElementById("ModificarVisita").classList.add("disabled");
+
+                    document.getElementById("ModificarVisita").classList.remove("enabled", "AzulActivo");
+                    document.getElementById("ModificarVisita").classList.add("disabled");
+
+                    document.getElementById("Exportar").classList.remove("enabled", "AzulActivo");
+                    document.getElementById("Exportar").classList.add("disabled");
+
 
                 }
-            }
 
-
-            var Visita = '<%= Session["InsertUpdateVisita"] %>';
-
-            if (Visita === "Insertar") {
-                // Habilitar enlaces 
-                document.getElementById("GrabarVisita").classList.add("enabled");
-                document.getElementById("CancelarVisita").classList.add("enabled");
-                // Deshabilitar enlaces
-                document.getElementById("NuevaVisita").classList.remove("enabled");
-                document.getElementById("NuevaVisita").classList.add("disabled");
-
-
-            } else if (Visita === "Actualizar") {
-                // Habilitar enlaces 
-                document.getElementById("GrabarVisita").classList.add("enabled");
-                document.getElementById("CancelarVisita").classList.add("enabled");
-                // Deshabilitar enlaces
-                document.getElementById("NuevaVisita").classList.remove("enabled");
-                document.getElementById("ModificarVisita").classList.remove("enabled");
-                document.getElementById("ModificarVisita").classList.add("disabled");
-                document.getElementById("Exportar").classList.add("disabled");
 
 
             }
+
+           
 
         }
+
         function Estadistica() {
             var boton1 = document.getElementById("<%= Button2.ClientID %>");
             boton1.disabled = true;
@@ -210,23 +240,23 @@
                             <%--Comienza Nueva OT--%>
 
 
-                            <a class="icong disabled" href="#" title="Nueva Visita" id="NuevaVisita" onclick="NuevaVisita()">
-                                <i class="bi bi-file-earmark"></i>
+                            <a class="icong disabled shadow-sm btn btn-sm" href="#" title="Nueva Visita" id="NuevaVisita" onclick="NuevaVisita()">
+                               <i class="bi bi-file-earmark-check-fill"></i>
                             </a>
 
-                            <asp:LinkButton class="icong disabled" runat="server" title="Guardar Visita" ID="GrabarVisita" OnClick="GuardarModificarCliente" OnClientClick="return ValidarFormulario();">
-                                 <i class="bi bi-floppy-fill"></i>
+                            <asp:LinkButton class="icong disabled shadow-sm btn btn-sm" runat="server" title="Guardar Visita" ID="GrabarVisita" OnClick="GuardarModificarCliente" OnClientClick="return ValidarFormulario();">
+                                    <i class="bi bi-floppy-fill"></i>
                             </asp:LinkButton>
 
 
-                            <a class="icong disabled" href="#" title="Modificar Visita" id="ModificarVisita" onclick="ModificarVisita()">
-                                <i class="bi bi-wrench"></i>
+                            <a class="icong disabled shadow-sm btn btn-sm" href="#" title="Modificar Visita" id="ModificarVisita" onclick="ModificarVisita()">
+                                <i class="bi bi-wrench-adjustable"></i>
                             </a>
-                            <a class="icong disabled Cancelar" href="#" title="Cancelar" id="CancelarVisita" onclick="CancelarVisita()">
-                                <i class="bi bi-x-lg"></i>
+                            <a class="icong disabled shadow-sm btn btn-sm" href="#" title="Cancelar" id="CancelarVisita" onclick="CancelarVisita()">
+                                <i class="bi bi-x-circle-fill"></i>
                             </a>
 
-                            <asp:LinkButton class="icong disabled" runat="server" title="Exportar" ID="Exportar" OnClick="ExportarExel2">
+                            <asp:LinkButton class="icong disabled shadow-sm btn btn-sm" runat="server" title="Exportar" ID="Exportar" OnClick="ExportarExel2">
                                          <i class="custom-icon"></i>
                             </asp:LinkButton>
 
@@ -253,24 +283,24 @@
 
                             <div class="row pb-1">
 
-                                <div class="col-4">
+                                <div class="col-sm-4">
                                     <div class="input-group input-group-sm  mb-2 gap-2 ">
                                         <asp:Label class="form-label" Text="Asesor" runat="server" ID="lbAsesor"></asp:Label>
                                         <asp:DropDownList class="form-control" ID="ddlAsesor" runat="server" OnSelectedIndexChanged="Cambio" AutoPostBack="true"></asp:DropDownList>
                                     </div>
                                 </div>
 
-                                <div class="col-4">
+                                <div class="col-sm-4">
                                     <div class="input-group input-group-sm  mb-2 gap-2 ">
                                         <asp:Label class="form-label" Text="Visitas Por" runat="server" ID="lbVisitasPor"></asp:Label>
                                         <asp:DropDownList class="form-control" ID="ddlVisitasPor" runat="server" disabled="false" DataTextField="NombreCausa" DataValueField="Id_Causa" DataSourceID="CausaVisita"></asp:DropDownList><asp:SqlDataSource runat="server" ID="CausaVisita" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="select * from tblCausaVisita"></asp:SqlDataSource>
                                     </div>
                                 </div>
 
-                                <div class="col-1">
+                                <div class="col-sm-1">
                                 </div>
 
-                                <div class="col-3">
+                                <div class="col-sm-3">
                                     <div class="input-group input-group-sm  input-group-sm mb-2 gap-2">
                                         <label class="form-label" runat="server" id="lbFecha">Fecha </label>
                                         <asp:TextBox ID="fecha" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
@@ -283,7 +313,7 @@
 
                             <div class="row pb-1">
 
-                                <div class="col-4">
+                                <div class="col-sm-4">
                                     <div class="input-group input-group-sm  mb-2 gap-2 ">
                                         <asp:Button class="btn btn-outline-secondary" ID="btnCliente" type="button" Text="Cliente" runat="server" OnClick="GuardarDatosSesion" OnClientClick="abrirOtraPestana();"></asp:Button>
                                         <asp:TextBox ID="tbCliente" type="text" class="form-control" runat="server" disabled="false"></asp:TextBox>
@@ -292,7 +322,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-4">
+                                <div class="col-sm-4">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbTelefono" class="form-label" Text="Telefono" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbTelefono" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
@@ -300,10 +330,10 @@
                                     </div>
                                 </div>
 
-                                <div class="col-1">
+                                <div class="col-sm-1">
                                 </div>
 
-                                <div class="col-3">
+                                <div class="col-sm-3">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbCotizacion" class="form-label" Text="Cotizacion" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbCotizacion" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
@@ -316,7 +346,7 @@
 
                             <div class="row pb-1">
 
-                                <div class="col-6">
+                                <div class="col-sm-6">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbContacto" class="form-label" Text="Contacto" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbContacto" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
@@ -324,7 +354,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-6">
+                                <div class="col-sm-6">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbMailCont" class="form-label" Text="Mail Contacto" runat="server"></asp:Label>
                                         <asp:TextBox ID="tbMailCont" type="text" class="form-control " runat="server" disabled="false"></asp:TextBox>
@@ -337,7 +367,7 @@
 
                             <div class="row pb-1">
 
-                                <div class="col-12">
+                                <div class="col-sm-12">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbObservaciones" class="form-label" Text="Obs." runat="server"></asp:Label>
                                         <textarea class="form-control form-control-sm" id="txObs" runat="server" cols="29" rows="3" disabled="disabled"></textarea>
@@ -347,20 +377,19 @@
                                 </div>
 
 
-
-
                             </div>
 
                             <div class="row pt-3">
 
-                                <div class="col-5">
+                                <div class="col-sm-5">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbVistaEntre" class="form-label" Text="Visitas entre" runat="server"></asp:Label>
                                         <asp:TextBox ID="fecha1" type="date" runat="server" class="form-control"></asp:TextBox>
                                         <asp:TextBox ID="fecha2" type="date" runat="server" class="form-control"></asp:TextBox>
                                     </div>
                                 </div>
-                                <div class="col-2">
+
+                                <div class="col-sm-2">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
 
                                         <asp:Button ID="btnConsultar" type="button" Text="Consultar" class="btn btn-outline-secondary"
@@ -729,12 +758,17 @@
        
         document.getElementById("btnCliente").disabled = true;
 
+         //variable de control y NUEVA y MODIFICAR
         var MN_Vis = '<%= Session["MN_Vis"] %>';
+        //Variable control Botones 
+        var ControlBotones = '<%= Session["controlBotones"] %>';
 
-        if (MN_Vis === "1" || MN_Vis === "2")
+        if ((MN_Vis === "1" || MN_Vis === "2") && ControlBotones === "1")
         {
+           
             // Habilitar enlace Nueva Visita 
-            document.getElementById("NuevaVisita").classList.remove("enabled");
+            document.getElementById("NuevaVisita").classList.remove("enabled","AzulActivo");
+            document.getElementById("NuevaVisita").classList.add("disabled");
   
             $.ajax({
                 type: "POST", // Puede ser "GET" o "POST" según tus necesidades
@@ -750,22 +784,27 @@
             });
         } else
         {
-            document.getElementById("NuevaVisita").classList.add("enabled");
+           
+            document.getElementById("NuevaVisita").classList.remove("disabled");
+            document.getElementById("NuevaVisita").classList.add("enabled","AzulActivo");
+
+            $.ajax({
+                type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                url: "Visita_Asesores.aspx/LimpiarVariablesControl", // La URL debe apuntar al método en el servidor
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                },
+                error: function (error) {
+                    // Manejar errores si los hay
+                }
+            });
+
+
 
         }
        
-       
-        // Ocultar el div con clase "contenedor-icono" cuando se activa la pestaña "Info-content" 
-        $(document).ready(function () {
-            $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
-                var targetTab = $(e.target).attr("href");
-                if (targetTab === "#Estadisticas-content") {
-                    $(".contenedor-icono").hide();
-                } else {
-                    $(".contenedor-icono").show();
-                }
-            });
-        });
 
 
         function validarDropDownList() {
@@ -781,10 +820,15 @@
 
             if (validarDropDownList()) {
                 // Habilitar enlaces 
-                document.getElementById("GrabarVisita").classList.add("enabled");
-                document.getElementById("CancelarVisita").classList.add("enabled");
-                // Deshabilitar enlaces
-                document.getElementById("NuevaVisita").classList.remove("enabled");
+                document.getElementById("GrabarVisita").classList.remove("disabled");
+                document.getElementById("GrabarVisita").classList.add("enabled", "AzulActivo");
+
+                document.getElementById("CancelarVisita").classList.remove("disabled");
+                document.getElementById("CancelarVisita").classList.add("enabled","RojoCancelar");
+
+                document.getElementById("NuevaVisita").classList.remove("enabled", "AzulActivo");
+                document.getElementById("NuevaVisita").classList.add("disabled");
+               
 
 
                 //Habilitar TextBox Cotizacion y TextArea Observaciones y Boton Cliente y deshabilitar BtnConsultar
@@ -834,11 +878,16 @@
 
         function CancelarVisita() {
             // Habilitar enlaces
-            document.getElementById("NuevaVisita").classList.add("enabled");
+            document.getElementById("NuevaVisita").classList.remove("disabled");
+            document.getElementById("NuevaVisita").classList.add("enabled","AzulActivo");
 
-            // Deshabilitar enlaces
-            document.getElementById("GrabarVisita").classList.remove("enabled");
-            document.getElementById("CancelarVisita").classList.remove("enabled");
+          
+            document.getElementById("GrabarVisita").classList.remove("enabled","AzulActivo");
+            document.getElementById("GrabarVisita").classList.add("disabled");
+
+            document.getElementById("CancelarVisita").classList.remove("enabled","RojoCancelar");
+            document.getElementById("CancelarVisita").classList.add("disabled");
+
 
 
             //DesHabilitar
@@ -888,12 +937,21 @@
             BtnCliente.disabled = false;
 
             // Habilitar enlaces 
-            document.getElementById("GrabarVisita").classList.add("enabled");
-            document.getElementById("CancelarVisita").classList.add("enabled");
-            // Deshabilitar enlaces
-            document.getElementById("NuevaVisita").classList.remove("enabled");
-            document.getElementById("ModificarVisita").classList.remove("enabled");
+            document.getElementById("GrabarVisita").classList.remove("disabled");
+            document.getElementById("GrabarVisita").classList.add("enabled", "AzulActivo");
+
+            document.getElementById("CancelarVisita").classList.remove("disabled");
+            document.getElementById("CancelarVisita").classList.add("enabled", "RojoCancelar");
+          
+            document.getElementById("NuevaVisita").classList.remove("enabled","AzulActivo");
+            document.getElementById("NuevaVisita").classList.add("disabled");
+
+            document.getElementById("ModificarVisita").classList.remove("enabled","AzulActivo");
+            document.getElementById("ModificarVisita").classList.add("disabled");
+
+            document.getElementById("Exportar").classList.remove("enabled","AzulActivo");
             document.getElementById("Exportar").classList.add("disabled");
+
 
 
             // Habilitar o deshabilitar los DropDownList
@@ -945,7 +1003,7 @@
             //habilitar link de Exportar Excel
             if (validarDropDownList()) {
                 document.getElementById("Exportar").classList.remove("disabled");
-                document.getElementById("Exportar").classList.add("enabled");
+                document.getElementById("Exportar").classList.add("enabled","AzulActivo");
             }
 
 
@@ -955,8 +1013,9 @@
         function DeshabilitarExcel() {
 
             //habilitar link de Exportar Excel
+            document.getElementById("Exportar").classList.remove("enabled","AzulActivo");
             document.getElementById("Exportar").classList.add("disabled");
-            document.getElementById("Exportar").classList.remove("enabled");
+            
 
 
 
@@ -965,7 +1024,8 @@
 
         function HabilitarEnlaces1() {
             // Habilitar enlaces de Detalle
-            document.getElementById("ModificarVisita").classList.add("enabled");
+            document.getElementById("ModificarVisita").classList.remove("disabled");
+            document.getElementById("ModificarVisita").classList.add("enabled","AzulActivo");
             //Habilitar
             var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
             boton1.disabled = true;

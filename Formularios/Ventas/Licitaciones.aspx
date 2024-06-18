@@ -57,21 +57,21 @@
                             <%--Comienza Nueva OT--%>
 
 
-                            <a class="icong disabled" title="Nueva Licitacion" id="NuevaLic" runat="server" onclick="NuevaLic()">
-                                <i class="bi bi-file-earmark"></i>
+                            <a class="icong disabled btn btn-sm shadow" title="Nueva Licitacion" id="NuevaLic" runat="server" onclick="NuevaLic()">
+                                <i class="bi bi-file-earmark-check-fill"></i>
                             </a>
-                            <asp:LinkButton class="icong disabled" runat="server" title="Grabar Licitacion" ID="GrabarLic" OnClick="Grabar">
-                               <i class="bi bi-floppy-fill"></i>
+                            <asp:LinkButton class="icong disabled btn btn-sm shadow" runat="server" title="Grabar Licitacion" ID="GrabarLic" OnClick="Grabar">
+                                <i class="bi bi-floppy-fill"></i>
                             </asp:LinkButton>
 
                             <asp:CheckBox ID="estadoLicitacion" runat="server" />
 
 
-                            <a class="icong disabled" href="#" title="Modificar Licitacion" id="ModificarLic" runat="server" onclick="ModificarLic()">
-                                <i class="bi bi-wrench"></i>
+                            <a class="icong disabled btn btn-sm shadow" href="#" title="Modificar Licitacion" id="ModificarLic" runat="server" onclick="ModificarLic()">
+                               <i class="bi bi-wrench-adjustable"></i>
                             </a>
-                            <a class="icong disabled Cancelar" href="#" title="Cancelar" id="CancelarLic" onclick="Cancelar() ">
-                                <i class="bi bi-x-lg"></i>
+                            <a class="icong disabled btn btn-sm shadow" href="#" title="Cancelar" id="CancelarLic" onclick="Cancelar() ">
+                                <i class="bi bi-x-circle-fill"></i>
                             </a>
 
 
@@ -610,7 +610,8 @@
     <script>
 
         // Habilitar enlace nueca licitacion al inicio
-        document.getElementById("NuevaLic").classList.add("enabled");
+        document.getElementById("NuevaLic").classList.remove("disabled");
+        document.getElementById("NuevaLic").classList.add("enabled","AzulActivo");
 
         var checkBox = document.getElementById('<%= estadoLicitacion.ClientID %>');
         checkBox.style.display = 'none'; // Ocultar el checkbox
@@ -620,13 +621,16 @@
         // Función para activar los textBox y activar o desactivar los links  
         function NuevaLic() {
 
-            // Deshabilitar enlaces
-            document.getElementById("NuevaLic").classList.remove("enabled");
+            // Deshabilitar habilitar  enlaces
+            document.getElementById("NuevaLic").classList.remove("enabled", "AzulActivo");
+            document.getElementById("NuevaLic").classList.add("disabled");
 
+            document.getElementById("GrabarLic").classList.remove("disabled")
+            document.getElementById("GrabarLic").classList.add("enabled", "AzulActivo");
 
-            // Habilitar enlaces
-            document.getElementById("GrabarLic").classList.add("enabled");
-            document.getElementById("CancelarLic").classList.add("enabled");
+            document.getElementById("CancelarLic").classList.remove("disabled");
+            document.getElementById("CancelarLic").classList.add("enabled", "RojoCancelar");
+            
 
 
             // Habilitar o deshabilitar los TextBox Type text
@@ -686,13 +690,18 @@
 
 
             // Deshabilitar enlaces
-            document.getElementById("GrabarLic").classList.remove("enabled");
-            document.getElementById("CancelarLic").classList.remove("enabled");
-            document.getElementById("ModificarLic").classList.remove("enabled");
+            document.getElementById("GrabarLic").classList.remove("enabled","AzulActivo");
+            document.getElementById("GrabarLic").classList.add("disabled");
 
+            document.getElementById("CancelarLic").classList.remove("enabled","RojoCancelar");
+            document.getElementById("CancelarLic").classList.add("disabled");
 
-            // Habilitar enlaces
-            document.getElementById("NuevaLic").classList.add("enabled");
+            document.getElementById("ModificarLic").classList.remove("enabled","AzulActivo");
+            document.getElementById("ModificarLic").classList.add("disabled");
+
+            document.getElementById("NuevaLic").classList.remove("disabled");
+            document.getElementById("NuevaLic").classList.add("enabled","AzulActivo");
+           
 
             // Habilitar o deshabilitar los TextBox Type Text
             var textBoxes = document.querySelectorAll("input[type='text']");
@@ -745,13 +754,19 @@
 
         // Funcion para activar la modificacion de la licitacion  ok
         function ModificarLic() {
-            // Deshabilitar enlaces
-            document.getElementById("NuevaLic").classList.remove("enabled");
-            document.getElementById("ModificarLic").classList.remove("enabled");
+            // Deshabilitar // Habilitar botones
+            document.getElementById("NuevaLic").classList.remove("enabled", "AzulActivo");
+            document.getElementById("NuevaLic").classList.remove("disabled");
 
-            // Habilitar enlaces
-            document.getElementById("GrabarLic").classList.add("enabled");
-            document.getElementById("CancelarLic").classList.add("enabled");
+
+            document.getElementById("ModificarLic").classList.remove("enabled","AzulActivo");
+            document.getElementById("ModificarLic").classList.add("disabled");
+
+            document.getElementById("GrabarLic").classList.remove("disabled");
+            document.getElementById("GrabarLic").classList.add("enabled","AzulActivo");
+
+            document.getElementById("CancelarLic").classList.remove("disabled");
+            document.getElementById("CancelarLic").classList.add("enabled","RojoCancelar");
 
 
             // Habilitar o deshabilitar los TextBox
@@ -806,9 +821,12 @@
         //Funcion para habilitar Modificar y cancelar  ok
         function HabilitarEnlaces1() {
 
-            // Habilitar enlaces
-            document.getElementById("ModificarLic").classList.add("enabled");
-            document.getElementById("CancelarLic").classList.add("enabled");
+            // Habilitar Deshabilitar botones
+            document.getElementById("ModificarLic").classList.remove("disabled");
+            document.getElementById("ModificarLic").classList.add("enabled","AzulActivo");
+
+            document.getElementById("CancelarLic").classList.remove("disabled");
+            document.getElementById("CancelarLic").classList.add("enabled","RojoCancelar");
         }
 
     </script>

@@ -17,14 +17,19 @@
 /*Para deshabilitar o habilitar  los iconos*/
 
 a.icong.disabled {
-    pointer-events: none;
-    color: black; /* Cambia el color a negro para enlaces deshabilitados */
-    opacity: 0.5;
+    background-color: #ededed; /* Color de fondo para botones deshabilitados */
+    cursor: not-allowed; /* Cambia el cursor al estilo "no permitido" */
+    border-bottom: 2px solid #ccc; /* Borde en la parte inferior */
+    border-right: 2px solid #ccc; /* Borde en el lado derecho */
+    padding: 0;
 }
 
 a.icong.enabled {
-    pointer-events: auto;
-    color: blue; /* Cambia el color a azul para enlaces habilitados */
+    background-color: #fff; /* Color de fondo para botones habilitados */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    border-bottom: 2px solid #ccc; /* Borde en la parte inferior */
+    border-right: 2px solid #ccc; /* Borde en el lado derecho */
+    padding: 0;
 }
 
 .auto-width-column {
@@ -42,4 +47,12 @@ a.icong.enabled {
     top: 0;
     z-index: 1;
     background-color: #f2f2f2; /* Ajusta el color de fondo del encabezado según tus preferencias */
+}
+
+.AzulActivo {
+    color: #0863a4;
+}
+
+.RojoCancelar {
+    color: #b94747
 }

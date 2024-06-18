@@ -5,3 +5,9 @@
 .fila-seleccionada {
     background-color: #D6FAFA; /* Cambia el color de fondo según tus preferencias */
 }
+
+.Tam {
+    display: block;
+    width: 100%;
+    height: 100%;
+}

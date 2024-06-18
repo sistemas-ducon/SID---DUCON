@@ -9,22 +9,27 @@
     }
 
 .contenedor-icono i {
-    font-size: 24px;
-    margin: 5px;
+    font-size: 1.2rem;
+    margin: 0.4rem;
 }
 
 
 /*Para deshabilitar o habilitar  los iconos*/
 
 a.icong.disabled {
-    pointer-events: none;
-    color: black; /* Cambia el color a negro para enlaces deshabilitados */
-    opacity: 0.5;
+    background-color: #ededed; /* Color de fondo para botones deshabilitados */
+    cursor: not-allowed; /* Cambia el cursor al estilo "no permitido" */
+    border-bottom: 2px solid #ccc; /* Borde en la parte inferior */
+    border-right: 2px solid #ccc; /* Borde en el lado derecho */
+    padding: 0;
 }
 
 a.icong.enabled {
-    pointer-events: auto;
-    color: blue; /* Cambia el color a azul para enlaces habilitados */
+    background-color: #fff; /* Color de fondo para botones habilitados */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    border-bottom: 2px solid #ccc; /* Borde en la parte inferior */
+    border-right: 2px solid #ccc; /* Borde en el lado derecho */
+    padding: 0;
 }
 
 
@@ -50,16 +55,11 @@ a.icong.enabled {
 
 .custom-icon {
     display: inline-block;
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.2rem;
+    height: 0.9rem;
     background-color: transparent; /* No necesitas fondo si usas una imagen de fondo */
     background-image: url('https://i.ibb.co/86fR8JK/icons8-microsoft-excel-2019-48.png'); /* Ruta de la imagen */
-    background-size: cover; /* Ajusta el tamaño de la imagen */
-    color: white;
-    text-align: center;
-    border-radius: 50%; /* Hace que sea un círculo */
-    font-size: 16px;
-    line-height: 30px; /* Centrar verticalmente */
+    background-size: 1.150rem; /* Ajusta el tamaño de la imagen */
 }
 
 
@@ -117,4 +117,12 @@ a.icong.enabled {
     display: block;
     width: 100%;
     height: 100%;
+}
+
+.AzulActivo {
+    color: #0863a4;
+}
+
+.RojoCancelar {
+    color: #b94747
 }

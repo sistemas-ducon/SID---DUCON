@@ -29,6 +29,18 @@
             return false; // Previene que el evento del botón se ejecute dos veces
         }
     </script>
+
+     <script>
+         function focusAndScrollToRow(rowId) {
+             var row = document.getElementById(rowId);
+             if (row) {
+                 row.setAttribute('tabindex', '-1'); // Make it focusable
+                 row.focus();
+                 row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+             }
+         }
+     </script>
+
 </head>
 
 
@@ -66,42 +78,42 @@
 
 
 
-                            <a class="icong disabled" href="#" title="Nuevo Render" id="NuevoRender" onclick="NuevoRender()">
-                                <i class="bi bi-file-earmark"></i>
+                            <a class="icong disabled btn btn-sm shadow-sm" href="#" title="Nuevo Render" id="NuevoRender" onclick="NuevoRender()">
+                               <i class="bi bi-file-earmark-check-fill"></i>
                             </a>
 
-                            <asp:LinkButton class="icong disabled" runat="server" title="Guardar Render" ID="GrabarRender" OnClick="GuardarModificarRender" OnClientClick="return validarFormularioRender();">
-                               <i class="bi bi-floppy-fill"></i>
+                            <asp:LinkButton class="icong disabled btn btn-sm shadow-sm" runat="server" title="Guardar Render" ID="GrabarRender" OnClick="GuardarModificarRender" OnClientClick="return validarFormularioRender();">
+                                  <i class="bi bi-floppy-fill"></i>
                             </asp:LinkButton>
 
-                            <a class="icong disabled" href="#" title="Modificar Render" id="ModificarRender" onclick="ModificarRender()">
-                                <i class="bi bi-wrench"></i>
+                            <a class="icong disabled btn btn-sm shadow-sm" href="#" title="Modificar Render" id="ModificarRender" onclick="ModificarRender()">
+                               <i class="bi bi-wrench-adjustable"></i>
                             </a>
 
 
-                            <asp:LinkButton class="icong disabled" title="Regresar el Render a un Proceso Anterior" ID="DevolverRender" runat="server">
+                            <asp:LinkButton class="icong disabled btn btn-sm shadow-sm" title="Regresar el Render a un Proceso Anterior" ID="DevolverRender" runat="server">
                                   <i class="bi bi-skip-backward-circle"></i>
                             </asp:LinkButton>
 
 
-                            <a class="icong disabled " href="#" title="Actualizar Render" id="Actualizar">
+                            <a class="icong disabled btn btn-sm shadow-sm " href="#" title="Actualizar Render" id="Actualizar">
                                 <i class="bi bi-arrow-clockwise"></i>
                             </a>
 
-                            <asp:LinkButton class="icong disabled" title="Pausar Render" ID="PausarRender" runat="server">
-                                <i class="bi bi-pause-circle"></i>
+                            <asp:LinkButton class="icong disabled btn btn-sm shadow-sm" title="Pausar Render" ID="PausarRender" runat="server">
+                              <i class="bi bi-pause-circle-fill"></i>
                             </asp:LinkButton>
 
-                            <a class="icong disabled " href="#" title="Importar Render" id="ImportarRender">
-                                <i class="bi bi-arrow-bar-down"></i>
+                            <a class="icong disabled btn btn-sm shadow-sm" href="#" title="Importar Render" id="ImportarRender">
+                                <i class="bi bi-arrow-down-circle-fill"></i>
                             </a>
 
-                            <a class="icong disabled " href="#" title="Cancelar" id="CancelarRender" onclick="Cancelar()">
-                                <i class="bi bi-x-lg"></i>
+                            <a class="icong disabled btn btn-sm shadow-sm" href="#" title="Cancelar" id="CancelarRender" onclick="Cancelar()">
+                                 <i class="bi bi-x-circle-fill"></i>
                             </a>
 
-                            <asp:LinkButton class="icong disabled" title="Eliminar Render " ID="EliminarRender" runat="server">
-                                  <i class="bi bi-trash"></i>
+                            <asp:LinkButton class="icong disabled btn btn-sm shadow-sm" title="Eliminar Render " ID="EliminarRender" runat="server">
+                                 <i class="bi bi-trash-fill"></i>
                             </asp:LinkButton>
 
 
@@ -121,7 +133,7 @@
                 <asp:UpdatePanel ID="PanelRender" runat="server" UpdateMode="Conditional">
                     <ContentTemplate>
 
-                        <div class="container-fluid Principal mb-2   ">
+                        <div class="container-fluid Principal g-2 mb-2   ">
 
                             <div class=" container-fluid rounded border gap-2  ">
 
@@ -679,7 +691,7 @@
                         <div class="container-fluid">
 
                             <div class="row pt-2">
-                                <div class="col-8">
+                                <div class="col-sm-8">
                                     <div class="input-group input-group-sm  mb-2 gap-3">
                                         <asp:Label ID="lbFechaIngreso" class="form-label" Text="Fecha Ingreso" runat="server"></asp:Label>
                                         <asp:TextBox ID="FechaIni" type="date" runat="server" class="form-control"></asp:TextBox>
@@ -687,7 +699,7 @@
                                         <asp:TextBox ID="FechaFin" type="date" runat="server" class="form-control"></asp:TextBox>
                                     </div>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-sm-2">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Button ID="btnConsultar" type="button" Text="Consultar" class="btn btn-outline-secondary" runat="server" OnClick="ConsultarRender"></asp:Button>
                                     </div>
@@ -695,13 +707,13 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-1">
+                                <div class="col-sm-1">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbClienteX" class="form-label" Text="Cliente" runat="server"></asp:Label>
 
                                     </div>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-sm-3">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
 
                                         <asp:TextBox ID="tbClienteX" type="text" class="form-control " runat="server"></asp:TextBox>
@@ -710,12 +722,12 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-1">
+                                <div class="col-sm-1">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbProyectoX" class="form-label" Text="Proyecto" runat="server"></asp:Label>
                                     </div>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-sm-3">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:TextBox ID="tbProyectoX" type="text" class="form-control " runat="server"></asp:TextBox>
                                     </div>
@@ -723,23 +735,23 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-1">
+                                <div class="col-sm-1">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:Label ID="lbNumeroRender" class="form-label" Text="Render N." runat="server"></asp:Label>
                                     </div>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-sm-3">
                                     <div class="input-group input-group-sm  mb-2 gap-2">
                                         <asp:TextBox ID="tbNumeroRender" runat="server" class="form-control"></asp:TextBox>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="row justify-content-center pt-3">
+                            <div class="row justify-content-center pt-3 m-1">
                                 <div class="border rounded p-2">
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="table-responsive mb-2 gap-2" style="max-height: 30rem; overflow-x: auto;">
+                                            <div class="table-responsive mb-2 gap-2" style="max-height: 25rem; height:25rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-center">Render Filtrados</h5>
 
                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="BuscarRender" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridBuscarRender_ItemDataBound" OnItemCommand="DataGridBuscarRenders_LinkButton">
@@ -893,10 +905,16 @@
 
     <script>
 
-        // se Habilitan enlaces 
-        document.getElementById("NuevoRender").classList.add("enabled");
-        document.getElementById("ImportarRender").classList.add("enabled");
-        document.getElementById("CancelarRender").classList.add("enabled");
+        // se Habilitan y deshabilitan botones 
+        
+        document.getElementById("NuevoRender").classList.remove("disabled");
+        document.getElementById("NuevoRender").classList.add("enabled","AzulActivo");
+
+        document.getElementById("ImportarRender").classList.remove("disabled");
+        document.getElementById("ImportarRender").classList.add("enabled","AzulActivo");
+
+        document.getElementById("CancelarRender").classList.remove("disabled");
+        document.getElementById("CancelarRender").classList.add("enabled","RojoCancelar");
 
         // Habilitar o deshabilitar los DropDownList
         var dropDownLists = document.querySelectorAll("select");
@@ -931,8 +949,8 @@
         function HabilitarEnlaces1() {
 
             // Habilitar enlaces
-            document.getElementById("ModificarRender").classList.add("enabled");
-
+            document.getElementById("ModificarRender").classList.remove("disabled");
+            document.getElementById("ModificarRender").classList.add("enabled","AzulActivo");
             // Si la pagina de Render Es para el Area de Dibujo , Se habilita Devolver, Pausar y Eliminar Render
             /* 
              document.getElementById("DevolverRender").classList.add("enabled");
@@ -1048,11 +1066,13 @@
 
 
 
-            // Deshabilitar enlace Nuevo Render 
-            document.getElementById("NuevoRender").classList.remove("enabled");
+            // Deshabilitar y habilitar botones  
 
-            // Habilitar enlace Grabar Render
-            document.getElementById("GrabarRender").classList.add("enabled");
+            document.getElementById("NuevoRender").classList.remove("enabled","AzulActivo");
+            document.getElementById("NuevoRender").classList.add("disabled");
+
+            document.getElementById("GrabarRender").classList.remove("disabled");
+            document.getElementById("GrabarRender").classList.add("enabled","AzulActivo");
 
 
 
@@ -1085,12 +1105,16 @@
                 alert("El render ya fue aprobado para Dibujo y Despiece, este departamento lo debe habilitar para ser modificado");
             }
             else {
-                // Habilitar enlace grabar
-                document.getElementById("GrabarRender").classList.add("enabled");
+                // Habilitar y Dehabilitar botones
+                document.getElementById("GrabarRender").classList.remove("disabled");
+                document.getElementById("GrabarRender").classList.add("enabled", "AzulActivo");
 
-                // Dehabilitar enlace Moficiar
-                document.getElementById("ModificarRender").classList.remove("enabled");
+                document.getElementById("NuevoRender").classList.remove("enabled", "AzulActivo");
+                document.getElementById("NuevoRender").classList.add("disabled");
 
+               
+                document.getElementById("ModificarRender").classList.remove("enabled","AzulActivo");
+                document.getElementById("ModificarRender").classList.add("disabled");
 
                 // Habilitar o deshabilitar los DropDownList
                 var dropDownLists = document.querySelectorAll("select");
@@ -1168,13 +1192,15 @@
 
         function Cancelar() {
             // Habilitar enlace Nuevo Render 
-            document.getElementById("NuevoRender").classList.add("enabled");
+            document.getElementById("NuevoRender").classList.remove("disabled");
+            document.getElementById("NuevoRender").classList.add("enabled","AzulActivo");
 
-            // Deshabilitar  enlace Importar Render
-            document.getElementById("GrabarRender").classList.remove("enabled");
-
-            // Habilitar enlace Importar Render
-            document.getElementById("Actualizar").classList.remove("enabled");
+           
+            document.getElementById("GrabarRender").classList.remove("enabled","AzulActivo");
+            document.getElementById("GrabarRender").classList.add("disabled");
+          
+            document.getElementById("Actualizar").classList.remove("enabled","AzulActivo");
+            document.getElementById("Actualizar").classList.add("disabled");
 
 
             // Habilitar o deshabilitar los DropDownList
