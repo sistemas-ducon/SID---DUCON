@@ -381,8 +381,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
                 Session["Id_OT2"] = row.Cells[4].Text;              
                 Session["Id_Plano"] = row.Cells[1].Text;
-            
 
+                
                 ControlBotonesModificarPlanoDataGrid();
 
 
@@ -401,6 +401,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
                         // Reiniciar la variable de sesión "ClickCount" a 0 para la próxima interacción
                         Session["ClickCount"] = 0;
+
+                        //Variable para controlar Activar Tap Plano en orden Trabajo 
+                        Session["controlTapPlano"] = "1";
                     }
  
                 }

@@ -210,14 +210,15 @@
 
     <script>
         function activarPestana(pestanaId, contenidoId) {
-            // Desactivar la pestaña actualmente activa
-            document.querySelector(".nav-link.active").classList.remove("active");
-            document.querySelector(".tab-pane.show.active").classList.remove("show", "active");
+            setTimeout(function () {
+                // Desactivar la pestaña actualmente activa
+                document.querySelector(".nav-link.active").classList.remove("active");
+                document.querySelector(".tab-pane.show.active").classList.remove("show", "active");
 
-            // Activar la nueva pestaña
-            document.getElementById(pestanaId).classList.add("active");
-            document.getElementById(contenidoId).classList.add("show", "active");
-
+                // Activar la nueva pestaña
+                document.getElementById(pestanaId).classList.add("active");
+                document.getElementById(contenidoId).classList.add("show", "active");
+            }, 350); // 350 milisegundos de retardo
         }
 
         function MostralModalObjetosNo() {
@@ -231,7 +232,6 @@
         }
 
     </script>
-
 
     <script>
         $(document).ready(function () {
@@ -265,9 +265,10 @@
                 progressMessage.text(messages[messageIndex]); // Actualizar el mensaje
             }, 500);
         }
+
     </script>
 
-
+   
 
 
 </head>
@@ -3036,7 +3037,7 @@
                                                             <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Lado" HeaderText="Lado" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="Descripcion_Familia" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
+                                                            <asp:BoundColumn DataField="PanModResponsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="FechaChequeo" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column" />
                                                             <asp:BoundColumn DataField="ID_Familia" Visible="false" />
 
@@ -3798,9 +3799,21 @@
             document.getElementById('planoEliminar').innerText = plano;
 
         }
+
+        // Poner el foco en una fila seleccionada 
+        function focusAndScrollToRow(rowId) {
+            var row = document.getElementById(rowId);          
+            if (row) {
+                row.setAttribute('tabindex', '-1'); // Make it focusable
+                row.focus();
+                row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+
+            }
+        } 
     </script>
 
-
+    
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

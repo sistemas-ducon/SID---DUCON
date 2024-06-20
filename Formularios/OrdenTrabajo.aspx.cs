@@ -161,6 +161,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 HabilitarBotonesPlano();
                             }
 
+                            //Activar Tap Plano 
+                            string script = "activarPestana('Plano-tab', 'Plano-Content');";
+                            ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
+
                         }
                         // Este bloque consulta la OT con variables de Session de afuera del formulario 
                         else if (Session["Id_OT2"] != null && Session["pedido2"] != null)
@@ -183,6 +187,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             // Se eliminar variables de session para cargar OT 
                             Session.Remove("Id_OT2");
                             Session.Remove("pedido2");
+
+                            if (Session["controlTapPlano"]?.ToString() == "1")
+                            {
+                                //Activar Tap Plano 
+                                string script = "activarPestana('Plano-tab', 'Plano-Content');";
+                                ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
+                                
+                                Session.Remove("controlTapPlano");
+
+                            }
+
 
                             if (Session["CargarTxt"]?.ToString() == "TXT")
                             {
@@ -3149,6 +3164,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 ObjetoEliminar.InnerText = Descri;
                 anchoEliminar.InnerText = Ancho;
+
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
+                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
+
+
             }
         }
 
@@ -3269,6 +3292,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 //se usa Para darle un color a la fila seleccionada  anderson
                 e.Item.CssClass = "fila-seleccionada";
 
+                
 
             }
         }
@@ -3421,6 +3445,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ValorlbDipLa2.Text = Altura + " Cms";
                 ValorlbDipLa3.Text = Altura + " Cms";
 
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
 
                 // Se compara si el click es en la misma fila con el id del plano 
                 if (row.Cells[8].Text == Session["Id_PanelNum_Session1"]?.ToString())
@@ -3447,6 +3474,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
                     Session["ClickCount1"] = 1;
                     Session["Id_PanelNum_Session1"] = row.Cells[8].Text;
+
+                  
+
+                    // Llamar a la función JavaScript para enfocar y desplazar la fila
+                    ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                 }
 
             }

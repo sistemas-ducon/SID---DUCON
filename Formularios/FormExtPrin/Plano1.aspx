@@ -268,8 +268,8 @@
 
     <script>
         function enviarFormulario() {
-            // Realiza el procesamiento necesario en el formulario 2
-
+            // Cierra la ventana 
+            window.close();
             // Actualiza el formulario 1
             window.opener.location.reload(); // Recarga el formulario padre
 

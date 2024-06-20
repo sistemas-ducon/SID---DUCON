@@ -52,11 +52,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 if (Session["usuariologueado"] != null)
                 {
                     // Para todos los usuarios 
+                    DepartamentoAsesor();
                     NombreAsesorLogeado();
                     CargarAsesoresEnDropDownList();
                     CargarClienteYContacto();
                     ZonaAsesorLog();
-                    DepartamentoAsesor();
                     CargarSession();
                     CargarVariablesDeSesion();
 
@@ -544,6 +544,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 ddlAsesor.DataBind();
 
+                if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
+                {
+                    ddlAsesor.SelectedValue = Session["CedulaLogeada"].ToString();
+                }
+
                 reader.Close();
             }
 
@@ -667,6 +672,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 isModalVisible = false;
             }
+
+            string script = @"ControlHeaderCard();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "ControlHeaderCard", script, true);
+
         }
 
 
@@ -692,34 +701,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (DesComplejo == 1 && programadoVentas == 1)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#57F525");    //Verde 
-                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#77a765");    //Verde 
+                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
                 else if (Urgente == 1 && programadoVentas == 1)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#FA721E");    //Naranja 
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#e9a270");    //Naranja 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
 
                 else if (programadoVentas == 1 && pausado == 1)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#08F4E2");    // Aqua
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#70ede4");    // Aqua
 
                 }
                 else if (fechaProgramada <= DateTime.Now && programadoVentas == 1)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F71A27");    //rojo 
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868");    //rojo 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
 
                 else if (programadoVentas == 0)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#673f8b");    //Morado 
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#72459b");    //Morado 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
                 else
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F1FF43");//amarillo 
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#efdd79");//amarillo 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
                 }
 
@@ -736,6 +745,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             CambiarSqlDataSource(valorSeleccionado);
             CambiarSqlDataSource2(valorSeleccionado);
+
+            string script = @"ControlHeaderCard();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "ControlHeaderCard", script, true);
         }
 
 
@@ -885,34 +897,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (DesComplejo == 1 && programadoVentas == 1)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#57F525");    //Verde 
-                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#77a765");    //Verde 
+                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
                 else if (Urgente == 1 && programadoVentas == 1)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#FA721E");    //Naranja 
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#e9a270");    //Naranja 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
 
                 else if (programadoVentas == 1 && pausado == 1)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#08F4E2");    // Aqua
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#70ede4");    // Aqua
 
                 }
                 else if (fechaProgramada <= DateTime.Now && programadoVentas == 1)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F71A27");    //rojo 
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868");    //rojo 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
 
                 else if (programadoVentas == 0)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#673f8b");    //Morado 
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#72459b");    //Morado 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
                 else
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F1FF43");//amarillo 
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#efdd79");//amarillo 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
                 }
 
@@ -950,8 +962,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     BuscarDesarrollo.DataBind();
                 }
 
-                string script = "<script>HabilEnla1Ventas();</script>";
-                ScriptManager.RegisterStartupScript(this, GetType(), "HabilEnla1Ventas", script, false);
+                // Control de la activacion del boton de cliente 
+                string script = "<script>ControlBtnCliente();</script>";
+                ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, false);
 
             }
             else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO" /* || ControlDeDiseño() */)
@@ -1037,34 +1050,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
                 else if (DesComplejo == 1 && programadoVentas == 1)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#57F525");    //Verde 
-                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#77a765");    //Verde 
+                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
                 else if (Urgente == 1 && programadoVentas == 1)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#FA721E");    //Naranja 
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#e9a270");    //Naranja 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
 
                 else if (programadoVentas == 1 && pausado == 1)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#08F4E2");    // Aqua
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#70ede4");    // Aqua
 
                 }
                 else if (fechaProgramada <= DateTime.Now && programadoVentas == 1)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F71A27");    //rojo 
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868");    //rojo 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
 
                 else if (programadoVentas == 0)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#673f8b");    //Morado 
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#72459b");    //Morado 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
                 else
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F1FF43");//amarillo 
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#efdd79");//amarillo 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
                 }
 
@@ -1161,7 +1174,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         break;
                     }
                 }
-                tbDesarrollaPor.Text = RealizadoPor.Replace("&nbsp;","PENDIENTE");
+                tbDesarrollaPor.Text = RealizadoPor.Replace("&nbsp;", "PENDIENTE");
                 tbFechaEntrega.Text = FechaEntregaForm.ToString("yyyy-MM-dd");
                 tbFechaEntregaServidor.Text = FechaEntregaForm.ToString("yyyy-MM-dd");
                 tbFechaRespuesta.Text = FechaRespuestaForm.ToString("yyyy-MM-dd");
@@ -1216,11 +1229,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 //Limpiamos Campos de Detalle 
                 LimpiarCamposDetalle();
 
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
+                tbId_Fila.Text = rowIndex.ToString();
 
 
 
                 if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
                 {
+
+                    DataGrid2.DataSourceID = "CargarCotizaciones";
+                    DataGrid2.DataBind();
+                    BuscarDesarrollo.DataBind();
+
                     if (termiVenta != "True")
                     {
 
@@ -1231,6 +1253,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         string script = "<script>HabilEnla1Ventas();</script>";
                         ScriptManager.RegisterStartupScript(this, GetType(), "HabilEnla1Ventas", script, false);
+
+                        // Llamar a la función JavaScript para enfocar y desplazar la fila
+                        ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                     }
                     else
                     {
@@ -1241,13 +1266,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         string script = "<script>HabilitarEnlaces4();</script>";
                         ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces4", script, false);
+
+                        // Llamar a la función JavaScript para enfocar y desplazar la fila
+                        ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                     }
 
                 }
                 else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
                 {
-                    CargarSolicitudPrimerafilaDesarrollo();
 
+                    //Se refrescan los otros datagrid 
+                    CargarCotizaciones_Metodo();
 
                     if (TermiDiseño != "True")
                     {
@@ -1257,10 +1286,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         btnProgramarSolicitud.CssClass = "btn btn-sm btn-warning";
 
                         ConfirmarComplejo.Enabled = true;
-                        ConfirmarComplejo.CssClass = "btn btn-sm btn-outline-primary";
+                        ConfirmarComplejo.CssClass = "btn btn-sm btn-primary";
 
                         btnConUrgente.Enabled = true;
-                        btnConUrgente.CssClass = "btn btn-sm btn-outline-primary";
+                        btnConUrgente.CssClass = "btn btn-sm btn-primary";
+
+                        btnTrabajarSolicitud.Enabled = true;
+                        btnTrabajarSolicitud.CssClass = "btn btn-sm btn-primary  btn-dept";
+
+                        btnDesprogramar.Enabled = true;
+                        btnDesprogramar.CssClass = "btn btn-sm btn-primary  btn-dept";
+
+                        btnTrbajarCotizacion.Enabled = false;
+                        btnTrbajarCotizacion.CssClass = "btn btn-sm btn-outline-primary";
+
+                        btnDesprogramar1.Enabled = false;
+                        btnDesprogramar1.CssClass = "btn btn-sm btn-outline-primary";
 
                         chxDesComplejo.Enabled = true;
                         chxUrgente.Enabled = true;
@@ -1271,11 +1312,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             {
                                 string script = "<script>HabEnlDiseñoPausado();</script>";
                                 ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+
+                                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                             }
                             else
                             {
                                 string script = "<script>HabEnlDiseño();</script>";
                                 ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+
+                                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                             }
 
                         }
@@ -1285,11 +1332,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             {
                                 string script = "<script>HabEnlDiseño3Pausado();</script>";
                                 ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+
+                                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                             }
                             else
                             {
                                 string script = "<script>HabEnlDiseño3();</script>";
                                 ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño2", script, false);
+
+                                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                             }
                         }
 
@@ -1313,6 +1366,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         string script = "<script>HabEnlDiseño2();</script>";
                         ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño2", script, false);
+
+                        // Llamar a la función JavaScript para enfocar y desplazar la fila
+                        ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
 
 
                     }
@@ -1459,11 +1515,25 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 //Limpiamos Campos de Detalle 
                 LimpiarCamposDetalle();
 
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
+                tbId_Fila.Text = rowIndex.ToString();
+
+
+
+
 
                 if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
                 {
+
+                    DataGrid1.DataSourceID = "CargarDesarrollos"; DataGrid1.DataSourceID = "CargarDesarrollos";
+                    DataGrid1.DataBind();
+                    BuscarDesarrollo.DataBind();
+
                     if (termiVenta != "True")
                     {
+
 
                         Session["ProVenSolicitud"] = termiVenta;
 
@@ -1472,6 +1542,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         string script = "<script>HabilEnla1Ventas();</script>";
                         ScriptManager.RegisterStartupScript(this, GetType(), "HabilEnla1Ventas", script, false);
+
+                        // Llamar a la función JavaScript para enfocar y desplazar la fila
+                        ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                     }
                     else
                     {
@@ -1481,13 +1554,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         string script = "<script>HabilitarEnlaces4();</script>";
                         ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces4", script, false);
+
+                        // Llamar a la función JavaScript para enfocar y desplazar la fila
+                        ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                     }
 
                 }
                 else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
                 {
 
-                    CargarSolicitudPrimerafilaCotizacion();
+                    // se refrescan lo demas datagrid
+                    CargarDesarrollos_Metodo();
 
                     if (TermiDiseño != "True")
                     {
@@ -1503,6 +1580,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         btnConUrgente.Enabled = true;
                         btnConUrgente.CssClass = "btn btn-sm btn-outline-primary";
 
+
+                        btnTrbajarCotizacion.Enabled = true;
+                        btnTrbajarCotizacion.CssClass = "btn btn-sm btn-primary btn-depth ";
+
+                        btnDesprogramar1.Enabled = true;
+                        btnDesprogramar1.CssClass = "btn btn-sm btn-primary  btn-dept";
+
+                        btnTrabajarSolicitud.Enabled = false;
+                        btnTrabajarSolicitud.CssClass = "btn btn-sm btn-outline-primary";
+
+                        btnDesprogramar.Enabled = false;
+                        btnDesprogramar.CssClass = "btn btn-sm btn-outline-primary";
+
+
                         chxDesComplejo.Enabled = true;
                         chxUrgente.Enabled = true;
 
@@ -1512,11 +1603,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             {
                                 string script = "<script>HabEnlDiseñoPausado();</script>";
                                 ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+
+                                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                             }
                             else
                             {
                                 string script = "<script>HabEnlDiseño();</script>";
                                 ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+
+                                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                             }
 
                         }
@@ -1526,11 +1623,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             {
                                 string script = "<script>HabEnlDiseño3Pausado();</script>";
                                 ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+
+                                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                             }
                             else
                             {
                                 string script = "<script>HabEnlDiseño3();</script>";
                                 ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño2", script, false);
+
+                                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                             }
                         }
 
@@ -1555,6 +1658,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         string script = "<script>HabEnlDiseño2();</script>";
                         ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño2", script, false);
+
+                        // Llamar a la función JavaScript para enfocar y desplazar la fila
+                        ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
 
 
                     }
@@ -1701,9 +1807,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 //Limpiamos Campos de Detalle 
                 LimpiarCamposDetalle();
 
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
+
+
 
                 if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
                 {
+                    DataGrid1.DataSourceID = "CargarDesarrollos";
+                    DataGrid1.DataBind();
+                    DataGrid2.DataSourceID = "CargarCotizaciones";
+                    DataGrid2.DataBind();
+
                     if (termiVenta != "True")
                     {
 
@@ -1714,6 +1830,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         string script = "<script>HabilEnla1Ventas();</script>";
                         ScriptManager.RegisterStartupScript(this, GetType(), "HabilEnla1Ventas", script, false);
+
+
+                        // Llamar a la función JavaScript para enfocar y desplazar la fila
+                        ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                     }
                     else
                     {
@@ -1724,11 +1844,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         string script = "<script>HabilitarEnlaces4();</script>";
                         ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces4", script, false);
+
+                        // Llamar a la función JavaScript para enfocar y desplazar la fila
+                        ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                     }
 
                 }
                 else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
                 {
+                    //Se refrescan lo demas datagrid
+                    CargarDesarrollos_Metodo();
+                    CargarCotizaciones_Metodo();
 
                     if (TermiDiseño != "True")
                     {
@@ -1753,11 +1879,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             {
                                 string script = "<script>HabEnlDiseñoPausado();</script>";
                                 ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+
+                                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                             }
                             else
                             {
                                 string script = "<script>HabEnlDiseño();</script>";
                                 ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+
+                                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                             }
 
                         }
@@ -1767,11 +1899,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             {
                                 string script = "<script>HabEnlDiseño3Pausado();</script>";
                                 ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño", script, false);
+
+                                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                             }
                             else
                             {
                                 string script = "<script>HabEnlDiseño3();</script>";
                                 ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño2", script, false);
+
+                                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                             }
                         }
 
@@ -1796,6 +1934,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         string script = "<script>HabEnlDiseño2();</script>";
                         ScriptManager.RegisterStartupScript(this, GetType(), "HabEnlDiseño2", script, false);
+
+                        // Llamar a la función JavaScript para enfocar y desplazar la fila
+                        ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
 
 
                     }
@@ -3318,6 +3459,40 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
+        private void CargarDesarrollos_Metodo()
+        {
+            // Cargar Desarrollos 
+
+            CargarDesarrollos.SelectCommand = " SELECT * FROM tblSoliciDiseEspe  " +
+                                                           " WHERE Terminado = 0 AND Dirigidoa='DESARROLLO DE PRODUCTO'AND  ProgramadoVentas = 1  " +
+                                                           " AND TipoSolicitud ='DESARROLLO' ORDER BY Fecha_Ingreso ASC ";
+
+
+
+            DataGrid1.DataSourceID = "CargarDesarrollos";
+            DataGrid1.DataBind();
+
+
+        }
+
+        private void CargarCotizaciones_Metodo()
+        {
+
+            // Cargar Cotizaciones 
+
+            CargarCotizaciones.SelectCommand = "SELECT * FROM tblSoliciDiseEspe " +
+                                               "WHERE Terminado = 0 AND TipoSolicitud ='COTIZACIÓN' AND Dirigidoa = 'DESARROLLO DE PRODUCTO' " +
+                                               "AND ProgramadoVentas = 1 ORDER BY Fecha_Ingreso ASC;";
+
+
+
+            DataGrid2.DataSourceID = "CargarCotizaciones";
+            DataGrid2.DataBind();
+
+
+
+        }
+
 
         // Asignar Dibujante en Solcitud Especial (Desarrollo)
         protected void btnTrabajarSolicitud_Click(object sender, EventArgs e)
@@ -3339,7 +3514,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             ProgramarDibujanteDesarrollo(lbNumeroSolicitud.Text);
             ContadorClic.Text = "";
-            CargarSolicitudPrimerafilaDesarrollo();
+            CargarDesarrollos_Metodo();
+
+
+
+            int rowIndex = Convert.ToInt32(tbId_Fila.Text);
+            string script = $"SeleccionarFilayEnfocarDesarrollo({rowIndex});";
+            ScriptManager.RegisterStartupScript(this, GetType(), "SeleccionarFilayEnfocarDesarrollo", script, true);
+
+
         }
         private void ProgramarDibujanteDesarrollo(string ID)
         {
@@ -3385,7 +3568,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DesprogramarDibujanteDesarrollo(lbNumeroSolicitud.Text);
             ContadorClic.Text = "";
-            CargarSolicitudPrimerafilaDesarrollo();
+            CargarDesarrollos_Metodo();
+
+            int rowIndex = Convert.ToInt32(tbId_Fila.Text);
+            string script = $"SeleccionarFilayEnfocarDesarrollo({rowIndex});";
+            ScriptManager.RegisterStartupScript(this, GetType(), "SeleccionarFilayEnfocarDesarrollo", script, true);
+
+
         }
         private void DesprogramarDibujanteDesarrollo(string ID)
         {
@@ -3429,7 +3618,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             ProgramarDibujanteCotizacion(lbNumeroSolicitud.Text);
             ContadorClic.Text = "";
-            CargarSolicitudPrimerafilaCotizacion();
+            CargarCotizaciones_Metodo();
+
+            int rowIndex = Convert.ToInt32(tbId_Fila.Text);
+            string script = $"SeleccionarFilayEnfocarCotizacion({rowIndex});";
+            ScriptManager.RegisterStartupScript(this, GetType(), "SeleccionarFilayEnfocarDesarrollo", script, true);
         }
         private void ProgramarDibujanteCotizacion(string ID)
         {
@@ -3472,7 +3665,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DesprogramarDibujanteCotizacion(lbNumeroSolicitud.Text);
             ContadorClic.Text = "";
-            CargarSolicitudPrimerafilaCotizacion();
+            CargarCotizaciones_Metodo();
+
+            int rowIndex = Convert.ToInt32(tbId_Fila.Text);
+            string script = $"SeleccionarFilayEnfocarCotizacion({rowIndex});";
+            ScriptManager.RegisterStartupScript(this, GetType(), "SeleccionarFilayEnfocarDesarrollo", script, true);
         }
         private void DesprogramarDibujanteCotizacion(string ID)
         {
@@ -3527,12 +3724,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     {
                         DataGrid1.DataSourceID = "SolUnica";
                         DataGrid1.DataBind();
+
+                        string script = @"ControlBtnCliente();";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, true);
                     }
                     else
                     {
                         string mensajeExito = "El desarrollo buscado no existe";
                         string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
                         ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
+
+                        string script = @"ControlBtnCliente();";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, true);
+
                     }
                 }
                 else
@@ -3541,6 +3745,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
                     ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
                     CargarDesarrollos_Cotizaciones();
+
+                    string script = @"ControlBtnCliente();";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, true);
                 }
             }
 
@@ -3555,6 +3762,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 if (ID_Cot_Dib.Text == "")
                 {
                     CargarDesarrollos_Cotizaciones();
+                    string script = @"ControlBtnCliente();";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, true);
                 }
                 else
                 {
@@ -3582,6 +3791,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         string mensajeExito = "La cotización buscada no existe";
                         string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
                         ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
+
+                        string script = @"ControlBtnCliente();";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, true);
                     }
                 }
                 else
@@ -3590,6 +3802,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
                     ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
                     CargarDesarrollos_Cotizaciones();
+
+                    string script = @"ControlBtnCliente();";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, true);
                 }
             }
 
@@ -3630,56 +3845,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
 
-        // Mantener el datagrid  de Desarrollo fila selecccionada
-        private void CargarSolicitudPrimerafilaDesarrollo()
-        {
-            // actualiza la consulta del SqlDatasource
-            CargarDesarrollos.SelectCommand = " SELECT * FROM tblSoliciDiseEspe  WHERE Terminado = 0  AND Dirigidoa='DESARROLLO DE PRODUCTO'  " +
-                                              "AND  ProgramadoVentas = 1  AND TipoSolicitud ='DESARROLLO' ORDER BY " +
-                                              "CASE     WHEN ID_Solicitud = @Id_Sol  THEN 0     ELSE 1   END,   Fecha_Ingreso ASC";
-
-
-            // Limpiar los parámetros anteriores
-            CargarDesarrollos.SelectParameters.Clear();
-
-            int num = Convert.ToInt32(lbNumeroSolicitud.Text);
-            CargarDesarrollos.SelectParameters.Add("Id_Sol", num.ToString());
-
-            DataGrid1.DataSourceID = "CargarDesarrollos";
-            DataGrid1.DataBind();
-            if (DataGrid1.Items.Count > 0)
-            {
-                DataGridItem primeraFila = DataGrid1.Items[0];
-                primeraFila.CssClass = "fila-seleccionada1"; // Asigna la clase CSS
-            }
-        }
-
-
-        // Mantener el datagrid Cotizacion fila selecccionada 
-        private void CargarSolicitudPrimerafilaCotizacion()
-        {
-            // actualiza la consulta del SqlDatasource
-            CargarCotizaciones.SelectCommand = "SELECT * FROM tblSoliciDiseEspe  WHERE Terminado = 0  AND Dirigidoa='DESARROLLO DE PRODUCTO' " +
-                                               " AND  ProgramadoVentas = 1  AND TipoSolicitud ='COTIZACIÓN' ORDER BY " +
-                                               "CASE     WHEN ID_Solicitud = @Id_Sol  THEN 0     ELSE 1   END,   Fecha_Ingreso ASC";
-
-
-            // Limpiar los parámetros anteriores
-            CargarCotizaciones.SelectParameters.Clear();
-
-            int num = Convert.ToInt32(lbNumeroSolicitud.Text);
-            CargarCotizaciones.SelectParameters.Add("Id_Sol", num.ToString());
-
-            DataGrid2.DataSourceID = "CargarCotizaciones";
-            DataGrid2.DataBind();
-            if (DataGrid2.Items.Count > 0)
-            {
-                DataGridItem primeraFila = DataGrid2.Items[0];
-                primeraFila.CssClass = "fila-seleccionada1"; // Asigna la clase CSS
-            }
-        }
-
-
         // Confirmar Solicitud Especial Complejo 
         protected void ConfirmarComplejo_Click(object sender, EventArgs e)
         {
@@ -3709,6 +3874,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     string mensajeExito = "La solicitud ya está marcada como Desarrollo Complejo.";
                     string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
                     ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
+
                 }
                 else
                 {
@@ -3717,14 +3883,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
                     ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
 
-                    if (ddlTipo.SelectedItem.Text == "DESARROLLO")
-                    {
-                        CargarSolicitudPrimerafilaDesarrollo();
-                    }
-                    else
-                    {
-                        CargarSolicitudPrimerafilaCotizacion();
-                    }
                 }
 
             }
@@ -3747,6 +3905,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
 
             }
+
+
+            CargarDesarrollos_Cotizaciones();
+            if (ddlTipo.SelectedValue.ToUpper() == "DESARROLLO")
+            {
+                int rowIndex = Convert.ToInt32(tbId_Fila.Text);
+                string script = $"SeleccionarFilayEnfocarDesarrollo({rowIndex});";
+                ScriptManager.RegisterStartupScript(this, GetType(), "SeleccionarFilayEnfocarDesarrollo", script, true);
+            }
+            else if (ddlTipo.SelectedValue.ToUpper() == "COTIZACIÓN")
+            {
+                int rowIndex = Convert.ToInt32(tbId_Fila.Text);
+                string script = $"SeleccionarFilayEnfocarCotizacion({rowIndex});";
+                ScriptManager.RegisterStartupScript(this, GetType(), "SeleccionarFilayEnfocarCotizacion", script, true);
+            }
+
         }
         private void ActulizarComplejo(string ID, bool Complejo)
         {
@@ -3840,14 +4014,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
                     ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
 
-                    if (ddlTipo.SelectedItem.Text == "DESARROLLO")
-                    {
-                        CargarSolicitudPrimerafilaDesarrollo();
-                    }
-                    else
-                    {
-                        CargarSolicitudPrimerafilaCotizacion();
-                    }
+
                 }
 
 
@@ -3876,6 +4043,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             }
+
+            CargarDesarrollos_Cotizaciones();
+
+            if (ddlTipo.SelectedValue.ToUpper() == "DESARROLLO")
+            {
+                int rowIndex = Convert.ToInt32(tbId_Fila.Text);
+                string script = $"SeleccionarFilayEnfocarDesarrollo({rowIndex});";
+                ScriptManager.RegisterStartupScript(this, GetType(), "SeleccionarFilayEnfocarDesarrollo", script, true);
+            }
+            else if (ddlTipo.SelectedValue.ToUpper() == "COTIZACIÓN")
+            {
+                int rowIndex = Convert.ToInt32(tbId_Fila.Text);
+                string script = $"SeleccionarFilayEnfocarCotizacion({rowIndex});";
+                ScriptManager.RegisterStartupScript(this, GetType(), "SeleccionarFilayEnfocarCotizacion", script, true);
+            }
+
+
+
 
         }
         private void ActulizarUrgente(string ID, bool urgente)
@@ -4619,7 +4804,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
                 else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
                 {
-                    CargarSolicitudPrimerafilaDesarrollo();
+
 
                     if (TermiDiseño != "True")
                     {
@@ -4685,9 +4870,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // mostrar mensaje de exito 
 
-            
-        }
 
+        }
         protected void btnPausar_No_Click(object sender, EventArgs e)
         {
             Session["CargarSolicitud"] = "1";
@@ -4695,6 +4879,37 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Response.Redirect("Solicitud_Especial.aspx");
         }
 
-        
+        // control de vista para los Dibujantes Programacion 
+        protected void chkVerDes_CheckedChanged(object sender, EventArgs e)
+        {
+
+            if (chkVerDes.Checked)
+            {
+                bodyDes.Visible = false;
+                tituloDes.Visible = true;
+            }
+            else
+            {
+                bodyDes.Visible = true;
+                tituloDes.Visible = false;
+            }
+
+        }
+
+        protected void chkVerCot_CheckedChanged(object sender, EventArgs e)
+        {
+
+            if (chkVerCot.Checked)
+            {
+                bodyCot.Visible = false;
+                tituloCot.Visible = true;
+            }
+            else
+            {
+                bodyCot.Visible = true;
+                tituloCot.Visible = false;
+            }
+
+        }
     }
 }
