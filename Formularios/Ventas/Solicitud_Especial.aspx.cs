@@ -963,8 +963,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
 
                 // Control de la activacion del boton de cliente 
-                string script = "<script>ControlBtnCliente();</script>";
-                ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, false);
+                string script = "<script>ConsultarSolicitud();</script>";
+                ScriptManager.RegisterStartupScript(this, GetType(), "ConsultarSolicitud", script, false);
 
             }
             else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO" /* || ControlDeDiseño() */)

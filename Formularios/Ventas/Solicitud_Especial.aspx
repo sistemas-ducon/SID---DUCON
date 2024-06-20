@@ -1271,7 +1271,7 @@
                                                 <asp:LinkButton runat="server" Text="Buscar" ID="BuscarSol" title="Buscar Solicitud" Style="padding-right: 2rem; font-size: 1rem;" OnClick="BuscarSol_Click">
                                                         <i class="bi bi-search"></i>
                                                 </asp:LinkButton>
-                                                <asp:CheckBox ID="chkVerDes" runat="server" OnCheckedChanged="chkVerDes_CheckedChanged" AutoPostBack="true" />
+                                                <asp:CheckBox ID="chkVerDes" runat="server" ToolTip="Ocultar desarrollos" OnCheckedChanged="chkVerDes_CheckedChanged" AutoPostBack="true" />
                                             </div>
                                         </div>
 
@@ -1444,7 +1444,7 @@
                                                 <asp:LinkButton runat="server" Text="Buscar" ID="BuscarCot" title="Buscar Solicitud" Style="padding-right: 2rem; font-size: 1rem;" OnClick="BuscarCot_Click">
                                                   <i class="bi bi-search"></i>
                                                 </asp:LinkButton>
-                                                <asp:CheckBox ID="chkVerCot" runat="server" OnCheckedChanged="chkVerCot_CheckedChanged" AutoPostBack="true" />
+                                                <asp:CheckBox ID="chkVerCot" runat="server" ToolTip="Ocultar cotizaciones" OnCheckedChanged="chkVerCot_CheckedChanged" AutoPostBack="true" />
                                             </div>
                                         </div>
 
@@ -2651,8 +2651,7 @@
         function ControlBtnCliente() {
             var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
             boton1.disabled = true;
-
-            ControlHeaderCard();
+  
         }
 
         function HabilitarEnlaces2() {
@@ -3169,6 +3168,12 @@
             if (headerDes) {
                 headerDes.style.display = 'none';
             }
+        }
+
+        function ControlBuscarSolicitud() {
+
+            ControlBtnCliente
+            ControlHeaderCard();
         }
 
     </script>
