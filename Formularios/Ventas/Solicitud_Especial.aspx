@@ -1256,16 +1256,16 @@
                                     <%-- Desarrollo--%>
                                     <div class="row pb-2">
 
-                                        <div class="col-md-4 text-end">
+                                        <div class="col-md-2 text-end">
 
                                             <asp:TextBox ID="tbNombreAsesor" type="text" class="form-control form-control-sm" CssClass="hidden-textBox" runat="server"></asp:TextBox>
                                         </div>
 
-                                        <div class="col-md-3 text-center">
+                                        <div class="col-md-4 text-center">
                                             <h5 id="tituloDes" runat="server" visible="false">Desarrollos</h5>
                                         </div>
 
-                                        <div class="col-md-5 " id="BusDesDiv" runat="server">
+                                        <div class="col-md-6 " id="BusDesDiv" runat="server">
                                             <div class="input-group input-group-sm gap-2 justify-content-end">
                                                 <asp:TextBox ID="ID_Sol_Dib" CssClass="form-control form-control-sm  text-center fw-bold" Style="width: 15rem; max-width: 15rem;" placeHolder="N° Desarrollo" ToolTip="Digite la solcitud que desea buscar " runat="server" OnTextChanged="ID_Sol_Dib_TextChanged"></asp:TextBox>
                                                 <asp:LinkButton runat="server" Text="Buscar" ID="BuscarSol" title="Buscar Solicitud" Style="padding-right: 2rem; font-size: 1rem;" OnClick="BuscarSol_Click">
@@ -1432,13 +1432,13 @@
 
                                     <div class="row pb-2">
 
-                                        <div class="col-md-4"></div>
+                                        <div class="col-md-2"></div>
 
-                                        <div class="col-md-3 text-center">
+                                        <div class="col-md-4 text-center">
                                              <h5 id="tituloCot" runat="server" visible="false">Cotizaciones</h5>
                                         </div>
 
-                                        <div class="col-md-5 " id="BusCotDiv" runat="server">
+                                        <div class="col-md-6 " id="BusCotDiv" runat="server">
                                             <div class="input-group input-group-sm gap-2 justify-content-end">
                                                 <asp:TextBox ID="ID_Cot_Dib" CssClass="form-control form-control-sm fw-bold  text-center" style="width:15rem; max-width:15rem;" placeHolder="N° Cotización" ToolTip="Digite la solcitud que desea buscar " runat="server" OnTextChanged="ID_Cot_Dib_TextChanged"></asp:TextBox>
                                                 <asp:LinkButton runat="server" Text="Buscar" ID="BuscarCot" title="Buscar Solicitud" Style="padding-right: 2rem; font-size: 1rem;" OnClick="BuscarCot_Click">
