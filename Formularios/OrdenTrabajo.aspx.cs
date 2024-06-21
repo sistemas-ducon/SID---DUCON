@@ -1110,6 +1110,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             public string peso { get; set; }
             public string profundidad { get; set; }
             public string ajusteCub { get; set; }
+            public bool Cotizar { get; set; }
 
 
 
@@ -2986,12 +2987,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string cn = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(cn))
             {
-
                 SqlCommand command = new SqlCommand("cta_Plano_Paneles", connection);
                 command.CommandType = CommandType.StoredProcedure;
-
                 command.Parameters.Add("@Plan", SqlDbType.VarChar, 100).Value = txtPlano.Text;
-
 
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 DataTable dataTable = new DataTable();
@@ -3002,10 +3000,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 List<DatosFiltrados> datosFiltradosList = new List<DatosFiltrados>();
 
-
                 foreach (var grupo in gruposUnicos)
                 {
-
                     if (resumen.Length > 0)
                     {
                         resumen.Append(" - ");
@@ -3017,25 +3013,26 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     resumen.Append(grupo.Substring(0, 3) + " (" + sumaCantidad + ")");
 
-
                     datosFiltradosList.Add(new DatosFiltrados { Tipo = "Titulo", Titulo = "<b>" + grupo });
 
-                    var datosFiltrados = dataTable.AsEnumerable().Where(r => r.Field<string>("Descripcion_Grupo") == grupo).Select(r => new DatosFiltrados
-                    {
+                    var datosFiltrados = dataTable.AsEnumerable()
+                        .Where(r => r.Field<string>("Descripcion_Grupo") == grupo)
+                        .Select(r => new DatosFiltrados
+                        {
+                            ID = r["Id_Numerico"].ToString(),
+                            Descripcion = r["Descripcion_Panel"].ToString(),
+                            Altura = r["Altura"].ToString(),
+                            Ancho = r["Ancho"].ToString(),
+                            Cantidad = r["Cantidad"].ToString(),
+                            ValorUnd = r["Precio_Venta"].ToString(),
+                            SubTotal = (Convert.ToDecimal(r["Cantidad"]) * Convert.ToDecimal(r["Precio_Venta"])).ToString(),
+                            Id_Panel = r["Id_Panel"].ToString(),
+                            RevisadoDibujo = Convert.ToBoolean(r["RevisadoDibujo"].ToString()),
+                            Cotizar = Convert.ToBoolean(r["cotizar"])
 
-                        ID = r["Id_Numerico"].ToString(),
-                        Descripcion = r["Descripcion_Panel"].ToString(),
-                        Altura = r["Altura"].ToString(),
-                        Ancho = r["Ancho"].ToString(),
-                        Cantidad = r["Cantidad"].ToString(),
-                        ValorUnd = r["Precio_Venta"].ToString(),
-                        SubTotal = (Convert.ToDecimal(r["Cantidad"]) * Convert.ToDecimal(r["Precio_Venta"])).ToString(),
-                        Id_Panel = r["Id_Panel"].ToString(),
-                        RevisadoDibujo = Convert.ToBoolean(r["RevisadoDibujo"].ToString())
 
 
-
-                    });
+                        });
 
 
 
@@ -3051,7 +3048,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Agregar el resumen al del plano 
                 txResumen.InnerText = resumen.ToString();
 
-                decimal totalGeneral = datosFiltradosList.Where(d => d.Tipo != "Titulo" && d.Tipo != "Total").Sum(d => Convert.ToDecimal(d.SubTotal));
+                decimal totalGeneral = datosFiltradosList.Where(d => d.Tipo != "Titulo" && d.Tipo != "Total" && d.Cotizar).Sum(d => Convert.ToDecimal(d.SubTotal));
                 decimal Cantidad = datosFiltradosList.Where(d => d.Tipo != "Titulo" && d.Tipo != "Total").Sum(d => Convert.ToDecimal(d.Cantidad));
 
                 // Agregar la fila de total general al final del DataGrid
@@ -3104,9 +3101,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#47ca4b");
                         e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
                     }
-
                 }
-
 
                 if (datos.ValorUnd == "0")
                 {
@@ -3118,8 +3113,42 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     Session["ValorUnd"] = "1";
                 }
+
+                //Alienar celdas el centro               
+                e.Item.Cells[4].HorizontalAlign = HorizontalAlign.Center;
+                e.Item.Cells[5].HorizontalAlign = HorizontalAlign.Center;
+                e.Item.Cells[6].HorizontalAlign = HorizontalAlign.Center;
+
+
+                // Formatear y alinear SubTotal a la derecha
+                decimal valorUnd;
+                if (decimal.TryParse(datos.ValorUnd, out valorUnd))
+                {
+                    e.Item.Cells[7].Text = valorUnd.ToString("N0"); // Formato de número con 2 decimales
+                    e.Item.Cells[7].HorizontalAlign = HorizontalAlign.Right; // Alinear a la derecha
+                }
+
+
+                
+                decimal subTotal;
+                if (decimal.TryParse(datos.SubTotal, out subTotal))
+                {
+                    e.Item.Cells[8].Text = subTotal.ToString("N0"); 
+                    e.Item.Cells[8].HorizontalAlign = HorizontalAlign.Right; 
+                }
+
+                
+                if (datos.Tipo == "Total" && decimal.TryParse(datos.SubTotal.Replace("<b>", "").Replace("</b>", ""), out decimal subTotal1))
+                {
+                    e.Item.Cells[8].Text = $"<b>{subTotal1.ToString("N0")}</b>"; 
+                    e.Item.Cells[8].HorizontalAlign = HorizontalAlign.Right; 
+                    e.Item.Cells[8].Font.Bold = true; 
+                    e.Item.Cells[8].Font.Size = 11; 
+                }
             }
         }
+
+
 
         protected void DataGridDespiecePlano_LinkButton(object source, DataGridCommandEventArgs e)
         {
@@ -9689,25 +9718,31 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 DataTable dataTable = new DataTable();
                 adapter.Fill(dataTable);
 
-                var gruposUnicos = dataTable.AsEnumerable().Select(r => r.Field<string>("Descripcion_Grupo")).Distinct();
+                // Filtrar los datos donde Cotizar es true
+                var datosFiltradosTabla = dataTable.AsEnumerable().Where(r => Convert.ToBoolean(r["Cotizar"])).CopyToDataTable();
+
+                var gruposUnicos = datosFiltradosTabla.AsEnumerable().Select(r => r.Field<string>("Descripcion_Grupo")).Distinct();
 
                 foreach (var grupo in gruposUnicos)
                 {
                     datosFiltradosList.Add(new DatosFiltrados { Tipo = "Titulo", Titulo = grupo });
 
-                    var datosFiltrados = dataTable.AsEnumerable().Where(r => r.Field<string>("Descripcion_Grupo") == grupo).Select(r => new DatosFiltrados
-                    {
-                        Descripcion = r["Descripcion"].ToString(),
-                        Ancho = r["Ancho"].ToString(),
-                        Cantidad = r["Cantidad"].ToString(),
-                        ValorUnd = r["Precio_Venta"].ToString(),
-                        SubTotal = (Convert.ToDecimal(r["Cantidad"]) * Convert.ToDecimal(r["Precio_Venta"])).ToString(),
-                        Id_Panel = r["Id_Panel"].ToString(),
-                        peso = r["PesoKG"].ToString(),
-                        profundidad = r["Profundidad"].ToString(),
-                        ajusteCub = r["AjusteCubicaje"].ToString(),
-                        Altura = r["Altura"].ToString()
-                    });
+                    var datosFiltrados = datosFiltradosTabla.AsEnumerable()
+                        .Where(r => r.Field<string>("Descripcion_Grupo") == grupo)
+                        .Select(r => new DatosFiltrados
+                        {
+                            Descripcion = r["Descripcion"].ToString(),
+                            Ancho = r["Ancho"].ToString(),
+                            Cantidad = r["Cantidad"].ToString(),
+                            ValorUnd = r["Precio_Venta"].ToString(),
+                            SubTotal = (Convert.ToDecimal(r["Cantidad"]) * Convert.ToDecimal(r["Precio_Venta"])).ToString(),
+                            Id_Panel = r["Id_Panel"].ToString(),
+                            peso = r["PesoKG"].ToString(),
+                            profundidad = r["Profundidad"].ToString(),
+                            ajusteCub = r["AjusteCubicaje"].ToString(),
+                            Altura = r["Altura"].ToString(),
+                            Cotizar = Convert.ToBoolean(r["Cotizar"])
+                        });
 
                     datosFiltradosList.AddRange(datosFiltrados);
 
@@ -9715,13 +9750,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     datosFiltradosList.Add(new DatosFiltrados { Tipo = "Total", SubTotal = totalVenta.ToString() });
                 }
 
-                decimal totalGeneral = datosFiltradosList.Where(d => d.Tipo != "Titulo" && d.Tipo != "Total").Sum(d => Convert.ToDecimal(d.SubTotal));
+                decimal totalGeneral = datosFiltradosList
+                    .Where(d => d.Tipo != "Titulo" && d.Tipo != "Total")
+                    .Sum(d => Convert.ToDecimal(d.SubTotal));
+
                 // Agregar la fila de total general al final de la lista
                 datosFiltradosList.Add(new DatosFiltrados { Tipo = "Total", Titulo = "Total Despiece", SubTotal = totalGeneral.ToString() });
             }
 
             return datosFiltradosList;
         }
+
         private Dictionary<string, string> ObtenerDescripcionesPlano(string plano)
         {
             Dictionary<string, string> descripciones = new Dictionary<string, string>();
@@ -9732,7 +9771,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                           "INNER JOIN tblGrupoObjeto " +
                           "INNER JOIN tblPanel ON tblGrupoObjeto.ID_GrupoObjeto = tblPanel.Id_GrupoObjeto " +
                           "INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum ON tblPlano.Plano = tblPlano_Panel.Id_Plano " +
-                          "WHERE tblPlano.Plano = @plano";
+                          "WHERE tblPlano.Plano = @plano and tblGrupoObjeto.Cotizar = 1";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
