@@ -18,46 +18,106 @@
     <link type="text/css" href="../../Recursos/CSS/Ventas/Diseño_Venta.css" rel="stylesheet" />
     <title>Diseño - Departamento de Ventas</title>
 
-  <script type="text/javascript">
-      function triggerFileUpload() {
-          document.getElementById('<%= FileUpload1.ClientID %>').click();
-      }
+    <script>
+        function activarPestana(pestanaId, contenidoId) {
+            // Desactivar la pestaña actualmente activa
+            var activeTab = document.querySelector(".nav-link.active");
+            if (activeTab) {
+                activeTab.classList.remove("active");
+            }
 
-      document.getElementById('<%= FileUpload1.ClientID %>').addEventListener('change', function() {
-        document.getElementById('<%= BtnHiddenUpload.ClientID %>').click();
+            var activePane = document.querySelector(".tab-pane.show.active");
+            if (activePane) {
+                activePane.classList.remove("show", "active");
+            }
+
+            // Mostrar y activar la nueva pestaña
+            var newTab = document.getElementById(pestanaId);
+            var newPane = document.getElementById(contenidoId);
+
+            if (newTab) {
+                newTab.style.display = 'block';
+                newTab.classList.add("active");
+            }
+
+            if (newPane) {
+                newPane.classList.add("show", "active");
+            }
+        }
+    </script>
+
+<script>
+    function triggerFileUpload() {
+        document.getElementById('<%= FileUpload2.ClientID %>').click();
+    }
+
+    function showFileName() {
+        var fileUpload = document.getElementById('<%= FileUpload2.ClientID %>');
+        var textBox = document.getElementById('<%= txtFileName.ClientID %>');
+        if (fileUpload.files.length > 0) {
+            textBox.value = fileUpload.files[0].name;
+        }
+    }
+
+    $(document).ready(function () {
+        $('#<%= btnCargar.ClientID %>').on('click', function () {
+            showLoadingAnimation();
+        });
     });
-  </script>
+
+    function showLoadingAnimation() {
+        var loadingAnimation = $('#loadingAnimation');
+        var progressMessage = $('#progressMessage');
+        
+        loadingAnimation.show(); // Mostrar la animación de carga
+
+        // Array de mensajes
+        var messages = ["Cargando...", "Por favor, espere...", "Estamos procesando su solicitud...", "Gracias por su paciencia..."];
+        var messageIndex = 0;
+
+        // Cambiar mensajes de forma periódica
+        var interval = setInterval(function () {
+            messageIndex = (messageIndex + 1) % messages.length; // Cambiar el mensaje
+            progressMessage.text(messages[messageIndex]); // Actualizar el mensaje
+        }, 2000); // Cambiar mensaje cada 2 segundos
+    }
+</script>
+
+
+
+
+
+
+
+
+
 </head>
 <body translate="no">
     <form id="form1" runat="server" enctype="multipart/form-data">
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
         <asp:Literal ID="litModalScript" runat="server"></asp:Literal>
 
-
-
-        <nav class="navbar navbar-light bg-light">
-            <div class="container d-flex justify-content-center">
-                <ul class="nav nav-tabs" id="myTabs">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark shadow-sm" id="Diseño-BitacoraFPV-001-tab" data-bs-toggle="tab" href="#Diseño-BitacoraFPV-001-content">Diseño-Bitacora FPV-001</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark active shadow-sm" id="Programacion-tab" data-bs-toggle="tab" href="#Programacion-content">Programación</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark shadow-sm" id="Buscar-tab" data-bs-toggle="tab" href="#Buscar-content" style="display: none;">Buscar Diseño</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark shadow-sm" id="Buscar-tabPlano" data-bs-toggle="tab" href="#Plano-content" style="display: none;">Plano</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark shadow-sm" id="Despiece-tab" data-bs-toggle="tab" href="#Despiece-content" style="display: none;">Despiece</a>
-                    </li>
-
-                </ul>
-            </div>
-        </nav>
-
+       <nav class="navbar navbar-light bg-light">
+        <div class="container d-flex justify-content-center">
+            <ul class="nav nav-tabs" id="myTabs">
+                <li class="nav-item">
+                    <a class="nav-link text-dark" id="Diseño-BitacoraFPV-001-tab" data-bs-toggle="tab" href="#Diseño-BitacoraFPV-001-content">Diseño-Bitacora FPV-001</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark active" id="Programacion-tab" data-bs-toggle="tab" href="#Programacion-content">Programación</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" id="Buscar-tab" data-bs-toggle="tab" href="#Buscar-content" style="display: none;">Buscar Diseño</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" id="Buscar-tabPlano" data-bs-toggle="tab" href="#Plano-content" style="display: none;">Plano</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" id="Despiece-tab" data-bs-toggle="tab" href="#Despiece-content" style="display: none;">Despiece</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
         <div class="tab-content" id="myTabContent">
 
             <div class="tab-pane fade" id="Despiece-content">
@@ -190,12 +250,9 @@
                         <div class="container mt-3">
                             <div class="row">
                                 <div class="col-12 d-flex gap-2">
-                                     <asp:LinkButton runat="server" title="Nuevo plano" ID="LinkButton7" OnClientClick="triggerFileUpload(); return false;">
+                                     <asp:LinkButton runat="server" title="Nuevo plano" ID="LinkButton7" OnClick="LinkButton7_Click">
                     <img src="https://i.ibb.co/BCtb1QS/icons8-archivo-dxf-autocad-windows-11-color-310.png" alt="Nuevo plano" style="width: 40px; height: 40px;" />
-                </asp:LinkButton>
-                <asp:FileUpload runat="server" ID="FileUpload2" Style="display: none;" />
-                <asp:Button runat="server" ID="BtnHiddenUpload" Style="display: none;" OnClick="BtnHiddenUpload_Click" />
-                                    <asp:FileUpload runat="server" ID="FileUpload1" Style="display: none;" />
+                </asp:LinkButton>      
                                     <asp:LinkButton runat="server" title="Nuevo plano" ID="LinkButton8" CssClass="btn btn-sm">
                                         <img src="https://img.icons8.com/3d-fluency/94/print.png" alt="Nuevo plano" style="width: 40px; height: 40px;" />
                                     </asp:LinkButton>
@@ -207,9 +264,7 @@
                 </div>
             </div>
                      </div>
-
-
-                        
+            
                         <div class="modal fade" id="DigitarCantidad" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -225,9 +280,35 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>              
+
+                        <div id="modal23" class="modal fade" tabindex="-1" role="dialog">
+                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <h6>Resumen Dibujante</h6>
+                                        <div class="row">
+                                            <div class="border rounded">
+                                                <div class="table-responsive" style="max-height: 400px">
+                                                    <asp:DataGrid ID="DataGridNoExistentes" runat="server" AutoGenerateColumns="False" Class="table table-bordered table-hover table-sm">
+                                                        <Columns>
+                                                            <asp:BoundColumn DataField="Item" HeaderText="Item" />
+                                                            <asp:BoundColumn DataField="Objeto" HeaderText="Objeto" />
+                                                            <asp:BoundColumn DataField="Ancho" HeaderText="Ancho" />
+                                                            <asp:BoundColumn DataField="Cant" HeaderText="Cant" />
+                                                            <asp:BoundColumn DataField="Observacion" HeaderText="Observación" />
+                                                        </Columns>
+                                                    </asp:DataGrid>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                          <div class="modal fade" id="SeleccionFila" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal fade" id="SeleccionFila" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-danger">
@@ -261,6 +342,13 @@
                                 </div>
                             </div>
                         </div>
+
+        
+                        <asp:HiddenField ID="hdnUserConfirmed" runat="server" />
+                        <asp:Button ID="btnHidden" runat="server" Style="display:none;" OnClick="btnHidden_Click" />
+
+      
+
 
                     </ContentTemplate>
                 </asp:UpdatePanel>
@@ -832,7 +920,7 @@
             <div class="tab-pane fade" id="Diseño-BitacoraFPV-001-content">
                 <asp:UpdatePanel runat="server" ID="UpdateDiseñoBitacora" UpdateMode="Conditional">
                     <ContentTemplate>
-                        <div class="container-fluid">
+                      
 
                             <nav class="navbar navbar-expand-sm navbar-light bg-light gap-2">
                                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#ejemplo2" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -967,14 +1055,14 @@
                                     </ul>
                                 </div>
                             </nav>
-                        </div>
 
+                          <div class="container-fluid">
                         <div id="miDiv" runat="server" data-div="miDiv" style="display: block">
                             <%--  1/4--%>
-                            <div class="container-fluid m-1">
-                                <div class="row justify-content-center">
-                                    <div class="border shadow-sm bg-light rounded p-1">
-
+                         
+                              
+                                    <div class="border shadow-sm bg-light p-1 m-2">
+                                       
                                         <div class="row">
                                             <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
 
@@ -1181,14 +1269,14 @@
                                                 </div>
                                             </div>
 
-                                        </div>
+                                       
                                     </div>
                                 </div>
-                            </div>
+                           
                             <%-- 2/4--%>
-                            <div class="container-fluid m-2">
-                                <div class="row justify-content-center">
-                                    <div class="border shadow-sm bg-light rounded p-3">
+                           
+                              
+                                    <div class="border shadow-sm bg-light m-2">
 
                                         <div class="row">
                                             <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12 border">
@@ -1389,12 +1477,12 @@
 
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                               
+                            
                             <%--  3/4--%>
-                            <div class="container-fluid m-2">
-                                <div class="row justify-content-center">
-                                    <div class="border rounded p-1 shadow-sm bg-light">
+                            
+                               
+                                    <div class="border p-3 shadow-sm bg-light m-2">
                                         <div class="row">
                                             <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
                                                 <h6>Observaciones Ventas</h6>
@@ -1410,12 +1498,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                               
+                          
                             <%-- 4/4--%>
-                            <div class="container-fluid m-2">
-                                <div class="row justify-content-center">
-                                    <div class="border rounded p-1 shadow-sm bg-light">
+                           
+                               
+                                    <div class="border rounded p-3 shadow-sm bg-light m-2">
                                         <div class="row">
                                             <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                                                 <div class="border rounded p-1" style="height: 250px">
@@ -1522,9 +1610,9 @@
                                         </asp:LinkButton>
                                     </div>
                                 </div>
-                            </div>
+                          
 
-
+                        
 
                         </div>
 
@@ -1575,7 +1663,6 @@
                                                                                 CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square text-white'></i>" />
                                                                         </ItemTemplate>
                                                                     </asp:TemplateColumn>
-
                                                                     <asp:TemplateColumn HeaderText="Turno" ItemStyle-CssClass="auto-width-column">
                                                                         <ItemTemplate>
                                                                             <%# Container.ItemIndex + 1 %>
@@ -2191,7 +2278,62 @@
                 </div>
             </div>
         </div>
+<div class="modal fade" id="CargarTXToXLS" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow">
+            <div class="modal-header bg-success">
+                <h5 class="modal-title d-flex align-items-center justify-content-center text-white">CARGAR TXT O XLS</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <div class="input-group input-group-sm gap-2 justify-content-center">
+                        <asp:CheckBox ID="chkElemExit" CssClass="form-check" runat="server" ToolTip="Seleccione la casilla si desea cargar los elementos existentes." />
+                        <asp:Label ID="Label19" runat="server" Text="Cargar Elementos Existentes" ToolTip="Seleccione la casilla si desea cargar los elementos existentes."></asp:Label>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center form-control-sm justify-content-center">
+                    <p>Por favor selecciona el txt que deseas cargar</p>
+                    <asp:LinkButton runat="server" title="Nuevo plano" ID="LinkButton3" OnClientClick="triggerFileUpload(); return false;">
+                        <img src="https://i.ibb.co/BCtb1QS/icons8-archivo-dxf-autocad-windows-11-color-310.png" alt="Nuevo plano" style="width: 40px; height: 40px;" />
+                    </asp:LinkButton>
+                    <asp:FileUpload runat="server" ID="FileUpload2" Style="display: none;" OnChange="showFileName();" />
+                    <asp:TextBox runat="server" ID="txtFileName" CssClass="form-control" ReadOnly="True"></asp:TextBox>
+                </div>
+                <!-- Animación de carga -->
+                <div id="loadingAnimation" class="loading-animation" style="display: none;">
+                    <div class="spinner"></div>
+                    <div id="progressMessage" class="progress-message">Cargando...</div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex align-items-center justify-content-center bg-light">
+                <asp:Button ID="btnCargar" runat="server" type="button" class="btn btn-sm linkButtonClicked2 shadow-sm btn-outline-dark" OnClick="btnCargar_Click" Text="Cargar" OnClientClick="showLoadingAnimation(); return true;"></asp:Button>
+            </div>
+        </div>
+    </div>
+</div>
 
+
+
+
+        <div class="modal fade" id="CargarElementosExistentes" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID_DUCON</h5>
+
+                                    </div>
+                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                                        <p>Desea cargar los elementos Existentes?</p>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                                        <asp:Button runat="server" type="button" class="btn btn-sm linkButtonClicked2 shadow-sm btn-outline-dark" data-bs-dismiss="modal" Text="Si" aria-label="Close"></asp:Button>
+                                         <asp:Button runat="server" type="button" class="btn btn-sm linkButtonClicked2 shadow-sm btn-outline-dark" data-bs-dismiss="modal" Text="No" aria-label="Close"></asp:Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
     </form>
 
     <script>

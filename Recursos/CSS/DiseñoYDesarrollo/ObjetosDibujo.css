@@ -1,6 +1,6 @@
 ﻿.auto-width-column {
     width: auto;
-    max-width: 350px; /* Puedes ajustar este valor según el ancho máximo deseado */
+    max-width: 200px; /* Puedes ajustar este valor según el ancho máximo deseado */
     white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
     overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
     text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
@@ -18,4 +18,9 @@
 
 .color{
     color:#808080;
+}
+
+.fila-seleccionada {
+    background-color: black !important; /*Se Cambia el color de la fila Seleccionada  */
+    color: white !important;
 }

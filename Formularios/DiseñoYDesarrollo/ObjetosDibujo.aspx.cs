@@ -9,6 +9,7 @@ using System.Web.UI.WebControls;
 using System.Data;
 using AjaxControlToolkit;
 using System.Web.UI.HtmlControls;
+using System.Windows.Forms;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 {
@@ -17,24 +18,25 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         private string CadenaConexionSID = "BD_SIDSQL";
         protected void Page_Load(object sender, EventArgs e)
         {
-       
 
-                if (!IsPostBack)
-                {
-                    LoadGrupoObjeto();
-                    LoadLinea();
-                    dropdivisiones();
-                    LoadData();
-                    DisposicionInicialBotones();
-                    EstadoGrabarCancelarInicial();
-                }
-            
-     
+
+            if (!IsPostBack)
+            {
+                LoadGrupoObjeto();
+                LoadLinea();
+                dropdivisiones();
+                LoadData();
+                DisposicionInicialBotones();
+                EstadoGrabarCancelarInicial();
+                DataGridInicial();
+            }
+
+
         }
 
         protected void EstadoGrabarCancelarInicial()
         {
-            var controles = new (Control control, string tag)[]
+            var controles = new (System.Web.UI.Control control, string tag)[]
         {
             (CheckEstable, CheckEstable.Checked.ToString()),
             (CheckActivo, CheckActivo.Checked.ToString()),
@@ -58,13 +60,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             {
                 switch (control)
                 {
-                    case TextBox textBox:
+                    case System.Web.UI.WebControls.TextBox textBox:
                         textBox.Attributes["Tag"] = tag;
                         break;
-                    case DropDownList dropDownList:
+                    case System.Web.UI.WebControls.DropDownList dropDownList:
                         dropDownList.Attributes["Tag"] = tag;
                         break;
-                    case CheckBox checkBox:
+                    case System.Web.UI.WebControls.CheckBox checkBox:
                         checkBox.Attributes["Tag"] = tag;
                         break;
                     case HtmlTextArea htmlTextArea:
@@ -81,10 +83,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
         private void EstadoGrabarCancelar()
         {
-          
+
 
             // Lista de controles y sus atributos "Tag"
-            var controles = new (Control control, string tag, Func<string, bool> isChanged, Func<string, bool> isValid)[]
+            var controles = new (System.Web.UI.Control control, string tag, Func<string, bool> isChanged, Func<string, bool> isValid)[]
             {
         (CheckEstable, CheckEstable.Attributes["Tag"], val => CheckEstable.Checked != Convert.ToBoolean(val), val => true),
         (CheckActivo, CheckActivo.Attributes["Tag"], val => CheckActivo.Checked != Convert.ToBoolean(val), val => true),
@@ -105,7 +107,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             };
 
             bool valoresCambiados = controles.Any(c => c.isChanged(c.tag));
-            bool camposRequeridosLlenos = controles.All(c => c.isValid(c.control is TextBox ? (c.control as TextBox).Text : c.control is DropDownList ? (c.control as DropDownList).SelectedItem.Text : c.control is HtmlTextArea ? (c.control as HtmlTextArea).Value : ""));
+            bool camposRequeridosLlenos = controles.All(c => c.isValid(c.control is System.Web.UI.WebControls.TextBox ? (c.control as System.Web.UI.WebControls.TextBox).Text : c.control is DropDownList ? (c.control as DropDownList).SelectedItem.Text : c.control is HtmlTextArea ? (c.control as HtmlTextArea).Value : ""));
 
             if (valoresCambiados && camposRequeridosLlenos)
             {
@@ -118,7 +120,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 BtnGrabarObjetosPanel.Enabled = false;
                 if (camposRequeridosLlenos)
                 {
-                   
+
                 }
             }
         }
@@ -419,8 +421,151 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             return descripcionPanel;
         }
 
+        protected void DataGridInicial()
+        {
+            string GrupoElementos = ""; // Aquí debes obtener el valor de GrupoElementos según tu lógica
+            string criterio = TextCriterio.Text.Trim();
+            string alturaMod = TextAlturaConfigurar.Text.Trim();
+            string familiaModulo = ""; // Aquí debes obtener el valor de DtaCboFamiliaModulo.Text según tu lógica
 
+            string sSql = "";
+            if (CheckBase.Checked)
+            {
+                // Consulta para optBases = True
+                sSql = "SELECT TOP 200 tblModulo.*, tblTipoModulo.Id_TipoModulo, tblModulo.Descripcion_Modulo, " +
+                       "tblFamiliaModulo.Descripcion_Familia, tblTipoModulo.Descripcion_TipoModulo " +
+                       "FROM tblTipoModulo INNER JOIN (tblFamiliaModulo INNER JOIN tblModulo ON " +
+                       "tblFamiliaModulo.ID_Familia = tblModulo.ID_Familia) ON " +
+                       "tblTipoModulo.Id_TipoModulo = tblModulo.Id_TipoModulo " +
+                       "WHERE (((tblTipoModulo.Id_TipoModulo)=1) " +
+                       "AND ((tblModulo.Descripcion_Modulo) Like @Criterio " +
+                       "AND (tblModulo.Descripcion_Modulo) Like @GrupoElementos) " +
+                       "AND ((tblModulo.Altura) Like @AlturaModulo) " +
+                       "AND (tblFamiliaModulo.Descripcion_Familia like @FamiliaModulo)) " +
+                       "ORDER BY tblModulo.Descripcion_Modulo, tblModulo.Altura";
+            }
+            else
+            {
+                // Consulta para optBases = False
+                sSql = "SELECT TOP 200 tblModulo.*, tblTipoModulo.Id_TipoModulo, tblModulo.Descripcion_Modulo, " +
+                       "tblFamiliaModulo.Descripcion_Familia, tblTipoModulo.Descripcion_TipoModulo " +
+                       "FROM tblTipoModulo INNER JOIN (tblFamiliaModulo INNER JOIN tblModulo ON " +
+                       "tblFamiliaModulo.ID_Familia = tblModulo.ID_Familia) ON " +
+                       "tblTipoModulo.Id_TipoModulo = tblModulo.Id_TipoModulo " +
+                       "WHERE (((tblTipoModulo.Id_TipoModulo)=2 or (tblTipoModulo.Id_TipoModulo)=3) " +
+                       "AND ((tblModulo.Descripcion_Modulo) Like @Criterio " +
+                       "AND (tblModulo.Descripcion_Modulo) Like @GrupoElementos) " +
+                       "AND ((tblModulo.Altura) Like @AlturaModulo) " +
+                       "AND (tblFamiliaModulo.Descripcion_Familia like @FamiliaModulo)) " +
+                       "ORDER BY tblModulo.Descripcion_Modulo, tblModulo.Altura";
+            }
+
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(sSql, con))
+                {
+                    cmd.Parameters.AddWithValue("@Criterio", "%" + criterio + "%");
+                    cmd.Parameters.AddWithValue("@GrupoElementos", "%" + GrupoElementos + "%");
+                    cmd.Parameters.AddWithValue("@AlturaModulo", alturaMod + "%");
+                    cmd.Parameters.AddWithValue("@FamiliaModulo", familiaModulo + "%");
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+
+                    DataGridConfigurar.DataSource = dt;
+                    DataGridConfigurar.DataBind();
+                }
+            }
+        }
+
+        private void BindDataGrid()
+        {  
+            string consultaBase = "";
+
+            if (CheckBase.Checked)
+            {
+                // Consulta para optBases = True
+                consultaBase = "SELECT TOP 200 tblModulo.*, tblTipoModulo.Id_TipoModulo, tblModulo.Descripcion_Modulo, " +
+                       "tblFamiliaModulo.Descripcion_Familia, tblTipoModulo.Descripcion_TipoModulo " +
+                       "FROM tblTipoModulo INNER JOIN (tblFamiliaModulo INNER JOIN tblModulo ON " +
+                       "tblFamiliaModulo.ID_Familia = tblModulo.ID_Familia) ON " +
+                       "tblTipoModulo.Id_TipoModulo = tblModulo.Id_TipoModulo " +
+                       "WHERE (((tblTipoModulo.Id_TipoModulo)=1)";
+            }
+            else
+            {
+                // Consulta para optBases = False
+                 consultaBase = "SELECT TOP 200 tblModulo.*, tblTipoModulo.Id_TipoModulo, tblModulo.Descripcion_Modulo, " +
+                       "tblFamiliaModulo.Descripcion_Familia, tblTipoModulo.Descripcion_TipoModulo " +
+                       "FROM tblTipoModulo INNER JOIN (tblFamiliaModulo INNER JOIN tblModulo ON " +
+                       "tblFamiliaModulo.ID_Familia = tblModulo.ID_Familia) ON " +
+                       "tblTipoModulo.Id_TipoModulo = tblModulo.Id_TipoModulo " +
+                       "WHERE (((tblTipoModulo.Id_TipoModulo)=2 or (tblTipoModulo.Id_TipoModulo)=3))";
+            }
+
+            // Inicializa la cláusula WHERE
+            string whereClause = "";
+
+            // Agrega la condición de texto de búsqueda si se proporciona
+            if (!string.IsNullOrEmpty(TextCriterio.Text))
+            {
+                whereClause += " AND tblModulo.Descripcion_Modulo LIKE '%" + TextCriterio.Text + "%'";
+            }
+            if (!string.IsNullOrEmpty(TextAlturaConfigurar.Text))
+            {
+                whereClause += " AND tblModulo.Altura LIKE '%" + TextAlturaConfigurar.Text + "%'";
+            }
+
+            // Combina la consulta base con la cláusula WHERE
+            consultaBase += whereClause;
+
+
+            // Conexión a la base de datos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(consultaBase, connection);
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                DataTable dataTable = new DataTable();
+
+              
+                    connection.Open();
+                    adapter.Fill(dataTable);
+
+                    // Asigna los datos al DataGrid
+                    DataGridConfigurar.DataSource = dataTable;
+                    DataGridConfigurar.DataBind();
+               
+            }
+        }
+
+        protected void ButtonBuscar_Click(object sender, EventArgs e)
+        {
+            BindDataGrid();
+        }
+
+        protected void DataGridConfigurar_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            if (e.CommandName == "Id_Modulo")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGridConfigurar.Items[rowIndex];
+
+                // capturamos los campos de la fila del datagrid 
+                foreach (DataGridItem item in DataGridConfigurar.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+                e.Item.CssClass = "fila-seleccionada1";
+
+                
+            }
+        }
     }
-
 
 }

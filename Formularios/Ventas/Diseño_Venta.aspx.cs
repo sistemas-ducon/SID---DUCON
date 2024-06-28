@@ -31,6 +31,9 @@ using NPOI.SS.Util;
 using System.Text;
 using NPOI.XSSF.UserModel;
 using DocumentFormat.OpenXml.Vml.Presentation;
+using Excel = Microsoft.Office.Interop.Excel;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Text.RegularExpressions;
 
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
@@ -51,6 +54,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             public string DescripcionPanel { get; set; }
             public string Ancho { get; set; }
         }
+
+        private string objeto;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -151,6 +156,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (Session["ID_ContactoBD"] != null && !string.IsNullOrEmpty(Session["ID_ContactoBD"].ToString()))
                 {
+                    TextObsDibDes.Value = string.Empty;
+
                     scripTabDise();
 
                     NuevoLimpiar();
@@ -207,6 +214,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (Session["NumeroDiseño2"] != null && !string.IsNullOrEmpty(Session["NumeroDiseño2"].ToString()))
             {
                 ProcesarNumeroDiseño2(null);
+
+                if (Session["Despiece"]?.ToString() == "1")
+                {
+                    BindDataGrid(); // Llamar al método para llenar el DataGrid
+
+                    // Activar Tab Plano 
+                    string script = "activarPestana('Despiece-tab', 'Despiece-content');";
+                    ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
+
+                   
+
+                    Session.Remove("Despiece");
+
+                   
+                }
+
             }
 
             DesabilitarTextBox();
@@ -8053,17 +8076,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Implementa la lógica para cargar los planos del diseño
         }
 
-        protected void BtnHiddenUpload_Click(object sender, EventArgs e)
-        {
-            if (FileUpload1.HasFile)
-            {
-                string fileName = Path.GetFileName(FileUpload1.PostedFile.FileName);
-                string filePath = Server.MapPath("~/Uploads/") + fileName;
-                FileUpload1.SaveAs(filePath);
-                // Lógica adicional para manejar el archivo subido
-            }
-        }
-
+   
         protected void Objetos_Click(object sender, EventArgs e)
         {
             string url = "/Formularios/FormExtPrin/Objetos.aspx";
@@ -8362,5 +8375,977 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
             ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
         }
+
+        protected void LinkButton7_Click(object sender, EventArgs e)
+        {
+            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#CargarTXToXLS').modal('show');", true);
+        }
+
+        private void ProcessExcelFile(HttpPostedFile file, DataTable dtAnchosObsoletos, string plano)
+        {
+            string tempFilePath = Path.Combine(Path.GetTempPath(), file.FileName);
+            file.SaveAs(tempFilePath);
+
+            Excel.Application ObjExcel = new Excel.Application();
+            Excel.Workbook WBook = ObjExcel.Workbooks.Open(tempFilePath, ReadOnly: true);
+            Excel.Worksheet sheet = (Excel.Worksheet)WBook.Sheets[1];
+
+            // Leer nombres de columnas desde el archivo de configuración
+            string[] Nombre_Columna = new string[3];
+            Nombre_Columna[0] = GetConfigValue("Usuario", "Columna_Bloque", "NAME");
+            Nombre_Columna[1] = GetConfigValue("Usuario", "Columna_Ancho", "ANCHO");
+            Nombre_Columna[2] = GetConfigValue("Usuario", "Columna_Cantidad", "COUNT");
+
+            int Columna_Bloque = 0;
+            int Columna_Ancho = 0;
+            int Columna_Cantidad = 0;
+            int I = 1;
+
+            while (((Excel.Range)sheet.Cells[1, I]).Value2 != null)
+            {
+                string cellValue = ((Excel.Range)sheet.Cells[1, I]).Value2.ToString().ToUpper();
+                if (cellValue == Nombre_Columna[0])
+                {
+                    Columna_Bloque = I;
+                }
+                else if (cellValue == Nombre_Columna[1])
+                {
+                    Columna_Ancho = I;
+                }
+                else if (cellValue == Nombre_Columna[2])
+                {
+                    Columna_Cantidad = I;
+                }
+                I++;
+            }
+
+            if (Columna_Bloque > 0 && Columna_Ancho > 0 && Columna_Cantidad > 0)
+            {
+                int Registro = 2;
+                string sSql = $"DELETE FROM tblPlano_Panel WHERE ID_Plano= '{plano}'";
+                ExecuteSql(sSql);
+
+                while (((Excel.Range)sheet.Cells[Registro, Columna_Bloque]).Value2 != null)
+                {
+                    string Objeto = ((Excel.Range)sheet.Cells[Registro, Columna_Bloque]).Value2.ToString();
+                    double Ancho = Convert.ToDouble(((Excel.Range)sheet.Cells[Registro, Columna_Ancho]).Value2);
+                    double Cantidad = Convert.ToDouble(((Excel.Range)sheet.Cells[Registro, Columna_Cantidad]).Value2);
+
+                    // Se busca si el objeto tiene el ancho obsoleto
+                    DataRow[] foundRows = dtAnchosObsoletos.Select($"Id_Panel='{Objeto}'");
+                    if (foundRows.Length > 0)
+                    {
+                        Ancho = Convert.ToDouble(foundRows[0]["AnchoNew"]) / 100;
+                    }
+
+                    if (Ancho > 0)
+                    {
+                        // Lógica para procesar cada registro
+                        ProcesarRegistro(sheet, Registro, Columna_Bloque, Columna_Ancho, Columna_Cantidad, Objeto, Ancho, Cantidad, plano);
+                    }
+
+                    Registro++;
+                }
+            }
+            else
+            {
+                ShowMessage("No Coinciden las Columnas de archivo de despiece con las Columnas configuradas en el SID.INI", "Despiece no válido");
+            }
+
+            WBook.Close(false);
+            ObjExcel.Quit();
+            ReleaseObject(sheet);
+            ReleaseObject(WBook);
+            ReleaseObject(ObjExcel);
+
+            // Eliminar el archivo temporal
+            File.Delete(tempFilePath);
+        }
+
+        protected void btnCargar_Click(object sender, EventArgs e)
+        {
+            double PrecioVenta = 0;
+            double TotalDespiece = 0;
+            string numeroDiseño = lblNumDise.Text;
+            string Plano = Session["Id_PlanoDise"].ToString();
+
+            if (FileUpload2.HasFile)
+            {
+                string fileExtension = Path.GetExtension(FileUpload2.FileName).ToLower();
+                if (fileExtension == ".txt" || fileExtension == ".xls")
+                {
+                    string fileName = Path.GetFileName(FileUpload2.FileName);
+                    txtFileName.Text = fileName;
+
+                    // Consulta todos los anchos obsoletos
+                    DataTable dtAnchosObsoletos = new DataTable();
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        string sSql = "SELECT * FROM tblPanelAnchoOld";
+                        using (SqlCommand command = new SqlCommand(sSql, connection))
+                        {
+                            SqlDataAdapter adapter = new SqlDataAdapter(command);
+                            adapter.Fill(dtAnchosObsoletos);
+                        }
+                    }
+
+                    // Validar el nombre del archivo
+                    string expectedFileName = Plano + fileExtension;
+                    if (string.Compare(fileName, expectedFileName, StringComparison.OrdinalIgnoreCase) != 0)
+                    {
+                        Session["NumeroDiseño2"] = numeroDiseño;
+                        Session["Despiece"] = "1";
+
+                        string mensajePersonalizado = "No coinciden los nombres de los planos. No se Puede Cargar.";
+                        string urlRedireccion = "Ventas/Diseño_Venta.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                        return;
+                    }
+
+                    // Procesar el archivo .txt
+                    if (fileExtension == ".txt")
+                    {
+                        using (Stream fileStream = FileUpload2.PostedFile.InputStream)
+                        {
+                            ProcessTxtFile(fileStream, Plano);
+                        }
+                    }
+                    // Procesar el archivo .xls
+                    else if (fileExtension == ".xls")
+                    {
+                        ProcessExcelFile(FileUpload2.PostedFile, dtAnchosObsoletos, Plano);
+                    }
+
+                    // Simulación de tiempo de procesamiento
+                    System.Threading.Thread.Sleep(5000); // Simula un retraso de 5 segundos
+
+                    // Redirigir después de completar la carga
+                    Session["NumeroDiseño2"] = numeroDiseño;
+                    Session["Despiece"] = "1";
+                    string mensajeExitoso = "Archivo cargado exitosamente.";
+                    string urlRedireccionExito = "Ventas/Diseño_Venta.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajeExitoso)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccionExito)}");
+                }
+                else
+                {
+                    Session["NumeroDiseño2"] = numeroDiseño;
+                    Session["Despiece"] = "1";
+
+                    string mensajePersonalizado = "Solo se permiten archivos txt y xls";
+                    string urlRedireccion = "Ventas/Diseño_Venta.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                }
+            }
+            else
+            {
+                Session["NumeroDiseño2"] = numeroDiseño;
+                Session["Despiece"] = "1";
+
+                string mensajePersonalizado = "Por favor, selecciona un archivo para cargar.";
+                string urlRedireccion = "Ventas/Diseño_Venta.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            }
+        }
+
+
+        public void ProcessTxtFile(Stream fileStream, string planoId)
+        {
+            LeerYPrepararArchivo(fileStream, planoId);
+           
+        }
+
+        private void LeerYPrepararArchivo(Stream fileStream, string planoId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string sSql = $"DELETE FROM tblPlano_Panel WHERE ID_Plano= '{planoId}'";
+                using (SqlCommand command = new SqlCommand(sSql, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+
+                using (StreamReader reader = new StreamReader(fileStream))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        string objetoAncho = line;
+                        objeto = objetoAncho.Substring(0, 50).Trim(); // Asignar el valor a la variable de clase
+                        string ancho = ObtenerAncho(connection, objeto, objetoAncho);
+
+                        // Suponiendo que objetoAncho es la línea del archivo que estás leyendo
+                        string parteDesmonte = objetoAncho.Substring(100, 10).Trim();
+
+                        bool desmonte;
+
+                        // Verificar si la cadena no está vacía antes de la conversión
+                        if (string.IsNullOrEmpty(parteDesmonte))
+                        {
+                            // Asignar un valor predeterminado o manejar de acuerdo a tus necesidades
+                            desmonte = false; // Por ejemplo, asumir que desmonte es falso si no hay valor
+                        }
+                        else
+                        {
+                            // Intentar convertir la cadena a booleano
+                            if (!bool.TryParse(parteDesmonte, out desmonte))
+                            {
+                                // Manejar el caso en el que la conversión no sea válida
+                                throw new FormatException($"No se puede reconocer la cadena '{parteDesmonte}' como un valor booleano válido.");
+                            }
+                        }
+
+                        // Ahora puedes usar la variable 'desmonte' en tu lógica
+
+                        // Suponiendo que objetoAncho es la línea del archivo que estás leyendo
+                        string parteReinstalacion = objetoAncho.Substring(110, 10).Trim();
+
+                        bool reinstalacion;
+
+                        // Verificar si la cadena no está vacía antes de la conversión
+                        if (string.IsNullOrEmpty(parteReinstalacion))
+                        {
+                            // Asignar un valor predeterminado o manejar de acuerdo a tus necesidades
+                            reinstalacion = false; // Por ejemplo, asumir que reinstalacion es falso si no hay valor
+                        }
+                        else
+                        {
+                            // Intentar convertir la cadena a booleano
+                            if (!bool.TryParse(parteReinstalacion, out reinstalacion))
+                            {
+                                // Manejar el caso en el que la conversión no sea válida
+                                throw new FormatException($"No se puede reconocer la cadena '{parteReinstalacion}' como un valor booleano válido.");
+                            }
+                        }
+
+                        // Ahora puedes usar la variable 'reinstalacion' en tu lógica
+
+
+                        if (!decimal.TryParse(ancho, out decimal anchoDecimal))
+                        {
+                            throw new FormatException($"El archivo no es compatible con el formato en la línea: {objetoAncho}");
+                        }
+
+                        ProcesarObjetosYPaneles(planoId, ancho, desmonte, reinstalacion);
+                       
+                       
+                        CalcularTotalYActualizarPlano(planoId);
+                    }
+                }
+            }
+        }
+
+
+        private string ObtenerAncho(SqlConnection connection, string objeto, string objetoAncho)
+        {
+            string ancho;
+            string sSql = $"SELECT AnchoNew FROM tblPanelAnchoOld WHERE Id_Panel='{objeto}'";
+            using (SqlCommand command = new SqlCommand(sSql, connection))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        ancho = (Convert.ToDecimal(reader["AnchoNew"]) / 100).ToString();
+                    }
+                    else
+                    {
+                        ancho = objetoAncho.Substring(50, 50).Trim();
+                        if (ancho.Contains(","))
+                        {
+                            ancho = ancho.Replace(",", ".");
+                        }
+                    }
+                }
+            }
+            return ancho;
+        }
+
+        private void ProcesarObjetosYPaneles(string planoId, string ancho, bool desmonte, bool reinstalacion)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlTransaction transaction = connection.BeginTransaction();
+
+               
+                    // Declarar variables fuera del if para que estén disponibles en todo el método
+                    int Id_Numerico = 0;
+                    int precioVenta = 0;
+                    string descripcionPanel = string.Empty;
+                    string idGrupoObjeto = string.Empty;
+                    decimal altura = 0;
+                    int idLinea = 0;
+                    int divisiones = 0;
+                    decimal holgura = 0;
+                    int profundidad = 0;
+                    bool chequeado = false;
+                    string responsable = string.Empty;
+                    DateTime fechaChequeo = DateTime.MinValue;
+                    int undxPaquete = 0;
+                    string descripcionTecnica = string.Empty;
+
+                    // Verificar si el panel existe y obtener los valores necesarios
+                    string sSql = $"SELECT * FROM tblPanel WHERE Id_Panel='{objeto}'";
+                    using (SqlCommand command = new SqlCommand(sSql, connection, transaction))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                Id_Numerico = Convert.ToInt32(reader["Id_Numerico"]);
+                                precioVenta = Convert.ToInt32(reader["Precio_Venta"]);
+                                descripcionPanel = reader["Descripcion_Panel"].ToString();
+                                idGrupoObjeto = reader["id_GrupoObjeto"].ToString();
+                                altura = Convert.ToDecimal(reader["Altura"]);
+                                idLinea = Convert.ToInt32(reader["Id_Linea"]);
+                                divisiones = Convert.ToInt32(reader["Divisiones"]);
+                                holgura = Convert.ToDecimal(reader["Holgura"]);
+                                profundidad = Convert.ToInt32(reader["Profundidad"]);
+                                chequeado = Convert.ToBoolean(reader["Chequeado"]);
+                                responsable = reader["Responsable"].ToString();
+                                fechaChequeo = Convert.ToDateTime(reader["FechaChequeo"]);
+                                undxPaquete = Convert.ToInt32(reader["UndxPaquete"]);
+                                descripcionTecnica = reader["Descripcion_Tecnica"].ToString();
+                            }
+                            reader.Close();
+                        }
+                    }
+
+                    // Verificar si el ancho requerido ya existe
+                    sSql = $"SELECT * FROM tblPanel WHERE Id_Panel='{objeto}' AND Ancho={Convert.ToDecimal(ancho) * 100}";
+                    bool anchoExiste = false;
+                    using (SqlCommand anchoCommand = new SqlCommand(sSql, connection, transaction))
+                    {
+                        using (SqlDataReader anchoReader = anchoCommand.ExecuteReader())
+                        {
+                            if (anchoReader.Read())
+                            {
+                                anchoExiste = true;
+                            }
+                            anchoReader.Close();
+                        }
+                    }
+             
+
+                    if (anchoExiste)
+                    {
+                        ActualizarCantidadEnPlano(planoId, desmonte, reinstalacion, Id_Numerico, precioVenta);
+                    }
+                    else
+                    {
+                    // Convertir fecha a formato compatible con SQL Server
+                    string formattedFechaChequeo = fechaChequeo.ToString("yyyy-MM-dd HH:mm:ss");
+
+                    // Si no existe, proceder con la inserción
+                    sSql = $"INSERT INTO tblPanel(Id_Panel, Ancho, Descripcion_Panel, Id_GrupoObjeto, Altura, Id_linea, Divisiones, Holgura, Escalable, Profundidad, CubicajeM3, Chequeado, Responsable, FechaChequeo, UndxPaquete, Descripcion_Tecnica) " +
+                           $"VALUES ('{objeto}', {Convert.ToDecimal(ancho) * 100}, '{descripcionPanel}', '{idGrupoObjeto}', {altura}, {idLinea}, {divisiones}, {holgura}, 1, {profundidad}, {Convert.ToDecimal(ancho) * 100 * altura * profundidad / 1000000}, " +
+                           $"{(chequeado ? 1 : 0)}, '{responsable}', '{formattedFechaChequeo}', {undxPaquete}, '{descripcionTecnica}')";
+
+                    using (SqlCommand insertCommand = new SqlCommand(sSql, connection, transaction))
+                    {
+                        insertCommand.ExecuteNonQuery();
+                    }
+
+
+
+                    // Ahora realizamos la consulta para tblPanel_Modulo
+                    sSql = $"SELECT * FROM tblPanel_Modulo WHERE Id_PanelNum = {Id_Numerico}";
+
+                        using (SqlCommand panelModuloCommand = new SqlCommand(sSql, connection, transaction))
+                        {
+                            using (SqlDataReader panelModuloReader = panelModuloCommand.ExecuteReader())
+                            {
+                                List<(int, string, string, int, string, string, DateTime)> panelModulos = new List<(int, string, string, int, string, string, DateTime)>();
+
+                                while (panelModuloReader.Read())
+                                {
+                                    // Almacenar cada fila en una lista temporal
+                                    panelModulos.Add(
+                                        (Convert.ToInt32(panelModuloReader["ID_Modulo"]),
+                                         panelModuloReader["Ubicacion_Modulo"].ToString(),
+                                         panelModuloReader["Lado"].ToString(),
+                                         Convert.ToInt32(panelModuloReader["Cantidad"]),
+                                         panelModuloReader["Observaciones"].ToString(),
+                                         panelModuloReader["PanModResponsable"].ToString(),
+                                         Convert.ToDateTime(panelModuloReader["FechaConfiguracion"])));
+                                }
+
+                                panelModuloReader.Close();
+
+                                // Ahora procesamos e insertamos los datos
+                                foreach (var panelModulo in panelModulos)
+                                {
+                                    int idModulo = panelModulo.Item1;
+                                    string ubicacionModulo = panelModulo.Item2;
+                                    string lado = panelModulo.Item3;
+                                    int cantidad = panelModulo.Item4;
+                                    string observaciones = panelModulo.Item5;
+                                    string panModResponsable = panelModulo.Item6;
+                                    DateTime fechaConfiguracion = panelModulo.Item7;
+
+                                    sSql = $"INSERT INTO tblPanel_Modulo(Id_PanelNum, Id_Modulo, Ubicacion_Modulo, Lado, Cantidad, Observaciones, PanModResponsable, FechaConfiguracion) " +
+                                           $"VALUES ({Id_Numerico}, {idModulo}, '{ubicacionModulo}', '{lado}', {cantidad}, '{observaciones}', '{panModResponsable}', '{fechaConfiguracion.ToString("MM/dd/yyyy HH:mm")}')";
+
+                                    using (SqlCommand insertPanelModuloCommand = new SqlCommand(sSql, connection, transaction))
+                                    {
+                                        insertPanelModuloCommand.ExecuteNonQuery();
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    transaction.Commit();
+               
+            }
+        }
+
+
+
+        private void ActualizarCantidadEnPlano(string planoId, bool desmonte, bool reinstalacion, int id_Numerico, int precioVenta)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string sSql = $"SELECT Cantidad FROM tblPlano_Panel WHERE Id_Plano= '{planoId}' AND Id_PanelNum = {id_Numerico}";
+
+                using (SqlCommand command = new SqlCommand(sSql, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read() && !reader.IsDBNull(0))
+                        {
+                            float cantidad = reader.GetFloat(0);
+
+                            // Cerrar el reader antes de ejecutar el siguiente comando
+                            reader.Close();
+
+                            switch (objeto.Substring(0, 3).ToUpper())
+                            {
+                                case "DSM":
+                                    if (desmonte)
+                                    {
+                                        cantidad += 1;
+                                        sSql = $"UPDATE tblPlano_Panel SET Cantidad = @Cantidad WHERE Id_Plano= '{planoId}' AND Id_PanelNum = {id_Numerico}";
+                                        using (SqlCommand updateCommand = new SqlCommand(sSql, connection))
+                                        {
+                                            updateCommand.Parameters.AddWithValue("@Cantidad", cantidad);
+                                            updateCommand.ExecuteNonQuery();
+                                        }
+                                    }
+                                    if (reinstalacion)
+                                    {
+                                        objeto = objeto.Replace("DSM", "REINST");
+                                        // Aquí deberías implementar la lógica para insertar de nuevo con el nuevo objeto
+                                        // Dependiendo de tu estructura, puedes llamar a un método para manejar la inserción
+                                        // Suponiendo que tengas un método para esto:
+                                        // InsertarNuevoObjeto(planoId, objeto, id_Numerico);
+                                    }
+                                    break;
+                                default:
+                                    cantidad += 1;
+                                    sSql = $"UPDATE tblPlano_Panel SET Cantidad = @Cantidad WHERE Id_Plano= '{planoId}' AND Id_PanelNum = {id_Numerico}";
+                                    using (SqlCommand updateCommand = new SqlCommand(sSql, connection))
+                                    {
+                                        updateCommand.Parameters.AddWithValue("@Cantidad", cantidad);
+                                        updateCommand.ExecuteNonQuery();
+                                    }
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            GestionarPrecioVentaEInsercion(planoId, desmonte, precioVenta, id_Numerico);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void GestionarPrecioVentaEInsercion(string planoId, bool desmonte, int precioVenta, int id_Numerico)
+        {
+            bool Existentes = chkElemExit.Checked;
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+              
+
+                if (precioVenta == 0)
+                {
+                    // Llamar al método para calcular Precio_Venta y obtener el valor
+                    CalcularPrecioVentaObjeto(Convert.ToInt32(id_Numerico), out precioVenta);
+                }
+               
+               
+
+                if (objeto.Substring(0, 3).ToUpper() == "EX ")
+                {
+                    if (Existentes)
+                    {
+                        string sSql = $"INSERT INTO tblPlano_Panel(Id_Plano, Id_Panelnum, Cantidad, Observaciones, Precio_Venta) " +
+                                      $"VALUES ('{planoId}', {id_Numerico}, 1, '', {precioVenta})";
+                        using (SqlCommand command = new SqlCommand(sSql, connection))
+                        {
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                }
+                else
+                {
+                    switch (objeto.Substring(0, 3).ToUpper())
+                    {
+                        case "DSM":
+                            if (desmonte == true)
+                            {
+                                string sSql2 = $"INSERT INTO tblPlano_Panel(Id_Plano, Id_Panelnum, Cantidad, Observaciones, Precio_Venta) " +
+                                              $"VALUES ('{planoId}', {id_Numerico}, 1, '', {precioVenta})";
+                                using (SqlCommand command = new SqlCommand(sSql2, connection))
+                                {
+                                    command.ExecuteNonQuery();
+                                }
+                            }
+                            break;
+                        default:
+                            string sSql = $"INSERT INTO tblPlano_Panel(Id_Plano, Id_Panelnum, Cantidad, Observaciones, Precio_Venta) " +
+                                          $"VALUES ('{planoId}', {id_Numerico}, 1, '', {precioVenta})";
+                            using (SqlCommand command = new SqlCommand(sSql, connection))
+                            {
+                                command.ExecuteNonQuery();
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+
+        private void CalcularPrecioVentaObjeto(int idNumerico, out int precioVenta)
+        {
+            // Implementar la lógica para calcular Precio_Venta similar a la función Calcular_Precio_Venta_Objeto en VB6
+            precioVenta = 0; // Valor inicial, puede ser modificado según la lógica de cálculo
+            string sSql = $"EXEC sp_ActualizarPrecioObjeto {idNumerico}";
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(sSql, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+
+                // Obtener el valor de Precio_Venta de tblPanel
+                sSql = $"SELECT Precio_Venta FROM tblPanel WHERE Id_Numerico = {idNumerico}";
+
+                using (SqlCommand commandPrecioVenta = new SqlCommand(sSql, connection))
+                {
+                    object precioVentaObject = commandPrecioVenta.ExecuteScalar();
+                    if (precioVentaObject != null)
+                    {
+                        precioVenta = Convert.ToInt32(precioVentaObject);
+                    }
+                }
+            }
+        }
+
+
+
+        private void CalcularTotalYActualizarPlano(string planoId)
+        {
+            // Aquí puedes implementar la lógica para calcular el total y actualizar el plano
+        }
+
+        private bool ConversionBoolean(bool val)
+        {
+            return val;
+        }
+
+
+
+        //public void ProcessPlanoPanel(string planoId, bool desmonte, bool reinstalacion, bool existentes, string objeto, decimal precioVenta, string nombreUsuario, int diseñoNumero)
+        //{
+        //    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+        //    using (SqlConnection connection = new SqlConnection(connectionString))
+        //    {
+        //        connection.Open();
+
+        //        // Verificar si el objeto ya está en tblPlano_Panel
+        //        string selectSql = "SELECT Cantidad FROM tblPlano_Panel WHERE Id_Plano = @PlanoId AND Id_PanelNum = @PanelNum";
+        //        using (SqlCommand selectCommand = new SqlCommand(selectSql, connection))
+        //        {
+        //            selectCommand.Parameters.AddWithValue("@PlanoId", planoId);
+        //            selectCommand.Parameters.AddWithValue("@PanelNum", objeto);
+
+        //            int cantidad = 0;
+        //            using (SqlDataReader reader = selectCommand.ExecuteReader())
+        //            {
+        //                if (reader.Read())
+        //                {
+        //                    // Si el plano ya tiene incluido el objeto, se modifica la cantidad
+        //                    cantidad = reader.GetInt32(0) + 1;
+        //                }
+        //            }
+
+        //            if (cantidad > 0)
+        //            {
+        //                // Actualizar la cantidad
+        //                string updateSql = "UPDATE tblPlano_Panel SET Cantidad = @Cantidad WHERE Id_Plano = @PlanoId AND Id_PanelNum = @PanelNum";
+        //                using (SqlCommand updateCommand = new SqlCommand(updateSql, connection))
+        //                {
+        //                    updateCommand.Parameters.AddWithValue("@Cantidad", cantidad);
+        //                    updateCommand.Parameters.AddWithValue("@PlanoId", planoId);
+        //                    updateCommand.Parameters.AddWithValue("@PanelNum", objeto);
+        //                    updateCommand.ExecuteNonQuery();
+        //                }
+        //            }
+        //            else
+        //            {
+        //                // Consultar el precio de venta
+        //                if (precioVenta == 0)
+        //                {
+        //                    precioVenta = CalcularPrecioVentaObjeto(connection, objeto);
+        //                }
+
+        //                // Insertar nuevo registro si no existe
+        //                if (existentes && objeto.StartsWith("EX ", StringComparison.OrdinalIgnoreCase))
+        //                {
+        //                    InsertarPlanoPanel(connection, planoId, objeto, precioVenta);
+        //                }
+        //                else
+        //                {
+        //                    // Corregir el reemplazo del objeto DSM por REINST
+        //                    // Corregir el reemplazo del objeto DSM por REINST
+        //                    if (objeto.StartsWith("DSM", StringComparison.OrdinalIgnoreCase))
+        //                    {
+        //                        if (desmonte)
+        //                        {
+        //                            InsertarPlanoPanel(connection, planoId, objeto, precioVenta);
+        //                        }
+
+        //                        if (reinstalacion)
+        //                        {
+        //                            // Reemplazar "DSM" por "REINST" (ignorando mayúsculas y minúsculas)
+        //                            objeto = Regex.Replace(objeto, "DSM", "REINST", RegexOptions.IgnoreCase);
+        //                            InsertarPlanoPanel(connection, planoId, objeto, precioVenta);
+        //                        }
+        //                    }
+
+        //                    else
+        //                    {
+        //                        InsertarPlanoPanel(connection, planoId, objeto, precioVenta);
+        //                    }
+        //                }
+        //            }
+
+        //            // Actualizar SubTotalZona y Composicion
+        //            ActualizarSubTotalZona(connection, diseñoNumero, planoId);
+        //            ActualizarFechaLecturaDespiece(connection, planoId, nombreUsuario, diseñoNumero);
+        //        }
+        //    }
+        //}
+
+        //private void InsertarPlanoPanel(SqlConnection connection, string planoId, string objeto, decimal precioVenta)
+        //{
+        //    string insertSql = @"INSERT INTO tblPlano_Panel(Id_Plano, Id_Panelnum, Cantidad, Observaciones, Precio_Venta) 
+        //                 VALUES (@PlanoId, @PanelNum, @Cantidad, @Observaciones, @PrecioVenta)";
+        //    using (SqlCommand insertCommand = new SqlCommand(insertSql, connection))
+        //    {
+        //        insertCommand.Parameters.AddWithValue("@PlanoId", planoId);
+        //        insertCommand.Parameters.AddWithValue("@PanelNum", objeto);
+        //        insertCommand.Parameters.AddWithValue("@Cantidad", 1);
+        //        insertCommand.Parameters.AddWithValue("@Observaciones", "");
+        //        insertCommand.Parameters.AddWithValue("@PrecioVenta", precioVenta);
+        //        insertCommand.ExecuteNonQuery();
+        //    }
+        //}
+
+        //private decimal CalcularPrecioVentaObjeto(SqlConnection connection, string panelNum)
+        //{
+        //    // Implementar la lógica de cálculo del precio de venta aquí
+        //    string precioVentaSql = "SELECT Precio_Venta FROM tblPanel WHERE Id_Numerico = @PanelNum";
+        //    using (SqlCommand precioVentaCommand = new SqlCommand(precioVentaSql, connection))
+        //    {
+        //        precioVentaCommand.Parameters.AddWithValue("@PanelNum", panelNum);
+        //        object result = precioVentaCommand.ExecuteScalar();
+        //        if (result != null && result != DBNull.Value)
+        //        {
+        //            return Convert.ToDecimal(result);
+        //        }
+        //        else
+        //        {
+        //            throw new Exception("No se encontró el precio de venta para el objeto.");
+        //        }
+        //    }
+        //}
+
+        //private void ActualizarSubTotalZona(SqlConnection connection, int diseñoNumero, string planoId)
+        //{
+        //    string subTotalSql = @"SELECT ISNULL(SUM(tblPlano_Panel.Precio_Venta * tblPlano_Panel.Cantidad), 0) AS SubTotalZona 
+        //                   FROM tblDiseño 
+        //                   INNER JOIN tblPlanoDiseño ON tblDiseño.Numero_Diseño = tblPlanoDiseño.Numero_Diseño 
+        //                   INNER JOIN tblPlano_Panel ON tblPlanoDiseño.Plano = tblPlano_Panel.Id_Plano 
+        //                   INNER JOIN tblPanel ON tblPlano_Panel.Id_PanelNum = tblPanel.Id_Numerico 
+        //                   INNER JOIN tblGrupoObjeto ON tblPanel.Id_GrupoObjeto = tblGrupoObjeto.ID_GrupoObjeto 
+        //                   WHERE tblGrupoObjeto.Cotizar = 1 
+        //                   AND tblDiseño.Numero_Diseño = @DiseñoNumero 
+        //                   AND tblPlanoDiseño.Plano = @PlanoId";
+
+        //    decimal subTotalZona = 0;
+        //    using (SqlCommand subTotalCommand = new SqlCommand(subTotalSql, connection))
+        //    {
+        //        subTotalCommand.Parameters.AddWithValue("@DiseñoNumero", diseñoNumero);
+        //        subTotalCommand.Parameters.AddWithValue("@PlanoId", planoId);
+        //        object result = subTotalCommand.ExecuteScalar();
+        //        if (result != null && result != DBNull.Value)
+        //        {
+        //            subTotalZona = Convert.ToDecimal(result);
+        //        }
+        //    }
+
+        //    string updatePlanoDiseñoSql = @"UPDATE tblPlanoDiseño 
+        //                            SET SubTotalZona = @SubTotalZona, 
+        //                                Composicion = dbo.fn_Composicion_Plano(tblPlanoDiseño.Plano), 
+        //                                FechalecturaDespiece = GETDATE() 
+        //                            WHERE Numero_Diseño = @DiseñoNumero 
+        //                            AND Plano = @PlanoId";
+        //    using (SqlCommand updatePlanoDiseñoCommand = new SqlCommand(updatePlanoDiseñoSql, connection))
+        //    {
+        //        updatePlanoDiseñoCommand.Parameters.AddWithValue("@SubTotalZona", subTotalZona);
+        //        updatePlanoDiseñoCommand.Parameters.AddWithValue("@DiseñoNumero", diseñoNumero);
+        //        updatePlanoDiseñoCommand.Parameters.AddWithValue("@PlanoId", planoId);
+        //        updatePlanoDiseñoCommand.ExecuteNonQuery();
+        //    }
+        //}
+
+        //private void ActualizarFechaLecturaDespiece(SqlConnection connection, string planoId, string nombreUsuario, int diseñoNumero)
+        //{
+        //    string updatePlanoSql = @"UPDATE tblPlano 
+        //                      SET PlaFechalecturaDespiece = GETDATE(), 
+        //                          realizadopor = @NombreUsuario 
+        //                      WHERE Plano = @PlanoId";
+        //    using (SqlCommand updatePlanoCommand = new SqlCommand(updatePlanoSql, connection))
+        //    {
+        //        updatePlanoCommand.Parameters.AddWithValue("@NombreUsuario", nombreUsuario);
+        //        updatePlanoCommand.Parameters.AddWithValue("@PlanoId", planoId);
+        //        updatePlanoCommand.ExecuteNonQuery();
+        //    }
+        //}
+
+
+
+
+
+        private void ProcesarRegistro(Excel.Worksheet sheet, int Registro, int Columna_Bloque, int Columna_Ancho, int Columna_Cantidad, string Objeto, double Ancho, double Cantidad, string plano)
+        {
+            string numeroDiseño = lblNumDise.Text;
+            string mensajePersonalizado = "¡La operación se completó exitosamente!";
+            string urlRedireccion = "Ventas/Diseño_Venta.aspx";
+
+            try
+            {
+                // Consultar la familia del Objeto o bloque
+                string sSql = $"SELECT * FROM tblPanel WHERE Id_Panel = '{Objeto}' ORDER BY ID_Numerico";
+                DataTable rsObjeto = ExecuteSqlQuery(sSql);
+
+                if (rsObjeto.Rows.Count > 0)
+                {
+                    DataRow firstRow = rsObjeto.Rows[0];
+                    bool SwObjetoEscalable = Convert.ToBoolean(firstRow["Escalable"]);
+
+                    // Cadena de inserción del registro
+                    sSql = $"INSERT INTO tblPanel (Id_Panel, Ancho, Descripcion_Panel, Id_GrupoObjeto, Altura, Id_Linea, Divisiones, Holgura, Escalable, profundidad, CubicajeM3, Chequeado, Responsable, FechaChequeo, UndxPaquete, Descripcion_Tecnica) " +
+                           $"VALUES ('{Objeto}', {Ancho * 100}, '{firstRow["Descripcion_Panel"]}', '{firstRow["Id_GrupoObjeto"]}', {firstRow["Altura"]}, {firstRow["Id_Linea"]}, {firstRow["Divisiones"]}, {firstRow["Holgura"]}, 1, {firstRow["Profundidad"]}, {Ancho * 100 * Convert.ToDouble(firstRow["Altura"]) * Convert.ToDouble(firstRow["Profundidad"]) / 1000000}, {Convert.ToBoolean(firstRow["Chequeado"])}, '{firstRow["Responsable"]}', '{Convert.ToDateTime(firstRow["FechaChequeo"]).ToString("MM/dd/yyyy HH:mm")}', {firstRow["UndxPaquete"]}, '{firstRow["Descripcion_Tecnica"]}')";
+
+                    DataRow[] foundRows = rsObjeto.Select($"ancho = {Ancho * 100}");
+                    if (foundRows.Length == 0)
+                    {
+                        if (SwObjetoEscalable)
+                        {
+                            ExecuteSql(sSql);
+
+                            // Agregando módulos al panel
+                            sSql = $"SELECT * FROM tblPanel_Modulo WHERE Id_PanelNum = {firstRow["Id_Numerico"]}";
+                            DataTable rsPanel_Modulos = ExecuteSqlQuery(sSql);
+
+                            foreach (DataRow moduleRow in rsPanel_Modulos.Rows)
+                            {
+                                sSql = $"INSERT INTO tblPanel_Modulo (Id_PanelNum, Id_Modulo, Ubicacion_Modulo, Lado, Cantidad, Observaciones, PanModResponsable, FechaConfiguracion) " +
+                                       $"VALUES ({firstRow["Id_Numerico"]}, {moduleRow["ID_Modulo"]}, {moduleRow["Ubicacion_Modulo"]}, '{moduleRow["Lado"]}', {moduleRow["Cantidad"]}, '{moduleRow["Observaciones"]}', '{moduleRow["PanModResponsable"]}', '{Convert.ToDateTime(moduleRow["FechaConfiguracion"]).ToString("MM/dd/yyyy HH:mm")}')";
+                                ExecuteSql(sSql);
+                            }
+                        }
+                        else
+                        {
+                            ShowNoExistentesMessage(sheet, Registro, Columna_Bloque, Ancho, Cantidad);
+                            throw new Exception("Objeto no escalable.");
+                        }
+                    }
+
+                    // Consultar si el plano ya tiene incluido el Objeto
+                    sSql = $"SELECT Cantidad FROM tblPlano_Panel WHERE Id_Plano= '{plano}' AND Id_PanelNum = {firstRow["Id_Numerico"]}";
+                    DataTable rsPlanoPanel = ExecuteSqlQuery(sSql);
+
+                    if (rsPlanoPanel.Rows.Count > 0)
+                    {
+                        int currentQuantity = Convert.ToInt32(rsPlanoPanel.Rows[0]["Cantidad"]);
+                        sSql = $"UPDATE tblPlano_Panel SET Cantidad = {currentQuantity + Cantidad} WHERE Id_Plano= '{plano}' AND Id_PanelNum = {firstRow["Id_Numerico"]}";
+                        ExecuteSql(sSql);
+                    }
+                    else
+                    {
+                        double PrecioVenta;
+                        if (Convert.ToDouble(firstRow["Precio_Venta"]) == 0)
+                        {
+                            CalcularPrecioVentaObjeto(Convert.ToInt32(firstRow["Id_Numerico"]), out float precioVenta, out float peso);
+                            PrecioVenta = precioVenta;
+                        }
+                        else
+                        {
+                            PrecioVenta = Convert.ToDouble(firstRow["Precio_Venta"]);
+                        }
+
+                        string cellValue = sheet.Cells[Registro, Columna_Bloque].ToString().ToUpper();
+
+                        if (cellValue.StartsWith("EX"))
+                        {
+                            if (chkElemExit.Checked) // Verifica directamente el estado del CheckBox
+                            {
+                                sSql = $"INSERT INTO tblPlano_Panel (Id_Plano, Id_Panelnum, Cantidad, Observaciones, Precio_Venta) " +
+                                       $"VALUES ('{plano}', {firstRow["Id_Numerico"]}, {Cantidad}, '', {PrecioVenta})";
+                                ExecuteSql(sSql);
+                            }
+                        }
+                        else
+                        {
+                            sSql = $"INSERT INTO tblPlano_Panel (Id_Plano, Id_Panelnum, Cantidad, Observaciones, Precio_Venta) " +
+                                   $"VALUES ('{plano}', {firstRow["Id_Numerico"]}, {Cantidad}, '', {PrecioVenta})";
+                            ExecuteSql(sSql);
+                        }
+                    }
+
+                    // Actualizar sesiones en caso de éxito
+                    Session["NumeroDiseño2"] = numeroDiseño;
+                    Session["Despiece"] = "1";
+                }
+                else
+                {
+                    ShowNoExistentesMessage(sheet, Registro, Columna_Bloque, Ancho, Cantidad);
+                    mensajePersonalizado = "Objetos no existentes no se completó la carga exitosamente.";
+                }
+            }
+            catch (Exception ex)
+            {
+                mensajePersonalizado = "Lo sentimos, no se pudo completar el proceso exitosamente.";
+            }
+            finally
+            {
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            }
+        }
+
+        private DataTable ExecuteSqlQuery(string query)
+        {
+            DataTable result = new DataTable();
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+              
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                        {
+                            adapter.Fill(result);
+                        }
+                    }
+            }
+
+            return result;
+        }
+
+        private void ShowNoExistentesMessage(Excel.Worksheet sheet, int Registro, int Columna_Bloque, double Ancho, double Cantidad)
+        {
+            // Implementación para mostrar mensaje de "No Existe" para el panel
+            // ...
+        }
+
+        private string GetConfigValue(string section, string key, string defaultValue)
+        {
+            // Implementa la lógica para leer valores desde un archivo de configuración
+            return defaultValue;
+        }
+
+        private void ExecuteSql(string sSql)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        private void ShowMessage(string message, string title)
+        {
+            // Implementa la lógica para mostrar un mensaje al usuario
+        }
+
+        private void ReleaseObject(object obj)
+        {
+            try
+            {
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
+                obj = null;
+            }
+            catch (Exception ex)
+            {
+                obj = null;
+            }
+            finally
+            {
+                GC.Collect();
+            }
+        }
+
+        protected void btnHidden_Click(object sender, EventArgs e)
+        {
+            string userConfirmed = hdnUserConfirmed.Value;
+
+            if (userConfirmed == "yes")
+            {
+                // Lógica para cargar los elementos existentes
+                DataTable dt = new DataTable();
+                dt.Columns.Add("Item");
+                dt.Columns.Add("Objeto");
+                dt.Columns.Add("Ancho");
+                dt.Columns.Add("Cant");
+                dt.Columns.Add("Observacion");
+
+                // Ejemplo: Agregar datos al DataTable (reemplaza esto con la lógica real de lectura del archivo)
+                dt.Rows.Add("1", "Objeto1", "100", "2", "Obs1");
+                dt.Rows.Add("2", "Objeto2", "200", "3", "Obs2");
+
+                DataGridNoExistentes.DataSource = dt;
+                DataGridNoExistentes.DataBind();
+            }
+            else
+            {
+                // Manejar la cancelación de la carga de elementos existentes
+            }
+        }
+
+
     }
+
 }
