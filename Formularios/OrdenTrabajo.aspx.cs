@@ -161,28 +161,66 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 HabilitarBotonesPlano();
                             }
 
+                            //Activar Tap Plano 
+                            string script = "activarPestana('Plano-tab', 'Plano-Content');";
+                            ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
+
                         }
                         // Este bloque consulta la OT con variables de Session de afuera del formulario 
                         else if (Session["Id_OT2"] != null && Session["pedido2"] != null)
                         {
 
 
-                            Cargar_OTs2();
-                            List<int> numeros = ObtenerNumerosDesdeLaBaseDeDatos(Session["Id_OT2"].ToString());
-
-                            ddlNumbers.Items.Clear(); // Limpiar las opciones existentes
-
-                            foreach (int numero in numeros)
+                            // Este bloque carga solo el plano ya que el Id_OT2 es igual al texto Nula
+                            if (Session["Id_OT2"].ToString() == "")
                             {
-                                ddlNumbers.Items.Add(numero.ToString());
+                                if (Session["Id_Plano"] != null)
+                                {
+                                    Cargar_Plano2(Session["Id_Plano"].ToString());
+                                    Session.Remove("Id_Plano");
+                                    Session.Remove("Id_OT2");
+                                    Session.Remove("pedido2");
+                                    HabilitarBotonesPlano();
+                                }
+
+                                //Activar Tap Plano 
+                                string script = "activarPestana('Plano-tab', 'Plano-Content');";
+                                ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
+
+                            }
+                            else
+                            {
+                                Cargar_OTs2();
+                                List<int> numeros = ObtenerNumerosDesdeLaBaseDeDatos(Session["Id_OT2"].ToString());
+
+                                ddlNumbers.Items.Clear(); // Limpiar las opciones existentes
+
+                                foreach (int numero in numeros)
+                                {
+                                    ddlNumbers.Items.Add(numero.ToString());
+
+                                }
+
+                                ddlNumbers.SelectedValue = Session["pedido2"].ToString();
+
+                                // Se eliminar variables de session para cargar OT 
+                                Session.Remove("Id_OT2");
+                                Session.Remove("pedido2");
+                            }
+
+
+                           
+
+                            if (Session["controlTapPlano"]?.ToString() == "1")
+                            {
+                                //Activar Tap Plano 
+                                string script = "activarPestana('Plano-tab', 'Plano-Content');";
+                                ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
+                                
+                                Session.Remove("controlTapPlano");
 
                             }
 
-                            ddlNumbers.SelectedValue = Session["pedido2"].ToString();
-
-                            // Se eliminar variables de session para cargar OT 
-                            Session.Remove("Id_OT2");
-                            Session.Remove("pedido2");
 
                             if (Session["CargarTxt"]?.ToString() == "TXT")
                             {
@@ -1095,6 +1133,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             public string peso { get; set; }
             public string profundidad { get; set; }
             public string ajusteCub { get; set; }
+            public bool Cotizar { get; set; }
 
 
 
@@ -2971,12 +3010,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string cn = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(cn))
             {
-
                 SqlCommand command = new SqlCommand("cta_Plano_Paneles", connection);
                 command.CommandType = CommandType.StoredProcedure;
-
                 command.Parameters.Add("@Plan", SqlDbType.VarChar, 100).Value = txtPlano.Text;
-
 
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 DataTable dataTable = new DataTable();
@@ -2987,10 +3023,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 List<DatosFiltrados> datosFiltradosList = new List<DatosFiltrados>();
 
-
                 foreach (var grupo in gruposUnicos)
                 {
-
                     if (resumen.Length > 0)
                     {
                         resumen.Append(" - ");
@@ -3002,25 +3036,26 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     resumen.Append(grupo.Substring(0, 3) + " (" + sumaCantidad + ")");
 
-
                     datosFiltradosList.Add(new DatosFiltrados { Tipo = "Titulo", Titulo = "<b>" + grupo });
 
-                    var datosFiltrados = dataTable.AsEnumerable().Where(r => r.Field<string>("Descripcion_Grupo") == grupo).Select(r => new DatosFiltrados
-                    {
+                    var datosFiltrados = dataTable.AsEnumerable()
+                        .Where(r => r.Field<string>("Descripcion_Grupo") == grupo)
+                        .Select(r => new DatosFiltrados
+                        {
+                            ID = r["Id_Numerico"].ToString(),
+                            Descripcion = r["Descripcion_Panel"].ToString(),
+                            Altura = r["Altura"].ToString(),
+                            Ancho = r["Ancho"].ToString(),
+                            Cantidad = r["Cantidad"].ToString(),
+                            ValorUnd = r["Precio_Venta"].ToString(),
+                            SubTotal = (Convert.ToDecimal(r["Cantidad"]) * Convert.ToDecimal(r["Precio_Venta"])).ToString(),
+                            Id_Panel = r["Id_Panel"].ToString(),
+                            RevisadoDibujo = Convert.ToBoolean(r["RevisadoDibujo"].ToString()),
+                            Cotizar = Convert.ToBoolean(r["cotizar"])
 
-                        ID = r["Id_Numerico"].ToString(),
-                        Descripcion = r["Descripcion_Panel"].ToString(),
-                        Altura = r["Altura"].ToString(),
-                        Ancho = r["Ancho"].ToString(),
-                        Cantidad = r["Cantidad"].ToString(),
-                        ValorUnd = r["Precio_Venta"].ToString(),
-                        SubTotal = (Convert.ToDecimal(r["Cantidad"]) * Convert.ToDecimal(r["Precio_Venta"])).ToString(),
-                        Id_Panel = r["Id_Panel"].ToString(),
-                        RevisadoDibujo = Convert.ToBoolean(r["RevisadoDibujo"].ToString())
 
 
-
-                    });
+                        });
 
 
 
@@ -3036,7 +3071,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Agregar el resumen al del plano 
                 txResumen.InnerText = resumen.ToString();
 
-                decimal totalGeneral = datosFiltradosList.Where(d => d.Tipo != "Titulo" && d.Tipo != "Total").Sum(d => Convert.ToDecimal(d.SubTotal));
+                decimal totalGeneral = datosFiltradosList.Where(d => d.Tipo != "Titulo" && d.Tipo != "Total" && d.Cotizar).Sum(d => Convert.ToDecimal(d.SubTotal));
                 decimal Cantidad = datosFiltradosList.Where(d => d.Tipo != "Titulo" && d.Tipo != "Total").Sum(d => Convert.ToDecimal(d.Cantidad));
 
                 // Agregar la fila de total general al final del DataGrid
@@ -3089,9 +3124,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#47ca4b");
                         e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
                     }
-
                 }
-
 
                 if (datos.ValorUnd == "0")
                 {
@@ -3103,8 +3136,42 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     Session["ValorUnd"] = "1";
                 }
+
+                //Alienar celdas el centro               
+                e.Item.Cells[4].HorizontalAlign = HorizontalAlign.Center;
+                e.Item.Cells[5].HorizontalAlign = HorizontalAlign.Center;
+                e.Item.Cells[6].HorizontalAlign = HorizontalAlign.Center;
+
+
+                // Formatear y alinear SubTotal a la derecha
+                decimal valorUnd;
+                if (decimal.TryParse(datos.ValorUnd, out valorUnd))
+                {
+                    e.Item.Cells[7].Text = valorUnd.ToString("N0"); // Formato de número con 2 decimales
+                    e.Item.Cells[7].HorizontalAlign = HorizontalAlign.Right; // Alinear a la derecha
+                }
+
+
+                
+                decimal subTotal;
+                if (decimal.TryParse(datos.SubTotal, out subTotal))
+                {
+                    e.Item.Cells[8].Text = subTotal.ToString("N0"); 
+                    e.Item.Cells[8].HorizontalAlign = HorizontalAlign.Right; 
+                }
+
+                
+                if (datos.Tipo == "Total" && decimal.TryParse(datos.SubTotal.Replace("<b>", "").Replace("</b>", ""), out decimal subTotal1))
+                {
+                    e.Item.Cells[8].Text = $"<b>{subTotal1.ToString("N0")}</b>"; 
+                    e.Item.Cells[8].HorizontalAlign = HorizontalAlign.Right; 
+                    e.Item.Cells[8].Font.Bold = true; 
+                    e.Item.Cells[8].Font.Size = 11; 
+                }
             }
         }
+
+
 
         protected void DataGridDespiecePlano_LinkButton(object source, DataGridCommandEventArgs e)
         {
@@ -3149,6 +3216,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 ObjetoEliminar.InnerText = Descri;
                 anchoEliminar.InnerText = Ancho;
+
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
+                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
+
+
             }
         }
 
@@ -3269,6 +3344,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 //se usa Para darle un color a la fila seleccionada  anderson
                 e.Item.CssClass = "fila-seleccionada";
 
+                
 
             }
         }
@@ -3421,6 +3497,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ValorlbDipLa2.Text = Altura + " Cms";
                 ValorlbDipLa3.Text = Altura + " Cms";
 
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
 
                 // Se compara si el click es en la misma fila con el id del plano 
                 if (row.Cells[8].Text == Session["Id_PanelNum_Session1"]?.ToString())
@@ -3447,6 +3526,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
                     Session["ClickCount1"] = 1;
                     Session["Id_PanelNum_Session1"] = row.Cells[8].Text;
+
+                  
+
+                    // Llamar a la función JavaScript para enfocar y desplazar la fila
+                    ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                 }
 
             }
@@ -6605,6 +6689,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             //Variables de Session para volver a cargar el plano
             Session["Id_OT2"] = tbOT.Text;
             Session["pedido2"] = ddlNumbers.Text;
+            Session["Id_Plano"] = txtPlano.Text;
 
 
             // Se valida que el plano este o no bloqueado
@@ -9657,25 +9742,31 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 DataTable dataTable = new DataTable();
                 adapter.Fill(dataTable);
 
-                var gruposUnicos = dataTable.AsEnumerable().Select(r => r.Field<string>("Descripcion_Grupo")).Distinct();
+                // Filtrar los datos donde Cotizar es true
+                var datosFiltradosTabla = dataTable.AsEnumerable().Where(r => Convert.ToBoolean(r["Cotizar"])).CopyToDataTable();
+
+                var gruposUnicos = datosFiltradosTabla.AsEnumerable().Select(r => r.Field<string>("Descripcion_Grupo")).Distinct();
 
                 foreach (var grupo in gruposUnicos)
                 {
                     datosFiltradosList.Add(new DatosFiltrados { Tipo = "Titulo", Titulo = grupo });
 
-                    var datosFiltrados = dataTable.AsEnumerable().Where(r => r.Field<string>("Descripcion_Grupo") == grupo).Select(r => new DatosFiltrados
-                    {
-                        Descripcion = r["Descripcion"].ToString(),
-                        Ancho = r["Ancho"].ToString(),
-                        Cantidad = r["Cantidad"].ToString(),
-                        ValorUnd = r["Precio_Venta"].ToString(),
-                        SubTotal = (Convert.ToDecimal(r["Cantidad"]) * Convert.ToDecimal(r["Precio_Venta"])).ToString(),
-                        Id_Panel = r["Id_Panel"].ToString(),
-                        peso = r["PesoKG"].ToString(),
-                        profundidad = r["Profundidad"].ToString(),
-                        ajusteCub = r["AjusteCubicaje"].ToString(),
-                        Altura = r["Altura"].ToString()
-                    });
+                    var datosFiltrados = datosFiltradosTabla.AsEnumerable()
+                        .Where(r => r.Field<string>("Descripcion_Grupo") == grupo)
+                        .Select(r => new DatosFiltrados
+                        {
+                            Descripcion = r["Descripcion"].ToString(),
+                            Ancho = r["Ancho"].ToString(),
+                            Cantidad = r["Cantidad"].ToString(),
+                            ValorUnd = r["Precio_Venta"].ToString(),
+                            SubTotal = (Convert.ToDecimal(r["Cantidad"]) * Convert.ToDecimal(r["Precio_Venta"])).ToString(),
+                            Id_Panel = r["Id_Panel"].ToString(),
+                            peso = r["PesoKG"].ToString(),
+                            profundidad = r["Profundidad"].ToString(),
+                            ajusteCub = r["AjusteCubicaje"].ToString(),
+                            Altura = r["Altura"].ToString(),
+                            Cotizar = Convert.ToBoolean(r["Cotizar"])
+                        });
 
                     datosFiltradosList.AddRange(datosFiltrados);
 
@@ -9683,13 +9774,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     datosFiltradosList.Add(new DatosFiltrados { Tipo = "Total", SubTotal = totalVenta.ToString() });
                 }
 
-                decimal totalGeneral = datosFiltradosList.Where(d => d.Tipo != "Titulo" && d.Tipo != "Total").Sum(d => Convert.ToDecimal(d.SubTotal));
+                decimal totalGeneral = datosFiltradosList
+                    .Where(d => d.Tipo != "Titulo" && d.Tipo != "Total")
+                    .Sum(d => Convert.ToDecimal(d.SubTotal));
+
                 // Agregar la fila de total general al final de la lista
                 datosFiltradosList.Add(new DatosFiltrados { Tipo = "Total", Titulo = "Total Despiece", SubTotal = totalGeneral.ToString() });
             }
 
             return datosFiltradosList;
         }
+
         private Dictionary<string, string> ObtenerDescripcionesPlano(string plano)
         {
             Dictionary<string, string> descripciones = new Dictionary<string, string>();
@@ -9700,7 +9795,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                           "INNER JOIN tblGrupoObjeto " +
                           "INNER JOIN tblPanel ON tblGrupoObjeto.ID_GrupoObjeto = tblPanel.Id_GrupoObjeto " +
                           "INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum ON tblPlano.Plano = tblPlano_Panel.Id_Plano " +
-                          "WHERE tblPlano.Plano = @plano";
+                          "WHERE tblPlano.Plano = @plano and tblGrupoObjeto.Cotizar = 1";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -9872,13 +9967,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
 
                     // Se verifica que la informacion del contacto este actualizada 
-                    if (VerificarActualizacionContacto(txtNit.Text, Session["IdContactoFactSession"].ToString()))
-                    {
+                    // SE COMENTA EL ESTE BLOQUE PARA QUE NO PREGUNTE ACTUALIZACION CONTACTO CLIENTE 
+                    //if (VerificarActualizacionContacto(txtNit.Text, Session["IdContactoFactSession"].ToString()))
+                    //{
 
-                        string mensajePersonalizado = "No puede pasar un pedido, si la información del contacto del cliente no esta actualizada";
-                        string urlRedireccion = "OrdenTrabajo.aspx";
-                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-                    }
+                    //    string mensajePersonalizado = "No puede pasar un pedido, si la información del contacto del cliente no esta actualizada";
+                    //    string urlRedireccion = "OrdenTrabajo.aspx";
+                    //    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    //}
 
 
                     // Se realiza la validacon de TotalObraMas (Pendiente hasta validar que es la variable TotalObraMas) !!!Verificar 
@@ -10132,8 +10228,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             DateTime ultimaActualizacion = reader.GetDateTime(0);
                             TimeSpan diferencia = DateTime.Now - ultimaActualizacion;
                             int diasTranscurridos = diferencia.Days;
-
-                            return diasTranscurridos > 395;
+                            // SE AÑADEN MAS DIAS A ESTA VALIDACION PERO EL METODO ESTA COMENTADO 
+                            return diasTranscurridos > 5500;
                         }
                     }
                 }

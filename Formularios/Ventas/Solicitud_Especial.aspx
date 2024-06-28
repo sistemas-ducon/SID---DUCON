@@ -163,18 +163,48 @@
                 row.setAttribute('tabindex', '-1'); // Make it focusable
                 row.focus();
                 row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+
             }
         }
-    </script>
 
-    <script>
-        function RedireccionPagina() {
-            // Refresca la página actual
-            location.reload();
+        function SeleccionarFilayEnfocarCotizacion(rowIndex) {
+            var dataGrid = document.getElementById('<%= DataGrid2.ClientID %>'); // Reemplaza DataGrid1 por el ID de tu DataGrid
+            if (dataGrid && dataGrid.rows && dataGrid.rows.length > rowIndex + 1) { // Ajusta el índice para excluir el encabezado
+                var row = dataGrid.rows[rowIndex + 1]; // Suma 1 para omitir el encabezado
+                row.style.backgroundColor = '#000000'; // Cambia el color de fondo a negro
+                row.style.color = '#ffffff'; // Cambia el color de la letra a blanco
+
+                // Hacer scroll hasta la fila
+                row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                // Establecer el foco en la fila
+                row.setAttribute('tabindex', '-1'); // Hacerla enfocable
+                row.focus();
+            }
         }
+
+        function SeleccionarFilayEnfocarDesarrollo(rowIndex) {
+            var dataGrid = document.getElementById('<%= DataGrid1.ClientID %>'); // Reemplaza DataGrid1 por el ID de tu DataGrid
+            if (dataGrid && dataGrid.rows && dataGrid.rows.length > rowIndex + 1) { // Ajusta el índice para excluir el encabezado
+                var row = dataGrid.rows[rowIndex + 1]; // Suma 1 para omitir el encabezado
+                row.style.backgroundColor = '#000000'; // Cambia el color de fondo a negro
+                row.style.color = '#ffffff'; // Cambia el color de la letra a blanco
+
+                // Hacer scroll hasta la fila
+                row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                // Establecer el foco en la fila
+                row.setAttribute('tabindex', '-1'); // Hacerla enfocable
+                row.focus();
+            }
+        }
+
+
+
     </script>
 
-
+ 
 </head>
 <body translate="no">
 
@@ -182,7 +212,7 @@
         <asp:ScriptManager runat="server" />
 
         <nav class="navbar navbar-light bg-light">
-            <div class="container d-flex justify-content-center">
+            <div class="container d-flex justify-content-center gap-2">
                 <ul class="nav nav-tabs" id="miPestañas">
                     <li class="nav-item">
                         <a class="nav-link text-dark active" id="BitacoraDesarrollo-tab" data-bs-toggle="tab" href="#BitacoraDesarrollo-content">Desarrollo Bitacora- PQ-006</a>
@@ -199,7 +229,7 @@
             </div>
         </nav>
 
-        <nav class="navbar navbar-expand-sm navbar-light bg-light mb-2 gap-2">
+        <nav class="navbar navbar-expand-sm navbar-light bg-light  gap-2">
             <div class="container-fluid">
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#ejemplo2" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -221,8 +251,8 @@
                             <a class="icong disabled shadow-sm btn btn-sm" title="Pausar Solicitud" id="PausarSolicitud" runat="server" onclick="mostralMoldalPausar();">
                                 <i class="bi bi-pause-circle-fill"></i>
                             </a>
-                             <a class="icong disabled shadow-sm btn btn-sm " runat="server" title="Despausar" id="DespausarSolicitud" style="display:none;" onclick="mostralMoldalDespausar();">                                 
-                                                             <i class="bi bi-play-circle-fill"></i>
+                            <a class="icong disabled shadow-sm btn btn-sm " runat="server" title="Despausar" id="DespausarSolicitud" style="display:none;" onclick="mostralMoldalDespausar();">
+                                <i class="bi bi-play-circle-fill"></i>
                             </a>
                             <asp:LinkButton class="icong disabled shadow-sm btn btn-sm " runat="server" title="Guardar Solicitud" ID="GrabarSolicitud" OnClick="GuardarModificarSolicitud" OnClientClick="return validarFormularioSolicitud();">                                 
                                                                <i class="bi bi-floppy-fill"></i>
@@ -272,7 +302,7 @@
                 <asp:UpdatePanel ID="PanelBitacora" runat="server">
                     <ContentTemplate>
 
-                        <div class="container-fluid">
+                        <div class="container-fluid shadow rounded mt-2  ">
 
                             <div class="container-fluid border shadow-sm rounded bg-light mb-2 ">
 
@@ -1164,7 +1194,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                               
+
                                                 <h6> Por favor justifique la causa de la pausa de la solicitid y presione aceptar </h6>
                                             </div>
 
@@ -1180,7 +1210,7 @@
                                 </div>
                             </div>
 
-                             <!--Modal confirmar Despausar Solicitud  -->
+                            <!--Modal confirmar Despausar Solicitud  -->
                             <div id="ConfirmarDespausarSol" class="modal" tabindex="-1" style="display: none;">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
@@ -1217,279 +1247,317 @@
             <div class="tab-pane fade" id="Programacion-content">
                 <asp:UpdatePanel ID="PanelProgamacion" runat="server">
                     <ContentTemplate>
-                        <div class="container-fluid ">
+                        <div class="container-fluid p-2 bg-light ">
 
 
-                            <%-- Desarrollo--%>
+                            <div class="card m-3">
 
-                            <div class="row pb-2">
+                                <div class="card-header" style="height: 2.9rem;" id="headerDes" runat="server">
+                                    <%-- Desarrollo--%>
+                                    <div class="row pb-2">
 
-                                <div class="col-md-3 text-end">
+                                        <div class="col-md-2 text-end">
 
-                                    <asp:TextBox ID="tbNombreAsesor" type="text" class="form-control form-control-sm" CssClass="hidden-textBox" runat="server"></asp:TextBox>
-                                </div>
+                                            <asp:TextBox ID="tbNombreAsesor" type="text" class="form-control form-control-sm" CssClass="hidden-textBox" runat="server"></asp:TextBox>
+                                        </div>
 
-                                <div class="col-md-6"></div>
+                                        <div class="col-md-4 text-center">
+                                            <h5 id="tituloDes" runat="server" visible="false">Desarrollos</h5>
+                                        </div>
 
-                                <div class="col-md-3" style="width: 15rem;" id="BusDesDiv" runat="server">
-                                    <div class="input-group input-group-sm gap-2">
-                                        <asp:TextBox ID="ID_Sol_Dib" CssClass="form-control form-control-sm  text-center fw-bold" placeHolder="N° Desarrollo" ToolTip="Digite la solcitud que desea buscar " runat="server" OnTextChanged="ID_Sol_Dib_TextChanged"></asp:TextBox>
-                                        <asp:LinkButton runat="server" Text="Buscar" ID="BuscarSol" title="Buscar Solicitud" Style="padding-right: 2rem; font-size: 1rem;" OnClick="BuscarSol_Click">
+                                        <div class="col-md-6 " id="BusDesDiv" runat="server">
+                                            <div class="input-group input-group-sm gap-2 justify-content-end">
+                                                <asp:TextBox ID="ID_Sol_Dib" CssClass="form-control form-control-sm  text-center fw-bold" Style="width: 15rem; max-width: 15rem;" placeHolder="N° Desarrollo" ToolTip="Digite la solcitud que desea buscar " runat="server" OnTextChanged="ID_Sol_Dib_TextChanged"></asp:TextBox>
+                                                <asp:LinkButton runat="server" Text="Buscar" ID="BuscarSol" title="Buscar Solicitud" Style="padding-right: 2rem; font-size: 1rem;" OnClick="BuscarSol_Click">
                                                         <i class="bi bi-search"></i>
-                                        </asp:LinkButton>
-                                    </div>
-                                </div>
-
-
-
-                            </div>
-
-                            <%-- Fila control Click--%>
-                            <div class="row" style="display: none">
-                                <div class="col-1">
-                                    <asp:TextBox ID="filaAntior" type="text" class="form-control form-control-sm" placeHolder="fila anterior" runat="server"></asp:TextBox>
-
-                                </div>
-
-                                <div class="col-1">
-                                    <asp:TextBox ID="filaActual" type="text" class="form-control form-control-sm" placeHolder="fila Actual" runat="server"></asp:TextBox>
-                                </div>
-
-                                <div class="col-1">
-                                    <asp:TextBox ID="ContadorClic" type="text" class="form-control form-control-sm" placeHolder="Contador" runat="server"></asp:TextBox>
-                                </div>
-                            </div>
-
-                            <div class="row">
-
-                                <div class="col-md-5">
-                                    <div class=" input-group input-group-sm justify-content-around  mb-2" style="padding-left: 3rem;">
-                                        <asp:Button ID="btnTrabajarSolicitud" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Trabajar Solicitud" OnClick="btnTrabajarSolicitud_Click" />
-                                        <asp:Button ID="btnDesprogramar" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Desprogramar" OnClick="btnDesprogramar_Click" />
-                                    </div>
-                                </div>
-
-                                <div class="col-md-3">
-                                    <div class="input-group  input-group-sm  mb-2 gap-2">
-                                        <asp:Label ID="lbFechaPactoentrega" class=" col-form-label-sm" Text="Pacto Entrega" runat="server"></asp:Label>
-                                        <asp:TextBox ID="tbFechaPactoentrega" type="date" class="form-control " runat="server"></asp:TextBox>
-
-                                    </div>
-                                </div>
-
-                                <div class="col-md-2 justify-content-center">
-                                    <div class="input-group  input-group-sm  mb-2 gap-2">
-                                        <asp:CheckBox ID="chxConvenciones" OnCheckedChanged="chxConvenciones_CheckedChanged" AutoPostBack="true" runat="server" />
-                                        <asp:Label ID="lbConvenciones" class=" col-form-label-sm" Text="Convenciones" runat="server"></asp:Label>
+                                                </asp:LinkButton>
+                                                <asp:CheckBox ID="chkVerDes" runat="server" ToolTip="Ocultar desarrollos" OnCheckedChanged="chkVerDes_CheckedChanged" AutoPostBack="true" />
+                                            </div>
+                                        </div>
 
 
                                     </div>
                                 </div>
 
-                                <div class="col-md-2" style="padding-right: 4rem;">
-                                    <div class="input-group  input-group-sm  mb-2 gap-4">
-                                        <asp:Label ID="lbZona" class="form-label" Text="Zona" runat="server"></asp:Label>
-                                        <asp:DropDownList class="form-control" ID="ddlZona" runat="server" DataSourceID="Zona" DataTextField="Zona" DataValueField="Zona" OnSelectedIndexChanged="CambioZona" AutoPostBack="true" OnDataBound="ddlZona_DataBound"></asp:DropDownList>
-                                        <asp:SqlDataSource runat="server" ID="Zona" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="
+                                <div class="card-body" id="bodyDes" runat="server">
+
+
+                                    <%-- Fila control Click--%>
+                                    <div class="row" style="display: none;">
+                                        <div class="col-1">
+                                            <asp:TextBox ID="filaAntior" type="text" class="form-control form-control-sm" placeHolder="fila anterior" runat="server"></asp:TextBox>
+
+                                        </div>
+
+                                        <div class="col-1">
+                                            <asp:TextBox ID="filaActual" type="text" class="form-control form-control-sm" placeHolder="fila Actual" runat="server"></asp:TextBox>
+                                        </div>
+
+                                        <div class="col-1">
+                                            <asp:TextBox ID="ContadorClic" type="text" class="form-control form-control-sm" placeHolder="Contador" runat="server"></asp:TextBox>
+                                        </div>
+
+                                        <div class="col-1">
+                                            <asp:TextBox ID="tbId_Fila" type="text" class="form-control form-control-sm" placeHolder="Contador" runat="server"></asp:TextBox>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row pb-2">
+
+                                        <div class="col-md-5">
+                                            <div class=" input-group input-group-sm justify-content-around  mb-2" style="padding-left: 3rem;">
+                                                <asp:Button ID="btnTrabajarSolicitud" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Trabajar Solicitud" OnClick="btnTrabajarSolicitud_Click" />
+                                                <asp:Button ID="btnDesprogramar" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Desprogramar" OnClick="btnDesprogramar_Click" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="input-group  input-group-sm  mb-2 gap-2">
+                                                <asp:Label ID="lbFechaPactoentrega" class=" col-form-label-sm" Text="Pacto Entrega" runat="server"></asp:Label>
+                                                <asp:TextBox ID="tbFechaPactoentrega" type="date" class="form-control " runat="server"></asp:TextBox>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2 justify-content-center">
+                                            <div class="input-group  input-group-sm  mb-2 gap-2">
+                                                <asp:CheckBox ID="chxConvenciones" OnCheckedChanged="chxConvenciones_CheckedChanged" AutoPostBack="true" runat="server" />
+                                                <asp:Label ID="lbConvenciones" class=" col-form-label-sm" Text="Convenciones" runat="server"></asp:Label>
+
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2" style="padding-right: 4rem;">
+                                            <div class="input-group  input-group-sm  mb-2 gap-4">
+                                                <asp:Label ID="lbZona" class="form-label" Text="Zona" runat="server"></asp:Label>
+                                                <asp:DropDownList class="form-control" ID="ddlZona" runat="server" DataSourceID="Zona" DataTextField="Zona" DataValueField="Zona" OnSelectedIndexChanged="CambioZona" AutoPostBack="true" OnDataBound="ddlZona_DataBound"></asp:DropDownList>
+                                                <asp:SqlDataSource runat="server" ID="Zona" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="
                                         select Zona from tblRender group by Zona"></asp:SqlDataSource>
 
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="row pb-lg-2 mb-lg-2 p-2 justify-content-center">
-                                <div class="border border-2 rounded p-2">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="row">
                                             </div>
-                                            <div class="table-responsive mb-2 gap-2" style="max-height: 15rem; height: 15rem; overflow-x: auto;">
+                                        </div>
 
-                                                <h5 class="datagrid-header text-Start" style="padding-left: 1rem;">Desarrollos</h5>
+                                    </div>
 
-                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid1" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="CargarDesarrollos" OnItemDataBound="DataGridDesarrollo_ItemDataBound" OnItemCommand="DataGridSolicitudPE_LinkButton">
-                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
-                                                    <Columns>
-                                                        <asp:TemplateColumn HeaderText=". . .">
-                                                            <ItemTemplate>
-                                                                <asp:LinkButton ID="lnkView" runat="server" CommandName="VerDesarrollo" CssClass="Tam link-button" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>"
-                                                                    OnClientClick='<%# "return function() { return activarTab(\"BitacoraDesarrollo-content\", \"" + Eval("ID_Solicitud") + "\"); }();" %>' />
-                                                            </ItemTemplate>
-                                                        </asp:TemplateColumn>
+                                    <div class="row pb-lg-2 mb-lg-2 p-2 justify-content-center">
+                                        <div class="border border-2 rounded p-2">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="row">
+                                                    </div>
+                                                    <div class="table-responsive mb-2 gap-2" style="max-height: 15rem; height: 15rem; overflow-x: auto;">
 
-                                                        <asp:BoundColumn DataField="ID_Solicitud" HeaderText="ID" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Proyecto" HeaderText="Proyecto" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Fecha_Ingreso" HeaderText="Ingreso" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Dirigidoa" HeaderText="Para" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="TipoSolicitud" HeaderText="Tipo de Solicitud	" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="RealizadoPor" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="ProgramadoVentas" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Pausado" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Terminado" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <%-- Columnas para mostrar en el datagrid Empieza desde el 11 --%>
-                                                        <asp:BoundColumn DataField="Fecha_Programada_Entrega" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="FechaRespuesta" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="id_SolicitudOrigen" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="CiudadProyecto" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="CotizarViaTte" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Cotizacion" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Cliente" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Contacto" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Telefono" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Celular" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Mail" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Direccion" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="SeguimientoPausa" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="DesarrolloComplejo" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Urgente" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                        <h5 class="datagrid-header text-Start" style="padding-left: 1rem;">Desarrollos</h5>
 
-                                                    </Columns>
-                                                </asp:DataGrid>
+                                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid1" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="CargarDesarrollos" OnItemDataBound="DataGridDesarrollo_ItemDataBound" OnItemCommand="DataGridSolicitudPE_LinkButton">
+                                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                            <Columns>
+                                                                <asp:TemplateColumn HeaderText=". . .">
+                                                                    <ItemTemplate>
+                                                                        <asp:LinkButton ID="lnkView" runat="server" CommandName="VerDesarrollo" CssClass="Tam link-button" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>"
+                                                                            OnClientClick='<%# "return function() { return activarTab(\"BitacoraDesarrollo-content\", \"" + Eval("ID_Solicitud") + "\"); }();" %>' />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateColumn>
 
-                                                <asp:SqlDataSource runat="server" ID="Desarrollo" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="spObtenerSolicitudesDiseEspe" SelectCommandType="StoredProcedure">
-                                                    <SelectParameters>
-                                                        <asp:ControlParameter ControlID="ddlZona" PropertyName="SelectedValue" Name="Zona" Type="String"></asp:ControlParameter>
-                                                        <asp:ControlParameter ControlID="tbNombreAsesor" PropertyName="Text" Name="Asesor" Type="String"></asp:ControlParameter>
-                                                    </SelectParameters>
-                                                </asp:SqlDataSource>
+                                                                <asp:BoundColumn DataField="ID_Solicitud" HeaderText="ID" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Proyecto" HeaderText="Proyecto" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Fecha_Ingreso" HeaderText="Ingreso" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Dirigidoa" HeaderText="Para" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="TipoSolicitud" HeaderText="Tipo de Solicitud	" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="RealizadoPor" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="ProgramadoVentas" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Pausado" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Terminado" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <%-- Columnas para mostrar en el datagrid Empieza desde el 11 --%>
+                                                                <asp:BoundColumn DataField="Fecha_Programada_Entrega" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="FechaRespuesta" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="id_SolicitudOrigen" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="CiudadProyecto" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="CotizarViaTte" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Cotizacion" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Cliente" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Contacto" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Telefono" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Celular" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Mail" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Direccion" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="SeguimientoPausa" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="DesarrolloComplejo" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Urgente" Visible="false" ItemStyle-CssClass="auto-width-column" />
 
-                                                <asp:SqlDataSource ID="CargarDesarrollos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="   SELECT *
+                                                            </Columns>
+                                                        </asp:DataGrid>
+
+                                                        <asp:SqlDataSource runat="server" ID="Desarrollo" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="spObtenerSolicitudesDiseEspe" SelectCommandType="StoredProcedure">
+                                                            <SelectParameters>
+                                                                <asp:ControlParameter ControlID="ddlZona" PropertyName="SelectedValue" Name="Zona" Type="String"></asp:ControlParameter>
+                                                                <asp:ControlParameter ControlID="tbNombreAsesor" PropertyName="Text" Name="Asesor" Type="String"></asp:ControlParameter>
+                                                            </SelectParameters>
+                                                        </asp:SqlDataSource>
+
+                                                        <asp:SqlDataSource ID="CargarDesarrollos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="   SELECT *
                                                         FROM tblSoliciDiseEspe  WHERE Terminado = 0  AND TipoSolicitud ='DESARROLLO' AND Asesor =@Asesor ORDER BY Fecha_Ingreso ASC;">
-                                                    <SelectParameters>
-                                                        <asp:ControlParameter ControlID="tbNombreAsesor" PropertyName="Text" Name="Asesor"></asp:ControlParameter>
-                                                    </SelectParameters>
-                                                </asp:SqlDataSource>
+                                                            <SelectParameters>
+                                                                <asp:ControlParameter ControlID="tbNombreAsesor" PropertyName="Text" Name="Asesor"></asp:ControlParameter>
+                                                            </SelectParameters>
+                                                        </asp:SqlDataSource>
 
-                                                <asp:SqlDataSource ID="SolUnica" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT * FROM tblSoliciDiseEspe
+                                                        <asp:SqlDataSource ID="SolUnica" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT * FROM tblSoliciDiseEspe
                                                       WHERE Terminado = 0  AND Dirigidoa='DESARROLLO DE PRODUCTO'  AND  ProgramadoVentas = 1  
                                                        AND TipoSolicitud ='DESARROLLO' And ID_Solicitud = @IdSolcicitud ORDER BY Fecha_Ingreso ASC ">
-                                                    <SelectParameters>
-                                                        <asp:ControlParameter ControlID="ID_Sol_Dib" PropertyName="Text" Name="IdSolcicitud"></asp:ControlParameter>
-                                                    </SelectParameters>
-                                                </asp:SqlDataSource>
+                                                            <SelectParameters>
+                                                                <asp:ControlParameter ControlID="ID_Sol_Dib" PropertyName="Text" Name="IdSolcicitud"></asp:ControlParameter>
+                                                            </SelectParameters>
+                                                        </asp:SqlDataSource>
 
 
 
 
 
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-
-                            <%-- cotizaciones--%>
-
-                            <div class="row pb-2 pt-3">
-
-                                <div class="col-md-5 text-center" style="padding-left: 3rem;">
-                                    <div class=" input-group input-group-sm justify-content-around  mb-2 gap-2">
-                                        <asp:Button ID="btnTrbajarCotizacion" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Trabajar Cotización" OnClick="btnTrbajarCotizacion_Click" />
-                                        <asp:Button ID="btnDesprogramar1" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Desprogramar" OnClick="btnDesprogramar1_Click" />
-                                    </div>
-                                </div>
-
-                                <div class="col-md-3">
-                                    <div class="input-group  input-group-sm  mb-2 gap-2">
-                                        <asp:Label ID="lbPactoEntrega1" class=" col-form-label-sm" Text="Pacto Entrega" runat="server"></asp:Label>
-                                        <asp:TextBox ID="tbPactoEntrega" type="date" class="form-control " runat="server"></asp:TextBox>
-
-                                    </div>
-                                </div>
-
-                                <div class="col-1"></div>
-
-                                <div class="col-md-3" style="width: 15rem;" id="BusCotDiv" runat="server">
-                                    <div class="input-group input-group-sm gap-2">
-                                        <asp:TextBox ID="ID_Cot_Dib" CssClass="form-control form-control-sm fw-bold  text-center" placeHolder="N° Cotización" ToolTip="Digite la solcitud que desea buscar " runat="server" OnTextChanged="ID_Cot_Dib_TextChanged"></asp:TextBox>
-                                        <asp:LinkButton runat="server" Text="Buscar" ID="BuscarCot" title="Buscar Solicitud" Style="padding-right: 2rem; font-size: 1rem;" OnClick="BuscarCot_Click">
-                                                        <i class="bi bi-search"></i>
-                                        </asp:LinkButton>
-
-                                    </div>
-
-                                </div>
-
-
 
                             </div>
 
-                            <div class="row justify-content-center p-2">
-                                <div class="border border-2 rounded p-2">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="table-responsive mb-2 gap-2" style="max-height: 15rem; height: 15rem; overflow-x: auto;">
-                                                <h5 class="datagrid-header text-start" style="padding-left: 1rem;">Cotizaciones</h5>
+                            <div class="card m-3">
 
-                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid2" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="CargarCotizaciones" OnItemDataBound="DataGridCotizacion_ItemDataBound" OnItemCommand="DataGridSolicitudPE_LinkButton">
-                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
-                                                    <Columns>
-                                                        <asp:TemplateColumn HeaderText=". . .">
-                                                            <ItemTemplate>
-                                                                <asp:LinkButton ID="lnkView" runat="server" CommandName="VerCotizacion" CssClass="Tam" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>"
-                                                                    OnClientClick='<%# "return function() { return activarTab(\"BitacoraDesarrollo-content\", \"" + Eval("ID_Solicitud") + "\"); }();" %>' />
-                                                            </ItemTemplate>
-                                                        </asp:TemplateColumn>
+                                <div class="card-header" style="height: 2.9rem;" id="headerCot" runat="server">
+
+                                    <div class="row pb-2">
+
+                                        <div class="col-md-2"></div>
+
+                                        <div class="col-md-4 text-center">
+                                             <h5 id="tituloCot" runat="server" visible="false">Cotizaciones</h5>
+                                        </div>
+
+                                        <div class="col-md-6 " id="BusCotDiv" runat="server">
+                                            <div class="input-group input-group-sm gap-2 justify-content-end">
+                                                <asp:TextBox ID="ID_Cot_Dib" CssClass="form-control form-control-sm fw-bold  text-center" style="width:15rem; max-width:15rem;" placeHolder="N° Cotización" ToolTip="Digite la solcitud que desea buscar " runat="server" OnTextChanged="ID_Cot_Dib_TextChanged"></asp:TextBox>
+                                                <asp:LinkButton runat="server" Text="Buscar" ID="BuscarCot" title="Buscar Solicitud" Style="padding-right: 2rem; font-size: 1rem;" OnClick="BuscarCot_Click">
+                                                  <i class="bi bi-search"></i>
+                                                </asp:LinkButton>
+                                                <asp:CheckBox ID="chkVerCot" runat="server" ToolTip="Ocultar cotizaciones" OnCheckedChanged="chkVerCot_CheckedChanged" AutoPostBack="true" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="card-body" id="bodyCot" runat="server">
+
+                                    <%-- cotizaciones--%>
+
+                                    <div class="row pb-2">
+
+                                        <div class="col-md-5 text-center" style="padding-left: 3rem;">
+                                            <div class=" input-group input-group-sm justify-content-around  mb-2 gap-2">
+                                                <asp:Button ID="btnTrbajarCotizacion" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Trabajar Cotización" OnClick="btnTrbajarCotizacion_Click" />
+                                                <asp:Button ID="btnDesprogramar1" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Desprogramar" OnClick="btnDesprogramar1_Click" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="input-group  input-group-sm  mb-2 gap-2">
+                                                <asp:Label ID="lbPactoEntrega1" class=" col-form-label-sm" Text="Pacto Entrega" runat="server"></asp:Label>
+                                                <asp:TextBox ID="tbPactoEntrega" type="date" class="form-control " runat="server"></asp:TextBox>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col-1"></div>
+
+                                        <div class="col-md-3">
+                                        </div>
 
 
-                                                        <asp:BoundColumn DataField="ID_Solicitud" HeaderText="ID" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Proyecto" HeaderText="Proyecto" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Fecha_Ingreso" HeaderText="Ingreso" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Dirigidoa" HeaderText="Para" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="TipoSolicitud" HeaderText="Tipo de Solicitud	" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="RealizadoPor" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="ProgramadoVentas" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Pausado" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Terminado" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <%-- Columnas para mostrar en el datagrid Empieza desde el 11 --%>
-                                                        <asp:BoundColumn DataField="Fecha_Programada_Entrega" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="FechaRespuesta" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="id_SolicitudOrigen" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="CiudadProyecto" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="CotizarViaTte" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Cotizacion" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Cliente" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Contacto" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Telefono" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Celular" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Mail" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Direccion" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="SeguimientoPausa" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="DesarrolloComplejo" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Urgente" Visible="false" ItemStyle-CssClass="auto-width-column" />
-                                                    </Columns>
-                                                </asp:DataGrid>
 
-                                                <asp:SqlDataSource runat="server" ID="Cotizaciones" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="spObtenerSolicitudCotizaciones" SelectCommandType="StoredProcedure">
-                                                    <SelectParameters>
-                                                        <asp:ControlParameter ControlID="ddlZona" PropertyName="SelectedValue" Name="Zona" Type="String"></asp:ControlParameter>
-                                                        <asp:ControlParameter ControlID="tbNombreAsesor" PropertyName="Text" Name="Asesor" Type="String"></asp:ControlParameter>
-                                                    </SelectParameters>
-                                                </asp:SqlDataSource>
+                                    </div>
 
-                                                <asp:SqlDataSource ID="CargarCotizaciones" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="   SELECT *
+                                    <div class="row justify-content-center p-2">
+                                        <div class="border border-2 rounded p-2">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="table-responsive mb-2 gap-2" style="max-height: 15rem; height: 15rem; overflow-x: auto;">
+                                                        <h5 class="datagrid-header text-start" style="padding-left: 1rem;">Cotizaciones</h5>
+
+                                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid2" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="CargarCotizaciones" OnItemDataBound="DataGridCotizacion_ItemDataBound" OnItemCommand="DataGridSolicitudPE_LinkButton">
+                                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                            <Columns>
+                                                                <asp:TemplateColumn HeaderText=". . .">
+                                                                    <ItemTemplate>
+                                                                        <asp:LinkButton ID="lnkView" runat="server" CommandName="VerCotizacion" CssClass="Tam" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>"
+                                                                            OnClientClick='<%# "return function() { return activarTab(\"BitacoraDesarrollo-content\", \"" + Eval("ID_Solicitud") + "\"); }();" %>' />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateColumn>
+
+
+                                                                <asp:BoundColumn DataField="ID_Solicitud" HeaderText="ID" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Proyecto" HeaderText="Proyecto" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Fecha_Ingreso" HeaderText="Ingreso" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Dirigidoa" HeaderText="Para" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="TipoSolicitud" HeaderText="Tipo de Solicitud	" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="RealizadoPor" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="ProgramadoVentas" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Pausado" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Terminado" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <%-- Columnas para mostrar en el datagrid Empieza desde el 11 --%>
+                                                                <asp:BoundColumn DataField="Fecha_Programada_Entrega" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="FechaRespuesta" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="id_SolicitudOrigen" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="CiudadProyecto" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="CotizarViaTte" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Cotizacion" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Cliente" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Contacto" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Telefono" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Celular" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Mail" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Direccion" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="SeguimientoPausa" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="DesarrolloComplejo" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Urgente" Visible="false" ItemStyle-CssClass="auto-width-column" />
+                                                            </Columns>
+                                                        </asp:DataGrid>
+
+                                                        <asp:SqlDataSource runat="server" ID="Cotizaciones" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="spObtenerSolicitudCotizaciones" SelectCommandType="StoredProcedure">
+                                                            <SelectParameters>
+                                                                <asp:ControlParameter ControlID="ddlZona" PropertyName="SelectedValue" Name="Zona" Type="String"></asp:ControlParameter>
+                                                                <asp:ControlParameter ControlID="tbNombreAsesor" PropertyName="Text" Name="Asesor" Type="String"></asp:ControlParameter>
+                                                            </SelectParameters>
+                                                        </asp:SqlDataSource>
+
+                                                        <asp:SqlDataSource ID="CargarCotizaciones" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="   SELECT *
                                                         FROM tblSoliciDiseEspe  WHERE Terminado = 0  AND TipoSolicitud ='COTIZACIÓN' AND Asesor =@Asesor ORDER BY Fecha_Ingreso ASC;">
-                                                    <SelectParameters>
-                                                        <asp:ControlParameter ControlID="tbNombreAsesor" PropertyName="Text" Name="Asesor"></asp:ControlParameter>
-                                                    </SelectParameters>
-                                                </asp:SqlDataSource>
+                                                            <SelectParameters>
+                                                                <asp:ControlParameter ControlID="tbNombreAsesor" PropertyName="Text" Name="Asesor"></asp:ControlParameter>
+                                                            </SelectParameters>
+                                                        </asp:SqlDataSource>
 
-                                                <asp:SqlDataSource ID="CotUnica" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT * FROM tblSoliciDiseEspe
+                                                        <asp:SqlDataSource ID="CotUnica" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT * FROM tblSoliciDiseEspe
                                                       WHERE Terminado = 0  AND Dirigidoa='DESARROLLO DE PRODUCTO'  AND  ProgramadoVentas = 1  
                                                        AND TipoSolicitud ='COTIZACIÓN' And ID_Solicitud = @IdSolcicitud ORDER BY Fecha_Ingreso ASC ">
-                                                    <SelectParameters>
-                                                        <asp:ControlParameter ControlID="ID_Cot_Dib" PropertyName="Text" Name="IdSolcicitud"></asp:ControlParameter>
-                                                    </SelectParameters>
-                                                </asp:SqlDataSource>
+                                                            <SelectParameters>
+                                                                <asp:ControlParameter ControlID="ID_Cot_Dib" PropertyName="Text" Name="IdSolcicitud"></asp:ControlParameter>
+                                                            </SelectParameters>
+                                                        </asp:SqlDataSource>
 
 
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
 
@@ -1596,9 +1664,9 @@
 
                             <!--Modal Convenciones   -->
                             <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog  ">
+                                <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
-                                        <div class="modal-header">
+                                        <div class="modal-header bg-secondary text-white">
                                             <h5 class="modal-title" id="exampleModalLabel">Convenciones</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
@@ -1608,34 +1676,34 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="input-group input-group-sm mb-1 gap-2">
-                                                                <div class="input-group " style="width: 20px; height: 20px; border: 1px; background-color: mediumpurple; white-space: nowrap"></div>
-                                                                <label for="lbNoProgamado" class="form-label">No programado por Ventas</label>
+                                                                <div class="input-group " style="width: 20px; height: 20px; border: 1px; background-color: #72459b; white-space: nowrap"></div>
+                                                                <label  class="form-label">No programado por Ventas</label>
                                                             </div>
 
 
                                                             <div class="input-group input-group-sm mb-1 gap-2">
-                                                                <div class="input-group" style="width: 20px; height: 20px; border: 1px; background-color: red"></div>
-                                                                <label for="lbEspera" class="form-label">No cumplidos y en espera</label>
+                                                                <div class="input-group" style="width: 20px; height: 20px; border: 1px; background-color: #c86868"></div>
+                                                                <label  class="form-label">No cumplidos y en espera</label>
                                                             </div>
 
 
                                                             <div class="input-group input-group-sm mb-1 gap-2">
-                                                                <div class="input-group " style="width: 20px; height: 20px; border: 1px; background-color: yellow"></div>
-                                                                <label for="lbNormal" class="form-label">Programación Normal</label>
+                                                                <div class="input-group " style="width: 20px; height: 20px; border: 1px; background-color: #efdd79"></div>
+                                                                <label class="form-label">Programación Normal</label>
                                                             </div>
 
 
                                                             <div class="input-group input-group-sm mb-1 gap-2">
-                                                                <div class="input-group " style="width: 20px; height: 20px; border: 1px; background-color: darkorange"></div>
-                                                                <label for="lbTerminado" class="form-label">Urgente</label>
+                                                                <div class="input-group " style="width: 20px; height: 20px; border: 1px; background-color: #e9a270"></div>
+                                                                <label  class="form-label">Urgente</label>
                                                             </div>
                                                             <div class="input-group input-group-sm mb-1 gap-2">
-                                                                <div class="input-group " style="width: 20px; height: 20px; border: 1px; background-color: aqua"></div>
-                                                                <label for="lbPausado" class="form-label">Pausados</label>
+                                                                <div class="input-group " style="width: 20px; height: 20px; border: 1px; background-color: #70ede4"></div>
+                                                                <label  class="form-label">Pausados</label>
                                                             </div>
                                                             <div class="input-group input-group-sm mb-1 gap-2">
-                                                                <div class="input-group " style="width: 20px; height: 20px; border: 1px; background-color: #83F455"></div>
-                                                                <label for="lbPausado" class="form-label">Desarrollo Complejo </label>
+                                                                <div class="input-group " style="width: 20px; height: 20px; border: 1px; background-color: #77a765"></div>
+                                                                <label  class="form-label">Desarrollo Complejo </label>
                                                             </div>
 
                                                         </div>
@@ -1656,6 +1724,7 @@
                             </div>
 
 
+
                         </div>
                     </ContentTemplate>
                 </asp:UpdatePanel>
@@ -1666,7 +1735,7 @@
             <div class="tab-pane fade " id="BuscarDesarrollo-content">
                 <asp:UpdatePanel ID="PanelBuscar" runat="server">
                     <ContentTemplate>
-                        <div class="container-fluid">
+                        <div class="container-fluid m-2">
 
                             <%-- Buscar Diseño Especial --%>
 
@@ -1852,6 +1921,17 @@
 
 
         if (AreaDepar.toUpperCase() === "VENTAS") {
+
+            // Quitar 'active' de la pestaña actualmente activa y su contenido
+            $('#Programacion-tab').removeClass('active');
+            $('#Programacion-content').removeClass('active show');
+
+            // Activa la pestaña de Programación
+            $('#BitacoraDesarrollo-tab').addClass('active');
+            $('#BitacoraDesarrollo-content').addClass('active show');
+
+            ControlHeaderCard();
+
             // se Habilitan enlaces Iniciales 
             document.getElementById("NuevaSolicitud").classList.remove("disabled");
             document.getElementById("NuevaSolicitud").classList.add("enabled", "AzulActivo");
@@ -1920,6 +2000,16 @@
 
         }
         else if (AreaDepar.toUpperCase() === "DISEÑO" || AreaDepar.toUpperCase() === "DESARROLLO DE PRODUCTO") {
+
+            // Quitar 'active' de la pestaña actualmente activa y su contenido
+            $('#BitacoraDesarrollo-tab').removeClass('active');
+            $('#BitacoraDesarrollo-content').removeClass('active show');
+
+            // Activa la pestaña de Programación
+            $('#Programacion-tab').addClass('active');
+            $('#Programacion-content').addClass('active show');
+
+            $(".contenedor-icono").hide();
 
             // se Habilitan enlaces Iniciales
 
@@ -2256,66 +2346,66 @@
 
         function ModificarSolicitud() {
 
-           
-                // Habilitar enlaces deshabilitar enlaces
-                document.getElementById("GrabarSolicitud").classList.remove("disabled");
-                document.getElementById("GrabarSolicitud").classList.add("enabled", "AzulActivo");
 
-                document.getElementById("NuevaSolicitud").classList.remove("enabled", "AzulActivo");
-                document.getElementById("NuevaSolicitud").classList.add("disabled");
+            // Habilitar enlaces deshabilitar enlaces
+            document.getElementById("GrabarSolicitud").classList.remove("disabled");
+            document.getElementById("GrabarSolicitud").classList.add("enabled", "AzulActivo");
 
-                document.getElementById("ModificarSolicitud").classList.remove("enabled", "AzulActivo");
-                document.getElementById("ModificarSolicitud").classList.add("disabled");
+            document.getElementById("NuevaSolicitud").classList.remove("enabled", "AzulActivo");
+            document.getElementById("NuevaSolicitud").classList.add("disabled");
 
-                // Habilitar o deshabilitar los DropDownList
-                var dropDownLists = document.querySelectorAll("select");
-                for (var j = 0; j < dropDownLists.length; j++) {
-                    dropDownLists[j].disabled = false;
+            document.getElementById("ModificarSolicitud").classList.remove("enabled", "AzulActivo");
+            document.getElementById("ModificarSolicitud").classList.add("disabled");
+
+            // Habilitar o deshabilitar los DropDownList
+            var dropDownLists = document.querySelectorAll("select");
+            for (var j = 0; j < dropDownLists.length; j++) {
+                dropDownLists[j].disabled = false;
+
+            }
+
+            // Habilitar o deshabilitar los TextBox Type text
+            var textBoxes = document.querySelectorAll("input[type='text']");
+            for (var i = 0; i < textBoxes.length; i++) {
+
+                if (textBoxes[i].id !== "tbProveedor" && textBoxes[i].id !== "tbAncho" && textBoxes[i].id !== "tbAltura" && textBoxes[i].id !== "tbProfundidad"
+                    && textBoxes[i].id !== "tbMaterial" && textBoxes[i].id !== "tbCliente" && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbTelefono"
+                    && textBoxes[i].id !== "tbCelular" && textBoxes[i].id !== "tbMail" && textBoxes[i].id !== "tbDireccion" && textBoxes[i].id !== "tbPrecioSugerido"
+                    && textBoxes[i].id !== "tbCantidad" && textBoxes[i].id !== "tbDesarrollaPor") {
+                    textBoxes[i].disabled = false;
+
 
                 }
 
-                // Habilitar o deshabilitar los TextBox Type text
-                var textBoxes = document.querySelectorAll("input[type='text']");
-                for (var i = 0; i < textBoxes.length; i++) {
+            }
+            var checkBoxesToEnable = ["chxViaticos"];
 
-                    if (textBoxes[i].id !== "tbProveedor" && textBoxes[i].id !== "tbAncho" && textBoxes[i].id !== "tbAltura" && textBoxes[i].id !== "tbProfundidad"
-                        && textBoxes[i].id !== "tbMaterial" && textBoxes[i].id !== "tbCliente" && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbTelefono"
-                        && textBoxes[i].id !== "tbCelular" && textBoxes[i].id !== "tbMail" && textBoxes[i].id !== "tbDireccion" && textBoxes[i].id !== "tbPrecioSugerido"
-                        && textBoxes[i].id !== "tbCantidad" && textBoxes[i].id !== "tbDesarrollaPor") {
-                        textBoxes[i].disabled = false;
+            for (var i = 0; i < checkBoxesToEnable.length; i++) {
+                var checkBoxId = checkBoxesToEnable[i];
+                var checkBox = document.getElementById(checkBoxId);
 
-
-                    }
-
+                if (checkBox) {
+                    checkBox.disabled = false; // Habilita el CheckBox
                 }
-                var checkBoxesToEnable = ["chxViaticos"];
+            }
 
-                for (var i = 0; i < checkBoxesToEnable.length; i++) {
-                    var checkBoxId = checkBoxesToEnable[i];
-                    var checkBox = document.getElementById(checkBoxId);
+            var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
+            boton1.disabled = false;
 
-                    if (checkBox) {
-                        checkBox.disabled = false; // Habilita el CheckBox
-                    }
+
+            $.ajax({
+                type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                url: "Solicitud_Especial.aspx/ModificarSolicitud", // La URL debe apuntar al método en el servidor
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                },
+                error: function (error) {
+                    // Manejar errores si los hay
                 }
+            });
 
-                var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
-                boton1.disabled = false;
-
-
-                $.ajax({
-                    type: "POST", // Puede ser "GET" o "POST" según tus necesidades
-                    url: "Solicitud_Especial.aspx/ModificarSolicitud", // La URL debe apuntar al método en el servidor
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
-                    },
-                    error: function (error) {
-                        // Manejar errores si los hay
-                    }
-                });
-           
 
         }
 
@@ -2351,6 +2441,8 @@
 
             var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
             boton1.disabled = true;
+
+            ControlHeaderCard();
 
         }
 
@@ -2421,25 +2513,25 @@
 
             // Se controla el boton de cliente
             var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
-              boton1.disabled = true;
+            boton1.disabled = true;
 
-              // Controlamos los dropdownlist
+            // Controlamos los dropdownlist
 
-              // Habilitar o deshabilitar los DropDownList
-              var dropDownLists = document.querySelectorAll("select");
-              for (var j = 0; j < dropDownLists.length; j++) {
+            // Habilitar o deshabilitar los DropDownList
+            var dropDownLists = document.querySelectorAll("select");
+            for (var j = 0; j < dropDownLists.length; j++) {
 
-                  if (dropDownLists[j].id != "ddlZona") {
-                      dropDownLists[j].disabled = true;
-                  }
-              }
+                if (dropDownLists[j].id != "ddlZona") {
+                    dropDownLists[j].disabled = true;
+                }
+            }
 
-              // Mostrar el LinkButton "PausarSolicitud"
+            // Mostrar el LinkButton "PausarSolicitud"
             var DespausarSolicitud = document.getElementById("<%= DespausarSolicitud.ClientID %>");
             var PausarSolicitud = document.getElementById("<%= PausarSolicitud.ClientID %>");
 
             if (DespausarSolicitud) {
-                  DespausarSolicitud.style.display = '';
+                DespausarSolicitud.style.display = '';
             }
 
             if (PausarSolicitud) {
@@ -2447,7 +2539,7 @@
             }
 
 
-          }
+        }
 
         function HabEnlDiseño2() {
 
@@ -2554,11 +2646,12 @@
 
 
 
-         }
+        }
 
         function ControlBtnCliente() {
             var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
             boton1.disabled = true;
+  
         }
 
         function HabilitarEnlaces2() {
@@ -2637,7 +2730,7 @@
             var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
             boton1.disabled = true;
 
-
+            ControlHeaderCard();
         }
 
         function abrirOtraPestana() {
@@ -2751,14 +2844,14 @@
                 document.getElementById("ModificarDetalle").classList.remove("enabled", "AzulActivo");
                 document.getElementById("ModificarDetalle").classList.add("disabled");
 
-              
+
 
                 // Habilitar o deshabilitar los TextBox Type text
                 var textBoxes = document.querySelectorAll("input[type='text']");
                 for (var i = 0; i < textBoxes.length; i++) {
 
                     if (textBoxes[i].id !== "tbProyecto" && textBoxes[i].id !== "tbSolicitudOrigen" && textBoxes[i].id !== "tbCotizacionEsp" && textBoxes[i].id !== "tbCliente"
-                        && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbTelefono" && textBoxes[i].id !== "tbDesarrollaPor" 
+                        && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbTelefono" && textBoxes[i].id !== "tbDesarrollaPor"
                         && textBoxes[i].id !== "tbCelular" && textBoxes[i].id !== "tbMail" && textBoxes[i].id !== "tbDireccion" && textBoxes[i].id !== "tbPrecioSugerido") {
                         textBoxes[i].disabled = false;
 
@@ -2841,12 +2934,12 @@
                 }
 
 
-                
+
             }
 
 
 
-            
+
 
 
             $.ajax({
@@ -3064,6 +3157,25 @@
 
         }
 
+        function ControlHeaderCard()
+        {
+            var headerCot1 = document.getElementById('<%= headerCot.ClientID %>');
+            if (headerCot1) {
+                headerCot1.style.display = 'none';
+            }
+
+            var headerDes = document.getElementById('<%= headerDes.ClientID %>');
+            if (headerDes) {
+                headerDes.style.display = 'none';
+            }
+        }
+
+        function ControlBuscarSolicitud() {
+
+            ControlBtnCliente
+            ControlHeaderCard();
+        }
+
     </script>
 
     <script>
@@ -3115,15 +3227,23 @@
                 if (focusedElement.tagName !== 'TEXTAREA') {
                     // Prevenir la acción predeterminada del evento
                     event.preventDefault();
-                  
+
                 }
                 // Verificar si el elemento cual  pestaña esta activa  activa
                 var activeTab = document.querySelector('.tab-content .tab-pane.active');
-                if (activeTab)
-                {
+                if (activeTab) {
                     if (focusedElement.id === "tbSolicitud1" || focusedElement.id === "tbClienteX" || focusedElement.id === "tbProyectoX" || focusedElement.id === "tbFechaIni" || focusedElement.id === "tbFechaFin") {
                         document.getElementById('<%= btnConsultar.ClientID %>').click();
-                    } 
+                    }
+
+                    if (focusedElement.id === "ID_Sol_Dib") {
+                        document.getElementById('<%= BuscarSol.ClientID %>').click();
+                    }
+
+                    if (focusedElement.id === "ID_Cot_Dib") {
+                        document.getElementById('<%= BuscarCot.ClientID %>').click();
+                    }
+
                 }
 
 
@@ -3159,7 +3279,7 @@
             $('#ConfirmarPausarSol').modal('hide');
         }
 
-         // Mostrar  modal pausar solicitud
+        // Mostrar  modal pausar solicitud
         function mostralMoldalDespausar() {
 
             // Cambiamos el valor del span
@@ -3170,6 +3290,7 @@
 
             $('#ConfirmarDespausarSol').modal('show');
         }
+
 
 
     </script>

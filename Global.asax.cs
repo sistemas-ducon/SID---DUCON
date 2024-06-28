@@ -33,7 +33,34 @@ namespace SISTEMA_INTEGRAL_DUCON
 
         protected void Application_Error(object sender, EventArgs e)
         {
-          
+            // Obtener la última excepción
+            Exception ex = Server.GetLastError();
+
+            // Verificar si la excepción es un HttpException
+            if (ex is HttpException httpException)
+            {
+                // Verificar si el código de estado HTTP es 400 (Bad Request)
+                if (httpException.GetHttpCode() == 400)
+                {
+                    // Error de tamaño de solicitud excedido
+                    string mensajePersonalizado = "A ocurrido un error, por favor ponerse en contacto ";
+                    string urlRedireccion = "Ventas/DocumentacionDise.aspx"; // Cambia esto por la URL correcta
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                }
+                // Otros tipos de errores HTTP
+                else
+                {
+                    // Error de tamaño de solicitud excedido
+                    string mensajePersonalizado = "A ocurrido un error, por favor ponerse en contacto con el departamento de sistemas";
+                    string urlRedireccion = "Inicio.aspx"; // Cambia esto por la URL correcta
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                }
+            }
+            else
+            {
+                // Manejar otros tipos de excepciones que no sean HttpException
+                // Puedes registrar la excepción o redirigir a una página de error genérica
+            }
         }
 
 

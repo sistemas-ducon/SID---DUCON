@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using static SISTEMA_INTEGRAL_DUCON.Formularios.OrdenTrabajo;
@@ -338,9 +339,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         }
 
 
+        [WebMethod]
+        public static void ControlTapPlano()
+        {
+            HttpContext.Current.Session["controlTapPlano"] = "1";
+        }
+
         // Pendiente los Botones de la barra principal (Definir Funcionalidades y Autorizacion)
-
-
 
     }
 }
