@@ -273,6 +273,20 @@
             // Actualiza el formulario 1
             window.opener.location.reload(); // Recarga el formulario padre
 
+            $.ajax({
+                type: "POST", // Puede ser "GET" o "POST" según tus necesidades
+                url: "Objetos.aspx/ControlTapPlano", // La URL debe apuntar al método en el servidor
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    // La llamada al servidor fue exitosa, puedes realizar acciones adicionales aquí
+                },
+                error: function (error) {
+                    // Manejar errores si los hay
+                }
+            });
+
+
         }
 
         function ValidarFormularioCantidad() {

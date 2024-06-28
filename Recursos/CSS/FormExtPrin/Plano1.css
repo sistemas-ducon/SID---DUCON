@@ -21,14 +21,38 @@
     text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
 }
 
-.datagrid-header {
+.auto-width-column1 {
+    width: auto;
+    max-width: 400px; /* Puedes ajustar este valor según el ancho máximo deseado */
+    white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
+    overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
+    text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
+}
+
+.datagrid-header-title {
     position: sticky;
     top: 0;
     z-index: 1;
     background-color: #F8F8F8F8; /* Ajusta el color de fondo del encabezado según tus preferencias */
+    
+}
+
+.datagrid-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #a5a5a9; /* Ajusta el color de fondo del encabezado según tus preferencias */
+    color:white;
 }
 
 .fila-seleccionada{
     background-color: black !important; /*Se Cambia el color de la fila Seleccionada  */
     color: white !important;
+}
+
+/*Control Tamaño botones de datagrid*/
+.Tam {
+    display: block;
+    width: 100%;
+    height: 100%;
 }

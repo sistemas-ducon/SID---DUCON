@@ -2800,7 +2800,7 @@
 
                             <div class=" container-fluid panel-plano">
 
-                                <div class="container-fluid descripcion-plano">
+                                <div class="container-fluid descripcion-plano border border-opacity-50 rounded p-3 shadow-sm">
 
                                     <div class="row pb-2">
                                         <div class="col-3">
@@ -2930,11 +2930,11 @@
                                         </div>
                                     </div>
 
-                                    <div class="row justify-content-center">
+                                    <div class="row justify-content-center p-2">
                                         <div class="border rounded p-1 m-1">
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <div class="table-responsive mb-1" style="max-height: 7rem; overflow-x: auto;">
+                                                    <div class="table-responsive mb-1" style="max-height: 7rem; overflow-x:auto;">
                                                         <h5 class="datagrid-header text-center">Acabado objeto</h5>
                                                         <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridAcabado" runat="server">
                                                             <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
@@ -2958,12 +2958,12 @@
 
                                 </div>
 
-                                <div class="container-fluid tabla-plano">
-                                    <div class="row justify-content-center">
+                                <div class="container-fluid tabla-plano border rounded shadow-sm">
+                                    <div class="row justify-content-center p-2">
                                         <div class="border rounded p-1 m-1">
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <div class="table-responsive mb-1" style="max-height: 28rem; height: 28rem; overflow-x: auto;">
+                                                    <div class="table-responsive mb-1" style="max-height: 30rem; height: 32rem; overflow-x: auto;">
                                                         <h5 class="datagrid-header text-center">Despiece</h5>
                                                         <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDespiecePlano" runat="server" OnItemDataBound="DataGridDespiecePlano_ItemDataBound" OnItemCommand="DataGridDespiecePlano_LinkButton">
                                                             <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
@@ -3012,9 +3012,9 @@
 
                             </div>
 
-                            <div class=" container-fluid panel-tabla  ">
+                            <div class=" container-fluid panel-tabla border p-2 rounded  ">
 
-                                <div class="row justify-content-center ">
+                                <div class="row justify-content-center p-2">
                                     <div class="border rounded pb-2 mb-2">
                                         <div class="row">
                                             <div class="col-12">

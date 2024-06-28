@@ -171,22 +171,45 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
 
 
-                            Cargar_OTs2();
-                            List<int> numeros = ObtenerNumerosDesdeLaBaseDeDatos(Session["Id_OT2"].ToString());
-
-                            ddlNumbers.Items.Clear(); // Limpiar las opciones existentes
-
-                            foreach (int numero in numeros)
+                            // Este bloque carga solo el plano ya que el Id_OT2 es igual al texto Nula
+                            if (Session["Id_OT2"].ToString() == "")
                             {
-                                ddlNumbers.Items.Add(numero.ToString());
+                                if (Session["Id_Plano"] != null)
+                                {
+                                    Cargar_Plano2(Session["Id_Plano"].ToString());
+                                    Session.Remove("Id_Plano");
+                                    Session.Remove("Id_OT2");
+                                    Session.Remove("pedido2");
+                                    HabilitarBotonesPlano();
+                                }
+
+                                //Activar Tap Plano 
+                                string script = "activarPestana('Plano-tab', 'Plano-Content');";
+                                ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
 
                             }
+                            else
+                            {
+                                Cargar_OTs2();
+                                List<int> numeros = ObtenerNumerosDesdeLaBaseDeDatos(Session["Id_OT2"].ToString());
 
-                            ddlNumbers.SelectedValue = Session["pedido2"].ToString();
+                                ddlNumbers.Items.Clear(); // Limpiar las opciones existentes
 
-                            // Se eliminar variables de session para cargar OT 
-                            Session.Remove("Id_OT2");
-                            Session.Remove("pedido2");
+                                foreach (int numero in numeros)
+                                {
+                                    ddlNumbers.Items.Add(numero.ToString());
+
+                                }
+
+                                ddlNumbers.SelectedValue = Session["pedido2"].ToString();
+
+                                // Se eliminar variables de session para cargar OT 
+                                Session.Remove("Id_OT2");
+                                Session.Remove("pedido2");
+                            }
+
+
+                           
 
                             if (Session["controlTapPlano"]?.ToString() == "1")
                             {
@@ -6666,6 +6689,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             //Variables de Session para volver a cargar el plano
             Session["Id_OT2"] = tbOT.Text;
             Session["pedido2"] = ddlNumbers.Text;
+            Session["Id_Plano"] = txtPlano.Text;
 
 
             // Se valida que el plano este o no bloqueado
@@ -9943,13 +9967,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
 
                     // Se verifica que la informacion del contacto este actualizada 
-                    if (VerificarActualizacionContacto(txtNit.Text, Session["IdContactoFactSession"].ToString()))
-                    {
+                    // SE COMENTA EL ESTE BLOQUE PARA QUE NO PREGUNTE ACTUALIZACION CONTACTO CLIENTE 
+                    //if (VerificarActualizacionContacto(txtNit.Text, Session["IdContactoFactSession"].ToString()))
+                    //{
 
-                        string mensajePersonalizado = "No puede pasar un pedido, si la información del contacto del cliente no esta actualizada";
-                        string urlRedireccion = "OrdenTrabajo.aspx";
-                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-                    }
+                    //    string mensajePersonalizado = "No puede pasar un pedido, si la información del contacto del cliente no esta actualizada";
+                    //    string urlRedireccion = "OrdenTrabajo.aspx";
+                    //    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    //}
 
 
                     // Se realiza la validacon de TotalObraMas (Pendiente hasta validar que es la variable TotalObraMas) !!!Verificar 
@@ -10203,8 +10228,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             DateTime ultimaActualizacion = reader.GetDateTime(0);
                             TimeSpan diferencia = DateTime.Now - ultimaActualizacion;
                             int diasTranscurridos = diferencia.Days;
-
-                            return diasTranscurridos > 395;
+                            // SE AÑADEN MAS DIAS A ESTA VALIDACION PERO EL METODO ESTA COMENTADO 
+                            return diasTranscurridos > 5500;
                         }
                     }
                 }

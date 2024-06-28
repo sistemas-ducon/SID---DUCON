@@ -51,80 +51,74 @@
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
         <asp:UpdatePanel ID="panelPlano1" runat="server">
             <ContentTemplate>
-                <div class="container-fluid">
+                <div class="container-fluid mt-3">
 
-                    <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
-                        <div class="container-fluid">
+                    <nav class="navbar navbar-expand-sm navbar-light bg-light custom rounded mb-3 gap-2">
 
-                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#ejemplo2" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#ejemplo2" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
 
-                            <div class="collapse navbar-collapse" id="ejemplo2">
-                                <ul class="navbar-nav mx-auto contenedor-icono">
-                                    <div class="contenedor-icono">
+                        <div class="collapse navbar-collapse" id="ejemplo2">
+                            <ul class="navbar-nav mx-auto contenedor-icono">
+                                <div class="contenedor-icono">
 
 
-                                        <asp:LinkButton runat="server" Text="Nuevo Plano" ID="NuevoPlano" OnClick="NuevoPlano_Click" title="Nuevo Plano">
+                                    <asp:LinkButton runat="server" Text="Nuevo Plano" ID="NuevoPlano" OnClick="NuevoPlano_Click" title="Nuevo Plano">
                                                       <i class="bi bi-file-earmark"></i>
-                                        </asp:LinkButton>
+                                    </asp:LinkButton>
 
-                                        <asp:LinkButton runat="server" Text="Guardar Plano" ID="GurdarPlano" title="Guardar Plano" OnClick="GuardarModifcarPlano" OnClientClick=" return validarFormulario();">
+                                    <asp:LinkButton runat="server" Text="Guardar Plano" ID="GurdarPlano" title="Guardar Plano" OnClick="GuardarModifcarPlano" OnClientClick=" return validarFormulario();">
                                                <i class="bi bi-floppy-fill"></i>
-                                        </asp:LinkButton>
+                                    </asp:LinkButton>
 
-                                        <asp:LinkButton runat="server" Text="Modificar Plano" ID="ModificarPlano" OnClick="ModificarPlano_Click" title="Modificar Plano">
+                                    <asp:LinkButton runat="server" Text="Modificar Plano" ID="ModificarPlano" OnClick="ModificarPlano_Click" title="Modificar Plano">
                                                    <i class="bi bi-wrench"></i>
-                                        </asp:LinkButton>
+                                    </asp:LinkButton>
 
-                                        <asp:LinkButton runat="server" Text="Bloqueado" ID="Bloqueado" title="Bloquear o Desbloquear Plano" OnClick="Bloqueado_Click" OnClientClick="return confirmarBloquearPlano(event);">
+                                    <asp:LinkButton runat="server" Text="Bloqueado" ID="Bloqueado" title="Bloquear o Desbloquear Plano" OnClick="Bloqueado_Click" OnClientClick="return confirmarBloquearPlano(event);">
                                                   <i class="bi bi-lock-fill"></i>
-                                        </asp:LinkButton>
+                                    </asp:LinkButton>
 
-                                        <asp:LinkButton runat="server" Text="Anular o Eliminar Plano" ID="ELiminarPlano" title="Eliminar Plano" OnClick="EliminarPlano_Click" OnClientClick="return confirmarEliminarPlano(event);">
+                                    <asp:LinkButton runat="server" Text="Anular o Eliminar Plano" ID="ELiminarPlano" title="Eliminar Plano" OnClick="EliminarPlano_Click" OnClientClick="return confirmarEliminarPlano(event);">
                                                  <i class="bi bi-file-earmark-excel"></i>
-                                        </asp:LinkButton>
+                                    </asp:LinkButton>
 
-                                        <asp:LinkButton runat="server" Text="Buscar" ID="BuscarPlano" OnClick="BuscarPlano_Click" title="Buscar">
+                                    <asp:LinkButton runat="server" Text="Buscar" ID="BuscarPlano" OnClick="BuscarPlano_Click" title="Buscar">
                                                     <i class="bi bi-search"></i>
-                                        </asp:LinkButton>
+                                    </asp:LinkButton>
 
-                                        <asp:LinkButton runat="server" Text="Cancelar" ID="Cancelar" OnClick="Cancelar_Click" title="Cancelar">
+                                    <asp:LinkButton runat="server" Text="Cancelar" ID="Cancelar" OnClick="Cancelar_Click" title="Cancelar">
                                                  <i class="bi bi-x-square"></i>
-                                        </asp:LinkButton>
+                                    </asp:LinkButton>
 
-                                    </div>
+                                </div>
 
-
-
-                                </ul>
-                            </div>
-
-
-
+                            </ul>
                         </div>
+
                     </nav>
 
                     <div class="row text-center">
                         <span id="ErrorValidacion1" style="color: red;"></span>
                     </div>
 
-                    <div class="row justify-content-center m-1 p-1 pb-3 mb-3" style="height: 25rem">
+                    <div class="row justify-content-center m-1 p-1 pb-3 mb-3 " style="height: 25rem">
                         <div class="border rounded pb-2 mb-2">
                             <div class="row">
                                 <div class="col-12">
                                     <div class="table-responsive mb-1" style="max-height: 23rem; overflow-x: auto;">
-                                        <h5 class="datagrid-header text-center">Planos</h5>
+                                        <h5 class="datagrid-header-title text-center">Planos</h5>
                                         <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridPlano1" runat="server" OnItemCommand="DataGridPlano1_ItemCommand">
-                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header auto-width-column" />
 
                                             <Columns>
-                                                <asp:TemplateColumn HeaderText="...">
+                                                <asp:TemplateColumn HeaderText=". . .">
                                                     <ItemTemplate>
-                                                        <asp:LinkButton ID="lnkPlano1" runat="server" CommandName="VerPlano1" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
+                                                        <asp:LinkButton ID="lnkPlano1" runat="server" CssClass="Tam" CommandName="VerPlano1" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
                                                     </ItemTemplate>
                                                 </asp:TemplateColumn>
-                                                <asp:BoundColumn DataField="Plano" HeaderText="Plano" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="Plano" HeaderText="Plano" ItemStyle-CssClass="auto-width-column1" />
                                                 <asp:BoundColumn DataField="Bolsa" HeaderText="Bolsa" ItemStyle-CssClass="auto-width-column" />
                                                 <asp:BoundColumn DataField="AfectaBolsa" HeaderText="Afecta" ItemStyle-CssClass="auto-width-column" />
                                                 <asp:BoundColumn DataField="Id_OT" HeaderText="O.T" ItemStyle-CssClass="auto-width-column" />
@@ -151,113 +145,126 @@
                         </div>
                     </div>
 
-                    <div class="row pb-2 mb-2">
+                    <div class="card shadow-sm">
 
-                        <div class="col-1">
-                            <div class=" input-group input-group-sm gap-2  ">
-                                <asp:Label ID="lbPlano" Text="Plano" runat="server"></asp:Label>
+                        <div class="card-body">
+
+                            <div class="row pb-2 mb-2 g-2">
+
+                                <div class="col-sm-1">
+                                    <div class=" input-group input-group-sm gap-2  ">
+                                        <asp:Label ID="lbPlano" Text="Plano" runat="server"></asp:Label>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-sm-3">
+                                    <div class=" input-group input-group-sm gap-2  ">
+                                        <asp:TextBox ID="tbPlano" type="Text" class="form-control mayusculas " runat="server" AutoPostBack="true" OnTextChanged="tbPlano_TextChanged"></asp:TextBox>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-3">
+                                    <div class=" input-group input-group-sm gap-2  ">
+                                        <asp:Label ID="lbPor" Text="Por" runat="server"></asp:Label>
+                                        <asp:TextBox ID="tbPor" type="Text" class="form-control mayusculas " runat="server"></asp:TextBox>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-3">
+                                    <div class=" input-group input-group-sm gap-2  ">
+                                        <asp:Label ID="lbAsesor" Text="Asesor" runat="server"></asp:Label>
+                                        <asp:DropDownList class="form-control" ID="ddlAsesor" runat="server"></asp:DropDownList>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <div class=" input-group input-group-sm gap-2   ">
+                                        <asp:Label ID="lbFecha" class="form-label" Text="Fecha" runat="server"></asp:Label>
+                                        <asp:TextBox ID="tbFecha" type="date" class="form-control " runat="server"></asp:TextBox>
+                                    </div>
+                                </div>
+
+
                             </div>
-                        </div>
+
+                            <div class="row g-2 mb-2">
+
+                                <div class="col-sm-1">
+                                    <div class=" input-group input-group-sm gap-2  ">
+                                        <asp:Label ID="lbCliente" Text="Cliente" runat="server"></asp:Label>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-3">
+                                    <div class=" input-group input-group-sm gap-2  ">
+
+                                        <asp:TextBox ID="tbCliente" type="Text" class="form-control mayusculas " runat="server"></asp:TextBox>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-3">
+                                    <div class=" input-group input-group-sm gap-2  ">
+                                        <asp:Label ID="lbArea" Text="Área" runat="server"></asp:Label>
+                                        <asp:TextBox ID="tbArea" type="Text" class="form-control mayusculas " runat="server"></asp:TextBox>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-3">
+                                    <div class=" input-group input-group-sm gap-2  ">
+                                        <asp:Label ID="lbContacto" Text="Contacto" runat="server"></asp:Label>
+                                        <asp:TextBox ID="tbContacto" type="text" class="form-control mayusculas " runat="server"></asp:TextBox>
+                                    </div>
+                                </div>
 
 
-                        <div class="col-3">
-                            <div class=" input-group input-group-sm gap-2  ">
-                                <asp:TextBox ID="tbPlano" type="Text" class="form-control mayusculas " runat="server" AutoPostBack="true" OnTextChanged="tbPlano_TextChanged"></asp:TextBox>
                             </div>
-                        </div>
 
-                        <div class="col-3">
-                            <div class=" input-group input-group-sm gap-2  ">
-                                <asp:Label ID="lbPor" Text="Por" runat="server"></asp:Label>
-                                <asp:TextBox ID="tbPor" type="Text" class="form-control mayusculas " runat="server"></asp:TextBox>
+                            <div class="row pb-2 mb-2 g-2">
+
+                                <div class="col-sm-1">
+                                    <div class=" input-group-sm   ">
+                                        <asp:Label ID="lbTipologia" class="form-label pt-3" Text="Tipología" runat="server"></asp:Label>
+                                        <asp:CheckBox ID="chxTipologia" CssClass="pt-3" runat="server" />
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-3">
+                                    <div class=" input-group input-group-sm gap-2  ">
+                                        <asp:Label ID="lbHistorial" class="form-label " Text="Historial" runat="server"></asp:Label>
+                                        <asp:CheckBox ID="chxHistorial" runat="server" />
+                                        <asp:DropDownList class="form-control form-control-sm" ID="ddlHistorial" runat="server"></asp:DropDownList>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-1">
+                                    <div class=" input-group-sm   ">
+                                        <asp:Label ID="lbAfecta" class="form-label pt-3" Text="Afecta" runat="server"></asp:Label>
+                                        <asp:CheckBox ID="chxAfecta" CssClass="pt-3" runat="server" />
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <div class=" input-group input-group-sm gap-2   ">
+                                        <asp:Label ID="lbBolsa" class="form-label" Text="Bolsa" runat="server"></asp:Label>
+                                        <asp:TextBox ID="tbBolsa" type="text" class="form-control " runat="server"></asp:TextBox>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-5">
+                                    <div class=" input-group input-group-sm gap-2  justify-content-around  ">
+                                        <asp:Button ID="btnCargarPlano" CssClass="btn btn-outline-secondary" runat="server" Text="Cargar Plano" OnClick="btnCargarPlano_Click" />
+                                        <asp:Button ID="btnAsignar" CssClass="btn btn-outline-secondary" runat="server" Text="Asignar" />
+                                        <asp:Button ID="btnBuscar" CssClass="btn btn-outline-secondary" runat="server" Text="Buscar" OnClick="BuscarPlano_Boton" />
+
+                                    </div>
+                                </div>
+
                             </div>
+
                         </div>
-
-                        <div class="col-3">
-                            <div class=" input-group input-group-sm gap-2  ">
-                                <asp:Label ID="lbAsesor" Text="Asesor" runat="server"></asp:Label>
-                                <asp:DropDownList class="form-control" ID="ddlAsesor" runat="server"></asp:DropDownList>
-                            </div>
-                        </div>
-
-                        <div class="col-2">
-                            <div class=" input-group input-group-sm gap-2   ">
-                                <asp:Label ID="lbFecha" class="form-label" Text="Fecha" runat="server"></asp:Label>
-                                <asp:TextBox ID="tbFecha" type="date" class="form-control " runat="server"></asp:TextBox>
-                            </div>
-                        </div>
-
-
                     </div>
 
-                    <div class="row s mb-2">
-                        <div class="col-1">
-                            <div class=" input-group input-group-sm gap-2  ">
-                                <asp:Label ID="lbCliente" Text="Cliente" runat="server"></asp:Label>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class=" input-group input-group-sm gap-2  ">
-
-                                <asp:TextBox ID="tbCliente" type="Text" class="form-control mayusculas " runat="server"></asp:TextBox>
-                            </div>
-                        </div>
-
-                        <div class="col-3">
-                            <div class=" input-group input-group-sm gap-2  ">
-                                <asp:Label ID="lbArea" Text="Área" runat="server"></asp:Label>
-                                <asp:TextBox ID="tbArea" type="Text" class="form-control mayusculas " runat="server"></asp:TextBox>
-                            </div>
-                        </div>
-
-                        <div class="col-3">
-                            <div class=" input-group input-group-sm gap-2  ">
-                                <asp:Label ID="lbContacto" Text="Contacto" runat="server"></asp:Label>
-                                <asp:TextBox ID="tbContacto" type="text" class="form-control mayusculas " runat="server"></asp:TextBox>
-                            </div>
-                        </div>
-
-
-                    </div>
-
-                    <div class="row pb-2 mb-2">
-                        <div class="col-1">
-                            <div class=" input-group-sm   ">
-                                <asp:Label ID="lbTipologia" class="form-label pt-3" Text="Tipología" runat="server"></asp:Label>
-                                <asp:CheckBox ID="chxTipologia" CssClass="pt-3" runat="server" />
-                            </div>
-                        </div>
-
-                        <div class="col-3">
-                            <div class=" input-group input-group-sm gap-2  ">
-                                <asp:Label ID="lbHistorial" class="form-label " Text="Historial" runat="server"></asp:Label>
-                                <asp:CheckBox ID="chxHistorial" runat="server" />
-                                <asp:DropDownList class="form-control form-control-sm" ID="ddlHistorial" runat="server"></asp:DropDownList>
-                            </div>
-                        </div>
-
-
-                        <div class="col-1">
-                            <div class=" input-group-sm   ">
-                                <asp:Label ID="lbAfecta" class="form-label pt-3" Text="Afecta" runat="server"></asp:Label>
-                                <asp:CheckBox ID="chxAfecta" CssClass="pt-3" runat="server" />
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <div class=" input-group input-group-sm gap-2   ">
-                                <asp:Label ID="lbBolsa" class="form-label" Text="Bolsa" runat="server"></asp:Label>
-                                <asp:TextBox ID="tbBolsa" type="text" class="form-control " runat="server"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="col-5">
-                            <div class=" input-group input-group-sm gap-2  justify-content-around  ">
-                                <asp:Button ID="btnCargarPlano" CssClass="btn btn-outline-secondary" runat="server" Text="Cargar Plano" OnClick="btnCargarPlano_Click" />
-                                <asp:Button ID="btnAsignar" CssClass="btn btn-outline-secondary" runat="server" Text="Asignar" />
-                                <asp:Button ID="btnBuscar" CssClass="btn btn-outline-secondary" runat="server" Text="Buscar" OnClick="BuscarPlano_Boton" />
-
-                            </div>
-                        </div>
-                    </div>
 
 
                 </div>
@@ -303,10 +310,6 @@
             });
         });
     </script>
-
-
-
-
 
 
 

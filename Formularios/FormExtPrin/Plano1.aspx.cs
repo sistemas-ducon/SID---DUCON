@@ -326,10 +326,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         {
             if (e.CommandName == "VerPlano1")
             {
-
-
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGridPlano1.Items[rowIndex];
+
+                foreach (DataGridItem item in DataGridPlano1.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+                e.Item.CssClass = "fila-seleccionada";
 
                 // Deshabilitamos los campos activos 
                 tbPlano.Enabled = false;
