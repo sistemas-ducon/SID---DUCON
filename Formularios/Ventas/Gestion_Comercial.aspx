@@ -18,20 +18,15 @@
 
     <form id="form1" runat="server">
 
-        <nav class="navbar navbar-light bg-light">
-            <div class="container d-flex justify-content-center">
-                <span class="navbar-brand mb-0 h1">Gestion Comercial</span>
-            </div>
-        </nav>
 
-        <nav class="navbar navbar-light bg-light">
+        <nav class="navbar navbar-light bg-light navbar-custom">
             <div class="container d-flex justify-content-center">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a class="nav-link text-dark active" id="Gestion-tab" data-bs-toggle="tab" href="#Gestion-content">Gestion de Clientes</a>
+                        <a class="nav-link text-white active" id="Gestion-tab" data-bs-toggle="tab" href="#Gestion-content"> <i class="bi bi-person-lines-fill"></i> Gestion de Clientes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="Seguimiento-tab" data-bs-toggle="tab" href="#Seguimiento-content">Seguimiento Cliente</a>
+                        <a class="nav-link text-white" id="Seguimiento-tab" data-bs-toggle="tab" href="#Seguimiento-content"><i class="bi bi-clipboard-data"></i> Seguimiento Cliente</a>
                     </li>
                 </ul>
             </div>

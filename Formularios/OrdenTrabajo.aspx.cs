@@ -134,7 +134,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     Nit.Enabled = false;
                     Nit.CssClass = "bi bf  btn btn-outline-secondary";
                     btnCotizacion.Enabled = false;
-                    btnCotizacion.CssClass = "bi bf  btn btn-outline-secondary w-100";
+                    btnCotizacion.CssClass = "bi bf  btn btn-sm btn-outline-secondary w-100";
                     tbPedDepen.DataBind();
                     tbPedDepen.Items.Insert(0, new ListItem(" "));
                     cboPedidoBase.DataBind();
@@ -5288,9 +5288,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         else
                         {
                             Session["Id_OT2"] = tbOT.Text;
-                            Session["pedido2"] = ddlNumbers.SelectedItem.Text;
+                            if(tbOT.Text != "")
+                            {
+                                Session["pedido2"] = ddlNumbers.SelectedItem.Text;
+                            }
+                            else
+                            {
+                                Session["pedido2"] = "";
+                            }                         
                             Session["Numero_Plano"] = txtPlano.Text;
-
+                            Session["Id_Plano"] = txtPlano.Text;
                             string url = "FormExtprin/Objetos.aspx";
                             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
                             ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
@@ -9845,10 +9852,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void Terminar(object sender, EventArgs e)
         {
             // Esta redireccion se deja por si la descarga demora un poco mas de lo normal 
-
-            Session["Id_OT2"] = tbOT.Text;
-            Session["pedido2"] = ddlNumbers.SelectedItem.Text;
-
+            Session["Id_OT2"] = tbOT.Text;        
+            if (tbOT.Text != "")
+            {
+                Session["pedido2"] = ddlNumbers.SelectedItem.Text;
+            }
+            
             Response.Redirect("OrdenTrabajo.aspx");
 
         }

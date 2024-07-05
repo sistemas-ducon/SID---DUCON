@@ -1743,15 +1743,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.TextBox txtOrdenCompra;
 
         /// <summary>
-        /// Control lblComisionCompart.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblComisionCompart;
-
-        /// <summary>
         /// Control cbxComisionCompart.
         /// </summary>
         /// <remarks>
@@ -1759,6 +1750,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox cbxComisionCompart;
+
+        /// <summary>
+        /// Control lblComisionCompart.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblComisionCompart;
 
         /// <summary>
         /// Control btnAsesor1.

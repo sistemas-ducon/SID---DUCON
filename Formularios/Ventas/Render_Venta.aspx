@@ -48,16 +48,16 @@
     <form id="formRenderVenta" runat="server">
         <asp:ScriptManager runat="server" />
 
-        <nav class="navbar navbar-light bg-light">
+        <nav class="navbar navbar-light bg-light navbar-custom">
             <div class="container d-flex justify-content-center ">
                 <ul class="nav nav-tabs gap-5" id="miPestañas">
 
 
                     <li class="nav-item">
-                        <a class="nav-link text-dark active" id="Render-tab" data-bs-toggle="tab" href="#Render-Content">Programar Render</a>
+                        <a class="nav-link text-white active" id="Render-tab" data-bs-toggle="tab" href="#Render-Content">Programar Render</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="BuscarRender-tab" data-bs-toggle="tab" href="#BuscarRender-Content">Buscar Render</a>
+                        <a class="nav-link text-white" id="BuscarRender-tab" data-bs-toggle="tab" href="#BuscarRender-Content">Buscar Render</a>
                     </li>
                 </ul>
             </div>

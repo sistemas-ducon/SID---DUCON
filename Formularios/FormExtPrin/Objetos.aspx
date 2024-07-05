@@ -25,7 +25,7 @@
 
                 <div class="container-fluid p-1 m-1 ">
 
-                    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+                    <nav class="navbar navbar-expand-sm navbar-light bg-light p-1 ">
                         <div class="container-fluid">
 
                             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#ejemplo2"
@@ -67,10 +67,9 @@
                             </div>
                     </nav>
 
+                    <div class="row p-2 m-2 pt-2 pb-2 mb-2 border shadow-sm rounded">
 
-                    <div class="row pt-3 mt-3 pb-2 mb-2">
-
-                        <div class="col-2">
+                        <div class="col-sm-2">
                             <div class="form-check">
                                 <asp:RadioButtonList ID="rbObjeto" runat="server">
                                     <asp:ListItem Selected="True" Value="Objeto">Por Objeto </asp:ListItem>
@@ -80,7 +79,7 @@
 
                         </div>
 
-                        <div class="col-2">
+                        <div class="col-sm-2">
                             <div class="input-group-sm">
                                 <asp:Label class="form-label" Text="Grupo" runat="server" ID="lbGrupo"></asp:Label>
                                 <asp:DropDownList class="form-control" ID="ddlGrupo" runat="server" DataTextField="Descripcion" DataValueField="Descripcion" OnDataBound="ddlGrupoObjeto_DataBound" DataSourceID="GrupoObjetos" AutoPostBack="true"></asp:DropDownList>
@@ -89,28 +88,28 @@
                             </div>
                         </div>
 
-                        <div class="col-3">
+                        <div class="col-sm-3">
                             <div class="input-group-sm">
                                 <asp:Label class="form-label" Text="Criterio" runat="server" ID="lbCriterio"></asp:Label>
                                 <asp:TextBox ID="tbCriterio" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
                         </div>
 
-                        <div class="col-1">
+                        <div class="col-sm-1">
                             <div class="input-group-sm">
                                 <asp:Label class="form-label" Text="Altura." runat="server" ID="lbAltura"></asp:Label>
                                 <asp:TextBox ID="tbAltura" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
                         </div>
 
-                        <div class="col-1">
+                        <div class="col-sm-1">
                             <div class="input-group-sm">
                                 <asp:Label class="form-label" Text="Ancho" runat="server" ID="lbAncho"></asp:Label>
                                 <asp:TextBox ID="tbAncho" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
                         </div>
 
-                        <div class="col-3 pt-4">
+                        <div class="col-sm-3 pt-4 pb-2">
                             <div class="input-group-sm">
                                 <asp:Button ID="btnBuscar" runat="server" Text="Buscar" CssClass="btn btn-sm btn-outline-secondary" OnClick="BuscarObjeto" />
                                 <asp:HiddenField ID="Id_Objeto_Hid" runat="server" />
@@ -123,15 +122,15 @@
 
                     </div>
 
-                    <div class="row p-2 m-2">
+                    <div class="row d-flex p-1 m-1 pt-3 justify-content-between">
 
-                        <div class="col-9">
-                            <div class="row justify-content-center m-1 p-1 pb-1 mb-1" style="height: 29rem">
-                                <div class="border rounded pb-2 mb-2">
+                        <div class="col-8 border rounded shadow-sm">
+                            <div class="row justify-content-center p-2" style="height: 31rem">
+                                <div class="border rounded">
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="table-responsive mb-1" style="max-height: 27rem; overflow-x: auto;">
-                                                <h5 class="datagrid-header text-center">Paneles</h5>
+                                            <div class="table-responsive mb-1" style="max-height: 30rem; height: 31rem; overflow-x: auto;">
+                                                <h5 class="datagrid-header-title text-center">Paneles</h5>
                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" ID="DataGridObjetos" AutoGenerateColumns="false" runat="server" DataSourceID="ObtenerDatosObjetos" OnItemCommand="DataGridObtenerDatosObjetos_LinkButton">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
@@ -149,9 +148,6 @@
                                                         <asp:BoundColumn DataField="Descripcion_Grupo" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="Id_Numerico" Visible="false" />
                                                         <asp:BoundColumn DataField="Precio_Venta" Visible="false" />
-
-
-
                                                     </Columns>
                                                 </asp:DataGrid>
                                                 <asp:SqlDataSource ID="ObtenerDatosObjetos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="sp_ObtenerDatosObjetoActivo" SelectCommandType="StoredProcedure">
@@ -162,21 +158,17 @@
                                                         <asp:ControlParameter ControlID="ddlGrupo" PropertyName="SelectedValue" DefaultValue="%" Name="Grupo" Type="String"></asp:ControlParameter>
                                                     </SelectParameters>
                                                 </asp:SqlDataSource>
-
-
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-3 p-1">
-
-                            <div class="row ">
-                                <div class="col-1"></div>
-                                <div class="col-8">
+                        <div class="col-4 border rounded shadow-sm ml-3">
+                            <div class="row">
+                                <div class="col-1 p-0 m-0"></div>
+                                <div class="col-10">
                                     <div class="input-group-sm">
                                         <asp:Label class="form-label" Text="Observaciones:" runat="server" ID="lbObservaciones"></asp:Label>
                                         <textarea class="form-control form-control-sm" id="txObs1" runat="server" cols="4" rows="4"></textarea>
@@ -187,7 +179,7 @@
 
                             <div class="row pt-2 mt-2 pb-1 mb-1">
                                 <div class="col-1"></div>
-                                <div class="col-8">
+                                <div class="col-10">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="D. Altura" runat="server" ID="lbdAltura"></asp:Label>
                                         <asp:TextBox ID="tbAlturaD" type="text" class="form-control" runat="server"></asp:TextBox>
@@ -198,7 +190,7 @@
 
                             <div class="row pb-1 mb-1">
                                 <div class="col-1"></div>
-                                <div class="col-8">
+                                <div class="col-10">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="D. Ancho" runat="server" ID="lbAnchoD"></asp:Label>
                                         <asp:TextBox ID="tbAnchoD" type="text" class="form-control" runat="server"></asp:TextBox>
@@ -209,10 +201,10 @@
 
                             <div class="row pb-1 mb-1">
                                 <div class="col-1"></div>
-                                <div class="col-8">
+                                <div class="col-10">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="Cantidad" runat="server" ID="lbCantidad"></asp:Label>
-                                        <asp:TextBox ID="tbCantidad" type="text" class="form-control" runat="server" OnTextChanged="tbCantidad_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                        <asp:TextBox ID="tbCantidad" type="number" class="form-control" runat="server" OnTextChanged="tbCantidad_TextChanged" AutoPostBack="true"></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="col-1"></div>
@@ -220,43 +212,40 @@
 
                             <div class="row">
                                 <div class="col-1"></div>
-                                <div class="col-8">
+                                <div class="col-10">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="P. Venta" runat="server" ID="lbPrecioVenta"></asp:Label>
-                                        <asp:TextBox ID="tbPrecioVenta" type="text" class="form-control" runat="server"></asp:TextBox>
+                                        <asp:TextBox ID="tbPrecioVenta" type="number" class="form-control" runat="server"></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="col-1"></div>
                             </div>
 
-
                             <div class="row text-center">
                                 <span id="ErrorValidacionCantidad" style="color: red;"></span>
                             </div>
 
-                            <div class="row pt-4 mt-4 justify-content-center ">
+                            <div class="row pt-4 mt-4 justify-content-center">
                                 <div class="col-2">
                                 </div>
-                                <div class="col-4 ">
-                                    <div class=" input-group input-group-sm ">
-                                        <asp:Button ID="Adicionar" runat="server" Text="Adicionar" class="bi bf btn btn-outline-secondary " OnClick="Adicionar_Click" OnClientClick="return ValidarFormularioCantidad();" />
+                                <div class="col-5">
+                                    <div class="input-group input-group-sm">
+                                        <asp:Button ID="Adicionar" runat="server" Text="Adicionar" class="bi bf btn btn-outline-secondary" OnClick="Adicionar_Click" OnClientClick="return ValidarFormularioCantidad();" Style="width: 5.5rem;" />
                                     </div>
                                 </div>
-                                <div class="col-2">
-                                    <div class=" input-group input-group-sm ">
-                                        <asp:Button ID="Cerrar" runat="server" Text="Cerrar" class="bi bf btn  btn-outline-secondary" OnClientClick="enviarFormulario();" />
-                                    </div>
 
+                                <div class="col-5">
+                                    <div class="input-group input-group-sm">
+                                        <asp:Button ID="Cerrar" runat="server" Text="Cerrar" class="bi bf btn btn-outline-secondary" OnClientClick="enviarFormulario();" Style="width: 5.5rem;" />
+                                    </div>
                                 </div>
 
                                 <div class="col-2"></div>
-
                             </div>
-
-
                         </div>
 
                     </div>
+
 
                 </div>
 
@@ -312,7 +301,16 @@
             return isValid;
         }
 
+        function focusAndScrollToRow(rowId) {
+            var row = document.getElementById(rowId);
+            if (row) {
+                row.setAttribute('tabindex', '-1'); // Make it focusable
+                row.focus();
+                row.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
+
+            }
+        }
 
     </script>
 

@@ -36,24 +36,24 @@
     <form id="form1" runat="server">
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
 
-        <nav class="navbar navbar-light bg-light">
+        <nav class="navbar navbar-light bg-light navbar-custom">
             <div class="container d-flex justify-content-center">
                 <ul class="nav nav-tabs" id="myTabs">
 
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="Observaciones-tab" data-bs-toggle="tab" href="#Observaciones-content">Observaciones a la OT</a>
+                        <a class="nav-link text-white" id="Observaciones-tab" data-bs-toggle="tab" href="#Observaciones-content"> <i class="bi bi-eye-fill"></i> Observaciones a la OT</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="Personales-tab" data-bs-toggle="tab" href="#Personales-content">Observaciones Personales</a>
+                        <a class="nav-link text-white" id="Personales-tab" data-bs-toggle="tab" href="#Personales-content"><i class="bi bi-person"></i> Observaciones Personales</a>
                     </li>
 
 
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="Todas-tab" data-bs-toggle="tab" href="#Todas-content">Todas las Observaciones</a>
+                        <a class="nav-link text-white" id="Todas-tab" data-bs-toggle="tab" href="#Todas-content"><i class="bi bi-grid"></i> Todas las Observaciones</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="Pendientes-tab" data-bs-toggle="tab" href="#Pendientes-content">Actividades Pendientes</a>
+                        <a class="nav-link text-white" id="Pendientes-tab" data-bs-toggle="tab" href="#Pendientes-content"> <i class="bi bi-hourglass-bottom"></i> Actividades Pendientes</a>
                     </li>
 
                 </ul>

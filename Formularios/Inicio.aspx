@@ -52,19 +52,19 @@
         </header>
         <asp:UpdatePanel ID="PanelModulo" runat="server">
             <ContentTemplate >
-                <nav class="navbar navbar-expand-lg navbar-light bg-light shadow p-2 mb-5 bg-body form-control-sm" >
-                    <div class="container-fluid rounded-3 d-flex justify-content-start" style="background-color: #101321">
-                        <a class="navbar-brand" href="#"></a>
-                        <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light shadow p-2 mb-5 bg-body form-control-sm " >
+                    <div class="container-fluid rounded-3 d-flex justify-content-start  navbar-custom" style="background-color: #101321">
+                        <a class="navbar-brand " href="#"></a>
+                        <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation"  />
                             <span class="navbar-toggler-icon form-control-sm"></span>
                         </button>
                         <img src="https://i.ibb.co/c8cmwQ0/Actuallogo-SIDOKblanco.png" style="margin: 0.5rem; width:10rem; height:2.5rem;"/> <%---Logo de la aplicacion---%>
                        
-                        <div class="collapse navbar-collapse navbar-expand" id="navbarScroll">
-                            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="margin-left: 2.0rem;">
+                        <div class="collapse navbar-collapse navbar-expand " id="navbarScroll">
+                            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll " style="margin-left: 2.0rem;">
                                 <li class="nav-item dropdown">
                                    
-                                    <a class="nav-link dropdown-toggle text-white" href="#" id="Departamento" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <a class="nav-link dropdown-toggle rounded text-white" href="#" id="Departamento" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                       <%--Icono Departamento --%>   <i class="bi bi-building-fill"></i> Departamento                           
                                     </a>
                                     <ul class="dropdown-menu shadow bg-light" aria-labelledby="Departamento">
@@ -262,13 +262,14 @@
 
                             <hr class="text-white-50" />
                             <asp:Label ID="lblBienvenida" runat="server" ForeColor="White"></asp:Label>
-                            <asp:Button class="btn btn-light" type="button" ID="BtnCerrar" runat="server" Text="Cerrar" OnClick="BtnCerrar_Click" BackColor="#101321" BorderColor="#101321" ForeColor="White" />
-
+                            <asp:Button class="btn btn-light" type="button" ID="BtnCerrar" runat="server" Text="Cerrar" OnClick="BtnCerrar_Click" style="background-color:#23273b00; border-color:#23273b00; color:white;"  />
+                            "
                         </div>
                           
                     </div>
                 </nav>
-  
+
+              
             </ContentTemplate>
 
         </asp:UpdatePanel>

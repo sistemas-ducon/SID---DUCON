@@ -16,14 +16,14 @@
     <form id="FormReproceso" runat="server">
         <asp:ScriptManager runat="server" />
 
-        <nav class="navbar navbar-light bg-light">
+        <nav class="navbar navbar-light bg-light navbar-custom">
             <div class="container d-flex justify-content-center">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a class="nav-link text-dark active" id="ReproCalidad-tab" data-bs-toggle="tab" href="#ReproCalidad-content">Reprocesos Calidad</a>
+                        <a class="nav-link text-white active" id="ReproCalidad-tab" data-bs-toggle="tab" href="#ReproCalidad-content"><i class="bi bi-recycle"></i> Reprocesos Calidad</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="Estadistica-tab" data-bs-toggle="tab" href="#Estadisticas_content">Estadísticas-Consolidado</a>
+                        <a class="nav-link text-white" id="Estadistica-tab" data-bs-toggle="tab" href="#Estadisticas_content"> <i class="bi bi-bar-chart-line-fill"></i> Estadísticas-Consolidado</a>
                     </li>
 
                 </ul>

@@ -21,14 +21,14 @@
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
 
 
-        <nav class="navbar navbar-light bg-light">
+        <nav class="navbar navbar-light bg-light navbar-custom">
             <div class="container d-flex justify-content-center">
                 <ul class="nav nav-tabs" id="myTabs">
                     <li class="nav-item">
-                        <a class="nav-link text-dark active" id="Cotizaciones-tab" data-bs-toggle="tab" href="#Cotizaciones-content">Cotizaciones</a>
+                        <a class="nav-link text-white active" id="Cotizaciones-tab" data-bs-toggle="tab" href="#Cotizaciones-content"><i class="bi bi-file-richtext"></i>  Cotizaciones</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="Resumen_Cotizaciones-tab" data-bs-toggle="tab" href="#ResumenCotizaciones-content">Resumen Cotizaciones</a>
+                        <a class="nav-link text-white" id="Resumen_Cotizaciones-tab" data-bs-toggle="tab" href="#ResumenCotizaciones-content"> <i class="bi bi-list-check"></i> Resumen Cotizaciones</a>
                     </li>
 
                 </ul>

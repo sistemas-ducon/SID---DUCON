@@ -433,6 +433,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         {
             // Se habilitar el Texbox de busqueda de Plano 
             tbPlano.Enabled = true;
+            tbPlano.Focus();
 
         }
 

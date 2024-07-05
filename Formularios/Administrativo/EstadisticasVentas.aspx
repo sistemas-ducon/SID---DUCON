@@ -187,27 +187,27 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar navbar-light bg-light navbar-custom">
         <div class="container d-flex justify-content-center">
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link text-dark active" id="TipoPedido-tab" data-bs-toggle="tab" href="#TipoPedido-content">Tipo Pedido</a>
+                    <a class="nav-link text-white active" id="TipoPedido-tab" data-bs-toggle="tab" href="#TipoPedido-content">Tipo Pedido</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-dark" id="Xmeses-tab" data-bs-toggle="tab" href="#Xmeses-content">X Meses</a>
+                    <a class="nav-link text-white" id="Xmeses-tab" data-bs-toggle="tab" href="#Xmeses-content">X Meses</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link text-dark " id="Xtrimestre-tab" data-bs-toggle="tab" href="#Xtrimestre-content">X Trimestre</a>
+                    <a class="nav-link text-white " id="Xtrimestre-tab" data-bs-toggle="tab" href="#Xtrimestre-content">X Trimestre</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-dark" id="Xrangos-tab" data-bs-toggle="tab" href="#Xrangos-content">X Rangos</a>
+                    <a class="nav-link text-white" id="Xrangos-tab" data-bs-toggle="tab" href="#Xrangos-content">X Rangos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-dark " id="XcuotaMensual-tab" data-bs-toggle="tab" href="#XcuotaMensual-content">X Cuota Mensual</a>
+                    <a class="nav-link text-white " id="XcuotaMensual-tab" data-bs-toggle="tab" href="#XcuotaMensual-content">X Cuota Mensual</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-dark" id="XcuotaTimensual-tab" data-bs-toggle="tab" href="#XcuotaTimensual-content">X Cuota Trimestral</a>
+                    <a class="nav-link text-white" id="XcuotaTimensual-tab" data-bs-toggle="tab" href="#XcuotaTimensual-content">X Cuota Trimestral</a>
                 </li>
             </ul>
         </div>

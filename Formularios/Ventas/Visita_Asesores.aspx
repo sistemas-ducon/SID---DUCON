@@ -205,21 +205,16 @@
     <form id="form1" runat="server">
         <asp:ScriptManager runat="server" />
 
-        <nav class="navbar navbar-light bg-light">
-            <div class="container d-flex justify-content-center">
-                <span class="navbar-brand mb-0 h1">Visita Asesor
-                </span>
-            </div>
-        </nav>
+        
 
-        <nav class="navbar navbar-light bg-light">
+        <nav class="navbar navbar-light bg-light navbar-custom">
             <div class="container d-flex justify-content-center">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a class="nav-link text-dark active" id="Visitas-tab" data-bs-toggle="tab" href="#Visitas-content">Registro Visitas</a>
+                        <a class="nav-link text-white active" id="Visitas-tab" data-bs-toggle="tab" href="#Visitas-content"><i class="bi bi-calendar-check"></i> Registro Visitas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="Estadistica-tab" data-bs-toggle="tab" href="#Estadisticas_content">Estadisticas</a>
+                        <a class="nav-link text-white" id="Estadistica-tab" data-bs-toggle="tab" href="#Estadisticas_content"><i class="bi bi-bar-chart-line-fill"></i> Estadisticas</a>
                     </li>
 
                 </ul>

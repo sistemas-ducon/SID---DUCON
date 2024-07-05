@@ -20,20 +20,15 @@
     <form id="form2" runat="server">
         <asp:ScriptManager runat="server" />
 
-        <nav class="navbar navbar-light bg-light">
-            <div class="container d-flex justify-content-center">
-                <span class="navbar-brand mb-0 h1">Licitaciones</span>
-            </div>
-        </nav>
 
-        <nav class="navbar navbar-light bg-light">
+        <nav class="navbar navbar-light bg-light navbar-custom">
             <div class="container d-flex justify-content-center">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a class="nav-link text-dark active" id="Detalle-tab" data-bs-toggle="tab" href="#Detalle-Licitacion">Detalle Licitaciones</a>
+                        <a class="nav-link text-white active" id="Detalle-tab" data-bs-toggle="tab" href="#Detalle-Licitacion"><i class="bi bi-clipboard-data"></i> Detalle Licitaciones</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="Info-tab" data-bs-toggle="tab" href="#Info-Licitacion">Infor. General Licitaciones</a>
+                        <a class="nav-link text-white" id="Info-tab" data-bs-toggle="tab" href="#Info-Licitacion"><i class="bi bi-info-circle-fill"></i> Infor. General Licitaciones</a>
                     </li>
                 </ul>
             </div>

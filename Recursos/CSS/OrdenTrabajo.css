@@ -205,24 +205,6 @@
         width: 11rem;
     }
 
-@media (max-width: 1550px) {
-
-
-
-    .Datos-Cliente1 {
-        width: 25%;
-    }
-
-    .Datos-Cliente1 {
-        width: 50%;
-    }
-
-    .Datos-Cliente1 {
-        width: 25%;
-    }
-}
-
-
 
 .bf {
     background-color: #fff;
@@ -458,4 +440,54 @@
         width: 60%;
         height: auto;
     }
+
+   
+
+
 }
+
+@media (max-width: 1550px) {
+
+
+    .Datos-Cliente1 {
+        width: 25%;
+    }
+
+    .Datos-Cliente1 {
+        width: 50%;
+    }
+
+    .Datos-Cliente1 {
+        width: 25%;
+    }
+}
+
+
+.navbar-custom {
+    background: radial-gradient(circle, #afb5b9, #23273be6); /* Radial gradient */
+    border-bottom: 2px solid #ffffff; /* White border */
+}
+
+.nav-tabs .nav-link {
+    color: #ffffff; /* White text */
+    border: none;
+    background-color: transparent;
+}
+
+    .nav-tabs .nav-link.active {
+        color: #ffffff; /* White text for active link */
+        background-color: transparent;
+        border: none;
+        border-bottom: 3px solid #ffffff; /* White border */
+    }
+
+    .nav-tabs .nav-link:hover {
+        color: #f8f9fa; /* Light text on hover */
+    }
+
+    .nav-tabs .nav-link:focus {
+        color: #f8f9fa; /* Light text on focus */
+        outline: none;
+    }
+
+
