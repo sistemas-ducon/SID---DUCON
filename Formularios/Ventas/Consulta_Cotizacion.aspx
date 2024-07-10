@@ -26,33 +26,26 @@
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
 
 
-        <nav class="navbar navbar-light bg-light">
-            <div class="container d-flex justify-content-center">
-                <label class="navbar-brand mb-0 h1">Consulta de Cotizaciones</label>
-            </div>
-        </nav>
-
-
-        <nav class="navbar navbar-light bg-light">
+        <nav class="navbar navbar-light bg-light navbar-custom">
             <div class="container d-flex justify-content-center">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a class="nav-link text-dark active" id="PorVendedor-tab" data-bs-toggle="tab" href="#PorVendedor-content">Por Vendedor</a>
+                        <a class="nav-link text-white active" id="PorVendedor-tab" data-bs-toggle="tab" href="#PorVendedor-content">Por Vendedor</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="PorEstado-tab" data-bs-toggle="tab" href="#PorEstado-content">Por estado</a>
+                        <a class="nav-link text-white" id="PorEstado-tab" data-bs-toggle="tab" href="#PorEstado-content">Por estado</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="Seguimiento-tab" data-bs-toggle="tab" href="#Seguimiento-content">Seguimiento</a>
+                        <a class="nav-link text-white" id="Seguimiento-tab" data-bs-toggle="tab" href="#Seguimiento-content">Seguimiento</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="Totales-tab" data-bs-toggle="tab" href="#Totales-content">Totales</a>
+                        <a class="nav-link text-white" id="Totales-tab" data-bs-toggle="tab" href="#Totales-content">Totales</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="EnEstudio-tab" data-bs-toggle="tab" href="#EnEstudio-content">En Estudio</a>
+                        <a class="nav-link text-white" id="EnEstudio-tab" data-bs-toggle="tab" href="#EnEstudio-content">En Estudio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="UltimoContacto-tab" data-bs-toggle="tab" href="#UltimoContacto-content">Ultimo Contacto</a>
+                        <a class="nav-link text-white" id="UltimoContacto-tab" data-bs-toggle="tab" href="#UltimoContacto-content">Ultimo Contacto</a>
                     </li>
                 </ul>
             </div>

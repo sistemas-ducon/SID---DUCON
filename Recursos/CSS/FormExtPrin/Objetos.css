@@ -19,11 +19,19 @@
     overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
     text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
 }
-.datagrid-header {
+.datagrid-header-title {
     position: sticky;
     top: 0;
     z-index: 1;
     background-color: #F8F8F8F8; /* Ajusta el color de fondo del encabezado según tus preferencias */
+}
+
+.datagrid-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #a5a5a9; /* Ajusta el color de fondo del encabezado según tus preferencias */
+    color: white;
 }
 
 .fila-seleccionada {

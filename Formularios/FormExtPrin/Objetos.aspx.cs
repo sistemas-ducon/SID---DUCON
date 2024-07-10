@@ -141,8 +141,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 Nombre_Objeto_Hid.Value = row.Cells[2].Text;
                 Ancho_Objeto_Hid.Value = row.Cells[3].Text;
                 Id_Objeto_Hid.Value = row.Cells[7].Text;
-
                 tbPrecioVenta.Text = row.Cells[8].Text;
+
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
+
+                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
+
+
+
             }
         }
 
@@ -292,7 +301,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             {
                 // El texto es numérico
                 Adicionar.Enabled = true;
-                Adicionar.CssClass = "bi bf btn btn-lg btn-outline-primary";
+                Adicionar.CssClass = "bi bf btn btn-lg btn-primary";
             }
             else
             {

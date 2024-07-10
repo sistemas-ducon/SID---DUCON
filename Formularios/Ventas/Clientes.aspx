@@ -91,22 +91,22 @@
 </head>
 <body translate="no">
 
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar navbar-light bg-light navbar-custom">
         <div class="container d-flex justify-content-center ">
             <ul class="nav nav-tabs gap-5">
 
 
                 <li class="nav-item">
-                    <a class="nav-link text-dark active" id="Cliente-tab" data-bs-toggle="tab" href="#Cliente-content">Cliente</a>
+                    <a class="nav-link text-white active" id="Cliente-tab" data-bs-toggle="tab" href="#Cliente-content"><i class="bi bi-person-fill"></i> Cliente</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-dark" id="Contacto-tab" data-bs-toggle="tab" href="#Contacto-content">Contacto</a>
+                    <a class="nav-link text-white" id="Contacto-tab" data-bs-toggle="tab" href="#Contacto-content"><i class="bi bi-people-fill"></i> Contacto</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-dark " id="Consulta-tab" data-bs-toggle="tab" href="#Consulta-content">Consultas </a>
+                    <a class="nav-link text-white " id="Consulta-tab" data-bs-toggle="tab" href="#Consulta-content"><i class="bi bi-journal-arrow-up"></i> Consultas </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-dark" id="ClienteNuevo-tab" data-bs-toggle="tab" href="#ClienteNuevo-content">Clientes Nuevos</a>
+                    <a class="nav-link text-white" id="ClienteNuevo-tab" data-bs-toggle="tab" href="#ClienteNuevo-content"><i class="bi bi-person-plus-fill"></i> Clientes Nuevos</a>
                 </li>
 
 

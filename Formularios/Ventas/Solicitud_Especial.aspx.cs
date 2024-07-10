@@ -673,8 +673,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 isModalVisible = false;
             }
 
-            string script = @"ControlHeaderCard();";
-            ScriptManager.RegisterStartupScript(this, GetType(), "ControlHeaderCard", script, true);
+
+            if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
+            {
+                string script = @"ControlHeaderCard();";
+                ScriptManager.RegisterStartupScript(this, GetType(), "ControlHeaderCard", script, true);
+            }
+            else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+            {
+                string script = @"ControlBtnCliente();";
+                ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, true);
+            }
+
+
 
         }
 
@@ -745,11 +756,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             CambiarSqlDataSource(valorSeleccionado);
             CambiarSqlDataSource2(valorSeleccionado);
-
-            string script = @"ControlHeaderCard();";
-            ScriptManager.RegisterStartupScript(this, GetType(), "ControlHeaderCard", script, true);
+            if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
+            {
+                string script = @"ControlHeaderCard();";
+                ScriptManager.RegisterStartupScript(this, GetType(), "ControlHeaderCard", script, true);
+            }
+            else
+            {
+                string script = @"ControlBtnCliente();";
+                ScriptManager.RegisterStartupScript(this, GetType(), "ControlHeaderCard", script, true);
+            }
+               
         }
-
 
         private void CambiarSqlDataSource(string valorSeleccionado)
         {
@@ -3193,7 +3211,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string scriptAgregado = "alert('Detalles Agregados.');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showAgregado", scriptAgregado, true);
 
-                string script = "<script>ControlBtnCliente();</script>";
+                string script = "<script>ControlHeaderCard();</script>";
                 ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, false);
 
             }
@@ -3203,7 +3221,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string scriptEncontrado = "alert('La solicitud de origen no tiene detalles para importar.');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showEncontrado", scriptEncontrado, true);
 
-                string script = "<script>ControlBtnCliente();</script>";
+                string script = "<script>ControlHeaderCard();</script>";
                 ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, false);
 
             }
@@ -3504,6 +3522,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
+                string script = @"ControlBtnCliente();";
+                ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, true);
+
+
                 string mensajeExito = "Por favor, seleccione una solicitud de  Desarrollo ";
                 string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
@@ -3556,6 +3578,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
+                string script = @"ControlBtnCliente();";
+                ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, true);
+
+
                 string mensajeExito = "Por favor, seleccione una solicitud de Desarrollo ";
                 string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
@@ -3607,6 +3633,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
+                string script = @"ControlBtnCliente();";
+                ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, true);
+
+
                 string mensajeExito = "Por favor, seleccione una solicitud de  Cotización";
                 string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
@@ -3655,6 +3685,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
+
+                string script = @"ControlBtnCliente();";
+                ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, true);
+
+
                 string mensajeExito = "Por favor, seleccione una solicitud de  Cotización  ";
                 string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
@@ -3785,6 +3820,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     {
                         DataGrid2.DataSourceID = "CotUnica";
                         DataGrid2.DataBind();
+
+                        string script = @"ControlBtnCliente();";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, true);
                     }
                     else
                     {
@@ -4138,9 +4176,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Consultamos el correo por defecto de la solicitud especial 
                 ConsultarCorreo(IdSolicitud);
 
+                // ocultar boton de grabar observacion detener
+                btnGrabarObservacionDetener.Visible = false;
+                btnCerrarDetener.Visible = false;
 
                 // Se abre el modal de la observacion 
-                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolver').modal('show');", true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolverDetener').modal('show');", true);
             }
             else
             {
@@ -4152,13 +4193,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
         }
-        protected void btnDevolver_NO_Click(object sender, EventArgs e)
-        {
 
-            Session["CargarSolicitud"] = "1";
-            Session["CargarSolicitud_ID"] = lbNumeroSolicitud.Text;
-            Response.Redirect("Solicitud_Especial.aspx");
-        }
         protected void btnCerrarDevolver_Click(object sender, EventArgs e)
         {
             // Refrescar la página después de cerrar el modal        
@@ -4251,7 +4286,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
 
 
-                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolver').modal('show');", true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolverDetener').modal('show');", true);
 
                 // Asignar ID único a la fila
                 row.Attributes["id"] = "row_" + rowIndex;
@@ -4271,7 +4306,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             tbRecepTipoObs.Text = CorreoTipoObser;
 
 
-            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolver').modal('show');", true);
+            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolverDetener').modal('show');", true);
         }
         protected string ConsultarCorreoPorTipoObservacion()
         {
@@ -4422,16 +4457,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Mensaje de alerta
                 string script1 = "alert('Por favor seleccione el tipo de observación.');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", script1, true);
-                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolver').modal('show');", true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolverDetener').modal('show');", true);
                 valido = false;
             }
 
             if (txObservacion.InnerText.Trim() == "")
             {
                 // Mensaje de alerta
-                string script1 = "alert('Por favor escriba  la justificaci{on de la observación.');";
+                string script1 = "alert('Por favor escriba  la justificación de la observación.');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", script1, true);
-                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolver').modal('show');", true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolverDetener').modal('show');", true);
                 valido = false;
             }
 
@@ -4440,7 +4475,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Mensaje de alerta
                 string script1 = "alert('No se ha seleccionado una OT o una Solicitud Especial para generar una observacion');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", script1, true);
-                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolver').modal('show');", true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolverDetener').modal('show');", true);
                 valido = false;
 
             }
@@ -4860,24 +4895,332 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         // Pausar Solicitud Especial
         protected void btnPausar_Si_Click(object sender, EventArgs e)
         {
-            string SeguimientoPausa = txJustificacionPausa.InnerText;
+            if (PausarSolicitudEspecial())
+            {
+                // Consultar el correo electrónico del asesor a notificar 
+                string emisor = ConsultarCorreoEmisor();
+                string destinatario = ConsultarCorreoNotificar();
+                string destinatarios = emisor.TrimEnd(';') + ";" + destinatario;
 
-            // Realizar la actualizacion 
+                // Separar y validar correos electrónicos
+                var correos = destinatarios.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                List<string> correosValidos = new List<string>();
+                List<string> correosInvalidos = new List<string>();
 
-            // consultar a quien enviar notifcacion 
+                foreach (var correo in correos)
+                {
+                    if (EsCorreoValido(correo))
+                    {
+                        correosValidos.Add(correo);
+                    }
+                    else
+                    {
+                        correosInvalidos.Add(correo);
+                    }
+                }
 
-            // Invocar metodo para enviar correo 
+                if (correosValidos.Count > 0)
+                {
+                    string correosValidosString = string.Join(";", correosValidos);
 
-            // mostrar mensaje de exito 
+                    string cuerpo = @"
+                <!DOCTYPE html>
+                <html lang='es'>
+                <head>
+                    <meta charset='UTF-8'>
+                    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            font-size: 14px;
+                            line-height: 1.6;
+                            margin: 0;
+                            padding: 0;
+                            background-color: #f9f9f9;
+                        }
+                        .container {
+                            max-width: 37rem;
+                            margin: 20px auto;
+                            padding: 20px;
+                            border: 1px solid #ccc;
+                            border-radius: 5px;
+                            background-color: #fff;
+                        }
+                        h2 {
+                            color: #333;
+                            font-size: 24px;
+                            margin-bottom: 20px;
+                        }
+                        p {
+                            margin-bottom: 10px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class='container'>
+                        <h3>Notificación Desarrollo Pausado: </h3>
+                        <p> <strong> Fecha: </strong> " + DateTime.Now.ToString() + @"</p>
+                        <p><strong> Responsable pausa :  </strong> " + Session["usuariologueado"].ToString() + @"</p>
+                        <p><strong>Desarrollo N°: </strong>  " + lbNumeroSolicitud.Text + @"</p>
+                        <p><strong>Cliente: </strong> " + tbCliente.Text + @"</p>
+                        <p><strong>Proyecto: </strong> " + tbProyecto.Text + @"</p>
+                        <p><strong>Detalle pausa: </strong> " + txJustificacionPausa.InnerText + @"</p>
+                        <p> Cualquier inquietud no dude en comunicarse con: " + Session["usuariologueado"].ToString() + @"</p>
+                        <p><strong>Departamento Dibujo y Despiece: </strong></p>
+                        <p><strong>Fin Notificación </strong> </p>
+                    </div>
+                </body>
+                </html>";
 
+                    bool correoEnviado = EnviarCorreoPausarSolEspe(correosValidosString, cuerpo);
 
+                    if (correoEnviado)
+                    {
+
+                        if (lbNumeroSolicitud.Text != "" && ddlTipo.SelectedItem.Text == "COTIZACIÓN")
+                        {
+                            DataGrid2.DataBind();
+                        }
+                        else if (lbNumeroSolicitud.Text != "" && ddlTipo.SelectedItem.Text == "DESARROLLO")
+                        {
+                            DataGrid1.DataBind();
+                        }
+
+                        // Mostrar mensaje de éxito
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", "alert('El desarrollo fue puasado y notificado a los correos: \\n " + correosValidosString + "');", true);
+                    }
+                    else
+                    {
+                        // Mostrar mensaje de error
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showError", "alert('Error al enviar el correo. Por favor, intente nuevamente.');", true);
+                    }
+                }
+
+                if (correosInvalidos.Count > 0)
+                {
+                    string correosInvalidosString = string.Join(", ", correosInvalidos);
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showInvalidEmails", "alert('El desarrollo fue puasado, pero las siguientes direcciones de correo son inválidas: " + correosInvalidosString + " y no fueron notificadas');", true);
+                }
+            }
+            else
+            {
+                // Manejar la excepción y mostrar mensaje de "intente nuevamente"
+                ScriptManager.RegisterStartupScript(this, GetType(), "showError", "alert('Error al pausar la solicitud especial. Por favor, intente nuevamente.');", true);
+            }
         }
-        protected void btnPausar_No_Click(object sender, EventArgs e)
+        private bool PausarSolicitudEspecial()
         {
-            Session["CargarSolicitud"] = "1";
-            Session["CargarSolicitud_ID"] = lbNumeroSolicitud.Text;
-            Response.Redirect("Solicitud_Especial.aspx");
+            DateTime fecha = DateTime.Now;
+            string SegPausa = "(Desarrollo pausado por el dibujante: " + Session["usuariologueado"].ToString() + "el " + fecha + "Razón " + txJustificacionPausa.InnerText + ")";
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "UPDATE tblSoliciDiseEspe SET Pausado = 1,  SeguimientoPausa = @seguimientoPausa WHERE ID_Solicitud = @ID_Solicitud  ";
+
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    // Aquí ajusta los valores según los nombres de columnas reales en tu DataRow
+                    cmd.Parameters.AddWithValue("@seguimientoPausa", SegPausa);
+                    cmd.Parameters.AddWithValue("@ID_Solicitud", lbNumeroSolicitud.Text);
+
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+
+                    if (CantidadFilasAfectada > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
         }
+        public string ConsultarCorreoNotificar()
+        {
+            string correo = "";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT AC.Mail FROM tblSoliciDiseEspe AS SE INNER JOIN " +
+                               "tblAsesorComercial AS AC ON AC.Nombre + ' ' + AC.Apellidos = SE.Asesor WHERE ID_Solicitud = @ID_Solicitud";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+
+                    command.Parameters.AddWithValue("@ID_Solicitud", lbNumeroSolicitud.Text);
+                    try
+                    {
+                        connection.Open();
+                        correo = Convert.ToString(command.ExecuteScalar());
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejar la excepción 
+                        //Console.WriteLine("Error al ejecutar la consulta: " + ex.Message);
+                    }
+                }
+            }
+
+            return correo;
+        }
+
+        public string ConsultarCorreoEmisor()
+        {
+            string correo = "";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "select mail from tblEmpleado where Cedula = @cedulalogueada";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+
+                    command.Parameters.AddWithValue("@cedulalogueada", Session["CedulaLogeada"].ToString());
+                    try
+                    {
+                        connection.Open();
+                        correo = Convert.ToString(command.ExecuteScalar());
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejar la excepción 
+                        //Console.WriteLine("Error al ejecutar la consulta: " + ex.Message);
+                    }
+                }
+            }
+
+            return correo;
+        }
+
+        public bool EnviarCorreoPausarSolEspe(string destinatarios, string cuerpo)
+        {
+            string nombreProcedimiento = "duc_sp_Correo";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(nombreProcedimiento, connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Definir los parámetros del procedimiento almacenado
+                        command.Parameters.AddWithValue("@Destinatarios", destinatarios);
+                        command.Parameters.AddWithValue("@asunto", "Desarrollo " + lbNumeroSolicitud.Text + " pausado");
+                        command.Parameters.AddWithValue("@cuerpo", cuerpo);
+                        command.Parameters.AddWithValue("@adjuntos", "");
+                        command.Parameters.AddWithValue("@usuario", Session["usuariologueado"].ToString());
+
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                        return true;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                // Manejar la excepción (opcional)
+                // Loggear la excepción o hacer algo con ella
+                return false;
+            }
+        }
+
+        private bool EsCorreoValido(string correo)
+        {
+            if (string.IsNullOrWhiteSpace(correo))
+            {
+                return false;
+            }
+
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(correo);
+                return addr.Address == correo;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+        //Despausar solicitud 
+        protected void btnDespausar_SI_Click(object sender, EventArgs e)
+        {
+            // calculamos la nueva fecha de entrega
+
+            DateTime FechaIngreso = DateTime.Now;
+            DateTime FechaEntrega = CalcularFechaEntrega(FechaIngreso);
+            // agregamos a seguimiento las fechas de activacion 
+
+            string SeguPausas = "(Diseño Reactivado el " + FechaIngreso + " , Fecha Ingreso anterior: " + tbFechaIngreso.Text + ")" + "\n" + txSegPausa.InnerText;
+
+            // realizamos l Actualizacion  en la base de datos 
+            if (DespausarSolicitudEspecial(SeguPausas, FechaEntrega))
+            {
+                if (lbNumeroSolicitud.Text != "" && ddlTipo.SelectedItem.Text == "COTIZACIÓN")
+                {
+                    BuscarCot_Click(sender, e);
+                }
+                else if (lbNumeroSolicitud.Text != "" && ddlTipo.SelectedItem.Text == "DESARROLLO")
+                {
+                    BuscarSol_Click(sender, e);
+                }
+                // Se actualizo correctamente
+                ScriptManager.RegisterStartupScript(this, GetType(), "showError", "alert('El desarrollo de reactivo exitosamente.');", true);
+            }
+            else
+            {
+                // Manejar la excepción y mostrar mensaje de "intente nuevamente"
+                ScriptManager.RegisterStartupScript(this, GetType(), "showError", "alert('Error al despausar la solicitud especial. Por favor, intente nuevamente.');", true);
+            }
+
+
+        }
+        private bool DespausarSolicitudEspecial(string segPau, DateTime fechaentrega)
+        {
+            DateTime fecha = DateTime.Now;
+
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "UPDATE tblSoliciDiseEspe SET Fecha_Ingreso = @fechaIngreso,  Pausado = 0, UltimaActivacion = @fechaentrega1, Fecha_Programada_Entrega = @fechaEntrega, SeguimientoPausa = @seguimientoPausa WHERE ID_Solicitud = @ID_Solicitud  ";
+
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    // Aquí ajusta los valores según los nombres de columnas reales en tu DataRow
+                    cmd.Parameters.AddWithValue("@fechaIngreso", fecha);
+                    cmd.Parameters.AddWithValue("@fechaentrega1", fechaentrega);
+                    cmd.Parameters.AddWithValue("@fechaEntrega", fechaentrega);
+                    cmd.Parameters.AddWithValue("@seguimientoPausa", segPau);
+                    cmd.Parameters.AddWithValue("@ID_Solicitud", lbNumeroSolicitud.Text);
+
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+
+                    if (CantidadFilasAfectada > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+
 
         // control de vista para los Dibujantes Programacion 
         protected void chkVerDes_CheckedChanged(object sender, EventArgs e)
@@ -4893,6 +5236,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 bodyDes.Visible = true;
                 tituloDes.Visible = false;
             }
+
+            string script = @"ControlBtnCliente();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, true);
 
         }
 
@@ -4910,6 +5256,68 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 tituloCot.Visible = false;
             }
 
+            string script = @"ControlBtnCliente();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, true);
+
+        }
+
+
+        // Detener Pedido Especial
+
+        protected void btnDetenerPE_SI_Click(object sender, EventArgs e)
+        {
+            if (Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO" || Session["Departamento"].ToString().ToUpper() == "DISEÑO")
+            {
+                // Se ponen las variables en los textbox del modal 
+                string IdSolicitud = lbNumeroSolicitud.Text;
+                tbObra.Text = tbCliente.Text + "-" + tbProyecto.Text;
+                tbOt.Text = "SPE" + IdSolicitud;
+                tbPed.Text = "0";
+
+                // Cambiar la consulta del SqlDataSource
+                TipoObservacion.SelectCommand = "SELECT Id_TipoObservacion, Aplicacion, Descripcion, Aplicacion + ' - ' + Descripcion as TipoObservacion, " +
+                                                 "DestinatarioPorDefecto, Programable, AlDirectorComercial " +
+                                                 "FROM tblTipoObservacion " +
+                                                 "WHERE Aplicacion Like '%PARAR PEDIDO PE%' " +
+                                                 "AND Activa = 1 " +
+                                                 "ORDER BY Aplicacion ASC, Descripcion ASC";
+                ddlTipoObservacion.DataBind();
+
+                // Agregamos vacio en ddlTipoObservacion 
+                ddlTipoObservacion.Items.Insert(0, new System.Web.UI.WebControls.ListItem(" "));
+                ddlTipoObservacion.SelectedIndex = 0;
+
+              
+
+                // Ponemos la fecha del dia por defecto 
+                DateTime Fecha = DateTime.Now;
+                tbfechaActividad.Text = Fecha.ToString("yyyy-MM-dd");
+                tbfechaActividad.Enabled = false;
+
+                // Consultamos el correo por defecto de la solicitud especial 
+                ConsultarCorreo(IdSolicitud);
+
+                // ocultar boton de grabar observacion y cerrar  detener
+                BtnGrabarObservacion.Visible = false;
+                btnCerrarDevolver.Visible = false;
+
+                // Se abre el modal de la observacion 
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolverDetener').modal('show');", true);
+ 
+            }
+            else
+            {
+                string mensajePersonalizado = "No cuentas con los permisos necesarios para devolver una solicitud.";
+                string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            }
+        }
+
+  
+        protected void btnCerrarDetener_Click(object sender, EventArgs e)
+        {
+            // Refrescar la página después de cerrar el modal        
+            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalCerrarDet').modal('show');", true);
         }
     }
 }

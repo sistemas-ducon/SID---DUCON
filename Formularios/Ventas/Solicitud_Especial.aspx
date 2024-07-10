@@ -181,6 +181,8 @@
                 // Establecer el foco en la fila
                 row.setAttribute('tabindex', '-1'); // Hacerla enfocable
                 row.focus();
+
+                ControlBtnCliente();
             }
         }
 
@@ -197,6 +199,8 @@
                 // Establecer el foco en la fila
                 row.setAttribute('tabindex', '-1'); // Hacerla enfocable
                 row.focus();
+
+                ControlBtnCliente();
             }
         }
 
@@ -204,32 +208,32 @@
 
     </script>
 
- 
+
 </head>
 <body translate="no">
 
     <form id="form1" runat="server" enctype="multipart/form-data">
         <asp:ScriptManager runat="server" />
 
-        <nav class="navbar navbar-light bg-light">
+        <nav class="navbar navbar-light bg-light navbar-custom">
             <div class="container d-flex justify-content-center gap-2">
-                <ul class="nav nav-tabs" id="miPestañas">
+                <ul class="nav nav-tabs gap-4" id="miPestañas">
                     <li class="nav-item">
-                        <a class="nav-link text-dark active" id="BitacoraDesarrollo-tab" data-bs-toggle="tab" href="#BitacoraDesarrollo-content">Desarrollo Bitacora- PQ-006</a>
+                        <a class="nav-link text-white active" id="BitacoraDesarrollo-tab" data-bs-toggle="tab" href="#BitacoraDesarrollo-content"><i class="bi bi-file-text"></i> Desarrollo Bitacora- PQ-006</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="Programacion-tab" data-bs-toggle="tab" href="#Programacion-content">Programacion</a>
+                        <a class="nav-link text-white" id="Programacion-tab" data-bs-toggle="tab" href="#Programacion-content"><i class="bi bi-table"></i> Programacion</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link text-dark " id="BuscarDesarrollo-tab" data-bs-toggle="tab" href="#BuscarDesarrollo-content">Buscar Solicitudes</a>
+                        <a class="nav-link text-white " id="BuscarDesarrollo-tab" data-bs-toggle="tab" href="#BuscarDesarrollo-content"><i class="bi bi-search"></i> Buscar Solicitudes</a>
                     </li>
 
                 </ul>
             </div>
         </nav>
 
-        <nav class="navbar navbar-expand-sm navbar-light bg-light  gap-2">
+        <nav class="navbar navbar-expand-sm navbar-light  bg-light  gap-2">
             <div class="container-fluid">
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#ejemplo2" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -251,7 +255,7 @@
                             <a class="icong disabled shadow-sm btn btn-sm" title="Pausar Solicitud" id="PausarSolicitud" runat="server" onclick="mostralMoldalPausar();">
                                 <i class="bi bi-pause-circle-fill"></i>
                             </a>
-                            <a class="icong disabled shadow-sm btn btn-sm " runat="server" title="Despausar" id="DespausarSolicitud" style="display:none;" onclick="mostralMoldalDespausar();">
+                            <a class="icong disabled shadow-sm btn btn-sm " runat="server" title="Despausar" id="DespausarSolicitud" style="display: none;" onclick="mostralMoldalDespausar();">
                                 <i class="bi bi-play-circle-fill"></i>
                             </a>
                             <asp:LinkButton class="icong disabled shadow-sm btn btn-sm " runat="server" title="Guardar Solicitud" ID="GrabarSolicitud" OnClick="GuardarModificarSolicitud" OnClientClick="return validarFormularioSolicitud();">                                 
@@ -270,9 +274,9 @@
                                 <i class="bi bi-skip-backward-circle"></i>
                             </a>
 
-                            <asp:LinkButton class="icong disabled shadow-sm btn btn-sm" title="Detener Pedido PE" ID="DetenerPE" runat="server">
+                            <a class="icong disabled shadow-sm btn btn-sm" title="Detener Pedido PE" id="DetenerPE" runat="server"  onclick="mostralMoldalDetener();">
                                                               <i class="bi bi-stop-circle"></i>
-                            </asp:LinkButton>
+                            </a>
 
 
                             <asp:LinkButton class="icong disabled shadow-sm btn btn-sm " title="Cancelar" ID="CancelarSolicitud" OnClientClick="CancelarSolicitud();" OnClick="LimpiarCampos" runat="server">
@@ -699,7 +703,6 @@
                                     </div>
 
 
-
                                 </div>
 
                             </div>
@@ -821,9 +824,9 @@
                                                                 <i class="bi bi-wrench-adjustable"></i>
                                                             </a>
 
-                                                            <asp:LinkButton class="icong disabled shadow-sm btn btn-sm" title="Documentacion Producto" ID="Documentacion" runat="server" OnClientClick="abrirOtraPestana2();">
+                                                            <a class="icong disabled shadow-sm btn btn-sm" title="Documentacion Producto" id="Documentacion" runat="server" onclick="abrirOtraPestana2();">
                                                           <i class="bi bi-paperclip"></i>
-                                                            </asp:LinkButton>
+                                                            </a>
 
 
                                                             <asp:LinkButton class="icong disabled shadow-sm btn btn-sm" title="RedirigirCompras" ID="RedirigirCompras" runat="server">
@@ -861,7 +864,7 @@
                             </div>
 
                             <!--Modal confirmar Importar -->
-                            <div id="confirmarImportar" class="modal" tabindex="-1" style="display: none;"  aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
+                            <div id="confirmarImportar" class="modal" tabindex="-1" style="display: none;" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header bg-success text-white">
@@ -904,7 +907,7 @@
                                         <div class="modal-footer">
                                             <div class="container-fluid d-flex justify-content-center gap-5 p-0">
                                                 <asp:Button runat="server" ID="btnConfComlplejo_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnConfComlplejo_SI_Click" />
-                                                <asp:Button runat="server" ID="Button4" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                                <asp:Button runat="server" ID="Button4" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" OnClientClick="ControlBtnCliente(); return false;" />
                                             </div>
 
                                         </div>
@@ -931,7 +934,7 @@
                                         <div class="modal-footer">
                                             <div class="container-fluid d-flex justify-content-center gap-5 p-0">
                                                 <asp:Button runat="server" ID="btnConUrg" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnConUrg_Click" />
-                                                <asp:Button runat="server" ID="Button6" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                                <asp:Button runat="server" ID="Button6" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" OnClientClick="ControlBtnCliente(); return false;" />
                                             </div>
 
                                         </div>
@@ -958,7 +961,7 @@
                                         <div class="modal-footer">
                                             <div class="container-fluid d-flex justify-content-center gap-5 p-0">
                                                 <asp:Button runat="server" ID="btnDevolverSolicitud_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnDevolverSolicitud_SI_Click" />
-                                                <asp:Button runat="server" ID="btnDevolver_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" OnClick="btnDevolver_NO_Click" />
+                                                <asp:Button runat="server" ID="btnDevolver_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" OnClientClick="ControlBtnCliente(); return false;" />
                                             </div>
 
                                         </div>
@@ -971,7 +974,7 @@
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header bg-danger  text-white">
-                                            <h5 class="modal-title text-center"><i class="bi bi-exclamation-circle" style="font-size: 1.5rem;"></i>Observación no grabada </h5>
+                                            <h5 class="modal-title text-center"><i class="bi bi-exclamation-circle" style="font-size: 1.5rem;"></i> Observación no grabada </h5>
                                         </div>
                                         <div class="modal-body border rounded">
                                             <div class="container-fluid">
@@ -986,13 +989,17 @@
                             </div>
 
                             <!--Modal Observacion  -->
-                            <div id="ObservacionDevolver" class="modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" style="display: none;">
+                            <div id="ObservacionDevolverDetener" class="modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" style="display: none;">
                                 <div class="modal-dialog modal-fullscreen">
                                     <div class="modal-content">
 
-                                        <div class="modal-header bg-secondary p-0 text-white">
+                                        <div class="modal-header p-0 text-white" style="background-color:#23273be6">
                                             <h5 class="modal-title text-center" style="padding-left: 2rem;">Observacion </h5>
                                             <asp:LinkButton ID="btnCerrarDevolver" data-bs-dismiss="modal" runat="server" aria-label="Close" Style="color: white !important; margin-right: 1.5rem; font-size: 1.8rem; text-decoration: none;" OnClick="btnCerrarDevolver_Click">
+                                            <i class="bi bi-x-circle"></i>
+                                            </asp:LinkButton>
+
+                                             <asp:LinkButton ID="btnCerrarDetener" data-bs-dismiss="modal" runat="server" aria-label="Close" Style="color: white !important; margin-right: 1.5rem; font-size: 1.8rem; text-decoration: none;" OnClick="btnCerrarDetener_Click">
                                             <i class="bi bi-x-circle"></i>
                                             </asp:LinkButton>
 
@@ -1002,11 +1009,11 @@
 
                                             <div class="container-fluid">
 
-                                                <div class="container">
+                                                <div class="container pt-2">
 
-                                                    <div class="row">
+                                                    <div class="row pt-2 border p-3 rounded shadow g-2">
 
-                                                        <div class="col-md-6 pt-3">
+                                                        <div class="col-md-6 mt-2 p-3 border rounded  p-1">
 
                                                             <div class="row g-1 pb-2">
 
@@ -1057,10 +1064,10 @@
                                                                     </div>
                                                                 </div>
 
-                                                                <div class="col-md-5">
+                                                                <div class="col-md-7">
                                                                     <div class="input-group input-group-sm gap-2">
 
-                                                                        <asp:DropDownList ID="ddlTipoObservacion" runat="server" CssClass="form-control form-control-sm" DataTextField="Descripcion" DataValueField="Id_TipoObservacion" DataSourceID="TipoObservacion" OnSelectedIndexChanged="ddlTipoObservacion_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                                                                        <asp:DropDownList ID="ddlTipoObservacion" runat="server" CssClass="form-control form-control-sm" DataTextField="TipoObservacion" DataValueField="Id_TipoObservacion" DataSourceID="TipoObservacion" OnSelectedIndexChanged="ddlTipoObservacion_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
 
                                                                         <asp:SqlDataSource runat="server" ID="TipoObservacion" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL %>" SelectCommand="SELECT 
                                                                                         Id_TipoObservacion, Aplicacion,Descripcion, Aplicacion + ' - ' + Descripcion as TipoObservacion,
@@ -1073,7 +1080,7 @@
                                                                     </div>
                                                                 </div>
 
-                                                                <div class="col-md-6">
+                                                                <div class="col-md-4">
                                                                     <div class="input-group input-group-sm gap-2">
                                                                         <asp:Label ID="Label3" runat="server" CssClass="col-form-label-sm" Text="F.Actividad"></asp:Label>
                                                                         <asp:TextBox ID="tbfechaActividad" runat="server" CssClass="form-control form-control-sm" type="date"></asp:TextBox>
@@ -1091,9 +1098,9 @@
 
                                                         </div>
 
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-6 p-2 mt-2 border">
 
-                                                            <div class="p-2 m-2 border" style="height: 35rem;">
+                                                            <div class="" style="height: 35.5rem;">
 
                                                                 <div class="border rounded p-1 special-border" style="max-height: 20rem; height: 22rem; overflow-x: auto;">
                                                                     <h6 class="datagrid-header text-center">Recptores de Correo</h6>
@@ -1155,6 +1162,7 @@
                                                                         </div>
                                                                         <div class="col-md-3">
                                                                             <asp:Button ID="BtnGrabarObservacion" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Grabar Observacion" OnClick="BtnGrabarObservacion_Click" />
+                                                                            <asp:Button ID="btnGrabarObservacionDetener" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Grabar Observacion" />
                                                                         </div>
                                                                     </div>
 
@@ -1178,7 +1186,7 @@
                             </div>
 
                             <!--Modal confirmar Pausar Solicitud  -->
-                            <div id="ConfirmarPausarSol" class="modal" tabindex="-1" style="display: none;"  aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
+                            <div id="ConfirmarPausarSol" class="modal" tabindex="-1" style="display: none;" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
                                 <div class="modal-dialog modal-lg modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header bg-primary text-white">
@@ -1195,14 +1203,14 @@
                                                     </div>
                                                 </div>
 
-                                                <h6> Por favor justifique la causa de la pausa de la solicitid y presione aceptar </h6>
+                                                <h6>Por favor justifique la causa de la pausa de la solicitid y presione aceptar </h6>
                                             </div>
 
                                         </div>
                                         <div class="modal-footer">
                                             <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                                <asp:Button runat="server" ID="btnPausar_Si" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnPausar_Si_Click"/>
-                                                <asp:Button runat="server" ID="btnPausar_No" Text="Cancelar" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" OnClick="btnPausar_No_Click"  />
+                                                <asp:Button runat="server" ID="btnPausar_Si" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnPausar_Si_Click" />
+                                                <asp:Button runat="server" ID="btnPausar_No" Text="Cancelar" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" OnClientClick="ControlBtnCliente(); return false;" />
                                             </div>
 
                                         </div>
@@ -1226,10 +1234,53 @@
                                         </div>
                                         <div class="modal-footer">
                                             <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                                <asp:Button runat="server" ID="Button1" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" />
-                                                <asp:Button runat="server" ID="Button8" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;"  />
+                                                <asp:Button runat="server" ID="btnDespausar_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnDespausar_SI_Click" />
+                                                <asp:Button runat="server" ID="Button8" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" OnClientClick="ControlBtnCliente(); return false;" />
                                             </div>
 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Modal confirmar Detener Solicitud  -->
+                            <div id="ConfirmarDetenerSol" class="modal" tabindex="-1" style="display: none;" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
+                                <div class="modal-dialog  modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-primary text-white">
+                                            <h5 class="modal-title text-center">Detener desarrollo  </h5>
+                                        </div>
+                                        <div class="modal-body border rounded">
+                                            <div class="container-fluid">
+                                                <h6>¿ Esta seguro de detener este pedido?  </h6>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                                <asp:Button runat="server" ID="btnDetenerPE_SI" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnDetenerPE_SI_Click"  />
+                                                <asp:Button runat="server" ID="btnDetenerPE_NO" Text="Cancelar" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" OnClientClick="ControlBtnCliente(); return false;" />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                                <!--Modal Cerrar Devolver  -->
+                            <div id="modalCerrarDet" class="modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" style="display: none;">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-danger  text-white">
+                                            <h5 class="modal-title text-center"><i class="bi bi-exclamation-circle" style="font-size: 1.5rem;"></i> Observación no grabada </h5>
+                                        </div>
+                                        <div class="modal-body border rounded">
+                                            <div class="container-fluid">
+                                                <h6>Para detener la solicitud, es necesario registrar la observación.</h6>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer justify-content-center">
+                                            <asp:Button runat="server" ID="Button1" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-outline-danger " Style="width: 5rem;" OnClick="btnRedireccionar_Sol_Click" />
                                         </div>
                                     </div>
                                 </div>
@@ -1252,7 +1303,7 @@
 
                             <div class="card m-3">
 
-                                <div class="card-header" style="height: 2.9rem;" id="headerDes" runat="server">
+                                <div class="card-header" style="height: 2.9rem; background:repeating-radial-gradient(#fff,#eeebebe6)" id="headerDes" runat="server">
                                     <%-- Desarrollo--%>
                                     <div class="row pb-2">
 
@@ -1268,7 +1319,7 @@
                                         <div class="col-md-6 " id="BusDesDiv" runat="server">
                                             <div class="input-group input-group-sm gap-2 justify-content-end">
                                                 <asp:TextBox ID="ID_Sol_Dib" CssClass="form-control form-control-sm  text-center fw-bold" Style="width: 15rem; max-width: 15rem;" placeHolder="N° Desarrollo" ToolTip="Digite la solcitud que desea buscar " runat="server" OnTextChanged="ID_Sol_Dib_TextChanged"></asp:TextBox>
-                                                <asp:LinkButton runat="server" Text="Buscar" ID="BuscarSol" title="Buscar Solicitud" Style="padding-right: 2rem; font-size: 1rem;" OnClick="BuscarSol_Click">
+                                                <asp:LinkButton runat="server" Text="Buscar" CssClass="icong enabled shadow-sm btn btn-sm AzulActivo rounded" ID="BuscarSol" title="Buscar Solicitud" Style="width: 2rem; font-size: 1.1rem;" OnClick="BuscarSol_Click">
                                                         <i class="bi bi-search"></i>
                                                 </asp:LinkButton>
                                                 <asp:CheckBox ID="chkVerDes" runat="server" ToolTip="Ocultar desarrollos" OnCheckedChanged="chkVerDes_CheckedChanged" AutoPostBack="true" />
@@ -1279,7 +1330,7 @@
                                     </div>
                                 </div>
 
-                                <div class="card-body" id="bodyDes" runat="server">
+                                <div class="card-body shadow-sm" id="bodyDes" runat="server">
 
 
                                     <%-- Fila control Click--%>
@@ -1428,20 +1479,20 @@
 
                             <div class="card m-3">
 
-                                <div class="card-header" style="height: 2.9rem;" id="headerCot" runat="server">
+                                <div class="card-header" style="height: 2.9rem; background:repeating-radial-gradient(#fff,#eeebebe6)" id="headerCot" runat="server">
 
                                     <div class="row pb-2">
 
                                         <div class="col-md-2"></div>
 
                                         <div class="col-md-4 text-center">
-                                             <h5 id="tituloCot" runat="server" visible="false">Cotizaciones</h5>
+                                            <h5 id="tituloCot" runat="server" visible="false">Cotizaciones</h5>
                                         </div>
 
                                         <div class="col-md-6 " id="BusCotDiv" runat="server">
                                             <div class="input-group input-group-sm gap-2 justify-content-end">
-                                                <asp:TextBox ID="ID_Cot_Dib" CssClass="form-control form-control-sm fw-bold  text-center" style="width:15rem; max-width:15rem;" placeHolder="N° Cotización" ToolTip="Digite la solcitud que desea buscar " runat="server" OnTextChanged="ID_Cot_Dib_TextChanged"></asp:TextBox>
-                                                <asp:LinkButton runat="server" Text="Buscar" ID="BuscarCot" title="Buscar Solicitud" Style="padding-right: 2rem; font-size: 1rem;" OnClick="BuscarCot_Click">
+                                                <asp:TextBox ID="ID_Cot_Dib" CssClass="form-control form-control-sm fw-bold  text-center" Style="width: 15rem; max-width: 15rem;" placeHolder="N° Cotización" ToolTip="Digite la solcitud que desea buscar " runat="server" OnTextChanged="ID_Cot_Dib_TextChanged"></asp:TextBox>
+                                                <asp:LinkButton runat="server" CssClass="icong enabled shadow-sm btn btn-sm AzulActivo rounded" Text="Buscar" ID="BuscarCot" title="Buscar Solicitud" Style="width: 2rem; font-size: 1rem;" OnClick="BuscarCot_Click">
                                                   <i class="bi bi-search"></i>
                                                 </asp:LinkButton>
                                                 <asp:CheckBox ID="chkVerCot" runat="server" ToolTip="Ocultar cotizaciones" OnCheckedChanged="chkVerCot_CheckedChanged" AutoPostBack="true" />
@@ -1452,7 +1503,7 @@
 
                                 </div>
 
-                                <div class="card-body" id="bodyCot" runat="server">
+                                <div class="card-body shadow-sm" id="bodyCot" runat="server">
 
                                     <%-- cotizaciones--%>
 
@@ -1579,7 +1630,7 @@
                                         <div class="modal-footer">
                                             <div class="container-fluid d-flex justify-content-center gap-5 p-0">
                                                 <asp:Button runat="server" ID="btnTraSol_Si" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnTraSol_Si_Click" />
-                                                <asp:Button runat="server" ID="Button2" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                                <asp:Button runat="server" ID="Button2" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" OnClientClick="ControlBtnCliente(); return false;" />
                                             </div>
 
                                         </div>
@@ -1604,7 +1655,7 @@
                                         <div class="modal-footer">
                                             <div class="container-fluid d-flex justify-content-center gap-5 p-0">
                                                 <asp:Button runat="server" ID="btnDesprogramar_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnDesprogramar_SI_Click" />
-                                                <asp:Button runat="server" ID="Button3" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                                <asp:Button runat="server" ID="Button3" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" OnClientClick="ControlBtnCliente(); return false;" />
                                             </div>
 
                                         </div>
@@ -1629,7 +1680,7 @@
                                         <div class="modal-footer">
                                             <div class="container-fluid d-flex justify-content-center gap-5 p-0">
                                                 <asp:Button runat="server" ID="btnProCot_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnProCot_SI_Click" />
-                                                <asp:Button runat="server" ID="Button5" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                                <asp:Button runat="server" ID="Button5" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" OnClientClick="ControlBtnCliente(); return false;" />
                                             </div>
 
                                         </div>
@@ -1654,7 +1705,7 @@
                                         <div class="modal-footer">
                                             <div class="container-fluid d-flex justify-content-center gap-5 p-0">
                                                 <asp:Button runat="server" ID="btnDesCot_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnDesCot_SI_Click" />
-                                                <asp:Button runat="server" ID="Button7" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                                <asp:Button runat="server" ID="Button7" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" OnClientClick="ControlBtnCliente(); return false;" />
                                             </div>
 
                                         </div>
@@ -1666,7 +1717,7 @@
                             <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
-                                        <div class="modal-header bg-secondary text-white">
+                                        <div class="modal-header text-white" style="background-color:#23273be6">
                                             <h5 class="modal-title" id="exampleModalLabel">Convenciones</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
@@ -1677,13 +1728,13 @@
                                                         <div class="col-12">
                                                             <div class="input-group input-group-sm mb-1 gap-2">
                                                                 <div class="input-group " style="width: 20px; height: 20px; border: 1px; background-color: #72459b; white-space: nowrap"></div>
-                                                                <label  class="form-label">No programado por Ventas</label>
+                                                                <label class="form-label">No programado por Ventas</label>
                                                             </div>
 
 
                                                             <div class="input-group input-group-sm mb-1 gap-2">
                                                                 <div class="input-group" style="width: 20px; height: 20px; border: 1px; background-color: #c86868"></div>
-                                                                <label  class="form-label">No cumplidos y en espera</label>
+                                                                <label class="form-label">No cumplidos y en espera</label>
                                                             </div>
 
 
@@ -1695,15 +1746,15 @@
 
                                                             <div class="input-group input-group-sm mb-1 gap-2">
                                                                 <div class="input-group " style="width: 20px; height: 20px; border: 1px; background-color: #e9a270"></div>
-                                                                <label  class="form-label">Urgente</label>
+                                                                <label class="form-label">Urgente</label>
                                                             </div>
                                                             <div class="input-group input-group-sm mb-1 gap-2">
                                                                 <div class="input-group " style="width: 20px; height: 20px; border: 1px; background-color: #70ede4"></div>
-                                                                <label  class="form-label">Pausados</label>
+                                                                <label class="form-label">Pausados</label>
                                                             </div>
                                                             <div class="input-group input-group-sm mb-1 gap-2">
                                                                 <div class="input-group " style="width: 20px; height: 20px; border: 1px; background-color: #77a765"></div>
-                                                                <label  class="form-label">Desarrollo Complejo </label>
+                                                                <label class="form-label">Desarrollo Complejo </label>
                                                             </div>
 
                                                         </div>
@@ -2452,8 +2503,8 @@
             document.getElementById("DevolverSolicitud").classList.remove("disabled");
             document.getElementById("DevolverSolicitud").classList.add("enabled", "AzulActivo");
 
-            document.getElementById("DetenerPE").classList.remove("disabled");
-            document.getElementById("DetenerPE").classList.add("enabled", "AzulActivo");
+            document.getElementById("DetenerPE").classList.remove("enabled", "AzulActivo");
+            document.getElementById("DetenerPE").classList.add("disabled");
 
             document.getElementById("PausarSolicitud").classList.remove("disabled");
             document.getElementById("PausarSolicitud").classList.add("enabled", "AzulActivo")
@@ -2500,8 +2551,8 @@
             document.getElementById("DevolverSolicitud").classList.remove("disabled");
             document.getElementById("DevolverSolicitud").classList.add("enabled", "AzulActivo");
 
-            document.getElementById("DetenerPE").classList.remove("disabled");
-            document.getElementById("DetenerPE").classList.add("enabled", "AzulActivo");
+            document.getElementById("DetenerPE").classList.remove("enabled", "AzulActivo");
+            document.getElementById("DetenerPE").classList.add("disabled");
 
             document.getElementById("DespausarSolicitud").classList.remove("disabled");
             document.getElementById("DespausarSolicitud").classList.add("enabled", "AzulActivo")
@@ -2651,7 +2702,7 @@
         function ControlBtnCliente() {
             var boton1 = document.getElementById("<%= btnCliente.ClientID %>");
             boton1.disabled = true;
-  
+
         }
 
         function HabilitarEnlaces2() {
@@ -2683,7 +2734,7 @@
 
             }
 
-            ControlBtnCliente();
+            ControlHeaderCard();
 
         }
 
@@ -2702,7 +2753,7 @@
 
             }
 
-            ControlBtnCliente();
+            ControlHeaderCard();
 
         }
 
@@ -2738,6 +2789,8 @@
             document.getElementById("tbCliente").value = "";
             // Utiliza window.open para abrir "Formulario2.aspx" en otra pestaña
             window.open('Clientes.aspx', '_blank');
+
+            ControlHeaderCard();
         }
 
         function NuevoDetalle() {
@@ -2958,8 +3011,23 @@
         }
 
         function abrirOtraPestana2() {
+
+          
             // Utiliza window.open para abrir "Formulario2.aspx" en otra pestaña
             window.open('AdjuntarDocumentos.aspx', '_blank');
+
+            // Validamos el Área del Usuario
+            var AreaDepar = '<%= Session["Departamento"] %>';
+
+
+            if (AreaDepar.toUpperCase() === "VENTAS") {
+                ControlHeaderCard();
+            } else {
+                ControlBtnCliente();
+            }
+
+           
+           
         }
 
         function abrirObservaciones() {
@@ -3157,8 +3225,7 @@
 
         }
 
-        function ControlHeaderCard()
-        {
+        function ControlHeaderCard() {
             var headerCot1 = document.getElementById('<%= headerCot.ClientID %>');
             if (headerCot1) {
                 headerCot1.style.display = 'none';
@@ -3168,6 +3235,7 @@
             if (headerDes) {
                 headerDes.style.display = 'none';
             }
+            ControlBtnCliente();
         }
 
         function ControlBuscarSolicitud() {
@@ -3291,7 +3359,11 @@
             $('#ConfirmarDespausarSol').modal('show');
         }
 
+        // Mostrar  modal pausar solicitud
+        function mostralMoldalDetener() {
 
+            $('#ConfirmarDetenerSol').modal('show');
+        }
 
     </script>
 

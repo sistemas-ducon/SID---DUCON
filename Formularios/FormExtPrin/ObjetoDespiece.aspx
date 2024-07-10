@@ -16,16 +16,16 @@
     <form id="form1" runat="server">
         <asp:ScriptManager runat="server" />
 
-        <nav class="navbar navbar-light bg-light">
+        <nav class="navbar navbar-light bg-light navbar-custom">
             <div class="container d-flex justify-content-center ">
                 <ul class="nav nav-tabs gap-5" id="miPestañas">
 
 
                     <li class="nav-item">
-                        <a class="nav-link text-dark active" id="InfObjetos-tab" data-bs-toggle="tab" href="#InfObjetos-Content">Información Objetos</a>
+                        <a class="nav-link text-white active" id="InfObjetos-tab" data-bs-toggle="tab" href="#InfObjetos-Content"><i class="bi bi-info-circle"></i> Información Objetos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="DespiecePrecio-tab" data-bs-toggle="tab" href="#DespiecePrecio-Content">Despiece y Precio del Objeto</a>
+                        <a class="nav-link text-white" id="DespiecePrecio-tab" data-bs-toggle="tab" href="#DespiecePrecio-Content"><i class="bi bi-tools"></i> Despiece y Precio del Objeto</a>
                     </li>
 
                 </ul>

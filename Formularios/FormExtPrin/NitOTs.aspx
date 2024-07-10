@@ -20,15 +20,15 @@
     <form id="form1" runat="server">
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
 
-        <nav class="navbar navbar-light bg-light">
+        <nav class="navbar navbar-light bg-light navbar-custom">
             <div class="container d-flex justify-content-center">
                 <ul class="nav nav-tabs" id="myTabs">
 
                     <li class="nav-item active">
-                        <a class="nav-link text-dark" id="Cliente-tab" data-bs-toggle="tab" href="#Cliente-content">Cliente</a>
+                        <a class="nav-link text-white" id="Cliente-tab" data-bs-toggle="tab" href="#Cliente-content"><i class="bi bi-person"></i> Cliente</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" id="ConFac-tab" data-bs-toggle="tab" href="#ConFac_content">Contacto Factura</a>
+                        <a class="nav-link text-white" id="ConFac-tab" data-bs-toggle="tab" href="#ConFac_content"><i class="bi bi-people-fill"></i> Contacto Factura</a>
                     </li>
 
                 </ul>
