@@ -276,6 +276,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             Button1.Enabled = true;
                             BtnCopAca.Enabled = true;
                             BtnCopAca.CssClass = "btn shadow btn-light linkButtonClicked2 grande button-enabled";
+                            LinkButton1.Enabled = true;
+                            LinkButton1.CssClass = "btn shadow btn-light linkButtonClicked2 grande button-enabled";
                             TextBox2.Enabled = true;
                             TextBox2.CssClass = "form-control shadow grande linkButtonClicked button-enabled";
                         }
@@ -286,6 +288,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             Button1.Enabled = false;
                             BtnCopAca.Enabled = false;
                             BtnCopAca.CssClass = "btn shadow btn-light linkButtonClicked2 grande button-disabled";
+                            LinkButton1.Enabled = false;
+                            LinkButton1.CssClass = "btn shadow btn-light linkButtonClicked2 grande button-disabled";
                             TextBox2.Enabled = false;
                             TextBox2.CssClass = "form-control shadow grande linkButtonClicked button-disabled";
                         }
