@@ -2858,7 +2858,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             LimpiarCamposCotizacion();
 
             // Verificar el contenido del TextBox tbOT
-            if (tbOT.Text == "0209700" || tbOT.Text == "0102000" || tbOT.Text == "0109700" || tbOT.Text == "0202000" || tbOT.Text == "0109701")
+            if (tbOT.Text == "0209700" || tbOT.Text == "0102000" || tbOT.Text == "0109700" || tbOT.Text == "0202000" || tbOT.Text == "0109701" || tbOT.Text == "0204000" || tbOT.Text == "0104000")
             {
                 // Mostrar el modal solo si el contenido del TextBox coincide con los valores esperados
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#LlenarNITModificar').modal('show');", true);

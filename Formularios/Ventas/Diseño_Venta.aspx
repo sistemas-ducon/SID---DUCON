@@ -100,23 +100,23 @@
 
 
 
-        <nav class="navbar navbar-light bg-light navbar-custom">
+        <nav class="navbar navbar-light bg-light navbar-custom shadow">
             <div class="container d-flex justify-content-center">
                 <ul class="nav nav-tabs" id="myTabs">
                     <li class="nav-item">
-                        <a class="nav-link text-white " id="Diseño-BitacoraFPV-001-tab" data-bs-toggle="tab" href="#Diseño-BitacoraFPV-001-content"> <i class="bi bi-file-text"></i> Diseño-Bitacora FPV-001</a>
+                        <a class="nav-link text-white fw-bold" id="Diseño-BitacoraFPV-001-tab" data-bs-toggle="tab" href="#Diseño-BitacoraFPV-001-content"> <i class="bi bi-file-text"></i> Diseño-Bitacora FPV-001</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white active " id="Programacion-tab" data-bs-toggle="tab" href="#Programacion-content"><i class="bi bi-table"></i> Programación</a>
+                        <a class="nav-link text-white active fw-bold" id="Programacion-tab" data-bs-toggle="tab" href="#Programacion-content"><i class="bi bi-table"></i> Programación</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white " id="Buscar-tab" data-bs-toggle="tab" href="#Buscar-content" style="display: none;"><i class="bi bi-search"></i> Buscar Diseño</a>
+                        <a class="nav-link text-white fw-bold" id="Buscar-tab" data-bs-toggle="tab" href="#Buscar-content" style="display: none;"><i class="bi bi-search"></i> Buscar Diseño</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white " id="Buscar-tabPlano" data-bs-toggle="tab" href="#Plano-content" style="display: none;"><i class="bi bi-file-image-fill"></i> Plano</a>
+                        <a class="nav-link text-white fw-bold" id="Buscar-tabPlano" data-bs-toggle="tab" href="#Plano-content" style="display: none;"><i class="bi bi-file-image-fill"></i> Plano</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white " id="Despiece-tab" data-bs-toggle="tab" href="#Despiece-content" style="display: none;"><i class="bi bi-tools"></i> Despiece</a>
+                        <a class="nav-link text-white fw-bold" id="Despiece-tab" data-bs-toggle="tab" href="#Despiece-content" style="display: none;"><i class="bi bi-tools"></i> Despiece</a>
                     </li>
 
                 </ul>
