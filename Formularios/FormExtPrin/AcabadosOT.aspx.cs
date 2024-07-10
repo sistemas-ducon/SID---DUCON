@@ -33,6 +33,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             {
                 botonGrabarValidacion();
                 CargarDatos();
+
+                // Obtener las variables de sesión
+                string idOt = Session["Id_OT"] != null ? Session["Id_OT"].ToString() : string.Empty;
+                string pedido = Session["Pedido"] != null ? Session["Pedido"].ToString() : string.Empty;
+
+                // Construir el texto a mostrar en el h5
+                string acabadosText = $"Acabados OT {idOt} Ped {pedido}";
+
+                // Asignar el texto al Literal
+                AcabadosLiteral.Text = acabadosText;
             }
             else
             {
@@ -56,6 +66,115 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             else
             {
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#miModalll').modal('show');", true);
+            }
+        }
+
+        protected void BtnCopAcaOT_Click(object sender, EventArgs e)
+        {
+            tbOT.Text = string.Empty;
+            TextBox3.Text = string.Empty;
+
+            string id = Session["Id_OT"]?.ToString();
+            string pedido = Session["Pedido"]?.ToString();
+            string contenidoModalOT = "Por favor digite la OT y el pedido donde se encuentran los acabados que desea copiar en la OT " + id + " con el pedido " + pedido + " ";
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#CopiarAcabadosOT').modal('show'); $('#CopiarAcabadosOT2').text('" + contenidoModalOT + "');", true);
+           
+        }
+
+        protected void BtnAceptar_Click(object sender, EventArgs e)
+        {
+            string id = tbOT.Text.Trim().TrimEnd(',');
+            string pedido = TextBox3.Text.Trim().TrimEnd(',');
+
+            if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(pedido))
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = "SELECT ID_Acabado, ID_GrupoObjetoparaAcabado, Detalle_Adicional, AcabadoVentas " +
+                                   "FROM tblOTAcabados " +
+                                   "WHERE Id_OT = @Id_OT " +
+                                   "AND Consecutivo_Pedido = @Consecutivo_Pedido";
+
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@Id_OT", id);
+                    command.Parameters.AddWithValue("@Consecutivo_Pedido", pedido);
+
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        // Almacena los valores en listas para cada columna
+                        ID_Acabados.Add(Convert.ToInt32(reader["ID_Acabado"]));
+                        ID_GruposObjetoparaAcabados.Add(Convert.ToInt32(reader["ID_GrupoObjetoparaAcabado"]));
+                        Detalles_Adicionales.Add(reader["Detalle_Adicional"].ToString());
+                        AcabadosVentas.Add(reader["AcabadoVentas"].ToString());
+                    }
+
+                    reader.Close();
+
+                    // Luego de almacenar todos los datos, procede con la inserción
+                    RealizarInsercionesCopiarAcaOT();
+                }
+            }
+            else
+            {
+                // Manejar el caso cuando id o pedido están vacíos
+            }
+        }
+
+
+        protected void RealizarInsercionesCopiarAcaOT()
+        {
+            string OTinsertada = Session["Id_OT"]?.ToString();
+            string PedidoInsertado = Session["Pedido"]?.ToString();
+
+            if (ID_Acabados.Count == 0)
+            {
+                string id = tbOT.Text.Trim().TrimEnd(',');
+                string pedido = TextBox3.Text.Trim().TrimEnd(',');
+                string contenidoModalOT = "La OT " + id + " con el pedido " + pedido + ", seleccionado para copiar los acabados. No tiene acabados asociados o no existe.";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ErrorCopAca').modal('show'); $('#ErrorCopAca2').text('" + contenidoModalOT + "');", true);
+            }
+
+            else if(!string.IsNullOrEmpty(OTinsertada) && !string.IsNullOrEmpty(PedidoInsertado))
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    // Iterar sobre las listas y realizar inserciones
+                    for (int i = 0; i < ID_Acabados.Count; i++)
+                    {
+                        string query = "INSERT INTO tblOTAcabados (Id_OT, Consecutivo_Pedido, id_Acabado, Id_GrupoObjetoParaAcabado, Detalle_Adicional, AcabadoVentas) " +
+                                       "VALUES (@Id_OT, @Consecutivo_Pedido, @ID_Acabado, @ID_GrupoObjetoParaAcabado, @Detalle_Adicional, @AcabadoVentas)";
+
+                        SqlCommand command = new SqlCommand(query, connection);
+                        command.Parameters.AddWithValue("@Id_OT", OTinsertada);
+                        command.Parameters.AddWithValue("@Consecutivo_Pedido", PedidoInsertado);
+                        command.Parameters.AddWithValue("@ID_Acabado", ID_Acabados[i]);
+                        command.Parameters.AddWithValue("@ID_GrupoObjetoParaAcabado", ID_GruposObjetoparaAcabados[i]);
+                        command.Parameters.AddWithValue("@Detalle_Adicional", Detalles_Adicionales[i]);
+                        command.Parameters.AddWithValue("@AcabadoVentas", AcabadosVentas[i]);
+
+                        int rowsAffected = command.ExecuteNonQuery();
+                        if (rowsAffected <= 0)
+                        {
+                            // Si alguna inserción falla, detenemos el proceso y mostramos un mensaje de error
+                            string mensajePersonalizado2 = "No fue posible realizar copiar los acabados";
+                            string urlRedireccion2 = "FormExtPrin/AcabadosOT.aspx";
+                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado2)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion2)}");
+                            return; // Salir del método para evitar más intentos de inserción
+                        }
+                    }
+
+                    // Si todas las inserciones fueron exitosas, redireccionamos con un mensaje de éxito
+                    string mensajePersonalizado = "Se insertaron correctamente los acabados";
+                    string urlRedireccion = "FormExtPrin/AcabadosOT.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                }
             }
         }
 

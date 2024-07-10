@@ -2858,7 +2858,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             LimpiarCamposCotizacion();
 
             // Verificar el contenido del TextBox tbOT
-            if (tbOT.Text == "0209700" || tbOT.Text == "0102000" || tbOT.Text == "0109700" || tbOT.Text == "0202000")
+            if (tbOT.Text == "0209700" || tbOT.Text == "0102000" || tbOT.Text == "0109700" || tbOT.Text == "0202000" || tbOT.Text == "0109701")
             {
                 // Mostrar el modal solo si el contenido del TextBox coincide con los valores esperados
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#LlenarNITModificar').modal('show');", true);
@@ -4949,7 +4949,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void BtnNo_Click(object sender, EventArgs e)
         {
 
-            string mensajePersonalizado = "Se guardaron los datos exitosamente";
+            string mensajePersonalizado = "No Se guardaron los datos exitosamente";
             string urlRedireccion = "OrdenTrabajo.aspx";
             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
 

@@ -36,7 +36,10 @@
             <ContentTemplate>
                 <div class="container mt-3 shadow p-3">
                             <div class="p-3 m-2 border shadow-sm" style="height: 22rem;">
-                                <h5 class="datagrid-header text-center">Acabados</h5>
+                               <h5 class="datagrid-header text-center">
+    <asp:Literal ID="AcabadosLiteral" runat="server"></asp:Literal>
+</h5>
+
 
                                 <div class="table-responsive mb-2 gap-2" style="height: 15.1rem; overflow-x: auto;">
                                     <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm"
@@ -190,73 +193,115 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="container-fluid">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <div class="d-flex">
-                                                        <div class="col-11">
-                                                            <div class="row">
-                                                                <div class="col-10">
-                                                                    <asp:Label ID="Label2" runat="server" Text="Aplicar Acabado a:" CssClass="col-form-label-sm"></asp:Label>
-                                                                    <asp:Label ID="Label3" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
-                                                                    <asp:Label ID="Label8" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
-                                                                </div>
-                                                                <div class="col-2">
-                                                                    <asp:Label ID="Label9" runat="server" Text="Copiar Acab. del ped" CssClass="fw-bold"></asp:Label>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row">
-                                                                <div class="col-12">
-                                                                    <asp:Label ID="Label4" runat="server" Text="Acabado Definitivo:" CssClass="col-form-label-sm"></asp:Label>
-                                                                    <asp:Label ID="Label5" CssClass="form-control-sm" runat="server" Text="" Visible="false"></asp:Label>
-                                                                    <asp:Label ID="Label10" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row">
-                                                                <div class="col-10">
-                                                                    <div class="input-group input-group-sm gap-2">
-                                                                        <asp:Label ID="Label6" runat="server" Text="Detalle Adicional" CssClass="col-form-label-sm"></asp:Label>
-                                                                        <asp:TextBox ID="TextBox1" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-2">
-                                                                    <asp:Button ID="Button3" runat="server" Text="Grabar Acabado" CssClass="btn btn-dark btn-sm" Enabled="false" OnClick="BtnGrabar_Click" />
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-1 m-1">
-                                                            <div class="d-flex flex-wrap">
-                                                                <div class="col-8 p-2">
-
-                                                                    <asp:TextBox ID="TextBox2" runat="server" CssClass="form-control shadow grande linkButtonClicked2" MaxLength="4"></asp:TextBox>
-                                                                </div>
-                                                                <div class="col-4 p-2">
-                                                                    <asp:LinkButton runat="server" ID="BtnCopAca" CssClass="btn shadow btn-light linkButtonClicked grande" OnClick="BtnCopAca_Click">
-                                                                        <i class="bi-floppy-fill" style="color: #0863a4;"></i>
-                                                                    </asp:LinkButton>
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
 
 
+                                        <div class="d-flex">
+
+                                            <div class="col-lg-10 col-md-6 col-sm-12 col-xs-12">
+                                                <div class="p-3 m-2" style="height: 10rem;">
+                                                    <div class="row">
+                                                        <div class="col-10">
+                                                            <asp:Label ID="Label2" runat="server" Text="Aplicar Acabado a:" CssClass="col-form-label-sm"></asp:Label>
+                                                            <asp:Label ID="Label3" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
+                                                            <asp:Label ID="Label8" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
+                                                        </div>  
                                                     </div>
-        </div>
-    </div>
-</div>
 
+                                                    <div class="row mt-3">
+                                                        <div class="col-10">
+                                                            <asp:Label ID="Label4" runat="server" Text="Acabado Definitivo:" CssClass="col-form-label-sm"></asp:Label>
+                                                            <asp:Label ID="Label5" CssClass="form-control-sm" runat="server" Text="" Visible="false"></asp:Label>
+                                                            <asp:Label ID="Label10" runat="server" Text="" Visible="false" CssClass="fw-bold form-control-sm"></asp:Label>
+                                                        </div>
+                                                    </div>
 
+                                                    <div class="row mt-3">
+                                                        <div class="col-10">
+                                                            <div class="input-group input-group-sm gap-2">
+                                                                <asp:Label ID="Label6" runat="server" Text="Detalle Adicional" CssClass="col-form-label-sm"></asp:Label>
+                                                                <asp:TextBox ID="TextBox1" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <asp:Button ID="Button3" runat="server" Text="Grabar Acabado" CssClass="btn btn-dark btn-sm" Enabled="false" OnClick="BtnGrabar_Click" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
+                                            <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
+                                                <div class="p-1 m-2" style="height: 10rem;">
+                                                      <div class="d-flex flex-wrap">
+                                                      <asp:Label ID="Label9" runat="server" Text="Copiar Acab. del ped" CssClass="fw-bold"></asp:Label>
+                                                          </div>
+                                                    <div class="d-flex flex-wrap">
+                                                        <div class="col-8 p-2">
+                                                            <asp:TextBox ID="TextBox2" runat="server" CssClass="form-control shadow grande linkButtonClicked2" MaxLength="4"></asp:TextBox>
+                                                        </div>
+                                                        <div class="col-4 p-2">
+                                                            <asp:LinkButton runat="server" ID="BtnCopAca" CssClass="btn shadow btn-light linkButtonClicked grande" OnClick="BtnCopAca_Click">
+                                                                        <i class="bi-floppy-fill" style="color: #0863a4;"></i>
+                                                            </asp:LinkButton>
+                                                        </div>
+                                                    </div>
 
+                                                     <div class="d-flex flex-wrap">
+                                                            <asp:LinkButton runat="server" ID="LinkButton1" CssClass="btn shadow-sm btn-light linkButtonClicked2 grande" Text="Copiar Acabados OT" OnClick="BtnCopAcaOT_Click"/>              
+                                                          
+                                                         </div>
 
+                                                </div>
+                                            </div>
+
+                                         
+
+                                        </div>
+                                        <div class="col-2 m-1">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                   
                 </div>
+                </div>
+
+                
+        <div class="modal fade" id="CopiarAcabadosOT" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-title d-flex align-items-center justify-content-center text-white p-2" style="background:#0863a4">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">COPIAR ACABADOS DE OTRA OT</h5>
+
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                    <p><span id="CopiarAcabadosOT2"></span></p>  
+                                            </div>
+                                            </div>
+                                         <div class="row">
+                                              <div class="col-8">
+                                                  <div class="input-group input-group-sm gap-2">
+                                         <asp:Label class="form-label" Text="OT" runat="server" ID="lblOT"></asp:Label>
+                                        <asp:TextBox ID="tbOT" runat="server" CssClass="form-control" placeholder="Escriba número de OT"></asp:TextBox>
+                                                  </div>
+                                                  </div>
+                                               <div class="col-4">
+                                                   <div class="input-group input-group-sm gap-2">
+                                            <asp:Label class="form-label" Text="Pedido" runat="server" ID="lblPedido"></asp:Label>
+                                          <asp:TextBox ID="TextBox3" runat="server" CssClass="form-control" placeholder="Pedido"></asp:TextBox>
+                                                   </div>
+                                                   </div>
+                                             </div>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                                        <asp:Button runat="server" type="button" class="btn btn-sm linkButtonClicked2 shadow-sm btn-outline-dark" data-bs-dismiss="modal" Text="Aceptar" OnClick="BtnAceptar_Click" aria-label="Close"></asp:Button>
+                                         <asp:Button runat="server" type="button" class="btn btn-sm linkButtonClicked2 shadow-sm btn-outline-dark" data-bs-dismiss="modal" Text="Cerrar" aria-label="Close"></asp:Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
 
         <div class="modal" id="miModalll" tabindex="-1" style="display: none;">
             <div class="modal-dialog modal-dialog-centered">
@@ -274,21 +319,24 @@
             </div>
         </div>
 
-                  <div class="modal" id="ErrorCopAca" tabindex="-1" style="display: none;">
+                   <div class="modal fade" id="ErrorCopAca" tabindex="-1" style="display: none;">
             <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header bg-dark">
-                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Copiar Acabados</h5>
-                        <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
-                        <p><span id="ErrorCopAca2"></span></p>
-                    </div>
-                    <div class="modal-footer">
-                    </div>
-                </div>
-            </div>
-        </div>
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID_DUCON</h5>
+
+                                    </div>
+                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                                          <p><span id="ErrorCopAca2"></span></p>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                                     
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+            
 
                 <div class="modal" id="miModalError" tabindex="-1" style="display: none;">
             <div class="modal-dialog modal-dialog-centered">

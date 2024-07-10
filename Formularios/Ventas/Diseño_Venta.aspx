@@ -46,6 +46,7 @@
         }
     </script>
 
+
 <script>
     function triggerFileUpload() {
         document.getElementById('<%= FileUpload2.ClientID %>').click();
@@ -325,6 +326,8 @@
                             </div>
                         </div>
 
+                       
+
                         <div class="modal fade" id="ModaldeConfirmacionCambiarCantidad" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -342,6 +345,8 @@
                                 </div>
                             </div>
                         </div>
+
+
 
         
                         <asp:HiddenField ID="hdnUserConfirmed" runat="server" />
@@ -1197,8 +1202,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-
                                             <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                                 <div class="row d-flex justify-content-between mt-1">
                                                     <div class="col-md-6 col-12">
@@ -2333,6 +2336,53 @@
                                 </div>
                             </div>
                         </div>
+
+        
+                      <div class="modal fade" id="modalObjNoExistente" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-title d-flex align-items-center justify-content-center text-white p-2" style="background:#0863a4">
+                    <h5 class="text-white m-0">Objetos no existentes</h5>
+                </div>
+                <div class="modal-body bg-light">
+                    <div class="row justify-content-center mb-3">
+                        <div class="border rounded p-2">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="table-responsive mb-1 gap-2" style="max-height: 20.7rem; overflow-x: auto;">  
+                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridObjNoExiste" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemDataBound="DataGridObjNoExiste_ItemDataBound">
+                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                            <Columns>
+                                                <asp:BoundColumn DataField="" HeaderText="Item" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="ID_Objeto" HeaderText="Objeto" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="Ancho" HeaderText="Ancho" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="Observacion" HeaderText="Observación" ItemStyle-CssClass="auto-width-column" />
+                                            </Columns>
+                                        </asp:DataGrid>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">   
+                    <div class="d-flex col-12">
+                        <div class="col-10">
+                    <asp:TextBox ID="TextBox1" runat="server" CssClass="form-control form-control-sm linkButtonClicked2 shadow-sm grande"></asp:TextBox>
+                             </div>
+                             <div class="col-2">
+                        <asp:LinkButton runat="server" title="Nuevo plano" ID="LinkButton5">
+                    <img src="https://i.ibb.co/86fR8JK/icons8-microsoft-excel-2019-48.png" alt="Nuevo plano" style="width: 40px; height: 40px;" />
+                </asp:LinkButton>    
+                     <button type="button" class="btn btn-sm border" data-bs-dismiss="modal" aria-label="Close">Cerrar</button>
+                                 </div>
+                </div>
+                    </div>
+                    </div>
+            </div>
+        </div>
+   
         
     </form>
 
