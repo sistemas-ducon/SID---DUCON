@@ -779,7 +779,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 TableCell cell = e.Item.Cells[6];
                 cell.Text = (MuebleEspecial == 1) ? "Si" : "No";
 
-               
+                TableCell archivoCell = e.Item.Cells[1]; // Índice 1 para la columna Archivo, ajustar si es necesario
+                archivoCell.ToolTip = archivoCell.Text;
+
             }
         }
 
