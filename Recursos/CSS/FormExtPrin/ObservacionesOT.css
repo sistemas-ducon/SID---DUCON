@@ -48,8 +48,8 @@
 }
 
 .fila-seleccionada1 {
-    background: radial-gradient(circle, #75787b, #23273be6); /* Radial gradient */
-    color: white !important;
+    background-color: white !important; /* Radial gradient */
+    color: black !important;
 }
 
 .Tam {
