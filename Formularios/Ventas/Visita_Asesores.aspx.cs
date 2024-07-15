@@ -655,7 +655,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGrid2.Items[rowIndex];
 
+                // Se utiliza para darle el color solo a la fila seleccionada 
+                foreach (DataGridItem item in DataGrid2.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
 
+
+                //se usa Para darle un color a la fila seleccionada  anderson
+                e.Item.CssClass = "fila-seleccionada";
 
                 string Asesor = row.Cells[1].Text;
                 string FechaInicio = fecha5.Text;
@@ -665,8 +676,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 LlenarDetalle.SelectParameters["FechaInicio"].DefaultValue = FechaInicio;
                 LlenarDetalle.SelectParameters["FechaFin"].DefaultValue = FechaFin;
 
-                // Actualizar el segundo DataGrid con los datos del procedimiento almacenado
-                DataGrid2.DataBind();
+          
             }
         }
 

@@ -174,7 +174,7 @@
                                             <div class="col-12">
                                                 <div class="table-responsive mb-1 gap-2" style="max-height: 10rem; height: 10rem; overflow-x: auto;">
                                                     <h5 class="datagrid-header text-center">Documentos Solicitudes Especiales </h5>
-                                                    <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridSolicitudEspecial" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="DocEspeciales" OnItemCommand="DataGridSolicitudEspecial_ItemCommand">
+                                                    <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridSolicitudEspecial" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="DocEspeciales" OnItemCommand="DataGridSolicitudEspecial_ItemCommand" OnItemDataBound="DataGridSolicitudEspecial_ItemDataBound">
                                                         <Columns>
 
                                                             <asp:TemplateColumn HeaderText=". . .">

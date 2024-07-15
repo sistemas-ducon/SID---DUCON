@@ -272,11 +272,12 @@
             <div class="tab-pane fade show active" id="Visitas-content">
                 <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                     <ContentTemplate>
-                        <div class="container p-1">
 
 
+                        <div class="container border rounded shadow-sm ">
 
-                            <div class="row pb-1">
+                                <div class="card-body">
+                                      <div class="row pb-1">
 
                                 <div class="col-sm-4">
                                     <div class="input-group input-group-sm  mb-2 gap-2 ">
@@ -507,9 +508,8 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
+                                </div>
+                       
 
                         </div>
                     </ContentTemplate>

@@ -3,7 +3,8 @@
 
 
 .fila-seleccionada {
-    background-color: #D6FAFA; /* Cambia el color de fondo según tus preferencias */
+    background: radial-gradient(circle, #75787b, #23273be6); /* Radial gradient */
+    color: white;
 }
 
 .Tam {

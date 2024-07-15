@@ -52,9 +52,8 @@
                             // Aquí puedes realizar acciones adicionales si el usuario no confirma
                             return false; // Detiene el envío del formulario
                         }
-                    } else
-                    {
-                        return true;
+                    } else{
+return true;
                     }
                 }
                 else {
@@ -77,23 +76,24 @@
         }
     </script>
 
-     <script>
-         function focusAndScrollToRow(rowId) {
-             var row = document.getElementById(rowId);
-             if (row) {
-                 row.setAttribute('tabindex', '-1'); // Make it focusable
-                 row.focus();
-                 row.scrollIntoView({ behavior: 'smooth', block: 'center' });
-             }
-         }
-     </script>
+    <script>
+        function focusAndScrollToRow(rowId) {
+            var row = document.getElementById(rowId);
+            if (row) {
+                row.setAttribute('tabindex', '-1'); // Make it focusable
+                row.focus();
+                row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+    </script>
 
 </head>
 <body translate="no">
 
     <nav class="navbar navbar-light bg-light navbar-custom">
         <div class="container d-flex justify-content-center ">
-            <ul class="nav nav-tabs gap-5">
+            <ul class="nav nav-tabs gap-5"  id="miPestañas">
 
 
                 <li class="nav-item">
@@ -131,7 +131,7 @@
                                 <div class="border rounded p-2">
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="table-responsive mb-2 gap-2" style="max-height: 25rem; height:25rem; overflow-x: auto;">
+                                            <div class="table-responsive mb-2 gap-2" style="max-height: 23rem; height: 23rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-center">Clientes </h5>
                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridCliente" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemCommand="DataGridCliente_ItemCommand" DataSourceID="ListarClientes">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header p-2" />
@@ -147,11 +147,13 @@
                                                         <asp:BoundColumn DataField="Nombre_Compañia" HeaderText="Nombre Compañia" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="AsesorComercial" HeaderText="Asesor Comercial " ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="FCreación" HeaderText="Fecha Creacion" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Teléfono" visible="false" />
-                                                        <asp:BoundColumn DataField="Dirección" visible="false" />
-                                                        <asp:BoundColumn DataField="IdProcedencia" visible="false" />
-                                                        <asp:BoundColumn DataField="CompartidoCon" visible="false" />
-                                                        <asp:BoundColumn DataField="Asesor" visible="false" />
+                                                        <asp:BoundColumn DataField="Teléfono" Visible="false" />
+                                                        <asp:BoundColumn DataField="Dirección" Visible="false" />
+                                                        <asp:BoundColumn DataField="IdProcedencia" Visible="false" />
+                                                        <asp:BoundColumn DataField="CompartidoCon" Visible="false" />
+                                                        <asp:BoundColumn DataField="Asesor" Visible="false" />
+                                                        <asp:BoundColumn DataField="Ciudad" Visible="false" />
+                                                        <asp:BoundColumn DataField="Región" Visible="false" />
 
 
                                                     </Columns>
@@ -177,7 +179,6 @@
                                     </div>
                                 </div>
                             </div>
-
 
                             <div class="container-fluid border shadow-sm bg-light mt-2 p-2">
                                 <div class="row mt-3 mb-2">
@@ -290,8 +291,6 @@
 
                             </div>
 
-
-
                             <div class="modal fade" id="myModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
                                 <div class="modal-dialog modal-xl ">
                                     <div class="modal-content">
@@ -391,6 +390,11 @@
                 <asp:UpdatePanel ID="PanelContacto" runat="server">
                     <ContentTemplate>
                         <div class="container-fluid">
+
+                            <div class="container" style="display: none;">
+                                <asp:TextBox ID="tbNumeroFilaCliente" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="tbNumeroFilaContacto" runat="server"></asp:TextBox>
+                            </div>
 
                             <div class="row justify-content-center mb-5 p-2">
                                 <div class="border rounded p-2">

@@ -71,9 +71,9 @@
     color: #007bff; /* Color azul - puedes cambiarlo a tu preferencia */
 }
 
-.fila-seleccionada{
-    background-color: black !important;
-    color: white !important;
+.fila-seleccionada {
+    background: radial-gradient(circle, #75787b, #23273be6); /* Radial gradient */
+    color: white;
 }
 
 .Tam {
