@@ -1,4 +1,5 @@
-﻿.auto-width-column {   
+﻿.auto-width-column {
+    width: auto;
     max-width: 300px; /* Puedes ajustar este valor según el ancho máximo deseado */
     white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
     overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
@@ -41,7 +42,7 @@
 }
 
 .fila-seleccionada {
-    background: radial-gradient(circle, #75787b, #23273be6); /* Radial gradient */
+    background-color: black !important; /*Se Cambia el color de la fila Seleccionada  */
     color: white !important;
 }
 
