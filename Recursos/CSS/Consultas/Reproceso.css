@@ -1,5 +1,5 @@
 ﻿.fila-seleccionada {
-    background-color: black !important;
+    background: radial-gradient(circle, #75787b, #23273be6); /* Radial gradient */
     color: white !important;
 }
 

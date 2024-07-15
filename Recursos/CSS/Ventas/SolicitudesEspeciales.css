@@ -119,7 +119,7 @@ a.icong.enabled {
 .fila-seleccionada {
     /* background: linear-gradient( to top right, #afb5b9, #23273be6); linear gradient */
     background: radial-gradient(circle, #75787b, #23273be6); /* Radial gradient */
-    color: white;
+    color: white !important;
 }
 
 .fila-seleccionada1 {

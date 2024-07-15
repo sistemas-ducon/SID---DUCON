@@ -110,7 +110,7 @@ a.icong.enabled {
 
 .fila-seleccionada {
     background: radial-gradient(circle, #75787b, #23273be6) !important; /* Radial gradient */
-    color: white;
+    color: white !important;
 }
 
 .Tam {
