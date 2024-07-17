@@ -1314,10 +1314,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         btnConUrgente.CssClass = "btn btn-sm btn-primary";
 
                         btnTrabajarSolicitud.Enabled = true;
-                        btnTrabajarSolicitud.CssClass = "btn btn-sm btn-primary  btn-dept";
+                        btnTrabajarSolicitud.CssClass = "btn btn-sm btn-outline-primary  btn-dept";
 
                         btnDesprogramar.Enabled = true;
-                        btnDesprogramar.CssClass = "btn btn-sm btn-primary  btn-dept";
+                        btnDesprogramar.CssClass = "btn btn-sm btn-outline-primary btn-dept";
 
                         btnTrbajarCotizacion.Enabled = false;
                         btnTrbajarCotizacion.CssClass = "btn btn-sm btn-outline-primary";
@@ -1571,6 +1571,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     else
                     {
 
+                        Session["ProVenSolicitud"] = termiVenta;
+
                         btnProgramarSolicitud.Enabled = false;
                         btnProgramarSolicitud.CssClass = "btn btn btn-warning";
 
@@ -1597,17 +1599,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         btnProgramarSolicitud.CssClass = "btn btn-sm btn-warning";
 
                         ConfirmarComplejo.Enabled = true;
-                        ConfirmarComplejo.CssClass = "btn btn-sm btn-outline-primary";
+                        ConfirmarComplejo.CssClass = "btn btn-sm btn-primary";
 
                         btnConUrgente.Enabled = true;
-                        btnConUrgente.CssClass = "btn btn-sm btn-outline-primary";
+                        btnConUrgente.CssClass = "btn btn-sm btn-primary";
 
 
                         btnTrbajarCotizacion.Enabled = true;
-                        btnTrbajarCotizacion.CssClass = "btn btn-sm btn-primary btn-depth ";
+                        btnTrbajarCotizacion.CssClass = "btn btn-sm btn-outline-primary btn-depth ";
 
                         btnDesprogramar1.Enabled = true;
-                        btnDesprogramar1.CssClass = "btn btn-sm btn-primary  btn-dept";
+                        btnDesprogramar1.CssClass = "btn btn-sm btn-outline-primary btn-dept";
 
                         btnTrabajarSolicitud.Enabled = false;
                         btnTrabajarSolicitud.CssClass = "btn btn-sm btn-outline-primary";
@@ -3446,6 +3448,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         public DateTime CalcularFechaEntrega(DateTime FechaIngreso)
         {
             DateTime UltimaActivacionSolicitud = FechaIngreso;
+            DateTime FechaEntrega = DateTime.Now;
 
             //Se valida  si ingresan la solicitud un dia sabado o domingo 
             while (UltimaActivacionSolicitud.DayOfWeek == DayOfWeek.Saturday || UltimaActivacionSolicitud.DayOfWeek == DayOfWeek.Sunday)
@@ -3453,7 +3456,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 UltimaActivacionSolicitud = UltimaActivacionSolicitud.AddDays(1);
                 UltimaActivacionSolicitud = new DateTime(UltimaActivacionSolicitud.Year, UltimaActivacionSolicitud.Month, UltimaActivacionSolicitud.Day, 8, 0, 0);
             }
-            DateTime FechaEntrega = SumarDiaLaboral(UltimaActivacionSolicitud, 5);
+
+            // Coltrol de tres dias para la cotizacion y 5 dias para desarrollos 
+            if(ddlTipo.SelectedItem.Text .ToUpper() == "DESARROLLO")
+            {
+                 FechaEntrega = SumarDiaLaboral(UltimaActivacionSolicitud, 5);
+            }
+            else if(ddlTipo.SelectedItem.Text.ToUpper() == "COTIZACIÓN")
+            {
+                 FechaEntrega = SumarDiaLaboral(UltimaActivacionSolicitud, 3);
+            }
+           
 
             return FechaEntrega;
         }
@@ -4032,6 +4045,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 if (ActualizarDetalleSolicitudEspecial())
                 {
+                   
+                    // Tener el cuenta para controlar  que quede en la pantalla donde modificó  para el dibujante
+
                     //Mensaje Exito             
                     string mensajePersonalizado = "El detalle ha sido actualizado con exito.";
                     string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
@@ -4864,11 +4880,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     string mensajeExito = "La solicitud ya está marcada como Desarrollo Complejo.";
                     string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
                     ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
-
                 }
                 else
                 {
-                    ActulizarComplejo(IdSolicitud, chkComplejo);
+
+                    ActivarComplejo(IdSolicitud, chkComplejo);
                     string mensajeExito = "Desarrollo Complejo Activado vence en 20 dias";
                     string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
                     ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
@@ -4882,13 +4898,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (ComplejoDB == chkComplejo)
                 {
+                  
                     string mensajeExito = "La solicitud ya está marcada como No Desarrollo Complejo.";
                     string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
                     ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
                 }
                 else
                 {
-                    ActulizarComplejo(IdSolicitud, chkComplejo);
+                    DesactivarComplejo(IdSolicitud, chkComplejo);
                     string mensajeExito = "Desarrollo Complejo Desactivado";
                     string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
                     ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
@@ -4912,10 +4929,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         }
-        private void ActulizarComplejo(string ID, bool Complejo)
+        private void ActivarComplejo(string ID, bool Complejo)
         {
+            DateTime FechaIngresoActual = Convert.ToDateTime(tbFechaIngreso.Text);
+            DateTime FechaEntregaActualizda20Dias = CalcularFechaEntregaComplejo(FechaIngresoActual);
+           
+            // el calculo de la fecha esta Ok solo falta hacer el update 
+
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-            string sSql = "Update tblSoliciDiseEspe SET DesarrolloComplejo = @Complejo where ID_Solicitud = @ID_Solicitud ";
+            string sSql = "Update tblSoliciDiseEspe SET DesarrolloComplejo = @Complejo, Fecha_Programada_Entrega = @FechaEntrega where ID_Solicitud = @ID_Solicitud ";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -4926,11 +4948,38 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     // Aquí ajusta los valores según los nombres de columnas reales en tu DataRow
                     cmd.Parameters.AddWithValue("@ID_Solicitud", ID);
                     cmd.Parameters.AddWithValue("@Complejo", Complejo);
+                    cmd.Parameters.AddWithValue("@FechaEntrega", FechaEntregaActualizda20Dias);
 
                     cmd.ExecuteNonQuery();
                 }
             }
         }
+        private void DesactivarComplejo(string ID, bool Complejo)
+        {
+
+            DateTime FechaIngresoActual = Convert.ToDateTime(tbFechaIngreso.Text);
+            DateTime FechaProEntrega = CalcularFechaEntrega(FechaIngresoActual);
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "Update tblSoliciDiseEspe SET DesarrolloComplejo = @Complejo, Fecha_Programada_Entrega = @FechaEntrega where ID_Solicitud = @ID_Solicitud ";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    // Aquí ajusta los valores según los nombres de columnas reales en tu DataRow
+                    cmd.Parameters.AddWithValue("@ID_Solicitud", ID);
+                    cmd.Parameters.AddWithValue("@Complejo", Complejo);
+                    cmd.Parameters.AddWithValue("@FechaEntrega", FechaProEntrega);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
         private bool ConsultarComplejo(string ID)
         {
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -4961,6 +5010,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
             }
+        }
+        public DateTime CalcularFechaEntregaComplejo(DateTime FechaIngreso)
+        {
+            DateTime UltimaActivacionSolicitud = FechaIngreso;
+            
+
+            //Se valida  si ingresan la solicitud un dia sabado o domingo 
+            while (UltimaActivacionSolicitud.DayOfWeek == DayOfWeek.Saturday || UltimaActivacionSolicitud.DayOfWeek == DayOfWeek.Sunday)
+            {
+                UltimaActivacionSolicitud = UltimaActivacionSolicitud.AddDays(1);
+                UltimaActivacionSolicitud = new DateTime(UltimaActivacionSolicitud.Year, UltimaActivacionSolicitud.Month, UltimaActivacionSolicitud.Day, 8, 0, 0);
+            }
+
+             DateTime  FechaEntrega = SumarDiaLaboral(UltimaActivacionSolicitud, 20);
+            
+            return FechaEntrega;
         }
 
 

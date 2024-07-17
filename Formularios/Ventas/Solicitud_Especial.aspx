@@ -1383,7 +1383,7 @@
 
 
                                     <%-- Fila control Click--%>
-                                    <div class="row" style="display: none;">
+                                    <div class="row" style="display:none;">
                                         <div class="col-1">
                                             <asp:TextBox ID="filaAntior" type="text" class="form-control form-control-sm" placeHolder="fila anterior" runat="server"></asp:TextBox>
 
@@ -1398,12 +1398,12 @@
                                         </div>
 
                                         <div class="col-1">
-                                            <asp:TextBox ID="tbId_Fila" type="text" class="form-control form-control-sm" placeHolder="Contador" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="tbId_Fila" type="text" class="form-control form-control-sm" placeHolder="Número de fila" runat="server"></asp:TextBox>
                                         </div>
 
                                     </div>
 
-                                    <div class="row pb-2">
+                                    <div class="row">
 
                                         <div class="col-md-5">
                                             <div class=" input-group input-group-sm justify-content-around  mb-2" style="padding-left: 3rem;">
@@ -1556,7 +1556,7 @@
 
                                     <%-- cotizaciones--%>
 
-                                    <div class="row pb-2">
+                                    <div class="row ">
 
                                         <div class="col-md-5 text-center" style="padding-left: 3rem;">
                                             <div class=" input-group input-group-sm justify-content-around  mb-2 gap-2">
@@ -1834,11 +1834,11 @@
             <div class="tab-pane fade " id="BuscarDesarrollo-content">
                 <asp:UpdatePanel ID="PanelBuscar" runat="server">
                     <ContentTemplate>
-                        <div class="container-fluid m-2">
+                        <div class="container">
 
                             <%-- Buscar Diseño Especial --%>
 
-                            <div class="container-fluid border shadow-sm  rounded-1 bg-light pb-3 mb-3">
+                            <div class="container-fluid border shadow-sm  rounded-1 bg-light pb-3 mb-3 mt-2">
                                 <div class="row pt-2">
                                     <div class="col-lg-8 col-xs-12">
                                         <div class="input-group input-group-sm  mb-2 gap-3">
@@ -2125,9 +2125,6 @@
 
             // Control Boton cliente 
             ControlBtnCliente();
-
-
-
 
         }
 

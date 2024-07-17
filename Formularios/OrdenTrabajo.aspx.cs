@@ -3956,7 +3956,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@Descuento", txtDcto.Text);
                         command.Parameters.AddWithValue("@Precio_Venta", txtVenta.Text);
                         command.Parameters.AddWithValue("@Forma_Pago", TextTNegociacion.Value);
-                        command.Parameters.AddWithValue("@Cotizacion", txtCotizacion.Text);
+                        command.Parameters.AddWithValue("@Cotizacion", txtCotizacion.Text.Trim());
                         command.Parameters.AddWithValue("@Observaciones_Contables", ObservacionCont.Value);
                         command.Parameters.AddWithValue("@Mail_Contacto", tbEmail.Text);
                         command.Parameters.AddWithValue("@Fecha_Despacho_Terceros", dtpRealEmpaque.Text);
@@ -4185,7 +4185,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 command.Parameters.AddWithValue("@Descuento", txtDcto.Text);
                                 command.Parameters.AddWithValue("@Precio_Venta", txtVenta.Text);
                                 command.Parameters.AddWithValue("@Forma_Pago", TextTNegociacion.Value);
-                                command.Parameters.AddWithValue("@Cotizacion", txtCotizacion.Text);
+                                command.Parameters.AddWithValue("@Cotizacion", txtCotizacion.Text.Trim());
                                 command.Parameters.AddWithValue("@Observaciones_Contables", ObservacionCont.Value);
                                 command.Parameters.AddWithValue("@Mail_Contacto", tbEmail.Text);
                                 command.Parameters.AddWithValue("@Fecha_Despacho_Terceros", dtpRealEmpaque.Text);
@@ -4586,7 +4586,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@Descuento", txtDcto.Text);
                         command.Parameters.AddWithValue("@Precio_Venta", txtVenta.Text);
                         command.Parameters.AddWithValue("@Forma_Pago", TextTNegociacion.Value);
-                        command.Parameters.AddWithValue("@Cotizacion", txtCotizacion.Text);
+                        command.Parameters.AddWithValue("@Cotizacion", txtCotizacion.Text.Trim());
                         command.Parameters.AddWithValue("@Observaciones_Contables", ObservacionCont.Value);
                         command.Parameters.AddWithValue("@Mail_Contacto", tbEmail.Text);
                         command.Parameters.AddWithValue("@Id_TipoPedido", dtacboTipoPedido.SelectedValue);
