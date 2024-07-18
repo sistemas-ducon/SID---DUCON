@@ -347,6 +347,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
                 case "PersonaCliente":
                     pageURL = "Ventas/Empleado.aspx";
                     break;
+                case "OT_Manuales":
+                    pageURL = "Consultas/OT_ManualesSid.aspx";
+                    break;
+                case "Reprocesos":
+                    pageURL = "Consultas/Reproceso.aspx";
+                    break;
                 default:
                     // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí
                     break;
@@ -361,7 +367,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
             }
             else
             {
-                string url = "Consultas/Reproceso.aspx";
+                string url = pageURL;
                 string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
 
