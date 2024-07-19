@@ -68,6 +68,7 @@
 
     function showLoadingAnimation() {
         var loadingAnimation = $('#loadingAnimation');
+        var progressBar = $('#progressBar');
         var progressMessage = $('#progressMessage');
         
         loadingAnimation.show(); // Mostrar la animación de carga
@@ -80,11 +81,19 @@
         var interval = setInterval(function () {
             messageIndex = (messageIndex + 1) % messages.length; // Cambiar el mensaje
             progressMessage.text(messages[messageIndex]); // Actualizar el mensaje
+
+            // Simulación de progreso
+            var progress = (messageIndex + 1) * 25; // Incrementar el progreso
+            progressBar.css('width', progress + '%').attr('aria-valuenow', progress); // Actualizar la barra de progreso
         }, 2000); // Cambiar mensaje cada 2 segundos
+
+        // Detener la animación cuando el formulario se envíe
+        $('#<%= btnCargar.ClientID %>').on('click', function () {
+            clearInterval(interval);
+            progressBar.css('width', '100%').attr('aria-valuenow', 100); // Completar la barra de progreso
+        });
     }
 </script>
-
-
 
 
 
@@ -210,66 +219,118 @@
                                                     <asp:BoundColumn DataField="Altura" HeaderText="H" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     <asp:BoundColumn HeaderText="A" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                     <asp:BoundColumn DataField="Cantidad" HeaderText="C" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                     <asp:BoundColumn DataField="Lado" HeaderText="L" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                   
-                                                </Columns>
-                                            </asp:DataGrid>  
-                                        </div>
-                                </div>
-                          
-                            </div>
-                           <div class="container mb-3">
-                            <div class="row align-items-center">
-                                <div class="col-lg-6 col-md-4 col-sm-12 mb-2">
-                                    <div class="input-group input-group-sm">
-                                        <asp:CheckBox runat="server" ID="CheckBox2" CssClass="form-check" onchange="cambiarAnchoColumnas(this)"/>
-                                        <asp:Label runat="server" ID="Label20" class="form-label ms-2" Text="Ampliar Modulos"></asp:Label>
-                                    </div>
-                                </div>
-                                <div class="col-lg-2 col-md-4 col-sm-12 mb-2"></div>
-                                <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
-                                    <div class="d-flex justify-content-end gap-2">
-                                        <asp:LinkButton runat="server" title="Nuevo objeto" ID="BtnNueObjDes" CssClass="btn btn-sm shadow button-enabled" OnClick="BtnNueObjDes_Click">
-                                            <i class="bi bi-file-earmark-fill GrisClaro"></i>
-                                        </asp:LinkButton>
-                                        <asp:LinkButton runat="server" title="Adicionar Modulo" ID="BtnAdiModDes" CssClass="btn btn-sm shadow button-enabled" OnClick="BtnAdiMod_Click">
-                                             <img src="https://i.ibb.co/xCpDzy1/icons8-documentos-96.png" alt="Nuevo plano" style="width: 15px; height: 18px;" />
-                                        </asp:LinkButton>                    
-                                        <asp:LinkButton runat="server" title="Configurar Objeto" ID="BtnConObjDes" CssClass="btn btn-sm shadow button-enabled" OnClick="BtnConObjDes_Click">
-                                         <i class="bi bi-wrench-adjustable GrisClaro"></i>
-                                        </asp:LinkButton> 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Observaciones Plano -->
-                        <div class="container mt-4 mb-2">
-                            <div class="row">
-                                <div class="col-12">
-                                    <h6>Observaciones Plano</h6>
-                                    <textarea id="TextArea1" runat="server" rows="5" class="form-control shadow-sm"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Link Buttons -->
-                        <div class="container mt-3">
-                            <div class="row">
-                                <div class="col-12 d-flex gap-2">
-                                     <asp:LinkButton runat="server" title="Nuevo plano" ID="LinkButton7" OnClick="LinkButton7_Click">
-                    <img src="https://i.ibb.co/BCtb1QS/icons8-archivo-dxf-autocad-windows-11-color-310.png" alt="Nuevo plano" style="width: 40px; height: 40px;" />
-                </asp:LinkButton>      
-                                    <asp:LinkButton runat="server" title="Nuevo plano" ID="LinkButton8" CssClass="btn btn-sm">
-                                        <img src="https://img.icons8.com/3d-fluency/94/print.png" alt="Nuevo plano" style="width: 40px; height: 40px;" />
-                                    </asp:LinkButton>
+                                                    <asp:BoundColumn DataField="Lado" HeaderText="L" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
 
+                                                </Columns>
+                                            </asp:DataGrid>
+                                       </div>
+                                </div>
+
+                        </div>
+                                        <div class="container mb-3">
+                                            <div class="row align-items-center">
+                                                <div class="col-lg-6 col-md-4 col-sm-12 mb-2">
+                                                    <div class="input-group input-group-sm">
+                                                        <asp:CheckBox runat="server" ID="CheckBox2" CssClass="form-check" onchange="cambiarAnchoColumnas(this)" />
+                                                        <asp:Label runat="server" ID="Label20" class="form-label ms-2" Text="Ampliar Modulos"></asp:Label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-2 col-md-4 col-sm-12 mb-2"></div>
+                                                <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
+                                                    <div class="d-flex justify-content-end gap-2">
+                                                        <asp:LinkButton runat="server" title="Nuevo objeto" ID="BtnNueObjDes" CssClass="btn btn-sm shadow button-enabled" OnClick="BtnNueObjDes_Click">
+                                            <i class="bi bi-file-earmark-fill GrisClaro"></i>
+                                                        </asp:LinkButton>
+                                                        <asp:LinkButton runat="server" title="Adicionar Modulo" ID="BtnAdiModDes" CssClass="btn btn-sm shadow button-enabled" OnClick="BtnAdiMod_Click">
+                                             <img src="https://i.ibb.co/xCpDzy1/icons8-documentos-96.png" alt="Nuevo plano" style="width: 15px; height: 18px;" />
+                                                        </asp:LinkButton>
+                                                        <asp:LinkButton runat="server" title="Configurar Objeto" ID="BtnConObjDes" CssClass="btn btn-sm shadow button-enabled" OnClick="BtnConObjDes_Click">
+                                         <i class="bi bi-wrench-adjustable GrisClaro"></i>
+                                                        </asp:LinkButton>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Observaciones Plano -->
+                                        <div class="container mt-4 mb-2">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <h6>Observaciones Plano</h6>
+                                                    <textarea id="TextArea1" runat="server" rows="5" class="form-control shadow-sm"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Link Buttons -->
+                                        <div class="container mt-3">
+                                            <div class="row">
+                                                <div class="col-12 d-flex gap-2">
+                                                    <asp:LinkButton runat="server" title="Nuevo plano" ID="LinkButton7" OnClick="LinkButton7_Click">
+                                                         <img src="https://i.ibb.co/BCtb1QS/icons8-archivo-dxf-autocad-windows-11-color-310.png" alt="Nuevo plano" style="width: 40px; height: 40px;" />
+                                                    </asp:LinkButton>
+                                                    <asp:LinkButton runat="server" title="Nuevo plano" ID="LinkButton8" CssClass="btn btn-sm">
+                                                         <img src="https://img.icons8.com/3d-fluency/94/print.png" alt="Nuevo plano" style="width: 40px; height: 40px;" />
+                                                    </asp:LinkButton>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-                     </div>
-            
+
+                        <div class="modal fade" id="modalObjNoExistente" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-title d-flex align-items-center justify-content-center text-white p-2" style="background: #0863a4">
+                                        <h5 class="text-white m-0">Objetos no existentes</h5>
+                                    </div>
+                                    <div class="modal-body bg-light">
+                                        <div class="row justify-content-center mb-3">
+                                            <div class="border rounded p-2">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="table-responsive mb-1 gap-2" style="max-height: 20.7rem; overflow-x: auto;">
+                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridObjNoExiste"
+                                                                runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemDataBound="DataGridObjNoExiste_ItemDataBound" OnItemCommand="DataGridObjNoExiste_ItemCommand">
+                                                                <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                                <Columns>
+                                                                    <asp:TemplateColumn ItemStyle-CssClass="auto-width-column">
+                                                                        <ItemTemplate>
+                                                                            <asp:LinkButton ID="BtnObjetoNoExistente" runat="server" CommandName="ID_Objeto"
+                                                                                CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                        </ItemTemplate>
+                                                                    </asp:TemplateColumn>
+                                                                    <asp:BoundColumn DataField="" HeaderText="Item" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="ID_Objeto" HeaderText="Objeto" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Ancho" HeaderText="Ancho" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Observacion" HeaderText="Observación" ItemStyle-CssClass="auto-width-column" />
+                                                                </Columns>
+                                                            </asp:DataGrid>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer bg-light">
+                                        <div class="d-flex col-12">
+                                            <div class="col-10">
+                                                <asp:TextBox ID="TextObjNoExi" runat="server" CssClass="form-control form-control-sm linkButtonClicked2 shadow-sm grande"></asp:TextBox>
+                                            </div>
+                                            <div class="col-2">
+                                                <asp:LinkButton runat="server" title="Nuevo plano" ID="ExcelDeObjetosNoExistentes" OnClick="ExcelDeObjetosNoExistentes_Click">
+                                    <img src="https://i.ibb.co/86fR8JK/icons8-microsoft-excel-2019-48.png" alt="Nuevo plano" style="width: 40px; height: 40px;" />
+                                                </asp:LinkButton>
+                                                <asp:Button runat="server" ID="BtnCerrarObjNoExi" class="btn btn-sm border" data-bs-dismiss="modal" aria-label="Close" Text="Cerrar" OnClick="BtnCerrarObjNoExi_Click"></asp:Button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="modal fade" id="DigitarCantidad" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -285,7 +346,24 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>              
+                        </div>
+
+                        <div class="modal fade" id="DiseñoTerminado" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID_DUCON</h5>
+
+                                    </div>
+                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                                        <p>No puede revisar el Despiece, una vez que el Diseño este terminado</p>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                                        <asp:Button runat="server" type="button" class="btn btn-sm btn-outline-dark" data-bs-dismiss="modal" Text="Aceptar" aria-label="Close"></asp:Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div id="modal23" class="modal fade" tabindex="-1" role="dialog">
                             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -330,8 +408,6 @@
                             </div>
                         </div>
 
-                       
-
                         <div class="modal fade" id="ModaldeConfirmacionCambiarCantidad" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -360,6 +436,9 @@
 
 
                     </ContentTemplate>
+                      <Triggers>
+                        <asp:PostBackTrigger ControlID="ExcelDeObjetosNoExistentes" />
+                    </Triggers>
                 </asp:UpdatePanel>
             </div>
 
@@ -1045,8 +1124,8 @@
                                               <i class="bi bi-arrow-right-square"></i>
                                             </asp:LinkButton>
 
-                                            <asp:LinkButton runat="server" title="Pausar Diseño" ID="PausarDiseño" Enabled="false">
-                                              <i class="bi bi-stop-circle"></i>
+                                            <asp:LinkButton runat="server" title="Pausar Diseño" ID="PausarDiseño" Enabled="false" OnClick="PausarDiseño_Click">
+                                              <i class="bi bi-stop-circle-fill"></i>
                                             </asp:LinkButton>
 
                                             <asp:LinkButton runat="server" title="Cancelar" ID="Cancelar" Enabled="false" OnClick="Cancelar_Click">
@@ -1489,7 +1568,7 @@
                             <%--  3/4--%>
                             
                                
-                                    <div class="border p-3 shadow-sm bg-light m-2">
+                                    <div class="border p-1 shadow-sm bg-light m-2">
                                         <div class="row">
                                             <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
                                                 <h6>Observaciones Ventas</h6>
@@ -1510,7 +1589,7 @@
                             <%-- 4/4--%>
                            
                                
-                                    <div class="border rounded p-3 shadow-sm bg-light m-2">
+                                    <div class="border rounded p-1 shadow-sm bg-light m-2">
                                         <div class="row">
                                             <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                                                 <div class="border rounded p-1" style="height: 250px">
@@ -1568,7 +1647,6 @@
                                                                                 CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square text-white'></i>" />
                                                                         </ItemTemplate>
                                                                     </asp:TemplateColumn>
-
                                                                     <asp:BoundColumn DataField="id_PlanoDiseno" HeaderText="ID" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Plano" HeaderText="Plano" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Area" HeaderText="Area" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
@@ -1586,7 +1664,7 @@
                                                                 SelectCommand="SELECT pd.[id_PlanoDiseno], pd.[Plano], p.[RealizadoPor], p.[Area], pd.[SubTotalZona], pd.[Cantidad], pd.[SubTotalZona], pd.[Opcion], pd.[Observacion], pd.[Composicion], pd.[FechalecturaDespiece]
                                                                    FROM [tblPlanoDiseño] pd
                                                                    INNER JOIN [tblPlano] p ON pd.[Plano] = p.[Plano]
-                                                                   WHERE (pd.[Numero_Diseño] = @NumeroDiseño)"
+                                                                   WHERE (pd.[Numero_Diseño] = @NumeroDiseño) order by opcion, Plano asc"
                                                                 DataSourceMode="DataSet">
                                                                 <SelectParameters>
                                                                     <asp:Parameter Name="NumeroDiseño" Type="Int32" />
@@ -2209,7 +2287,7 @@
                         </p>
                     </div>
                     <div class="modal-footer  d-flex align-items-center justify-content-center">
-                        <asp:Button runat="server" Text="Si" OnClick="ProgramarDiseño_Click" CssClass="btn btn-sm btn-outline-dark" />
+                        <asp:Button runat="server" Text="Si" OnClick="ProgramarVentas_Click" CssClass="btn btn-sm btn-outline-dark" />
                         <asp:Button runat="server" Text="No" data-bs-dismiss="modal" aria-label="Close" OnClick="NOProgramarDiseño_Click" CssClass="btn btn-sm btn-outline-dark" />
                     </div>
                 </div>
@@ -2285,6 +2363,7 @@
                 </div>
             </div>
         </div>
+
 <div class="modal fade" id="CargarTXToXLS" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content shadow">
@@ -2307,9 +2386,11 @@
                     <asp:FileUpload runat="server" ID="FileUpload2" Style="display: none;" OnChange="showFileName();" />
                     <asp:TextBox runat="server" ID="txtFileName" CssClass="form-control" ReadOnly="True"></asp:TextBox>
                 </div>
-                <!-- Animación de carga -->
+                <!-- Barra de progreso -->
                 <div id="loadingAnimation" class="loading-animation" style="display: none;">
-                    <div class="spinner"></div>
+                    <div class="progress">
+                        <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
                     <div id="progressMessage" class="progress-message">Cargando...</div>
                 </div>
             </div>
@@ -2319,8 +2400,6 @@
         </div>
     </div>
 </div>
-
-
 
 
         <div class="modal fade" id="CargarElementosExistentes" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -2341,52 +2420,11 @@
                             </div>
                         </div>
 
-        
-                      <div class="modal fade" id="modalObjNoExistente" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-title d-flex align-items-center justify-content-center text-white p-2" style="background:#0863a4">
-                    <h5 class="text-white m-0">Objetos no existentes</h5>
-                </div>
-                <div class="modal-body bg-light">
-                    <div class="row justify-content-center mb-3">
-                        <div class="border rounded p-2">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="table-responsive mb-1 gap-2" style="max-height: 20.7rem; overflow-x: auto;">  
-                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridObjNoExiste" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemDataBound="DataGridObjNoExiste_ItemDataBound">
-                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
-                                            <Columns>
-                                                <asp:BoundColumn DataField="" HeaderText="Item" ItemStyle-CssClass="auto-width-column" />
-                                                <asp:BoundColumn DataField="ID_Objeto" HeaderText="Objeto" ItemStyle-CssClass="auto-width-column" />
-                                                <asp:BoundColumn DataField="Ancho" HeaderText="Ancho" ItemStyle-CssClass="auto-width-column" />
-                                                <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column" />
-                                                <asp:BoundColumn DataField="Observacion" HeaderText="Observación" ItemStyle-CssClass="auto-width-column" />
-                                            </Columns>
-                                        </asp:DataGrid>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer bg-light">   
-                    <div class="d-flex col-12">
-                        <div class="col-10">
-                    <asp:TextBox ID="TextBox1" runat="server" CssClass="form-control form-control-sm linkButtonClicked2 shadow-sm grande"></asp:TextBox>
-                             </div>
-                             <div class="col-2">
-                        <asp:LinkButton runat="server" title="Nuevo plano" ID="LinkButton5">
-                    <img src="https://i.ibb.co/86fR8JK/icons8-microsoft-excel-2019-48.png" alt="Nuevo plano" style="width: 40px; height: 40px;" />
-                </asp:LinkButton>    
-                     <button type="button" class="btn btn-sm border" data-bs-dismiss="modal" aria-label="Close">Cerrar</button>
-                                 </div>
-                </div>
-                    </div>
-                    </div>
-            </div>
-        </div>
-   
+
+      
+
+
+
         
     </form>
 

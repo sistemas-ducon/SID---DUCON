@@ -199,7 +199,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col p-1">
-                                                        <asp:Button runat="server" ID="BtnGrabarObjetosPanel" CssClass="form-control" Text="Grabar" />
+                                                        <asp:Button runat="server" ID="BtnGrabarObjetosPanel" CssClass="form-control" Text="Grabar" OnClick="GrabarObjetosDibujo_Click"/>
                                                     </div>
                                                     <div class="col p-1">
                                                         <asp:Button runat="server" ID="BtnCancelarObjetosPanel" CssClass="form-control" Text="Cancelar" />
@@ -427,6 +427,23 @@
                 </asp:UpdatePanel>
             </div>
         </div>
+
+           <div class="modal fade" id="ModalObjetoIngresadoUsuario" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-success">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Modificar Plano Diseño</h5>
+
+                                    </div>
+                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                                        <p><span id="ModalObjetoIngresadoUsuario2"></span></p>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">   
+                                        <asp:Button runat="server" type="button" class="btn btn-sm btn-outline-dark" data-bs-dismiss="modal" Text="Aceptar" aria-label="Close"></asp:Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
     </form>
 

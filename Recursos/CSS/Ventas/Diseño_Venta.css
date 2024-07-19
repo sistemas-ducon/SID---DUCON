@@ -153,8 +153,12 @@
 }
 
 .fila-seleccionada1 {
-    background-color: #243451 !important;
-    color: white !important;
+    /* background-color: #243451 !important;
+    color: white !important;*/
+
+
+    background: radial-gradient(circle, #94a8bc, #3e4559e6); /* Radial gradient */
+   
 }
 
 .linkButtonNormal {
@@ -181,7 +185,7 @@
 }
 
 .AzulClaro {
-    color: #bfdef5;
+    color: #92afc4;
 }
 
 .GrisClaro {
@@ -230,3 +234,65 @@
         color: #f8f9fa; /* Light text on focus */
         outline: none;
     }
+
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.pulsar {
+    animation: pulse 1s ease;
+}
+
+.loading-animation {
+    display: none;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.progress {
+    height: 20px;
+    background-color: #f3f3f3;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #3498db;
+    width: 0;
+    animation: pulseAnimation 2s infinite;
+}
+
+@keyframes pulseAnimation {
+    0%, 100% {
+        width: 0;
+        opacity: 0.5;
+    }
+
+    50% {
+        width: 100%;
+        opacity: 1;
+    }
+}
+
+.progress-message {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+}

@@ -34,6 +34,7 @@ using DocumentFormat.OpenXml.Vml.Presentation;
 using Excel = Microsoft.Office.Interop.Excel;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Text.RegularExpressions;
+using static SISTEMA_INTEGRAL_DUCON.Formularios.Diseño_Venta;
 
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
@@ -62,7 +63,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["usuariologueado"] != null)
-            { 
+            {
 
 
                 if (!IsPostBack)
@@ -232,16 +233,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         DataGridObjNoExiste.DataSource = objetosNoExistentes;
                         DataGridObjNoExiste.DataBind();
 
-                        // Añadir una variable de estado para mostrar el modal después de 4 segundos
-                        ClientScript.RegisterStartupScript(this.GetType(), "ShowModalAfterDelay", @"
+                        // Mostrar el modal con un retraso de 2 segundos
+                        ScriptManager.RegisterStartupScript(UpdatePanel1, UpdatePanel1.GetType(), "ShowModalAfterDelay", @"
                     setTimeout(function() {
                         $('#modalObjNoExistente').modal('show');
-                    }, 2000);
+                    }, 500);
                 ", true);
 
-                        // Limpiar la lista de objetos no existentes
-                        objetosNoExistentes.Clear();
-                        Session["ObjetosNoExistentes"] = objetosNoExistentes;
+                     
                     }
 
                     // Limpiar la sesión
@@ -255,7 +254,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session.Remove("PrimerClicTime");
         }
 
-
+        
         protected void CargarDatagridDise()
         {
             DataGridOTsDise();
@@ -817,6 +816,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ProgramarDiseño').modal('show'); $('#ProgramarDiseño2').text('" + contenidoModalOT + "');", true);
 
             }
+            else if (tipoAccion == "Diseño")
+            {
+                if (BtnProgramar.Text == "TERMINARSC")
+                {
+                    string mensaje = "Desea dar por terminado el showcase con número de diseño: " + lblNumDise.Text;
+                    string script = "if(confirm('" + mensaje + "')) { " +
+                                    "__doPostBack('btnConfirmTerminar', ''); }";
+
+                    ClientScript.RegisterStartupScript(this.GetType(), "ConfirmTerminar", script, true);
+                }
+                else
+                {
+                    TerminarDiseño();
+                }
+            }
             else if (tipoAccion == "Recepcion")
             {
                 string diseño = lblNumDise.Text + " - ";
@@ -830,7 +844,393 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-        protected void ProgramarDiseño_Click(object sender, EventArgs e)
+        //TERMINARDIBUJO
+        protected void TerminarDiseño()
+        {
+            string NombreUsuario = Session["usuariologueado"].ToString();
+            string numeroDiseno = lblNumDise.Text;
+
+            // Consulta para verificar si el diseño está pausado
+            string consultaSql = "SELECT Pausado FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseno";
+            int pausado = 0; // Valor por defecto
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(consultaSql, connection))
+                {
+                    command.Parameters.AddWithValue("@NumeroDiseno", numeroDiseno);
+                    object resultado = command.ExecuteScalar();
+                    if (resultado != null && resultado != DBNull.Value)
+                    {
+                        pausado = Convert.ToInt32(resultado);
+                    }
+                }
+            }
+
+            // Verificar si el diseño está pausado
+            if (pausado == 1)
+            {
+                // Mostrar mensaje de advertencia si el diseño está pausado
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('El diseño está pausado, no se puede terminar.');", true);
+                return;
+            }
+
+            // Lógica para confirmar la terminación del diseño usando JavaScript
+            ClientScript.RegisterStartupScript(this.GetType(), "confirm",
+                "if (confirm('Se enviará correo de notificación de Ok diseño? Una vez terminado el Diseño, no podrá realizarles modificaciones. ¿Está seguro de Terminar el diseño: " + lblNumDise.Text + " - " + TextProyecto.Text + "?')) { __doPostBack('ConfirmOkDiseno', ''); }",
+                true);
+
+            // Lógica para cargar planos del diseño
+            CargarPlanosDelDiseno(numeroDiseno);
+
+            // Obtención de la fecha y hora actual del servidor
+            string dtpUltimaActivacion = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+
+            // Actualización de la base de datos
+            string sSql = "UPDATE tblDiseño SET RealizadoPor = @NombreUsuario, ProgramadoVentas = 1, TerminadoDibujo = 1, FechaDibujoOk = GETDATE() WHERE Numero_Diseño = @NumeroDiseno";
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(sSql, connection))
+                {
+                    command.Parameters.AddWithValue("@NombreUsuario", NombreUsuario);
+                    command.Parameters.AddWithValue("@NumeroDiseno", numeroDiseno);
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            // Deshabilitar el botón de terminar diseño
+            BtnProgramar.Enabled = false;
+            BtnProgramar.BackColor = System.Drawing.Color.Gray;
+
+            // Envío de correos electrónicos
+            EnviarCorreosDeNotificacion(NombreUsuario);
+        }
+
+        private void EnviarCorreosDeNotificacion(string NombreUsuario)
+        {
+            string EnviadoA = DropDownList1.SelectedItem.Text.ToString();
+            EnviadoA += ObtenerCorreos("mailTerminadoDisenoDibujo" + TextZona.SelectedItem.Text);
+
+            if (ChecCotVia.Checked)
+            {
+                EnviadoA += ObtenerCorreos("mailcotizarviaticos" + TextZona.SelectedItem.Text);
+            }
+
+            if (CheckBox4.Checked)
+            {
+                EnviadoA += ObtenerCorreos("mailcotizartransporte" + TextZona.SelectedItem.Text);
+            }
+
+            // Verificar si hay destinatarios
+            if (!string.IsNullOrWhiteSpace(EnviadoA))
+            {
+                // Lógica para obtener los destinatarios del correo
+                string receptormail = "";
+                int Buscardesde = EnviadoA.IndexOf(';');
+                while (Buscardesde != -1)
+                {
+                    string correo = EnviadoA.Substring(0, Buscardesde).Trim();
+                    if (ValidarCadenaMail(correo))
+                    {
+                        receptormail += ";" + correo;
+                    }
+                    EnviadoA = EnviadoA.Substring(Buscardesde + 1);
+                    Buscardesde = EnviadoA.IndexOf(';');
+                }
+
+                if (!string.IsNullOrWhiteSpace(EnviadoA))
+                {
+                    receptormail += ";" + EnviadoA.Trim();
+                }
+
+                // Validar y agregar el correo del usuario actual
+                string mailUsuario = Session["MailUsuario"].ToString();
+                if (ValidarCadenaMail(mailUsuario))
+                {
+                    receptormail = mailUsuario + receptormail;
+                }
+
+                // Verificar si se pudo obtener al menos un destinatario válido
+                if (!string.IsNullOrWhiteSpace(receptormail))
+                {
+                    // Determinar el asunto del correo
+                    string AsuntoMail = ChecCot.Checked ?
+                        $"Diseño Terminado: {lblNumDise.Text} - {TextProyecto.Text}" :
+                        $"Aprobar para Cotizar Diseño: {lblNumDise.Text} - {TextProyecto.Text}";
+
+                    // Construir la descripción del correo
+                    string DescripcionMail = $"Fecha: {DateTime.Now.ToString("dd/MM/yyyy HH:mm")}<br><br>" +
+                        $"Estimado(a) Asesor(a), por medio de la presente se informa que el Diseño: {lblNumDise.Text}, ha sido terminado, bajo los siguientes parámetros:<br><br>" +
+                        $"Aprobado para Cotizar: {ConversionBoolean2(ChecCot.Checked)}<br>" +
+                        $"Descuento: {TextDes.Text}<br>" +
+                        $"Conducción de Cables<br>" +
+                        $"Piso: {ConversionBoolean2(ChecPiso.Checked)}, Cielo: {ConversionBoolean2(ChecCie.Checked)}, División: {ConversionBoolean2(ChecDiv.Checked)}, Canaleta: {ConversionBoolean2(ChecCan.Checked)}, Bajantes Eléctricos: {ConversionBoolean2(ChecBteEle.Checked)}, Bajantes Switches: {ConversionBoolean2(ChecBteSw.Checked)}<br><br>" +
+                        $"Sujeción<br>" +
+                        $"Cielo: {ConversionBoolean2(ChecSujPt.Checked)}, Perfil Refuerzo: {ConversionBoolean2(ChecPerRef.Checked)}, Guarda Escobas: {ConversionBoolean2(ChecGuaEsc.Checked)}, Altura Cielo: {TexHTot.Text}<br><br>" +
+                        $"Otros datos<br>" +
+                        $"Línea: {TextLin.Text}, Acab. Paneles: {TextPan.Text}, Superficies: {TextSup.Text}, Tipo Vidrio: {TextTipVid.Text}<br><br>" +
+                        $"Observaciones Ventas:<br>{TextObsVen.Value}<br><br>" +
+                        $"Observaciones Dibujo y Despiece:<br>Realizado por: {NombreUsuario} ({Session["MailUsuario"].ToString()})<br>{TextObsDibDes.Value}<br><br>";
+
+                    //// Generar y guardar el Excel
+                    //GenerarYGuardarExcel();
+
+                    bool correoEnviado = EnviarCorreoTerminadoDise(receptormail, AsuntoMail, DescripcionMail, NombreUsuario);
+
+                    //// Lógica de envío del correo
+                    //string sSql = $"duc_sp_correo('{receptormail}','{AsuntoMail}','{DescripcionMail}','{adjuntos}','{NombreUsuario}')";
+                    //// ConectSID.Execute(sSql); // Aquí deberías ejecutar tu código para enviar el correo
+                }
+                else
+                {
+                    // Mostrar un mensaje si no hay destinatarios válidos
+                    // MessageBox.Show("No hay destinatarios válidos para enviar el correo.");
+                }
+            }
+        }
+
+        public bool EnviarCorreoTerminadoDise(string receptormail, string AsuntoMail, string DescripcionMail, string NombreUsuario)
+        {
+            string nombreProcedimiento = "duc_sp_Correo";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(nombreProcedimiento, connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Definir los parámetros del procedimiento almacenado
+                        command.Parameters.AddWithValue("@Destinatarios", receptormail);
+                        command.Parameters.AddWithValue("@asunto", AsuntoMail);
+                        command.Parameters.AddWithValue("@cuerpo", DescripcionMail);
+                        command.Parameters.AddWithValue("@adjuntos", "");
+                        command.Parameters.AddWithValue("@usuario", NombreUsuario);
+
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                        return true;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                // Manejar la excepción (opcional)
+                // Loggear la excepción o hacer algo con ella
+                return false;
+            }
+        }
+
+        private bool ValidarCadenaMail(string cadenaMail)
+        {
+            string[] correos = cadenaMail.Split(';'); // Dividir por el delimitador ';' si hay varios correos
+
+            foreach (string correo in correos)
+            {
+                string mail = correo.Trim().ToLower();
+
+                // Validar si el correo tiene espacios en blanco
+                if (mail.Contains(" ")) return false;
+
+                // Validar si el correo tiene '@.' juntos
+                if (mail.Contains("@.")) return false;
+
+                // Validar si el correo tiene una 'ñ'
+                if (mail.Contains("ñ")) return false;
+
+                // Validar si el correo empieza con '@'
+                if (!mail.StartsWith("@"))
+                {
+                    return false;
+                }
+                else
+                {
+                    // Validar si el correo tiene más de una '@'
+                    if (mail.Substring(1).Contains("@")) return false;
+
+                    // Validar si después de '@' no hay un '.'
+                    if (!mail.Substring(mail.IndexOf("@") + 1).Contains(".")) return false;
+                }
+
+                // Validar si el correo termina con "@", ".", "-", "_"
+                char lastChar = mail[mail.Length - 1];
+                if (lastChar == '@' || lastChar == '.' || lastChar == '-' || lastChar == '_') return false;
+            }
+
+            return true;
+        }
+
+
+
+        private void GenerarYGuardarExcel()
+        {
+            string pathTemplate = Server.MapPath("~/Excel_Formatos/FormatoCotizacion.xlsx");
+            string pathSave = Server.MapPath($"~/Excel_Generados/Cotizacion_{lblNumDise.Text}_{DateTime.Now:yyyyMMddHHmmss}.xlsx");
+
+            IWorkbook workbook;
+
+            using (FileStream fs = new FileStream(pathTemplate, FileMode.Open, FileAccess.Read))
+            {
+                workbook = new XSSFWorkbook(fs);
+            }
+
+            ISheet sheet = workbook.GetSheet("Cotizacion Detallada");
+
+            sheet.GetRow(0).GetCell(1).SetCellValue($"Sabaneta, {DateTime.Now:MMMM dd} de {DateTime.Now:yyyy}");
+            sheet.GetRow(1).GetCell(4).SetCellValue($"Diseño: {lblNumDise.Text}");
+            sheet.GetRow(6).GetCell(1).SetCellValue("Ciudad");
+
+            int filaExcel = 16;
+            decimal TotalCubicajeProyecto = 0;
+            decimal TotalPesoProyecto = 0;
+
+            var rsPlanosdelDiseño = ObtenerPlanosDelDiseno(lblNumDise.Text); // Método para obtener los datos
+
+            if (rsPlanosdelDiseño != null && rsPlanosdelDiseño.Rows.Count > 0)
+            {
+                string OpcionCotizacion = rsPlanosdelDiseño.Rows[0]["Opcion"].ToString();
+                decimal TotalOpcion = 0;
+
+                SetCellBold(sheet.GetRow(filaExcel).GetCell(1), "OPCIÓN: " + OpcionCotizacion);
+                filaExcel++;
+
+                foreach (DataRow row in rsPlanosdelDiseño.Rows)
+                {
+                    if (OpcionCotizacion != row["Opcion"].ToString())
+                    {
+                        SetCellBold(sheet.GetRow(filaExcel).GetCell(1), "TOTAL OPCIÓN: " + OpcionCotizacion);
+                        sheet.GetRow(filaExcel).GetCell(5).SetCellValue((double)TotalOpcion);
+                        filaExcel += 2;
+
+                        OpcionCotizacion = row["Opcion"].ToString();
+                        TotalOpcion = 0;
+
+                        SetCellBold(sheet.GetRow(filaExcel).GetCell(1), "OPCIÓN: " + OpcionCotizacion);
+                        filaExcel++;
+                    }
+
+                    decimal TotalDespiece = 0;
+                    decimal TotalCubicajeDespiece = 0;
+                    decimal TotalPesoDespiece = 0;
+
+                }
+
+                SetCellBold(sheet.GetRow(filaExcel).GetCell(1), "TOTAL OPCIÓN: " + OpcionCotizacion);
+                sheet.GetRow(filaExcel).GetCell(5).SetCellValue((double)TotalOpcion);
+            }
+
+            using (FileStream fs = new FileStream(pathSave, FileMode.Create, FileAccess.Write))
+            {
+                workbook.Write(fs);
+            }
+
+            workbook.Close();
+        }
+
+        private void SetCellBold(ICell cell, string value)
+        {
+            IWorkbook workbook = cell.Sheet.Workbook;
+            IFont font = workbook.CreateFont();
+            font.IsBold = true;
+
+            ICellStyle style = workbook.CreateCellStyle();
+            style.SetFont(font);
+
+            cell.SetCellValue(value);
+            cell.CellStyle = style;
+        }
+
+        private DataTable ObtenerPlanosDelDiseno(string numeroDiseno)
+        {
+            DataTable dtPlanos = new DataTable();
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            string query = @"SELECT pd.[id_PlanoDiseno], pd.[Plano], p.[RealizadoPor], p.[Area], pd.[SubTotalZona], pd.[Cantidad], pd.[SubTotalZona], pd.[Opcion], pd.[Observacion], pd.[Composicion], pd.[FechalecturaDespiece]
+                     FROM [tblPlanoDiseño] pd
+                     INNER JOIN [tblPlano] p ON pd.[Plano] = p.[Plano]
+                     WHERE pd.[Numero_Diseño] = @NumeroDiseno
+                     ORDER BY pd.[Opcion], pd.[Plano] ASC";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@NumeroDiseno", numeroDiseno);
+
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        dtPlanos.Load(reader);
+                    }
+                }
+            }
+
+            return dtPlanos;
+        }
+
+
+        private string ConversionBoolean2(bool valor)
+        {
+            return valor ? "Sí" : "No";
+        }
+
+        private string ObtenerCorreos(string objetivoMail)
+        {
+            string correos = string.Empty;
+            string query = "SELECT mail FROM TblUsosVarios WHERE ObjetivoMail = @ObjetivoMail";
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ObjetivoMail", objetivoMail);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            correos += ";" + reader["mail"].ToString();
+                        }
+                    }
+                }
+            }
+            return correos;
+        }
+
+        protected void btnConfirmTerminarSC_Click(object sender, EventArgs e)
+        {
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "UPDATE tbldiseño SET SC_Terminado = 1, SC_FechaTerminado = GETDATE() WHERE Numero_Diseño = @NumeroDiseño";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(sSql, connection);
+                command.Parameters.AddWithValue("@NumeroDiseño", lblNumDise.Text);
+
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    BtnProgramar.Enabled = false;
+                }
+                catch (Exception ex)
+                {
+                    // Maneja la excepción (log, mostrar mensaje de error, etc.)
+                }
+            }
+        }
+
+        //FIN DE TERMINARDIBUJO
+
+        protected void ProgramarVentas_Click(object sender, EventArgs e)
         {
 
 
@@ -4116,27 +4516,28 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
-
-                    // Consulta SQL para verificar el campo ProgramadoVentas
-                    string consultaProgramadoVentas = "SELECT ProgramadoVentas FROM tbldiseño WHERE Numero_Diseño = @Numero_Diseño";
-
-                    using (SqlCommand commandProgramadoVentas = new SqlCommand(consultaProgramadoVentas, connection))
+                    string tipoAccion = Session["Diseno"] as string;
+                    if (tipoAccion == "Ventas")
                     {
-                        commandProgramadoVentas.Parameters.AddWithValue("@Numero_Diseño", numDise);
+                        // Consulta SQL para verificar el campo ProgramadoVentas
+                        string consultaProgramadoVentas = "SELECT ProgramadoVentas FROM tbldiseño WHERE Numero_Diseño = @Numero_Diseño";
 
-                        bool programadoVentas = false; // Valor predeterminado
 
-                        using (SqlDataReader readerProgramadoVentas = commandProgramadoVentas.ExecuteReader())
+                        using (SqlCommand commandProgramadoVentas = new SqlCommand(consultaProgramadoVentas, connection))
                         {
-                            if (readerProgramadoVentas.Read())
+                            commandProgramadoVentas.Parameters.AddWithValue("@Numero_Diseño", numDise);
+
+                            bool programadoVentas = false; // Valor predeterminado
+
+                            using (SqlDataReader readerProgramadoVentas = commandProgramadoVentas.ExecuteReader())
                             {
-                                programadoVentas = readerProgramadoVentas.GetBoolean(0);
+                                if (readerProgramadoVentas.Read())
+                                {
+                                    programadoVentas = readerProgramadoVentas.GetBoolean(0);
+                                }
                             }
-                        }
 
-                        string tipoAccion = Session["Diseno"] as string;
-                        if (tipoAccion == "Ventas")
-                        {
+
                             // Validar ProgramadoVentas
                             if (programadoVentas)
                             {
@@ -4151,16 +4552,25 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 BtnProgramar.Enabled = true;
                                 BtnProgramar.CssClass = "btn btn-warning shadow btn-sm fw-bold";
                             }
-                        }
-                        else if (tipoAccion == "Recepcion")
-                        {
-                            ValidarBotonTerminarRecep();
-                        }
 
 
+                        
+
+
+
+                        }
                     }
 
-                    using (SqlCommand command = new SqlCommand("sp_FormularioDisBita", connection))
+                    if (tipoAccion == "Recepcion")
+                    {
+                        ValidarBotonTerminarRecep();
+                    }
+                    else if (tipoAccion == "Diseño")
+                    {
+                        obtenerContenidoDeBtnOk();
+                    }
+
+                        using (SqlCommand command = new SqlCommand("sp_FormularioDisBita", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@NumDise", numDise);
@@ -4326,6 +4736,50 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session.Remove("NumeroDiseño");
         }
 
+        protected void obtenerContenidoDeBtnOk()
+        {
+            // Consulta para obtener SC_Terminado y TerminadoDibujo
+            string numeroDiseño = Session["NumeroDiseño"]?.ToString();
+            if (!string.IsNullOrEmpty(numeroDiseño))
+            {
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+                {
+                    conn.Open();
+                    string query = "SELECT SC_Terminado, TerminadoDibujo FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseño";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@NumeroDiseño", numeroDiseño);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            bool scTerminado = Convert.ToBoolean(reader["SC_Terminado"]);
+                            bool terminadoDibujo = Convert.ToBoolean(reader["TerminadoDibujo"]);
+
+                            if (!scTerminado && terminadoDibujo)
+                            {
+                                BtnProgramar.Text = "TERMINARSC";
+                                BtnProgramar.CssClass = "btn btn-warning shadow btn-sm fw-bold";
+                                BtnProgramar.Enabled = true;
+                            }
+                            else
+                            {
+                                BtnProgramar.Text = "TERMINAR";
+                                BtnProgramar.Enabled = false;
+                            }
+                            if (!terminadoDibujo)
+                            {
+                                BtnProgramar.Enabled = true;
+                                PausarDiseño.Enabled = true;
+                                PausarDiseño.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
+                                EliminarDiseño.Enabled = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         private void ProcesarNumeroDiseño2(DataGridCommandEventArgs e)
         {
             string numeroDiseño = Session["NumeroDiseño2"].ToString();
@@ -4380,9 +4834,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 BtnProgramar.CssClass = "btn btn-warning shadow btn-sm fw-bold";
                             }
                         }
-                        else if (tipoAccion == "Recepcion")
+                        if (tipoAccion == "Recepcion")
                         {
                             ValidarBotonTerminarRecep();
+                        }
+
+                        if (tipoAccion == "Diseño")
+                        {
+                            obtenerContenidoDeBtnOk();
                         }
                     }
 
@@ -5113,7 +5572,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-     
+
 
         protected void CargarVSC_Click(object sender, EventArgs e)
         {
@@ -7952,7 +8411,51 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void DataGrid5_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+                string idPlano = e.Item.Cells[2].Text; // Columna 2 contiene el Id_Plano
 
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    // Consulta para obtener los valores de RevisadoDibujo
+                    string queryRevisadoDibujo = "SELECT RevisadoDibujo FROM tblPlano_Panel WHERE Id_Plano = @IdPlano";
+                    SqlCommand cmdRevisadoDibujo = new SqlCommand(queryRevisadoDibujo, conn);
+                    cmdRevisadoDibujo.Parameters.AddWithValue("@IdPlano", idPlano);
+
+                    using (SqlDataReader reader = cmdRevisadoDibujo.ExecuteReader())
+                    {
+                        bool tieneCero = false;
+                        bool todosUno = true;
+
+                        while (reader.Read())
+                        {
+                            int revisadoDibujo = Convert.ToInt32(reader["RevisadoDibujo"]);
+                            if (revisadoDibujo == 0)
+                            {
+                                tieneCero = true;
+                                todosUno = false;
+                                break; // Si encontramos un 0, no necesitamos seguir buscando
+                            }
+                        }
+
+                        // Si no encontramos ningún 0, significa que todos son 1
+                        if (todosUno && !tieneCero)
+                        {
+                            e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#6ea983"); /*Verde*/
+                            e.Item.ForeColor = System.Drawing.Color.White;
+                        }
+                        else if (tieneCero)
+                        {
+                            e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#df9856"); /* Naranja */
+                            e.Item.ForeColor = System.Drawing.Color.White;
+                        }
+                    }
+                    conn.Close();
+                }
+            }
         }
 
         private string ValidarCamposAsignarPlano()
@@ -8146,13 +8649,95 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 Session["Id_NumericoDise"] = row.Cells[1].Text;
 
+                DateTime? primerClicTime = Session["PrimerClicTime5"] as DateTime?;
+                if (primerClicTime != null && (DateTime.Now - primerClicTime.Value).TotalSeconds <= 1)
+                {
+                    // Se compara si el click es en la misma fila
+                    if (row.Cells[1].Text == Session["Id_OTdise5"]?.ToString())
+                    {
+                        // Incrementar la variable de sesión "ClickCount" en el servidor
+                        int clickCount = Convert.ToInt32(Session["ClickCount5"]) + 1;
+                        Session["ClickCount5"] = clickCount;
 
+                        e.Item.CssClass = "fila-seleccionada1";
+
+                        // Se valida si es el segundo click en la misma fila 
+                        if (clickCount == 2)
+                        {
+                            ValidarYActualizarDibujo(row);
+                            BindDataGrid();
+                        }
+                    }
+
+                    // Limpia las variables de sesión
+                    Session.Remove("PrimerClicTime5");
+                }
+                else
+                {
+
+                    e.Item.CssClass = "fila-seleccionada1";
+                    // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
+                    Session["ClickCount5"] = 1;
+                    Session["Id_OTdise5"] = row.Cells[1].Text;
+                    Session["PrimerClicTime5"] = DateTime.Now; // Establecer el tiempo del primer clic
+
+                   
+                }
 
                 // Obtener el Id_Numerico de la fila seleccionada
                 int idNumerico = Convert.ToInt32(DataGridDespiece.DataKeys[rowIndex]);
 
                 // Cargar el segundo DataGrid
                 LoadDataGrid6(idNumerico);
+            }
+        }
+
+        private void ValidarYActualizarDibujo(DataGridItem row)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            int idNumerico = Convert.ToInt32(row.Cells[1].Text); // Ajustar el índice de la celda según sea necesario
+            string lblNumDise2 = lblNumDise.Text; // Obtener el valor del Label
+            string idPlanoDise = Session["Id_PlanoDise"]?.ToString();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                if (BtnProgramar.Enabled)
+                {
+                    // Validar RevisadoDibujo
+                    string queryRevisadoDibujo = "SELECT RevisadoDibujo FROM tblPlano_Panel WHERE Id_Plano = @IdPlano AND Id_PanelNum = @IdPanelNum";
+                    SqlCommand cmdRevisadoDibujo = new SqlCommand(queryRevisadoDibujo, conn);
+                    cmdRevisadoDibujo.Parameters.AddWithValue("@IdPlano", idPlanoDise);
+                    cmdRevisadoDibujo.Parameters.AddWithValue("@IdPanelNum", idNumerico);
+
+                    int revisadoDibujo = Convert.ToInt32(cmdRevisadoDibujo.ExecuteScalar());
+
+                    // Actualizar RevisadoDibujo
+                    string updateQuery;
+                    if (revisadoDibujo == 1)
+                    {
+                        updateQuery = "UPDATE tblPlano_Panel SET RevisadoDibujo = 0 WHERE Id_Plano = @IdPlano AND Id_PanelNum = @IdPanelNum";
+                    }
+                    else
+                    {
+                        updateQuery = "UPDATE tblPlano_Panel SET RevisadoDibujo = 1 WHERE Id_Plano = @IdPlano AND Id_PanelNum = @IdPanelNum";
+                    }
+
+                    SqlCommand updateCmd = new SqlCommand(updateQuery, conn);
+                    updateCmd.Parameters.AddWithValue("@IdPlano", idPlanoDise);
+                    updateCmd.Parameters.AddWithValue("@IdPanelNum", idNumerico);
+
+                    updateCmd.ExecuteNonQuery();
+
+                    
+                }
+                else
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#DiseñoTerminado').modal('show');", true);
+                }
+
+                conn.Close();
             }
         }
 
@@ -8376,6 +8961,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string url = "~/Formularios/DiseñoYDesarrollo/ObjetosDibujo.aspx";
             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
             ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+
+            Session["CrudObjetosDibujo"] = "Nuevo";
         }
 
         protected void BtnAdiMod_Click(object sender, EventArgs e)
@@ -8383,6 +8970,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string url = "~/Formularios/DiseñoYDesarrollo/ObjetosDibujo.aspx";
             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
             ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+
+            Session["CrudObjetosDibujo"] = "Modificar";
         }
 
         protected void BtnConObjDes_Click(object sender, EventArgs e)
@@ -8390,6 +8979,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string url = "~/Formularios/DiseñoYDesarrollo/ObjetosDibujo.aspx";
             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
             ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+
+            Session["CrudObjetosDibujo"] = "Copiar";
         }
 
         protected void LinkButton7_Click(object sender, EventArgs e)
@@ -8815,7 +9406,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             {
                                 ancho = Convert.ToDecimal(readerOldPanel["AnchoNew"]) / 100;
                             }
-                          
+
                         }
                     }
                 }
@@ -8878,7 +9469,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Guardar la lista de objetos no existentes en la sesión
                 Session["ObjetosNoExistentes"] = objetosNoExistentes;
 
-               
+
             }
 
 
@@ -9046,87 +9637,35 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 else
                 {
-                 
-                        var row2 = panelData.Rows[0];
 
-                        // Si Precio_Venta es 0, calculamos el precio de venta del objeto
-                        decimal precioVenta = Convert.ToDecimal(row2["Precio_Venta"]);
-                        decimal peso;
+                    var row2 = panelData.Rows[0];
 
-                        if (precioVenta == 0)
+                    // Si Precio_Venta es 0, calculamos el precio de venta del objeto
+                    decimal precioVenta = Convert.ToDecimal(row2["Precio_Venta"]);
+                    decimal peso;
+
+                    if (precioVenta == 0)
+                    {
+                        CalcularPrecioVentaObjeto(idNumerico, out precioVenta, out peso, connection);
+                    }
+
+                    if (objeto.ToUpper().Substring(0, 3) == "EX ")
+                    {
+                        if (Existentes)
                         {
-                            CalcularPrecioVentaObjeto(idNumerico, out precioVenta, out peso, connection);
-                        }
-
-                        if (objeto.ToUpper().Substring(0, 3) == "EX ")
-                        {
-                            if (Existentes)
-                            {
-                                string insertPlanoPanelSql = @"
+                            string insertPlanoPanelSql = @"
                         INSERT INTO tblPlano_Panel (Id_Plano, Id_Panelnum, Cantidad, Observaciones, Precio_Venta) 
                         VALUES (@IdPlano, @IdPanelnum, @Cantidad, @Observaciones, @Precio_Venta)";
 
-                                using (SqlCommand insertPlanoPanelCommand = new SqlCommand(insertPlanoPanelSql, connection))
-                                {
-                                    insertPlanoPanelCommand.Parameters.AddWithValue("@IdPlano", plano);
-                                    insertPlanoPanelCommand.Parameters.AddWithValue("@IdPanelnum", idNumerico);
-                                    insertPlanoPanelCommand.Parameters.AddWithValue("@Cantidad", 1);
-                                    insertPlanoPanelCommand.Parameters.AddWithValue("@Observaciones", string.Empty);
-                                    insertPlanoPanelCommand.Parameters.AddWithValue("@Precio_Venta", precioVenta);
-
-                                    insertPlanoPanelCommand.ExecuteNonQuery();
-                                }
-                            }
-                            else
+                            using (SqlCommand insertPlanoPanelCommand = new SqlCommand(insertPlanoPanelSql, connection))
                             {
-                                string objetoPrefix = objeto.ToUpper().Substring(0, 3);
+                                insertPlanoPanelCommand.Parameters.AddWithValue("@IdPlano", plano);
+                                insertPlanoPanelCommand.Parameters.AddWithValue("@IdPanelnum", idNumerico);
+                                insertPlanoPanelCommand.Parameters.AddWithValue("@Cantidad", 1);
+                                insertPlanoPanelCommand.Parameters.AddWithValue("@Observaciones", string.Empty);
+                                insertPlanoPanelCommand.Parameters.AddWithValue("@Precio_Venta", precioVenta);
 
-                                switch (objetoPrefix)
-                                {
-                                    case "DSM":
-                                        if (desmonte)
-                                        {
-                                            string insertDesmonteSql = @"
-                                    INSERT INTO tblPlano_Panel (Id_Plano, Id_Panelnum, Cantidad, Observaciones, Precio_Venta) 
-                                    VALUES (@IdPlano, @IdPanelnum, @Cantidad, @Observaciones, @Precio_Venta)";
-
-                                            using (SqlCommand insertDesmonteCommand = new SqlCommand(insertDesmonteSql, connection))
-                                            {
-                                                insertDesmonteCommand.Parameters.AddWithValue("@IdPlano", plano);
-                                                insertDesmonteCommand.Parameters.AddWithValue("@IdPanelnum", idNumerico);
-                                                insertDesmonteCommand.Parameters.AddWithValue("@Cantidad", 1);
-                                                insertDesmonteCommand.Parameters.AddWithValue("@Observaciones", string.Empty);
-                                                insertDesmonteCommand.Parameters.AddWithValue("@Precio_Venta", precioVenta);
-
-                                                insertDesmonteCommand.ExecuteNonQuery();
-                                            }
-                                        }
-
-                                        if (reinstalacion)
-                                        {
-                                            objeto = objeto.Replace("DSM", "REINST");
-
-                                            TableYLlegar(connection, plano, objeto, ancho, desmonte, reinstalacion);
-                                        }
-                                        break;
-
-                                    default:
-                                        string insertDefaultSql = @"
-                                INSERT INTO tblPlano_Panel (Id_Plano, Id_Panelnum, Cantidad, Observaciones, Precio_Venta) 
-                                VALUES (@IdPlano, @IdPanelnum, @Cantidad, @Observaciones, @Precio_Venta)";
-
-                                        using (SqlCommand insertDefaultCommand = new SqlCommand(insertDefaultSql, connection))
-                                        {
-                                            insertDefaultCommand.Parameters.AddWithValue("@IdPlano", plano);
-                                            insertDefaultCommand.Parameters.AddWithValue("@IdPanelnum", idNumerico);
-                                            insertDefaultCommand.Parameters.AddWithValue("@Cantidad", 1);
-                                            insertDefaultCommand.Parameters.AddWithValue("@Observaciones", string.Empty);
-                                            insertDefaultCommand.Parameters.AddWithValue("@Precio_Venta", precioVenta);
-
-                                            insertDefaultCommand.ExecuteNonQuery();
-                                        }
-                                        break;
-                                }
+                                insertPlanoPanelCommand.ExecuteNonQuery();
                             }
                         }
                         else
@@ -9139,8 +9678,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     if (desmonte)
                                     {
                                         string insertDesmonteSql = @"
-                                INSERT INTO tblPlano_Panel (Id_Plano, Id_Panelnum, Cantidad, Observaciones, Precio_Venta) 
-                                VALUES (@IdPlano, @IdPanelnum, @Cantidad, @Observaciones, @Precio_Venta)";
+                                    INSERT INTO tblPlano_Panel (Id_Plano, Id_Panelnum, Cantidad, Observaciones, Precio_Venta) 
+                                    VALUES (@IdPlano, @IdPanelnum, @Cantidad, @Observaciones, @Precio_Venta)";
 
                                         using (SqlCommand insertDesmonteCommand = new SqlCommand(insertDesmonteSql, connection))
                                         {
@@ -9159,14 +9698,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                         objeto = objeto.Replace("DSM", "REINST");
 
                                         TableYLlegar(connection, plano, objeto, ancho, desmonte, reinstalacion);
-
                                     }
                                     break;
 
                                 default:
                                     string insertDefaultSql = @"
-                            INSERT INTO tblPlano_Panel (Id_Plano, Id_Panelnum, Cantidad, Observaciones, Precio_Venta) 
-                            VALUES (@IdPlano, @IdPanelnum, @Cantidad, @Observaciones, @Precio_Venta)";
+                                INSERT INTO tblPlano_Panel (Id_Plano, Id_Panelnum, Cantidad, Observaciones, Precio_Venta) 
+                                VALUES (@IdPlano, @IdPanelnum, @Cantidad, @Observaciones, @Precio_Venta)";
 
                                     using (SqlCommand insertDefaultCommand = new SqlCommand(insertDefaultSql, connection))
                                     {
@@ -9181,7 +9719,60 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     break;
                             }
                         }
-                    
+                    }
+                    else
+                    {
+                        string objetoPrefix = objeto.ToUpper().Substring(0, 3);
+
+                        switch (objetoPrefix)
+                        {
+                            case "DSM":
+                                if (desmonte)
+                                {
+                                    string insertDesmonteSql = @"
+                                INSERT INTO tblPlano_Panel (Id_Plano, Id_Panelnum, Cantidad, Observaciones, Precio_Venta) 
+                                VALUES (@IdPlano, @IdPanelnum, @Cantidad, @Observaciones, @Precio_Venta)";
+
+                                    using (SqlCommand insertDesmonteCommand = new SqlCommand(insertDesmonteSql, connection))
+                                    {
+                                        insertDesmonteCommand.Parameters.AddWithValue("@IdPlano", plano);
+                                        insertDesmonteCommand.Parameters.AddWithValue("@IdPanelnum", idNumerico);
+                                        insertDesmonteCommand.Parameters.AddWithValue("@Cantidad", 1);
+                                        insertDesmonteCommand.Parameters.AddWithValue("@Observaciones", string.Empty);
+                                        insertDesmonteCommand.Parameters.AddWithValue("@Precio_Venta", precioVenta);
+
+                                        insertDesmonteCommand.ExecuteNonQuery();
+                                    }
+                                }
+
+                                if (reinstalacion)
+                                {
+                                    objeto = objeto.Replace("DSM", "REINST");
+
+                                    TableYLlegar(connection, plano, objeto, ancho, desmonte, reinstalacion);
+
+                                }
+                                break;
+
+                            default:
+                                string insertDefaultSql = @"
+                            INSERT INTO tblPlano_Panel (Id_Plano, Id_Panelnum, Cantidad, Observaciones, Precio_Venta) 
+                            VALUES (@IdPlano, @IdPanelnum, @Cantidad, @Observaciones, @Precio_Venta)";
+
+                                using (SqlCommand insertDefaultCommand = new SqlCommand(insertDefaultSql, connection))
+                                {
+                                    insertDefaultCommand.Parameters.AddWithValue("@IdPlano", plano);
+                                    insertDefaultCommand.Parameters.AddWithValue("@IdPanelnum", idNumerico);
+                                    insertDefaultCommand.Parameters.AddWithValue("@Cantidad", 1);
+                                    insertDefaultCommand.Parameters.AddWithValue("@Observaciones", string.Empty);
+                                    insertDefaultCommand.Parameters.AddWithValue("@Precio_Venta", precioVenta);
+
+                                    insertDefaultCommand.ExecuteNonQuery();
+                                }
+                                break;
+                        }
+                    }
+
                 }
             }
         }
@@ -9236,7 +9827,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-                TableCell cell0 = e.Item.Cells[0];
+                TableCell cell0 = e.Item.Cells[1];
                 cell0.Text = contadorObjNoExistentes.ToString();
                 // Incrementa el contador para la próxima fila
                 contadorObjNoExistentes++;
@@ -9358,15 +9949,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-              
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand(query, connection))
+
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
                     {
-                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
-                        {
-                            adapter.Fill(result);
-                        }
+                        adapter.Fill(result);
                     }
+                }
             }
 
             return result;
@@ -9446,6 +10037,170 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-    }
+        protected void DataGridObjNoExiste_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            if (e.CommandName == "ID_Objeto")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGridObjNoExiste.Items[rowIndex];
 
+                // Se utiliza para darle el color solo a la fila seleccionada 
+                foreach (DataGridItem item in DataGridObjNoExiste.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+                // Se usa Para darle un color a la fila seleccionada
+                e.Item.CssClass = "fila-seleccionada1";
+
+                TextObjNoExi.Text = row.Cells[2].Text;
+
+                // Mantener el modal abierto
+                ScriptManager.RegisterStartupScript(UpdatePanel4, UpdatePanel4.GetType(), "KeepModalOpen", "$('#modalObjNoExistente').modal('show');", true);
+            }
+        }
+
+        protected void BtnCerrarObjNoExi_Click(object sender, EventArgs e)
+        {
+
+            Session["NumeroDiseño2"] = lblNumDise.Text;
+            Session["Despiece"] = "1";
+
+            var objetosNoExistentes = Session["ObjetosNoExistentes"] as List<ObjetoNoExistente> ?? new List<ObjetoNoExistente>();
+            // Limpiar la lista de objetos no existentes
+            objetosNoExistentes.Clear();
+            Session["ObjetosNoExistentes"] = objetosNoExistentes;
+
+            string mensajePersonalizado = "";
+            string urlRedireccion = "Ventas/Diseño_Venta.aspx";
+            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            return;
+        }
+
+        protected void ExcelDeObjetosNoExistentes_Click(object sender, EventArgs e)
+        {
+            DataTable dataTable = new DataTable("DataGridData");
+
+            // Agregar columnas al DataTable, omitiendo la primera columna
+            for (int i = 1; i < DataGridObjNoExiste.Columns.Count; i++)
+            {
+                if (DataGridObjNoExiste.Columns[i] is BoundColumn)
+                {
+                    dataTable.Columns.Add(((BoundColumn)DataGridObjNoExiste.Columns[i]).HeaderText);
+                }
+            }
+
+            // Agregar filas al DataTable
+            foreach (DataGridItem item in DataGridObjNoExiste.Items)
+            {
+                DataRow row = dataTable.NewRow();
+                for (int i = 1; i < item.Cells.Count; i++)
+                {
+                    row[i - 1] = item.Cells[i].Text;
+                }
+                dataTable.Rows.Add(row);
+            }
+
+            // Crear el archivo Excel
+            IWorkbook workbook = new XSSFWorkbook();
+            ISheet sheet = workbook.CreateSheet("Data");
+
+            // Crear estilos para el encabezado y las celdas
+            ICellStyle headerStyle = workbook.CreateCellStyle();
+            headerStyle.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+            headerStyle.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+            headerStyle.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
+            headerStyle.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
+            headerStyle.FillForegroundColor = IndexedColors.LightYellow.Index;
+            headerStyle.FillPattern = FillPattern.SolidForeground;
+            IFont headerFont = workbook.CreateFont();
+            headerFont.IsBold = true;
+            headerStyle.SetFont(headerFont);
+
+            ICellStyle cellStyle = workbook.CreateCellStyle();
+            cellStyle.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+            cellStyle.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+            cellStyle.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
+            cellStyle.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
+
+            // Agregar encabezados
+            IRow headerRow = sheet.CreateRow(0);
+            for (int i = 0; i < dataTable.Columns.Count; i++)
+            {
+                ICell cell = headerRow.CreateCell(i);
+                cell.SetCellValue(dataTable.Columns[i].ColumnName);
+                cell.CellStyle = headerStyle;
+            }
+
+            // Agregar datos
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                IRow row = sheet.CreateRow(i + 1);
+                for (int j = 0; j < dataTable.Columns.Count; j++)
+                {
+                    ICell cell = row.CreateCell(j);
+                    cell.SetCellValue(dataTable.Rows[i][j].ToString());
+                    cell.CellStyle = cellStyle;
+                }
+            }
+
+            // Ajustar el ancho de las columnas, en especial la columna "Objeto"
+            for (int i = 0; i < dataTable.Columns.Count; i++)
+            {
+                sheet.AutoSizeColumn(i);
+            }
+            sheet.SetColumnWidth(1, 256 * 30); // Ajustar el ancho de la columna "Objeto" (índice 1)
+
+            // Guardar archivo temporal y enviar como respuesta
+            string tempFilePath = Path.GetTempFileName() + ".xlsx";
+            using (FileStream tempFileStream = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write))
+            {
+                workbook.Write(tempFileStream);
+            }
+
+            Response.Clear();
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            Response.AddHeader("content-disposition", "attachment; filename=DataGridData.xlsx");
+            Response.TransmitFile(tempFilePath);
+            Response.End();
+        }
+
+        protected void PausarDiseño_Click(object sender, EventArgs e)
+        {
+            // Añadir la clase de animación para el pulso
+            ScriptManager.RegisterStartupScript(this, GetType(), "PulsarBoton",
+                "document.getElementById('" + PausarDiseño.ClientID + "').classList.add('pulsar');",
+                true);
+
+            // Cambiar entre íconos basado en el estado actual del botón
+            if (PausarDiseño.Text.Contains("bi-stop-circle-fill"))
+            {
+                // Cambiar el ícono a "play" y actualizar la base de datos o estado en memoria
+                PausarDiseño.Text = "<i class='bi bi-play-circle-fill'></i>";
+                // Lógica para pausar el diseño
+            }
+            else
+            {
+                // Cambiar el ícono a "stop" y actualizar la base de datos o estado en memoria
+                PausarDiseño.Text = "<i class='bi bi-stop-circle-fill'></i>";
+                // Lógica para continuar el diseño
+            }
+
+            // Desactivar temporalmente la animación para que no se repita
+            ScriptManager.RegisterStartupScript(this, GetType(), "QuitarPulsarBoton",
+                "setTimeout(function(){ document.getElementById('" + PausarDiseño.ClientID + "').classList.remove('pulsar'); }, 1000);",
+                true);
+
+
+        }
+
+
+
+
+
+
+    }
 }
