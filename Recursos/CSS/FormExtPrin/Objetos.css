@@ -35,6 +35,6 @@
 }
 
 .fila-seleccionada {
-    background-color: black !important; /*Se Cambia el color de la fila Seleccionada  */
+    background: radial-gradient(circle, #75787b, #23273be6); /* Radial gradient */
     color: white !important;
 }

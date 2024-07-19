@@ -1489,6 +1489,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     int rowIndex = Convert.ToInt32(e.CommandArgument);
                     DataGridItem row = DataGridContacto.Items[rowIndex];
 
+
+                    // Se utiliza para darle el color solo a la fila seleccionada 
+                    foreach (DataGridItem item in DataGridContacto.Items)
+                    {
+                        if (item != row)
+                        {
+                            item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                        }
+                    }
+
+                    //se usa Para darle un color a la fila seleccionada  anderson
+                    e.Item.CssClass = "fila-seleccionada";
+
                     string idContacto = row.Cells[1].Text;
                     string sede = row.Cells[2].Text;
                     string direccion = row.Cells[3].Text;

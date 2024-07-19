@@ -109,8 +109,8 @@ a.icong.enabled {
 }
 
 .fila-seleccionada {
-    background-color: black; /* Cambia el color de fondo según tus preferencias */
-    color: white;
+    background: radial-gradient(circle, #75787b, #23273be6) !important; /* Radial gradient */
+    color: white !important;
 }
 
 .Tam {

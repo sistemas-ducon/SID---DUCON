@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Office.Word;
 using DocumentFormat.OpenXml.Office2010.Word;
 using DocumentFormat.OpenXml.Office2013.PowerPoint.Roaming;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -20,6 +21,7 @@ using static SISTEMA_INTEGRAL_DUCON.Formularios.Ventas.Clientes;
 using Button = System.Web.UI.WebControls.Button;
 using CheckBox = System.Web.UI.WebControls.CheckBox;
 using Control = System.Web.UI.Control;
+using Label = System.Web.UI.WebControls.Label;
 using TextBox = System.Web.UI.WebControls.TextBox;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
@@ -47,7 +49,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     if (btnTrabajarRender != null)
                     {
                         btnTrabajarRender.Enabled = false;
-                        btnTrabajarRender.CssClass = "bnt btn-outline-secoundary";
+                        btnTrabajarRender.CssClass = "btn btn-sm btn-outline-secondary";
+                    }
+
+                    Button btnDesprogramarRender = FindControl("btnDesprogramarRender") as Button;
+                    if (btnDesprogramarRender != null)
+                    {
+                        btnDesprogramarRender.Enabled = false;
+                        btnDesprogramarRender.CssClass = "btn btn-sm btn-outline-secondary";
                     }
 
 
@@ -107,7 +116,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 { "IluSession", tbIluminacion },
                 { "AntSession", tbAntepecho },
                 { "AmbientacionSession", chxAmbientacion },
-                { "AnimacionSession", chxAnimacion }
+                { "AnimacionSession", chxAnimacion },
+                { "NumeroRenderCargar", NumeroRender }
             };
 
             foreach (var kvp in variablesDeSesionYControles)
@@ -126,6 +136,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     else if (kvp.Value is CheckBox)
                     {
                         ((CheckBox)kvp.Value).Checked = Convert.ToBoolean(valorSesion);
+                    }
+                    else if (kvp.Value is Label)
+                    {
+                        ((Label)kvp.Value).Text = valorSesion;
                     }
 
                     Session.Remove(kvp.Key);
@@ -284,31 +298,31 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (terminadoDibujo == 1)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#57F525"); //Verde
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#77a765"); //Verde
+                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
                 else if (pausado == 1 && programadoVentas == 1)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#08F4E2"); // Aqua
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#70ede4"); // Aqua
                 }
                 else if (fechaProgramada <= DateTime.Now && programadoVentas == 1)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F71A27");    //rojo 
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868");    //rojo 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
                 else if (programadoVentas == 0)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#673f8b");    //Morado 
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#72459b");    //Morado 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
                 else
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F1FF43");//amarillo 
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#efdd79");//amarillo 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
                 }
 
 
             }
-
 
         }
 
@@ -530,6 +544,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Llamar a la función JavaScript para enfocar y desplazar la fila
                 ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
 
+              
 
             }
         }
@@ -673,7 +688,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
-                            // Crear Variables de Session o Cookies para guardar los datos del guardado 
+                            // Crear Variables de Session o Cookies para guardar los datos del guardado
+                            
+                           
 
                             Session["FecIngresoSession"] = tbIngresoServidor.Text;
                             Session["FechaUltActiv"] = tbUltActivServidor.Text;
@@ -709,7 +726,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             Session["AntSession"] = tbAntepecho.Text;
                             Session["AmbientacionSession"] = chxAmbientacion.Checked;
                             Session["AnimacionSession"] = chxAnimacion.Checked;
-
+                            Session["NumeroRenderCargar"] = ConsultarNumeroRenderInsertado();
 
                             string mensajePersonalizado = "El Render ha sido ingresado con éxito";
                             string urlRedireccion = "Ventas/Render_Venta.aspx";
@@ -733,157 +750,232 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             else if (Session["InsertUpdateRender"].ToString() == "Actualizar")
             {
-                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
-
-                DateTime fechaIngreso;
-                if (!DateTime.TryParse(tbIngresoServidor.Text, out fechaIngreso))
-                {
-                    ScriptManager.RegisterStartupScript(this, GetType(), "showError", "alert('La fecha ingresada no es valida .');", true);
-                    return;
-                }
-
-                DateTime fechaEntrega;
-                if (!DateTime.TryParse(tbEntregaServidor.Text, out fechaEntrega))
-                {
-                    ScriptManager.RegisterStartupScript(this, GetType(), "showError1", "alert('La fecha de ingreso  no es valida .');", true);
-                    return;
-                }
-
-                DateTime fechaUltimaActivacion;
-                if (!DateTime.TryParse(tbUltActivServidor.Text, out fechaUltimaActivacion))
-                {
-                    ScriptManager.RegisterStartupScript(this, GetType(), "showError2", "alert('La fecha de Ultima Activacion  no es valida .');", true);
-                    return;
-                }
-
-                DateTime fechaOk;
-                if (!DateTime.TryParse(tbFechaOkServidor.Text, out fechaOk))
-                {
-                    ScriptManager.RegisterStartupScript(this, GetType(), "showError3", "alert('La fecha Ok no es valida .');", true);
-                    return;
-                }
-
-
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                if(ValidarAsesorRender())
                 {
 
-                    using (SqlCommand cmd = new SqlCommand("sp_ActualizarRender", connection))
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+                    DateTime fechaIngreso;
+                    if (!DateTime.TryParse(tbIngresoServidor.Text, out fechaIngreso))
                     {
-                        // Establecer el tipo de comando como procedimiento almacenado
-                        cmd.CommandType = CommandType.StoredProcedure;
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showError", "alert('La fecha ingresada no es valida .');", true);
+                        return;
+                    }
 
-                        // Agregar los parámetros necesarios para la actualización
-                        cmd.Parameters.Add("@IDRender", SqlDbType.Int).Value = NumeroRender.Text;
-                        cmd.Parameters.AddWithValue("@Fecha_Ingreso", fechaIngreso);
-                        cmd.Parameters.AddWithValue("@Fecha_Programada_Entrega", fechaEntrega);
-                        cmd.Parameters.AddWithValue("@UltimaActivacion", fechaUltimaActivacion);
-                        cmd.Parameters.AddWithValue("@FechaRenderOk", fechaOk);
-                        cmd.Parameters.AddWithValue("@Numero_Diseño", tbDiseño.Text);
-                        cmd.Parameters.AddWithValue("@Cliente", tbCliente.Text);
-                        cmd.Parameters.AddWithValue("@Asesor", ddlAsesor.SelectedItem.Text);
-                        cmd.Parameters.AddWithValue("@Nombre_Render", tbProyecto.Text);
-                        cmd.Parameters.AddWithValue("@Contacto", tbContacto.Text);
-                        cmd.Parameters.AddWithValue("@Celular", tbCelular.Text);
-                        cmd.Parameters.AddWithValue("@Mail", tbMail.Text);
-                        cmd.Parameters.AddWithValue("@Telefono", tbTelefono.Text);
-                        cmd.Parameters.AddWithValue("@Plano", tbPlano.Text);
-                        cmd.Parameters.AddWithValue("@Areas", txAreaRender.Value);
-                        cmd.Parameters.AddWithValue("@Observaciones_Ventas", txObsVentas.Value);
-                        cmd.Parameters.AddWithValue("@Linea", tbLinea.Text);
-                        cmd.Parameters.AddWithValue("@AcabadoSuperficie", tbSup.Text);
-                        cmd.Parameters.AddWithValue("@AcabadoAccesorios", tbAcc.Text);
+                    DateTime fechaEntrega;
+                    if (!DateTime.TryParse(tbEntregaServidor.Text, out fechaEntrega))
+                    {
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showError1", "alert('La fecha de ingreso  no es valida .');", true);
+                        return;
+                    }
 
-                        cmd.Parameters.AddWithValue("@AcabadoPaneles", tbPaneles.Text);
-                        cmd.Parameters.AddWithValue("@AcabadoPerfileria", tbPerfil.Text);
-                        cmd.Parameters.AddWithValue("@Sillas", tbSillas.Text);
-                        cmd.Parameters.AddWithValue("@Archivadores", tbArch.Text);
-                        cmd.Parameters.AddWithValue("@Ambientacion", chxAmbientacion.Checked);
-                        cmd.Parameters.AddWithValue("@Animacion", chxAnimacion.Checked);
-                        cmd.Parameters.AddWithValue("@EspacioArquitectonico", chxConvenciones.Checked);
-                        cmd.Parameters.AddWithValue("@PisoyZocalo", tbAcaPisZoc.Text);
-                        cmd.Parameters.AddWithValue("@Muros", tbAcaMuros.Text);
-                        cmd.Parameters.AddWithValue("@Iluminacion", tbIluminacion.Text);
-                        cmd.Parameters.AddWithValue("@Sillar", tbAntepecho.Text);
-                        cmd.Parameters.AddWithValue("@Imagenes", tbImagenes.Text);
-                        cmd.Parameters.AddWithValue("@Cantos", tbCantos.Text);
-                        cmd.Parameters.AddWithValue("@Pantallas", tbPantallas.Text);
-                        cmd.Parameters.AddWithValue("@Muebles", txMuebles.Value);
-                        cmd.Parameters.AddWithValue("@Observacion_Dibujo", txObsDibujo.Value);
-                        cmd.Parameters.AddWithValue("@Zona", ddlZona.SelectedItem.Text);
+                    DateTime fechaUltimaActivacion;
+                    if (!DateTime.TryParse(tbUltActivServidor.Text, out fechaUltimaActivacion))
+                    {
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showError2", "alert('La fecha de Ultima Activacion  no es valida .');", true);
+                        return;
+                    }
 
-
-                        connection.Open();
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                        if (rowsAffected > 0)
-                        {
-
-
-                            Session["FecIngresoSession"] = tbIngresoServidor.Text;
-                            Session["FechaUltActiv"] = tbUltActivServidor.Text;
-                            Session["FecEntregaSession"] = tbEntregaServidor.Text;
-                            Session["FechaOKSession"] = tbFechaOkServidor.Text;
-                            Session["DiseñoSession"] = tbDiseño.Text;
-                            Session["ClienteSession"] = tbCliente.Text;
-                            Session["AsesorSession"] = ddlAsesor.SelectedItem.Text;
-                            Session["ProyectoSession"] = tbProyecto.Text;
-                            Session["ContactoSession"] = tbContacto.Text;
-                            Session["CelularSession"] = tbCelular.Text;
-                            Session["MailSession"] = tbMail.Text;
-                            Session["TelefonoSession"] = tbTelefono.Text;
-                            Session["PlanoSession"] = tbPlano.Text;
-                            Session["ZonaSession"] = ddlZona.SelectedItem.Text;
-                            Session["ImagenSession"] = tbImagenes.Text;
-                            Session["AreaSession"] = txAreaRender.InnerText;
-                            Session["ObVentaSession"] = txObsVentas.InnerText;
-                            Session["LineaSession"] = tbLinea.Text;
-                            Session["SupSession"] = tbSup.Text;
-                            Session["AccSession"] = tbAcc.Text;
-                            Session["CantosSession"] = tbCantos.Text;
-                            Session["PerfilSession"] = tbPerfil.Text;
-                            Session["PanelesSession"] = tbPaneles.Text;
-                            Session["ArcSession"] = tbArch.Text;
-                            Session["SillasSession"] = tbSillas.Text;
-                            Session["PantallasSession"] = tbPantallas.Text;
-                            Session["EspArqSession"] = chxEspArq.Checked;
-                            Session["MuebleSession"] = txMuebles.InnerText;
-                            Session["AcabPisSession"] = tbAcaPisZoc.Text;
-                            Session["AcabMuroSession"] = tbAcaMuros.Text;
-                            Session["IluSession"] = tbIluminacion.Text;
-                            Session["AntSession"] = tbAntepecho.Text;
-                            Session["AmbientacionSession"] = chxAmbientacion.Checked;
-                            Session["AnimacionSession"] = chxAnimacion.Checked;
-
-
-                            string mensajePersonalizado = "El Render ha sido Actualizado con éxito";
-                            string urlRedireccion = "Ventas/Render_Venta.aspx";
-                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-                        }
-                        else
-                        {
-                            string mensajePersonalizado = "¡El Render No ha sido Actualizado Correctamente, Intentelo Nuevamente!";
-                            string urlRedireccion = "Ventas/Render_Venta.aspx";
-                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-                        }
-
-
+                    DateTime fechaOk;
+                    if (!DateTime.TryParse(tbFechaOkServidor.Text, out fechaOk))
+                    {
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showError3", "alert('La fecha Ok no es valida .');", true);
+                        return;
                     }
 
 
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+
+                        using (SqlCommand cmd = new SqlCommand("sp_ActualizarRender", connection))
+                        {
+                            // Establecer el tipo de comando como procedimiento almacenado
+                            cmd.CommandType = CommandType.StoredProcedure;
+
+                            // Agregar los parámetros necesarios para la actualización
+                            cmd.Parameters.Add("@IDRender", SqlDbType.Int).Value = NumeroRender.Text;
+                            cmd.Parameters.AddWithValue("@Fecha_Ingreso", fechaIngreso);
+                            cmd.Parameters.AddWithValue("@Fecha_Programada_Entrega", fechaEntrega);
+                            cmd.Parameters.AddWithValue("@UltimaActivacion", fechaUltimaActivacion);
+                            cmd.Parameters.AddWithValue("@FechaRenderOk", fechaOk);
+                            cmd.Parameters.AddWithValue("@Numero_Diseño", tbDiseño.Text);
+                            cmd.Parameters.AddWithValue("@Cliente", tbCliente.Text);
+                            cmd.Parameters.AddWithValue("@Asesor", ddlAsesor.SelectedItem.Text);
+                            cmd.Parameters.AddWithValue("@Nombre_Render", tbProyecto.Text);
+                            cmd.Parameters.AddWithValue("@Contacto", tbContacto.Text);
+                            cmd.Parameters.AddWithValue("@Celular", tbCelular.Text);
+                            cmd.Parameters.AddWithValue("@Mail", tbMail.Text);
+                            cmd.Parameters.AddWithValue("@Telefono", tbTelefono.Text);
+                            cmd.Parameters.AddWithValue("@Plano", tbPlano.Text);
+                            cmd.Parameters.AddWithValue("@Areas", txAreaRender.Value);
+                            cmd.Parameters.AddWithValue("@Observaciones_Ventas", txObsVentas.Value);
+                            cmd.Parameters.AddWithValue("@Linea", tbLinea.Text);
+                            cmd.Parameters.AddWithValue("@AcabadoSuperficie", tbSup.Text);
+                            cmd.Parameters.AddWithValue("@AcabadoAccesorios", tbAcc.Text);
+
+                            cmd.Parameters.AddWithValue("@AcabadoPaneles", tbPaneles.Text);
+                            cmd.Parameters.AddWithValue("@AcabadoPerfileria", tbPerfil.Text);
+                            cmd.Parameters.AddWithValue("@Sillas", tbSillas.Text);
+                            cmd.Parameters.AddWithValue("@Archivadores", tbArch.Text);
+                            cmd.Parameters.AddWithValue("@Ambientacion", chxAmbientacion.Checked);
+                            cmd.Parameters.AddWithValue("@Animacion", chxAnimacion.Checked);
+                            cmd.Parameters.AddWithValue("@EspacioArquitectonico", chxConvenciones.Checked);
+                            cmd.Parameters.AddWithValue("@PisoyZocalo", tbAcaPisZoc.Text);
+                            cmd.Parameters.AddWithValue("@Muros", tbAcaMuros.Text);
+                            cmd.Parameters.AddWithValue("@Iluminacion", tbIluminacion.Text);
+                            cmd.Parameters.AddWithValue("@Sillar", tbAntepecho.Text);
+                            cmd.Parameters.AddWithValue("@Imagenes", tbImagenes.Text);
+                            cmd.Parameters.AddWithValue("@Cantos", tbCantos.Text);
+                            cmd.Parameters.AddWithValue("@Pantallas", tbPantallas.Text);
+                            cmd.Parameters.AddWithValue("@Muebles", txMuebles.Value);
+                            cmd.Parameters.AddWithValue("@Observacion_Dibujo", txObsDibujo.Value);
+                            cmd.Parameters.AddWithValue("@Zona", ddlZona.SelectedItem.Text);
 
 
+                            connection.Open();
+                            int rowsAffected = cmd.ExecuteNonQuery();
+                            if (rowsAffected > 0)
+                            {
+
+
+                                Session["FecIngresoSession"] = tbIngresoServidor.Text;
+                                Session["FechaUltActiv"] = tbUltActivServidor.Text;
+                                Session["FecEntregaSession"] = tbEntregaServidor.Text;
+                                Session["FechaOKSession"] = tbFechaOkServidor.Text;
+                                Session["DiseñoSession"] = tbDiseño.Text;
+                                Session["ClienteSession"] = tbCliente.Text;
+                                Session["AsesorSession"] = ddlAsesor.SelectedItem.Text;
+                                Session["ProyectoSession"] = tbProyecto.Text;
+                                Session["ContactoSession"] = tbContacto.Text;
+                                Session["CelularSession"] = tbCelular.Text;
+                                Session["MailSession"] = tbMail.Text;
+                                Session["TelefonoSession"] = tbTelefono.Text;
+                                Session["PlanoSession"] = tbPlano.Text;
+                                Session["ZonaSession"] = ddlZona.SelectedItem.Text;
+                                Session["ImagenSession"] = tbImagenes.Text;
+                                Session["AreaSession"] = txAreaRender.InnerText;
+                                Session["ObVentaSession"] = txObsVentas.InnerText;
+                                Session["LineaSession"] = tbLinea.Text;
+                                Session["SupSession"] = tbSup.Text;
+                                Session["AccSession"] = tbAcc.Text;
+                                Session["CantosSession"] = tbCantos.Text;
+                                Session["PerfilSession"] = tbPerfil.Text;
+                                Session["PanelesSession"] = tbPaneles.Text;
+                                Session["ArcSession"] = tbArch.Text;
+                                Session["SillasSession"] = tbSillas.Text;
+                                Session["PantallasSession"] = tbPantallas.Text;
+                                Session["EspArqSession"] = chxEspArq.Checked;
+                                Session["MuebleSession"] = txMuebles.InnerText;
+                                Session["AcabPisSession"] = tbAcaPisZoc.Text;
+                                Session["AcabMuroSession"] = tbAcaMuros.Text;
+                                Session["IluSession"] = tbIluminacion.Text;
+                                Session["AntSession"] = tbAntepecho.Text;
+                                Session["AmbientacionSession"] = chxAmbientacion.Checked;
+                                Session["AnimacionSession"] = chxAnimacion.Checked;
+                                Session["NumeroRenderCargar"] = NumeroRender.Text;
+
+
+                                string mensajePersonalizado = "El Render ha sido Actualizado con éxito";
+                                string urlRedireccion = "Ventas/Render_Venta.aspx";
+                                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                            }
+                            else
+                            {
+                                string mensajePersonalizado = "¡El Render No ha sido Actualizado Correctamente, Intentelo Nuevamente!";
+                                string urlRedireccion = "Ventas/Render_Venta.aspx";
+                                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                            }
+
+                        }
+
+                    }
                 }
-
+                else
+                {
+                    string mensajePersonalizado = "Solo el creador del render o alguien con permisos específicos puede modificarlo.";
+                    string urlRedireccion = "Ventas/Render_Venta.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                }
 
 
             }
             else
             {
-               
+
                 // Se activo el Boton de guardar de alguina otra manera  y se debe mostrar la excepcion o la denegacion de pero
+                string mensajePersonalizado = "Ocurrió un error, por favor intentelo nuevamente";
+                string urlRedireccion = "Ventas/Render_Venta.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
             }
 
         }
+        public string ConsultarNumeroRenderInsertado()
+        {
+            string maxID = "0";
+            string query = "SELECT MAX(tblRender.ID_Render) FROM tblRender";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    try
+                    {
+                        connection.Open();
+                        object result = command.ExecuteScalar();
+                        if (result != DBNull.Value)
+                        {
+                            maxID = result.ToString();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejo de excepciones (puedes registrar el error o manejarlo según tus necesidades)
+                        Console.WriteLine("Error: " + ex.Message);
+                    }
+                }
+            }
+
+            return maxID;
+        }
+
+        private bool ValidarAsesorRender()
+        {
+            bool ok = false;
+            string query = "SELECT Asesor FROM tblRender where ID_Render = @Id_Render";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id_Render", NumeroRender.Text);
+
+                    try
+                    {
+                        connection.Open();
+                        object result = command.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            string asesor = result.ToString();
+                            string usuarioLogueado = Session["usuariologueado"]?.ToString();
+
+                            if (!string.IsNullOrEmpty(usuarioLogueado) && asesor == usuarioLogueado)
+                            {
+                                ok = true;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                      
+                    }
+                }
+            }
+
+            return ok;
+        }
+
 
         private bool IsValidEmail(string email)
         {
@@ -925,27 +1017,29 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Cambiar el color de fondo de la fila en función de los valores de las columnas
                 if (terminadoDibujo == 1)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#57F525");
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#77a765"); //Verde
+                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
                 else if (fechaProgramada <= DateTime.Now && programadoVentas == 1)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F71A27");
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868");    //rojo 
+                    e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
                 else if (programadoVentas == 0)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#673f8b");
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#72459b");    //Morado 
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
                 else
                 {
                     if (pausado == 1 && programadoVentas == 1)
                     {
-                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#08F4E2");
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#70ede4"); // Aqua
                     }
 
                     else
                     {
-                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#F1FF43");//amarillo 
+                        e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#efdd79");//amarillo 
                         e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
                     }
 
@@ -1150,12 +1244,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces1", script, false);
 
                 
-
-
-                PanelRender.Update();
-
-
-
             }
         }
 

@@ -252,7 +252,7 @@
                                     </a>
                                     <ul class="dropdown-menu shadow bg-light" aria-labelledby="navbarScrollingDropdown">
                                         <li><asp:linkbutton ID="Linkbutton5" runat="server" CssClass="dropdown-item form-control-sm"  CommandName="PersonaCliente" Text="Programacion de OT"/></li>
-                                        <li><asp:linkbutton ID="Linkbutton6" runat="server" CssClass="dropdown-item form-control-sm"   CommandName="PersonaEmpleado" Text="Todas las OT (Manuales /SID)"/></li>
+                                        <li><asp:linkbutton ID="Linkbutton6" runat="server" CssClass="dropdown-item form-control-sm"   CommandName="OT_Manuales" Text="Todas las OT (Manuales /SID)" OnClick="Reprocesos_Click"/></li>
                                     </ul>
                                 </li>
                      

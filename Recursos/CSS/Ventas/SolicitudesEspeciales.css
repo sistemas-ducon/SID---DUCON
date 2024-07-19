@@ -117,17 +117,20 @@ a.icong.enabled {
 
 
 .fila-seleccionada {
-    background-color: black; /* Cambia el color de fondo según tus preferencias */
-    color:white;
+    /* background: linear-gradient( to top right, #afb5b9, #23273be6); linear gradient */
+    background: radial-gradient(circle, #75787b, #23273be6); /* Radial gradient */
+    color: white !important;
 }
 
 .fila-seleccionada1 {
-    background-color: black !important;
+    /*  background: linear-gradient(to top right, #afb5b9, #23273be6); linear gradient */
+    background: radial-gradient(circle, #75787b, #23273be6); /* Radial gradient */
     color: white !important;
 }
 
 .fila-seleccionada2 {
-    background-color: white !important; /*Se Cambia el color de la fila Seleccionada  */
+    /* background: linear-gradient(to top right, #afb5b9, #23273be6); linear gradient */
+    background-color: white !important;
     color: black !important;
 }
 

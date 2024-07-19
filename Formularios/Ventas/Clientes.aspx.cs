@@ -54,8 +54,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     Session.Remove("CompartirClientes");
                     Session.Remove("AseComp");
                     Session.Remove("NitCliComp");
+                
 
                 }
+
+                if (!IsPostBack)
+                {
+                    Session.Remove("ID_ContactoBD1");
+                    Session.Remove("ClickCount3");
+                }
+
+
+
             }
             else
             {
@@ -143,10 +153,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 string Procedencia = row.Cells[7].Text;
                 string CompartidoCon = row.Cells[8].Text;
                 string CedulaAsesor = row.Cells[9].Text;
+                string ciudad = row.Cells[10].Text;
+                string Region = row.Cells[11].Text;
+
+                string CiudadRegion = ciudad + "/" + Region;
 
 
                 string[] campos = {
-                  Nit,NombreCompañia, Asesor, Telefono, Direccion, Procedencia, CompartidoCon,CedulaAsesor
+                  Nit,NombreCompañia, Asesor, Telefono, Direccion, Procedencia, CompartidoCon,CedulaAsesor,CiudadRegion
                 };
 
 
@@ -178,6 +192,26 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 {
                     ddlprocedencia.ClearSelection(); // Valor nulo, deseleccionar
                 }
+
+                if (!string.IsNullOrEmpty(campos[8]))
+                {
+                    ListItem item = ddlCiudaX.Items.FindByValue(campos[8]);
+                    if (item != null)
+                    {
+                        ddlCiudaX.ClearSelection();
+                        item.Selected = true;
+                    }
+                    else
+                    {
+
+                        ddlCiudaX.ClearSelection(); // Deseleccionar en este caso
+                    }
+                }
+                else
+                {
+                    ddlCiudaX.ClearSelection(); // Valor nulo, deseleccionar
+                }
+
 
                 tbCompartido.Text = campos[6];
                 tbCedulaAsesor.Text = campos[7];
@@ -268,7 +302,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     if (btnCancelar != null)
                     {
                         btnCancelar.Enabled = false;
-                    }   
+                    }
                 }
 
                 //Deshabilitamos la edicion de los campos 
@@ -279,6 +313,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 ddlprocedencia.Enabled = false;
                 ddlprocedencia.CssClass = "form-control";
+
+                // Numero de la fila en el texbox Oculto
+                tbNumeroFilaCliente.Text = rowIndex.ToString();
 
 
                 // Asignar ID único a la fila
@@ -323,7 +360,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     {
                         // Escribe el valor del encabezado en la hoja de Excel
                         worksheet.Cells[rowIndex - 1, colIndex].Value = column.HeaderText;
-                        worksheet.Cells[rowIndex - 1, colIndex].Style.Font.Bold = true;                             
+                        worksheet.Cells[rowIndex - 1, colIndex].Style.Font.Bold = true;
                         worksheet.Cells[rowIndex - 1, colIndex].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                     }
                     colIndex++;
@@ -613,27 +650,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         if (reader.HasRows)
                         {
                             // Se valida si el cliente ya existe  y se muestra un mensaje 
-                            string mensaje = "El Cliente " + tbNombreCliente.Text.Trim() + " ya existe";
+                            string mensaje = "El Cliente con nit: " + tbNit.Text.Trim() + " ya existe";
                             string script = "alert('" + mensaje + "');";
                             ScriptManager.RegisterStartupScript(this, GetType(), "showError", script, true);
                             return;
                         }
-
-                        reader.Close();
-
-
-                        string sSqlInsert = "INSERT INTO tblCliente(Id_Cliente,NombreCompañía,teléfono,asesor,IdProcedencia,Fecha_Creacion,Dirección) " +
-                                            "VALUES ('" + tbNit.Text.Trim() + "','" + tbNombreCliente.Text.Trim() + "','" + tbTelefono.Text.Trim() + "'," + ddlAsesorC.SelectedValue + "," + ddlprocedencia.SelectedValue + ",'" + DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "','" + tbDireccion.Text.Trim() + "')";
-
-                        SqlCommand commandInsert = new SqlCommand(sSqlInsert, connection);
-                        commandInsert.ExecuteNonQuery();
-
-
-                        DataGridCliente.DataBind();
-                        // Mensaje de éxito
-                        string mensajePersonalizado = "El cliente " + tbNombreCliente.Text.Trim() + " ha sido agregado  exitosamente.";
-                        string urlRedireccion = "Ventas/Clientes.aspx";
-                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                        else
+                        {
+                            reader.Close();
+                            if (InsertarClienteNuevo())
+                            {
+                                DataGridCliente.DataBind();
+                                string mensajePersonalizado = "El cliente " + tbNombreCliente.Text.Trim() + " ha sido agregado  exitosamente.";
+                                string urlRedireccion = "Ventas/Clientes.aspx";
+                                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                            }
+                            else
+                            {
+                                //Error en la insercion
+                            }
+                        }
+                     
 
                     }
                     catch (Exception ex)
@@ -660,7 +697,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 // Variables para Verificar si el cliente es de diferente Asesor 
                 string AsesorAsignado = tbCedulaAsesor.Text;
-                string AsesorAsignar = ddlAsesorC.SelectedValue; 
+                string AsesorAsignar = ddlAsesorC.SelectedValue;
 
 
                 // Bloque para cuando el Asesor sea Diferente
@@ -668,40 +705,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 {
 
 
-                    string sSql = "UPDATE tblCliente SET Id_Cliente='" + tbNit.Text.Trim() + "', NombreCompañía='" + tbNombreCliente.Text.Trim() + "'," +
-                     " Teléfono='" + tbTelefono.Text.Trim() + "', IdProcedencia='" + ddlprocedencia.SelectedValue + "', Dirección='" + tbDireccion.Text.Trim() + "'," +
-                     " asesor=" + ddlAsesorC.SelectedValue + " WHERE Id_Cliente='" + Session["Id_ClienteBD"] + "'";
-
-                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    if (ActualizarCliente())
                     {
-                        connection.Open();
+                        DataGridCliente.DataBind();
+                        // Mostrar mensaje de éxito
+                        string mensajeExito = "El cliente " + tbNombreCliente.Text.Trim() + " ha sido Moficado  exitosamente.";
+                        string scriptExito = "alert('" + mensajeExito + "');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
 
-                        SqlCommand commandUpdate = new SqlCommand(sSql, connection);
-                        try
-                        {
-                            commandUpdate.ExecuteNonQuery();
-
-
-                        }
-                        catch (Exception ex)
-                        {
-                            string mensajeError = "Error al ejecutar la actualización: " + ex.Message;
-                            string scriptError = "alert('" + mensajeError + "');";
-                            ScriptManager.RegisterStartupScript(this, GetType(), "showError", scriptError, true);
-                            return;
-                        }
-                        finally
-                        {
-                            connection.Close();
-                        }
+                    }
+                    else
+                    {
+                        string mensajeError = "Error al ejecutar la actualización: ";
+                        string scriptError = "alert('" + mensajeError + "');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showError", scriptError, true);
                     }
 
-                    DataGridCliente.DataBind();
-                    // Mostrar mensaje de éxito
-                    string mensajeExito = "El cliente " + tbNombreCliente.Text.Trim() + " ha sido Moficado  exitosamente.";
-                    string scriptExito = "alert('" + mensajeExito + "');";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
 
 
                 }
@@ -709,41 +728,30 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 // Bloque para actualizar un cliente si tiene el mismo Asesor 
                 else
                 {
-                    string sSql = "UPDATE tblCliente SET Id_Cliente='" + tbNit.Text.Trim() + "', NombreCompañía='" + tbNombreCliente.Text.Trim() + "'," +
-                    " Teléfono='" + tbTelefono.Text.Trim() + "', IdProcedencia='" + ddlprocedencia.SelectedValue + "', Dirección='" + tbDireccion.Text.Trim() + "'," +
-                    " asesor=" + ddlAsesorC.SelectedValue + " WHERE Id_Cliente='" + Session["Id_ClienteBD"] + "'";
 
-                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    if (ActualizarCliente())
                     {
-                        connection.Open();
+                        // Mostrar mensaje de éxito           
+                        DataGridCliente.DataBind();
 
-                        SqlCommand commandUpdate = new SqlCommand(sSql, connection);
-                        try
-                        {
-                            commandUpdate.ExecuteNonQuery();
+                        int index = Convert.ToInt32(tbNumeroFilaCliente.Text); // Ajusta el índice según sea necesario
+                        DataGridCommandEventArgs args = new DataGridCommandEventArgs(
+                            DataGridCliente.Items[index],
+                            DataGridCliente,
+                            new CommandEventArgs("VerCliente", index)
+                        );
+                        DataGridCliente_ItemCommand(DataGridCliente, args);
 
-
-                        }
-                        catch (Exception ex)
-                        {
-                            string mensajeError = "Error al ejecutar la actualización: " + ex.Message;
-                            string scriptError = "alert('" + mensajeError + "');";
-                            ScriptManager.RegisterStartupScript(this, GetType(), "showError", scriptError, true);
-                            return;
-                        }
-                        finally
-                        {
-                            connection.Close();
-                        }
+                        string mensajeExito1 = "El cliente " + tbNombreCliente.Text.Trim() + " ha sido Moficado  exitosamente.";
+                        string scriptExito1 = "alert('" + mensajeExito1 + "');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito1, true);
                     }
-                    // Mostrar mensaje de éxito           
-                    DataGridCliente.DataBind();
-                    string mensajePersonalizado = "El cliente " + tbNombreCliente.Text.Trim() + " ha sido Moficado  exitosamente.";
-                    string urlRedireccion = "Ventas/Clientes.aspx";
-                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-
-
+                    else
+                    {
+                        string mensajeError = "Error al ejecutar la actualización: ";
+                        string scriptError = "alert('" + mensajeError + "');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showError", scriptError, true);
+                    }
 
                 }
 
@@ -752,6 +760,96 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             ddlAsesorC.DataBind();
 
         }
+        private bool ActualizarCliente()
+        {
+
+            string CiudadRegion = ddlCiudaX.SelectedValue;
+            string[] partes = CiudadRegion.Split('/');
+
+            string ciudad = partes[0];
+            string Region = partes[1];
+
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "UPDATE tblCliente SET Id_Cliente = @ID_CLiente1, NombreCompañía = @NombreCompañia,Teléfono = @Telefono, IdProcedencia = @Id_Procedencia," +
+                                 " Dirección = @Direccion,asesor = @Asesor,Ciudad = @Ciudad, Región = @Region WHERE Id_Cliente = @Id_Cliente ";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    cmd.Parameters.AddWithValue("@ID_CLiente1", tbNit.Text.Trim());
+                    cmd.Parameters.AddWithValue("@NombreCompañia", tbNombreCliente.Text.Trim());
+                    cmd.Parameters.AddWithValue("@Telefono", tbTelefono.Text.Trim());
+                    cmd.Parameters.AddWithValue("@Id_Procedencia", ddlprocedencia.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Direccion", tbDireccion.Text.Trim());
+                    cmd.Parameters.AddWithValue("@Asesor", ddlAsesorC.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Ciudad",ciudad );
+                    cmd.Parameters.AddWithValue("@Region", Region);
+                    cmd.Parameters.AddWithValue("@Id_Cliente", Session["Id_ClienteBD"].ToString().Trim());
+
+
+                    int filaAfectada = cmd.ExecuteNonQuery();
+
+                    if (filaAfectada > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        private bool InsertarClienteNuevo()
+        {
+
+            string CiudadRegion = ddlCiudaX.SelectedValue;
+            string[] partes = CiudadRegion.Split('/');
+
+            string ciudad = partes[0];
+            string Region = partes[1];
+
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "INSERT INTO tblCliente(Id_Cliente,NombreCompañía,Teléfono,asesor,IdProcedencia,Fecha_Creacion,Dirección,Ciudad, Región) " +
+                          "VALUES (@Id_Cliente,@NombreCompañía,@Telefono,@Asesor,@Id_Procedencia,@Fecha_Creacion,@Direccion,@Ciudad,@Region)";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    cmd.Parameters.AddWithValue("@Id_Cliente", tbNit.Text.Trim());
+                    cmd.Parameters.AddWithValue("@NombreCompañía", tbNombreCliente.Text.Trim());
+                    cmd.Parameters.AddWithValue("@Telefono", tbTelefono.Text.Trim());
+                    cmd.Parameters.AddWithValue("@Asesor", ddlAsesorC.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Id_Procedencia", ddlprocedencia.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Fecha_Creacion",DateTime.Now);
+                    cmd.Parameters.AddWithValue("@Direccion", tbDireccion.Text.Trim());
+                    cmd.Parameters.AddWithValue("@Ciudad", ciudad.Trim());
+                    cmd.Parameters.AddWithValue("@Region", Region.Trim());
+                  
+
+
+                    int filaAfectada = cmd.ExecuteNonQuery();
+
+                    if (filaAfectada > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
 
         [WebMethod]
         protected void btn_EliminarCliente(object sender, EventArgs e)
@@ -1165,7 +1263,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     DataTable dataTable = new DataTable();
                     adapter.Fill(dataTable);
 
-                    if(dataTable.Rows.Count > 0)
+                    if (dataTable.Rows.Count > 0)
                     {
                         DataRow row = dataTable.Rows[0]; // Obtiene la primera fila de resultados
 
@@ -1255,8 +1353,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 tbId_ContactoCliente.Text = campos[4];
                 Session["ID_ContactoBD"] = campos[4];
 
+
+                // Cargamos el numero de la fila de contacto 
+                tbNumeroFilaContacto.Text = rowIndex.ToString();
+
                 // Se compara si el click es en la misma fila con el id del plano 
-                if (row.Cells[4].Text == Session["ID_ContactoBD1"]?.ToString())
+                if (row.Cells[5].Text == Session["ID_ContactoBD1"]?.ToString())
                 {
                     // Incrementar la variable de sesión "ClickCount" en el servidor
                     int clickCount = Convert.ToInt32(Session["ClickCount3"]) + 1;
@@ -1282,7 +1384,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 {
                     // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
                     Session["ClickCount3"] = 1;
-                    Session["ID_ContactoBD1"] = row.Cells[4].Text;
+                    Session["ID_ContactoBD1"] = row.Cells[5].Text;
 
                     // Asignar ID único a la fila
                     row.Attributes["id"] = "row_" + rowIndex;
@@ -1466,7 +1568,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         string mensajeExito = "El Contacto " + tbNombreContacto.Text.Trim() + " ha sido agregado exitosamente.";
                         string scriptExito = "alert('" + mensajeExito + "');";
                         ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
-                        ScriptManager.RegisterStartupScript(this, GetType(), "RefreshPage", "window.location.reload();", true);
+
+                    
+
 
 
                     }
@@ -1500,7 +1604,28 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         string mensajeExito = "El Contacto " + tbNombreContacto.Text.Trim() + " ha sido Editado exitosamente.";
                         string scriptExito = "alert('" + mensajeExito + "');";
                         ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
-                        ScriptManager.RegisterStartupScript(this, GetType(), "RefreshPage", "window.location.reload();", true);
+
+
+
+                        int index = Convert.ToInt32(tbNumeroFilaCliente.Text); // Ajusta el índice según sea necesario
+                        DataGridCommandEventArgs args = new DataGridCommandEventArgs(
+                            DataGridCliente.Items[index],
+                            DataGridCliente,
+                            new CommandEventArgs("VerCliente", index)
+                        );
+                        DataGridCliente_ItemCommand(DataGridContacto, args);
+
+                        Session["ClickCount3"] = 0;
+
+                        int index1 = Convert.ToInt32(tbNumeroFilaContacto.Text); // Ajusta el índice según sea necesario
+                        DataGridCommandEventArgs args1 = new DataGridCommandEventArgs(
+                            DataGridContacto.Items[index1],
+                            DataGridContacto,
+                            new CommandEventArgs("VerContacto", index1)
+                        );
+                        DataGridContacto_ItemCommand(DataGridContacto, args1);
+
+
 
 
                     }
@@ -1510,7 +1635,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             }
 
         }
-
 
         protected void CheckBox1_CheckedChanged(object sender, EventArgs e)
         {

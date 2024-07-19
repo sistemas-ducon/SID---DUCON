@@ -16,16 +16,40 @@
     <script>
         function confirmProgramarSolicitud(event) {
 
-            var IdSolicitud = document.getElementById("lbNumeroSolicitud").innerHTML;
-            var mensaje = "Una vez programada la solicitud, no podrá realizar modificaciones. Esta seguro de programar la solicitud: " + IdSolicitud;
+            // Validamos el Área del Usuario 
+            var AreaDepar = '<%= Session["Departamento"] %>';
 
-            var result = confirm(mensaje);
-            if (result) {
 
-                $(event.target).removeAttr('onclick');
-                $(event.target).click();
+            if (AreaDepar.toUpperCase() === "VENTAS")
+            {
+                var IdSolicitud = document.getElementById("lbNumeroSolicitud").innerHTML;
+                var mensaje = "Una vez programada la solicitud, no podrá realizar modificaciones. Esta seguro de programar la solicitud: " + IdSolicitud;
+
+                var result = confirm(mensaje);
+                if (result) {
+
+                    $(event.target).removeAttr('onclick');
+                    $(event.target).click();
+                }
+                return false;
+
+            } else if (AreaDepar.toUpperCase() === "DISEÑO" || AreaDepar.toUpperCase() === "DESARROLLO DE PRODUCTO")
+            {
+                var IdSolicitud = document.getElementById("lbNumeroSolicitud").innerHTML;
+                var mensaje = "Una vez termnada la solicitud, no podrá realizar modificaciones. Esta seguro de terminar la solicitud: " + IdSolicitud;
+
+                var result = confirm(mensaje);
+                if (result) {
+
+                    $(event.target).removeAttr('onclick');
+                    $(event.target).click();
+                }
+                return false;
+
             }
-            return false;
+
+
+          
         }
 
         function ActivarGuardar() {
@@ -172,7 +196,7 @@
             var dataGrid = document.getElementById('<%= DataGrid2.ClientID %>'); // Reemplaza DataGrid1 por el ID de tu DataGrid
             if (dataGrid && dataGrid.rows && dataGrid.rows.length > rowIndex + 1) { // Ajusta el índice para excluir el encabezado
                 var row = dataGrid.rows[rowIndex + 1]; // Suma 1 para omitir el encabezado
-                row.style.backgroundColor = '#000000'; // Cambia el color de fondo a negro
+                row.style.background = 'radial-gradient(circle, #b5bbc1, #23273be6)';
                 row.style.color = '#ffffff'; // Cambia el color de la letra a blanco
 
                 // Hacer scroll hasta la fila
@@ -190,7 +214,7 @@
             var dataGrid = document.getElementById('<%= DataGrid1.ClientID %>'); // Reemplaza DataGrid1 por el ID de tu DataGrid
             if (dataGrid && dataGrid.rows && dataGrid.rows.length > rowIndex + 1) { // Ajusta el índice para excluir el encabezado
                 var row = dataGrid.rows[rowIndex + 1]; // Suma 1 para omitir el encabezado
-                row.style.backgroundColor = '#000000'; // Cambia el color de fondo a negro
+                row.style.background = 'radial-gradient(circle, #b5bbc1, #23273be6)';
                 row.style.color = '#ffffff'; // Cambia el color de la letra a blanco
 
                 // Hacer scroll hasta la fila
@@ -274,8 +298,8 @@
                                 <i class="bi bi-skip-backward-circle"></i>
                             </a>
 
-                            <a class="icong disabled shadow-sm btn btn-sm" title="Detener Pedido PE" id="DetenerPE" runat="server"  onclick="mostralMoldalDetener();">
-                                                              <i class="bi bi-stop-circle"></i>
+                            <a class="icong disabled shadow-sm btn btn-sm" title="Detener Pedido PE" id="DetenerPE" runat="server" onclick="mostralMoldalDetener();">
+                                <i class="bi bi-stop-circle"></i>
                             </a>
 
 
@@ -679,14 +703,14 @@
                                             <div class="col-6">
                                                 <div class="input-group-sm gap-1">
                                                     <asp:Label ID="lbCostoD" runat="server" Text="Costo"></asp:Label>
-                                                    <asp:TextBox CssClass="form-control form-control-sm" ID="tbCostoD" runat="server" disabled="disabled"></asp:TextBox>
+                                                    <asp:TextBox CssClass="form-control form-control-sm" ID="tbCostoD" type="number" min="0" runat="server" disabled="disabled" oninput="calcularPrecioSugerido()" Enabled="true"></asp:TextBox>
                                                 </div>
                                             </div>
 
                                             <div class="col-6">
                                                 <div class="input-group-sm gap-1">
                                                     <asp:Label ID="lbFactorD" runat="server" Text="Factor"></asp:Label>
-                                                    <asp:TextBox CssClass="form-control form-control-sm" ID="tbFactorD" runat="server" disabled="disabled"></asp:TextBox>
+                                                    <asp:TextBox CssClass="form-control form-control-sm" ID="tbFactorD" type="number" runat="server" disabled="disabled" oninput="calcularPrecioSugerido()" Enabled="true"></asp:TextBox>
                                                 </div>
                                             </div>
                                         </div>
@@ -825,11 +849,11 @@
                                                             </a>
 
                                                             <a class="icong disabled shadow-sm btn btn-sm" title="Documentacion Producto" id="Documentacion" runat="server" onclick="abrirOtraPestana2();">
-                                                          <i class="bi bi-paperclip"></i>
+                                                                <i class="bi bi-paperclip"></i>
                                                             </a>
 
 
-                                                            <asp:LinkButton class="icong disabled shadow-sm btn btn-sm" title="RedirigirCompras" ID="RedirigirCompras" runat="server">
+                                                            <asp:LinkButton class="icong disabled shadow-sm btn btn-sm" title="RedirigirCompras" ID="RedirigirCompras" runat="server" OnClick="RedirigirCompras_Click">
                                                          <i class="bi bi-cart4"></i>
                                                             </asp:LinkButton>
 
@@ -974,7 +998,7 @@
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header bg-danger  text-white">
-                                            <h5 class="modal-title text-center"><i class="bi bi-exclamation-circle" style="font-size: 1.5rem;"></i> Observación no grabada </h5>
+                                            <h5 class="modal-title text-center"><i class="bi bi-exclamation-circle" style="font-size: 1.5rem;"></i>Observación no grabada </h5>
                                         </div>
                                         <div class="modal-body border rounded">
                                             <div class="container-fluid">
@@ -993,13 +1017,13 @@
                                 <div class="modal-dialog modal-fullscreen">
                                     <div class="modal-content">
 
-                                        <div class="modal-header p-0 text-white" style="background-color:#23273be6">
+                                        <div class="modal-header p-0 text-white" style="background-color: #23273be6">
                                             <h5 class="modal-title text-center" style="padding-left: 2rem;">Observacion </h5>
                                             <asp:LinkButton ID="btnCerrarDevolver" data-bs-dismiss="modal" runat="server" aria-label="Close" Style="color: white !important; margin-right: 1.5rem; font-size: 1.8rem; text-decoration: none;" OnClick="btnCerrarDevolver_Click">
                                             <i class="bi bi-x-circle"></i>
                                             </asp:LinkButton>
 
-                                             <asp:LinkButton ID="btnCerrarDetener" data-bs-dismiss="modal" runat="server" aria-label="Close" Style="color: white !important; margin-right: 1.5rem; font-size: 1.8rem; text-decoration: none;" OnClick="btnCerrarDetener_Click">
+                                            <asp:LinkButton ID="btnCerrarDetener" data-bs-dismiss="modal" runat="server" aria-label="Close" Style="color: white !important; margin-right: 1.5rem; font-size: 1.8rem; text-decoration: none;" OnClick="btnCerrarDetener_Click">
                                             <i class="bi bi-x-circle"></i>
                                             </asp:LinkButton>
 
@@ -1162,7 +1186,7 @@
                                                                         </div>
                                                                         <div class="col-md-3">
                                                                             <asp:Button ID="BtnGrabarObservacion" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Grabar Observacion" OnClick="BtnGrabarObservacion_Click" />
-                                                                            <asp:Button ID="btnGrabarObservacionDetener" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Grabar Observacion" />
+                                                                            <asp:Button ID="btnGrabarObservacionDetener" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Grabar Observacion" OnClick="btnGrabarObservacionDetener_Click" />
                                                                         </div>
                                                                     </div>
 
@@ -1252,13 +1276,13 @@
                                         </div>
                                         <div class="modal-body border rounded">
                                             <div class="container-fluid">
-                                                <h6>¿ Esta seguro de detener este pedido?  </h6>
+                                                <h6>¿ Esta seguro de detener la solicitud <span runat="server" id="Span_Id_Sol4"></span>?</h6>
                                             </div>
 
                                         </div>
                                         <div class="modal-footer">
                                             <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                                <asp:Button runat="server" ID="btnDetenerPE_SI" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnDetenerPE_SI_Click"  />
+                                                <asp:Button runat="server" ID="btnDetenerPE_SI" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnDetenerPE_SI_Click" />
                                                 <asp:Button runat="server" ID="btnDetenerPE_NO" Text="Cancelar" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" OnClientClick="ControlBtnCliente(); return false;" />
                                             </div>
 
@@ -1267,12 +1291,12 @@
                                 </div>
                             </div>
 
-                                <!--Modal Cerrar Devolver  -->
+                            <!--Modal Cerrar Devolver  -->
                             <div id="modalCerrarDet" class="modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" style="display: none;">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header bg-danger  text-white">
-                                            <h5 class="modal-title text-center"><i class="bi bi-exclamation-circle" style="font-size: 1.5rem;"></i> Observación no grabada </h5>
+                                            <h5 class="modal-title text-center"><i class="bi bi-exclamation-circle" style="font-size: 1.5rem;"></i>Observación no grabada </h5>
                                         </div>
                                         <div class="modal-body border rounded">
                                             <div class="container-fluid">
@@ -1281,6 +1305,32 @@
                                         </div>
                                         <div class="modal-footer justify-content-center">
                                             <asp:Button runat="server" ID="Button1" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-outline-danger " Style="width: 5rem;" OnClick="btnRedireccionar_Sol_Click" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!--Modal confirmar Redirigir a compras -->
+                            <div id="modalRedirigirCompras" class="modal" tabindex="-1" style="display: none;">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-primary text-white">
+                                            <h5 class="modal-title text-center">Redirección  compras </h5>
+
+                                        </div>
+                                        <div class="modal-body border rounded">
+                                            <div class="container-fluid">
+                                                <h6>¿ Esta seguro de redirigir el detalle para compras?</h6>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                                <asp:Button runat="server" ID="btnRedirigir_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnRedirigir_SI_Click" />
+                                                <asp:Button runat="server" ID="btnRedirigir_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" OnClientClick="ControlBtnCliente(); return false;" />
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -1298,12 +1348,11 @@
             <div class="tab-pane fade" id="Programacion-content">
                 <asp:UpdatePanel ID="PanelProgamacion" runat="server">
                     <ContentTemplate>
-                        <div class="container-fluid p-2 bg-light ">
-
+                        <div class="container-fluid m-2 ">
 
                             <div class="card m-3">
 
-                                <div class="card-header" style="height: 2.9rem; background:repeating-radial-gradient(#fff,#eeebebe6)" id="headerDes" runat="server">
+                                <div class="card-header" style="height: 2.9rem; background: repeating-radial-gradient(#fff,#eeebebe6)" id="headerDes" runat="server">
                                     <%-- Desarrollo--%>
                                     <div class="row pb-2">
 
@@ -1334,7 +1383,7 @@
 
 
                                     <%-- Fila control Click--%>
-                                    <div class="row" style="display: none;">
+                                    <div class="row" style="display:none;">
                                         <div class="col-1">
                                             <asp:TextBox ID="filaAntior" type="text" class="form-control form-control-sm" placeHolder="fila anterior" runat="server"></asp:TextBox>
 
@@ -1349,12 +1398,12 @@
                                         </div>
 
                                         <div class="col-1">
-                                            <asp:TextBox ID="tbId_Fila" type="text" class="form-control form-control-sm" placeHolder="Contador" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="tbId_Fila" type="text" class="form-control form-control-sm" placeHolder="Número de fila" runat="server"></asp:TextBox>
                                         </div>
 
                                     </div>
 
-                                    <div class="row pb-2">
+                                    <div class="row">
 
                                         <div class="col-md-5">
                                             <div class=" input-group input-group-sm justify-content-around  mb-2" style="padding-left: 3rem;">
@@ -1479,7 +1528,7 @@
 
                             <div class="card m-3">
 
-                                <div class="card-header" style="height: 2.9rem; background:repeating-radial-gradient(#fff,#eeebebe6)" id="headerCot" runat="server">
+                                <div class="card-header" style="height: 2.9rem; background: repeating-radial-gradient(#fff,#eeebebe6)" id="headerCot" runat="server">
 
                                     <div class="row pb-2">
 
@@ -1507,7 +1556,7 @@
 
                                     <%-- cotizaciones--%>
 
-                                    <div class="row pb-2">
+                                    <div class="row ">
 
                                         <div class="col-md-5 text-center" style="padding-left: 3rem;">
                                             <div class=" input-group input-group-sm justify-content-around  mb-2 gap-2">
@@ -1611,7 +1660,6 @@
 
                                 </div>
                             </div>
-
 
                             <!--Modal Trabajar en Desarrollo  -->
                             <div id="confirTrabaSol" class="modal" tabindex="-1" style="display: none;">
@@ -1717,7 +1765,7 @@
                             <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
-                                        <div class="modal-header text-white" style="background-color:#23273be6">
+                                        <div class="modal-header text-white" style="background-color: #23273be6">
                                             <h5 class="modal-title" id="exampleModalLabel">Convenciones</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
@@ -1786,11 +1834,11 @@
             <div class="tab-pane fade " id="BuscarDesarrollo-content">
                 <asp:UpdatePanel ID="PanelBuscar" runat="server">
                     <ContentTemplate>
-                        <div class="container-fluid m-2">
+                        <div class="container">
 
                             <%-- Buscar Diseño Especial --%>
 
-                            <div class="container-fluid border shadow-sm  rounded-1 bg-light pb-3 mb-3">
+                            <div class="container-fluid border shadow-sm  rounded-1 bg-light pb-3 mb-3 mt-2">
                                 <div class="row pt-2">
                                     <div class="col-lg-8 col-xs-12">
                                         <div class="input-group input-group-sm  mb-2 gap-3">
@@ -2077,9 +2125,6 @@
 
             // Control Boton cliente 
             ControlBtnCliente();
-
-
-
 
         }
 
@@ -2790,7 +2835,7 @@
             // Utiliza window.open para abrir "Formulario2.aspx" en otra pestaña
             window.open('Clientes.aspx', '_blank');
 
-            ControlHeaderCard();
+           
         }
 
         function NuevoDetalle() {
@@ -2910,7 +2955,7 @@
 
 
                     }
-                    tbDesarrollaPor
+
                 }
 
 
@@ -2971,17 +3016,11 @@
                 }
 
                 // Habilitar o deshabilitar los TextBox Type text
-                var textBoxes = document.querySelectorAll("input[type='text']");
+                var textBoxes = document.querySelectorAll("input[type='number']");
                 for (var i = 0; i < textBoxes.length; i++) {
 
-                    if (textBoxes[i].id !== "tbProyecto" && textBoxes[i].id !== "tbSolicitudOrigen" && textBoxes[i].id !== "tbCotizacionEsp" && textBoxes[i].id !== "tbCliente"
-                        && textBoxes[i].id !== "tbContacto" && textBoxes[i].id !== "tbTelefono" && textBoxes[i].id !== "tbPrecioSugerido" && textBoxes[i].id !== "tbDesarrollaPor"
-                        && textBoxes[i].id !== "tbCelular" && textBoxes[i].id !== "tbMail" && textBoxes[i].id !== "tbDireccion" && textBoxes[i].id !== "tbPrecioSugerido"
-                        && textBoxes[i].id !== "tbProveedor" && textBoxes[i].id !== "tbAncho" && textBoxes[i].id !== "tbAltura" && textBoxes[i].id !== "tbProfundidad"
-                        && textBoxes[i].id !== "tbMaterial" && textBoxes[i].id !== "tbCostoC" && textBoxes[i].id !== "tbFactorC" && textBoxes[i].id !== "tbProve") {
+                    if (textBoxes[i].id !== "tbProyecto" && textBoxes[i].id !== "tbSolicitudOrigen" && textBoxes[i].id !== "tbCantidad") {
                         textBoxes[i].disabled = false;
-
-
                     }
 
                 }
@@ -3012,7 +3051,7 @@
 
         function abrirOtraPestana2() {
 
-          
+
             // Utiliza window.open para abrir "Formulario2.aspx" en otra pestaña
             window.open('AdjuntarDocumentos.aspx', '_blank');
 
@@ -3026,8 +3065,8 @@
                 ControlBtnCliente();
             }
 
-           
-           
+
+
         }
 
         function abrirObservaciones() {
@@ -3362,11 +3401,32 @@
         // Mostrar  modal pausar solicitud
         function mostralMoldalDetener() {
 
+            var lbNumeroSolicitud = document.getElementById('<%= lbNumeroSolicitud.ClientID %>').innerText;
+            // Actualiza el contenido del span con el valor del Label
+            document.getElementById('Span_Id_Sol4').innerText = lbNumeroSolicitud;
+
             $('#ConfirmarDetenerSol').modal('show');
         }
 
     </script>
 
+    <script>
+        function calcularPrecioSugerido() {
+            var tbCostoD = document.getElementById('<%= tbCostoD.ClientID %>');
+            var tbFactorD = document.getElementById('<%= tbFactorD.ClientID %>');
+            var tbPrecioSugerido = document.getElementById('<%= tbPrecioSugerido.ClientID %>');
+
+            var Costo = parseFloat(tbCostoD.value);
+            var factor = parseFloat(tbFactorD.value);
+
+            if (!isNaN(Costo) && !isNaN(factor) && factor != 100) {
+                var PrecioSugerido = Costo / (1 - factor / 100);
+                tbPrecioSugerido.value = Math.round(PrecioSugerido); // Redondear a entero
+            } else {
+                tbPrecioSugerido.value = "";
+            }
+        }
+    </script>
 
 
 </body>

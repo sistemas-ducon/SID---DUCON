@@ -189,6 +189,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 TableCell cell = e.Item.Cells[6];
                 cell.Text = (Eps == 1) ? "Si" : "No";
 
+                string archivo = DataBinder.Eval(e.Item.DataItem, "Archivo").ToString();
+                e.Item.Cells[1].ToolTip = archivo;
+
+
             }
         }
 

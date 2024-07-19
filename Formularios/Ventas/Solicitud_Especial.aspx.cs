@@ -7,6 +7,8 @@ using MathNet.Numerics;
 using Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json;
 using NPOI.SS.Formula.Functions;
+using OfficeOpenXml.Style;
+using OfficeOpenXml;
 using SISTEMA_INTEGRAL_DUCON.Formularios.Ventas;
 using System;
 using System.Collections.Generic;
@@ -30,6 +32,7 @@ using DataTable = System.Data.DataTable;
 using Label = System.Web.UI.WebControls.Label;
 using ListItem = System.Web.UI.WebControls.ListItem;
 using TextBox = System.Web.UI.WebControls.TextBox;
+using System.Drawing;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
@@ -249,7 +252,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Button btnTrabajarSolicitud = FindControl("btnTrabajarSolicitud") as Button;
             if (btnTrabajarSolicitud != null)
             {
-                btnTrabajarSolicitud.Enabled = true;
+                btnTrabajarSolicitud.Enabled = false;
                 btnTrabajarSolicitud.CssClass = "btn btn-sm btn-outline-primary";
 
             }
@@ -258,7 +261,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Button btnDesprogramar = FindControl("btnDesprogramar") as Button;
             if (btnDesprogramar != null)
             {
-                btnDesprogramar.Enabled = true;
+                btnDesprogramar.Enabled = false;
                 btnDesprogramar.CssClass = "btn btn-sm btn-outline-primary";
 
             }
@@ -267,7 +270,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Button btnTrbajarCotizacion = FindControl("btnTrbajarCotizacion") as Button;
             if (btnTrbajarCotizacion != null)
             {
-                btnTrbajarCotizacion.Enabled = true;
+                btnTrbajarCotizacion.Enabled = false;
                 btnTrbajarCotizacion.CssClass = "btn btn-sm btn-outline-primary";
 
             }
@@ -276,7 +279,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Button btnDesprogramar1 = FindControl("btnDesprogramar1") as Button;
             if (btnDesprogramar1 != null)
             {
-                btnDesprogramar1.Enabled = true;
+                btnDesprogramar1.Enabled = false;
                 btnDesprogramar1.CssClass = "btn btn-sm btn-outline-primary";
 
             }
@@ -763,10 +766,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
+                ControlBotonesDiseño();
                 string script = @"ControlBtnCliente();";
                 ScriptManager.RegisterStartupScript(this, GetType(), "ControlHeaderCard", script, true);
             }
-               
+
         }
 
         private void CambiarSqlDataSource(string valorSeleccionado)
@@ -1310,10 +1314,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         btnConUrgente.CssClass = "btn btn-sm btn-primary";
 
                         btnTrabajarSolicitud.Enabled = true;
-                        btnTrabajarSolicitud.CssClass = "btn btn-sm btn-primary  btn-dept";
+                        btnTrabajarSolicitud.CssClass = "btn btn-sm btn-outline-primary  btn-dept";
 
                         btnDesprogramar.Enabled = true;
-                        btnDesprogramar.CssClass = "btn btn-sm btn-primary  btn-dept";
+                        btnDesprogramar.CssClass = "btn btn-sm btn-outline-primary btn-dept";
 
                         btnTrbajarCotizacion.Enabled = false;
                         btnTrbajarCotizacion.CssClass = "btn btn-sm btn-outline-primary";
@@ -1567,6 +1571,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     else
                     {
 
+                        Session["ProVenSolicitud"] = termiVenta;
+
                         btnProgramarSolicitud.Enabled = false;
                         btnProgramarSolicitud.CssClass = "btn btn btn-warning";
 
@@ -1593,17 +1599,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         btnProgramarSolicitud.CssClass = "btn btn-sm btn-warning";
 
                         ConfirmarComplejo.Enabled = true;
-                        ConfirmarComplejo.CssClass = "btn btn-sm btn-outline-primary";
+                        ConfirmarComplejo.CssClass = "btn btn-sm btn-primary";
 
                         btnConUrgente.Enabled = true;
-                        btnConUrgente.CssClass = "btn btn-sm btn-outline-primary";
+                        btnConUrgente.CssClass = "btn btn-sm btn-primary";
 
 
                         btnTrbajarCotizacion.Enabled = true;
-                        btnTrbajarCotizacion.CssClass = "btn btn-sm btn-primary btn-depth ";
+                        btnTrbajarCotizacion.CssClass = "btn btn-sm btn-outline-primary btn-depth ";
 
                         btnDesprogramar1.Enabled = true;
-                        btnDesprogramar1.CssClass = "btn btn-sm btn-primary  btn-dept";
+                        btnDesprogramar1.CssClass = "btn btn-sm btn-outline-primary btn-dept";
 
                         btnTrabajarSolicitud.Enabled = false;
                         btnTrabajarSolicitud.CssClass = "btn btn-sm btn-outline-primary";
@@ -2330,6 +2336,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
+
+
+        // Programar y Terminar Solicitud Especial 
         protected void ProgramarSolicitud(object sender, EventArgs e)
         {
 
@@ -2398,7 +2407,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 FechaEntrega = CalcularFechaEntrega(FechaIngreso);
 
                                 // Se encontraron Detalles de esa solicitud con PrecioSugerido =< 0 
-                                // Se debe Realizar Validacion  aun no esta clara  ?????????????? Penidiente 
+                                // Se debe Realizar Validacion  aun no esta clara  ?????????????? Pendiente  
 
                                 using (SqlConnection connection = new SqlConnection(connectionString))
                                 {
@@ -2499,12 +2508,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             }
 
                         }
-
-
-
-
                     }
-
                     else
                     {
                         string mensajePersonalizado = "La solicitud no tiene ningun detalle asociado, No se puede programar en este momento";
@@ -2516,7 +2520,126 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     break;
 
-                case "DISEÑO": //Boton Programar  Departamento Compras
+                case "COMPRAS": //Boton Programar  Departamento Compras y desarrollo de producto 
+                case "DESARROLLO DE PRODUCTO":
+                case "DISEÑO":
+
+                    // Realizar el update de terminado 
+                    if (TerminarSolicitudEspecialDibujo())
+                    {
+                        // Realizar la creacion del archivo de control de Pedidos especiales y se guarda en temporales ((( PENDIENTE )))
+                        CreacionArchivoControlSolicitudEspecial(lbNumeroSolicitud.Text);
+
+
+                        //string destinatario = "andersonbetancur@ducon.com.co" para realizar pruebas de correo;
+
+                        // Se consulta el correo del asesor de la solicitud 
+                        string destinatario = ConsultarCorreoAsesor();
+
+                        // Se consulta el correo del dibujante que termina la solicitud  (( REVISAR SI  ES NOTICADO EL DIBUJANTE ))
+                        string CorreoDibujante = ConsultarCorreoEmisor();
+
+                        destinatario = destinatario + ";" + CorreoDibujante;
+
+
+                        // Se valida  correo para cuando viaticos esta chekeado y se agrega 
+                        if (chxViaticos.Checked)
+                        {
+                            string correoViatico = ConsultarCorreoViaticos();
+                            destinatario = destinatario + ";" + correoViatico;
+                        }
+
+                        // se crea el cuerpo de correo 
+                        string cuerpo = @"
+                            <!DOCTYPE html>
+                            <html lang='es'>
+                            <head>
+                                <meta charset='UTF-8'>
+                                <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+                                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                                <style>
+                                    body {
+                                        font-family: Arial, sans-serif;
+                                        font-size: 14px;
+                                        line-height: 1.6;
+                                        margin: 0;
+                                        padding: 0;
+                                        background-color: #f9f9f9;
+                                    }
+                                    .container {
+                                        max-width: 37rem;
+                                        margin: 20px auto;
+                                        padding: 20px;
+                                        border: 1px solid #ccc;
+                                        border-radius: 5px;
+                                        background-color: #fff;
+                                    }
+                                    h2 {
+                                        color: #333;
+                                        font-size: 24px;
+                                        margin-bottom: 20px;
+                                    }
+                                    p {
+                                        margin-bottom: 10px;
+                                    }
+                                </style>
+                            </head>
+                            <body>
+                                <div class='container'>
+                                    <h3>Notificación Solicitud Especial terminada </h3>
+                                    <p>  Estimado(a) Asesor(a), por medio de la presente se informa que la solicitud de producto especial: " + lbNumeroSolicitud.Text + @"</p>
+                                    <p><strong> Cliente : </strong>  " + tbCliente.Text + @"</p>
+                                    <p><strong> Proyecto : </strong>  " + tbProyecto.Text + @"</p>
+                                    <p><strong> Contacto : </strong>  " + tbContacto.Text + @"</p>
+                                    <p><strong> Solicitud N. : </strong>  " + lbNumeroSolicitud.Text + @"</p>
+                                    <p><strong> Realizado por : </strong> <strong> " + Session["usuariologueado"].ToString() + @"</strong></p>
+                                     <p><strong> Tipo solicitud : </strong>  " + ddlTipo.SelectedValue + @"</p>
+                                    <p><strong>Se adjuntan: : </strong></p>
+                                    <p>1. Documento de Excel con la cotización </p>
+                                    <p>2. Archivos de desarrollo de producto </p>
+     
+       
+                                </div>
+                            </body>
+                            </html>";
+
+
+                        // Se consultan el archivo de control PE 
+                        string ControlPE = "\\\\SRVDBAPPS\\S_I_Ducon$\\TemporalAdjunto\\Solicitud_N" + lbNumeroSolicitud.Text + ".xlsx";
+
+                        // Se consultan los archivos de la solicitud  que no sean bosquejos
+                        string ArchivosSPE = ConsultarRutasDocumentosSPE(lbNumeroSolicitud.Text);
+
+                        // Rutas de los archivos de adjuntos 
+                        string adjuntos = ControlPE + ";" + ArchivosSPE;
+
+
+                        if (destinatario != "")
+                        {
+                            // Se realiza el envio del correo electronico
+                            EnviarCorreoConAdjuntosTerminadoDibujo(destinatario, cuerpo, adjuntos);
+                        }
+                        else
+                        {
+                            string mensajePersonalizado1 = "La solicitud ha sido terminada, pero no ha sido posible notificar por  correo electronico.";
+                            string urlRedireccion1 = "Ventas/Solicitud_Especial.aspx";
+                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado1)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion1)}");
+                        }
+
+
+
+                        // Se muestra el mensaje de exito
+                        string mensajePersonalizado = "La solicitud ha sido terminada y notificada.";
+                        string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+                    }
+                    else
+                    {
+                        string mensajePersonalizado = "Ocurrió un error al terminar la solicitud, por favor intentalo nuevamente.";
+                        string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    }
 
                     break;
 
@@ -2537,10 +2660,795 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
 
-        //Calculo de la Fecha de entrega 
+        //Metodos Terminar Solicitud Especial Dibujo 
+        private bool TerminarSolicitudEspecialDibujo()
+        {
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "UPDATE tblSoliciDiseEspe SET Terminado=1, FechaRespuesta= @fechaRespuesta ,RealizadoPor = @RealizadoPor WHERE id_Solicitud = @Id_Solicitud";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+
+                    cmd.Parameters.AddWithValue("@RealizadoPor", Session["usuariologueado"].ToString().Trim());
+                    cmd.Parameters.AddWithValue("@fechaRespuesta", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@Id_Solicitud", lbNumeroSolicitud.Text);
+
+                    int filaAfectada = cmd.ExecuteNonQuery();
+
+                    if (filaAfectada > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        public bool EnviarCorreoConAdjuntosTerminadoDibujo(string destinatarios, string cuerpo, string adjuntos)
+        {
+            string nombreProcedimiento = "duc_sp_Correo";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(nombreProcedimiento, connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Definir los parámetros del procedimiento almacenado
+                        command.Parameters.AddWithValue("@Destinatarios", destinatarios);
+                        command.Parameters.AddWithValue("@asunto", "Solicitud PE Terminado: " + lbNumeroSolicitud.Text + "-" + tbProyecto.Text);
+                        command.Parameters.AddWithValue("@cuerpo", cuerpo);
+                        command.Parameters.AddWithValue("@adjuntos", adjuntos);
+                        command.Parameters.AddWithValue("@usuario", Session["usuariologueado"].ToString());
+
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                        return true;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                // Manejar la excepción (opcional)
+                // Loggear la excepción o hacer algo con ella
+                return false;
+            }
+        }
+        private void CreacionArchivoControlSolicitudEspecial(string ID_Solicitud)
+        {
+            try
+            {
+                // Crear un nuevo paquete de Excel
+                using (ExcelPackage excelPackage = new ExcelPackage())
+                {
+                    // Agregar una hoja de trabajo al paquete
+                    ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Control PE");
+
+                    // Contrlamos los anchos:
+
+                    //filas
+                    worksheet.Row(1).Height = 90;
+                    worksheet.Row(2).Height = 25;
+
+                    // Columnas
+                    worksheet.Column(1).Width = 16;
+                    worksheet.Column(2).Width = 24;
+                    worksheet.Column(3).Width = 16;
+                    worksheet.Column(4).Width = 16;
+                    worksheet.Column(5).Width = 32;
+                    worksheet.Column(6).Width = 16;
+                    worksheet.Column(7).Width = 24;
+                    worksheet.Column(8).Width = 16;
+                    worksheet.Column(9).Width = 16;
+                    worksheet.Column(10).Width = 16;
+                    worksheet.Column(11).Width = 16;
+                    worksheet.Column(12).Width = 16;
+                    worksheet.Column(13).Width = 24;
+
+
+                    // Configurar bordes para la  seleccion A3:O50
+                    var rangeB = worksheet.Cells["A3:O50"];
+
+                    rangeB.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    rangeB.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    rangeB.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    rangeB.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+
+                    rangeB.Style.Border.Left.Color.SetColor(System.Drawing.Color.Black);
+                    rangeB.Style.Border.Right.Color.SetColor(System.Drawing.Color.Black);
+                    rangeB.Style.Border.Top.Color.SetColor(System.Drawing.Color.Black);
+                    rangeB.Style.Border.Bottom.Color.SetColor(System.Drawing.Color.Black);
+
+                    // Aplicar borde inferior a la fila 4 desde la columna A hasta la M
+                    worksheet.Cells["A4:M4"].Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
+                    worksheet.Cells["A4:M4"].Style.Border.Bottom.Color.SetColor(System.Drawing.Color.Black);
+
+                    // Aplicar borde derecha a la fila 4 columna M
+                    worksheet.Cells["M3"].Style.Border.Right.Style = ExcelBorderStyle.Medium;
+                    worksheet.Cells["M3"].Style.Border.Right.Color.SetColor(System.Drawing.Color.Black);
+
+                    // Aplicar borde derecha a la fila 4 columna M
+                    worksheet.Cells["M4"].Style.Border.Right.Style = ExcelBorderStyle.Medium;
+                    worksheet.Cells["M4"].Style.Border.Right.Color.SetColor(System.Drawing.Color.Black);
+
+
+                    // Aplicar borde inferior a la fila 5 desde la columna A hasta la M
+                    worksheet.Cells["A5:M5"].Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
+                    worksheet.Cells["A5:M5"].Style.Border.Bottom.Color.SetColor(System.Drawing.Color.Black);
+
+
+                    // Definir el rango de celdas (de la fila 6 a la 25 en la columna A)
+                    var CeldaA6A25 = worksheet.Cells["A6:A25"];
+
+                    // Aplicar estilo a las celdas del rango
+                    CeldaA6A25.Style.Fill.PatternType = ExcelFillStyle.Solid; // Definir el patrón de relleno
+                    CeldaA6A25.Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#76933C")); // Establecer el color de fondo
+
+                    // Estilos adicionales si es necesario
+                    CeldaA6A25.Style.Font.Name = "Calibri";
+                    CeldaA6A25.Style.Font.Size = 36;
+
+                    CeldaA6A25.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    CeldaA6A25.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+
+
+
+                    // Definir el rango de celdas (de la fila 6 a la 25 en la columna A)
+                    var CeldaB6G25 = worksheet.Cells["B6:G25"];
+
+                    // Aplicar estilo a las celdas del rango
+                    CeldaB6G25.Style.Fill.PatternType = ExcelFillStyle.Solid; // Definir el patrón de relleno
+                    CeldaB6G25.Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#D2E9B1")); // Establecer el color de fondo
+
+                    // Estilos adicionales si es necesario
+                    CeldaB6G25.Style.Font.Name = "Calibri";
+                    CeldaB6G25.Style.Font.Size = 11;
+
+                    CeldaB6G25.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CeldaB6G25.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+
+
+                    // Definir el rango de celdas (de la fila 6 a la 25 en la columna A)
+                    var CeldaH6K25 = worksheet.Cells["H6:K25"];
+
+                    // Aplicar estilo a las celdas del rango
+                    CeldaH6K25.Style.Fill.PatternType = ExcelFillStyle.Solid; // Definir el patrón de relleno
+                    CeldaH6K25.Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#FDE9D9")); // Establecer el color de fondo
+
+                    // Estilos adicionales si es necesario
+                    CeldaH6K25.Style.Font.Name = "Calibri";
+                    CeldaH6K25.Style.Font.Size = 11;
+
+                    CeldaH6K25.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CeldaH6K25.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+
+
+                    // Establecer la altura de las filas del rango
+                    for (int row = 6; row <= 25; row++)
+                    {
+                        worksheet.Row(row).Height = 240; // Ajusta este valor según la altura deseada
+                    }
+
+                    // Logo Ducon  
+                    string rutaImagen = @"\\Srvfs\sistemas2\Logo Ducon\Ducon.jpg";
+                    FileInfo image = new FileInfo(rutaImagen);
+                    if (image.Exists)
+                    {
+                        var picture = worksheet.Drawings.AddPicture("Logo", image);
+                        picture.SetPosition(0, 10, 4, 50);
+                        picture.SetSize(180, 80);
+
+                    }
+
+                    // Titulo de encabezado  
+                    var CellB2O2 = worksheet.Cells["A2:M2"];
+                    CellB2O2.Merge = true;
+                    worksheet.Cells["A2"].Value = "FORMATO CONTROL PRODUCTO ESPECIAL (Solicitud N." + lbNumeroSolicitud.Text + ")";
+                    CellB2O2.Style.Font.Name = "Calibri";
+                    CellB2O2.Style.Font.Size = 16;
+                    CellB2O2.Style.Font.Bold = true;
+                    CellB2O2.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    CellB2O2.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    CellB2O2.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+
+                    // Configurar el color de fondo
+                    CellB2O2.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellB2O2.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#A6A6A6"));
+
+                    // Configurar los bordes
+                    CellB2O2.Style.Border.Top.Style = ExcelBorderStyle.Medium;
+                    CellB2O2.Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
+                    CellB2O2.Style.Border.Left.Style = ExcelBorderStyle.Medium;
+                    CellB2O2.Style.Border.Right.Style = ExcelBorderStyle.Medium;
+
+                    // Configurar los colores de los bordes
+                    CellB2O2.Style.Border.Top.Color.SetColor(System.Drawing.Color.Black);
+                    CellB2O2.Style.Border.Bottom.Color.SetColor(System.Drawing.Color.Black);
+                    CellB2O2.Style.Border.Left.Color.SetColor(System.Drawing.Color.Black);
+                    CellB2O2.Style.Border.Right.Color.SetColor(System.Drawing.Color.Black);
+
+                    // Aplicar bordes exteriores gruesos
+                    worksheet.Cells["A2"].Style.Border.Left.Style = ExcelBorderStyle.Medium;
+                    worksheet.Cells["M2"].Style.Border.Right.Style = ExcelBorderStyle.Medium;
+                    worksheet.Cells["A2:M2"].Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
+                    worksheet.Cells["A2:M2"].Style.Border.Bottom.Color.SetColor(System.Drawing.Color.Black);
+                    worksheet.Cells["A2:M2"].Style.Border.Left.Color.SetColor(System.Drawing.Color.Black);
+                    worksheet.Cells["A2:M2"].Style.Border.Right.Color.SetColor(System.Drawing.Color.Black);
+                    worksheet.Cells["A2:M2"].Style.Border.Top.Color.SetColor(System.Drawing.Color.Black);
+
+
+
+                    // Datos Fila 3 
+
+                    // fecha Solicitud                 
+                    var CellA3 = worksheet.Cells["A3"];
+                    CellA3.Value = "F. Solicitud";
+                    CellA3.Style.Font.Name = "Calibri";
+                    CellA3.Style.Font.Size = 12;
+                    CellA3.Style.Font.Bold = true;
+                    CellA3.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    // Configurar el color de fondo
+                    CellA3.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellA3.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#76933C"));
+
+
+
+                    // fecha Solicitud valor;
+                    var CellB3 = worksheet.Cells["B3"];
+                    CellB3.Value = tbFechaIngreso.Text;
+                    CellB3.Style.Font.Name = "Calibri";
+                    CellB3.Style.Font.Size = 11;
+                    CellB3.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellB3.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                    // Configurar el color de fondo
+                    CellB3.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellB3.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#D2E9B1"));
+
+
+                    // Fecha Respuesta
+                    string FechaRes = "F.Respuesta";
+                    var CellC3 = worksheet.Cells["C3"];
+                    CellC3.Value = FechaRes;
+                    CellC3.Style.Font.Name = "Calibri";
+                    CellC3.Style.Font.Size = 12;
+                    CellC3.Style.Font.Bold = true;
+                    CellC3.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    // Configurar el color de fondo
+                    CellC3.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellC3.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#76933C"));
+
+                    // Asesor
+                    string Asesor = "Asesor";
+                    var CellD3 = worksheet.Cells["D3"];
+                    CellD3.Value = Asesor;
+                    CellD3.Style.Font.Name = "Calibri";
+                    CellD3.Style.Font.Size = 12;
+                    CellD3.Style.Font.Bold = true;
+                    CellD3.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    // Configurar el color de fondo
+                    CellD3.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellD3.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#76933C"));
+
+
+                    // fecha Asesor Nombre;
+                    var CellE3 = worksheet.Cells["E3"];
+                    CellE3.Value = ddlAsesor.SelectedItem.Text;
+                    CellE3.Style.Font.Name = "Calibri";
+                    CellE3.Style.Font.Size = 11;
+                    CellE3.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellE3.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                    // Configurar el color de fondo
+                    CellE3.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellE3.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#D2E9B1"));
+
+
+                    // Cliente
+                    string Cliente = "Cliente";
+                    var CellF3 = worksheet.Cells["F3"];
+                    CellF3.Value = Cliente;
+                    CellF3.Style.Font.Name = "Calibri";
+                    CellF3.Style.Font.Size = 12;
+                    CellF3.Style.Font.Bold = true;
+                    CellF3.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    // Configurar el color de fondo
+                    CellF3.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellF3.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#76933C"));
+
+                    // Cliente a Valor;
+                    var CellG3H3 = worksheet.Cells["G3:H3"];
+                    CellG3H3.Merge = true;
+                    worksheet.Cells["G3"].Value = tbCliente.Text;
+                    CellG3H3.Style.Font.Name = "Calibri";
+                    CellG3H3.Style.Font.Size = 11;
+                    CellG3H3.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellG3H3.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                    // Configurar el color de fondo
+                    CellG3H3.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellG3H3.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#D2E9B1"));
+
+
+                    // Cliente
+                    string Contacto = "Contacto";
+                    var CellI3 = worksheet.Cells["i3"];
+                    CellI3.Value = Contacto;
+                    CellI3.Style.Font.Name = "Calibri";
+                    CellI3.Style.Font.Size = 12;
+                    CellI3.Style.Font.Bold = true;
+                    CellI3.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    // Configurar el color de fondo
+                    CellI3.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellI3.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#76933C"));
+
+
+                    // contacto 
+                    var CellJ3K3 = worksheet.Cells["J3:K3"];
+                    CellJ3K3.Merge = true;
+                    worksheet.Cells["J3"].Value = tbContacto.Text;
+                    CellJ3K3.Style.Font.Name = "Calibri";
+                    CellJ3K3.Style.Font.Size = 11;
+                    CellJ3K3.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellJ3K3.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                    // Configurar el color de fondo
+                    CellJ3K3.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellJ3K3.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#D2E9B1"));
+
+
+                    // Celular 
+
+                    var CellL3 = worksheet.Cells["L3"];
+                    CellL3.Value = "Celular";
+                    CellL3.Style.Font.Name = "Calibri";
+                    CellL3.Style.Font.Size = 12;
+                    CellL3.Style.Font.Bold = true;
+                    CellL3.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    CellL3.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellL3.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#76933C"));
+
+
+                    // Celular  valor  ;
+                    var CellM3 = worksheet.Cells["M3"];
+                    CellM3.Value = tbCelular.Text;
+                    CellM3.Style.Font.Name = "Calibri";
+                    CellM3.Style.Font.Size = 11;
+                    CellM3.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellM3.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                    // Configurar el color de fondo
+                    CellM3.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellM3.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#D2E9B1"));
+
+
+                    // Datos fila 4 
+
+
+                    // fecha Entrega                 
+                    var CellA4 = worksheet.Cells["A4"];
+                    CellA4.Value = "F. Entrega";
+                    CellA4.Style.Font.Name = "Calibri";
+                    CellA4.Style.Font.Size = 12;
+                    CellA4.Style.Font.Bold = true;
+                    CellA4.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    // Configurar el color de fondo
+                    CellA4.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellA4.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#76933C"));
+
+                    // fecha Entrega valor;
+                    var CellB4 = worksheet.Cells["B4"];
+                    CellB4.Value = tbFechaEntrega.Text;
+                    CellB4.Style.Font.Name = "Calibri";
+                    CellB4.Style.Font.Size = 11;
+                    CellB4.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellB4.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                    // Configurar el color de fondo
+                    CellB4.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellB4.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#D2E9B1"));
+
+
+                    // fecha Respuesta valor;
+                    var CellC4 = worksheet.Cells["C4"];
+                    CellC4.Value = (DateTime.Now).ToString("yyyy-MM/dd");
+                    CellC4.Style.Font.Name = "Calibri";
+                    CellC4.Style.Font.Size = 11;
+                    CellC4.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellC4.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                    // Configurar el color de fondo
+                    CellC4.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellC4.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#D2E9B1"));
+
+
+                    // Dirigido a                 
+                    var CellD4 = worksheet.Cells["D4"];
+                    CellD4.Value = "Dirigido a:";
+                    CellD4.Style.Font.Name = "Calibri";
+                    CellD4.Style.Font.Size = 12;
+                    CellD4.Style.Font.Bold = true;
+                    CellD4.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    CellD4.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellD4.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#76933C"));
+
+
+                    // Dirigido a Valor;
+                    var CellE4 = worksheet.Cells["E4"];
+                    CellE4.Value = ddlDirigido.SelectedItem.Text;
+                    CellE4.Style.Font.Name = "Calibri";
+                    CellE4.Style.Font.Size = 11;
+                    CellE4.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellE4.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                    // Configurar el color de fondo
+                    CellE4.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellE4.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#D2E9B1"));
+
+
+                    // Proyecto;
+                    var CellF4 = worksheet.Cells["F4"];
+                    CellF4.Value = "Proyecto";
+                    CellF4.Style.Font.Name = "Calibri";
+                    CellF4.Style.Font.Size = 12;
+                    CellF4.Style.Font.Bold = true;
+                    CellF4.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    // Configurar el color de fondo
+                    CellF4.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellF4.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#76933C"));
+
+
+                    // Proyecto a Valor;
+                    var CellG4H4 = worksheet.Cells["G4:H4"];
+                    CellG4H4.Merge = true;
+                    worksheet.Cells["G4"].Value = tbProyecto.Text;
+                    CellG4H4.Style.Font.Name = "Calibri";
+                    CellG4H4.Style.Font.Size = 11;
+                    CellG4H4.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellG4H4.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                    // Configurar el color de fondo
+                    CellG4H4.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellG4H4.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#D2E9B1"));
+
+
+                    // Mail;
+                    var CellI4 = worksheet.Cells["i4"];
+                    CellI4.Value = "Mail";
+                    CellI4.Style.Font.Name = "Calibri";
+                    CellI4.Style.Font.Size = 12;
+                    CellI4.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    // Configurar el color de fondo
+                    CellI4.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellI4.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#76933C"));
+
+
+                    // Mail valor  ;
+                    var CellJ4K4 = worksheet.Cells["J4:K4"];
+                    CellJ4K4.Merge = true;
+                    worksheet.Cells["J4"].Value = tbMail.Text;
+                    CellJ4K4.Style.Font.Name = "Calibri";
+                    CellJ4K4.Style.Font.Size = 11;
+                    CellJ4K4.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellJ4K4.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                    // Configurar el color de fondo
+                    CellJ4K4.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellJ4K4.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#D2E9B1"));
+
+
+                    // Tipo de solicitud 
+                    var CellL4 = worksheet.Cells["L4"];
+                    CellL4.Value = "T. solicitud";
+                    CellL4.Style.Font.Name = "Calibri";
+                    CellL4.Style.Font.Size = 12;
+                    CellL4.Style.Font.Bold = true;
+                    CellL4.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    CellL4.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellL4.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#76933C"));
+
+
+                    // Tipo  solicitud  valor  ;
+                    var CellM4 = worksheet.Cells["M4"];
+                    CellM4.Value = ddlTipo.SelectedItem.Text;
+                    CellM4.Style.Font.Name = "Calibri";
+                    CellM4.Style.Font.Size = 11;
+                    CellM4.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellM4.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                    // Configurar el color de fondo
+                    CellM4.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellM4.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#D2E9B1"));
+
+
+
+                    //Datos Filas 5 
+
+                    // Tipo de ID 
+                    var CellA5 = worksheet.Cells["A5"];
+                    CellA5.Value = "ID";
+                    CellA5.Style.Font.Name = "Calibri";
+                    CellA5.Style.Font.Size = 20;
+                    CellA5.Style.Font.Bold = true;
+                    CellA5.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                    CellA5.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellA5.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#76933C"));
+
+                    // Tipo de Producto 
+                    var CellB5 = worksheet.Cells["B5"];
+                    CellB5.Value = "Producto";
+                    CellB5.Style.Font.Name = "Calibri";
+                    CellB5.Style.Font.Size = 11;
+                    CellB5.Style.Font.Bold = true;
+                    CellB5.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    CellB5.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellB5.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#76933C"));
+
+                    // Tipo de Dimensiones 
+                    var CellC5 = worksheet.Cells["C5"];
+                    CellC5.Value = "Dimensiones";
+                    CellC5.Style.Font.Name = "Calibri";
+                    CellC5.Style.Font.Size = 11;
+                    CellC5.Style.Font.Bold = true;
+                    CellC5.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    CellC5.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellC5.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#76933C"));
+
+                    // Tipo de Material 
+                    var CellD5 = worksheet.Cells["D5"];
+                    CellD5.Value = "Material";
+                    CellD5.Style.Font.Name = "Calibri";
+                    CellD5.Style.Font.Size = 11;
+                    CellD5.Style.Font.Bold = true;
+                    CellD5.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    CellD5.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellD5.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#76933C"));
+
+
+                    // Especificaciones Tecnicas 
+                    var CellE5 = worksheet.Cells["E5"];
+                    CellE5.Value = "Especificaciones Tecnicas";
+                    CellE5.Style.Font.Name = "Calibri";
+                    CellE5.Style.Font.Size = 11;
+                    CellE5.Style.Font.Bold = true;
+                    CellE5.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    CellE5.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellE5.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#76933C"));
+
+                    //  Cantidad 
+                    var CellF5 = worksheet.Cells["F5"];
+                    CellF5.Value = "Cantidad";
+                    CellF5.Style.Font.Name = "Calibri";
+                    CellF5.Style.Font.Size = 11;
+                    CellF5.Style.Font.Bold = true;
+                    CellF5.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    CellF5.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellF5.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#76933C"));
+
+                    //  Proveedor Sugerido 
+                    var CellG5 = worksheet.Cells["G5"];
+                    CellG5.Value = "Proveedor sugerido";
+                    CellG5.Style.Font.Name = "Calibri";
+                    CellG5.Style.Font.Size = 11;
+                    CellG5.Style.Font.Bold = true;
+                    CellG5.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                    CellG5.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellG5.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#76933C"));
+
+
+                    // Observacion Compras 
+                    var CellH5 = worksheet.Cells["H5"];
+                    CellH5.Value = "Observación\nCompras";
+                    CellH5.Style.Font.Name = "Calibri";
+                    CellH5.Style.Font.Size = 11;
+                    CellH5.Style.Font.Bold = true;
+                    CellH5.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellH5.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    CellH5.Style.WrapText = true;
+                    CellH5.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellH5.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#FFC000"));
+
+                    // Observacion desarrollo 
+                    var CellI5 = worksheet.Cells["I5"];
+                    CellI5.Value = "Observación\nDesarrollo";
+                    CellI5.Style.Font.Name = "Calibri";
+                    CellI5.Style.Font.Size = 11;
+                    CellI5.Style.Font.Bold = true;
+                    CellI5.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellI5.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    CellI5.Style.WrapText = true;
+                    CellI5.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellI5.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#FFC000"));
+
+                    // Precio sugerido 
+                    var CellJ5 = worksheet.Cells["J5"];
+                    CellJ5.Value = "Precio Sugerido";
+                    CellJ5.Style.Font.Name = "Calibri";
+                    CellJ5.Style.Font.Size = 11;
+                    CellJ5.Style.Font.Bold = true;
+                    CellJ5.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellJ5.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    CellJ5.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellJ5.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#FFC000"));
+
+                    // Subtotal Sugerido 
+                    var CellK5 = worksheet.Cells["K5"];
+                    CellK5.Value = "Sub Total\nSugerido";
+                    CellK5.Style.Font.Name = "Calibri";
+                    CellK5.Style.Font.Size = 11;
+                    CellK5.Style.Font.Bold = true;
+                    CellK5.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    CellK5.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    CellK5.Style.WrapText = true;
+                    CellK5.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    CellK5.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#FFC000"));
+
+                    // consultamos los detalles para terminar de llenar el exel 
+
+                    DataTable InformacionDetalleSol = ConsultarDetalleSolicitud(lbNumeroSolicitud.Text);
+
+                    // Insertar los datos del DataTable en la hoja de excel
+                    int startRow = 6;
+                    int currentRow = startRow;
+
+                    foreach (DataRow row in InformacionDetalleSol.Rows)
+                    {
+                        worksheet.Cells[currentRow, 1].Value = row["ID_Solicitud"];
+                        worksheet.Cells[currentRow, 2].Value = row["Producto"];
+                        worksheet.Cells[currentRow, 3].Value = row["Ancho"] + "X" + row["Alto"] + "X" + row["Profundidad"];
+                        worksheet.Cells[currentRow, 4].Value = row["Material"];
+                        worksheet.Cells[currentRow, 5].Value = row["EspecificacionesTecnicas"];
+                        worksheet.Cells[currentRow, 6].Value = Convert.ToInt32(row["Cantidad"]);
+                        worksheet.Cells[currentRow, 7].Value = row["ProveedorSugerido"];
+                        worksheet.Cells[currentRow, 8].Value = row["observacionCompras"];
+                        worksheet.Cells[currentRow, 9].Value = row["observacionDesarrollo"];
+                        worksheet.Cells[currentRow, 10].Value = row["PrecioSugerido"];
+                        worksheet.Cells[currentRow, 11].Formula = $"F{currentRow}*J{currentRow}";
+
+                        // Ajustar el texto para cada celda en la fila actual
+                        for (int col = 1; col <= 11; col++) // Ajusta el número de columnas según tus datos
+                        {
+                            worksheet.Cells[currentRow, col].Style.WrapText = true;
+                     
+                        }
+
+                        currentRow++;
+                    }
+
+
+
+
+                    // Definimos la ruta y el archivo 
+                    string networkPath = @"\\SRVDBAPPS\S_I_Ducon$\TemporalAdjunto";
+                    string fileName = $"Solicitud_N{ID_Solicitud}.xlsx";
+                    string fullPath = Path.Combine(networkPath, fileName);
+
+                    // Guardar el archivo de Excel en la ruta de red
+                    using (FileStream fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write))
+                    {
+                        excelPackage.SaveAs(fileStream);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al exportar a Excel: " + ex.Message);
+            }
+        }
+        private string ConsultarRutasDocumentosSPE(string ID_Solicitud)
+        {
+            string RutaBase = @"\\Srvfs\s_i_ducon$\Documentacion PE";
+            string CarpetaBase = "PE" + ID_Solicitud;
+            string rutas = "";
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string query = "SELECT Archivo FROM tblDocumentacion WHERE ID_OT LIKE @ID_OT AND TipoDocumento <> 'BOSQUEJO'";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@ID_OT", "%" + "PE" + ID_Solicitud + "-%");
+
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string archivo = reader["Archivo"].ToString();
+                        string rutaCompleta = Path.Combine(RutaBase, CarpetaBase, archivo);
+
+                        if (rutas != "")
+                        {
+                            rutas += ";";
+                        }
+                        rutas += rutaCompleta;
+                    }
+                }
+            }
+
+            return rutas;
+        }
+        private string ConsultarCorreoViaticos()
+        {
+            string mail = "";
+            // Realizar la conexión y la consulta a la base de datos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = "SELECT mail FROM tblUsosVarios WHERE ObjetivoMail = 'MailCotizarViaticosTransporte'";
+
+                SqlCommand command = new SqlCommand(query, connection);
+                SqlDataReader reader = command.ExecuteReader();
+
+                // Verificar si hay filas devueltas por la consulta
+                if (reader.Read())
+                {
+                    mail = reader["Mail"].ToString();
+                }
+
+            }
+
+            return mail;
+        }
+        public DataTable ConsultarDetalleSolicitud(string ID_Solicitud)
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+                string sSql = "SELECT * FROM tblSoliciDiseEspeDeta WHERE ID_Solicitud = @Id_Solcitud";
+                using (SqlCommand cmdSelect = new SqlCommand(sSql, connectionSID))
+                {
+                    cmdSelect.Parameters.AddWithValue("@Id_Solcitud", ID_Solicitud);
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmdSelect))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            return dataTable;
+        }
+
+
+        //Metodos para Programar la solicitud  Ventas 
         public DateTime CalcularFechaEntrega(DateTime FechaIngreso)
         {
             DateTime UltimaActivacionSolicitud = FechaIngreso;
+            DateTime FechaEntrega = DateTime.Now;
 
             //Se valida  si ingresan la solicitud un dia sabado o domingo 
             while (UltimaActivacionSolicitud.DayOfWeek == DayOfWeek.Saturday || UltimaActivacionSolicitud.DayOfWeek == DayOfWeek.Sunday)
@@ -2548,7 +3456,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 UltimaActivacionSolicitud = UltimaActivacionSolicitud.AddDays(1);
                 UltimaActivacionSolicitud = new DateTime(UltimaActivacionSolicitud.Year, UltimaActivacionSolicitud.Month, UltimaActivacionSolicitud.Day, 8, 0, 0);
             }
-            DateTime FechaEntrega = SumarDiaLaboral(UltimaActivacionSolicitud, 5);
+
+            // Coltrol de tres dias para la cotizacion y 5 dias para desarrollos 
+            if(ddlTipo.SelectedItem.Text .ToUpper() == "DESARROLLO")
+            {
+                 FechaEntrega = SumarDiaLaboral(UltimaActivacionSolicitud, 5);
+            }
+            else if(ddlTipo.SelectedItem.Text.ToUpper() == "COTIZACIÓN")
+            {
+                 FechaEntrega = SumarDiaLaboral(UltimaActivacionSolicitud, 3);
+            }
+           
 
             return FechaEntrega;
         }
@@ -2651,8 +3569,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-        // Detalle solicitud
 
+
+        // Detalle solicitud
         protected void DataGridDetalleSolicitud_LinkButton(object source, DataGridCommandEventArgs e)
         {
 
@@ -2790,7 +3709,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
         }
-
         protected void DataGridDetalleSolicitud_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
@@ -2923,31 +3841,126 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void GuardarModificarDetalle(object sender, EventArgs e)
         {
-
-
-            if (Session["InsertUpdateDetalle"]?.ToString() == "Insertar")
+            if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
             {
-                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                if (Session["InsertUpdateDetalle"]?.ToString() == "Insertar")
                 {
-                    connection.Open();
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
-                    using (SqlCommand getMaxIdCmd = new SqlCommand("SELECT Max(tblSoliciDiseEspeDeta.Id_SolicitudDetalle) FROM tblSoliciDiseEspeDeta", connection))
+                    using (SqlConnection connection = new SqlConnection(connectionString))
                     {
-                        object maxIdObj = getMaxIdCmd.ExecuteScalar();
-                        int maxId = (maxIdObj != null && maxIdObj != DBNull.Value) ? Convert.ToInt32(maxIdObj) : 0;
+                        connection.Open();
 
-                        int nuevoId = maxId + 1;
+                        using (SqlCommand getMaxIdCmd = new SqlCommand("SELECT Max(tblSoliciDiseEspeDeta.Id_SolicitudDetalle) FROM tblSoliciDiseEspeDeta", connection))
+                        {
+                            object maxIdObj = getMaxIdCmd.ExecuteScalar();
+                            int maxId = (maxIdObj != null && maxIdObj != DBNull.Value) ? Convert.ToInt32(maxIdObj) : 0;
 
-                        string IdSolicitud = nuevoId.ToString();
-                        connection.Close();
-                        using (SqlCommand cmd = new SqlCommand("Sp_InsertarDetalleSolicitud", connection))
+                            int nuevoId = maxId + 1;
+
+                            string IdSolicitud = nuevoId.ToString();
+                            connection.Close();
+                            using (SqlCommand cmd = new SqlCommand("Sp_InsertarDetalleSolicitud", connection))
+                            {
+
+                                cmd.CommandType = CommandType.StoredProcedure;
+
+                                cmd.Parameters.AddWithValue("@Id_SolicitudDetalle", IdSolicitud);
+                                cmd.Parameters.AddWithValue("@ID_Solicitud", lbNumeroSolicitud.Text);
+                                cmd.Parameters.AddWithValue("@Producto", txDescProduc.InnerText);
+                                cmd.Parameters.AddWithValue("@ProveedorSugerido", tbProveedor.Text);
+
+                                cmd.Parameters.AddWithValue("@Ancho", tbAncho.Text);
+                                cmd.Parameters.AddWithValue("@Alto", tbAltura.Text);
+
+                                cmd.Parameters.AddWithValue("@Profundidad", tbProfundidad.Text);
+                                cmd.Parameters.AddWithValue("@Material", tbMaterial.Text);
+                                cmd.Parameters.AddWithValue("@EspecificacionesTecnicas", txEspGen.InnerText);
+                                cmd.Parameters.AddWithValue("@Cantidad", tbCantidad.Text);
+
+
+                                connection.Open();
+
+
+                                int rowsAffected = cmd.ExecuteNonQuery();
+                                if (rowsAffected > 0)
+                                {
+                                    // Variables de session de Detalle 
+                                    Session["ProductoSession"] = txDescProduc.InnerText;
+                                    Session["ProveedorVentaSession"] = tbProveedor.Text;
+                                    Session["AnchoSession"] = tbAncho.Text;
+                                    Session["AlturaSession"] = tbAltura.Text;
+                                    Session["ProfundidadSession"] = tbProfundidad.Text;
+                                    Session["MaterialSession"] = tbMaterial.Text;
+                                    Session["CantidadSession"] = tbCantidad.Text;
+                                    Session["EspGeneralSession"] = txEspGen.InnerText;
+
+                                    // Variables de Session de la solicitud 
+                                    Session["FecIngrSolSession"] = tbFechaIngresoServidor.Text;
+                                    Session["FecEntregaSolSession"] = tbFechaEntregaServidor.Text;
+                                    Session["FechaRespuestaSession"] = tbFechaRespuestaServidor.Text;
+                                    Session["DirigidoSession"] = ddlDirigido.SelectedItem.Text;
+                                    Session["TipoSession"] = ddlTipo.SelectedItem.Text;
+                                    Session["SolOrigenSession"] = tbSolicitudOrigen.Text;
+                                    Session["ProyectoSolSession"] = tbProyecto.Text;
+                                    Session["CiudadSession"] = ddlCiudad.SelectedItem.Text;
+                                    Session["ViaticoSession"] = chxViaticos.Checked;
+                                    Session["CotizacionSession"] = tbCotizacionEsp.Text;
+                                    Session["ClienteSolSession"] = tbClienteServidor.Text;
+                                    Session["ContactoSolSession"] = tbContactoServidor.Text;
+                                    Session["TelSeolSession"] = tbTelefonoServidor.Text;
+                                    Session["CelularSolSession"] = tbCelularServidor.Text;
+                                    Session["Mailsolsession"] = tbMailServidor.Text;
+                                    Session["DirecccionSolSession"] = tbDireccionServidor.Text;
+                                    Session["AsesorSolSession"] = ddlAsesor.SelectedItem.Text;
+                                    Session["numeroSolicitudSession"] = lbNumeroSolicitud.Text; ;
+
+                                    Session["ScriptEspecifico"] = "ActivarBotonDetalle1();";
+
+
+                                    string mensajePersonalizado = "El detalle  ha sido ingresado con éxito";
+                                    string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                                }
+                                else
+                                {
+                                    string mensajePersonalizado = "¡Ups! El detalle no se ingresó correctamente.Por favor comuniquese con el Departamento de Sistemas para obtener ayuda";
+                                    string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                                }
+
+
+
+
+                            }
+                        }
+                    }
+                }
+
+                else if (Session["InsertUpdateDetalle"]?.ToString() == "Actualizar")
+                {
+
+                    //CalcularFechaEntregaSolicitudEspecial() de momento se envia fecha del primer dia del año  !!!!IMPORTANTE !!!!
+
+                    if (!ConsultarTerminadoVentas())
+                    {
+                        string mensajePersonalizado = "La solicitud ya ha sido programda para ventas y no puede ser modificada.";
+                        string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    }
+
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+
+                        using (SqlCommand cmd = new SqlCommand("Sp_ActualizarDetalleSolicitud", connection))
                         {
 
                             cmd.CommandType = CommandType.StoredProcedure;
 
-                            cmd.Parameters.AddWithValue("@Id_SolicitudDetalle", IdSolicitud);
+                            cmd.Parameters.AddWithValue("@Id_SolicitudDetalle", Session["Id_Detalle"].ToString());
                             cmd.Parameters.AddWithValue("@ID_Solicitud", lbNumeroSolicitud.Text);
                             cmd.Parameters.AddWithValue("@Producto", txDescProduc.InnerText);
                             cmd.Parameters.AddWithValue("@ProveedorSugerido", tbProveedor.Text);
@@ -2961,6 +3974,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             cmd.Parameters.AddWithValue("@Cantidad", tbCantidad.Text);
 
 
+
                             connection.Open();
 
 
@@ -2968,6 +3982,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             if (rowsAffected > 0)
                             {
                                 // Variables de session de Detalle 
+
                                 Session["ProductoSession"] = txDescProduc.InnerText;
                                 Session["ProveedorVentaSession"] = tbProveedor.Text;
                                 Session["AnchoSession"] = tbAncho.Text;
@@ -2978,14 +3993,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 Session["EspGeneralSession"] = txEspGen.InnerText;
 
                                 // Variables de Session de la solicitud 
-                                Session["FecIngrSolSession"] = tbFechaIngresoServidor.Text;
                                 Session["FecEntregaSolSession"] = tbFechaEntregaServidor.Text;
                                 Session["FechaRespuestaSession"] = tbFechaRespuestaServidor.Text;
                                 Session["DirigidoSession"] = ddlDirigido.SelectedItem.Text;
                                 Session["TipoSession"] = ddlTipo.SelectedItem.Text;
                                 Session["SolOrigenSession"] = tbSolicitudOrigen.Text;
                                 Session["ProyectoSolSession"] = tbProyecto.Text;
-                                Session["CiudadSession"] = ddlCiudad.SelectedItem.Text;
+                                Session["CiudadSession"] = ddlCiudad.Text;
                                 Session["ViaticoSession"] = chxViaticos.Checked;
                                 Session["CotizacionSession"] = tbCotizacionEsp.Text;
                                 Session["ClienteSolSession"] = tbClienteServidor.Text;
@@ -2995,18 +4009,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 Session["Mailsolsession"] = tbMailServidor.Text;
                                 Session["DirecccionSolSession"] = tbDireccionServidor.Text;
                                 Session["AsesorSolSession"] = ddlAsesor.SelectedItem.Text;
-                                Session["numeroSolicitudSession"] = lbNumeroSolicitud.Text; ;
+                                Session["numeroSolicitudSession"] = lbNumeroSolicitud.Text;
 
                                 Session["ScriptEspecifico"] = "ActivarBotonDetalle1();";
 
 
-                                string mensajePersonalizado = "El detalle  ha sido ingresado con éxito";
+                                string mensajePersonalizado = "¡El detalle  ha sido actualizado con exito!";
                                 string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
                                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                             }
                             else
                             {
-                                string mensajePersonalizado = "¡Ups! El detalle no se ingresó correctamente.Por favor comuniquese con el Departamento de Sistemas para obtener ayuda";
+                                string mensajePersonalizado = "¡Ups! El detalle no se Actualizó correctamente.por favor, comuniquese con el Departamento de Sistemas para obtener ayuda";
                                 string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
                                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                             }
@@ -3016,108 +4030,63 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         }
                     }
+
                 }
-            }
-
-            else if (Session["InsertUpdateDetalle"]?.ToString() == "Actualizar")
-            {
-
-                //CalcularFechaEntregaSolicitudEspecial() de momento se envia fecha del primer dia del año  !!!!IMPORTANTE !!!!
-
-                if (!ConsultarTerminadoVentas())
+                else
                 {
                     string mensajePersonalizado = "La solicitud ya ha sido programda para ventas y no puede ser modificada.";
                     string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
                     Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                 }
 
-                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-
-                    using (SqlCommand cmd = new SqlCommand("Sp_ActualizarDetalleSolicitud", connection))
-                    {
-
-                        cmd.CommandType = CommandType.StoredProcedure;
-
-                        cmd.Parameters.AddWithValue("@Id_SolicitudDetalle", Session["Id_Detalle"].ToString());
-                        cmd.Parameters.AddWithValue("@ID_Solicitud", lbNumeroSolicitud.Text);
-                        cmd.Parameters.AddWithValue("@Producto", txDescProduc.InnerText);
-                        cmd.Parameters.AddWithValue("@ProveedorSugerido", tbProveedor.Text);
-
-                        cmd.Parameters.AddWithValue("@Ancho", tbAncho.Text);
-                        cmd.Parameters.AddWithValue("@Alto", tbAltura.Text);
-
-                        cmd.Parameters.AddWithValue("@Profundidad", tbProfundidad.Text);
-                        cmd.Parameters.AddWithValue("@Material", tbMaterial.Text);
-                        cmd.Parameters.AddWithValue("@EspecificacionesTecnicas", txEspGen.InnerText);
-                        cmd.Parameters.AddWithValue("@Cantidad", tbCantidad.Text);
-
-
-
-                        connection.Open();
-
-
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                        if (rowsAffected > 0)
-                        {
-                            // Variables de session de Detalle 
-
-                            Session["ProductoSession"] = txDescProduc.InnerText;
-                            Session["ProveedorVentaSession"] = tbProveedor.Text;
-                            Session["AnchoSession"] = tbAncho.Text;
-                            Session["AlturaSession"] = tbAltura.Text;
-                            Session["ProfundidadSession"] = tbProfundidad.Text;
-                            Session["MaterialSession"] = tbMaterial.Text;
-                            Session["CantidadSession"] = tbCantidad.Text;
-                            Session["EspGeneralSession"] = txEspGen.InnerText;
-
-                            // Variables de Session de la solicitud 
-                            Session["FecEntregaSolSession"] = tbFechaEntregaServidor.Text;
-                            Session["FechaRespuestaSession"] = tbFechaRespuestaServidor.Text;
-                            Session["DirigidoSession"] = ddlDirigido.SelectedItem.Text;
-                            Session["TipoSession"] = ddlTipo.SelectedItem.Text;
-                            Session["SolOrigenSession"] = tbSolicitudOrigen.Text;
-                            Session["ProyectoSolSession"] = tbProyecto.Text;
-                            Session["CiudadSession"] = ddlCiudad.Text;
-                            Session["ViaticoSession"] = chxViaticos.Checked;
-                            Session["CotizacionSession"] = tbCotizacionEsp.Text;
-                            Session["ClienteSolSession"] = tbClienteServidor.Text;
-                            Session["ContactoSolSession"] = tbContactoServidor.Text;
-                            Session["TelSeolSession"] = tbTelefonoServidor.Text;
-                            Session["CelularSolSession"] = tbCelularServidor.Text;
-                            Session["Mailsolsession"] = tbMailServidor.Text;
-                            Session["DirecccionSolSession"] = tbDireccionServidor.Text;
-                            Session["AsesorSolSession"] = ddlAsesor.SelectedItem.Text;
-                            Session["numeroSolicitudSession"] = lbNumeroSolicitud.Text;
-
-                            Session["ScriptEspecifico"] = "ActivarBotonDetalle1();";
-
-
-                            string mensajePersonalizado = "¡El detalle  ha sido actualizado con exito!";
-                            string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
-                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-                        }
-                        else
-                        {
-                            string mensajePersonalizado = "¡Ups! El detalle no se Actualizó correctamente.por favor, comuniquese con el Departamento de Sistemas para obtener ayuda";
-                            string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
-                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-                        }
-
-
-
-
-                    }
-                }
 
             }
-            else
+            else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
             {
-                string mensajePersonalizado = "La solicitud ya ha sido programda para ventas y no puede ser modificada.";
-                string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
-                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                if (ActualizarDetalleSolicitudEspecial())
+                {
+                   
+                    // Tener el cuenta para controlar  que quede en la pantalla donde modificó  para el dibujante
+
+                    //Mensaje Exito             
+                    string mensajePersonalizado = "El detalle ha sido actualizado con exito.";
+                    string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                }
+                else
+                {
+                    string mensajePersonalizado = "Ocurrió un error, por favor intenta nuevamente, ";
+                    string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                }
+            }
+
+
+        }
+
+        private bool ActualizarDetalleSolicitudEspecial()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "UPDATE tblSoliciDiseEspeDeta SET observacionDesarrollo = @ObsDibujo, Costo = @costo, Factor = @factor," +
+                          " PrecioSugerido = @precioSugerido, Categoria = 'PENDIENTE' WHERE Id_SolicitudDetalle = @Id_Detalle";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    // Ajusta los valores según los nombres de columnas reales en tu DataRow
+                    cmd.Parameters.AddWithValue("@ObsDibujo", txObsDesarrollo.InnerText);
+                    cmd.Parameters.AddWithValue("@costo", tbCostoD.Text);
+                    cmd.Parameters.AddWithValue("@factor", tbFactorD.Text); // Aquí faltaba ".Text"
+                    cmd.Parameters.AddWithValue("@precioSugerido",Convert.ToInt32(tbPrecioSugerido.Text.Replace(",","")));
+                    cmd.Parameters.AddWithValue("@Id_Detalle", lbIdDetalle.Text);
+
+                    int filaAfectada = cmd.ExecuteNonQuery();
+
+                    return filaAfectada > 0;
+                }
             }
         }
 
@@ -3170,7 +4139,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
-
 
         protected void ImportarDetalle_Click(object sender, EventArgs e)
         {
@@ -3476,7 +4444,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
         }
-
         private void CargarDesarrollos_Metodo()
         {
             // Cargar Desarrollos 
@@ -3492,7 +4459,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
         }
-
         private void CargarCotizaciones_Metodo()
         {
 
@@ -3751,6 +4717,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 // Se limpia contador de Click
                 ContadorClic.Text = "";
+                ControlBotonesDiseño();
 
 
                 if (ID_Sol_Dib.Text != "")
@@ -3813,6 +4780,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 // Se limpiar contador Click
                 ContadorClic.Text = "";
+                ControlBotonesDiseño();
 
                 if (ID_Cot_Dib.Text != "")
                 {
@@ -3912,11 +4880,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     string mensajeExito = "La solicitud ya está marcada como Desarrollo Complejo.";
                     string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
                     ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
-
                 }
                 else
                 {
-                    ActulizarComplejo(IdSolicitud, chkComplejo);
+
+                    ActivarComplejo(IdSolicitud, chkComplejo);
                     string mensajeExito = "Desarrollo Complejo Activado vence en 20 dias";
                     string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
                     ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
@@ -3930,13 +4898,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (ComplejoDB == chkComplejo)
                 {
+                  
                     string mensajeExito = "La solicitud ya está marcada como No Desarrollo Complejo.";
                     string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
                     ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
                 }
                 else
                 {
-                    ActulizarComplejo(IdSolicitud, chkComplejo);
+                    DesactivarComplejo(IdSolicitud, chkComplejo);
                     string mensajeExito = "Desarrollo Complejo Desactivado";
                     string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
                     ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
@@ -3960,10 +4929,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         }
-        private void ActulizarComplejo(string ID, bool Complejo)
+        private void ActivarComplejo(string ID, bool Complejo)
         {
+            DateTime FechaIngresoActual = Convert.ToDateTime(tbFechaIngreso.Text);
+            DateTime FechaEntregaActualizda20Dias = CalcularFechaEntregaComplejo(FechaIngresoActual);
+           
+            // el calculo de la fecha esta Ok solo falta hacer el update 
+
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-            string sSql = "Update tblSoliciDiseEspe SET DesarrolloComplejo = @Complejo where ID_Solicitud = @ID_Solicitud ";
+            string sSql = "Update tblSoliciDiseEspe SET DesarrolloComplejo = @Complejo, Fecha_Programada_Entrega = @FechaEntrega where ID_Solicitud = @ID_Solicitud ";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -3974,11 +4948,38 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     // Aquí ajusta los valores según los nombres de columnas reales en tu DataRow
                     cmd.Parameters.AddWithValue("@ID_Solicitud", ID);
                     cmd.Parameters.AddWithValue("@Complejo", Complejo);
+                    cmd.Parameters.AddWithValue("@FechaEntrega", FechaEntregaActualizda20Dias);
 
                     cmd.ExecuteNonQuery();
                 }
             }
         }
+        private void DesactivarComplejo(string ID, bool Complejo)
+        {
+
+            DateTime FechaIngresoActual = Convert.ToDateTime(tbFechaIngreso.Text);
+            DateTime FechaProEntrega = CalcularFechaEntrega(FechaIngresoActual);
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "Update tblSoliciDiseEspe SET DesarrolloComplejo = @Complejo, Fecha_Programada_Entrega = @FechaEntrega where ID_Solicitud = @ID_Solicitud ";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    // Aquí ajusta los valores según los nombres de columnas reales en tu DataRow
+                    cmd.Parameters.AddWithValue("@ID_Solicitud", ID);
+                    cmd.Parameters.AddWithValue("@Complejo", Complejo);
+                    cmd.Parameters.AddWithValue("@FechaEntrega", FechaProEntrega);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
         private bool ConsultarComplejo(string ID)
         {
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -4009,6 +5010,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
             }
+        }
+        public DateTime CalcularFechaEntregaComplejo(DateTime FechaIngreso)
+        {
+            DateTime UltimaActivacionSolicitud = FechaIngreso;
+            
+
+            //Se valida  si ingresan la solicitud un dia sabado o domingo 
+            while (UltimaActivacionSolicitud.DayOfWeek == DayOfWeek.Saturday || UltimaActivacionSolicitud.DayOfWeek == DayOfWeek.Sunday)
+            {
+                UltimaActivacionSolicitud = UltimaActivacionSolicitud.AddDays(1);
+                UltimaActivacionSolicitud = new DateTime(UltimaActivacionSolicitud.Year, UltimaActivacionSolicitud.Month, UltimaActivacionSolicitud.Day, 8, 0, 0);
+            }
+
+             DateTime  FechaEntrega = SumarDiaLaboral(UltimaActivacionSolicitud, 20);
+            
+            return FechaEntrega;
         }
 
 
@@ -4193,12 +5210,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
         }
-
         protected void btnCerrarDevolver_Click(object sender, EventArgs e)
         {
             // Refrescar la página después de cerrar el modal        
             ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalCerrarDev').modal('show');", true);
         }
+
 
         // Metodos cargar observacion en modal 
         private void ConsultarCorreo(string ID_Solicitud)
@@ -4447,7 +5464,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
         }
-
         private bool ValidarCamposRequeridos()
         {
             bool valido = true;
@@ -4637,7 +5653,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
-
         private void DevolverSolicitudaVentas(string ID_Solicitud)
         {
             // Consulta para verificar si el usuario tiene permisos
@@ -4678,6 +5693,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
         }
+
 
         // Metodo para cargar la solicitud si tiene ID_Solicitud 
         private void CargarSolictudEspecial(string idSolcitud)
@@ -4892,6 +5908,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
 
+
         // Pausar Solicitud Especial
         protected void btnPausar_Si_Click(object sender, EventArgs e)
         {
@@ -5069,7 +6086,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             return correo;
         }
-
         public string ConsultarCorreoEmisor()
         {
             string correo = "";
@@ -5097,7 +6113,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             return correo;
         }
-
         public bool EnviarCorreoPausarSolEspe(string destinatarios, string cuerpo)
         {
             string nombreProcedimiento = "duc_sp_Correo";
@@ -5131,7 +6146,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 return false;
             }
         }
-
         private bool EsCorreoValido(string correo)
         {
             if (string.IsNullOrWhiteSpace(correo))
@@ -5241,7 +6255,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ScriptManager.RegisterStartupScript(this, GetType(), "ControlBtnCliente", script, true);
 
         }
-
         protected void chkVerCot_CheckedChanged(object sender, EventArgs e)
         {
 
@@ -5263,7 +6276,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
         // Detener Pedido Especial
-
         protected void btnDetenerPE_SI_Click(object sender, EventArgs e)
         {
             if (Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO" || Session["Departamento"].ToString().ToUpper() == "DISEÑO")
@@ -5287,7 +6299,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ddlTipoObservacion.Items.Insert(0, new System.Web.UI.WebControls.ListItem(" "));
                 ddlTipoObservacion.SelectedIndex = 0;
 
-              
+
 
                 // Ponemos la fecha del dia por defecto 
                 DateTime Fecha = DateTime.Now;
@@ -5303,7 +6315,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 // Se abre el modal de la observacion 
                 ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolverDetener').modal('show');", true);
- 
+
             }
             else
             {
@@ -5312,12 +6324,340 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
             }
         }
+        protected void btnGrabarObservacionDetener_Click(object sender, EventArgs e)
+        {
+            // Validar que tenga los campos necesarios
+            if (ValidarCamposRequeridos())
+            {
+                InsertarObservacion();
 
-  
+                string ID_Solicitud = tbOt.Text;
+                if (ID_Solicitud.StartsWith("SPE"))
+                {
+                    ID_Solicitud = ID_Solicitud.Substring(3).TrimStart();
+                }
+
+                // Traemos el Id_MaxObservacion 
+                string Id_Observacion = ConsultarId_Observacion();
+
+                // Se valida si hay receptores seleccionados             
+                if (tbCedulaRecp.Text != "")
+                {
+                    string cedulasNotificar = tbCedulaRecp.Text.Trim(';');
+                    string NombresNotificar = tbNombreRecp.Text.Trim(';');
+
+                    string[] CedNot = cedulasNotificar.Split(';');
+                    string[] NomNot = NombresNotificar.Split(';');
+
+                    for (int i = 0; i < CedNot.Length; i++)
+                    {
+                        // Llamamos al método InsertarObservacionReceptores con la cédula y el nombre actuales
+                        InsertarObservacionReceptores(Id_Observacion, CedNot[i], NomNot[i]);
+
+                    }
+                }
+
+                //Consultamos el area de aplicacion  con el codigo del ddlTipoObservacion              
+                string Aplicacion = ConsultarAreaAplicacion();
+
+                //Enviar la notificacion por Correo 
+                string destinatarios = "andersonbetancur@ducon.com.co"; //(tbReceptorCorreo.Text + ";" + tbRecepTipoObs.Text).Trim(';').Trim(' ');
+                string cuerpo = @"
+                    <!DOCTYPE html>
+                    <html lang='es'>
+                    <head>
+                        <meta charset='UTF-8'>
+                        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+                        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                        <style>
+                            body {
+                                font-family: Arial, sans-serif;
+                                font-size: 14px;
+                                line-height: 1.6;
+                                margin: 0;
+                                padding: 0;
+                                background-color: #f9f9f9;
+                            }
+                            .container {
+                                max-width: 37rem;
+                                margin: 20px auto;
+                                padding: 20px;
+                                border: 1px solid #ccc;
+                                border-radius: 5px;
+                                background-color: #fff;
+                            }
+                            h2 {
+                                color: #333;
+                                font-size: 24px;
+                                margin-bottom: 20px;
+                            }
+                            p {
+                                margin-bottom: 10px;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class='container'>
+                            <h3>Notificación de Observación: </h3>
+                            <p> <strong> Fecha de Observación: </strong> " + DateTime.Now.ToString() + @"</p>
+                            <p><strong> Emisor : </strong> <strong> " + Session["usuariologueado"].ToString() + @"</strong></p>
+                            <p><strong>Nombre de la Obra: </strong> " + tbObra.Text + @"</p>
+                            <p><strong>Tipo Observacion : </strong> " + ddlTipoObservacion.SelectedItem.Text + @"</p>
+                            <p><strong>Detalle Observación: </strong> " + txObservacion.InnerText + @"</p>
+                            <p><strong>Fin Observación </strong> </p>
+                           
+                        </div>
+                    </body>
+                    </html>";
+
+                //ejecutar el procedimiento almacenado que envia el correo 
+                EnviarCorreoDevolucionPE(destinatarios, cuerpo, Aplicacion);
+
+                DetenerSolicitudEspecial(ID_Solicitud);
+
+
+                string mensajePersonalizado = "El pedido se Detuvo con éxito y se notificó por correo electrónico.";
+                string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            }
+        }
         protected void btnCerrarDetener_Click(object sender, EventArgs e)
         {
             // Refrescar la página después de cerrar el modal        
             ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalCerrarDet').modal('show');", true);
         }
+        private void DetenerSolicitudEspecial(string ID_Solicitud)
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "UPDATE tblSoliciDiseEspeDeta SET Terminado=0, FechaRespuesta = @FechaRes WHERE Id_Solicitud= @ID_Solicitud";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@FechaRes", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@ID_Solicitud", ID_Solicitud);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+
+        //Redirigir detalle a  compras 
+        protected void RedirigirCompras_Click(object sender, EventArgs e)
+        {
+            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalRedirigirCompras').modal('show');", true);
+        }
+        protected void btnRedirigir_SI_Click(object sender, EventArgs e)
+        {
+            //Realizar la actualizacones 
+            ActualizarSolicitudRediCompras();
+            ActualizarDetalleRediCompras();
+
+            // Enviar el correo electronico 
+            string correoEmisor = ConsultarCorreoEmisor();
+            string correoCompras = ConsultarCorreoCompras();
+            string correoAsesor = ConsultarCorreoAsesor();
+
+            string destinatarios = correoEmisor + ";" + correoAsesor + ";" + correoCompras;
+
+
+            string cuerpo = @"
+                    <!DOCTYPE html>
+                    <html lang='es'>
+                    <head>
+                        <meta charset='UTF-8'>
+                        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+                        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                        <style>
+                            body {
+                                font-family: Arial, sans-serif;
+                                font-size: 14px;
+                                line-height: 1.6;
+                                margin: 0;
+                                padding: 0;
+                                background-color: #f9f9f9;
+                            }
+                            .container {
+                                max-width: 37rem;
+                                margin: 20px auto;
+                                padding: 20px;
+                                border: 1px solid #ccc;
+                                border-radius: 5px;
+                                background-color: #fff;
+                            }
+                            h2 {
+                                color: #333;
+                                font-size: 24px;
+                                margin-bottom: 20px;
+                            }
+                            p {
+                                margin-bottom: 10px;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class='container'>
+                            <h3>Redirección  a Compras </h3>
+                            <p> <strong> Fecha: </strong> " + DateTime.Now.ToString() + @"</p>
+                            <p><strong> Realizado por : </strong> <strong> " + Session["usuariologueado"].ToString() + @"</strong></p>
+                            <p><strong>solicitud </strong> " + lbNumeroSolicitud.Text + "_" + lbIdDetalle.Text + @"</p>
+                            <p>Ver documentación asignada a COMPRAS </p>
+                            <p><strong>Prueba de sistemas SID nuevo Anderson, hacer caso omiso </strong> </p>
+                           
+                        </div>
+                    </body>
+                    </html>";
+
+
+
+            if (EnviarCorreRediCompras(destinatarios, cuerpo))
+            {
+                string mensajePersonalizado = "La solicitud a sido redirigida a compras y notificada por correo electronico";
+                string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            }
+            else
+            {
+                string mensajePersonalizado = "La Solicitud ha sido redireccionada a compras, pero no fue notificada, por favor confimar notificación .";
+                string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            }
+
+
+
+
+        }
+        private void ActualizarSolicitudRediCompras()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "UPDATE tblSoliciDiseEspe SET  RedirigidoCompras = 1 WHERE id_Solicitud= @ID_Solicitud ";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+
+                    cmd.Parameters.AddWithValue("@ID_Solicitud", lbNumeroSolicitud.Text);
+
+                    int filaAfectada = cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        private void ActualizarDetalleRediCompras()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "UPDATE tblSoliciDiseEspeDeta SET RedirigidoaCompras=1, Redirigidoel= @FechaRed, ComprasOk= 0 WHERE Id_SolicitudDetalle= @ID_Detalle ";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+
+                    cmd.Parameters.AddWithValue("@FechaRed", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@ID_Detalle", lbIdDetalle.Text);
+
+                    int filaAfectada = cmd.ExecuteNonQuery();
+
+                }
+            }
+        }
+        public string ConsultarCorreoCompras()
+        {
+            string correo = "";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "select  mail from tblUsosVarios where ObjetivoMail = 'MailSolicitudPECOMPRAS01'";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    try
+                    {
+                        connection.Open();
+                        correo = Convert.ToString(command.ExecuteScalar());
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejar la excepción 
+                        //Console.WriteLine("Error al ejecutar la consulta: " + ex.Message);
+                    }
+                }
+            }
+
+            return correo;
+        }
+        public string ConsultarCorreoAsesor()
+        {
+            string correo = "";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = " SELECT E.Mail  FROM tblSoliciDiseEspe AS SE INNER JOIN tblEmpleado AS E " +
+                               "ON  E.Nombre + ' ' + Apellidos = SE.Asesor WHERE SE.ID_Solicitud = @Id_Solicitud";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id_Solicitud", lbNumeroSolicitud.Text);
+                    try
+                    {
+                        connection.Open();
+                        correo = Convert.ToString(command.ExecuteScalar());
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejar la excepción 
+                        //Console.WriteLine("Error al ejecutar la consulta: " + ex.Message);
+                    }
+                }
+            }
+
+            return correo;
+        }
+        public bool EnviarCorreRediCompras(string destinatarios, string cuerpo)
+        {
+            string nombreProcedimiento = "duc_sp_Correo";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(nombreProcedimiento, connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Definir los parámetros del procedimiento almacenado
+                        command.Parameters.AddWithValue("@Destinatarios", destinatarios);
+                        command.Parameters.AddWithValue("@asunto", "Solicitud PE:" + lbNumeroSolicitud.Text + "-" + lbIdDetalle.Text + " " + tbProyecto.Text);
+                        command.Parameters.AddWithValue("@cuerpo", cuerpo);
+                        command.Parameters.AddWithValue("@adjuntos", "");
+                        command.Parameters.AddWithValue("@usuario", Session["usuariologueado"].ToString());
+
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                        return true;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                // Manejar la excepción (opcional)
+                // Loggear la excepción o hacer algo con ella
+                return false;
+            }
+        }
+
+
+
     }
 }
