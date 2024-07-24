@@ -86,7 +86,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
             {
                 case "PersonaCliente":
                     pageURL = "Ventas/Empleado.aspx";
-                    break;               
+                    break;
                 default:
                     // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí
                     break;
@@ -128,6 +128,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
 
                 case "BitacoraRenders":
                     pageURL = "Ventas/Render_Venta.aspx";
+                    break;
+
+                case "GenerarCodigoInventario":
+                    pageURL = "Compras/GenerarCodigoInventario.aspx";
                     break;
 
             }
