@@ -122,7 +122,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     // Se valida si la observacion  viene de solicitudes especiales 
                     if (id.StartsWith("SPE"))
                     {
-                        string query = "SELECT E.Mail  FROM tblSoliciDiseEspe AS  SE INNER JOIN tblEmpleado AS E " +
+                        string query = "SELECT E.Mail  FROM tblSoliciDiseEspe AS  SE INNER JOIN tblAsesorComercial AS E " +
                                        " ON  E.Nombre + ' ' + Apellidos =  SE.Asesor WHERE SE.ID_Solicitud = @Id_Solicitud";
 
                         SqlCommand command = new SqlCommand(query, connection);
@@ -807,6 +807,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
         public void InsertarObservacion()
         {
+
+            string cedulaAsesor = ConsultarCedulaAsesor();
+
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -828,7 +831,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     command.Parameters.AddWithValue("@ID_TipoObservacion", ddlTipoObservacion.SelectedValue);
                     command.Parameters.AddWithValue("@FechaAnteriorDespacho", DateTime.Now);
                     command.Parameters.AddWithValue("@FechaNuevaDespacho", DateTime.Now);
-                    command.Parameters.AddWithValue("@CedulaAsesor", Session["CedulaLogeada"].ToString());
+                    command.Parameters.AddWithValue("@CedulaAsesor", Session["CedulaLogeada"].ToString()); // Validar la cedula del asesor 
                     command.Parameters.AddWithValue("@FechaActividad", tbfechaActividad.Text);
                     command.Parameters.AddWithValue("@Destinatarios", tbReceptorCorreo.Text);
 
@@ -944,6 +947,40 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             return correo;
         }
 
+        protected string ConsultarCedulaAsesor()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string cedula = "";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT AC.CodigoAsesor FROM tblSoliciDiseEspe AS SE " +
+                                   "INNER JOIN tblAsesorComercial AS AC ON AC.Nombre + ' ' + AC. Apellidos = SE.Asesor " +
+                                   "WHERE ID_Solicitud = @ID_Solicitud";
+
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@ID_Solicitud", tbOT.Text.Substring(3));
+
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        cedula = reader["CodigoAsesor"].ToString();
+                    }
+
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejo de errores, por ejemplo, loguear el error
+                // También puedes lanzar una excepción o devolver un mensaje de error
+            }
+
+            return cedula;
+        }
 
     }
 }

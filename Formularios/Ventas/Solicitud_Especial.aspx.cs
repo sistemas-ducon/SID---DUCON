@@ -253,7 +253,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (btnTrabajarSolicitud != null)
             {
                 btnTrabajarSolicitud.Enabled = false;
-                btnTrabajarSolicitud.CssClass = "btn btn-sm btn-outline-primary";
+                btnTrabajarSolicitud.CssClass = "btn btn-sm btn-outline-secondary";
 
             }
 
@@ -262,7 +262,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (btnDesprogramar != null)
             {
                 btnDesprogramar.Enabled = false;
-                btnDesprogramar.CssClass = "btn btn-sm btn-outline-primary";
+                btnDesprogramar.CssClass = "btn btn-sm btn-outline-secondary";
 
             }
 
@@ -271,7 +271,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (btnTrbajarCotizacion != null)
             {
                 btnTrbajarCotizacion.Enabled = false;
-                btnTrbajarCotizacion.CssClass = "btn btn-sm btn-outline-primary";
+                btnTrbajarCotizacion.CssClass = "btn btn-sm btn-outline-secondary";
 
             }
 
@@ -280,7 +280,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (btnDesprogramar1 != null)
             {
                 btnDesprogramar1.Enabled = false;
-                btnDesprogramar1.CssClass = "btn btn-sm btn-outline-primary";
+                btnDesprogramar1.CssClass = "btn btn-sm btn-outline-secondary";
 
             }
 
@@ -1176,8 +1176,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         break;
                     }
                 }
-                tbFechaIngreso.Text = FechaIngresoForm.ToString("yyyy-MM-dd");
-                tbFechaIngresoServidor.Text = FechaIngresoForm.ToString("yyyy-MM-dd");
+                tbFechaIngreso.Text = FechaIngresoForm.ToString("yyyy-MM-ddTHH:mm");
+                tbFechaIngresoServidor.Text = FechaIngresoForm.ToString("yyyy-MM-ddTHH:mm");
                 foreach (ListItem item in ddlDirigido.Items)
                 {
                     if (item.Text == Dirigidoa)
@@ -1197,10 +1197,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
                 tbDesarrollaPor.Text = RealizadoPor.Replace("&nbsp;", "PENDIENTE");
-                tbFechaEntrega.Text = FechaEntregaForm.ToString("yyyy-MM-dd");
-                tbFechaEntregaServidor.Text = FechaEntregaForm.ToString("yyyy-MM-dd");
-                tbFechaRespuesta.Text = FechaRespuestaForm.ToString("yyyy-MM-dd");
-                tbFechaRespuestaServidor.Text = FechaRespuestaForm.ToString("yyyy-MM-dd");
+                tbFechaEntrega.Text = FechaEntregaForm.ToString("yyyy-MM-ddTHH:mm");
+                tbFechaEntregaServidor.Text = FechaEntregaForm.ToString("yyyy-MM-ddTHH:mm");
+                tbFechaRespuesta.Text = FechaRespuestaForm.ToString("yyyy-MM-ddTHH:mm");
+                tbFechaRespuestaServidor.Text = FechaRespuestaForm.ToString("yyyy-MM-ddTHH:mm");
                 tbSolicitudOrigen.Text = SoliOrigen;
 
                 foreach (ListItem item in ddlCiudad.Items)
@@ -1255,6 +1255,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 row.Attributes["id"] = "row_" + rowIndex;
 
                 tbId_Fila.Text = rowIndex.ToString();
+
+
 
 
 
@@ -1320,10 +1322,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         btnDesprogramar.CssClass = "btn btn-sm btn-outline-primary btn-dept";
 
                         btnTrbajarCotizacion.Enabled = false;
-                        btnTrbajarCotizacion.CssClass = "btn btn-sm btn-outline-primary";
+                        btnTrbajarCotizacion.CssClass = "btn btn-sm btn-outline-secondary";
 
                         btnDesprogramar1.Enabled = false;
-                        btnDesprogramar1.CssClass = "btn btn-sm btn-outline-primary";
+                        btnDesprogramar1.CssClass = "btn btn-sm btn-outline-secondary";
 
                         chxDesComplejo.Enabled = true;
                         chxUrgente.Enabled = true;
@@ -1461,8 +1463,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         break;
                     }
                 }
-                tbFechaIngreso.Text = FechaIngresoForm.ToString("yyyy-MM-dd");
-                tbFechaIngresoServidor.Text = FechaIngresoForm.ToString("yyyy-MM-dd");
+                tbFechaIngreso.Text = FechaIngresoForm.ToString("yyyy-MM-ddTHH:mm");
+                tbFechaIngresoServidor.Text = FechaIngresoForm.ToString("yyyy-MM-ddTHH:mm");
                 foreach (ListItem item in ddlDirigido.Items)
                 {
                     if (item.Text == Dirigidoa)
@@ -1482,10 +1484,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
                 tbDesarrollaPor.Text = RealizadoPor.Replace("&nbsp;", "PENDIENTE");
-                tbFechaEntrega.Text = FechaEntregaForm.ToString("yyyy-MM-dd");
-                tbFechaEntregaServidor.Text = FechaEntregaForm.ToString("yyyy-MM-dd");
-                tbFechaRespuesta.Text = FechaRespuestaForm.ToString("yyyy-MM-dd");
-                tbFechaRespuestaServidor.Text = FechaRespuestaForm.ToString("yyyy-MM-dd");
+                tbFechaEntrega.Text = FechaEntregaForm.ToString("yyyy-MM-ddTHH:mm");
+                tbFechaEntregaServidor.Text = FechaEntregaForm.ToString("yyyy-MM-ddTHH:mm");
+                tbFechaRespuesta.Text = FechaRespuestaForm.ToString("yyyy-MM-ddTHH:mm");
+                tbFechaRespuestaServidor.Text = FechaRespuestaForm.ToString("yyyy-MM-ddTHH:mm");
                 tbSolicitudOrigen.Text = SoliOrigen;
 
 
@@ -1612,10 +1614,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         btnDesprogramar1.CssClass = "btn btn-sm btn-outline-primary btn-dept";
 
                         btnTrabajarSolicitud.Enabled = false;
-                        btnTrabajarSolicitud.CssClass = "btn btn-sm btn-outline-primary";
+                        btnTrabajarSolicitud.CssClass = "btn btn-sm btn-outline-secondary";
 
                         btnDesprogramar.Enabled = false;
-                        btnDesprogramar.CssClass = "btn btn-sm btn-outline-primary";
+                        btnDesprogramar.CssClass = "btn btn-sm btn-outline-secondary";
 
 
                         chxDesComplejo.Enabled = true;
@@ -1755,8 +1757,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         break;
                     }
                 }
-                tbFechaIngreso.Text = FechaIngresoForm.ToString("yyyy-MM-dd");
-                tbFechaIngresoServidor.Text = FechaIngresoForm.ToString("yyyy-MM-dd");
+                tbFechaIngreso.Text = FechaIngresoForm.ToString("yyyy-MM-ddTHH:mm");
+                tbFechaIngresoServidor.Text = FechaIngresoForm.ToString("yyyy-MM-ddTHH:mm");
                 foreach (ListItem item in ddlDirigido.Items)
                 {
                     if (item.Text == Dirigidoa)
@@ -1776,10 +1778,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
                 tbDesarrollaPor.Text = RealizadoPor.Replace("&nbsp;", "PENDIENTE");
-                tbFechaEntrega.Text = FechaEntregaForm.ToString("yyyy-MM-dd");
-                tbFechaEntregaServidor.Text = FechaEntregaForm.ToString("yyyy-MM-dd");
-                tbFechaRespuesta.Text = FechaRespuestaForm.ToString("yyyy-MM-dd");
-                tbFechaRespuestaServidor.Text = FechaRespuestaForm.ToString("yyyy-MM-dd");
+                tbFechaEntrega.Text = FechaEntregaForm.ToString("yyyy-MM-ddTHH:mm");
+                tbFechaEntregaServidor.Text = FechaEntregaForm.ToString("yyyy-MM-ddTHH:mm");
+                tbFechaRespuesta.Text = FechaRespuestaForm.ToString("yyyy-MM-ddTHH:mm");
+                tbFechaRespuestaServidor.Text = FechaRespuestaForm.ToString("yyyy-MM-ddTHH:mm");
                 tbSolicitudOrigen.Text = SoliOrigen;
 
 
@@ -2027,9 +2029,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
                             cmd.Parameters.AddWithValue("@ID_Solicitud", IdSolicitud);
-                            cmd.Parameters.AddWithValue("@Fecha_Ingreso", tbFechaIngresoServidor.Text);
-                            cmd.Parameters.AddWithValue("@Fecha_Programada_Entrega", tbFechaEntregaServidor.Text);
-                            cmd.Parameters.AddWithValue("@FechaRespuesta", tbFechaRespuestaServidor.Text);
+                            cmd.Parameters.AddWithValue("@Fecha_Ingreso", Convert.ToDateTime(tbFechaIngresoServidor.Text));
+                            cmd.Parameters.AddWithValue("@Fecha_Programada_Entrega", Convert.ToDateTime(tbFechaEntregaServidor.Text));
+                            cmd.Parameters.AddWithValue("@FechaRespuesta", Convert.ToDateTime(tbFechaRespuestaServidor.Text));
 
                             cmd.Parameters.AddWithValue("@Zona", Session["ZonaAsesor"].ToString());
                             cmd.Parameters.AddWithValue("@Asesor", ddlAsesor.SelectedItem.Text);
@@ -2126,9 +2128,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
                         cmd.Parameters.AddWithValue("@ID_Solicitud", lbNumeroSolicitud.Text);
-                        cmd.Parameters.AddWithValue("@Fecha_Ingreso", tbFechaIngresoServidor.Text);
-                        cmd.Parameters.AddWithValue("@Fecha_Programada_Entrega", tbFechaEntregaServidor.Text);
-                        cmd.Parameters.AddWithValue("@FechaRespuesta", tbFechaRespuestaServidor.Text);
+                        cmd.Parameters.AddWithValue("@Fecha_Ingreso", Convert.ToDateTime(tbFechaIngresoServidor.Text));
+                        cmd.Parameters.AddWithValue("@Fecha_Programada_Entrega", Convert.ToDateTime(tbFechaEntregaServidor.Text));
+                        cmd.Parameters.AddWithValue("@FechaRespuesta", Convert.ToDateTime(tbFechaRespuestaServidor.Text));
 
                         cmd.Parameters.AddWithValue("@Zona", Session["ZonaAsesor"].ToString());
                         cmd.Parameters.AddWithValue("@Asesor", ddlAsesor.SelectedItem.Text);
@@ -2207,6 +2209,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void GuardarDatosSesion(object sender, EventArgs e)
         {
+
+            Session["FecIngrSolSession"] = tbFechaIngresoServidor.Text;
+            Session["FecEntregaSolSession"] = tbFechaEntregaServidor.Text;
+            Session["FechaRespuestaSession"] = tbFechaRespuestaServidor.Text;
             Session["ProyectoSession"] = tbProyecto.Text;
             Session["SolicitudOrigen"] = tbSolicitudOrigen.Text;
             Session["Cotizacion"] = tbCotizacionEsp.Text;
@@ -5226,7 +5232,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 connection.Open();
 
-                string query = "SELECT E.Mail  FROM tblSoliciDiseEspe AS  SE INNER JOIN tblEmpleado AS E " +
+                string query = "SELECT E.Mail  FROM tblSoliciDiseEspe AS  SE INNER JOIN tblAsesorComercial AS E " +
                                " ON  E.Nombre + ' ' + Apellidos =  SE.Asesor WHERE SE.ID_Solicitud = @Id_Solicitud";
 
                 SqlCommand command = new SqlCommand(query, connection);
@@ -5522,7 +5528,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     command.Parameters.AddWithValue("@ID_TipoObservacion", ddlTipoObservacion.SelectedValue);
                     command.Parameters.AddWithValue("@FechaAnteriorDespacho", DateTime.Now);
                     command.Parameters.AddWithValue("@FechaNuevaDespacho", DateTime.Now);
-                    command.Parameters.AddWithValue("@CedulaAsesor", Session["CedulaLogeada"].ToString());
+                    command.Parameters.AddWithValue("@CedulaAsesor", ddlAsesor.SelectedValue);
                     command.Parameters.AddWithValue("@FechaActividad", tbfechaActividad.Text);
                     command.Parameters.AddWithValue("@Destinatarios", tbReceptorCorreo.Text);
 
@@ -6176,7 +6182,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             string SeguPausas = "(Diseño Reactivado el " + FechaIngreso + " , Fecha Ingreso anterior: " + tbFechaIngreso.Text + ")" + "\n" + txSegPausa.InnerText;
 
-            // realizamos l Actualizacion  en la base de datos 
+            // realizamos la Actualizacion  en la base de datos 
             if (DespausarSolicitudEspecial(SeguPausas, FechaEntrega))
             {
                 if (lbNumeroSolicitud.Text != "" && ddlTipo.SelectedItem.Text == "COTIZACIÓN")

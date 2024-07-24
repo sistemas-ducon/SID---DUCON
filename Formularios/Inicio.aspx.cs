@@ -125,7 +125,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
                 case "BitacoraDesarrollo":
                     pageURL = "Ventas/Solicitud_Especial.aspx";
                     break;
-               
+
+                case "BitacoraRenders":
+                    pageURL = "Ventas/Render_Venta.aspx";
+                    break;
+
             }
 
             string cedulaLogueada = Session["CedulaLogeada"]?.ToString();

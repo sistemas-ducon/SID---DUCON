@@ -94,9 +94,9 @@
                                             </a>
                                             <ul class="dropdown-menu shadow bg-light">    
                                                
-                                                <li><asp:LinkButton ID="Linkbutton10" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Compras_Click" CommandName="GenerarCodigoInventario" Text="Generar codigo de inventario"/></li>
-                                                <li><asp:LinkButton ID="Linkbutton11" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Compras_Click" CommandName="SolicitudProductoEspecial" Text="Solicitud de producto especial"/></li>
-                                                 <li><asp:LinkButton ID="Linkbutton12" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Compras_Click" CommandName="OrdenAbastecimientoInterna" Text="Orden de abastecimiento interna"/></li>
+                                                <li><asp:LinkButton ID="Linkbutton10" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Compras_Click" CommandName="GenerarCodigoInventario" Text="Generar Código de Inventario"/></li>
+                                                <li><asp:LinkButton ID="Linkbutton11" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Compras_Click" CommandName="SolicitudProductoEspecial" Text="Solicitud de Producto Especial"/></li>
+                                                 <li><asp:LinkButton ID="Linkbutton12" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Compras_Click" CommandName="OrdenAbastecimientoInterna" Text="Orden de Abastecimiento Interna"/></li>
                                             </ul>
                                         </li>
 
@@ -107,15 +107,15 @@
                                                 <li>
                                                     <asp:LinkButton ID="Linkbutton13" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Diseno_Click" CommandName="EstadisicaDiseño" Text="Estadisticas Diseño" /></li>
                                                 <li>
-                                                    <asp:LinkButton ID="Linkbutton14" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Diseno_Click" CommandName="GenerarCodigoInventario" Text="Generar código de inventario" /></li>
+                                                    <asp:LinkButton ID="Linkbutton14" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Diseno_Click" CommandName="GenerarCodigoInventario" Text="Generar Código de Inventario" /></li>
                                                 <li>
-                                                    <asp:LinkButton ID="Linkbutton15" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Diseno_Click" CommandName="OrdenTrabajo" Text="Ordenes de trabajo" /></li>
+                                                    <asp:LinkButton ID="Linkbutton15" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Diseno_Click" CommandName="OrdenTrabajo" Text="Ordenes de Trabajo" /></li>
                                                 <li>
-                                                    <asp:LinkButton ID="Linkbutton16" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Diseno_Click" CommandName="BitacoraRenders" Text="Bitacora renders" /></li>
+                                                    <asp:LinkButton ID="Linkbutton16" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Diseno_Click" CommandName="BitacoraRenders" Text="Bitacora Renders" /></li>
                                                 <li>
-                                                    <asp:LinkButton ID="Linkbutton17" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Diseno_Click" CommandName="BitacoraDesarrollo" Text="Bitacora desarrollo" /></li>
+                                                    <asp:LinkButton ID="Linkbutton17" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Diseno_Click" CommandName="BitacoraDesarrollo" Text="Bitacora Desarrollo" /></li>
                                                 <li>
-                                                    <asp:LinkButton ID="Linkbutton18" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Diseno_Click" CommandName="BitacoraDiseno" Text="Bitacora diseño" /></li>     
+                                                    <asp:LinkButton ID="Linkbutton18" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Diseno_Click" CommandName="BitacoraDiseno" Text="Bitacora Diseño" /></li>     
                                             </ul>
                                         </li>
 
@@ -124,7 +124,7 @@
                                             </a>
                                             <ul class="dropdown-menu shadow bg-light">
                                                 <li>
-                                                    <asp:LinkButton ID="Linkbutton24" runat="server" CssClass="dropdown-item form-control-sm" OnClick="DisenoExterior_Click" CommandName="TablaDiseno" Text="Tabla de diseño" /></li>
+                                                    <asp:LinkButton ID="Linkbutton24" runat="server" CssClass="dropdown-item form-control-sm" OnClick="DisenoExterior_Click" CommandName="TablaDiseno" Text="Tabla de Diseño" /></li>
                                                 <li>
                                                     <asp:LinkButton ID="Linkbutton25" runat="server" CssClass="dropdown-item form-control-sm" OnClick="DisenoExterior_Click" CommandName="Plano" Text="Plano" /></li>
                                             </ul>
@@ -135,13 +135,13 @@
                                             </a>
                                             <ul class="dropdown-menu shadow bg-light">
                                                 <li>
-                                                    <asp:LinkButton ID="Linkbutton19" runat="server" CssClass="dropdown-item form-control-sm" OnClick="FacturacionCartera_Click" CommandName="CierreObra" Text="Cierre de obra" /></li>
+                                                    <asp:LinkButton ID="Linkbutton19" runat="server" CssClass="dropdown-item form-control-sm" OnClick="FacturacionCartera_Click" CommandName="CierreObra" Text="Cierre de Obra" /></li>
                                                 <li>
-                                                    <asp:LinkButton ID="Linkbutton20" runat="server" CssClass="dropdown-item form-control-sm" OnClick="FacturacionCartera_Click" CommandName="ControlObra" Text="Control de obra" /></li>
+                                                    <asp:LinkButton ID="Linkbutton20" runat="server" CssClass="dropdown-item form-control-sm" OnClick="FacturacionCartera_Click" CommandName="ControlObra" Text="Control de Obra" /></li>
                                                 <li>
-                                                    <asp:LinkButton ID="Linkbutton21" runat="server" CssClass="dropdown-item form-control-sm" OnClick="FacturacionCartera_Click" CommandName="DespachoObras" Text="Despacho de obras" /></li>
+                                                    <asp:LinkButton ID="Linkbutton21" runat="server" CssClass="dropdown-item form-control-sm" OnClick="FacturacionCartera_Click" CommandName="DespachoObras" Text="Despacho de Obras" /></li>
                                                 <li>
-                                                    <asp:LinkButton ID="Linkbutton22" runat="server" CssClass="dropdown-item form-control-sm" OnClick="FacturacionCartera_Click" CommandName="OrdenTrabajo" Text="Ordenes de trabajo" /></li>
+                                                    <asp:LinkButton ID="Linkbutton22" runat="server" CssClass="dropdown-item form-control-sm" OnClick="FacturacionCartera_Click" CommandName="OrdenTrabajo" Text="Ordenes de Trabajo" /></li>
                                                 <li>
                                                     <asp:LinkButton ID="Linkbutton23" runat="server" CssClass="dropdown-item form-control-sm" OnClick="FacturacionCartera_Click" CommandName="ProgramaciónTsSID" Text="Programación Ordenes de T'S de SID" /></li>
                                             </ul>
@@ -151,8 +151,8 @@
                                     <a class="nav-link dropdown-toggle form-control-sm" href="#" id="Gest_Cali_Adno" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-check-circle-fill"></i> <%-- Gestion de calidad admon--%> Gestio de calidad adnom
                                     </a>
                                     <ul class="dropdown-menu shadow bg-light">
-                                          <li><asp:LinkButton ID="Linkbutton26" runat="server" CssClass="dropdown-item form-control-sm" OnClick="GestionCalidadAdnom_Click" CommandName="AccionesMejora" Text="Acciones de mejora" /></li>
-                                       <li><asp:LinkButton ID="Linkbutton27" runat="server" CssClass="dropdown-item form-control-sm" OnClick="GestionCalidadAdnom_Click" CommandName="EntregaPerfecta" Text="Entrega perfecta" /></li>   
+                                          <li><asp:LinkButton ID="Linkbutton26" runat="server" CssClass="dropdown-item form-control-sm" OnClick="GestionCalidadAdnom_Click" CommandName="AccionesMejora" Text="Acciones de Mejora" /></li>
+                                       <li><asp:LinkButton ID="Linkbutton27" runat="server" CssClass="dropdown-item form-control-sm" OnClick="GestionCalidadAdnom_Click" CommandName="EntregaPerfecta" Text="Entrega Perfecta" /></li>   
                                     </ul>
                                 </li>
 
@@ -160,7 +160,7 @@
                                             <a class="nav-link dropdown-toggle form-control-sm" href="#" id="Gest_Cali_Usr" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-check2-circle"></i> <%-- Gestion de calidad --%> Gestion de calidad usr 
                                             </a>
                                             <ul class="dropdown-menu shadow bg-light">
-                                                <li><asp:LinkButton ID="Linkbutton28" runat="server" CssClass="dropdown-item form-control-sm" OnClick="GestionCalidadAdnom_Click" CommandName="AccionMejora" Text="Acción de mejora" /></li>
+                                                <li><asp:LinkButton ID="Linkbutton28" runat="server" CssClass="dropdown-item form-control-sm" OnClick="GestionCalidadAdnom_Click" CommandName="AccionMejora" Text="Acción de Mejora" /></li>
                                             </ul>
                                         </li>
 
@@ -169,8 +169,8 @@
                                             </a>
                                             <ul class="dropdown-menu shadow bg-light">
 
-                                                 <li><asp:LinkButton ID="Linkbutton29" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Instalacion_Click" CommandName="AccionesMejora" Text="Cierre de obra" /></li>
-                                       <li><asp:LinkButton ID="Linkbutton30" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Instalacion_Click" CommandName="EntregaPerfecta" Text="Ordenes de trabajo" /></li>   
+                                                 <li><asp:LinkButton ID="Linkbutton29" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Instalacion_Click" CommandName="AccionesMejora" Text="Cierre de Obra" /></li>
+                                       <li><asp:LinkButton ID="Linkbutton30" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Instalacion_Click" CommandName="EntregaPerfecta" Text="Ordenes de Trabajo" /></li>   
        
                                             </ul>
                                         </li>
@@ -179,9 +179,9 @@
                                             <a class="nav-link dropdown-toggle form-control-sm" href="#" id="Recepcion" role="button" data-bs-toggle="dropdown" aria-expanded="false"> <i class="bi bi-person-lines-fill"></i>  <%-- Icono Recepcion--%> Recepcion
                                             </a>
                                             <ul class="dropdown-menu shadow bg-light">
-                                                  <li><asp:LinkButton ID="Linkbutton31" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Recepcion_Click" CommandName="CierreObra" Text="Cierre de obra" /></li>
-                                               <li><asp:LinkButton ID="Linkbutton32" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Recepcion_Click" CommandName="IngresarCotizacion" Text="Ingresar cotizacion" /></li>
-                                                 <li><asp:LinkButton ID="Linkbutton33" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Recepcion_Click" CommandName="TablaDiseños" Text="Tabla de diseños" /></li>
+                                                  <li><asp:LinkButton ID="Linkbutton31" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Recepcion_Click" CommandName="CierreObra" Text="Cierre de Obra" /></li>
+                                               <li><asp:LinkButton ID="Linkbutton32" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Recepcion_Click" CommandName="IngresarCotizacion" Text="Ingresar Cotización" /></li>
+                                                 <li><asp:LinkButton ID="Linkbutton33" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Recepcion_Click" CommandName="TablaDiseños" Text="Tabla de Diseños" /></li>
                                             </ul>
                                         </li>
 
@@ -189,10 +189,10 @@
                                             <a class="nav-link dropdown-toggle form-control-sm" href="#" id="Sistemas" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-laptop"></i> <%-- Icono Sistemas--%> Sistemas
                                             </a>
                                             <ul class="dropdown-menu shadow bg-light">
-                                                <li><asp:LinkButton ID="Linkbutton34" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Sistemas_Click" CommandName="Administracion" Text="Administracion" /></li>
-                                                 <li><asp:LinkButton ID="Linkbutton35" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Sistemas_Click" CommandName="AsignarPermiso" Text="Asignar permiso" /></li>
-                                               <li><asp:LinkButton ID="Linkbutton36" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Sistemas_Click" CommandName="ConfigurarSede" Text="Configurar sede" /></li>
-                                                <li><asp:LinkButton ID="Linkbutton37" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Sistemas_Click" CommandName="VentanaPrincipal" Text="Ventana principal" /></li>         
+                                                <li><asp:LinkButton ID="Linkbutton34" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Sistemas_Click" CommandName="Administracion" Text="Administración" /></li>
+                                                 <li><asp:LinkButton ID="Linkbutton35" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Sistemas_Click" CommandName="AsignarPermiso" Text="Asignar Permiso" /></li>
+                                               <li><asp:LinkButton ID="Linkbutton36" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Sistemas_Click" CommandName="ConfigurarSede" Text="Configurar Sede" /></li>
+                                                <li><asp:LinkButton ID="Linkbutton37" runat="server" CssClass="dropdown-item form-control-sm" OnClick="Sistemas_Click" CommandName="VentanaPrincipal" Text="Ventana Principal" /></li>         
                                             </ul>
                                         </li>
 
@@ -215,9 +215,9 @@
                                                 <li>
                                                     <asp:linkbutton ID="LinkProgramarRender" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="ProgramarRender"> <i class="bi bi-badge-3d-fill"></i> Programar Render </asp:linkbutton></li>
                                                 <li>
-                                                    <asp:linkbutton ID="LinkSeguimientoCotizacion" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="SeguimientoCotizacion"><i class="bi bi-file-earmark-spreadsheet-fill"></i> Seguimiento Cotizacion</asp:linkbutton></li>
+                                                    <asp:linkbutton ID="LinkSeguimientoCotizacion" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="SeguimientoCotizacion"><i class="bi bi-file-earmark-spreadsheet-fill"></i> Seguimiento Cotización</asp:linkbutton></li>
                                                 <li>
-                                                    <asp:linkbutton ID="LinkSolicitudProductoEspecial" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="SolicitudProductoEspecial"><i class="bi bi-window-plus"></i>Solicitud producto especial</asp:linkbutton></li>
+                                                    <asp:linkbutton ID="LinkSolicitudProductoEspecial" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="SolicitudProductoEspecial"><i class="bi bi-window-plus"></i>Solicitud Producto Especial</asp:linkbutton></li>
                                                 <li>
                                                     <asp:linkbutton ID="LinkVisitaAsesores" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="VisitaAsesores"><i class="bi bi-people-fill"></i> Visita Asesores</asp:linkbutton></li>
                                             </ul>

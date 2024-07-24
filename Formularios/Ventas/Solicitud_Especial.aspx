@@ -83,19 +83,15 @@
 
             // Obtén la fecha actual
             var fechaActual = new Date();
-            // Formatea las fechas en el formato deseado (por ejemplo, YYYY-MM-DD)
-            var fechaActualFormateada = fechaActual.toISOString().split('T')[0];
-
-            var FechaActualAnio = new Date();
+            // Formatea la fecha actual en el formato deseado (YYYY-MM-DDTHH:MM)
+            var fechaActualFormateada = formatearFechaConHora(fechaActual);
 
             // Establece la fecha al primer día del año actual
+            var FechaActualAnio = new Date();
             FechaActualAnio.setMonth(0); // Establece el mes a enero (0)
             FechaActualAnio.setDate(1); // Establece el día al primero (1)
-            // Formatea la fecha en el formato deseado (por ejemplo, YYYY-MM-DD)
-            var fechaFormateada2 = FechaActualAnio.toISOString().split('T')[0];
-
-
-
+            // Formatea la fecha al primer día del año en el formato deseado (YYYY-MM-DDTHH:MM)
+            var fechaFormateada2 = formatearFechaConHora(FechaActualAnio);
 
             // Asigna las fechas a los TextBox correspondientes por su ID
             document.getElementById("tbFechaIngreso").value = fechaActualFormateada;
@@ -106,6 +102,7 @@
 
             document.getElementById("tbFechaRespuesta").value = fechaFormateada2;
             document.getElementById("tbFechaRespuestaServidor").value = fechaFormateada2;
+
 
 
             // Deshabilitar enlaces 
@@ -228,8 +225,6 @@
             }
         }
 
-
-
     </script>
 
 
@@ -336,38 +331,38 @@
 
                                 <div class="row pt-1 mt-1 pb-1 mb-1 ">
 
-                                    <div class="col-sm-1">
+                                    <div class=" col-lg-1 col-md-3 col-sm-3 col-xs-12">
                                         <div class="  input-group-sm  mb-2 gap-4 ">
                                             <asp:Label ID="lbSolicitud" CssClass="lbDesarrollo col-form-label-sm" Text="Solicitud #" runat="server"></asp:Label>
                                             <asp:Label ID="lbNumeroSolicitud" CssClass="lbDesarrolloNumero col-form-label-sm" Text="" runat="server" disabled="disabled"></asp:Label>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-2">
+                                    <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
                                         <div class=" mb-2 gap-4  input-group-sm">
                                             <asp:Label ID="lbFechaIngreso" CssClass="col-form-label-sm" Text="Ingreso" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbFechaIngreso" type="date" CssClass="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
-                                            <asp:TextBox ID="tbFechaIngresoServidor" type="date" class="form-control" runat="server" CssClass="hidden-textBox"></asp:TextBox>
+                                            <asp:TextBox ID="tbFechaIngreso" type="datetime-local" CssClass="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
+                                            <asp:TextBox ID="tbFechaIngresoServidor" type="datetime-local" class="form-control" runat="server" CssClass="hidden-textBox"></asp:TextBox>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-2">
+                                    <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
                                         <div class=" mb-2 gap-4  input-group-sm">
                                             <asp:Label ID="lbFechaEntrega" class="col-form-label-sm" Text="Entrega" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbFechaEntrega" type="date" class="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
-                                            <asp:TextBox ID="tbFechaEntregaServidor" type="date" class="form-control" runat="server" CssClass="hidden-textBox"></asp:TextBox>
+                                            <asp:TextBox ID="tbFechaEntrega" type="datetime-local" class="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
+                                            <asp:TextBox ID="tbFechaEntregaServidor" type="datetime-local" class="form-control" runat="server" CssClass="hidden-textBox"></asp:TextBox>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-2">
+                                    <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
                                         <div class=" mb-2 gap-4  input-group-sm">
                                             <asp:Label ID="lbFechaRespuesa" class="col-form-label-sm" Text="Fecha Respuesta" runat="server"></asp:Label>
-                                            <asp:TextBox ID="tbFechaRespuesta" type="date" class="form-control form-control-sm" runat="server" disabled="disabled"></asp:TextBox>
-                                            <asp:TextBox ID="tbFechaRespuestaServidor" type="date" class="form-control" runat="server" CssClass="hidden-textBox"></asp:TextBox>
+                                            <asp:TextBox ID="tbFechaRespuesta" type="datetime-local" class="form-control form-control-sm" runat="server" disabled="disabled"></asp:TextBox>
+                                            <asp:TextBox ID="tbFechaRespuestaServidor" type="datetime-local" class="form-control" runat="server" CssClass="hidden-textBox"></asp:TextBox>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-2">
+                                    <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
                                         <div class=" input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbDirigido" class=" col-form-label-sm" Text="Dirigido a" runat="server"></asp:Label>
                                             <asp:DropDownList class="form-control form-control-sm" ID="ddlDirigido" runat="server">
@@ -378,7 +373,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-2">
+                                    <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
                                         <div class=" input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbTipo" class="col-form-label-sm" Text="Tipo" runat="server"></asp:Label>
                                             <asp:DropDownList class="form-control form-control-sm" ID="ddlTipo" runat="server">
@@ -390,7 +385,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-1">
+                                    <div class="col-lg-1 col-md-4 col-sm-4 col-xs-12">
                                         <div class=" input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbSolicitudOrigen" class="col-form-label-sm" Text="SolicitudOrigen" runat="server"></asp:Label>
                                             <asp:TextBox ID="tbSolicitudOrigen" type="text" class="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
@@ -401,7 +396,7 @@
                                 </div>
 
                                 <div class="row pt-1 mt-1 pb-1 mb-1">
-                                    <div class="col-sm-3">
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
 
                                         <div class="input-group input-group-sm  mb-2 gap-3 justify-content-center">
                                             <asp:Label ID="lbProyecto" class="col-form-label-sm" Text="Proyecto" runat="server"></asp:Label>
@@ -410,7 +405,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                         <div class="input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbCiudad" class="col-form-label-sm" Text="Ciudad" runat="server"></asp:Label>
                                             <asp:DropDownList class="form-control" ID="ddlCiudad" runat="server" DataTextField="NombreCiudad" DataValueField="NombreCiudad" DataSourceID="CargarCiudad" OnDataBound="ddlCiudad_DataBound"></asp:DropDownList>
@@ -425,7 +420,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                         <div class=" input-group-sm  mb-2 gap-4 justify-content-center">
                                             <asp:CheckBox ID="chxViaticos" runat="server" Enabled="false" />
                                             <asp:Label ID="lbViaticoYTransporte" class=" col-form-label-sm" Text="Cotizar Viaticos y Transporte" runat="server"></asp:Label>
@@ -433,7 +428,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                         <div class=" input-group input-group-sm  mb-2 gap-4 justify-content-center">
                                             <asp:Label ID="lbCotizacionEsp" class="col-form-label-sm" Text="Cotización ESP" runat="server"></asp:Label>
                                             <asp:TextBox ID="tbCotizacionEsp" type="text" class="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
@@ -443,7 +438,7 @@
 
                                 <div class="row pb-1 mb-1">
 
-                                    <div class="col-sm-3">
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                         <div class=" input-group input-group-sm  mb-2 gap-4">
                                             <asp:Button CssClass="btn btn-outline-secondary" ID="btnCliente" runat="server" Text="Cliente" OnClick="GuardarDatosSesion" OnClientClick="abrirOtraPestana();" />
                                             <asp:TextBox ID="tbCliente" type="text" class="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
@@ -451,7 +446,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-2">
+                                    <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                                         <div class=" input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbContacto" class=" col-form-label-sm  " Text="Contacto" runat="server"></asp:Label>
                                             <asp:TextBox ID="tbContacto" type="text" class="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
@@ -459,7 +454,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-2">
+                                    <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
                                         <div class=" input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbTelefono" class="col-form-label-sm " Text="Telefono" runat="server"></asp:Label>
                                             <asp:TextBox ID="tbTelefono" type="text" class="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
@@ -467,7 +462,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-2">
+                                    <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
                                         <div class=" input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbCelular" class="col-form-label-sm" Text="Celular" runat="server"></asp:Label>
                                             <asp:TextBox ID="tbCelular" type="text" class="form-control form-control-sm" runat="server" disabled="disabled"></asp:TextBox>
@@ -475,7 +470,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
                                         <div class=" input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbDesarrollado" class="col-form-label-sm" Text="Desarrolado Por" runat="server"></asp:Label>
                                             <asp:TextBox ID="tbDesarrollaPor" type="text" class="form-control form-control-sm" runat="server" Text="" disabled="disabled"></asp:TextBox>
@@ -487,7 +482,7 @@
 
                                 <div class="row pt-1 mt-1 pb-1 mb-1">
 
-                                    <div class="col-sm-3">
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                         <div class="input-group input-group-sm  mb-2 gap-3 justify-content-center">
                                             <asp:Label ID="lbMail" class="col-form-label-sm" Text="Mail" runat="server"></asp:Label>
                                             <asp:TextBox ID="tbMail" type="text" class="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
@@ -495,7 +490,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                         <div class=" input-group input-group-sm  mb-2 gap-2 justify-content-center">
                                             <asp:Label ID="lbDireccion" class="col-form-label-sm" Text="Dirección" runat="server"></asp:Label>
                                             <asp:TextBox ID="tbDireccion" type="text" class="form-control form-control-sm " runat="server" disabled="disabled"></asp:TextBox>
@@ -503,14 +498,14 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                         <div class="input-group input-group-sm  mb-2 gap-4">
                                             <asp:Label ID="lbAsesor" class="col-form-label-sm" Text="Asesor" runat="server"></asp:Label>
                                             <asp:DropDownList class="form-control form-control-sm" ID="ddlAsesor" runat="server"></asp:DropDownList>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                                         <div class="input-group input-group-sm  mb-2 gap-2">
                                             <asp:CheckBox ID="chxDesComplejo" CssClass="pt-1" runat="server" Enabled="false" />
                                             <asp:Label ID="lb" class=" col-form-label-sm" Text="Desarrollo Complejo" runat="server"></asp:Label>
@@ -1365,7 +1360,7 @@
                                             <h5 id="tituloDes" runat="server" visible="false">Desarrollos</h5>
                                         </div>
 
-                                        <div class="col-md-6 " id="BusDesDiv" runat="server">
+                                        <div class="col-lg-6 col-xs-12" id="BusDesDiv" runat="server">
                                             <div class="input-group input-group-sm gap-2 justify-content-end">
                                                 <asp:TextBox ID="ID_Sol_Dib" CssClass="form-control form-control-sm  text-center fw-bold" Style="width: 15rem; max-width: 15rem;" placeHolder="N° Desarrollo" ToolTip="Digite la solcitud que desea buscar " runat="server" OnTextChanged="ID_Sol_Dib_TextChanged"></asp:TextBox>
                                                 <asp:LinkButton runat="server" Text="Buscar" CssClass="icong enabled shadow-sm btn btn-sm AzulActivo rounded" ID="BuscarSol" title="Buscar Solicitud" Style="width: 2rem; font-size: 1.1rem;" OnClick="BuscarSol_Click">
@@ -1405,14 +1400,14 @@
 
                                     <div class="row">
 
-                                        <div class="col-md-5">
-                                            <div class=" input-group input-group-sm justify-content-around  mb-2" style="padding-left: 3rem;">
+                                        <div class="col-lg-5 col-md-7 col-sm-8 col-xs-12">
+                                            <div class=" input-group input-group-sm justify-content-around  mb-2 gap-2">
                                                 <asp:Button ID="btnTrabajarSolicitud" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Trabajar Solicitud" OnClick="btnTrabajarSolicitud_Click" />
                                                 <asp:Button ID="btnDesprogramar" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Desprogramar" OnClick="btnDesprogramar_Click" />
                                             </div>
                                         </div>
 
-                                        <div class="col-md-3">
+                                        <div class="col-lg-3 col-md-5 col-sm-4 col-xs-12">
                                             <div class="input-group  input-group-sm  mb-2 gap-2">
                                                 <asp:Label ID="lbFechaPactoentrega" class=" col-form-label-sm" Text="Pacto Entrega" runat="server"></asp:Label>
                                                 <asp:TextBox ID="tbFechaPactoentrega" type="date" class="form-control " runat="server"></asp:TextBox>
@@ -1420,8 +1415,8 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-2 justify-content-center">
-                                            <div class="input-group  input-group-sm  mb-2 gap-2">
+                                        <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
+                                            <div class="input-group  input-group-sm  mb-2 gap-2 justify-content-center">
                                                 <asp:CheckBox ID="chxConvenciones" OnCheckedChanged="chxConvenciones_CheckedChanged" AutoPostBack="true" runat="server" />
                                                 <asp:Label ID="lbConvenciones" class=" col-form-label-sm" Text="Convenciones" runat="server"></asp:Label>
 
@@ -1429,8 +1424,8 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-2" style="padding-right: 4rem;">
-                                            <div class="input-group  input-group-sm  mb-2 gap-4">
+                                        <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12" style="padding-right: 4rem;">
+                                            <div class="input-group  input-group-sm  mb-2 gap-3">
                                                 <asp:Label ID="lbZona" class="form-label" Text="Zona" runat="server"></asp:Label>
                                                 <asp:DropDownList class="form-control" ID="ddlZona" runat="server" DataSourceID="Zona" DataTextField="Zona" DataValueField="Zona" OnSelectedIndexChanged="CambioZona" AutoPostBack="true" OnDataBound="ddlZona_DataBound"></asp:DropDownList>
                                                 <asp:SqlDataSource runat="server" ID="Zona" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="
@@ -1538,7 +1533,7 @@
                                             <h5 id="tituloCot" runat="server" visible="false">Cotizaciones</h5>
                                         </div>
 
-                                        <div class="col-md-6 " id="BusCotDiv" runat="server">
+                                        <div class="col-lg-6 col-xs-12" id="BusCotDiv" runat="server">
                                             <div class="input-group input-group-sm gap-2 justify-content-end">
                                                 <asp:TextBox ID="ID_Cot_Dib" CssClass="form-control form-control-sm fw-bold  text-center" Style="width: 15rem; max-width: 15rem;" placeHolder="N° Cotización" ToolTip="Digite la solcitud que desea buscar " runat="server" OnTextChanged="ID_Cot_Dib_TextChanged"></asp:TextBox>
                                                 <asp:LinkButton runat="server" CssClass="icong enabled shadow-sm btn btn-sm AzulActivo rounded" Text="Buscar" ID="BuscarCot" title="Buscar Solicitud" Style="width: 2rem; font-size: 1rem;" OnClick="BuscarCot_Click">
@@ -2187,19 +2182,15 @@
 
             // Obtén la fecha actual
             var fechaActual = new Date();
-            // Formatea las fechas en el formato deseado (por ejemplo, YYYY-MM-DD)
-            var fechaActualFormateada = fechaActual.toISOString().split('T')[0];
-
-            var FechaActualAnio = new Date();
+            // Formatea la fecha actual en el formato deseado (YYYY-MM-DDTHH:MM)
+            var fechaActualFormateada = formatearFechaConHora(fechaActual);
 
             // Establece la fecha al primer día del año actual
+            var FechaActualAnio = new Date();
             FechaActualAnio.setMonth(0); // Establece el mes a enero (0)
             FechaActualAnio.setDate(1); // Establece el día al primero (1)
-            // Formatea la fecha en el formato deseado (por ejemplo, YYYY-MM-DD)
-            var fechaFormateada2 = FechaActualAnio.toISOString().split('T')[0];
-
-
-
+            // Formatea la fecha al primer día del año en el formato deseado (YYYY-MM-DDTHH:MM)
+            var fechaFormateada2 = formatearFechaConHora(FechaActualAnio);
 
             // Asigna las fechas a los TextBox correspondientes por su ID
             document.getElementById("tbFechaIngreso").value = fechaActualFormateada;
@@ -2211,6 +2202,7 @@
             document.getElementById("tbFechaRespuesta").value = fechaFormateada2;
             document.getElementById("tbFechaRespuestaServidor").value = fechaFormateada2;
 
+            
 
             // Deshabilitar enlaces y Habilitar
             document.getElementById("NuevaSolicitud").classList.remove("enabled", "AzulActivo");
@@ -2290,19 +2282,15 @@
 
             // Obtén la fecha actual
             var fechaActual = new Date();
-            // Formatea las fechas en el formato deseado (por ejemplo, YYYY-MM-DD)
-            var fechaActualFormateada = fechaActual.toISOString().split('T')[0];
-
-            var FechaActualAnio = new Date();
+            // Formatea la fecha actual en el formato deseado (YYYY-MM-DDTHH:MM)
+            var fechaActualFormateada = formatearFechaConHora(fechaActual);
 
             // Establece la fecha al primer día del año actual
+            var FechaActualAnio = new Date();
             FechaActualAnio.setMonth(0); // Establece el mes a enero (0)
             FechaActualAnio.setDate(1); // Establece el día al primero (1)
-            // Formatea la fecha en el formato deseado (por ejemplo, YYYY-MM-DD)
-            var fechaFormateada2 = FechaActualAnio.toISOString().split('T')[0];
-
-
-
+            // Formatea la fecha al primer día del año en el formato deseado (YYYY-MM-DDTHH:MM)
+            var fechaFormateada2 = formatearFechaConHora(FechaActualAnio);
 
             // Asigna las fechas a los TextBox correspondientes por su ID
             document.getElementById("tbFechaIngreso").value = fechaActualFormateada;
@@ -3281,6 +3269,17 @@
 
             ControlBtnCliente
             ControlHeaderCard();
+        }
+
+        // Función para formatear una fecha con horas y minutos
+        function formatearFechaConHora(fecha) {
+            var dia = fecha.getDate().toString().padStart(2, '0');
+            var mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+            var anio = fecha.getFullYear();
+            var horas = fecha.getHours().toString().padStart(2, '0');
+            var minutos = fecha.getMinutes().toString().padStart(2, '0');
+
+            return `${anio}-${mes}-${dia}T${horas}:${minutos}`;
         }
 
     </script>
