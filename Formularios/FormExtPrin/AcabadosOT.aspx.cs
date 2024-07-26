@@ -934,5 +934,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             }
         }
+
+        protected void DataGrid1_ItemDataBound1(object sender, DataGridItemEventArgs e)
+        {
+           
+                if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+                {
+
+                    string archivo = DataBinder.Eval(e.Item.DataItem, "AcabadoVentas").ToString();
+                    e.Item.Cells[4].ToolTip = archivo;
+
+                }
+            
+        }
     }
 }

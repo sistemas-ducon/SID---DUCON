@@ -21,6 +21,9 @@
     font-size: 28px;
 }
 
+masGrande {
+    font-size: 50px;
+}
 
 .border {
     border: 1px solid black;
@@ -184,6 +187,14 @@
     color: #0863a4;
 }
 
+.ColorAzulActivo2 {
+    background: linear-gradient(to right, rgba(0, 123, 255, 1), rgba(137, 207, 240, 0.5), rgba(0, 123, 255, 1));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 50px; /* Aumentar el tamaño del icono */
+}
+
+
 .AzulClaro {
     color: #92afc4;
 }
@@ -296,3 +307,4 @@
     font-size: 14px;
     color: #555;
 }
+

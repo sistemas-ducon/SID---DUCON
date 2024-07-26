@@ -872,22 +872,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (pausado == 1)
             {
                 // Mostrar mensaje de advertencia si el diseño está pausado
-                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('El diseño está pausado, no se puede terminar.');", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#DiseñoPausado').modal('show');", true);
                 return;
             }
 
-            // Lógica para confirmar la terminación del diseño usando JavaScript
-            ClientScript.RegisterStartupScript(this.GetType(), "confirm",
-                "if (confirm('Se enviará correo de notificación de Ok diseño? Una vez terminado el Diseño, no podrá realizarles modificaciones. ¿Está seguro de Terminar el diseño: " + lblNumDise.Text + " - " + TextProyecto.Text + "?')) { __doPostBack('ConfirmOkDiseno', ''); }",
-                true);
+            string contenidoModalOT = "Se enviará correo de notificación de Ok diseño? Una vez terminado el Diseño, no podrá realizarles modificaciones. ¿Está seguro de Terminar el diseño: " + numeroDiseno +  " - " + NombreUsuario + " ? ";
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ConfirmarTerminarDiseño').modal('show'); $('#ConfirmarTerminarDiseño2').text('" + contenidoModalOT + "');", true);
+            return;
 
+        }
+
+        protected void TerminarSi_Click(object sender, EventArgs e)
+        {
+            string NombreUsuario = Session["usuariologueado"].ToString();
+            string numeroDiseno = lblNumDise.Text;
             // Lógica para cargar planos del diseño
             CargarPlanosDelDiseno(numeroDiseno);
 
             // Obtención de la fecha y hora actual del servidor
             string dtpUltimaActivacion = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
 
-            // Actualización de la base de datos
+            //// Actualización de la base de datos
             string sSql = "UPDATE tblDiseño SET RealizadoPor = @NombreUsuario, ProgramadoVentas = 1, TerminadoDibujo = 1, FechaDibujoOk = GETDATE() WHERE Numero_Diseño = @NumeroDiseno";
 
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
@@ -905,14 +910,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             BtnProgramar.Enabled = false;
             BtnProgramar.BackColor = System.Drawing.Color.Gray;
 
+            // Generar y guardar el archivo Excel
+            string rutaArchivo = GuardarExcel(numeroDiseno);
+
             // Envío de correos electrónicos
-            EnviarCorreosDeNotificacion(NombreUsuario);
+            EnviarCorreosDeNotificacion(NombreUsuario, rutaArchivo);
         }
 
-        private void EnviarCorreosDeNotificacion(string NombreUsuario)
+        private void EnviarCorreosDeNotificacion(string NombreUsuario, string rutaArchivo)
         {
-            string EnviadoA = DropDownList1.SelectedItem.Text.ToString();
-            EnviadoA += ObtenerCorreos("mailTerminadoDisenoDibujo" + TextZona.SelectedItem.Text);
+            string cedulaLogeada = Session["CedulaLogeada"].ToString();
+            string correoAsesor = DropDownList1.SelectedValue;
+            string EnviadoA = ObtenerCorreoAsesorComercial(correoAsesor);
+
+            EnviadoA += ObtenerCorreos("mailTerminadoDiseñoDibujo" + TextZona.SelectedItem.Text);
 
             if (ChecCotVia.Checked)
             {
@@ -924,44 +935,31 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 EnviadoA += ObtenerCorreos("mailcotizartransporte" + TextZona.SelectedItem.Text);
             }
 
-            // Verificar si hay destinatarios
             if (!string.IsNullOrWhiteSpace(EnviadoA))
             {
-                // Lógica para obtener los destinatarios del correo
                 string receptormail = "";
-                int Buscardesde = EnviadoA.IndexOf(';');
-                while (Buscardesde != -1)
+                string[] correos = EnviadoA.Split(';');
+
+                foreach (string correo in correos)
                 {
-                    string correo = EnviadoA.Substring(0, Buscardesde).Trim();
-                    if (ValidarCadenaMail(correo))
+                    if (ValidarCadenaMail(correo.Trim()))
                     {
-                        receptormail += ";" + correo;
+                        receptormail += ";" + correo.Trim();
                     }
-                    EnviadoA = EnviadoA.Substring(Buscardesde + 1);
-                    Buscardesde = EnviadoA.IndexOf(';');
                 }
 
-                if (!string.IsNullOrWhiteSpace(EnviadoA))
-                {
-                    receptormail += ";" + EnviadoA.Trim();
-                }
-
-                // Validar y agregar el correo del usuario actual
-                string mailUsuario = Session["MailUsuario"].ToString();
+                string mailUsuario = ObtenerMailUsuario(cedulaLogeada);
                 if (ValidarCadenaMail(mailUsuario))
                 {
                     receptormail = mailUsuario + receptormail;
                 }
 
-                // Verificar si se pudo obtener al menos un destinatario válido
                 if (!string.IsNullOrWhiteSpace(receptormail))
                 {
-                    // Determinar el asunto del correo
                     string AsuntoMail = ChecCot.Checked ?
                         $"Diseño Terminado: {lblNumDise.Text} - {TextProyecto.Text}" :
                         $"Aprobar para Cotizar Diseño: {lblNumDise.Text} - {TextProyecto.Text}";
 
-                    // Construir la descripción del correo
                     string DescripcionMail = $"Fecha: {DateTime.Now.ToString("dd/MM/yyyy HH:mm")}<br><br>" +
                         $"Estimado(a) Asesor(a), por medio de la presente se informa que el Diseño: {lblNumDise.Text}, ha sido terminado, bajo los siguientes parámetros:<br><br>" +
                         $"Aprobado para Cotizar: {ConversionBoolean2(ChecCot.Checked)}<br>" +
@@ -973,57 +971,112 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         $"Otros datos<br>" +
                         $"Línea: {TextLin.Text}, Acab. Paneles: {TextPan.Text}, Superficies: {TextSup.Text}, Tipo Vidrio: {TextTipVid.Text}<br><br>" +
                         $"Observaciones Ventas:<br>{TextObsVen.Value}<br><br>" +
-                        $"Observaciones Dibujo y Despiece:<br>Realizado por: {NombreUsuario} ({Session["MailUsuario"].ToString()})<br>{TextObsDibDes.Value}<br><br>";
+                        $"Observaciones Dibujo y Despiece:<br>Realizado por: {NombreUsuario} {mailUsuario}<br>{TextObsDibDes.Value}<br><br>";
 
-                    //// Generar y guardar el Excel
-                    //GenerarYGuardarExcel();
+                    // Guardar la información en el ViewState para su uso posterior
+                    ViewState["Receptormail"] = receptormail;
+                    ViewState["AsuntoMail"] = AsuntoMail;
+                    ViewState["DescripcionMail"] = DescripcionMail;
+                    ViewState["NombreUsuario"] = NombreUsuario;
+                    ViewState["RutaArchivo"] = rutaArchivo;
 
-                    bool correoEnviado = EnviarCorreoTerminadoDise(receptormail, AsuntoMail, DescripcionMail, NombreUsuario);
-
-                    //// Lógica de envío del correo
-                    //string sSql = $"duc_sp_correo('{receptormail}','{AsuntoMail}','{DescripcionMail}','{adjuntos}','{NombreUsuario}')";
-                    //// ConectSID.Execute(sSql); // Aquí deberías ejecutar tu código para enviar el correo
-                }
-                else
-                {
-                    // Mostrar un mensaje si no hay destinatarios válidos
-                    // MessageBox.Show("No hay destinatarios válidos para enviar el correo.");
+                    // Mostrar el modal
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#AdjuntarOtroArchivo').modal('show');", true);
                 }
             }
         }
 
-        public bool EnviarCorreoTerminadoDise(string receptormail, string AsuntoMail, string DescripcionMail, string NombreUsuario)
+        protected void AdjuntarOtroArchivo_Click(object sender, EventArgs e)
+        {
+            string rutaArchivoOriginal = ViewState["RutaArchivo"].ToString();
+            string rutaCompleta = rutaArchivoOriginal;
+
+            if (FileUpload1.HasFiles)
+            {
+                foreach (HttpPostedFile archivo in FileUpload1.PostedFiles)
+                {
+                    string rutaArchivoAdicional = GuardarArchivoAdicional(archivo);
+                    rutaCompleta += ";" + rutaArchivoAdicional;
+                }
+            }
+
+            bool correoEnviado = EnviarCorreoTerminadoDise(
+                ViewState["Receptormail"].ToString(),
+                ViewState["AsuntoMail"].ToString(),
+                ViewState["DescripcionMail"].ToString(),
+                ViewState["NombreUsuario"].ToString(),
+                rutaCompleta
+            );
+        }
+
+
+        private string GuardarArchivoAdicional(HttpPostedFile archivo)
+        {
+            string ruta = @"\\172.16.30.3\s_I_ducon$\TemporalAdjunto\";
+            string nombreArchivo = Path.GetFileName(archivo.FileName);
+            string rutaCompleta = Path.Combine(ruta, nombreArchivo);
+
+            archivo.SaveAs(rutaCompleta);
+
+            return rutaCompleta;
+        }
+
+
+        public bool EnviarCorreoTerminadoDise(string receptormail, string AsuntoMail, string DescripcionMail, string NombreUsuario, string nombreArchivo)
         {
             string nombreProcedimiento = "duc_sp_Correo";
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
-            try
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlCommand command = new SqlCommand(nombreProcedimiento, connection))
                 {
-                    using (SqlCommand command = new SqlCommand(nombreProcedimiento, connection))
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@Destinatarios", receptormail);
+                    command.Parameters.AddWithValue("@asunto", AsuntoMail);
+                    command.Parameters.AddWithValue("@cuerpo", DescripcionMail);
+
+                    if (!string.IsNullOrEmpty(nombreArchivo))
                     {
-                        command.CommandType = CommandType.StoredProcedure;
-
-                        // Definir los parámetros del procedimiento almacenado
-                        command.Parameters.AddWithValue("@Destinatarios", receptormail);
-                        command.Parameters.AddWithValue("@asunto", AsuntoMail);
-                        command.Parameters.AddWithValue("@cuerpo", DescripcionMail);
-                        command.Parameters.AddWithValue("@adjuntos", "");
-                        command.Parameters.AddWithValue("@usuario", NombreUsuario);
-
-                        connection.Open();
-                        command.ExecuteNonQuery();
-                        return true;
+                        command.Parameters.AddWithValue("@adjuntos", nombreArchivo);
                     }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@adjuntos", DBNull.Value);
+                    }
+
+                    command.Parameters.AddWithValue("@usuario", NombreUsuario);
+
+                    connection.Open();
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    catch (SqlException ex)
+                    {
+                        Console.WriteLine("Error de SQL: " + ex.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error general: " + ex.Message);
+                    }
+
+                    return true;
                 }
             }
-            catch (SqlException ex)
-            {
-                // Manejar la excepción (opcional)
-                // Loggear la excepción o hacer algo con ella
-                return false;
-            }
+        }
+
+
+        protected void EnviarCorreoTerminado_Click(object sender, EventArgs e)
+        {
+            bool correoEnviado = EnviarCorreoTerminadoDise(
+                ViewState["Receptormail"].ToString(),
+                ViewState["AsuntoMail"].ToString(),
+                ViewState["DescripcionMail"].ToString(),
+                ViewState["NombreUsuario"].ToString(),
+                ViewState["RutaArchivo"].ToString()
+            );
         }
 
         private bool ValidarCadenaMail(string cadenaMail)
@@ -1043,19 +1096,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Validar si el correo tiene una 'ñ'
                 if (mail.Contains("ñ")) return false;
 
-                // Validar si el correo empieza con '@'
-                if (!mail.StartsWith("@"))
-                {
-                    return false;
-                }
-                else
-                {
-                    // Validar si el correo tiene más de una '@'
-                    if (mail.Substring(1).Contains("@")) return false;
+                // Validar si el correo tiene una '@'
+                int atPos = mail.IndexOf('@');
+                if (atPos == -1) return false;
 
-                    // Validar si después de '@' no hay un '.'
-                    if (!mail.Substring(mail.IndexOf("@") + 1).Contains(".")) return false;
-                }
+                // Validar si el correo tiene más de una '@'
+                if (mail.IndexOf('@', atPos + 1) != -1) return false;
+
+                // Validar si después de '@' hay un '.'
+                if (mail.IndexOf('.', atPos) == -1) return false;
 
                 // Validar si el correo termina con "@", ".", "-", "_"
                 char lastChar = mail[mail.Length - 1];
@@ -1065,85 +1114,29 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return true;
         }
 
-
-
-        private void GenerarYGuardarExcel()
+        private string GuardarExcel(string numeroDiseno)
         {
-            string pathTemplate = Server.MapPath("~/Excel_Formatos/FormatoCotizacion.xlsx");
-            string pathSave = Server.MapPath($"~/Excel_Generados/Cotizacion_{lblNumDise.Text}_{DateTime.Now:yyyyMMddHHmmss}.xlsx");
+            // Crear un nuevo libro de Excel
+            IWorkbook workbook = new HSSFWorkbook();
+            // Crear las hojas necesarias
+            CreateCotizacionSheet(workbook.CreateSheet("Cotizacion"));
+            CreateCotizacionSheet(workbook.CreateSheet("Cotizacion Detallada"));
 
-            IWorkbook workbook;
+            // Definir la ruta y el nombre del archivo
+            string ruta = @"\\172.16.30.3\s_I_ducon$\TemporalAdjunto\";
+            string nombreArchivo = $"Diseño N.{numeroDiseno}.xls";
+            string rutaCompleta = Path.Combine(ruta, nombreArchivo);
 
-            using (FileStream fs = new FileStream(pathTemplate, FileMode.Open, FileAccess.Read))
+            // Guardar el libro de Excel en la ruta especificada
+            using (FileStream fileStream = new FileStream(rutaCompleta, FileMode.Create, FileAccess.Write))
             {
-                workbook = new XSSFWorkbook(fs);
+                workbook.Write(fileStream);
             }
 
-            ISheet sheet = workbook.GetSheet("Cotizacion Detallada");
-
-            sheet.GetRow(0).GetCell(1).SetCellValue($"Sabaneta, {DateTime.Now:MMMM dd} de {DateTime.Now:yyyy}");
-            sheet.GetRow(1).GetCell(4).SetCellValue($"Diseño: {lblNumDise.Text}");
-            sheet.GetRow(6).GetCell(1).SetCellValue("Ciudad");
-
-            int filaExcel = 16;
-            decimal TotalCubicajeProyecto = 0;
-            decimal TotalPesoProyecto = 0;
-
-            var rsPlanosdelDiseño = ObtenerPlanosDelDiseno(lblNumDise.Text); // Método para obtener los datos
-
-            if (rsPlanosdelDiseño != null && rsPlanosdelDiseño.Rows.Count > 0)
-            {
-                string OpcionCotizacion = rsPlanosdelDiseño.Rows[0]["Opcion"].ToString();
-                decimal TotalOpcion = 0;
-
-                SetCellBold(sheet.GetRow(filaExcel).GetCell(1), "OPCIÓN: " + OpcionCotizacion);
-                filaExcel++;
-
-                foreach (DataRow row in rsPlanosdelDiseño.Rows)
-                {
-                    if (OpcionCotizacion != row["Opcion"].ToString())
-                    {
-                        SetCellBold(sheet.GetRow(filaExcel).GetCell(1), "TOTAL OPCIÓN: " + OpcionCotizacion);
-                        sheet.GetRow(filaExcel).GetCell(5).SetCellValue((double)TotalOpcion);
-                        filaExcel += 2;
-
-                        OpcionCotizacion = row["Opcion"].ToString();
-                        TotalOpcion = 0;
-
-                        SetCellBold(sheet.GetRow(filaExcel).GetCell(1), "OPCIÓN: " + OpcionCotizacion);
-                        filaExcel++;
-                    }
-
-                    decimal TotalDespiece = 0;
-                    decimal TotalCubicajeDespiece = 0;
-                    decimal TotalPesoDespiece = 0;
-
-                }
-
-                SetCellBold(sheet.GetRow(filaExcel).GetCell(1), "TOTAL OPCIÓN: " + OpcionCotizacion);
-                sheet.GetRow(filaExcel).GetCell(5).SetCellValue((double)TotalOpcion);
-            }
-
-            using (FileStream fs = new FileStream(pathSave, FileMode.Create, FileAccess.Write))
-            {
-                workbook.Write(fs);
-            }
-
-            workbook.Close();
+            // Retornar la ruta completa del archivo guardado
+            return rutaCompleta;
         }
 
-        private void SetCellBold(ICell cell, string value)
-        {
-            IWorkbook workbook = cell.Sheet.Workbook;
-            IFont font = workbook.CreateFont();
-            font.IsBold = true;
-
-            ICellStyle style = workbook.CreateCellStyle();
-            style.SetFont(font);
-
-            cell.SetCellValue(value);
-            cell.CellStyle = style;
-        }
 
         private DataTable ObtenerPlanosDelDiseno(string numeroDiseno)
         {
@@ -1174,7 +1167,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             return dtPlanos;
         }
-
 
         private string ConversionBoolean2(bool valor)
         {
@@ -4630,12 +4622,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                                 TextPre.Text = GetString(reader, "PresentacionCotizacion");
 
+                                // Obtener el valor del campo "Asesor"
                                 string asesor = GetString(reader, "Asesor");
-                                ListItem asesorItem = new ListItem(asesor, asesor);
-                                DropDownList1.Items.Add(asesorItem);
 
-                                // Selecciona el valor en DropDownList1 para que coincida con el "Asesor" obtenido de la base de datos
-                                DropDownList1.SelectedValue = asesor;
+                                // Buscar el elemento en DropDownList1 que tenga el texto del asesor
+                                ListItem foundItem = DropDownList1.Items.FindByText(asesor);
+
+                                // Seleccionar el elemento encontrado si existe
+                                if (foundItem != null)
+                                {
+                                    DropDownList1.SelectedValue = foundItem.Value;
+                                }
 
 
                                 TextCliente.Text = GetString(reader, "Cliente");
@@ -4742,7 +4739,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string numeroDiseño = Session["NumeroDiseño"]?.ToString();
             if (!string.IsNullOrEmpty(numeroDiseño))
             {
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
                 {
                     conn.Open();
                     string query = "SELECT SC_Terminado, TerminadoDibujo FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseño";
@@ -4773,10 +4770,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 PausarDiseño.Enabled = true;
                                 PausarDiseño.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
                                 EliminarDiseño.Enabled = true;
+                                RegresarDiseño.Enabled = true;
+                                RegresarDiseño.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
                             }
                         }
                     }
                 }
+            }
+
+            bool estaPausado;
+            string consultaPausado = "SELECT Pausado FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseño";
+
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(consultaPausado, conn))
+                {
+                    cmd.Parameters.AddWithValue("@NumeroDiseño", numeroDiseño);
+                    conn.Open();
+                    estaPausado = (bool)cmd.ExecuteScalar();
+                }
+            }
+
+            if (estaPausado == false)
+            {
+                PausarDiseño.Text = "<i class='bi bi-stop-circle-fill'></i>";
+            }
+            else
+            {
+                PausarDiseño.Text = "<i class='bi bi-play-circle-fill'></i>";
             }
         }
 
@@ -7315,7 +7336,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void RegresarDise_Click(object sender, EventArgs e)
         {
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#RegresarDise').modal('show');", true);
+            string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Ventas")
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#RegresarDise').modal('show');", true);
+            }
+            if (tipoAccion == "Diseño")
+            {
+                string numeroDise = lblNumDise.Text;
+                string contenidoModalOT = "Desea regresar el diseño: " + numeroDise + " para el departamento de ventas ? ";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ConfirmarRegresoDelDiseno').modal('show'); $('#ConfirmarRegresoDelDiseno2').text('" + contenidoModalOT + "');", true);
+            }
         }
 
         protected void UpdateRegresarDise_Click(object sender, EventArgs e)
@@ -9276,7 +9307,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
         private bool LlegaraquiReinstalacion(SqlConnection connection, string plano, string objeto, decimal ancho, bool desmonte, bool reinstalacion, DataTable panelData)
         {
             bool Existentes = chkElemExit.Checked;
@@ -10175,32 +10205,799 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 "document.getElementById('" + PausarDiseño.ClientID + "').classList.add('pulsar');",
                 true);
 
-            // Cambiar entre íconos basado en el estado actual del botón
-            if (PausarDiseño.Text.Contains("bi-stop-circle-fill"))
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string nombreUsuario = Session["usuariologueado"].ToString();
+            string lblDiseño = lblNumDise.Text;
+            string txtNombreDiseño = TextProyecto.Text;
+            string txtCliente = TextCliente.Text;
+            string txtSeguimientoPausas = TextSegPauDev.Value;
+
+            // Obtener el correo del asesor comercial
+            string dtaCboAsesorComercialTag = ObtenerCorreoAsesorComercial(DropDownList1.SelectedValue);
+            string cedulaLogeada = Session["CedulaLogeada"].ToString();
+            string mailUsuario = ObtenerMailUsuario(cedulaLogeada); // Aquí se obtiene el correo del usuario usando la cédula de sesión
+
+            bool estaPausado;
+            string consultaPausado = "SELECT Pausado FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseño";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                // Cambiar el ícono a "play" y actualizar la base de datos o estado en memoria
-                PausarDiseño.Text = "<i class='bi bi-play-circle-fill'></i>";
-                // Lógica para pausar el diseño
+                using (SqlCommand cmd = new SqlCommand(consultaPausado, conn))
+                {
+                    cmd.Parameters.AddWithValue("@NumeroDiseño", lblDiseño);
+                    conn.Open();
+                    estaPausado = (bool)cmd.ExecuteScalar();
+                }
+            }
+
+            if (estaPausado == false)
+            {
+              
+                string razonPausa = "Razón de la pausa";
+                txtSeguimientoPausas = $"Diseño Pausado por el dibujante: {nombreUsuario} el {DateTime.Now:dd/MM/yyyy HH:mm} Razón: {razonPausa}\r\n{txtSeguimientoPausas}";
+
+                string sSql = "UPDATE tblDiseño SET Pausado = 1, SeguimientoPausa = @SeguimientoPausa WHERE Numero_Diseño = @NumeroDiseño";
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand(sSql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@SeguimientoPausa", txtSeguimientoPausas);
+                        cmd.Parameters.AddWithValue("@NumeroDiseño", lblDiseño);
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(dtaCboAsesorComercialTag.Trim()) && Validar_CadenaMail(dtaCboAsesorComercialTag))
+                {
+                    string asuntoMail = $"Pausado el Diseño: {lblDiseño} - {txtNombreDiseño}";
+                    string descripcionMail = $"Fecha: {DateTime.Now}<br><br>" +
+                                             $"Estimado(a) asesor(a)<br>" +
+                                             $"Su solicitud de Diseño y Cotización ha sido pausado por: {nombreUsuario}<br>" +
+                                             $"Historial de pausas y devoluciones: {txtSeguimientoPausas}<br><br>" +
+                                             $"Información del Diseño<br>" +
+                                             $"Diseño N.: {lblDiseño}<br>" +
+                                             $"Cliente: {txtCliente}<br>" +
+                                             $"Proyecto: {txtNombreDiseño}<br><br>" +
+                                             $"Cualquier inquietud no dude en comunicarse con: {nombreUsuario}<br><br>" +
+                                             $"Sede Información<br>" +
+                                             $"Dirección: Dirección de la sede<br>" +
+                                             $"Teléfono: Teléfono de la sede<br>" +
+                                             $"Email: Email de la sede";
+
+                    EnviarCorreo(dtaCboAsesorComercialTag, asuntoMail, descripcionMail, mailUsuario, lblDiseño);
+                }
+                else
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(), "MostrarMensaje",
+                        "alert('El Asesor no tiene configurado el correo electrónico');", true);
+                }
             }
             else
             {
-                // Cambiar el ícono a "stop" y actualizar la base de datos o estado en memoria
-                PausarDiseño.Text = "<i class='bi bi-stop-circle-fill'></i>";
-                // Lógica para continuar el diseño
+               
+                txtSeguimientoPausas = $"Diseño Reactivado el {DateTime.Now:dd/MM/yyyy HH:mm}, Fecha Ingreso anterior: {DateTime.Now:dd/MM/yyyy HH:mm}\r\n{txtSeguimientoPausas}";
+
+                DateTime FechaActivacion, FechaEntrega;
+                CalcularFechaEntrega(DateTime.Now, out FechaActivacion, out FechaEntrega, 10); // Ejemplo de plazo de entrega
+
+                string sSql = "UPDATE tblDiseño SET Pausado = 0, UltimaActivacion = @UltimaActivacion, Fecha_Programada_Entrega = @FechaProgramadaEntrega, SeguimientoPausa = @SeguimientoPausa WHERE Numero_Diseño = @NumeroDiseño";
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand(sSql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UltimaActivacion", FechaActivacion);
+                        cmd.Parameters.AddWithValue("@FechaProgramadaEntrega", FechaEntrega);
+                        cmd.Parameters.AddWithValue("@SeguimientoPausa", txtSeguimientoPausas);
+                        cmd.Parameters.AddWithValue("@NumeroDiseño", lblDiseño);
+                        conn.Open();
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                          
+
+                            PausarDiseño.Text = "<i class='bi bi-stop-circle-fill'></i>";
+                        }
+                        else
+                        {
+
+                        }
+                    }
+
+                }
             }
 
-            // Desactivar temporalmente la animación para que no se repita
             ScriptManager.RegisterStartupScript(this, GetType(), "QuitarPulsarBoton",
-                "setTimeout(function(){ document.getElementById('" + PausarDiseño.ClientID + "').classList.remove('pulsar'); }, 1000);",
+                $"setTimeout(function(){{ document.getElementById('{PausarDiseño.ClientID}').classList.remove('pulsar'); }}, 1000);",
                 true);
+        }
 
+        private string ObtenerCorreoAsesorComercial(string codigoAsesor)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string correo = string.Empty;
 
+            string consultaCorreo = "SELECT Mail FROM tblAsesorComercial WHERE CodigoAsesor = @CodigoAsesor";
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(consultaCorreo, conn))
+                {
+                    cmd.Parameters.AddWithValue("@CodigoAsesor", codigoAsesor);
+                    conn.Open();
+                    correo = cmd.ExecuteScalar()?.ToString();
+                }
+            }
+
+            return correo;
+        }
+
+        private string ObtenerMailUsuario(string cedula)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string correo = string.Empty;
+
+            string consultaCorreo = "SELECT Mail FROM tblEmpleado WHERE Cedula = @Cedula";
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(consultaCorreo, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Cedula", cedula);
+                    conn.Open();
+                    correo = cmd.ExecuteScalar()?.ToString();
+                }
+            }
+
+            return correo;
+        }
+
+        private string ObtenerDestinatariosValidos(string destinatarios, string mailUsuario)
+        {
+            string receptormail = string.Empty;
+            string[] correos = destinatarios.Split(';');
+
+            foreach (string correo in correos)
+            {
+                string correoTrimmed = correo.Trim();
+                if (Validar_CadenaMail(correoTrimmed))
+                {
+                    if (!string.IsNullOrEmpty(receptormail))
+                    {
+                        receptormail += ";";
+                    }
+                    receptormail += correoTrimmed;
+                }
+            }
+
+            // Agregar el correo del usuario si es válido
+            if (Validar_CadenaMail(mailUsuario))
+            {
+                if (!string.IsNullOrEmpty(receptormail))
+                {
+                    receptormail = mailUsuario + ";" + receptormail;
+                }
+                else
+                {
+                    receptormail = mailUsuario;
+                }
+            }
+
+            return receptormail;
+        }
+
+        public void EnviarCorreo(string destinatarios, string asuntoMail, string descripcionMail, string nombreUsuario, string lblDiseño)
+        {
+            string nombreProcedimiento = "duc_sp_Correo";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            string destinatariosValidos = ObtenerDestinatariosValidos(destinatarios, nombreUsuario);
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(nombreProcedimiento, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Definir los parámetros del procedimiento almacenado
+                    command.Parameters.AddWithValue("@Destinatarios", destinatariosValidos);
+                    command.Parameters.AddWithValue("@asunto", asuntoMail);
+                    command.Parameters.AddWithValue("@cuerpo", descripcionMail);
+                    command.Parameters.AddWithValue("@adjuntos", "");
+                    command.Parameters.AddWithValue("@usuario", nombreUsuario);
+
+                    try
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+
+                        PausarDiseño.Text = "<i class='bi bi-play-circle-fill'></i>";
+                        // Mostrar mensaje de éxito del envío de correo
+                       
+
+                    }
+                    catch (SqlException ex)
+                    {
+                        // Manejar la excepción (opcional)
+                        // error.Visible = true;
+                        // error.Text = ex.Message;
+                    }
+                }
+            }
+        }
+
+        private bool Validar_CadenaMail(string cadenaMail)
+        {
+            bool esValido = true;
+            string[] emails = cadenaMail.ToLower().Split(';');
+
+            foreach (string email in emails)
+            {
+                if (email.Contains(" ") || email.Contains("@.") || email.Contains("ñ") ||
+                    !email.Contains("@") || email.IndexOf("@") != email.LastIndexOf("@") ||
+                    email.IndexOf(".", email.IndexOf("@")) == -1 ||
+                    email.EndsWith("@") || email.EndsWith(".") || email.EndsWith("-") || email.EndsWith("_"))
+                {
+                    esValido = false;
+                    break;
+                }
+            }
+
+            return esValido;
         }
 
 
+        public void CalcularFechaEntrega(DateTime FechaIngreso, out DateTime FechaActivacion, out DateTime FechaEntrega, double PlazoEntrega)
+        {
+            double TiempoAdicional;
+            FechaActivacion = FechaIngreso;
+
+            // Ajustar la hora de activación a las 7 AM si es antes de las 7 AM
+            if (FechaActivacion.Hour < 7)
+            {
+                TiempoAdicional = 7 / 24.0 - (FechaActivacion.Hour / 24.0 + FechaActivacion.Minute / 1440.0);
+                FechaActivacion = FechaActivacion.AddDays(TiempoAdicional);
+            }
+
+            // Ajustar la hora de activación si es después de las 5 PM
+            if (FechaActivacion.Hour + FechaActivacion.Minute / 60.0 > 17)
+            {
+                TiempoAdicional = (FechaActivacion.Hour / 24.0 + FechaActivacion.Minute / 1440.0) - 7 / 24.0;
+                FechaActivacion = FechaActivacion.AddDays(1).AddDays(-TiempoAdicional);
+            }
+
+            // Ajustar la fecha de activación para que no sea un día no laborable
+            while (FechaActivacion.DayOfWeek == DayOfWeek.Saturday || FechaActivacion.DayOfWeek == DayOfWeek.Sunday || EsDiaNoLaboral2(FechaActivacion))
+            {
+                TiempoAdicional = (FechaActivacion.Hour / 24.0 + FechaActivacion.Minute / 1440.0) - 7 / 24.0;
+                FechaActivacion = FechaActivacion.AddDays(1).AddDays(-TiempoAdicional);
+            }
+
+            FechaEntrega = FechaActivacion;
+
+            // Ajustar la fecha de entrega para que no sea un día no laborable
+            while (FechaEntrega < FechaActivacion.AddDays(PlazoEntrega))
+            {
+                FechaEntrega = FechaEntrega.AddDays(1);
+                if (FechaEntrega.DayOfWeek == DayOfWeek.Saturday || FechaEntrega.DayOfWeek == DayOfWeek.Sunday || EsDiaNoLaboral2(FechaEntrega))
+                {
+                    PlazoEntrega++;
+                }
+            }
+        }
+
+        private bool EsDiaNoLaboral2(DateTime fecha)
+        {
+            // Verificar en la base de datos si es un día no laborable
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+            bool esNoLaboral = false;
+
+            string sSql = "SELECT COUNT(*) FROM tblDiaNoLaboral WHERE dnlFecha = @Fecha";
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(sSql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Fecha", fecha.ToString("MM/dd/yyyy"));
+                    conn.Open();
+                    esNoLaboral = (int)cmd.ExecuteScalar() > 0;
+                }
+            }
+
+            return esNoLaboral;
+        }
+
+        protected void ddlTipoObservacion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // metodo por si en algun momento agregan correos por defecto para devoluciones a  verntas 
+            string CorreoTipoObser = ConsultarCorreoPorTipoObservacion();
+
+            tbRecepTipoObs.Text = "";
+            tbRecepTipoObs.Text = CorreoTipoObser;
+
+            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionRegresar').modal('show');", true);
+        }
+
+        protected string ConsultarCorreoPorTipoObservacion()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+            string correo = "";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT DestinatarioPorDefecto FROM tblTipoObservacion " +
+                                   "WHERE UsoEspecifico = 0 AND Activa = 1 AND ID_TipoObservacion = @IdObservacion";
+
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@IdObservacion", ddlTipoObservacion.SelectedValue);
+
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        correo = reader["DestinatarioPorDefecto"].ToString();
+                    }
+
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejo de errores, por ejemplo, loguear el error
+                // También puedes lanzar una excepción o devolver un mensaje de error
+            }
+
+            return correo;
+        }
+
+        protected void DataGridReceptorMail_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            
 
 
+            if (e.CommandName == "VerMail")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGridReceptorMail.Items[rowIndex];
 
+                string Nombre = row.Cells[2].Text;
+                string mailAgregar = row.Cells[3].Text;
+                string cedula = row.Cells[4].Text;
+
+                // Tomamos los mail ya agregados y las cedulas agregadas
+                string MailAgregados = tbReceptorCorreo.Text;
+                string cedulaAgregadas = tbCedulaRecp.Text;
+                string NombreAgregado = tbNombreRecp.Text;
+
+                if (!MailAgregados.Contains(mailAgregar))
+                {
+                    // Agregamos el correo del receptor
+                    tbReceptorCorreo.Text = MailAgregados + ";" + mailAgregar;
+
+                    // Agregamos la cedula del receptor
+                    if (tbCedulaRecp.Text != "")
+                    {
+                        tbCedulaRecp.Text = cedulaAgregadas + ";" + cedula;
+                        tbNombreRecp.Text = NombreAgregado + ";" + Nombre;
+                    }
+                    else
+                    {
+                        tbCedulaRecp.Text = cedula;
+                        tbNombreRecp.Text = Nombre;
+                    }
+
+                    // Aplicar la clase a la fila seleccionada
+                    e.Item.CssClass = "fila-seleccionada1";
+                    // Mantener el modal abierto
+                  
+
+                }
+                else
+                {
+                    // Eliminamos el correo del receptor
+                    tbReceptorCorreo.Text = MailAgregados.Replace(";" + mailAgregar, "");
+
+                    // Eliminamos la cedula del receptor
+                    tbCedulaRecp.Text = cedulaAgregadas.Replace(cedula, "").TrimEnd(';').Replace(";;", ";");
+
+                    // Eliminamos el nombre del receptor
+                    tbNombreRecp.Text = NombreAgregado.Replace(Nombre, "").TrimEnd(';').Replace(";;", ";");
+
+                    // Aplicar la clase a la fila seleccionada
+                    e.Item.CssClass = "fila-seleccionada1";
+                }
+
+                // Mantener el modal abierto
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionRegresar').modal('show');", true);
+
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
+                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
+            }
+        }
+
+        protected void AbrirModalObservaciones_Click(object sender, EventArgs e)
+        {
+            string numeroDiseno = lblNumDise.Text;
+            string numeroDise = "DS" + numeroDiseno;
+            tbOt.Text = numeroDise;
+
+            tbPed.Text = "0";
+            string Obra = TextCliente.Text + " - " + TextProyecto.Text;
+            tbObra.Text = Obra;
+
+            // Agregamos vacio en ddlTipoObservacion 
+            ddlTipoObservacion.Items.Insert(0, new System.Web.UI.WebControls.ListItem(" "));
+            ddlTipoObservacion.SelectedIndex = 0;
+
+            // Ponemos la fecha del dia por defecto 
+            DateTime Fecha = DateTime.Now;
+            tbfechaActividad.Text = Fecha.ToString("yyyy-MM-dd");
+            tbfechaActividad.Enabled = false;
+
+            // Consultamos el correo por defecto del diseño
+            ConsultarCorreo(numeroDiseno);
+
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ObservacionRegresar').modal('show');", true);
+        }
+
+        private void ConsultarCorreo(string numeroDiseno)
+        {
+            // Realizar la conexión y la consulta a la base de datos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = "SELECT E.Mail  FROM tblDiseño AS  DISE INNER JOIN tblEmpleado AS E " +
+                               " ON  E.Nombre + ' ' + Apellidos =  DISE.Asesor WHERE DISE.Numero_Diseño = @Numero_Dise";
+
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Numero_Dise", numeroDiseno);
+
+                SqlDataReader reader = command.ExecuteReader();
+
+                // Verificar si hay filas devueltas por la consulta
+                if (reader.Read())
+                {
+                    string mail = reader["Mail"].ToString();
+                    tbReceptorCorreo.Text = mail; // Asignar el valor a TextBox3
+                }
+                else
+                {
+                    tbReceptorCorreo.Text = string.Empty; // Si no hay resultados, establecer el TextBox3 como vacío
+                }
+
+            }
+
+        }
+
+        protected void BtnGrabarObservacion_Click(object sender, EventArgs e)
+        {
+            // Validar que tenga los campos necesarios
+            if (ValidarCamposRequeridos())
+            {
+                InsertarObservacion();
+
+                string numeroDiseno = tbOt.Text;
+                if (numeroDiseno.StartsWith("DS"))
+                {
+                    numeroDiseno = numeroDiseno.Substring(3).TrimStart();
+                }
+
+                // Traemos el Id_MaxObservacion 
+                string Id_Observacion = ConsultarId_Observacion();
+
+                // Se valida si hay receptores seleccionados             
+                if (tbCedulaRecp.Text != "")
+                {
+                    string cedulasNotificar = tbCedulaRecp.Text.Trim(';');
+                    string NombresNotificar = tbNombreRecp.Text.Trim(';');
+
+                    string[] CedNot = cedulasNotificar.Split(';');
+                    string[] NomNot = NombresNotificar.Split(';');
+
+                    for (int i = 0; i < CedNot.Length; i++)
+                    {
+                        // Llamamos al método InsertarObservacionReceptores con la cédula y el nombre actuales
+                        InsertarObservacionReceptores(Id_Observacion, CedNot[i], NomNot[i]);
+
+                    }
+                }
+
+                //Consultamos el area de aplicacion  con el codigo del ddlTipoObservacion              
+                string Aplicacion = ConsultarAreaAplicacion();
+
+                //Enviar la notificacion por Correo 
+                string destinatarios = (tbReceptorCorreo.Text + ";" + tbRecepTipoObs.Text).Trim(';').Trim(' ');
+                string cuerpo = @"
+                    <!DOCTYPE html>
+                    <html lang='es'>
+                    <head>
+                        <meta charset='UTF-8'>
+                        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+                        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                        <style>
+                            body {
+                                font-family: Arial, sans-serif;
+                                font-size: 14px;
+                                line-height: 1.6;
+                                margin: 0;
+                                padding: 0;
+                                background-color: #f9f9f9;
+                            }
+                            .container {
+                                max-width: 37rem;
+                                margin: 20px auto;
+                                padding: 20px;
+                                border: 1px solid #ccc;
+                                border-radius: 5px;
+                                background-color: #fff;
+                            }
+                            h2 {
+                                color: #333;
+                                font-size: 24px;
+                                margin-bottom: 20px;
+                            }
+                            p {
+                                margin-bottom: 10px;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class='container'>
+                            <h3>Notificación de Observación: </h3>
+                            <p> <strong> Fecha de Observación: </strong> " + DateTime.Now.ToString() + @"</p>
+                            <p><strong> Emisor : </strong> <strong> " + Session["usuariologueado"].ToString() + @"</strong></p>
+                            <p><strong>Nombre de la Obra: </strong> " + tbObra.Text + @"</p>
+                            <p><strong>Tipo Observacion : </strong> " + ddlTipoObservacion.SelectedItem.Text + @"</p>
+                            <p><strong>Detalle Observación: </strong> " + txObservacion.InnerText + @"</p>
+                            <p><strong>Fin Observación </strong> </p>
+                           
+                        </div>
+                    </body>
+                    </html>";
+
+                //ejecutar el procedimiento almacenado que envia el correo 
+                EnviarCorreoDevolucionPE(destinatarios, cuerpo, Aplicacion);
+
+                DevolverDiseñoaVentas(numeroDiseno);
+
+
+                string mensajePersonalizado = "El diseño se devolvió con éxito y se notificó por correo electrónico.";
+                string urlRedireccion = "Ventas/Diseño_Venta.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+            }
+        }
+
+        private bool ValidarCamposRequeridos()
+        {
+            bool valido = true;
+
+            if (ddlTipoObservacion.SelectedValue == " ")
+            {
+                // Mensaje de alerta
+                string script1 = "alert('Por favor seleccione el tipo de observación.');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", script1, true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolver').modal('show');", true);
+                valido = false;
+            }
+
+            if (txObservacion.InnerText.Trim() == "")
+            {
+                // Mensaje de alerta
+                string script1 = "alert('Por favor escriba  la justificación de la observación.');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", script1, true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolver').modal('show');", true);
+                valido = false;
+            }
+
+            if (tbOt.Text == "")
+            {
+                // Mensaje de alerta
+                string script1 = "alert('No se ha seleccionado un Diseño para generar una observacion');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", script1, true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolver').modal('show');", true);
+                valido = false;
+
+            }
+
+
+            return valido;
+        }
+        public void InsertarObservacion()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "INSERT INTO tblOtObservacion (Id_OT,Consecutivo_Pedido,Nombre_Obra,Observacion,FechaObservacion,Emisor,Nombre_Emisor," +
+                               "ID_TipoObservacion,FechaAnteriorDespacho,FechaNuevaDespacho,CedulaAsesor, FechaActividad,  Destinatarios) " +
+                               "VALUES(@OT, @Pedido, @NombreObra, @Observacion, @fechaObsercion,@Emisor, @Nombre_Emisor, @ID_TipoObservacion," +
+                               " @FechaAnteriorDespacho,@FechaNuevaDespacho, @CedulaAsesor, @FechaActividad,@Destinatarios)";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@OT", tbOt.Text);
+                    command.Parameters.AddWithValue("@Pedido", tbPed.Text);
+                    command.Parameters.AddWithValue("@NombreObra", tbObra.Text);
+                    command.Parameters.AddWithValue("@Observacion", txObservacion.InnerText);
+                    command.Parameters.AddWithValue("@fechaObsercion", DateTime.Now);
+                    command.Parameters.AddWithValue("@Emisor", Session["CedulaLogeada"].ToString());
+                    command.Parameters.AddWithValue("@Nombre_Emisor", Session["usuariologueado"].ToString());
+                    command.Parameters.AddWithValue("@ID_TipoObservacion", ddlTipoObservacion.SelectedValue);
+                    command.Parameters.AddWithValue("@FechaAnteriorDespacho", DateTime.Now);
+                    command.Parameters.AddWithValue("@FechaNuevaDespacho", DateTime.Now);
+                    command.Parameters.AddWithValue("@CedulaAsesor", DropDownList1.SelectedValue);
+                    command.Parameters.AddWithValue("@FechaActividad", tbfechaActividad.Text);
+                    command.Parameters.AddWithValue("@Destinatarios", tbReceptorCorreo.Text);
+
+
+                    try
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Cambiar el mensaje de error
+                        //Console.WriteLine("Error al insertar datos: " + ex.Message);
+                    }
+                }
+            }
+        }
+        public string ConsultarId_Observacion()
+        {
+            string Id_Observacion = "";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "select max(id_Observacion) from tblOTObservacion";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    try
+                    {
+                        connection.Open();
+                        Id_Observacion = Convert.ToString(command.ExecuteScalar());
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejar la excepción 
+                        //Console.WriteLine("Error al ejecutar la consulta: " + ex.Message);
+                    }
+                }
+            }
+
+            return Id_Observacion;
+        }
+        public void InsertarObservacionReceptores(string Id_Observacion, string cedula, string nombre)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "INSERT INTO tblOTObservacion_Receptor (Id_Observacion,Receptor,Nombre_Receptor) Values(@ID_Observacion, @CedulaRecep , @NombreReceptor)";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ID_Observacion", Id_Observacion);
+                    command.Parameters.AddWithValue("@CedulaRecep", cedula);
+                    command.Parameters.AddWithValue("@NombreReceptor", nombre);
+
+                    try
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Cambiar el mensaje de error
+                        // Console.WriteLine("Error al insertar datos: " + ex.Message);
+                    }
+                }
+            }
+        }
+        public string ConsultarAreaAplicacion()
+        {
+            string areaAplicacion = "";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT Aplicacion FROM tblTipoObservacion WHERE UsoEspecifico=1  AND  Activa=1  AND  Aplicacion like '%' AND ID_TipoObservacion = @TipoObs";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+
+                    command.Parameters.AddWithValue("@TipoObs", ddlTipoObservacion.SelectedValue);
+
+
+                    try
+                    {
+                        connection.Open();
+                        areaAplicacion = Convert.ToString(command.ExecuteScalar());
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+            }
+
+            return areaAplicacion;
+        }
+        public void EnviarCorreoDevolucionPE(string destinatarios, string cuerpo, string aplicacion)
+        {
+            string nombreProcedimiento = "duc_sp_Correo";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(nombreProcedimiento, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Definir los parámetros del procedimiento almacenado
+                    command.Parameters.AddWithValue("@Destinatarios", destinatarios);
+                    command.Parameters.AddWithValue("@asunto", "Observacion: " + aplicacion + " APL: " + tbOt.Text + "-" + tbPed.Text);
+                    command.Parameters.AddWithValue("@cuerpo", cuerpo);
+                    command.Parameters.AddWithValue("@adjuntos", "");
+                    command.Parameters.AddWithValue("@usuario", Session["usuariologueado"].ToString());
+
+                    try
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+
+                    }
+                    catch (SqlException ex)
+                    {
+                        // Manejar la excepción (opcional)
+                        //error.Visible = true;
+                        // error.Text = ex.Message;
+                    }
+                }
+            }
+        }
+        private void DevolverDiseñoaVentas(string numeroDiseno)
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "UPDATE tblDiseño SET ProgramadoVentas=0 WHERE Numero_Diseño= @numeroDiseno";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@fecha", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@numeroDiseno", numeroDiseno);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                    if (CantidadFilasAfectada > 0)
+                    {
+
+                    }
+
+
+                }
+
+            }
+        }
+
+        protected void btnCerrarDevolver_Click(object sender, EventArgs e)
+{
+    // Cerrar el modal y activar la pestaña
+    string script = @"
+        $('#ObservacionRegresar').modal('hide');
+        setTimeout(function() {
+            activarPestana('Diseño-BitacoraFPV-001-tab', 'Diseño-BitacoraFPV-001-content');
+        }, 500);"; // Ajusta el tiempo de espera según sea necesario
+    ClientScript.RegisterStartupScript(this.GetType(), "cerrarModalYActivarPestanaScript", script, true);
+}
 
     }
 }

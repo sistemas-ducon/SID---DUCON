@@ -28,6 +28,7 @@
                }
            }
        </script>
+
 </head>
 <body>
     <form id="form1" runat="server">
@@ -43,7 +44,7 @@
 
                         <div class="table-responsive mb-2 gap-2" style="height: 15.1rem; overflow-x: auto;">
                             <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm"
-                                        ID="DataGrid1" runat="server" AutoGenerateColumns="false" >
+                                        ID="DataGrid1" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGrid1_ItemDataBound1" >
 
                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                 <Columns>
