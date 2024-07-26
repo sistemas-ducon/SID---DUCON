@@ -86,7 +86,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
             {
                 case "PersonaCliente":
                     pageURL = "Ventas/Empleado.aspx";
-                    break;               
+                    break;
                 default:
                     // Si no se encuentra el CommandName, se puede manejar el comportamiento predeterminado aquí
                     break;
@@ -125,7 +125,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
                 case "BitacoraDesarrollo":
                     pageURL = "Ventas/Solicitud_Especial.aspx";
                     break;
-               
+
+                case "BitacoraRenders":
+                    pageURL = "Ventas/Render_Venta.aspx";
+                    break;
+
+                case "GenerarCodigoInventario":
+                    pageURL = "Compras/GenerarCodigoInventario.aspx";
+                    break;
+
             }
 
             string cedulaLogueada = Session["CedulaLogeada"]?.ToString();

@@ -26,7 +26,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Consultas
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+            {
 
+                if (Session["usuariologueado"] != null)
+                {
+
+                }
+                else
+                {
+                    Response.Redirect("~/Formularios/Login.aspx");
+                }
+
+            }
         }
 
         protected void DataGridBusDis_ItemDataBound(object sender, DataGridItemEventArgs e)

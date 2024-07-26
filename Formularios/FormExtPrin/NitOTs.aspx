@@ -15,6 +15,22 @@
     <link type="text/css" href="../../Recursos/CSS/FormExtPrin/NitOts.css" rel="stylesheet" />
     <title>Cliente Obra</title>
     <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
+
+
+    <script>
+        function focusAndScrollToRow(rowId) {
+            var row = document.getElementById(rowId);
+            if (row) {
+                row.setAttribute('tabindex', '-1'); // Make it focusable
+                row.focus();
+                row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+
+            }
+        }
+    </script>
+
+
 </head>
 <body translate="no">
     <form id="form1" runat="server">

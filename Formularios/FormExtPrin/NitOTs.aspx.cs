@@ -504,6 +504,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     int rowIndex = Convert.ToInt32(e.CommandArgument);
                     DataGridItem row = DatagridClientes.Items[rowIndex];
 
+                    // Se utiliza para darle el color solo a la fila seleccionada 
+                    foreach (DataGridItem item in DatagridClientes.Items)
+                    {
+                        if (item != row)
+                        {
+                            item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                        }
+                    }
+
+                    //se usa Para darle un color a la fila seleccionada  anderson
+                    e.Item.CssClass = "fila-seleccionada";
+
+
                     // Accede al DataView del DataSource para obtener la fila correspondiente
                     DataView dataView = (DataView)ClientesFacturacion.Select(DataSourceSelectArguments.Empty);
 
@@ -666,18 +679,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                                 break;
                             }
                         }
-                        // Se utiliza para darle el color solo a la fila seleccionada 
-                        foreach (DataGridItem item in DatagridClientes.Items)
-                        {
-                            if (item != row)
-                            {
-                                item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
-                            }
-                        }
-
-                        //se usa Para darle un color a la fila seleccionada  anderson
-                        e.Item.CssClass = "fila-seleccionada";
-
+                      
 
                         DataGridContacto.DataBind();
                         DataGridVentaAsesor.DataBind();
@@ -737,6 +739,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         }
 
                     }
+
+                    // Asignar ID único a la fila
+                    row.Attributes["id"] = "row_" + rowIndex;
+
+                    // Llamar a la función JavaScript para enfocar y desplazar la fila
+                    ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
+
+
                 }
             }
             catch (Exception ex)
@@ -1528,6 +1538,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         }
                     }
 
+                    // Asignar ID único a la fila
+                    row.Attributes["id"] = "row_" + rowIndex;
 
                     // Se compara si el click es en la misma fila con el id del plano 
                     if (row.Cells[1].Text == Session["IdContactoFactSession1"]?.ToString())
@@ -1556,7 +1568,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
                         Session["ClickCount2"] = 1;
                         Session["IdContactoFactSession1"] = row.Cells[1].Text;
-                    
+
+
+                        // Llamar a la función JavaScript para enfocar y desplazar la fila
+                        ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
+
+
+
                     }
 
                 }
