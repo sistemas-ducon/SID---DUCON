@@ -836,7 +836,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-
         private void CambiarSqlDataSource2(string valorSeleccionado)
         {
 
@@ -891,8 +890,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             DataGrid2.DataBind();
 
         }
-
-
 
         protected void DataGridCotizacion_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
@@ -1972,7 +1969,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-
         private void LimpiarCamposDetalle()
         {
             txDescProduc.InnerText = "";
@@ -1992,7 +1988,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             tbFactorD.Text = "";
             tbPrecioSugerido.Text = "";
         }
-
 
         protected void GuardarModificarSolicitud(object sender, EventArgs e)
         {
@@ -2573,7 +2568,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                         background-color: #f9f9f9;
                                     }
                                     .container {
-                                        max-width: 37rem;
+                                        max-width: 40rem;
                                         margin: 20px auto;
                                         padding: 20px;
                                         border: 1px solid #ccc;
@@ -2623,7 +2618,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         if (destinatario != "")
                         {
                             // Se realiza el envio del correo electronico
-                            EnviarCorreoConAdjuntosTerminadoDibujo(destinatario, cuerpo, adjuntos);
+                            EnviarCorreoConAdjuntosTerminadoDibujo(destinatario, cuerpo, adjuntos.Trim(';'));
                         }
                         else
                         {
@@ -4051,8 +4046,26 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 if (ActualizarDetalleSolicitudEspecial())
                 {
-                   
-                    // Tener el cuenta para controlar  que quede en la pantalla donde modificó  para el dibujante
+
+                    // control del tap del dibujante
+                    Session["ActivarTapBita"] = "1";
+
+                    DataTable DatosSol = CosultarDatosSol();
+
+                    // Accede a la primera fila del DataTable
+                    DataRow row = DatosSol.Rows[0];
+
+                    // Obtén los valores de las columnas
+                    bool terminado = Convert.ToBoolean(row["Terminado"]);
+                    bool programadoVentas = Convert.ToBoolean(row["ProgramadoVentas"]);
+                    bool pausado = Convert.ToBoolean(row["Pausado"]);
+
+                    // VARIABLES EVALUACION Y CONTROL DIBUJANTE 
+
+                    Session["terDis"] = terminado;
+                    Session["terVen"] = programadoVentas;
+                    Session["pausado"] = pausado;
+
 
                     //Mensaje Exito             
                     string mensajePersonalizado = "El detalle ha sido actualizado con exito.";
@@ -4091,9 +4104,64 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     int filaAfectada = cmd.ExecuteNonQuery();
 
+                    if (filaAfectada > 0)
+                    {
+                        // Variables de session de Detalle 
+                        Session["ProductoSession"] = txDescProduc.InnerText;
+                        Session["ProveedorVentaSession"] = tbProveedor.Text;
+                        Session["AnchoSession"] = tbAncho.Text;
+                        Session["AlturaSession"] = tbAltura.Text;
+                        Session["ProfundidadSession"] = tbProfundidad.Text;
+                        Session["MaterialSession"] = tbMaterial.Text;
+                        Session["CantidadSession"] = tbCantidad.Text;
+                        Session["EspGeneralSession"] = txEspGen.InnerText;
+
+                        // Variables de Session de la solicitud 
+                        Session["FecIngrSolSession"] = tbFechaIngresoServidor.Text;
+                        Session["FecEntregaSolSession"] = tbFechaEntregaServidor.Text;
+                        Session["FechaRespuestaSession"] = tbFechaRespuestaServidor.Text;
+                        Session["DirigidoSession"] = ddlDirigido.SelectedItem.Text;
+                        Session["TipoSession"] = ddlTipo.SelectedItem.Text;
+                        Session["SolOrigenSession"] = tbSolicitudOrigen.Text;
+                        Session["ProyectoSolSession"] = tbProyecto.Text;
+                        Session["CiudadSession"] = ddlCiudad.SelectedItem.Text;
+                        Session["ViaticoSession"] = chxViaticos.Checked;
+                        Session["CotizacionSession"] = tbCotizacionEsp.Text;
+                        Session["ClienteSolSession"] = tbClienteServidor.Text;
+                        Session["ContactoSolSession"] = tbContactoServidor.Text;
+                        Session["TelSeolSession"] = tbTelefonoServidor.Text;
+                        Session["CelularSolSession"] = tbCelularServidor.Text;
+                        Session["Mailsolsession"] = tbMailServidor.Text;
+                        Session["DirecccionSolSession"] = tbDireccionServidor.Text;
+                        Session["AsesorSolSession"] = ddlAsesor.SelectedItem.Text;
+                        Session["numeroSolicitudSession"] = lbNumeroSolicitud.Text; ;
+
+                    }
+
                     return filaAfectada > 0;
+
                 }
             }
+        }
+
+        public DataTable CosultarDatosSol()
+        {
+            DataTable DetallesOrigen = new DataTable();
+
+            string query = "select Terminado, ProgramadoVentas,Pausado from tblSoliciDiseEspe where ID_Solicitud = @ID_Sol";
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionStringSID))
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter(query, connection))
+                {
+
+                    adapter.SelectCommand.Parameters.AddWithValue("@ID_Sol", lbNumeroSolicitud.Text);
+                    adapter.Fill(DetallesOrigen);
+                }
+            }
+
+            return DetallesOrigen;
         }
 
 
@@ -4107,6 +4175,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         public static void ModificarDetalle()
         {
             HttpContext.Current.Session["InsertUpdateDetalle"] = "Actualizar";
+        }
+
+        [WebMethod]
+        public static void EliminarTapAct()
+        {
+            HttpContext.Current.Session["ActivarTapBita"] = null;
+            HttpContext.Current.Session["terDis"] = null;
+            HttpContext.Current.Session["terVen"] = null;
+            HttpContext.Current.Session["pausado"] = null;
         }
 
         [WebMethod]
@@ -5427,7 +5504,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 background-color: #f9f9f9;
                             }
                             .container {
-                                max-width: 37rem;
+                                max-width: 40rem;
                                 margin: 20px auto;
                                 padding: 20px;
                                 border: 1px solid #ccc;
@@ -5963,7 +6040,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             background-color: #f9f9f9;
                         }
                         .container {
-                            max-width: 37rem;
+                            max-width: 40em;
                             margin: 20px auto;
                             padding: 20px;
                             border: 1px solid #ccc;
@@ -6003,11 +6080,29 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         if (lbNumeroSolicitud.Text != "" && ddlTipo.SelectedItem.Text == "COTIZACIÓN")
                         {
-                            DataGrid2.DataBind();
+                            ID_Cot_Dib.Text = lbNumeroSolicitud.Text;
+                            BuscarCot_Click(sender, e);
+
+
+                            DataGridCommandEventArgs args = new DataGridCommandEventArgs(
+                                DataGrid2.Items[0],
+                                DataGrid2,
+                                new CommandEventArgs("VerCotizacion", 0)
+                            );
+                            DataGridSolicitudPE_LinkButton(DataGrid2, args);
                         }
                         else if (lbNumeroSolicitud.Text != "" && ddlTipo.SelectedItem.Text == "DESARROLLO")
                         {
-                            DataGrid1.DataBind();
+                            ID_Sol_Dib.Text = lbNumeroSolicitud.Text;
+                            BuscarSol_Click(sender, e);
+
+
+                            DataGridCommandEventArgs args = new DataGridCommandEventArgs(
+                                DataGrid1.Items[0],
+                                DataGrid1,
+                                new CommandEventArgs("VerDesarrollo", 0)
+                            );
+                            DataGridSolicitudPE_LinkButton(DataGrid1, args);
                         }
 
                         // Mostrar mensaje de éxito
@@ -6035,7 +6130,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private bool PausarSolicitudEspecial()
         {
             DateTime fecha = DateTime.Now;
-            string SegPausa = "(Desarrollo pausado por el dibujante: " + Session["usuariologueado"].ToString() + "el " + fecha + "Razón " + txJustificacionPausa.InnerText + ")";
+            string SegPausa = "(Desarrollo pausado por el dibujante: " + Session["usuariologueado"].ToString() + "el " + fecha + "Razón " + txJustificacionPausa.InnerText + ")" + txSegPausa.InnerText;
 
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             string sSql = "UPDATE tblSoliciDiseEspe SET Pausado = 1,  SeguimientoPausa = @seguimientoPausa WHERE ID_Solicitud = @ID_Solicitud  ";
@@ -6187,12 +6282,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 if (lbNumeroSolicitud.Text != "" && ddlTipo.SelectedItem.Text == "COTIZACIÓN")
                 {
+                    ID_Cot_Dib.Text = lbNumeroSolicitud.Text;
                     BuscarCot_Click(sender, e);
+
+                   
+                    DataGridCommandEventArgs args = new DataGridCommandEventArgs(
+                        DataGrid2.Items[0],
+                        DataGrid2,
+                        new CommandEventArgs("VerCotizacion", 0)
+                    );
+                    DataGridSolicitudPE_LinkButton(DataGrid2, args);
                 }
                 else if (lbNumeroSolicitud.Text != "" && ddlTipo.SelectedItem.Text == "DESARROLLO")
                 {
+                    ID_Sol_Dib.Text = lbNumeroSolicitud.Text;
                     BuscarSol_Click(sender, e);
+
+                    
+                    DataGridCommandEventArgs args = new DataGridCommandEventArgs(
+                        DataGrid1.Items[0],
+                        DataGrid1,
+                        new CommandEventArgs("VerDesarrollo", 0)
+                    );
+                    DataGridSolicitudPE_LinkButton(DataGrid1, args);
                 }
+
+               
+
+
                 // Se actualizo correctamente
                 ScriptManager.RegisterStartupScript(this, GetType(), "showError", "alert('El desarrollo de reactivo exitosamente.');", true);
             }
@@ -6385,7 +6502,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 background-color: #f9f9f9;
                             }
                             .container {
-                                max-width: 37rem;
+                                max-width: 40rem;
                                 margin: 20px auto;
                                 padding: 20px;
                                 border: 1px solid #ccc;
@@ -6438,7 +6555,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sSql = "UPDATE tblSoliciDiseEspeDeta SET Terminado=0, FechaRespuesta = @FechaRes WHERE Id_Solicitud= @ID_Solicitud";
+                string sSql = "UPDATE tblSoliciDiseEspe SET Terminado=0, FechaRespuesta = @FechaRes WHERE Id_Solicitud= @ID_Solicitud";
 
                 using (SqlCommand cmd = new SqlCommand(sSql, connection))
                 {
@@ -6490,7 +6607,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 background-color: #f9f9f9;
                             }
                             .container {
-                                max-width: 37rem;
+                                max-width: 40rem;
                                 margin: 20px auto;
                                 padding: 20px;
                                 border: 1px solid #ccc;

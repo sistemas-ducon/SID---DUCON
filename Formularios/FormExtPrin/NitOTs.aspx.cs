@@ -25,7 +25,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         private List<TextBox> listaTextBoxes1;
 
         private string CadenaConexionSID = "BD_SIDSQL";
-       
+
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -65,6 +65,87 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     CargarCiudadesEnDropDownList();
                     CargarCiudades1EnDropDownList();
                     DepartamentoAsesor();
+
+                    if (Session["ClienteSaveOrUpdate"]?.ToString() == "1")
+                    {
+
+                        tbNom1.Text = Session["NitSaveOrUpdate"]?.ToString();
+                        DatagridClientes.DataBind();
+
+                        int index = Convert.ToInt32(0); // Ajusta el índice según sea necesario
+                        DataGridCommandEventArgs args = new DataGridCommandEventArgs(
+                            DatagridClientes.Items[index],
+                            DatagridClientes,
+                            new CommandEventArgs("VerContactoCliente", index)
+                        );
+                        DatagridClientes_LinkButton(DatagridClientes, args);
+
+                        //Eliminan las variables de conteo de fila Contactos 
+                        Session.Remove("IdContactoFactSession1");
+                        Session.Remove("ClickCount2");
+
+                        if (Session["ActContacto"]?.ToString() == "1")
+                        {
+
+                            string script = @"ControlTapContactos();";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "ControlTapContactos", script, true);
+
+                            int index1 = Convert.ToInt32(Session["IndiceContacto"].ToString()); 
+                            DataGridCommandEventArgs args1 = new DataGridCommandEventArgs(
+                                DataGridContacto.Items[index],
+                                DataGridContacto,
+                                new CommandEventArgs("VerContactoCliente", index1)
+                            );
+                            DatagridContactoClienteFact_LinkButton(DataGridContacto, args1);
+
+
+
+                            //Eliminan las variables de conteo de fila Contactos 
+                            Session.Remove("IdContactoFactSession1");
+                            Session.Remove("ClickCount2");
+
+
+                            // LIMPIAMOS VARIABLE DE CONTRONL DE FILA ACTUALIZAR
+                            Session.Remove("ActContacto");
+                            Session.Remove("IndiceContacto");
+
+
+
+                        }
+                        else if (Session["NuevoContacto"]?.ToString() == "1")
+                        {
+                            string script = @"ControlTapContactos();";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "ControlTapContactos", script, true);
+
+                            // LIMPIAMOS CLCKC EN CONTACTOS 
+                            Session.Remove("IdContactoFactSession1");
+                            Session.Remove("ClickCount2");
+
+                            int index1 = Convert.ToInt32(0); // Ajusta el índice según sea necesario
+                            DataGridCommandEventArgs args1 = new DataGridCommandEventArgs(
+                                DataGridContacto.Items[index],
+                                DataGridContacto,
+                                new CommandEventArgs("VerContactoCliente", index1)
+                            );
+                            DatagridContactoClienteFact_LinkButton(DataGridContacto, args1);
+
+                            // LIMPIAMOS CLCKC EN CONTACTOS 
+                            Session.Remove("IdContactoFactSession1");
+                            Session.Remove("ClickCount2");
+
+
+                            // LIMPIAMOS VARIABLE DE CONTROL DE FILA 
+                            Session.Remove("NuevoContacto");
+                            
+                        }
+
+                        Session.Remove("ClienteSaveOrUpdate");
+                        Session.Remove("NitSaveOrUpdate");
+                       
+                        
+
+
+                    }
 
                 }
 
@@ -145,8 +226,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             }
 
         } // Este  Metodo se podria cargar en el Login
-
-
 
         //Metodos de control Campos, botones  y llenado de Drodownlist 
         public void DeshabilitarTextBoxes(List<TextBox> textBoxes)
@@ -679,7 +758,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                                 break;
                             }
                         }
-                      
+
 
                         DataGridContacto.DataBind();
                         DataGridVentaAsesor.DataBind();
@@ -702,11 +781,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                                 cedulasList.Add(cedula);
 
                             }
-                            
+
 
                             // Convierte la lista de cédulas a un array si es necesario
                             string[] cedulasArray = cedulasList.ToArray();
-                            int persmiso = PermisoEmpleado();                                                                                                          
+                            int persmiso = PermisoEmpleado();
                             if (cedulasArray.Contains(Session["CedulaLogeada"].ToString()) && Session["Departamento"]?.ToString().ToUpper() == "VENTAS" || persmiso == 6 || cedulasArray.Length == 0 ||  compartidCon.Contains(Session["usuariologueado"].ToString()))
                             {
                                 // Se muestra el div contenedor de la informacion de contacto  y se activan los botones 
@@ -831,7 +910,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     string mensajePersonalizado = "Este cliente no cuenta con RUT en el servidor.";
                     string urlRedireccion = "FormExtPrin/NitOTs.aspx";
                     Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-                   
+
                 }
 
             }
@@ -880,7 +959,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     string mensajePersonalizado = "Este cliente no cuenta con Registro en el servidor.";
                     string urlRedireccion = "FormExtPrin/NitOTs.aspx";
                     Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-                  
+
                 }
 
 
@@ -1000,26 +1079,26 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             if (carpeta.ToUpper() == "RUT")
             {
                 // Obtener la extensión del archivo original
-                 extensionArchivo = Path.GetExtension(archivo.FileName);
+                extensionArchivo = Path.GetExtension(archivo.FileName);
 
                 // Construir el nuevo nombre del archivo con la nueva extensión
-                 nuevoNombreArchivo = tbNumero.Text + extensionArchivo;
+                nuevoNombreArchivo = tbNumero.Text + extensionArchivo;
 
                 // Combinar la ruta completa de la carpeta con el nuevo nombre del archivo
-                 rutaCompletaArchivo = Path.Combine(rutaCompletaCarpeta, nuevoNombreArchivo);
+                rutaCompletaArchivo = Path.Combine(rutaCompletaCarpeta, nuevoNombreArchivo);
             }
             else
             {
                 // Obtener la extensión del archivo original
-                 extensionArchivo = Path.GetExtension(archivo.FileName);
+                extensionArchivo = Path.GetExtension(archivo.FileName);
 
                 // Construir el nuevo nombre del archivo con la nueva extensión
-                 nuevoNombreArchivo = "R" + tbNumero.Text + extensionArchivo;
+                nuevoNombreArchivo = "R" + tbNumero.Text + extensionArchivo;
 
                 // Combinar la ruta completa de la carpeta con el nuevo nombre del archivo
-                 rutaCompletaArchivo = Path.Combine(rutaCompletaCarpeta, nuevoNombreArchivo);
+                rutaCompletaArchivo = Path.Combine(rutaCompletaCarpeta, nuevoNombreArchivo);
             }
-            
+
 
             try
             {
@@ -1163,10 +1242,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             {
                                 // Se invoca el Metodo para guardar archivos en el servidor 
                                 GuardarArchivosEnCarpetaServidor("RUT", @"\\172.16.30.6\s_i_ducon$", btnActRut);
-                                 //GuardarArchivosEnCarpetaServidor("RUT", @"P:\SISTEMAS\PruebaDocumentacion", btnActRut);
+                                //GuardarArchivosEnCarpetaServidor("RUT", @"P:\SISTEMAS\PruebaDocumentacion", btnActRut);
 
                                 GuardarArchivosEnCarpetaServidor("Registro Clientes", @"\\172.16.30.6\s_i_ducon$", btnActRegCli);
-                                  //GuardarArchivosEnCarpetaServidor("RegistroClientes", @"P:\SISTEMAS\PruebaDocumentacion", btnActRegCli);
+                                //GuardarArchivosEnCarpetaServidor("RegistroClientes", @"P:\SISTEMAS\PruebaDocumentacion", btnActRegCli);
+
+                                Session["ClienteSaveOrUpdate"] = "1";
+                                Session["NitSaveOrUpdate"] = tbNumero.Text;
 
                                 string mensajePersonalizado = "Cliente creado exitosamente.";
                                 string urlRedireccion = "FormExtPrin/NitOTs.aspx";
@@ -1213,17 +1295,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                                 GuardarArchivosEnCarpetaServidor("RUT", @"\\172.16.30.6\s_i_ducon$", btnActRut);
                                 GuardarArchivosEnCarpetaServidor("Registro Clientes", @"\\172.16.30.6\s_i_ducon$", btnActRegCli);
 
+                                Session["ClienteSaveOrUpdate"] = "1";
+                                Session["NitSaveOrUpdate"] = tbNumero.Text;
+
                                 // Puedes mostrar un mensaje de éxito u otra información si es necesario
-                                string mensajePersonalizado = "Cliente actualizado exitosamente.";
+                                string mensajePersonalizado = "EL cliente ha sido actualizado con exito";
                                 string urlRedireccion = "FormExtPrin/NitOTs.aspx";
                                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                             }
                             else
                             {
-
+                                string mensajePersonalizado = "Ocurrió un error al actualizar el cliente, por favor intentelo nuevamente.";
+                                string urlRedireccion = "FormExtPrin/NitOTs.aspx";
+                                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                             }
                         }
-                   
+
                     }
 
                 }
@@ -1540,7 +1627,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
                     // Asignar ID único a la fila
                     row.Attributes["id"] = "row_" + rowIndex;
-
+             
                     // Se compara si el click es en la misma fila con el id del plano 
                     if (row.Cells[1].Text == Session["IdContactoFactSession1"]?.ToString())
                     {
@@ -1559,12 +1646,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             // Reiniciar la variable de sesión "ClickCount" a 0 para la próxima interacción                        
                             Session.Remove("IdContactoFactSession1");
                             Session.Remove("ClickCount2");
-                            
+
                         }
 
                     }
                     else
-                    {
+                    {                    
                         // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
                         Session["ClickCount2"] = 1;
                         Session["IdContactoFactSession1"] = row.Cells[1].Text;
@@ -1591,6 +1678,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
         }
 
+        protected void DataGridContacto_ItemDataBound(object sender, DataGridItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                object IdContacto_Obj = DataBinder.Eval(e.Item.DataItem, "IdContacto");
+                string ID_Contacto = Convert.ToString(IdContacto_Obj);
+
+                if(Session["IdContactoFactSession"]?.ToString() == ID_Contacto)
+                {
+                    Session["IndiceContacto"] = e.Item.ItemIndex.ToString();
+                }
+            }
+        }
         protected void NuevoContactoFact(object sender, EventArgs e)
         {
             foreach (TextBox textBox in listaTextBoxes1)
@@ -1712,6 +1812,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                                 int rowsAffected = cmd.ExecuteNonQuery();
                                 if (rowsAffected > 0)
                                 {
+
+                                    Session["ClienteSaveOrUpdate"] = "1";
+                                    Session["NitSaveOrUpdate"] = tbNumero.Text; 
+                                    Session["NuevoContacto"] = "1";
+                                  
                                     string mensajePersonalizado = "El Contacto ha sido guardado con exito.";
                                     string urlRedireccion = "FormExtPrin/NitOTs.aspx";
                                     Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
@@ -1755,6 +1860,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             int rowsAffected = cmd.ExecuteNonQuery();
                             if (rowsAffected > 0)
                             {
+                                Session["ClienteSaveOrUpdate"] = "1";
+                                Session["NitSaveOrUpdate"] = tbNumero.Text;
+                                Session["ActContacto"] = "1";
+
                                 string mensajePersonalizado = "El contacto ha sido actualizado correctamente.";
                                 string urlRedireccion = "FormExtPrin/NitOTs.aspx";
                                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
@@ -1775,10 +1884,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 string mensajeError = "Por favor, seleccione un cliente.";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showError", $"alert('{mensajeError}');", true);
             }
-          
+
         }
 
-       
+
     }
 
 }

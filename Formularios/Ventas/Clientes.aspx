@@ -279,12 +279,12 @@ return true;
 
                                     <div class="col-sm-7">
                                         <div class="input-group input-group-sm  mb-2 justify-content-around ">
-                                            <asp:Button CssClass="btn btn-outline-secondary" ID="Buscar" runat="server" Text="Buscar" OnClick="ConsultarCliente" />
-                                            <asp:Button CssClass="btn btn-outline-primary " ID="Nuevo" runat="server" Text="Nuevo" OnClick="NuevoCliente" />
-                                            <asp:Button CssClass="btn btn-outline-success" ID="Modificar" runat="server" Text="Modificar" Enabled="false" OnClick="ModificarCliente" />
-                                            <asp:Button CssClass="btn btn-outline-primary" ID="Grabar" runat="server" Text="Grabar" Enabled="false" OnClick="btn_GuardarCliente" OnClientClick="return validarAsesores();" />
-                                            <asp:Button CssClass="btn btn-outline-danger" ID="Eliminar" runat="server" Text="Eliminar" Enabled="false" OnClientClick="return confirmDelete(event);" OnClick="btn_EliminarCliente" />
-                                            <asp:Button CssClass="btn btn-outline-secondary" ID="Cancelar" runat="server" Text="Cancelar" OnClick="CancelarBot" />
+                                            <asp:Button CssClass="btn btn-outline-secondary" style="border-radius:0.2rem" ID="Buscar" runat="server" Text="Buscar" OnClick="ConsultarCliente" />
+                                            <asp:Button CssClass="btn btn-outline-primary " style="border-radius:0.2rem" ID="Nuevo" runat="server" Text="Nuevo" OnClick="NuevoCliente" />
+                                            <asp:Button CssClass="btn btn-outline-secondary" style="border-radius:0.2rem" ID="Modificar" runat="server" Text="Modificar" Enabled="false" OnClick="ModificarCliente" />
+                                            <asp:Button CssClass="btn btn-outline-secondary" style="border-radius:0.2rem" ID="Grabar" runat="server" Text="Grabar" Enabled="false" OnClick="btn_GuardarCliente" OnClientClick="return validarAsesores();" />
+                                            <asp:Button CssClass="btn btn-outline-secondary" style="border-radius:0.2rem" ID="Eliminar" runat="server" Text="Eliminar" Enabled="false" OnClientClick="return confirmDelete(event);" OnClick="btn_EliminarCliente" />
+                                            <asp:Button CssClass="btn btn-outline-primary " style="border-radius:0.2rem" ID="Cancelar" runat="server" Text="Cancelar" OnClick="CancelarBot" />
                                         </div>
                                     </div>
                                 </div>
@@ -490,11 +490,11 @@ return true;
                                     </div>
 
                                     <div class="col-sm-7">
-                                        <div class="input-group  mb-2 justify-content-around ">
-                                            <asp:Button CssClass="btn btn-outline-primary" ID="btnNuevoContacto" runat="server" Text="Nuevo" Enabled="false" OnClick="btnNuevoContacto_Click" />
-                                            <asp:Button CssClass="btn btn-outline-primary" ID="btnGrabarContacto" runat="server" Text="Grabar" Enabled="false" OnClick="btnGuardarContacto_Click" />
-                                            <asp:Button CssClass="btn  btn-outline-success" ID="btnModificarContacto" runat="server" Text="Modificar" Enabled="false" OnClick="btnModificarContacto_Click" />
-                                            <asp:Button CssClass="btn btn-outline-secondary" ID="btnCancelar" runat="server" Text="Cancelar" Enabled="false" OnClick="btnCancelarContacto_Click" />
+                                        <div class="input-group input-group-sm  mb-2 justify-content-around ">
+                                            <asp:Button CssClass="btn btn-outline-secondary" ID="btnNuevoContacto" runat="server" Text="Nuevo" Enabled="false" OnClick="btnNuevoContacto_Click" />
+                                            <asp:Button CssClass="btn btn-outline-secondary" ID="btnGrabarContacto" runat="server" Text="Grabar" Enabled="false" OnClick="btnGuardarContacto_Click" />
+                                            <asp:Button CssClass="btn  btn-outline-secondary" ID="btnModificarContacto" runat="server" Text="Modificar" Enabled="false" OnClick="btnModificarContacto_Click" />
+                                            <asp:Button CssClass="btn btn-outline-primary" ID="btnCancelar" runat="server" Text="Cancelar" Enabled="false" OnClick="btnCancelarContacto_Click" />
                                         </div>
                                     </div>
 

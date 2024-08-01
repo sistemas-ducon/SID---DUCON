@@ -230,6 +230,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     if (btnModificar != null)
                     {
                         btnModificar.Enabled = true;
+                        btnModificar.CssClass = "btn btn-outline-success";
                         ddlAsesorC.Enabled = true;
                         ddlAsesorC.CssClass = "form-control form-control-sm";
                         ControlCliente.Checked = true;
@@ -241,6 +242,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     if (btnEliminar != null)
                     {
                         btnEliminar.Enabled = true;
+                        btnEliminar.CssClass = "btn btn-outline-danger";
                     }
 
 
@@ -258,6 +260,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     if (btnNuevo != null)
                     {
                         btnNuevo.Enabled = true;
+                        btnNuevo.CssClass = "btn btn-outline-primary";
                     }
 
                     // Habilita el botón "Cancelar"
@@ -265,6 +268,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     if (btnCancelar != null)
                     {
                         btnCancelar.Enabled = true;
+                        btnCancelar.CssClass = "btn btn-outline-primary";
                     }
                 }
                 else
@@ -280,11 +284,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     //Deshabilitar el botón Modificar
                     Button btnModificar = FindControl("Modificar") as Button;
                     btnModificar.Enabled = false;
+                    btnModificar.CssClass = "btn btn-outline-secondary";
 
                     // Deshabilitar el botón "Eliminar"
                     Button btnEliminar = FindControl("Eliminar") as Button;
                     btnEliminar.Enabled = false;
-
+                    btnEliminar.CssClass = "btn btn-outline-secondary";
 
                     ddlAsesorC.Enabled = false;
                     ddlAsesorC.CssClass = "form-control form-control-sm";
@@ -295,6 +300,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     if (btnNuevo != null)
                     {
                         btnNuevo.Enabled = false;
+                        btnNuevo.CssClass = "btn btn-outline-secondary";
                     }
 
                     //Deshabilita el botón "Cancelar"
@@ -302,8 +308,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     if (btnCancelar != null)
                     {
                         btnCancelar.Enabled = false;
+                        btnCancelar.CssClass = "btn btn-outline-secondary";
                     }
                 }
+
+
+                // Deshabilita el botón "Nuevo contacto"
+                Button btnGrabar = FindControl("Grabar") as Button;
+                if (btnGrabar != null)
+                {
+                    btnGrabar.Enabled = false;
+                    btnGrabar.CssClass = "btn btn-outline-secondary";
+                }
+
+
+
 
                 //Deshabilitamos la edicion de los campos 
                 tbNit.ReadOnly = true;
@@ -414,6 +433,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnModificar != null)
             {
                 btnModificar.Enabled = false;
+                btnModificar.CssClass = "btn btn-outline-secondary";
             }
 
 
@@ -422,6 +442,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnEliminar != null)
             {
                 btnEliminar.Enabled = false;
+                btnEliminar.CssClass = "btn btn-outline-secondary";
             }
 
             // Deshabilita el botón "Grabar"
@@ -429,6 +450,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (bntGrabar != null)
             {
                 bntGrabar.Enabled = false;
+                bntGrabar.CssClass = "btn btn-outline-secondary";
             }
 
 
@@ -437,6 +459,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnNuevo != null)
             {
                 btnNuevo.Enabled = true;
+                btnNuevo.CssClass = "btn btn-outline-primary";
             }
 
             // Ponemos lo campos en Blanco
@@ -455,6 +478,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             CheckBox1.Enabled = false;
 
             ddlprocedencia.Enabled = false;
+            ddlprocedencia.CssClass = "form-control form-control";
+
+            DataGridCliente.DataBind();
+            DataGridContacto.DataBind();
 
 
         }
@@ -469,6 +496,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnModificar != null)
             {
                 btnModificar.Enabled = false;
+                btnModificar.CssClass = "btn btn-outline-secondary";
             }
 
             // Deshabilita  el botón "Nuevo"
@@ -476,6 +504,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnNuevo != null)
             {
                 btnNuevo.Enabled = false;
+                btnNuevo.CssClass = "btn btn-outline-secondary";
             }
 
             // deshabilita el botón "Eliminar"
@@ -483,6 +512,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnEliminar != null)
             {
                 btnEliminar.Enabled = false;
+                btnEliminar.CssClass = "btn btn-outline-secondary";
             }
 
             // Habilita el botón "Grabar"
@@ -490,6 +520,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (bntGrabar != null)
             {
                 bntGrabar.Enabled = true;
+                bntGrabar.CssClass = "btn btn-outline-primary";
             }
 
 
@@ -533,6 +564,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnNuevoCliente != null)
             {
                 btnNuevoCliente.Enabled = false;
+                btnNuevoCliente.CssClass = "btn btn-outline-secondary";
+
             }
 
             // Deshabilitar el botón "Mofificar"
@@ -540,6 +573,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnModificarCliente != null)
             {
                 btnModificarCliente.Enabled = false;
+                btnModificarCliente.CssClass = "btn btn-outline-secondary";
             }
 
             // Deshabilitar el botón "Eliminar"
@@ -547,6 +581,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnEliminar != null)
             {
                 btnEliminar.Enabled = false;
+                btnEliminar.CssClass = "btn btn-outline-secondary";
             }
 
             // habilitar el botón "Grabar"
@@ -554,6 +589,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnGrabar != null)
             {
                 btnGrabar.Enabled = true;
+                btnGrabar.CssClass = "btn btn-outline-primary";
             }
 
             CheckBox1.Enabled = true;
@@ -596,30 +632,43 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (string.IsNullOrEmpty(tbNit.Text))
             {
                 ScriptManager.RegisterStartupScript(this, GetType(), "showError1", "alert('El Nit no puede estar vacío.');", true);
+                tbNit.Focus();
+
                 return;
             }
 
             if (string.IsNullOrEmpty(tbNombreCliente.Text))
             {
-                ScriptManager.RegisterStartupScript(this, GetType(), "showError2", "alert('El Nombre del Cliente no puede estar vacío.');", true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "showError2", "alert('El nombre del cliente no puede estar vacío.');", true);
+                tbNombreCliente.Focus();
                 return;
             }
 
             if (string.IsNullOrEmpty(tbTelefono.Text))
             {
-                ScriptManager.RegisterStartupScript(this, GetType(), "showError3", "alert('El Campo 3 no puede estar vacío.');", true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "showError3", "alert('Por favor ingrese un numero de teléfono');", true);
+                tbTelefono.Focus();
                 return;
             }
 
             if (string.IsNullOrEmpty(tbDireccion.Text))
             {
-                ScriptManager.RegisterStartupScript(this, GetType(), "showError4", "alert('El Campo 4 no puede estar vacío.');", true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "showError4", "alert('Por favor ingrese una dirección.');", true);
+                tbDireccion.Focus();
                 return;
             }
 
             if (string.IsNullOrEmpty(ddlprocedencia.Text))
             {
-                ScriptManager.RegisterStartupScript(this, GetType(), "showError5", "alert('El Campo 5 no puede estar vacío.');", true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "showError5", "alert('Por favor seleccione la procedencia..');", true);
+                ddlprocedencia.Focus();
+                return;
+            }
+
+            if (string.IsNullOrEmpty(ddlCiudaX.Text))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "showError5", "alert('Por favor seleccione la ciudad.');", true);
+                ddlCiudaX.Focus();
                 return;
             }
 
@@ -756,6 +805,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 }
 
             }
+
+
+
+
+
+
 
             ddlAsesorC.DataBind();
 
@@ -958,7 +1013,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 string query = @"SELECT *
                         FROM tblClienteContacto
-                        WHERE Id_Cliente = @IdCliente";
+                        WHERE Id_Cliente = @IdCliente ORDER BY  Id_ClienteContacto DESC";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -1353,6 +1408,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 tbId_ContactoCliente.Text = campos[4];
                 Session["ID_ContactoBD"] = campos[4];
 
+                // Invierte el valor de Enabled para el botón
+                tbNombreContacto.ReadOnly = true;
+                tbTelefonoContacto.ReadOnly = true;
+                tbCelularContacto.ReadOnly = true;
+                tbMailContacto.ReadOnly = true;
+
+                tbBuscarContacto.ReadOnly = false;
+
 
                 // Cargamos el numero de la fila de contacto 
                 tbNumeroFilaContacto.Text = rowIndex.ToString();
@@ -1401,7 +1464,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnModificar != null)
             {
                 btnModificar.Enabled = true;
+                btnModificar.CssClass = "btn btn-sm btn-outline-success";
             }
+
+            // habilitar el botón "Grabar"
+            Button btnGrabar = FindControl("btnGrabarContacto") as Button;
+            if (btnGrabar != null)
+            {
+                btnGrabar.Enabled = false;
+                btnGrabar.CssClass = "btn btn-sm btn-outline-secondary";
+            }
+
+            // habilitar el botón "Grabar"
+            Button btnNuevoCont = FindControl("btnNuevoContacto") as Button;
+            if (btnGrabar != null)
+            {
+                btnNuevoCont.Enabled = false;
+                btnNuevoCont.CssClass = "btn btn-sm btn-outline-secondary";
+            }
+
+          
+
 
 
         }
@@ -1422,6 +1505,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnNuevoCont != null)
             {
                 btnNuevoCont.Enabled = false;
+                btnNuevoCont.CssClass = "btn btn-sm  btn-outline-secondary";
             }
 
             // Habilitar el botón "Grabar"
@@ -1429,7 +1513,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnGrabar != null)
             {
                 btnGrabar.Enabled = true;
+                btnGrabar.CssClass = "btn btn-sm btn-outline-primary";
             }
+
+            // Deshabilitar el botón "Nuevo"
+            Button btnModificarCon = FindControl("btnModificarContacto") as Button;
+            if (btnModificarCon != null)
+            {
+                btnModificarCon.Enabled = false;
+                btnModificarCon.CssClass = "btn btn-sm btn-outline-secondary";
+            }
+
+
 
             chkEstadoGuardar.Checked = false;
 
@@ -1460,6 +1555,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnNuevoCont != null)
             {
                 btnNuevoCont.Enabled = true;
+                btnNuevoCont.CssClass = "btn btn-sm btn-outline-primary";
             }
 
             // Deshabilitar el botón "Grabar"
@@ -1467,6 +1563,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnGrabar != null)
             {
                 btnGrabar.Enabled = false;
+                btnGrabar.CssClass = "btn btn-sm  btn-outline-secondary";
             }
 
             // Deshabilitar el botón "Modificar"
@@ -1474,7 +1571,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnModificar != null)
             {
                 btnModificar.Enabled = false;
+                btnModificar.CssClass = "btn btn-sm btn-outline-secondary";
             }
+
+            if(tbNit.Text != "")
+            {
+                LlenarDataGridContacto(tbNit.Text);
+            }
+            else
+            {
+                DataGridContacto.DataBind();
+            }
+           
+
+            // limpiar variable de click 
+            Session.Remove("ID_ContactoBD1");
+            Session.Remove("ClickCount3");
 
         }
 
@@ -1498,11 +1610,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             tbId_ContactoCliente.Text = "";
 
 
-            // habilitar el botón "Grabar"
+            // Habilitar guardar
             Button btnGrabar = FindControl("btnGrabarContacto") as Button;
             if (btnGrabar != null)
             {
                 btnGrabar.Enabled = true;
+                btnGrabar.CssClass = "btn btn-sm btn-outline-primary";
             }
 
             // Deshabilitar el botón "Nuevo"
@@ -1510,6 +1623,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnNuevoCont != null)
             {
                 btnNuevoCont.Enabled = false;
+                btnNuevoCont.CssClass = "btn btn-sm btn-outline-secondary";
+            }
+
+            // Deshabilitar el botón "modificar"
+            Button btnModificarCon = FindControl("btnModificarContacto") as Button;
+            if (btnModificarCon != null)
+            {
+                btnModificarCon.Enabled = false;
+                btnModificarCon.CssClass = "btn btn-sm btn-outline-secondary";
             }
 
             chkEstadoGuardar.Checked = true;
@@ -1564,13 +1686,33 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                             command.ExecuteNonQuery();
                         }
 
+                      
+                        int index = Convert.ToInt32(tbNumeroFilaCliente.Text); // Ajusta el índice según sea necesario
+                        DataGridCommandEventArgs args = new DataGridCommandEventArgs(
+                            DataGridCliente.Items[index],
+                            DataGridCliente,
+                            new CommandEventArgs("VerCliente", index)
+                        );
+                        DataGridCliente_ItemCommand(DataGridContacto, args);
+
+                        int index1 = Convert.ToInt32(0); // Ajusta el índice según sea necesario
+                        DataGridCommandEventArgs args1 = new DataGridCommandEventArgs(
+                            DataGridContacto.Items[index1],
+                            DataGridContacto,
+                            new CommandEventArgs("VerContacto", index1)
+                        );
+                        DataGridContacto_ItemCommand(DataGridContacto, args1);
+
+
+                        // LIMPIAMOS VARIABLES DE SESSION CONTROL CLICK 
+                        Session.Remove("ID_ContactoBD1");
+                        Session.Remove("ClickCount3");
+
+    
                         // Mensaje de éxito
                         string mensajeExito = "El Contacto " + tbNombreContacto.Text.Trim() + " ha sido agregado exitosamente.";
                         string scriptExito = "alert('" + mensajeExito + "');";
                         ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
-
-                    
-
 
 
                     }
@@ -1606,7 +1748,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
 
 
-
                         int index = Convert.ToInt32(tbNumeroFilaCliente.Text); // Ajusta el índice según sea necesario
                         DataGridCommandEventArgs args = new DataGridCommandEventArgs(
                             DataGridCliente.Items[index],
@@ -1626,6 +1767,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         DataGridContacto_ItemCommand(DataGridContacto, args1);
 
 
+                        // LIMPIAMOS VARIABLES DE SESSION CONTROL CLICK 
+                        Session.Remove("ID_ContactoBD1");
+                        Session.Remove("ClickCount3");
 
 
                     }

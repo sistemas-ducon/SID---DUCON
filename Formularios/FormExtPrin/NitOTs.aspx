@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
     <link type="text/css" href="../../Recursos/CSS/FormExtPrin/NitOts.css" rel="stylesheet" />
     <title>Cliente Obra</title>
@@ -25,9 +25,22 @@
                 row.focus();
                 row.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-
             }
         }
+
+        function ControlTapContactos() {
+           
+            // Quitar 'active' de la pestaña actualmente activa y su contenido
+            $('#Cliente-tab').removeClass('active');
+            $('#Cliente-content').removeClass(' show active ');
+
+            // Activa la pestaña de Programación
+            $('#ConFac_tab').addClass('active');
+            $('#ConFac_content').addClass('show active ');
+
+
+        }
+
     </script>
 
 
@@ -273,7 +286,7 @@
                                 <div class="row text-center">
                                     <span id="ErrorValidacionClienteFact" style="color: red;"></span>
                                 </div>
-
+                                 
                                 <div class="row g-2 pt-1 mt-1">
 
                                     <div class="col-sm-1">
@@ -508,9 +521,9 @@
 
                                 </div>
 
-                                <div class="row g-2 pt-2">
+                                <div class="row g-3 pt-2">
 
-                                    <div class="col-sm-2 pt-3">
+                                    <div class="col-lg-2 col-md-2  col-sm-3 col-xs-3 pt-3">
 
                                         <div class="row pb-2">
                                             <div class="input-group input-group-sm mb-2 gap-2">
@@ -519,25 +532,28 @@
                                         </div>
 
                                         <div class="row">
-                                            <asp:UpdatePanel ID="Archivo" runat="server" UpdateMode="Conditional">
-                                                <ContentTemplate>
-                                                    <div class="input-group input-group-sm gap-1">
-                                                        <asp:Label ID="lbActRut" runat="server" Text="Actualizar Rut"></asp:Label>
-                                                        <asp:FileUpload CssClass="form-control btn btn-secondary" ID="btnActRut" runat="server" Style="width: 18rem" />
 
-                                                    </div>
-                                                </ContentTemplate>
-                                                <Triggers>
-                                                    <asp:PostBackTrigger ControlID="btnGrabar" />
-                                                </Triggers>
-                                            </asp:UpdatePanel>
+                                            <div class="col-12">
+                                                <asp:UpdatePanel ID="Archivo" runat="server" UpdateMode="Conditional">
+                                                    <ContentTemplate>
+                                                        <div class=" d-flex flex-column">
+                                                            <asp:Label ID="lbActRut" runat="server" Text="Actualizar Rut"></asp:Label>
+                                                            <asp:FileUpload CssClass="form-control form-control-sm btn btn-sm btn-secondary" ID="btnActRut" runat="server" Style="width: 14rem" />
+
+                                                        </div>
+                                                    </ContentTemplate>
+                                                    <Triggers>
+                                                        <asp:PostBackTrigger ControlID="btnGrabar" />
+                                                    </Triggers>
+                                                </asp:UpdatePanel>
+                                            </div>
 
 
 
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-2 pt-3">
+                                    <div class="col-lg-2 col-md-2  col-sm-3 col-xs-3 pt-3">
                                         <div class="row pb-2">
                                             <div class="input-group input-group-sm mb-2 gap-2">
                                                 <asp:Button ID="btnVerRegCli" type="button" Style="width: 10rem; min-width: 5rem;" Text="Ver Reg Cliente" class="btn btn-outline-secondary" runat="server" OnClick="VerRegistro"></asp:Button>
@@ -545,18 +561,21 @@
                                         </div>
 
                                         <div class="row">
-                                            <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
-                                                <ContentTemplate>
-                                                    <div class="input-group input-group-sm gap-1">
-                                                        <asp:Label ID="Label1" runat="server" Text="Actualizar Registro"></asp:Label>
-                                                        <asp:FileUpload CssClass="form-control btn btn-secondary" ID="btnActRegCli" runat="server" Style="width: 18rem" />
 
-                                                    </div>
-                                                </ContentTemplate>
-                                                <Triggers>
-                                                    <asp:PostBackTrigger ControlID="btnGrabar" />
-                                                </Triggers>
-                                            </asp:UpdatePanel>
+                                            <div class="col-12">
+                                                <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
+                                                    <ContentTemplate>
+                                                        <div class=" d-flex flex-column">
+                                                            <asp:Label ID="Label1" runat="server" Text="Actualizar Registro"></asp:Label>
+                                                            <asp:FileUpload CssClass="form-control form-control-sm btn btn-secondary" ID="btnActRegCli" runat="server" Style="width: 14rem" />
+
+                                                        </div>
+                                                    </ContentTemplate>
+                                                    <Triggers>
+                                                        <asp:PostBackTrigger ControlID="btnGrabar" />
+                                                    </Triggers>
+                                                </asp:UpdatePanel>
+                                            </div>
 
 
 
@@ -564,7 +583,7 @@
 
                                     </div>
 
-                                    <div class="col-sm-8 border rounded ">
+                                    <div class="col-lg-8 col-md-8  col-sm-6 col-xs-6 border rounded ">
 
                                         <h6>Información Tributaria</h6>
 
@@ -647,17 +666,17 @@
                                 <div class="row pt-3">
                                     <div class="col-sm-11">
                                         <div class="input-group input-group-sm mb-2 gap-2 justify-content-end">
-                                            <asp:Button ID="btnNuevo" type="button" Style="width: 10rem; min-width: 5rem;" Text="Nuevo" class="btn btn-outline-secondary" runat="server" OnClick="NuevoClienteFact"></asp:Button>
-                                         <asp:Button ID="btnGrabar" type="button" Style="width: 10rem; min-width: 5rem;" Text="Grabar" class="btn btn-outline-secondary" runat="server" OnClick="GuardarModificarClienteFact" OnClientClick=" return ValidarFormularioCLiente();"></asp:Button>
-                                         <asp:Button ID="btnModificar" type="button" Style="width: 10rem; min-width: 5rem;" Text="Modificar" class="btn btn-outline-secondary" runat="server" OnClick="MoficarClienteFact"></asp:Button>
-                                          <asp:Button ID="btnCancelar" type="button" Style="width: 10rem; min-width: 5rem;" Text="Cancelar" class="btn btn-outline-secondary" runat="server" OnClick="CancelarClienteFact"></asp:Button>
-                                        
+                                            <asp:Button ID="btnNuevo" type="button" Style="width: 10rem; min-width: 5rem;" Text="Nuevo" class="btn btn-sm btn-outline-secondary" runat="server" OnClick="NuevoClienteFact"></asp:Button>
+                                            <asp:Button ID="btnGrabar" type="button" Style="width: 10rem; min-width: 5rem;" Text="Grabar" class="btn btn-sm btn-outline-secondary" runat="server" OnClick="GuardarModificarClienteFact" OnClientClick=" return ValidarFormularioCLiente();"></asp:Button>
+                                            <asp:Button ID="btnModificar" type="button" Style="width: 10rem; min-width: 5rem;" Text="Modificar" class="btn btn-sm btn-outline-secondary" runat="server" OnClick="MoficarClienteFact"></asp:Button>
+                                            <asp:Button ID="btnCancelar" type="button" Style="width: 10rem; min-width: 5rem;" Text="Cancelar" class="btn btn-sm btn-outline-secondary" runat="server" OnClick="CancelarClienteFact"></asp:Button>
+
                                         </div>
                                     </div>
 
                                     <div class="col-sm-1"></div>
 
-                                    
+
 
                                 </div>
                             </div>
@@ -682,7 +701,7 @@
                                         <div class="col-12">
                                             <div class="table-responsive mb-2 gap-2" style="max-height: 18rem; height:18rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-center">Contacto Factura </h5>
-                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridContacto" runat="server" AutoGenerateColumns="false" DataSourceID="ContacoCliente" OnItemCommand="DatagridContactoClienteFact_LinkButton">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridContacto" runat="server" AutoGenerateColumns="false" DataSourceID="ContacoCliente" OnItemCommand="DatagridContactoClienteFact_LinkButton" OnItemDataBound="DataGridContacto_ItemDataBound">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header p-2" />
                                                     <Columns>
 
@@ -702,7 +721,7 @@
                                                         <asp:BoundColumn DataField="cocCiudad" HeaderText="Mail" Visible="false" />
 
                                                     </Columns>
-                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="ContacoCliente" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT * FROM tblClienteObraContacto where cocNIT= @NIT">
+                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="ContacoCliente" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT * FROM tblClienteObraContacto where cocNIT= @NIT ORDER BY cocFechaCreacion DESC ">
                                                     <SelectParameters>
                                                         <asp:ControlParameter ControlID="tbNumero" PropertyName="Text" Name="NIT"></asp:ControlParameter>
                                                     </SelectParameters>
@@ -718,93 +737,93 @@
                             </div>
 
                             <div class="container-fluid border rounded shadow-sm p-2">
-                                 <div class="row text-center pb2 mb-2">
-                                <span id="ErrorValidacionContactoFact" style="color: red;"></span>
-                            </div>
-
-                            <div class="row mb-2">
-
-                                <div class="col-sm-1">
-                                    <div class="input-group input-group-sm   mb-2 gap-4">
-                                        <asp:Label ID="lbNombreContacto" class="form-label" Text="Nombre" runat="server"></asp:Label>
-                                    </div>
+                                <div class="row text-center pb2 mb-2">
+                                    <span id="ErrorValidacionContactoFact" style="color: red;"></span>
                                 </div>
 
-                                <div class="col-sm-3">
-                                    <div class="input-group input-group-sm   mb-2 gap-4">
+                                <div class="row mb-2">
 
-                                        <asp:TextBox ID="tbNombreContacto" type="text" class="form-control " runat="server"></asp:TextBox>
+                                    <div class="col-sm-1">
+                                        <div class="input-group input-group-sm   mb-2 gap-4">
+                                            <asp:Label ID="lbNombreContacto" class="form-label" Text="Nombre" runat="server"></asp:Label>
+                                        </div>
                                     </div>
+
+                                    <div class="col-sm-3">
+                                        <div class="input-group input-group-sm   mb-2 gap-4">
+
+                                            <asp:TextBox ID="tbNombreContacto" type="text" class="form-control " runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="input-group input-group-sm   mb-2 gap-4">
+                                            <asp:Label ID="lbDireccion" class="form-label" Text="Dirección" runat="server"></asp:Label>
+                                            <asp:TextBox ID="tbDireccion1" type="text" class="form-control " runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="input-group input-group-sm   mb-2 gap-4">
+                                            <asp:Label ID="lbCiudad1" class="form-label" Text="Ciudad" runat="server"></asp:Label>
+                                            <asp:DropDownList ID="ddlCiudad1" runat="server" class="form-control"></asp:DropDownList>
+
+                                        </div>
+                                    </div>
+
                                 </div>
 
-                                <div class="col-sm-4">
-                                    <div class="input-group input-group-sm   mb-2 gap-4">
-                                        <asp:Label ID="lbDireccion" class="form-label" Text="Dirección" runat="server"></asp:Label>
-                                        <asp:TextBox ID="tbDireccion1" type="text" class="form-control " runat="server"></asp:TextBox>
+                                <div class="row mb-2">
+                                    <div class="col-sm-1 ">
+                                        <div class="input-group input-group-sm   mb-2 gap-4">
+                                            <asp:Label ID="lbMail" class="form-label" Text="Mail" runat="server"></asp:Label>
+                                        </div>
                                     </div>
+
+                                    <div class="col-sm-3 ">
+                                        <div class="input-group input-group-sm   mb-2 gap-4">
+
+                                            <asp:TextBox ID="tbMailContacto" type="text" class="form-control " runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-2 ">
+                                        <div class="input-group input-group-sm   mb-2 gap-4">
+                                            <asp:Label ID="lbTelefono1" class="form-label" Text="Teléfono" runat="server"></asp:Label>
+                                            <asp:TextBox ID="tbTelefono1" type="text" class="form-control " runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-3 ">
+                                        <div class="input-group input-group-sm   mb-2 gap-4">
+                                            <asp:Label ID="lbCelular" class="form-label" Text="Celular" runat="server"></asp:Label>
+                                            <asp:TextBox ID="tbCelular" type="text" class="form-control" runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-3 ">
+                                        <div class="input-group input-group-sm  mb-2 gap-4">
+                                            <asp:Label ID="lbSede" class="form-label" Text="Sede" runat="server"></asp:Label>
+                                            <asp:TextBox ID="tbSede" type="text" class="form-control" runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
+
                                 </div>
 
-                                <div class="col-sm-4">
-                                    <div class="input-group input-group-sm   mb-2 gap-4">
-                                        <asp:Label ID="lbCiudad1" class="form-label" Text="Ciudad" runat="server"></asp:Label>
-                                        <asp:DropDownList ID="ddlCiudad1" runat="server" class="form-control"></asp:DropDownList>
+                                <div class="row pt-2 mt-2  ">
 
+                                    <div class="col-sm-11">
+                                        <div class="input-group input-group-sm mb-2 justify-content-end gap-3 ">
+                                            <asp:Button CssClass="btn btn-sm btn-outline-secondary" Style="width: 8rem;" ID="btnNuevoContacto" runat="server" Text="Nuevo" OnClick="NuevoContactoFact" />
+                                            <asp:Button CssClass="btn btn-sm btn-outline-secondary" Style="width: 8rem;" ID="btnGrabarContacto" runat="server" Text="Grabar" OnClick="GuardarModificarContactoFact" OnClientClick="return ValidarFormularioContacto();" />
+                                            <asp:Button CssClass="btn btn-sm btn-outline-secondary" Style="width: 8rem;" ID="btnModificarContacto" runat="server" Text="Modificar" OnClick="MoficarContactoFact" />
+                                            <asp:Button CssClass="btn btn-sm btn-outline-secondary" Style="width: 8rem;" ID="btnCancelar1" runat="server" Text="Cancelar" OnClick="CancelarContactoFact" />
+                                        </div>
                                     </div>
+
+
+                                    <div class="col-sm-1"></div>
                                 </div>
-
-                            </div>
-
-                            <div class="row mb-2">
-                                <div class="col-sm-1 ">
-                                    <div class="input-group input-group-sm   mb-2 gap-4">
-                                        <asp:Label ID="lbMail" class="form-label" Text="Mail" runat="server"></asp:Label>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-3 ">
-                                    <div class="input-group input-group-sm   mb-2 gap-4">
-
-                                        <asp:TextBox ID="tbMailContacto" type="text" class="form-control " runat="server"></asp:TextBox>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-2 ">
-                                    <div class="input-group input-group-sm   mb-2 gap-4">
-                                        <asp:Label ID="lbTelefono1" class="form-label" Text="Teléfono" runat="server"></asp:Label>
-                                        <asp:TextBox ID="tbTelefono1" type="text" class="form-control " runat="server"></asp:TextBox>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-3 ">
-                                    <div class="input-group input-group-sm   mb-2 gap-4">
-                                        <asp:Label ID="lbCelular" class="form-label" Text="Celular" runat="server"></asp:Label>
-                                        <asp:TextBox ID="tbCelular" type="text" class="form-control" runat="server"></asp:TextBox>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-3 ">
-                                    <div class="input-group input-group-sm  mb-2 gap-4">
-                                        <asp:Label ID="lbSede" class="form-label" Text="Sede" runat="server"></asp:Label>
-                                        <asp:TextBox ID="tbSede" type="text" class="form-control" runat="server"></asp:TextBox>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="row pt-2 mt-2  ">
-
-                                <div class="col-sm-11">
-                                    <div class="input-group  mb-2 justify-content-end gap-3 ">
-                                        <asp:Button CssClass="btn btn-outline-secondary" ID="btnNuevoContacto" runat="server" Text="Nuevo" OnClick="NuevoContactoFact" />
-                                        <asp:Button CssClass="btn btn-outline-secondary" ID="btnGrabarContacto" runat="server" Text="Grabar" OnClick="GuardarModificarContactoFact" OnClientClick="return ValidarFormularioContacto();" />
-                                         <asp:Button CssClass="btn btn-outline-secondary" ID="btnModificarContacto" runat="server" Text="Modificar" OnClick="MoficarContactoFact" />
-                                         <asp:Button CssClass="btn btn-outline-secondary" ID="btnCancelar1" runat="server" Text="Cancelar" OnClick="CancelarContactoFact" />
-                                    </div>
-                                </div>
-
-
-                                <div class="col-sm-1"></div>
-                            </div>
                             </div>
 
                         </div>
