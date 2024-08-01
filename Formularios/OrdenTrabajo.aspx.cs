@@ -4782,6 +4782,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             Session["Id_OT2"] = tbOT.Text;
 
+            string idOT = Session["Id_OT2"].ToString();
+
             List<System.Web.UI.Control> botones = new List<System.Web.UI.Control>
             {
 
@@ -4873,8 +4875,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Obtener la cédula ingresada en el TextBox txtAsesor
             string cedulaTextBox = txtAsesor.Text;
 
-            // Verificar si las cédulas son iguales
-            if (cedulaLogueada == cedulaTextBox)
+
+
+            // Obtener idContactoCliente de la base de datos
+            string idContactoCliente = ObtenerIdContactoCliente(idOT, ddlNumbers.SelectedValue);
+
+            // Validar permiso compartido
+            bool validarPermiso = !string.IsNullOrEmpty(idContactoCliente) && ValidarPermisoCompartido(idContactoCliente);
+
+            if (validarPermiso || cedulaLogueada == cedulaTextBox)
             {
                 Session["NuevaOTEjecutada"] = true;
 
@@ -4889,8 +4898,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string urlRedireccion = "OrdenTrabajo.aspx";
                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
             }
-
-            tbVenta.Text = DateTime.Now.ToString("yyyy-MM-dd");
+           
+                tbVenta.Text = DateTime.Now.ToString("yyyy-MM-dd");
             dtpFechaEntregaDibujoDespiece.Text = DateTime.Now.ToString("yyyy-MM-dd");
             dtpFechaEntregaProduccion.Text = DateTime.Now.ToString("yyyy-MM-dd");
             DateTime fechaActual = DateTime.Now;
@@ -4900,6 +4909,33 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             LimpiarCamposCotizacion();
 
+        }
+
+        private string ObtenerIdContactoCliente(string idOT, string consecutivoPedido)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            string idContactoCliente = null;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string selectQuery = "SELECT IDContacto_Cliente FROM tblOT WHERE Id_OT = @Id_OT AND Consecutivo_Pedido = @Consecutivo_Pedido";
+                using (SqlCommand selectCommand = new SqlCommand(selectQuery, connection))
+                {
+                    selectCommand.Parameters.AddWithValue("@Id_OT", idOT);
+                    selectCommand.Parameters.AddWithValue("@Consecutivo_Pedido", consecutivoPedido);
+
+                    using (SqlDataReader reader = selectCommand.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            idContactoCliente = reader["IDContacto_Cliente"].ToString();
+                        }
+                    }
+                }
+            }
+
+            return idContactoCliente;
         }
 
         protected void BtnSi_Click(object sender, EventArgs e)

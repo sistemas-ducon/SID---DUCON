@@ -695,8 +695,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         primerClic();
 
-                        // Llama al método para recargar y ordenar el DataGrid
-                        DatagridDiseOrderBy();
+
+                        // Store the selected row index in the DataGrid attribute
+                        DataGrid1.Attributes["SelectedRowIndex"] = rowIndex.ToString();
+
+                        // Scroll to the row
+                        row.Attributes["id"] = "DataGrid1_row_" + rowIndex;
+                        ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DataGrid1_row_" + rowIndex + "');", true);
 
                     }
                 }
@@ -745,65 +750,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-        protected void DatagridDiseOrderBy()
-        {
-
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
-            string IdOT = Session["Id_OT2"].ToString();
-            string pedido = Session["pedido2"].ToString();
-            string valorZona = DropDownListOptions.SelectedValue;
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string query = @"
-            SELECT 
-                ot.Id_OT,
-                ot.Consecutivo_Pedido,
-                ot.Nombre_Obra,
-                CONCAT(ac.Nombre, ' ', ac.Apellidos) AS Nombre_Asesor,
-                ot.Fecha_Entrega_Dibujo_Despiece,
-                ot.RealizadoPor,
-                ot.Fecha_Despacho_Produccion,
-                ot.Zona,
-                ac.Cedula
-            FROM 
-                tblOT ot
-            INNER JOIN 
-                tblAsesorComercial ac ON ot.Codigo_Asesor = ac.Cedula
-            WHERE 
-                ot.Terminado_Diseño = '0' 
-                AND ot.Terminado_Ventas = '1' 
-                AND ot.Anulada = '0'
-                AND ot.Zona = @Zona 
-            ORDER BY 
-                CASE WHEN ot.Id_OT = @Id_OT THEN 0 ELSE 1 END, 
-                CASE WHEN ot.Consecutivo_Pedido = @pedido THEN 0 ELSE 1 END,
-                ot.Fecha_Entrega_Dibujo_Despiece";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@Id_OT", string.IsNullOrEmpty(IdOT) ? (object)DBNull.Value : IdOT);
-                    command.Parameters.AddWithValue("@pedido", string.IsNullOrEmpty(pedido) ? (object)DBNull.Value : pedido);
-                    command.Parameters.AddWithValue("@Zona", string.IsNullOrEmpty(valorZona) ? (object)DBNull.Value : valorZona);
-
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
-
-
-
-                    DataGrid1.DataSource = dt;  // Vincula el DataTable a tu DataGrid
-                    DataGrid1.DataBind();       // Realiza el DataBind para mostrar los datos
-                    UpdatePanel1.Update();      // Actualiza el UpdatePanel si es necesario
-
-                    if (DataGrid1.Items.Count > 0)
-                    {
-                        DataGridItem firstRow = DataGrid1.Items[0];
-                        firstRow.CssClass = "fila-seleccionada1";
-                    }
-                }
-            }
-        }
+       
 
         protected void BtnProgramar_Click(object sender, EventArgs e)
         {
@@ -4281,6 +4228,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
+                e.Item.Attributes["id"] = "DataGrid2_row_" + e.Item.ItemIndex;
+                e.Item.Attributes["data-datagridid"] = "DataGrid2";
                 string programadoVentas = DataBinder.Eval(e.Item.DataItem, "ProgramadoVentas").ToString();
                 string pasarACotizar = DataBinder.Eval(e.Item.DataItem, "PasarACotizar").ToString();
                 string terminadoDibujo = DataBinder.Eval(e.Item.DataItem, "TerminadoDibujo").ToString();
@@ -4392,14 +4341,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             // se valida si es el segundo click en la misma fila 
                             if (clickCount == 2)
                             {
-                                ScriptManager.RegisterStartupScript(this, GetType(), "ActivarTabScript", "activarTab('BitacoraDesarrollo-content');", true);
                                 ProcesarNumeroDiseño(e);
+                                ScriptManager.RegisterStartupScript(this, GetType(), "ActivarTabScript", "activarTab('BitacoraDesarrollo-content');", true);
 
                                 Session.Remove("ClickCount");
                                 Session.Remove("NumDis1");
                             }
-
                         }
+
+                        Session.Remove("PrimerClicTime");
                     }
                     else
                     {
@@ -4434,8 +4384,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         BtnDesRen.Enabled = false;
                         BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-                        CargarDatagridDiseOrderBy();
+                        // Store the selected row index in the DataGrid attribute
+                        DataGrid2.Attributes["SelectedRowIndex2"] = rowIndex.ToString();
 
+                        // Asignar ID único a la fila
+                        row.Attributes["id"] = "DataGrid2_row_" + rowIndex;
+                        ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DataGrid2_row_" + rowIndex + "');", true);
                     }
                 }
 
@@ -4443,51 +4397,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     ScriptManager.RegisterStartupScript(this, GetType(), "ActivarTabScript", "activarTab('BitacoraDesarrollo-content');", true);
                     ProcesarNumeroDiseño(e);
-                }
             }
         }
-
-        protected void CargarDatagridDiseOrderBy()
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
-            string numeroDise = Session["NumeroDiseño"].ToString();
-            string valorZona = DropDownListOptions.SelectedValue;
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string query = @"
-           	SELECT [Numero_Diseño], [Cliente], [Nombre_Diseño], [Asesor],
-                            [UltimaActivacion], [Fecha_Programada_Entrega], [RealizadoPor],
-                            A.[Zona], [PactodeEntrega], [ProgramadoVentas], [PasarACotizar], [TerminadoDibujo], [Pausado], B.[Cedula], A.[id_CiudadProyecto], A.[Urgente]
-                        FROM [tblDiseño] AS A 
-                            INNER JOIN tblAsesorComercial AS B ON (B.Nombre +' '+ B.Apellidos) = A.Asesor
-                        WHERE ProgramadoVentas = '1' AND TerminadoDibujo = '0' AND A.Zona = @Zona 
-                        ORDER BY
-						CASE WHEN Numero_Diseño = @NumDise THEN 0 ELSE 1 END,
-						[UltimaActivacion] ASC";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@NumDise", string.IsNullOrEmpty(numeroDise) ? (object)DBNull.Value : numeroDise);
-                    command.Parameters.AddWithValue("@Zona", string.IsNullOrEmpty(valorZona) ? (object)DBNull.Value : valorZona);
-
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
-
-
-
-                    DataGrid2.DataSource = dt;  // Vincula el DataTable a tu DataGrid
-                    DataGrid2.DataBind();       // Realiza el DataBind para mostrar los datos
-                    UpdatePanel1.Update();      // Actualiza el UpdatePanel si es necesario
-
-                    if (DataGrid2.Items.Count > 0)
-                    {
-                        DataGridItem firstRow = DataGrid2.Items[0];
-                        firstRow.CssClass = "fila-seleccionada1";
-                    }
-                }
-            }
         }
 
         private void ProcesarNumeroDiseño(DataGridCommandEventArgs e)
@@ -5116,7 +5027,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         BtnDesRen.Enabled = false;
                         BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-                        CargarDatagridSCOrderBy();
+                        // Store the selected row index in the DataGrid attribute
+                        DataGridDiseños.Attributes["SelectedRowIndex3"] = rowIndex.ToString();
+
+                        row.Attributes["id"] = "DataGridDiseños_row_" + rowIndex;
+                        ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DataGridDiseños_row_" + rowIndex + "');", true);
 
                     }
                 }
@@ -5134,47 +5049,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-        protected void CargarDatagridSCOrderBy()
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
-            string numeroDise = Session["NumeroDiseño"].ToString();
-            string valorZona = DropDownListOptions.SelectedValue;
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string query = @"
-                             SELECT * 
-                                FROM tblDiseño 
-                                WHERE SC_Terminado = 0 
-                                AND (SC_Tiemporeal = 1 OR SC_Imagenes = 1 OR SC_Presentacionppt = 1) 
-                                AND  Zona = @Zona
-                                ORDER BY
-                                  CASE WHEN Numero_Diseño = @NumDise THEN 0 ELSE 1 END, 
-                                  SC_Fecha ASC;";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@NumDise", string.IsNullOrEmpty(numeroDise) ? (object)DBNull.Value : numeroDise);
-                    command.Parameters.AddWithValue("@Zona", string.IsNullOrEmpty(valorZona) ? (object)DBNull.Value : valorZona);
-
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
-
-
-
-                    DataGridDiseños.DataSource = dt;  // Vincula el DataTable a tu DataGrid
-                    DataGridDiseños.DataBind();       // Realiza el DataBind para mostrar los datos
-                    UpdatePanel1.Update();      // Actualiza el UpdatePanel si es necesario
-
-                    if (DataGridDiseños.Items.Count > 0)
-                    {
-                        DataGridItem firstRow = DataGridDiseños.Items[0];
-                        firstRow.CssClass = "fila-seleccionada1";
-                    }
-                }
-            }
-        }
+   
 
         protected void DataGridBusDise_ItemCommand(object source, DataGridCommandEventArgs e)
         {
@@ -5233,7 +5108,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     BtnDesRen.Enabled = true;
                     BtnDesRen.CssClass = "btn btn-sm button-enabled linkButtonClicked2 full-width-btn";
 
-                    CargarDatagridRenderOrderBy();
+                    DataGridRender.Attributes["SelectedRowIndex4"] = rowIndex.ToString();
+
+                    row.Attributes["id"] = "DatagridRender_row_" + rowIndex;
+                    ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DatagridRender_row_" + rowIndex + "');", true);
 
 
                 }
@@ -5244,48 +5122,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-        protected void CargarDatagridRenderOrderBy()
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
-            string idRender = Session["Id_Render"].ToString();
-            string valorZona = DropDownListOptions.SelectedValue;
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string query = @"
-          SELECT Id_Render, Cliente, Nombre_Render, UltimaActivacion,
-           Fecha_Programada_Entrega, Asesor, RealizadoPor, A.[Zona], TerminadoRender, Pausado, ProgramadoVentas, b.Cedula
-    FROM tblRender as A
-	inner join tblAsesorComercial As B on (B.Nombre +' '+ B.Apellidos) = A.Asesor
-    WHERE TerminadoRender = '0' AND  A.Zona = @Zona
-      ORDER BY
-	  CASE WHEN Id_Render = @Id_Render THEN 0 ELSE 1 END, 
-	  UltimaActivacion
-";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@Id_Render", string.IsNullOrEmpty(idRender) ? (object)DBNull.Value : idRender);
-                    command.Parameters.AddWithValue("@Zona", string.IsNullOrEmpty(valorZona) ? (object)DBNull.Value : valorZona);
-
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
-
-
-
-                    DataGridRender.DataSource = dt;  // Vincula el DataTable a tu DataGrid
-                    DataGridRender.DataBind();       // Realiza el DataBind para mostrar los datos
-                    UpdatePanel1.Update();      // Actualiza el UpdatePanel si es necesario
-
-                    if (DataGridRender.Items.Count > 0)
-                    {
-                        DataGridItem firstRow = DataGridRender.Items[0];
-                        firstRow.CssClass = "fila-seleccionada1";
-                    }
-                }
-            }
-        }
+    
 
         private string GetString(SqlDataReader reader, string columnName)
         {
@@ -5326,6 +5163,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
+                e.Item.Attributes["id"] = "DataGridDiseños_row_" + e.Item.ItemIndex;
+                e.Item.Attributes["data-datagridid"] = "DataGridDiseños";
                 string scFecha = DataBinder.Eval(e.Item.DataItem, "SC_Fecha").ToString();
                 DateTime fechaSC;
 
@@ -5365,6 +5204,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
+                e.Item.Attributes["id"] = "DataGridRender_row_" + e.Item.ItemIndex;
+                e.Item.Attributes["data-datagridid"] = "DataGridRender";
                 string terminadoRender = DataBinder.Eval(e.Item.DataItem, "TerminadoRender").ToString();
                 string fechaProgramadaString = DataBinder.Eval(e.Item.DataItem, "Fecha_Programada_Entrega").ToString();
                 string Pausado = DataBinder.Eval(e.Item.DataItem, "Pausado").ToString();
@@ -5425,6 +5266,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
+                e.Item.Attributes["id"] = "DataGrid1_row_" + e.Item.ItemIndex;
+                e.Item.Attributes["data-datagridid"] = "DataGrid1";
                 DateTime fechaEntrega = Convert.ToDateTime(DataBinder.Eval(e.Item.DataItem, "Fecha_Entrega_Dibujo_Despiece"));
                 DateTime fechaActualMenos2Dias = DateTime.Now.AddDays(-2);
 
@@ -7337,15 +7180,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void RegresarDise_Click(object sender, EventArgs e)
         {
             string tipoAccion = Session["Diseno"] as string;
-            if (tipoAccion == "Ventas")
+
+            if (tipoAccion == "Recepcion")
             {
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#RegresarDise').modal('show');", true);
             }
-            if (tipoAccion == "Diseño")
+            else if (tipoAccion == "Diseño")
             {
                 string numeroDise = lblNumDise.Text;
                 string contenidoModalOT = "Desea regresar el diseño: " + numeroDise + " para el departamento de ventas ? ";
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ConfirmarRegresoDelDiseno').modal('show'); $('#ConfirmarRegresoDelDiseno2').text('" + contenidoModalOT + "');", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ConfirmarRegresoDelDiseno').modal('show'); $('#ConfirmarRegresoDelDiseno2').text('" + contenidoModalOT + "'); mostralMoldalDevolver();", true);
             }
         }
 
@@ -7416,16 +7260,32 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     if (rowsAffected > 0)
                     {
                         CargarDatagridDise();
-                        DatagridDiseOrderBy();
 
+                        // Recuperar el índice de la fila seleccionada desde el atributo del DataGrid
+                        if (DataGrid1.Attributes["SelectedRowIndex"] != null)
+                        {
+                            int selectedRowIndex = Convert.ToInt32(DataGrid1.Attributes["SelectedRowIndex"]);
+                            string rowId = "DataGrid1_row_" + selectedRowIndex;
+
+                            // Reaplicar la clase CSS para la fila seleccionada
+                            foreach (DataGridItem item in DataGrid1.Items)
+                            {
+                                item.CssClass = "";
+                            }
+                            DataGrid1.Items[selectedRowIndex].CssClass = "fila-seleccionada1";
+
+                            // Utilizar JavaScript para enfocar y desplazar la vista a la fila seleccionada
+                            ScriptManager.RegisterStartupScript(this, GetType(), "focusRow", $"focusAndScrollToRow('{rowId}');", true);
+                        }
                     }
                     else
                     {
-
+                        // Manejar el caso en que no se afectaron filas
                     }
                 }
             }
         }
+
 
         protected void BtnDesPed_Click(object sender, EventArgs e)
         {
@@ -7446,7 +7306,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     if (rowsAffected > 0)
                     {
                         CargarDatagridDise();
-                        DatagridDiseOrderBy();
+
+                        // Recuperar el índice de la fila seleccionada desde el atributo del DataGrid
+                        if (DataGrid1.Attributes["SelectedRowIndex"] != null)
+                        {
+                            int selectedRowIndex = Convert.ToInt32(DataGrid1.Attributes["SelectedRowIndex"]);
+                            string rowId = "DataGrid1_row_" + selectedRowIndex;
+
+                            // Reaplicar la clase CSS para la fila seleccionada
+                            foreach (DataGridItem item in DataGrid1.Items)
+                            {
+                                item.CssClass = "";
+                            }
+                            DataGrid1.Items[selectedRowIndex].CssClass = "fila-seleccionada1";
+
+                            // Utilizar JavaScript para enfocar y desplazar la vista a la fila seleccionada
+                            ScriptManager.RegisterStartupScript(this, GetType(), "focusRow", $"focusAndScrollToRow('{rowId}');", true);
+                        }
                     }
                     else
                     {
@@ -7460,7 +7336,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             bool puedeTrabajar = false;
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             string query = "SELECT RealizadoPor FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseno";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -7533,7 +7409,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 string numeroDise = Session["NumeroDiseño"].ToString();
 
-                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
                 {
                     connection.Open();
 
@@ -7549,8 +7425,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         if (rowsAffected > 0)
                         {
+                            CargarDatagridDise();
 
-                            CargarDatagridDiseOrderBy();
+                            // Recuperar el índice de la fila seleccionada desde el atributo del DataGrid
+                            if (DataGrid2.Attributes["SelectedRowIndex2"] != null)
+                            {
+                                int selectedRowIndex = Convert.ToInt32(DataGrid2.Attributes["SelectedRowIndex2"]);
+                                string rowId = "DataGrid2_row_" + selectedRowIndex;
+
+                                // Reaplicar la clase CSS para la fila seleccionada
+                                foreach (DataGridItem item in DataGrid2.Items)
+                                {
+                                    item.CssClass = "";
+                                }
+                                DataGrid2.Items[selectedRowIndex].CssClass = "fila-seleccionada1";
+
+                                // Utilizar JavaScript para enfocar y desplazar la vista a la fila seleccionada
+                                ScriptManager.RegisterStartupScript(this, GetType(), "focusRow", $"focusAndScrollToRow('{rowId}');", true);
+                            }
                         }
                         else
                         {
@@ -7569,7 +7461,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             string numeroDise = Session["NumeroDiseño"].ToString();
 
-            using (SqlConnection conection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            using (SqlConnection conection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 conection.Open();
 
@@ -7581,8 +7473,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     if (rowsAffected > 0)
                     {
+                        CargarDatagridDise();
 
-                        CargarDatagridDiseOrderBy();
+                        // Recuperar el índice de la fila seleccionada desde el atributo del DataGrid
+                        if (DataGrid2.Attributes["SelectedRowIndex2"] != null)
+                        {
+                            int selectedRowIndex = Convert.ToInt32(DataGrid2.Attributes["SelectedRowIndex2"]);
+                            string rowId = "DataGrid2_row_" + selectedRowIndex;
+
+                            // Reaplicar la clase CSS para la fila seleccionada
+                            foreach (DataGridItem item in DataGrid2.Items)
+                            {
+                                item.CssClass = "";
+                            }
+                            DataGrid2.Items[selectedRowIndex].CssClass = "fila-seleccionada1";
+
+                            // Utilizar JavaScript para enfocar y desplazar la vista a la fila seleccionada
+                            ScriptManager.RegisterStartupScript(this, GetType(), "focusRow", $"focusAndScrollToRow('{rowId}');", true);
+                        }
                     }
                     else
                     {
@@ -7598,7 +7506,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             string numeroDise = Session["NumeroDiseño"].ToString();
 
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 connection.Open();
 
@@ -7613,7 +7521,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     if (rowsAffected > 0)
                     {
-                        CargarDatagridSCOrderBy();
+                        CargarDatagridDise();
+
+                        // Recuperar el índice de la fila seleccionada desde el atributo del DataGrid
+                        if (DataGridDiseños.Attributes["SelectedRowIndex3"] != null)
+                        {
+                            int selectedRowIndex = Convert.ToInt32(DataGridDiseños.Attributes["SelectedRowIndex3"]);
+                            string rowId = "DataGridDiseños_row_" + selectedRowIndex;
+
+                            // Reaplicar la clase CSS para la fila seleccionada
+                            foreach (DataGridItem item in DataGridDiseños.Items)
+                            {
+                                item.CssClass = "";
+                            }
+                            DataGridDiseños.Items[selectedRowIndex].CssClass = "fila-seleccionada1";
+
+                            // Utilizar JavaScript para enfocar y desplazar la vista a la fila seleccionada
+                            ScriptManager.RegisterStartupScript(this, GetType(), "focusRow", $"focusAndScrollToRow('{rowId}');", true);
+                        }
                     }
                     else
                     {
@@ -7627,7 +7552,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             string numeroDise = Session["NumeroDiseño"].ToString();
 
-            using (SqlConnection conection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            using (SqlConnection conection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 conection.Open();
 
@@ -7639,8 +7564,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     if (rowsAffected > 0)
                     {
-                        CargarDatagridSCOrderBy();
+                        CargarDatagridDise();
 
+                        // Recuperar el índice de la fila seleccionada desde el atributo del DataGrid
+                        if (DataGridDiseños.Attributes["SelectedRowIndex3"] != null)
+                        {
+                            int selectedRowIndex = Convert.ToInt32(DataGridDiseños.Attributes["SelectedRowIndex3"]);
+                            string rowId = "DataGridDiseños_row_" + selectedRowIndex;
+
+                            // Reaplicar la clase CSS para la fila seleccionada
+                            foreach (DataGridItem item in DataGridDiseños.Items)
+                            {
+                                item.CssClass = "";
+                            }
+                            DataGridDiseños.Items[selectedRowIndex].CssClass = "fila-seleccionada1";
+
+                            // Utilizar JavaScript para enfocar y desplazar la vista a la fila seleccionada
+                            ScriptManager.RegisterStartupScript(this, GetType(), "focusRow", $"focusAndScrollToRow('{rowId}');", true);
+                        }
                     }
                     else
                     {
@@ -7656,7 +7597,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             string idRender = Session["Id_Render"].ToString();
 
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 connection.Open();
 
@@ -7671,7 +7612,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     if (rowsAffected > 0)
                     {
-                        CargarDatagridRenderOrderBy();
+                        CargarDatagridDise();
+
+                        // Recuperar el índice de la fila seleccionada desde el atributo del DataGrid
+                        if (DataGridRender.Attributes["SelectedRowIndex4"] != null)
+                        {
+                            int selectedRowIndex = Convert.ToInt32(DataGridRender.Attributes["SelectedRowIndex4"]);
+                            string rowId = "DataGridRender_row_" + selectedRowIndex;
+
+                            // Reaplicar la clase CSS para la fila seleccionada
+                            foreach (DataGridItem item in DataGridRender.Items)
+                            {
+                                item.CssClass = "";
+                            }
+                            DataGridRender.Items[selectedRowIndex].CssClass = "fila-seleccionada1";
+
+                            // Utilizar JavaScript para enfocar y desplazar la vista a la fila seleccionada
+                            ScriptManager.RegisterStartupScript(this, GetType(), "focusRow", $"focusAndScrollToRow('{rowId}');", true);
+                        }
                     }
                     else
                     {
@@ -7702,7 +7660,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         "ORDER BY tblplano.Fecha_Termino_Diseño";
             }
 
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -7735,7 +7693,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     "ORDER BY tblplano.Fecha_Termino_Diseño";
 
 
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -7858,7 +7816,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             string plano = TextPlano.Text.Trim(); // Asegúrate de que TextPlano tiene el valor correcto
 
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 connection.Open();
 
@@ -7955,7 +7913,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string plano = TextPlano.Text.Trim();
             string sSql = "SELECT * FROM tblPlano WHERE plano = @plano";
 
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 connection.Open();
 
@@ -7996,7 +7954,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 string sSql = "SELECT * FROM tblPlano WHERE plano = @plano";
 
-                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
                 {
                     connection.Open();
 
@@ -8071,7 +8029,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Actualizar los demás campos sin cambiar el nombre del plano
             string updateSql = "UPDATE tblPlano SET Nombre_Cliente = @cliente, Contacto_Cliente = @contacto, area = @area, RealizadoPor = @dibujante, AsesorComercial = @asesor WHERE Plano = @originalPlano";
 
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 connection.Open();
 
@@ -8118,7 +8076,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             string updateSql = "UPDATE tblPlano SET Plano = @nuevoPlano, Nombre_Cliente = @cliente, Contacto_Cliente = @contacto, area = @area, RealizadoPor = @dibujante, AsesorComercial = @asesor WHERE Plano = @originalPlano";
 
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 connection.Open();
 
@@ -8444,7 +8402,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-                string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                 string idPlano = e.Item.Cells[2].Text; // Columna 2 contiene el Id_Plano
 
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -8522,7 +8480,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     string numeroDiseno = lblNumDise.Text;
                     string observaciones = TextAreaObsPla.InnerText.Trim();
-                    string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
@@ -8725,7 +8683,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private void ValidarYActualizarDibujo(DataGridItem row)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             int idNumerico = Convert.ToInt32(row.Cells[1].Text); // Ajustar el índice de la celda según sea necesario
             string lblNumDise2 = lblNumDise.Text; // Obtener el valor del Label
             string idPlanoDise = Session["Id_PlanoDise"]?.ToString();
@@ -8885,7 +8843,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private PanelInfo GetPanelInfoByIdNumerico(string idNumerico)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             PanelInfo panelInfo = null;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -8918,7 +8876,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -10206,16 +10164,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 true);
 
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-            string nombreUsuario = Session["usuariologueado"].ToString();
             string lblDiseño = lblNumDise.Text;
-            string txtNombreDiseño = TextProyecto.Text;
-            string txtCliente = TextCliente.Text;
             string txtSeguimientoPausas = TextSegPauDev.Value;
-
-            // Obtener el correo del asesor comercial
-            string dtaCboAsesorComercialTag = ObtenerCorreoAsesorComercial(DropDownList1.SelectedValue);
-            string cedulaLogeada = Session["CedulaLogeada"].ToString();
-            string mailUsuario = ObtenerMailUsuario(cedulaLogeada); // Aquí se obtiene el correo del usuario usando la cédula de sesión
 
             bool estaPausado;
             string consultaPausado = "SELECT Pausado FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseño";
@@ -10232,46 +10182,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (estaPausado == false)
             {
-              
-                string razonPausa = "Razón de la pausa";
-                txtSeguimientoPausas = $"Diseño Pausado por el dibujante: {nombreUsuario} el {DateTime.Now:dd/MM/yyyy HH:mm} Razón: {razonPausa}\r\n{txtSeguimientoPausas}";
-
-                string sSql = "UPDATE tblDiseño SET Pausado = 1, SeguimientoPausa = @SeguimientoPausa WHERE Numero_Diseño = @NumeroDiseño";
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    using (SqlCommand cmd = new SqlCommand(sSql, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@SeguimientoPausa", txtSeguimientoPausas);
-                        cmd.Parameters.AddWithValue("@NumeroDiseño", lblDiseño);
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-
-                if (!string.IsNullOrEmpty(dtaCboAsesorComercialTag.Trim()) && Validar_CadenaMail(dtaCboAsesorComercialTag))
-                {
-                    string asuntoMail = $"Pausado el Diseño: {lblDiseño} - {txtNombreDiseño}";
-                    string descripcionMail = $"Fecha: {DateTime.Now}<br><br>" +
-                                             $"Estimado(a) asesor(a)<br>" +
-                                             $"Su solicitud de Diseño y Cotización ha sido pausado por: {nombreUsuario}<br>" +
-                                             $"Historial de pausas y devoluciones: {txtSeguimientoPausas}<br><br>" +
-                                             $"Información del Diseño<br>" +
-                                             $"Diseño N.: {lblDiseño}<br>" +
-                                             $"Cliente: {txtCliente}<br>" +
-                                             $"Proyecto: {txtNombreDiseño}<br><br>" +
-                                             $"Cualquier inquietud no dude en comunicarse con: {nombreUsuario}<br><br>" +
-                                             $"Sede Información<br>" +
-                                             $"Dirección: Dirección de la sede<br>" +
-                                             $"Teléfono: Teléfono de la sede<br>" +
-                                             $"Email: Email de la sede";
-
-                    EnviarCorreo(dtaCboAsesorComercialTag, asuntoMail, descripcionMail, mailUsuario, lblDiseño);
-                }
-                else
-                {
-                    ScriptManager.RegisterStartupScript(this, GetType(), "MostrarMensaje",
-                        "alert('El Asesor no tiene configurado el correo electrónico');", true);
-                }
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ModalRazonPausar').modal('show');", true);
             }
             else
             {
@@ -10310,6 +10221,60 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ScriptManager.RegisterStartupScript(this, GetType(), "QuitarPulsarBoton",
                 $"setTimeout(function(){{ document.getElementById('{PausarDiseño.ClientID}').classList.remove('pulsar'); }}, 1000);",
                 true);
+        }
+
+        protected void BtnAceptar_Click(object sender, EventArgs e)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string nombreUsuario = Session["usuariologueado"].ToString();
+            string txtSeguimientoPausas = TextSegPauDev.Value;
+            string lblDiseño = lblNumDise.Text;
+            string txtNombreDiseño = TextProyecto.Text;
+            string txtCliente = TextCliente.Text;
+            string cedulaLogeada = Session["CedulaLogeada"].ToString();
+
+            string dtaCboAsesorComercialTag = ObtenerCorreoAsesorComercial(DropDownList1.SelectedValue);
+            string mailUsuario = ObtenerMailUsuario(cedulaLogeada); // Aquí se obtiene el correo del usuario usando la cédula de sesión
+
+            string razonPausa = Razon.Value;
+            txtSeguimientoPausas = $"Diseño Pausado por el dibujante: {nombreUsuario} el {DateTime.Now:dd/MM/yyyy HH:mm} Razón: {razonPausa}\r\n{txtSeguimientoPausas}";
+
+            string sSql = "UPDATE tblDiseño SET Pausado = 1, SeguimientoPausa = @SeguimientoPausa WHERE Numero_Diseño = @NumeroDiseño";
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(sSql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@SeguimientoPausa", txtSeguimientoPausas);
+                    cmd.Parameters.AddWithValue("@NumeroDiseño", lblDiseño);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            if (!string.IsNullOrEmpty(dtaCboAsesorComercialTag.Trim()) && Validar_CadenaMail(dtaCboAsesorComercialTag))
+            {
+                string asuntoMail = $"Pausado el Diseño: {lblDiseño} - {txtNombreDiseño}";
+                string descripcionMail = $"Fecha: {DateTime.Now}<br><br>" +
+                                         $"Estimado(a) asesor(a)<br>" +
+                                         $"Su solicitud de Diseño y Cotización ha sido pausado por: {nombreUsuario}<br>" +
+                                         $"Historial de pausas y devoluciones: {txtSeguimientoPausas}<br><br>" +
+                                         $"Información del Diseño<br>" +
+                                         $"Diseño N.: {lblDiseño}<br>" +
+                                         $"Cliente: {txtCliente}<br>" +
+                                         $"Proyecto: {txtNombreDiseño}<br><br>" +
+                                         $"Cualquier inquietud no dude en comunicarse con: {nombreUsuario}<br><br>" +
+                                         $"Sede Información<br>" +
+                                         $"Dirección: Dirección de la sede<br>" +
+                                         $"Teléfono: Teléfono de la sede<br>" +
+                                         $"Email: Email de la sede";
+
+                EnviarCorreo(dtaCboAsesorComercialTag, asuntoMail, descripcionMail, mailUsuario, lblDiseño);
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "MostrarMensaje",
+                    "alert('El Asesor no tiene configurado el correo electrónico');", true);
+            }
         }
 
         private string ObtenerCorreoAsesorComercial(string codigoAsesor)
@@ -10512,7 +10477,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             tbRecepTipoObs.Text = "";
             tbRecepTipoObs.Text = CorreoTipoObser;
 
-            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionRegresar').modal('show');", true);
+            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolverDetener').modal('show');", true);
         }
 
         protected string ConsultarCorreoPorTipoObservacion()
@@ -10603,11 +10568,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     tbNombreRecp.Text = NombreAgregado.Replace(Nombre, "").TrimEnd(';').Replace(";;", ";");
 
                     // Aplicar la clase a la fila seleccionada
-                    e.Item.CssClass = "fila-seleccionada1";
+                    e.Item.CssClass = "fila-seleccionada2";
                 }
 
                 // Mantener el modal abierto
-                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionRegresar').modal('show');", true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionDevolverDetener').modal('show');", true);
 
                 // Asignar ID único a la fila
                 row.Attributes["id"] = "row_" + rowIndex;
@@ -10639,7 +10604,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Consultamos el correo por defecto del diseño
             ConsultarCorreo(numeroDiseno);
 
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ObservacionRegresar').modal('show');", true);
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ObservacionDevolverDetener').modal('show');", true);
         }
 
         private void ConsultarCorreo(string numeroDiseno)
@@ -10683,7 +10648,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string numeroDiseno = tbOt.Text;
                 if (numeroDiseno.StartsWith("DS"))
                 {
-                    numeroDiseno = numeroDiseno.Substring(3).TrimStart();
+                    numeroDiseno = numeroDiseno.Substring(2).TrimStart();
                 }
 
                 // Traemos el Id_MaxObservacion 
@@ -10760,7 +10725,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     </html>";
 
                 //ejecutar el procedimiento almacenado que envia el correo 
-                EnviarCorreoDevolucionPE(destinatarios, cuerpo, Aplicacion);
+                EnviarCorreoDevolucionDS(destinatarios, cuerpo, Aplicacion);
 
                 DevolverDiseñoaVentas(numeroDiseno);
 
@@ -10928,7 +10893,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             return areaAplicacion;
         }
-        public void EnviarCorreoDevolucionPE(string destinatarios, string cuerpo, string aplicacion)
+        public void EnviarCorreoDevolucionDS(string destinatarios, string cuerpo, string aplicacion)
         {
             string nombreProcedimiento = "duc_sp_Correo";
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -10989,15 +10954,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
         protected void btnCerrarDevolver_Click(object sender, EventArgs e)
-{
-    // Cerrar el modal y activar la pestaña
-    string script = @"
+        {
+            // Cerrar ambos modales y activar la pestaña
+            string script = @"
         $('#ObservacionRegresar').modal('hide');
+        $('#ConfirmarRegresoDelDiseno').modal('hide');
         setTimeout(function() {
             activarPestana('Diseño-BitacoraFPV-001-tab', 'Diseño-BitacoraFPV-001-content');
         }, 500);"; // Ajusta el tiempo de espera según sea necesario
-    ClientScript.RegisterStartupScript(this.GetType(), "cerrarModalYActivarPestanaScript", script, true);
-}
+            ClientScript.RegisterStartupScript(this.GetType(), "cerrarModalesYActivarPestanaScript", script, true);
+        }
 
     }
 }

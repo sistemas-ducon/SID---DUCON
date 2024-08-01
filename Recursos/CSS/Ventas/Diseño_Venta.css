@@ -21,7 +21,7 @@
     font-size: 28px;
 }
 
-masGrande {
+.masGrande {
     font-size: 50px;
 }
 
@@ -281,6 +281,11 @@ masGrande {
     overflow: hidden;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     position: relative;
+}
+.fila-seleccionada2 {
+    /* background: linear-gradient(to top right, #afb5b9, #23273be6); linear gradient */
+    background-color: white !important;
+    color: black !important;
 }
 
 .progress-bar {
