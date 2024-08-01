@@ -11,6 +11,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -25,6 +26,7 @@ using CheckBox = System.Web.UI.WebControls.CheckBox;
 using Control = System.Web.UI.Control;
 using Label = System.Web.UI.WebControls.Label;
 using ListItem = System.Web.UI.WebControls.ListItem;
+using Path = System.IO.Path;
 using TextBox = System.Web.UI.WebControls.TextBox;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
@@ -47,7 +49,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     CargarAsesoresEnDropDownList();
                     DepartamentoAsesor();
-
+                    CargarVariablesDeSesion();
 
                     if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
                     {
@@ -74,7 +76,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         }
 
-                        CargarVariablesDeSesion();
+                       
+
                     }
                     else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
                     {
@@ -106,7 +109,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         Session.Remove("ID_Render1");
                         Session.Remove("ClickCountRender");
 
-                        Session["CargarDocumento"] = "1";
+                       
 
                     }
 
@@ -156,7 +159,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 { "AntSession", tbAntepecho },
                 { "AmbientacionSession", chxAmbientacion },
                 { "AnimacionSession", chxAnimacion },
-                { "NumeroRenderCargar", NumeroRender }
+                { "NumeroRenderCargar", NumeroRender },
+               
             };
 
 
@@ -167,7 +171,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     if (kvp.Value is TextBox)
                     {
-                        ((TextBox)kvp.Value).Text = valorSesion;
+                        if (DateTime.TryParse(valorSesion, out DateTime fecha))
+                        {
+                            // Formatear como fecha y hora
+                            ((TextBox)kvp.Value).Text = fecha.ToString("yyyy-MM-ddTHH:mm");
+                        }
+                        else
+                        {
+                            ((TextBox)kvp.Value).Text = valorSesion;
+                        }
                     }
                     else if (kvp.Value is DropDownList)
                     {
@@ -204,6 +216,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 txMuebles.InnerText = Mueble;
                 Session.Remove("MuebleSession");
+            }
+
+            string ObsDibujo = Session["ObsDibujoSession"] as string;
+            if (!string.IsNullOrEmpty(ObsDibujo))
+            {
+                txObsDibujo.InnerText = ObsDibujo;
+                Session.Remove("ObsDibujoSession");
+            }
+
+            string SeguPausas = Session["SegPauSession"] as string;
+            if (!string.IsNullOrEmpty(SeguPausas))
+            {
+                txSegPausas.InnerText = SeguPausas;
+                Session.Remove("SegPauSession");
             }
 
 
@@ -762,7 +788,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
-                mensaje = "Por favor, selecciona una fecha de búsqueda.";
+                mensaje = "Por favor, seleccione una fecha de búsqueda.";
                 string script = "<script>AlertaBuscar('" + mensaje + "');</script>";
                 ScriptManager.RegisterStartupScript(this, GetType(), "AlertaBuscar", script, false);
 
@@ -1092,6 +1118,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 if (ActualizarRenderDibujo())
                 {
 
+                    // control del tap del dibujante
+                    Session["ActivarTapBitaRender"] = "1";
+
+                    DataTable DatosReder = ConsultarInfoRender();
+
+                    // Accede a la primera fila del DataTable
+                    DataRow row = DatosReder.Rows[0];
+
+                    // Obtén los valores de las columnas                   
+                    bool programadoVentas = Convert.ToBoolean(row["ProgramadoVentas"]);
+                    bool terminadoRender = Convert.ToBoolean(row["TerminadoRender"]);
+                    bool pausado = Convert.ToBoolean(row["Pausado"]);
+
+                    // VARIABLES EVALUACION Y CONTROL DIBUJANTE 
+
+                    Session["terVenta"] = programadoVentas;
+                    Session["terDibujo"] = terminadoRender;
+                    Session["pausadoRender"] = pausado;
+
+
+
                     string mensajePersonalizado = "El render fue actualizado correctamente.";
                     string urlRedireccion = "Ventas/Render_Venta.aspx";
                     Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
@@ -1109,6 +1156,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             //Pendiente Validaciones que el Render tenga un numero de Diseño Asociado 
 
         }
+
         private bool ActualizarRenderDibujo()
         {
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -1129,6 +1177,47 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     if (CantidadFilasAfectada > 0)
                     {
+                        DataTable DatosRender = ConsultarInfoRender();
+                        DataRow row = DatosRender.Rows[0];
+
+                        Session["FecIngresoSession"] = row["Fecha_Ingreso"].ToString();
+                        Session["FechaUltActiv"] = row["UltimaActivacion"].ToString();
+                        Session["FecEntregaSession"] = row["Fecha_Programada_Entrega"].ToString();
+                        Session["FechaOKSession"] = row["FechaRenderOK"].ToString();
+                        Session["DiseñoSession"] = row["Numero_Diseño"].ToString();
+                        Session["ClienteSession"] = row["Cliente"].ToString();
+                        Session["AsesorSession"] = row["Asesor"].ToString();
+                        Session["ProyectoSession"] = row["Nombre_Render"].ToString();
+                        Session["ContactoSession"] = row["Contacto"].ToString();
+                        Session["CelularSession"] = row["Celular"].ToString();
+                        Session["MailSession"] = row["Mail"].ToString();
+                        Session["TelefonoSession"] = row["Telefono"].ToString();
+                        Session["PlanoSession"] = row["Plano"].ToString();
+                        Session["ZonaSession"] = row["Zona"].ToString();
+                        Session["ImagenSession"] = row["Imagenes"].ToString();
+                        Session["AreaSession"] = row["Areas"].ToString();
+                        Session["ObVentaSession"] = row["Observaciones_Ventas"].ToString();
+                        Session["LineaSession"] = row["Linea"].ToString();
+                        Session["SupSession"] = row["AcabadoSuperficie"].ToString();
+                        Session["AccSession"] = row["AcabadoAccesorios"].ToString();
+                        Session["CantosSession"] = row["Cantos"].ToString();
+                        Session["PerfilSession"] = row["AcabadoPerfileria"].ToString();
+                        Session["PanelesSession"] = row["AcabadoPaneles"].ToString();
+                        Session["ArcSession"] = row["Archivadores"].ToString();
+                        Session["SillasSession"] = row["Sillas"].ToString();
+                        Session["PantallasSession"] = row["Pantallas"].ToString();
+                        Session["EspArqSession"] = row["EspacioArquitectonico"].ToString();
+                        Session["MuebleSession"] = row["Muebles"].ToString();
+                        Session["AcabPisSession"] = row["PisoyZocalo"].ToString();
+                        Session["AcabMuroSession"] = row["Muros"].ToString();
+                        Session["IluSession"] = row["Iluminacion"].ToString();
+                        Session["AntSession"] = row["Sillar"].ToString();
+                        Session["AmbientacionSession"] = row["Ambientacion"].ToString();
+                        Session["AnimacionSession"] = row["Animacion"].ToString();
+                        Session["NumeroRenderCargar"] = NumeroRender.Text;
+                        Session["ObsDibujoSession"] = txObsDibujo.InnerText;
+                        Session["SegPauSession"] = row["SeguimientoPausa"].ToString();
+
                         return true;
                     }
                     else
@@ -1222,6 +1311,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         public static void ModificarRender()
         {
             HttpContext.Current.Session["InsertUpdateRender"] = "Actualizar";
+        }
+
+        [WebMethod]
+        public static void EliminarTapActRender()
+        {
+            HttpContext.Current.Session["ActivarTapBitaRender"] = null;
+            HttpContext.Current.Session["terVenta"] = null;
+            HttpContext.Current.Session["terDibujo"] = null;
+            HttpContext.Current.Session["pausadoRender"] = null;
+ 
         }
 
 
@@ -1612,8 +1711,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 case "DESARROLLO DE PRODUCTO":// Boton Programar  Departamento Compras Desarrollo Producto
                 case "DISEÑO":
 
-                    
+                    // Realizar el update de terminar el render
 
+                    if (MetodoTerminarRenderDibujo())
+                    {
+                        ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#AdjuntarDocYTerminar').modal('show');", true);
+                    }
+                    else
+                    {
+                        // Mensaje Ocurrió un problema al terminar el render, por  favor intentelo nuevamente.
+                        string mensajePersonalizado = "Ocurrió un problema al terminar el render, por  favor intentelo nuevamente.";
+                        string urlRedireccion = "Ventas/Render_Venta.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    }
 
                     break;
 
@@ -1627,7 +1737,221 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-      
+        // Programar Render Dibujo y Adjuntar Documentos 
+        protected void btnAdjuntarYTerminarRender_Click(object sender, EventArgs e)
+        {
+            // Ruta de destino en el servidor apuntar a la ruta de temporales en el servidor 3
+            string serverPath = @"\\SRVDBAPPS\S_I_Ducon$\TemporalAdjunto";
+
+            // Numero de render para guardar los archivos con numero de render 
+            string NumRender = NumeroRender.Text;
+
+            string Adjuntos = "";
+
+            if (Request.Files.Count > 0)
+            {
+                for (int i = 0; i < Request.Files.Count; i++)
+                {
+                    HttpPostedFile file = Request.Files[i];
+                    if (file != null && file.ContentLength > 0)
+                    {
+
+                        string fileName = "Render_" + NumRender + "_" + file.FileName;
+                        string savePath = Path.Combine(serverPath, fileName);
+                        Adjuntos = Adjuntos + ";" + savePath;
+                        file.SaveAs(savePath);
+
+                    }
+                }
+
+
+            }
+
+            // Contruimos el Correo de Terminar Render para dibujo 
+
+            // Enviar el correo electronico 
+            string correoEmisor = ConsultarCorreoEmisor();
+            string correoAsesor = ConsultarCorreoAsesorRender();
+
+            DataTable DatosRender = ConsultarInfoRender();
+            DataRow row = DatosRender.Rows[0];
+
+            string destinatarios = correoEmisor + ";" + correoAsesor;
+            string cuerpo = @"
+                    <!DOCTYPE html>
+                    <html lang='es'>
+                    <head>
+                        <meta charset='UTF-8'>
+                        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+                        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                        <style>
+                            body {
+                                font-family: Arial, sans-serif;
+                                font-size: 14px;
+                                line-height: 1.6;
+                                margin: 0;
+                                padding: 0;
+                                background-color: #f9f9f9;
+                            }
+                            .container {
+                                max-width: 40rem;
+                                margin: 20px auto;
+                                padding: 20px;
+                                border: 1px solid #ccc;
+                                border-radius: 5px;
+                                background-color: #fff;
+                            }
+                            h2 {
+                                color: #333;
+                                font-size: 24px;
+                                margin-bottom: 20px;
+                            }
+                            p {
+                                margin-bottom: 10px;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class='container'>
+                            <h3>Render Terminado </h3>
+                             <p>Estimado(a) asesor(a), por medio de la presente se informa que el Render: " + NumeroRender.Text + ", ha sido terminado, bajo los siguientes parametros:" + @"</p>
+                             <p><strong>Fecha Ingreso </strong> " + row["Fecha_Ingreso"].ToString() + "<strong> Fecha Ok Render </strong>" + row["FechaRenderOK"].ToString() + @"</p>
+                             <p><strong>Cliente </strong> " + row["Cliente"].ToString() + "<strong> Contacto: </strong> " + row["Contacto"].ToString() + @"</p>
+                             <p><strong>Plano </strong> " + row["Plano"].ToString() + @"</p>
+                             <p><strong>Areas a renderizar: </strong> " + row["Areas"].ToString() + @"</p>
+                             <p><strong>Obs. Ventas: </strong> " + row["Observaciones_Ventas"].ToString() + @"</p>
+                             <p><strong>Realizada Por: </strong> <strong> " + Session["usuariologueado"].ToString() + @"</strong></p>     
+                             <p><strong>Observaciones Dibujo y Despiece: </strong> " + row["Observacion_Dibujo"].ToString() + @"</p>
+                             <h3>Acabados </h3>
+                             <p><strong>Linea: </strong> " + row["Linea"].ToString() + @" </p>
+                             <p><strong>Superficies: </strong> " + row["AcabadoSuperficie"].ToString() + @" </p>
+                             <p><strong>Accesorios: </strong> " + row["AcabadoAccesorios"].ToString() + @" </p>
+                             <p><strong>Paneles: </strong> " + row["AcabadoPaneles"].ToString() + @" </p>
+                             <p><strong>Perfileria: </strong> " + row["AcabadoPerfileria"].ToString() + @"</p>
+                             <p><strong>Sillas: </strong> " + row["Sillas"].ToString() + @"</p>
+                             <p><strong>Archivadores: </strong> " + row["Archivadores"].ToString() + @"</p>
+                             <p><strong>Piso y Zocalo: </strong> " + row["PisoyZocalo"].ToString() + @"</p>
+                             <p><strong>Muros: </strong> " + row["Muros"].ToString() + @"</p>              
+                             <p><strong>Iluminación y tipo de Lamparas:: </strong> " + row["Iluminacion"].ToString() + @"</p>
+                             <p><strong>Sillar y Antepecho: </strong> " + row["Sillar"].ToString() + @"</p>
+                             <p><strong>Imagenes: </strong> " + row["Imagenes"].ToString() + @"</p>
+                             <p><strong>Cualquier inquietud no dude en comunicarse con: </strong> " + Session["usuariologueado"].ToString() + @"</p>
+                        </div>
+                    </body>
+                    </html>";
+
+            string asunto = "Render Terminado " + NumeroRender.Text + "-" + row["Cliente"].ToString();
+
+
+
+            if (EnviarCorreoRenderTerminadoDibujo(destinatarios, cuerpo, Adjuntos, asunto))
+            {
+                //Mensaje de exito Render terminado y notificado
+                string mensajePersonalizado = "El render fue terminado y notificado exitosamente.";
+                string urlRedireccion = "Ventas/Render_Venta.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            }
+            else
+            {
+                // Mensjae de error  Render Terminado pero no notificado ( validar confirmacion) 
+                string mensajePersonalizado = "El render fue terminado, se cargaron los documentos y se notificó correctamente.";
+                string urlRedireccion = "Ventas/Render_Venta.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            }
+
+        }
+        public bool EnviarCorreoRenderTerminadoDibujo(string destinatarios, string cuerpo, string adjuntos,string asunto)
+        {
+            string nombreProcedimiento = "duc_sp_Correo";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(nombreProcedimiento, connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Definir los parámetros del procedimiento almacenado
+                        command.Parameters.AddWithValue("@Destinatarios", destinatarios.TrimEnd(';'));
+                        command.Parameters.AddWithValue("@asunto", asunto);
+                        command.Parameters.AddWithValue("@cuerpo", cuerpo);
+                        command.Parameters.AddWithValue("@adjuntos", adjuntos.TrimStart(';').TrimEnd(';'));
+                        command.Parameters.AddWithValue("@usuario", Session["usuariologueado"].ToString());
+
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                        return true;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                // Manejar la excepción (opcional)
+                // Loggear la excepción o hacer algo con ella
+                return false;
+            }
+        }
+        private DataTable ConsultarInfoRender()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT * FROM tblRender WHERE Id_Render = @ID_Render";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    
+                    cmd.Parameters.AddWithValue("@ID_Render", NumeroRender.Text);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+        private bool MetodoTerminarRenderDibujo()
+        {
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "UPDATE tblRender SET RealizadoPor = @RealizadoPor,ProgramadoVentas =1," +
+                          "TerminadoRender =1, FechaRenderOk= @fechaOk  WHERE Id_Render = @ID_Render  ";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    // Aquí ajusta los valores según los nombres de columnas reales en tu DataRow
+                    cmd.Parameters.AddWithValue("@RealizadoPor", Session["usuariologueado"].ToString());
+                    cmd.Parameters.AddWithValue("@fechaOk", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@ID_Render", NumeroRender.Text);
+
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+
+                    if (CantidadFilasAfectada > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
 
 
         //Metodos para Programar la solicitud  Ventas 
@@ -1703,7 +2027,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalConRender').modal('show');", true);
 
         }
-
         protected void btnTrabajarRender_SI_Click(object sender, EventArgs e)
         {
             // Asignar Renderizador
@@ -1715,7 +2038,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ScriptManager.RegisterStartupScript(this, GetType(), "SeleccionarFilayEnfocarRender", script, true);
 
         }
-
         private void ProgramarDibujanteRender(string ID)
         {
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -1737,7 +2059,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
 
-
         // Desprogramar dibujante para render 
         protected void btnDesprogramarRender_Click(object sender, EventArgs e)
         {
@@ -1747,7 +2068,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             NumRender2.InnerText = NumeroRender.Text;
             ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ConfirDespRender').modal('show');", true);
         }
-
         protected void btnDesprogramarRender_SI_Click(object sender, EventArgs e)
         {
             // Quitar  Renderizador 
@@ -1758,7 +2078,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string script = $"SeleccionarFilayEnfocarRender({rowIndex});";
             ScriptManager.RegisterStartupScript(this, GetType(), "SeleccionarFilayEnfocarRender", script, true);
         }
-
         private void DesprogramarDibujantRender(string ID)
         {
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -1777,7 +2096,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
-
 
 
         // Eliminar   render 
@@ -1800,7 +2118,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
             }
         }
-
         private bool EliminarRenderMetodo()
         {
             string query = "DELETE FROM tblRender WHERE Id_Render = @ID_Render";
@@ -1834,7 +2151,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 return false;
             }
         }
-
 
 
         // Pausar Render
@@ -1878,7 +2194,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 background-color: #f9f9f9;
                             }
                             .container {
-                                max-width: 37rem;
+                                max-width: 40rem;
                                 margin: 20px auto;
                                 padding: 20px;
                                 border: 1px solid #ccc;
@@ -1947,7 +2263,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         }
-
         private bool PausarRenderDibujo()
         {
             DateTime fecha = DateTime.Now;
@@ -1980,7 +2295,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
-
         public string ConsultarCorreoAsesorRender()
         {
             string correo = "";
@@ -2008,7 +2322,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             return correo;
         }
-
         public string ConsultarCorreoEmisor()
         {
             string correo = "";
@@ -2036,7 +2349,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             return correo;
         }
-
         public string ConsultarCorreoTerminadoDiseño()
         {
             string correo = "";
@@ -2062,7 +2374,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             return correo;
         }
-
         public bool EnviarCorreoRenderPausado(string destinatarios, string cuerpo)
         {
             string nombreProcedimiento = "duc_sp_Correo";
@@ -2096,7 +2407,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 return false;
             }
         }
-
 
 
         //Despausar Render
@@ -2149,7 +2459,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
         }
-
         private bool MetodoDespausarRender(string segPau, DateTime fechaEntrega, DateTime UltimaActivacionRender)
         {
 
@@ -2194,7 +2503,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ScriptManager.RegisterStartupScript(this, GetType(), "mostralMoldalDevolverRenderJustificacion", script, true);
 
         }
-
         protected void btnDevolverJustificacion_SI_Click(object sender, EventArgs e)
         {
             if (DevolverRenderDibujo())
@@ -2234,7 +2542,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 background-color: #f9f9f9;
                             }
                             .container {
-                                max-width: 37rem;
+                                max-width: 40rem;
                                 margin: 20px auto;
                                 padding: 20px;
                                 border: 1px solid #ccc;
@@ -2289,7 +2597,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
             }
         }
-
         private bool DevolverRenderDibujo()
         {
 
@@ -2323,7 +2630,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
-
         public bool EnviarCorreoRenderDevuelto(string destinatarios, string cuerpo)
         {
             string nombreProcedimiento = "duc_sp_Correo";
@@ -2359,42 +2665,99 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
 
-
         // Buscador de Renders 
         protected void btnBuscarRender_Click(object sender, EventArgs e)
         {
-
-            if (ID_Render_Buscado.Text != "")
+            if(ID_Render_Buscado.Text == "")
             {
-                DataGridRenders.DataSourceID = "RenderPorId";
-
-            }
-            else if (ddlZona2.SelectedItem.Text != "Todas")
-            {
-                DataGridRenders.DataSourceID = "RenderPorZona";
+                string mensajeExito = "Por favor, digite un número de render.";
+                string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
+                DataGridRenders.DataSourceID = "CargarRenders";
+                ID_Render_Buscado.Focus();
             }
             else
             {
-                DataGridRenders.DataSourceID = "CargarRenders";
+                if (ValidarExisteRender(ID_Render_Buscado.Text))
+                {
+
+                    if (ID_Render_Buscado.Text != "")
+                    {
+                        DataGridRenders.DataSourceID = "RenderPorId";
+
+                    }
+                    else if (ddlZona2.SelectedItem.Text != "Todas")
+                    {
+                        DataGridRenders.DataSourceID = "RenderPorZona";
+                    }
+                    else
+                    {
+                        DataGridRenders.DataSourceID = "CargarRenders";
+                    }
+
+                    // Coltrol de Boton de Trabajar Y Desprogramar Render 
+
+                    btnTrabajarRender.Enabled = false;
+                    btnTrabajarRender.CssClass = "btn btn-sm btn-outline-secondary";
+
+                    btnDesprogramarRender.Enabled = false;
+                    btnDesprogramarRender.CssClass = "btn btn-sm btn-outline-secondary";
+
+                    string script = @"ControlCamporYBotones();";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "ControlCamporYBotones", script, true);
+
+
+                   
+                }
+                else
+                {
+                    string mensajeExito = "El render buscado no se encuentra en programación";
+                    string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
+                    ID_Render_Buscado.Focus();
+                }
+
+                DataGridRenders.DataBind();
+
             }
-
-            // Coltrol de Boton de Trabajar Y Desprogramar Render 
-
-            btnTrabajarRender.Enabled = false;
-            btnTrabajarRender.CssClass = "btn btn-sm btn-outline-secondary";
-
-            btnDesprogramarRender.Enabled = false;
-            btnDesprogramarRender.CssClass = "btn btn-sm btn-outline-secondary";
-
-            string script = @"ControlCamporYBotones();";
-            ScriptManager.RegisterStartupScript(this, GetType(), "ControlCamporYBotones", script, true);
-
-
-            DataGridRenders.DataBind();
+      
+           
 
         }
+        private bool ValidarExisteRender(string ID_Render)
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
-    
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "SELECT * FROM tblRender WHERE  Id_Render = @ID";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+
+                    cmd.Parameters.AddWithValue("@ID", ID_Render);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.HasRows)
+                    {
+
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+
+                    }
+
+                }
+
+            }
+        }
+
     }
-
 }
+
+
+

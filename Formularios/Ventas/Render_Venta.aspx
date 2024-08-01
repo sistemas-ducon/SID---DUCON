@@ -14,51 +14,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="../../Recursos/CSS/Ventas/Render_Venta.css" />
 
-    <script>
-        function confirmProgramarRender(event) {
 
-            var IdRender = document.getElementById("NumeroRender").innerHTML;
-            var Nombre = document.getElementById("tbCliente").value;
-
-            // Validamos el Área del Usuario 
-            var AreaDepar = '<%= Session["Departamento"] %>';
-
-
-            if (AreaDepar.toUpperCase() === "VENTAS") {
-                if (IdRender === "") {
-                    alert("No se ha seleccionado ningún render");
-                    return false;
-                } else {
-                    var mensaje = "Una vez aprobado el Render no podrá modificarlo. Esta seguro de Terminar el render: " + IdRender + " " + Nombre + " ?";
-
-                    var result = confirm(mensaje);
-                    if (result) {
-                        // Llamar al evento del botón de eliminar en el servidor
-                        $(event.target).removeAttr('onclick');
-                        $(event.target).click();
-                    }
-                    return false; // Previene que el evento del botón se ejecute dos veces
-                }
-            } else if (AreaDepar.toUpperCase() === "DISEÑO" || AreaDepar.toUpperCase() === "DESARROLLO DE PRODUCTO") {
-
-                if (IdRender === "") {
-                    alert("No se ha seleccionado ningún render");
-                    return false;
-                } else {
-                    var mensaje = "Una vez terminado el Render no podrá modificarlo. Esta seguro de Terminar el render: " + IdRender + " " + Nombre + " ?";
-
-                    var result = confirm(mensaje);
-                    if (result) {
-                        // Llamar al evento del botón de eliminar en el servidor
-                        $(event.target).removeAttr('onclick');
-                        $(event.target).click();
-                    }
-                    return false; // Previene que el evento del botón se ejecute dos veces
-                }
-            }
-
-        }
-    </script>
 
     <script>
         function focusAndScrollToRow(rowId) {
@@ -129,12 +85,154 @@
             $('#ConfirmarEliminarRender').modal('show');
         }
 
-
         function mostralMoldalDevolverRenderJustificacion() {
             $('#DevolverRenderJustificacion').modal('show');
         }
 
+        function confirmProgramarRender(event) {
+
+            var IdRender = document.getElementById("NumeroRender").innerHTML;
+            var Nombre = document.getElementById("tbCliente").value;
+
+            // Validamos el Área del Usuario 
+            var AreaDepar = '<%= Session["Departamento"] %>';
+
+
+            if (AreaDepar.toUpperCase() === "VENTAS") {
+                if (IdRender === "") {
+                    alert("No se ha seleccionado ningún render");
+                    return false;
+                } else {
+                    var mensaje = "Una vez aprobado el Render no podrá modificarlo. Está seguro de programar el render: " + IdRender + " " + Nombre + " ?";
+
+                    var result = confirm(mensaje);
+                    if (result) {
+                        // Llamar al evento del botón de eliminar en el servidor
+                        $(event.target).removeAttr('onclick');
+                        $(event.target).click();
+                    }
+                    return false; // Previene que el evento del botón se ejecute dos veces
+                }
+            } else if (AreaDepar.toUpperCase() === "DISEÑO" || AreaDepar.toUpperCase() === "DESARROLLO DE PRODUCTO") {
+
+                if (IdRender === "") {
+                    alert("No se ha seleccionado ningún render");
+                    return false;
+                } else {
+                    var mensaje = "Una vez terminado el Render no podrá modificarlo. Está seguro de Terminar el render: " + IdRender + " " + Nombre + " ?";
+
+                    var result = confirm(mensaje);
+                    if (result) {
+                        // Llamar al evento del botón de eliminar en el servidor
+                        $(event.target).removeAttr('onclick');
+                        $(event.target).click();
+                    }
+                    return false; // Previene que el evento del botón se ejecute dos veces
+                }
+            }
+
+        }
+
+
+        //Funcion para habilitar Modificar Cuando dan Click en linkButton Del DataGrid  dibujo ss
+        function HabilitarEnlacesDibujo1() {
+            // Habilitar enlaces
+            document.getElementById("ModificarRender").classList.remove("disabled");
+            document.getElementById("ModificarRender").classList.add("enabled", "AzulActivo");
+
+            document.getElementById("GrabarRender").classList.remove("enabled", "AzulActivo");
+            document.getElementById("GrabarRender").classList.add("disabled");
+
+            // Si la página de Render es para el Área de Dibujo, se habilita Devolver, Pausar y Eliminar Render
+            document.getElementById("DevolverRender").classList.remove("disabled");
+            document.getElementById("DevolverRender").classList.add("enabled", "AzulActivo");
+
+            document.getElementById("PausarRender").classList.remove("disabled");
+            document.getElementById("PausarRender").classList.add("enabled", "AzulActivo");
+
+            document.getElementById("EliminarRender").classList.remove("disabled");
+            document.getElementById("EliminarRender").classList.add("enabled", "AzulActivo");
+        }
+
+        function HabilitarEnlacesDibujo2() {
+            // Habilitar enlaces
+            document.getElementById("ModificarRender").classList.remove("disabled");
+            document.getElementById("ModificarRender").classList.add("enabled", "AzulActivo");
+
+            document.getElementById("GrabarRender").classList.remove("enabled", "AzulActivo");
+            document.getElementById("GrabarRender").classList.add("disabled");
+
+            // Si la página de Render es para el Área de Dibujo, se habilita Devolver, Pausar y Eliminar Render
+            document.getElementById("DevolverRender").classList.remove("enabled", "AzulActivo");
+            document.getElementById("DevolverRender").classList.add("disabled");
+
+            document.getElementById("PausarRender").classList.remove("enabled", "AzulActivo");
+            document.getElementById("PausarRender").classList.add("disabled");
+
+            document.getElementById("DespausarRender").classList.remove("enabled", "AzulActivo");
+            document.getElementById("DespausarRender").classList.add("disabled");
+
+            document.getElementById("EliminarRender").classList.remove("enabled", "AzulActivo");
+            document.getElementById("EliminarRender").classList.add("disabled");
+        }
+
+        function HabEnlRenderPausado() {
+
+            // Habilitar enlaces
+            document.getElementById("DespausarRender").classList.remove("disabled");
+            document.getElementById("DespausarRender").classList.add("enabled", "AzulActivo");
+
+            // Mostrar el LinkButton "PausarSolicitud"
+            var DespausarRender = document.getElementById("<%= DespausarRender.ClientID %>");
+            var PausarRender = document.getElementById("<%= PausarRender.ClientID %>");
+
+            if (DespausarRender) {
+                DespausarRender.style.display = '';
+            }
+
+            if (PausarRender) {
+                PausarRender.style.display = 'none';
+            }
+
+        }
+
+        function HabEnlRenderPausado1() {
+
+            // Mostrar el LinkButton "PausarSolicitud"
+            var DespausarRender = document.getElementById("<%= DespausarRender.ClientID %>");
+            var PausarRender = document.getElementById("<%= PausarRender.ClientID %>");
+
+            if (DespausarRender) {
+                DespausarRender.style.display = 'none';
+            }
+
+            if (PausarRender) {
+                PausarRender.style.display = '';
+            }
+
+        }
+
+        function HabEnlRenderPausado2() {
+
+            // Mostrar el LinkButton "PausarSolicitud"
+            var DespausarRender = document.getElementById("<%= DespausarRender.ClientID %>");
+            var PausarRender = document.getElementById("<%= PausarRender.ClientID %>");
+
+            if (DespausarRender) {
+                DespausarRender.style.display = '';
+            }
+
+            if (PausarRender) {
+                PausarRender.style.display = 'none';
+            }
+
+        }
+
+
     </script>
+
+
+
 
 </head>
 
@@ -594,13 +692,12 @@
 
                         </div>
 
-
                         <!--Modal confirmar Pausar Render  -->
                         <div id="ConfirmarPausarRender" class="modal" tabindex="-1" style="display: none;" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
                             <div class="modal-dialog modal-lg modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-primary text-white">
-                                        <h5 class="modal-title text-center">Pausar Render  </h5>
+                                        <h6 class="modal-title text-center">Pausar Render  </h6>
                                     </div>
                                     <div class="modal-body border rounded">
                                         <div class="container-fluid">
@@ -619,8 +716,8 @@
                                     </div>
                                     <div class="modal-footer">
                                         <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                            <asp:Button runat="server" ID="btnPausarRender_Si" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnPausarRender_Si_Click" />
-                                            <asp:Button runat="server" ID="btnPausarRender_No" Text="Cancelar" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                            <asp:Button runat="server" ID="btnPausarRender_Si" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-primary" Style="width: 5rem;" OnClick="btnPausarRender_Si_Click" />
+                                            <asp:Button runat="server" ID="btnPausarRender_No" Text="Cancelar" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
                                         </div>
 
                                     </div>
@@ -633,19 +730,19 @@
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-primary text-white">
-                                        <h5 class="modal-title text-center">Despausar Render </h5>
+                                        <h6 class="modal-title text-center">Despausar Render </h6>
 
                                     </div>
                                     <div class="modal-body border rounded">
                                         <div class="container-fluid">
-                                            <h6>¿ Desea Despausar el Render N°  <span runat="server" id="Span_Id_Render3"></span>?</h6>
+                                            <h6>¿Desea despausar el Render N°  <span runat="server" id="Span_Id_Render3"></span>?</h6>
                                         </div>
 
                                     </div>
                                     <div class="modal-footer">
                                         <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                            <asp:Button runat="server" ID="btnDespausarRender_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnDespausarRender_SI_Click" />
-                                            <asp:Button runat="server" ID="btnDespausarRender_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                            <asp:Button runat="server" ID="btnDespausarRender_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm  btn-outline-primary" Style="width: 5rem;" OnClick="btnDespausarRender_SI_Click" />
+                                            <asp:Button runat="server" ID="btnDespausarRender_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
                                         </div>
 
                                     </div>
@@ -658,21 +755,21 @@
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-primary text-white">
-                                        <h5 class="modal-title text-center">Devolver Render </h5>
+                                        <h6 class="modal-title text-center">Devolver Render </h6>
 
                                     </div>
                                     <div class="modal-body border rounded">
                                         <div class="container-fluid">
-                                            <h6>¿ Esta seguro de devolver el Render N°:  <span runat="server" id="Span_Id_Render1"></span>
+                                            <h6>¿Está seguro de devolver el Render N°:  <span runat="server" id="Span_Id_Render1"></span>
                                                 <br />
-                                                al proceso anterior ?</h6>
+                                                al proceso anterior?</h6>
                                         </div>
 
                                     </div>
                                     <div class="modal-footer">
                                         <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                            <asp:Button runat="server" ID="btnDevolverRender_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnDevolverRender_SI_Click" />
-                                            <asp:Button runat="server" ID="btnDevolverRender_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                            <asp:Button runat="server" ID="btnDevolverRender_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm  btn-outline-primary" Style="width: 5rem;" OnClick="btnDevolverRender_SI_Click" />
+                                            <asp:Button runat="server" ID="btnDevolverRender_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
                                         </div>
 
                                     </div>
@@ -685,7 +782,7 @@
                             <div class="modal-dialog modal-lg modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-primary text-white">
-                                        <h5 class="modal-title text-center">Devolver Render  </h5>
+                                        <h6 class="modal-title text-center">Devolver Render  </h6>
                                     </div>
                                     <div class="modal-body border rounded">
                                         <div class="container-fluid">
@@ -698,14 +795,14 @@
                                                 </div>
                                             </div>
 
-                                            <h6>Por favor justifique la causa de la desvolucion del render y presione aceptar </h6>
+                                            <h6>Por favor justifique la causa de la devolución del render y presione aceptar </h6>
                                         </div>
 
                                     </div>
                                     <div class="modal-footer">
                                         <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                            <asp:Button runat="server" ID="btnDevolverJustificacion_SI" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnDevolverJustificacion_SI_Click" />
-                                            <asp:Button runat="server" ID="Button4" Text="Cancelar" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                            <asp:Button runat="server" ID="btnDevolverJustificacion_SI" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-primary" Style="width: 5rem;" OnClick="btnDevolverJustificacion_SI_Click" />
+                                            <asp:Button runat="server" ID="Button4" Text="Cancelar" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
                                         </div>
 
                                     </div>
@@ -718,19 +815,19 @@
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-danger text-white">
-                                        <h5 class="modal-title text-center">Devolver Render </h5>
+                                        <h6 class="modal-title text-center">Devolver Render </h6>
 
                                     </div>
                                     <div class="modal-body border rounded">
                                         <div class="container-fluid">
-                                            <h6>¿ Esta seguro de eliminar el Render N°:  <span runat="server" id="Span_Id_Render2"></span>? </h6>
+                                            <h6>¿Está seguro de eliminar el render N°:  <span runat="server" id="Span_Id_Render2"></span>? </h6>
                                         </div>
 
                                     </div>
                                     <div class="modal-footer">
                                         <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                            <asp:Button runat="server" ID="btnEliminarRender_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-danger" Style="width: 5rem;" OnClick="btnEliminarRender_SI_Click" />
-                                            <asp:Button runat="server" ID="btnEliminarRender_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                            <asp:Button runat="server" ID="btnEliminarRender_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm  btn-outline-danger" Style="width: 5rem;" OnClick="btnEliminarRender_SI_Click" />
+                                            <asp:Button runat="server" ID="btnEliminarRender_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
                                         </div>
 
                                     </div>
@@ -738,13 +835,45 @@
                             </div>
                         </div>
 
+                        <!--Modal adjuntar documentos y Terminar Render Solicitud  -->
+                        <div id="AdjuntarDocYTerminar" class="modal" tabindex="-1" style="display: none;" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary text-white">
+                                        <h6 class="modal-title text-center">Adjuntar Documentos Render</h6>
+                                    </div>
+                                    <div class="modal-body border rounded">
+                                        <div class="container-fluid">
+                                            <p>
+                                                Adjunte todos los documentos adicionales desde la misma carpeta y presione 'Aceptar'.
+                                                Si no necesita adjuntar documentos, solo presione 'Aceptar'.
+                                            </p>
+                                            <div class="row pt-2">
+                                                <div class="col-10">
+                                                    <div class="input-group input-group-sm">
+                                                        <input type="file" id="FileUpload1" name="FileUpload1" multiple="multiple" class="form-control" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                            <asp:Button runat="server" ID="btnAdjuntarYProgramarRender" Text="Aceptar" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-primary" Style="width: 5rem;" OnClick="btnAdjuntarYTerminarRender_Click" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-       
 
-                    
+
 
                     </ContentTemplate>
-                
+                    <Triggers>
+                        <asp:PostBackTrigger ControlID="btnAdjuntarYProgramarRender" />
+                    </Triggers>
+
                 </asp:UpdatePanel>
             </div>
 
@@ -817,7 +946,7 @@
                                             <div class="border rounded p-2">
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <div class="table-responsive mb-2 gap-2" style="max-height: 28rem; height: 28rem; overflow-x: auto;">
+                                                        <div class="table-responsive mb-2 gap-2" style="max-height: 27rem; height: 27rem; overflow-x: auto;">
                                                             <h5 class="datagrid-header text-start">Programación</h5>
                                                             <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridRenders" runat="server" DataSourceID="CargarRenders" AutoGenerateColumns="false" OnItemDataBound="DataGridRenders_ItemDataBound" OnItemCommand="DataGridRenders_LinkButton">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
@@ -952,7 +1081,7 @@
 
                         <!-- Modal convenciones -->
                         <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog  ">
+                            <div class="modal-dialog  modal-dialog-centered ">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="exampleModalLabel">Convenciones</h5>
@@ -994,7 +1123,7 @@
                                     </div>
 
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                                     </div>
 
                                 </div>
@@ -1006,19 +1135,19 @@
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-primary text-white">
-                                        <h5 class="modal-title text-center">Trabajar en Render </h5>
+                                        <h6 class="modal-title text-center">Trabajar en Render </h6>
 
                                     </div>
                                     <div class="modal-body border rounded">
                                         <div class="container-fluid">
-                                            <h6>¿ Desea trabajar en el Render número:   <span runat="server" id="NumRender1"></span>?</h6>
+                                            <h6>¿ Desea trabajar en el render número:   <span runat="server" id="NumRender1"></span>?</h6>
                                         </div>
 
                                     </div>
                                     <div class="modal-footer">
                                         <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                            <asp:Button runat="server" ID="btnTrabajarRender_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnTrabajarRender_SI_Click" />
-                                            <asp:Button runat="server" ID="Button2" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                            <asp:Button runat="server" ID="btnTrabajarRender_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm  btn-outline-primary" Style="width: 5rem;" OnClick="btnTrabajarRender_SI_Click" />
+                                            <asp:Button runat="server" ID="Button2" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
                                         </div>
 
                                     </div>
@@ -1031,19 +1160,19 @@
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-primary text-white">
-                                        <h5 class="modal-title text-center">Desprogramar Render </h5>
+                                        <h6 class="modal-title text-center">Desprogramar Render </h6>
 
                                     </div>
                                     <div class="modal-body border rounded">
                                         <div class="container-fluid">
-                                            <h6>¿ Desea Desprogramar el render número:   <span runat="server" id="NumRender2"></span>?</h6>
+                                            <h6>¿ Desea desprogramar el render número:   <span runat="server" id="NumRender2"></span>?</h6>
                                         </div>
 
                                     </div>
                                     <div class="modal-footer">
                                         <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                            <asp:Button runat="server" ID="btnDesprogramarRender_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="btnDesprogramarRender_SI_Click" />
-                                            <asp:Button runat="server" ID="Button3" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                            <asp:Button runat="server" ID="btnDesprogramarRender_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm  btn-outline-primary" Style="width: 5rem;" OnClick="btnDesprogramarRender_SI_Click" />
+                                            <asp:Button runat="server" ID="Button3" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
                                         </div>
 
                                     </div>
@@ -1121,7 +1250,7 @@
 
                                     <div class="col-lg-1 col-md-2">
                                         <div class="input-group input-group-sm  mb-2 gap-2">
-                                            <asp:Label ID="lbNumeroRender" class="form-label" Text="Render N." runat="server"></asp:Label>
+                                            <asp:Label ID="lbNumeroRender" class="form-label" Text="Render N°" runat="server"></asp:Label>
                                         </div>
                                     </div>
 
@@ -1327,19 +1456,6 @@
         }
         else if (AreaDepar.toUpperCase() === "DISEÑO" || AreaDepar.toUpperCase() === "DESARROLLO DE PRODUCTO") {
 
-            // Quitar 'active' de la pestaña actualmente activa y su contenido
-            $('#Render-tab').removeClass('active');
-            $('#Render-Content').removeClass('active show');
-
-            // Activa la pestaña de Programación
-            $('#Programacion-tab').addClass('active');
-            $('#Programacion-Content').addClass('active show');
-            $(".contenedor-icono").hide();
-
-            // PENDIENTE REVISAR SI SE NECESITA 
-            //document.getElementById("ImportarRender").classList.remove("disabled");
-            //document.getElementById("ImportarRender").classList.add("enabled", "AzulActivo");
-
             document.getElementById("CancelarRender").classList.remove("disabled");
             document.getElementById("CancelarRender").classList.add("enabled", "RojoCancelar");
 
@@ -1352,6 +1468,80 @@
                     dropDownLists[j].value = "";
                 }
             }
+
+
+            var ActivarTap = '<%= Session["ActivarTapBitaRender"] %>';
+            var TerminadoVentas = '<%= Session["terVenta"] %>';
+            var TerminadoDibujo = '<%= Session["terDibujo"] %>';
+            var Pausado = '<%= Session["pausadoRender"] %>';
+
+            if (ActivarTap === "1") {
+
+                // Se Asigna el valor de Terminado dibujo para control 
+                var TerDibujo = document.getElementById("tbTerminadoDibujo");
+                TerDibujo.value = TerminadoDibujo;
+
+
+                // Quitar 'active' de la pestaña actualmente activa y su contenido
+                $('#Programacion-tab').removeClass('active');
+                $('#Programacion-Content').removeClass('active show');
+
+                // Activa la pestaña de Programación
+                $('#Render-tab').addClass('active');
+                $('#Render-Content').addClass('active show');
+
+                if (TerminadoVentas === "True") {
+                    HabilitarEnlacesDibujo1();
+
+                    if (Pausado === "True") {
+                        HabEnlRenderPausado();
+                    }
+                    else {
+                        HabEnlRenderPausado1();
+                    }
+
+                } else {
+                    HabilitarEnlacesDibujo2();
+
+                    if (Pausado === "True") {
+                        HabEnlRenderPausado2();
+                    }
+                    else {
+                        HabEnlRenderPausado1();
+                    }
+
+                }
+
+                // Llamado ajax para limpiar las variables de session 
+                $.ajax({
+                    type: "POST",
+                    url: "Render_Venta.aspx/EliminarTapActRender",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+
+                    },
+                    error: function (error) {
+
+                    }
+                });
+
+            }
+            else {
+                // Quitar 'active' de la pestaña actualmente activa y su contenido
+                $('#Render-tab').removeClass('active');
+                $('#Render-Content').removeClass('active show');
+
+                // Activa la pestaña de Programación
+                $('#Programacion-tab').addClass('active');
+                $('#Programacion-Content').addClass('active show');
+                $(".contenedor-icono").hide();
+            }
+
+            // PENDIENTE REVISAR SI SE NECESITA 
+            //document.getElementById("ImportarRender").classList.remove("disabled");
+            //document.getElementById("ImportarRender").classList.add("enabled", "AzulActivo");
+
 
         }
 
@@ -1399,58 +1589,6 @@
 
         }
 
-        //Funcion para habilitar Modificar Cuando dan Click en linkButton Del DataGrid  dibujo ss
-        function HabilitarEnlacesDibujo1() {
-
-            // Habilitar enlaces
-            document.getElementById("ModificarRender").classList.remove("disabled");
-            document.getElementById("ModificarRender").classList.add("enabled", "AzulActivo");
-
-            document.getElementById("GrabarRender").classList.remove("enabled", "AzulActivo");
-            document.getElementById("GrabarRender").classList.add("disabled",);
-
-
-            // Si la pagina de Render Es para el Area de Dibujo , Se habilita Devolver, Pausar y Eliminar Render
-
-            document.getElementById("DevolverRender").classList.remove("disabled");
-            document.getElementById("DevolverRender").classList.add("enabled", "AzulActivo");
-
-            document.getElementById("PausarRender").classList.remove("disabled");
-            document.getElementById("PausarRender").classList.add("enabled", "AzulActivo");
-
-            document.getElementById("EliminarRender").classList.remove("disabled");
-            document.getElementById("EliminarRender").classList.add("enabled", "AzulActivo");
-
-
-        }
-
-        function HabilitarEnlacesDibujo2() {
-
-            // Habilitar enlaces
-            document.getElementById("ModificarRender").classList.remove("disabled");
-            document.getElementById("ModificarRender").classList.add("enabled", "AzulActivo");
-
-            document.getElementById("GrabarRender").classList.remove("enabled", "AzulActivo");
-            document.getElementById("GrabarRender").classList.add("disabled",);
-
-
-            // Si la pagina de Render Es para el Area de Dibujo , Se habilita Devolver, Pausar y Eliminar Render
-
-            document.getElementById("DevolverRender").classList.remove("enabled", "AzulActivo");
-            document.getElementById("DevolverRender").classList.add("disabled",);
-
-            document.getElementById("PausarRender").classList.remove("enabled", "AzulActivo");
-            document.getElementById("PausarRender").classList.add("disabled",)
-
-            ocument.getElementById("DespausarRender").classList.remove("enabled", "AzulActivo");
-            document.getElementById("DespausarRender").classList.add("disabled");
-
-            document.getElementById("EliminarRender").classList.remove("enabled", "AzulActivo");
-            document.getElementById("EliminarRender").classList.add("disabled",);
-
-
-        }
-
         function HabilitarEnlacesDibujo3() {
 
             // Habilitar enlaces
@@ -1458,10 +1596,10 @@
             document.getElementById("ModificarRender").classList.add("enabled", "AzulActivo");
 
             document.getElementById("GrabarRender").classList.remove("enabled", "AzulActivo");
-            document.getElementById("GrabarRender").classList.add("disabled",);
+            document.getElementById("GrabarRender").classList.add("disabled");
 
-            document.getElementById("NuevoRender").classList.remove("disabled");
-            document.getElementById("NuevoRender").classList.add("enabled", "AzulActivo");
+            document.getElementById("NuevoRender").classList.remove("enabled", "AzulActivo");
+            document.getElementById("NuevoRender").classList.add("disabled");
 
 
             // Si la pagina de Render Es para el Area de Dibujo , Se habilita Devolver, Pausar y Eliminar Render
@@ -1476,60 +1614,8 @@
             document.getElementById("DespausarRender").classList.add("disabled");
 
             document.getElementById("EliminarRender").classList.remove("enabled", "AzulActivo");
-            document.getElementById("EliminarRender").classList.add("disabled",);
+            document.getElementById("EliminarRender").classList.add("disabled");
 
-
-        }
-
-        function HabEnlRenderPausado() {
-
-            // Habilitar enlaces
-            document.getElementById("DespausarRender").classList.remove("disabled");
-            document.getElementById("DespausarRender").classList.add("enabled", "AzulActivo");
-
-            // Mostrar el LinkButton "PausarSolicitud"
-            var DespausarRender = document.getElementById("<%= DespausarRender.ClientID %>");
-            var PausarRender = document.getElementById("<%= PausarRender.ClientID %>");
-
-            if (DespausarRender) {
-                DespausarRender.style.display = '';
-            }
-
-            if (PausarRender) {
-                PausarRender.style.display = 'none';
-            }
-
-        }
-
-        function HabEnlRenderPausado1() {
-
-            // Mostrar el LinkButton "PausarSolicitud"
-            var DespausarRender = document.getElementById("<%= DespausarRender.ClientID %>");
-            var PausarRender = document.getElementById("<%= PausarRender.ClientID %>");
-
-            if (DespausarRender) {
-                DespausarRender.style.display = 'none';
-            }
-
-            if (PausarRender) {
-                PausarRender.style.display = '';
-            }
-
-        }
-
-        function HabEnlRenderPausado2() {
-
-            // Mostrar el LinkButton "PausarSolicitud"
-            var DespausarRender = document.getElementById("<%= DespausarRender.ClientID %>");
-            var PausarRender = document.getElementById("<%= PausarRender.ClientID %>");
-
-            if (DespausarRender) {
-                DespausarRender.style.display = '';
-            }
-
-            if (PausarRender) {
-                PausarRender.style.display = 'none';
-            }
 
         }
 
@@ -1749,6 +1835,7 @@
                 }
             }
             else if (AreaDepar.toUpperCase() === "DISEÑO" || AreaDepar.toUpperCase() === "DESARROLLO DE PRODUCTO") {
+
                 var tbTerminadoDibujo = document.getElementById("tbTerminadoDibujo");
                 var terminadoDibValor = tbTerminadoDibujo.value;
 
@@ -1782,6 +1869,9 @@
 
                     document.getElementById("PausarRender").classList.remove("enabled", "AzulActivo");
                     document.getElementById("PausarRender").classList.add("disabled");
+
+                    document.getElementById("DespausarRender").classList.remove("enabled", "AzulActivo");
+                    document.getElementById("DespausarRender").classList.add("disabled");
 
                     document.getElementById("EliminarRender").classList.remove("enabled", "AzulActivo");
                     document.getElementById("EliminarRender").classList.add("disabled");
