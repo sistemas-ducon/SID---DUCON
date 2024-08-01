@@ -84,8 +84,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         Session.Remove("IdContactoFactSession1");
                         Session.Remove("ClickCount2");
 
-
-
                         if (Session["ActContacto"]?.ToString() == "1")
                         {
 
@@ -100,6 +98,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             );
                             DatagridContactoClienteFact_LinkButton(DataGridContacto, args1);
 
+
+
+                            //Eliminan las variables de conteo de fila Contactos 
+                            Session.Remove("IdContactoFactSession1");
+                            Session.Remove("ClickCount2");
+
+
+                            // LIMPIAMOS VARIABLE DE CONTRONL DE FILA ACTUALIZAR
                             Session.Remove("ActContacto");
                             Session.Remove("IndiceContacto");
 
@@ -110,7 +116,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         {
                             string script = @"ControlTapContactos();";
                             ScriptManager.RegisterStartupScript(this, GetType(), "ControlTapContactos", script, true);
-                           
+
+                            // LIMPIAMOS CLCKC EN CONTACTOS 
+                            Session.Remove("IdContactoFactSession1");
+                            Session.Remove("ClickCount2");
+
                             int index1 = Convert.ToInt32(0); // Ajusta el índice según sea necesario
                             DataGridCommandEventArgs args1 = new DataGridCommandEventArgs(
                                 DataGridContacto.Items[index],
@@ -118,7 +128,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                                 new CommandEventArgs("VerContactoCliente", index1)
                             );
                             DatagridContactoClienteFact_LinkButton(DataGridContacto, args1);
-                            
+
+                            // LIMPIAMOS CLCKC EN CONTACTOS 
+                            Session.Remove("IdContactoFactSession1");
+                            Session.Remove("ClickCount2");
+
+
+                            // LIMPIAMOS VARIABLE DE CONTROL DE FILA 
                             Session.Remove("NuevoContacto");
                             
                         }
@@ -1800,7 +1816,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                                     Session["ClienteSaveOrUpdate"] = "1";
                                     Session["NitSaveOrUpdate"] = tbNumero.Text; 
                                     Session["NuevoContacto"] = "1";
-
+                                  
                                     string mensajePersonalizado = "El Contacto ha sido guardado con exito.";
                                     string urlRedireccion = "FormExtPrin/NitOTs.aspx";
                                     Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");

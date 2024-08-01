@@ -480,6 +480,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             ddlprocedencia.Enabled = false;
             ddlprocedencia.CssClass = "form-control form-control";
 
+            DataGridCliente.DataBind();
+            DataGridContacto.DataBind();
+
 
         }
 
@@ -1010,7 +1013,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 string query = @"SELECT *
                         FROM tblClienteContacto
-                        WHERE Id_Cliente = @IdCliente";
+                        WHERE Id_Cliente = @IdCliente ORDER BY  Id_ClienteContacto DESC";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -1405,6 +1408,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 tbId_ContactoCliente.Text = campos[4];
                 Session["ID_ContactoBD"] = campos[4];
 
+                // Invierte el valor de Enabled para el botón
+                tbNombreContacto.ReadOnly = true;
+                tbTelefonoContacto.ReadOnly = true;
+                tbCelularContacto.ReadOnly = true;
+                tbMailContacto.ReadOnly = true;
+
+                tbBuscarContacto.ReadOnly = false;
+
 
                 // Cargamos el numero de la fila de contacto 
                 tbNumeroFilaContacto.Text = rowIndex.ToString();
@@ -1453,7 +1464,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnModificar != null)
             {
                 btnModificar.Enabled = true;
+                btnModificar.CssClass = "btn btn-sm btn-outline-success";
             }
+
+            // habilitar el botón "Grabar"
+            Button btnGrabar = FindControl("btnGrabarContacto") as Button;
+            if (btnGrabar != null)
+            {
+                btnGrabar.Enabled = false;
+                btnGrabar.CssClass = "btn btn-sm btn-outline-secondary";
+            }
+
+            // habilitar el botón "Grabar"
+            Button btnNuevoCont = FindControl("btnNuevoContacto") as Button;
+            if (btnGrabar != null)
+            {
+                btnNuevoCont.Enabled = false;
+                btnNuevoCont.CssClass = "btn btn-sm btn-outline-secondary";
+            }
+
+          
+
 
 
         }
@@ -1474,6 +1505,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnNuevoCont != null)
             {
                 btnNuevoCont.Enabled = false;
+                btnNuevoCont.CssClass = "btn btn-sm  btn-outline-secondary";
             }
 
             // Habilitar el botón "Grabar"
@@ -1481,7 +1513,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnGrabar != null)
             {
                 btnGrabar.Enabled = true;
+                btnGrabar.CssClass = "btn btn-sm btn-outline-primary";
             }
+
+            // Deshabilitar el botón "Nuevo"
+            Button btnModificarCon = FindControl("btnModificarContacto") as Button;
+            if (btnModificarCon != null)
+            {
+                btnModificarCon.Enabled = false;
+                btnModificarCon.CssClass = "btn btn-sm btn-outline-secondary";
+            }
+
+
 
             chkEstadoGuardar.Checked = false;
 
@@ -1512,6 +1555,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnNuevoCont != null)
             {
                 btnNuevoCont.Enabled = true;
+                btnNuevoCont.CssClass = "btn btn-sm btn-outline-primary";
             }
 
             // Deshabilitar el botón "Grabar"
@@ -1519,6 +1563,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnGrabar != null)
             {
                 btnGrabar.Enabled = false;
+                btnGrabar.CssClass = "btn btn-sm  btn-outline-secondary";
             }
 
             // Deshabilitar el botón "Modificar"
@@ -1526,7 +1571,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnModificar != null)
             {
                 btnModificar.Enabled = false;
+                btnModificar.CssClass = "btn btn-sm btn-outline-secondary";
             }
+
+            if(tbNit.Text != "")
+            {
+                LlenarDataGridContacto(tbNit.Text);
+            }
+            else
+            {
+                DataGridContacto.DataBind();
+            }
+           
+
+            // limpiar variable de click 
+            Session.Remove("ID_ContactoBD1");
+            Session.Remove("ClickCount3");
 
         }
 
@@ -1550,11 +1610,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             tbId_ContactoCliente.Text = "";
 
 
-            // habilitar el botón "Grabar"
+            // Habilitar guardar
             Button btnGrabar = FindControl("btnGrabarContacto") as Button;
             if (btnGrabar != null)
             {
                 btnGrabar.Enabled = true;
+                btnGrabar.CssClass = "btn btn-sm btn-outline-primary";
             }
 
             // Deshabilitar el botón "Nuevo"
@@ -1562,6 +1623,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             if (btnNuevoCont != null)
             {
                 btnNuevoCont.Enabled = false;
+                btnNuevoCont.CssClass = "btn btn-sm btn-outline-secondary";
+            }
+
+            // Deshabilitar el botón "modificar"
+            Button btnModificarCon = FindControl("btnModificarContacto") as Button;
+            if (btnModificarCon != null)
+            {
+                btnModificarCon.Enabled = false;
+                btnModificarCon.CssClass = "btn btn-sm btn-outline-secondary";
             }
 
             chkEstadoGuardar.Checked = true;
@@ -1616,13 +1686,33 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                             command.ExecuteNonQuery();
                         }
 
+                      
+                        int index = Convert.ToInt32(tbNumeroFilaCliente.Text); // Ajusta el índice según sea necesario
+                        DataGridCommandEventArgs args = new DataGridCommandEventArgs(
+                            DataGridCliente.Items[index],
+                            DataGridCliente,
+                            new CommandEventArgs("VerCliente", index)
+                        );
+                        DataGridCliente_ItemCommand(DataGridContacto, args);
+
+                        int index1 = Convert.ToInt32(0); // Ajusta el índice según sea necesario
+                        DataGridCommandEventArgs args1 = new DataGridCommandEventArgs(
+                            DataGridContacto.Items[index1],
+                            DataGridContacto,
+                            new CommandEventArgs("VerContacto", index1)
+                        );
+                        DataGridContacto_ItemCommand(DataGridContacto, args1);
+
+
+                        // LIMPIAMOS VARIABLES DE SESSION CONTROL CLICK 
+                        Session.Remove("ID_ContactoBD1");
+                        Session.Remove("ClickCount3");
+
+    
                         // Mensaje de éxito
                         string mensajeExito = "El Contacto " + tbNombreContacto.Text.Trim() + " ha sido agregado exitosamente.";
                         string scriptExito = "alert('" + mensajeExito + "');";
                         ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
-
-                    
-
 
 
                     }
@@ -1658,7 +1748,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
 
 
-
                         int index = Convert.ToInt32(tbNumeroFilaCliente.Text); // Ajusta el índice según sea necesario
                         DataGridCommandEventArgs args = new DataGridCommandEventArgs(
                             DataGridCliente.Items[index],
@@ -1678,6 +1767,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         DataGridContacto_ItemCommand(DataGridContacto, args1);
 
 
+                        // LIMPIAMOS VARIABLES DE SESSION CONTROL CLICK 
+                        Session.Remove("ID_ContactoBD1");
+                        Session.Remove("ClickCount3");
 
 
                     }
