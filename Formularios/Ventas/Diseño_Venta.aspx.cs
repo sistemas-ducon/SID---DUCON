@@ -128,8 +128,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             LinkButton4.Enabled = false;
             LinkButton4.CssClass = "btn btn-sm button-disabled";
 
-            LinkButton2.Enabled = false;
-            LinkButton2.CssClass = "btn btn-sm button-disabled";
+            BtnVisCotPreAct.Enabled = false;
+            BtnVisCotPreAct.CssClass = "btn btn-sm button-disabled";
 
             Session.Remove("EventoItemCommandEjecutado");
             Session.Remove("ClickCount");
@@ -2930,13 +2930,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Verificar si la consulta arrojó resultados
                         if (reader.HasRows)
                         {
-                            LinkButton2.Enabled = true;
-                            LinkButton2.CssClass = "btn btn-sm shadow button-enabled";
+                            BtnVisCotPreAct.Enabled = true;
+                            BtnVisCotPreAct.CssClass = "btn btn-sm shadow button-enabled";
                         }
                         else
                         {
-                            LinkButton2.Enabled = false;
-                            LinkButton2.CssClass = "btn btn-sm shadow button-disabled";
+                            BtnVisCotPreAct.Enabled = false;
+                            BtnVisCotPreAct.CssClass = "btn btn-sm shadow button-disabled";
                         }
 
                         // Cerrar la conexión y liberar recursos
@@ -3017,6 +3017,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 AdicionarElemento.Enabled = true;
                 AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
 
+                BtnVisCotPreAct.Enabled = true;
+                BtnVisCotPreAct.CssClass = "btn btn-sm button-enabled";
             }
             else if (tipoAccion == "Recepcion")
             {
@@ -3042,8 +3044,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 AdicionarElemento.Enabled = true;
                 AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
 
-                LinkButton2.Enabled = true;
-                LinkButton2.CssClass = "btn btn-sm button-enabled";
+                BtnVisCotPreAct.Enabled = true;
+                BtnVisCotPreAct.CssClass = "btn btn-sm button-enabled";
             }
         }
 
@@ -3205,8 +3207,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 BtnDespiece.Enabled = false;
                 BtnDespiece.CssClass = "btn btn-sm shadow button-disabled";
 
-                LinkButton2.Enabled = false;
-                LinkButton2.CssClass = "btn btn-sm shadow button-disabled";
+                BtnVisCotPreAct.Enabled = false;
+                BtnVisCotPreAct.CssClass = "btn btn-sm shadow button-disabled";
 
 
             }

@@ -1715,7 +1715,7 @@
                                         <asp:LinkButton runat="server" ID="LinkButton4" CssClass="btn btn-sm"> 
                                                  <i class="bi bi-menu-app"></i>
                                         </asp:LinkButton>
-                                        <asp:LinkButton runat="server" ID="LinkButton2" CssClass="btn btn-sm" Style="background-color: #00ff21" OnClick="VisualizarCotPrecioActual_Click">  
+                                        <asp:LinkButton runat="server" ID="BtnVisCotPreAct" CssClass="btn btn-sm" Style="background-color: #00ff21" OnClick="VisualizarCotPrecioActual_Click">  
                                                    <i class="bi bi-currency-dollar"></i>
                                         </asp:LinkButton>
                                     </div>
@@ -1993,7 +1993,7 @@
 
                     </ContentTemplate>
                     <Triggers>
-                        <asp:PostBackTrigger ControlID="LinkButton2" />
+                        <asp:PostBackTrigger ControlID="BtnVisCotPreAct" />
                     </Triggers>
                 </asp:UpdatePanel>
             </div>
