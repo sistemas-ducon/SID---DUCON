@@ -1486,88 +1486,177 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void NoButton_Click(object sender, EventArgs e)
         {
-            string diseño = lblNumDise.Text;
+            string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Ventas")
+            {
+                string diseño = lblNumDise.Text;
 
-            Session["NumeroDiseño5"] = diseño;
+                Session["NumeroDiseño5"] = diseño;
 
-            // Obtener la fecha y hora actual
-            DateTime now = DateTime.Now;
+                // Obtener la fecha y hora actual
+                DateTime now = DateTime.Now;
 
-            string fechaHoraActual = now.ToString("yyyy-MM-ddTHH:mm");
+                string fechaHoraActual = now.ToString("yyyy-MM-ddTHH:mm");
 
-            // Asignar la fecha y hora actual al TextBox
-            TextUltAc.Text = fechaHoraActual;
-
-
-            DateTime fechaActual = DateTime.Now;
-
-            // Sumar 3 días hábiles a partir de la fecha actual
-            DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual, 3);
-
-            // Asignar la fecha programada de entrega al TextBox
-            TextEntrega.Text = fechaProgramadaEntrega.ToString("yyyy-MM-ddTHH:mm");
+                // Asignar la fecha y hora actual al TextBox
+                TextUltAc.Text = fechaHoraActual;
 
 
-            string fechaInDis = now.ToString("yyyy-MM-ddTHH:mm");
+                DateTime fechaActual = DateTime.Now;
 
-            // Asignar la fecha y hora actual al TextBox
-            TextIngDis.Text = fechaInDis;
+                // Sumar 3 días hábiles a partir de la fecha actual
+                DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual, 3);
 
-            string fechaOkDib = now.ToString("yyyy-MM-ddTHH:mm");
-
-            // Asignar la fecha y hora actual al TextBox
-            TextFecOkDib.Text = fechaOkDib;
-
-            TextObsDibDes.Value = string.Empty;
-            TextSegPauDev.Value = string.Empty;
+                // Asignar la fecha programada de entrega al TextBox
+                TextEntrega.Text = fechaProgramadaEntrega.ToString("yyyy-MM-ddTHH:mm");
 
 
-            lblNumDise.Text = "Por definir";
+                string fechaInDis = now.ToString("yyyy-MM-ddTHH:mm");
 
-            HabilitarDivYContenido(miDiv);
+                // Asignar la fecha y hora actual al TextBox
+                TextIngDis.Text = fechaInDis;
 
-            TextIngDis.Enabled = false;
-            TextIngDis.CssClass = "form-control form-control-sm";
+                string fechaOkDib = now.ToString("yyyy-MM-ddTHH:mm");
 
-            TextUltAc.Enabled = false;
-            TextUltAc.CssClass = "form-control form-control-sm";
+                // Asignar la fecha y hora actual al TextBox
+                TextFecOkDib.Text = fechaOkDib;
 
-            TextEntrega.Enabled = false;
-            TextEntrega.CssClass = "form-control form-control-sm";
-
-            TextFecOkDib.Enabled = false;
-            TextFecOkDib.CssClass = "form-control form-control-sm";
-
-            BtnProgramar.Enabled = false;
-            BtnProgramar.CssClass = "form-control form-control-sm fw-bold";
-
-            TextFec.Enabled = false;
-            TextFec.CssClass = "form-control form-control-sm";
-
-            TextFech.Enabled = false;
-            TextFech.CssClass = "form-control form-control-sm";
-
-            // Deshabilitar el botón "NuevoDisBit"
-            NuevoDisBit.Enabled = false;
-            NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
+                TextObsDibDes.Value = string.Empty;
+                TextSegPauDev.Value = string.Empty;
 
 
-            Grabar.Enabled = true;
-            Grabar.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+                lblNumDise.Text = "Por definir";
 
-            Modificar.Enabled = false;
-            Modificar.CssClass = "btn btn-sm shadow button-disabled";
+                HabilitarDivYContenido(miDiv);
 
-            ActualizarDiseno.Enabled = false;
-            ActualizarDiseno.CssClass = "btn btn-sm shadow button-disabled";
+                TextIngDis.Enabled = false;
+                TextIngDis.CssClass = "form-control form-control-sm";
 
-            // Cambiar el color del Label lblCotizar
-            lblCotizar.CssClass = "col-form-label-sm text-danger";
-            lblCotizar.Font.Bold = true;
+                TextUltAc.Enabled = false;
+                TextUltAc.CssClass = "form-control form-control-sm";
 
-            TextCliente.Enabled = false;
-            TextCliente.CssClass = "form-control form-control-sm";
+                TextEntrega.Enabled = false;
+                TextEntrega.CssClass = "form-control form-control-sm";
 
+                TextFecOkDib.Enabled = false;
+                TextFecOkDib.CssClass = "form-control form-control-sm";
+
+                BtnProgramar.Enabled = false;
+                BtnProgramar.CssClass = "form-control form-control-sm fw-bold";
+
+                TextFec.Enabled = false;
+                TextFec.CssClass = "form-control form-control-sm";
+
+                TextFech.Enabled = false;
+                TextFech.CssClass = "form-control form-control-sm";
+
+                // Deshabilitar el botón "NuevoDisBit"
+                NuevoDisBit.Enabled = false;
+                NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
+
+
+                Grabar.Enabled = true;
+                Grabar.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+                Modificar.Enabled = false;
+                Modificar.CssClass = "btn btn-sm shadow button-disabled";
+
+                ActualizarDiseno.Enabled = false;
+                ActualizarDiseno.CssClass = "btn btn-sm shadow button-disabled";
+
+                // Cambiar el color del Label lblCotizar
+                lblCotizar.CssClass = "col-form-label-sm text-danger";
+                lblCotizar.Font.Bold = true;
+
+                TextCliente.Enabled = false;
+                TextCliente.CssClass = "form-control form-control-sm";
+            }
+
+            if (tipoAccion == "Diseño")
+            {
+                string diseño = lblNumDise.Text;
+
+                Session["NumeroDiseño5"] = diseño;
+
+                // Obtener la fecha y hora actual
+                DateTime now = DateTime.Now;
+
+                string fechaHoraActual = now.ToString("yyyy-MM-ddTHH:mm");
+
+                // Asignar la fecha y hora actual al TextBox
+                TextUltAc.Text = fechaHoraActual;
+
+
+                DateTime fechaActual = DateTime.Now;
+
+                // Sumar 3 días hábiles a partir de la fecha actual
+                DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual, 3);
+
+                // Asignar la fecha programada de entrega al TextBox
+                TextEntrega.Text = fechaProgramadaEntrega.ToString("yyyy-MM-ddTHH:mm");
+
+
+                string fechaInDis = now.ToString("yyyy-MM-ddTHH:mm");
+
+                // Asignar la fecha y hora actual al TextBox
+                TextIngDis.Text = fechaInDis;
+
+                string fechaOkDib = now.ToString("yyyy-MM-ddTHH:mm");
+
+                // Asignar la fecha y hora actual al TextBox
+                TextFecOkDib.Text = fechaOkDib;
+
+                TextObsDibDes.Value = string.Empty;
+                TextSegPauDev.Value = string.Empty;
+
+
+                lblNumDise.Text = "Por definir";
+
+
+                TextIngDis.Enabled = false;
+                TextIngDis.CssClass = "form-control form-control-sm";
+
+                TextUltAc.Enabled = false;
+                TextUltAc.CssClass = "form-control form-control-sm";
+
+                TextEntrega.Enabled = false;
+                TextEntrega.CssClass = "form-control form-control-sm";
+
+                TextFecOkDib.Enabled = false;
+                TextFecOkDib.CssClass = "form-control form-control-sm";
+
+                BtnProgramar.Enabled = false;
+                BtnProgramar.CssClass = "form-control form-control-sm fw-bold";
+
+                TextFec.Enabled = false;
+                TextFec.CssClass = "form-control form-control-sm";
+
+                TextFech.Enabled = false;
+                TextFech.CssClass = "form-control form-control-sm";
+
+                // Deshabilitar el botón "NuevoDisBit"
+                NuevoDisBit.Enabled = false;
+                NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
+
+
+                Grabar.Enabled = true;
+                Grabar.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+                Modificar.Enabled = false;
+                Modificar.CssClass = "btn btn-sm shadow button-disabled";
+
+                ActualizarDiseno.Enabled = false;
+                ActualizarDiseno.CssClass = "btn btn-sm shadow button-disabled";
+
+                // Cambiar el color del Label lblCotizar
+                lblCotizar.CssClass = "col-form-label-sm text-danger";
+                lblCotizar.Font.Bold = true;
+
+                TextCliente.Enabled = false;
+                TextCliente.CssClass = "form-control form-control-sm";
+
+                DeshabilitarDivYContenido(miDiv);
+            }
         }
 
         private void ApplyButtonStyles()
@@ -3151,7 +3240,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             if (tipoAccion == "Diseño")
             {
-                Session["CrudDiseno"] = "Actualizar";
+                Session["CrudVentas"] = "Actualizar";
             }
 
         }
@@ -3230,8 +3319,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 DocBitacora.Enabled = true;
                 DocBitacora.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
-                // Habilitar el div y su contenido
-                HabilitarDivYContenido(miDiv);
+                DeshabilitarDivYContenido(miDiv);
 
                 TextIngDis.Enabled = false;
                 TextUltAc.Enabled = false;
@@ -3283,7 +3371,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             DeshabilitarDivYContenidoMitad(miDiv);
-        }
+
+            string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Diseño")
+            {
+
+                DeshabilitarDivYContenido(miDiv);
+                TextObsDibDes.Attributes.Remove("readonly");
+            }
+         }
 
         private void DeshabilitarDivYContenidoMitad(System.Web.UI.Control container)
         {
@@ -4080,38 +4176,52 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Abrir la conexión
                 connection.Open();
 
-                // Consulta SQL para verificar el campo ProgramadoVentas
-                string consulta = "SELECT ProgramadoVentas FROM tbldiseño WHERE Numero_Diseño = @Numero_Diseño";
+                    // Consulta SQL para verificar el campo ProgramadoVentas
+                    string consulta = "SELECT ProgramadoVentas, TerminadoDibujo FROM tbldiseño WHERE Numero_Diseño = @Numero_Diseño";
 
-                using (SqlCommand command = new SqlCommand(consulta, connection))
-                {
-                    // Asignar el valor del parámetro
-                    command.Parameters.AddWithValue("@Numero_Diseño", numeroDiseño);
+                    using (SqlCommand command = new SqlCommand(consulta, connection))
+                    {
+                        // Asignar el valor del parámetro
+                        command.Parameters.AddWithValue("@Numero_Diseño", numeroDiseño);
 
-                    // Ejecutar la consulta y obtener el valor de ProgramadoVentas
-                    bool programadoVentas = false; // Suponemos que el valor predeterminado es false
+                        // Ejecutar la consulta y obtener el valor de ProgramadoVentas
+                        bool programadoVentas = false;
+                        bool terminadoDibujo = false;// Suponemos que el valor predeterminado es false
 
                     using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
                         {
-                            programadoVentas = reader.GetBoolean(0);
+                            if (reader.Read())
+                            {
+                                programadoVentas = reader.GetBoolean(0);
+                                terminadoDibujo = reader.GetBoolean(1);
+                            }
+                    }
+
+                    string tipoAccion = Session["Diseno"] as string;
+                    if (tipoAccion == "Ventas")
+                    {
+                        // Verificar el valor de ProgramadoVentas
+                        if (programadoVentas)
+                        {
+                            // Mostrar el modal y terminar el método
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ErrorModiciarDiseno').modal('show');", true);
+                            return false;
+                        }
+                    }
+                    if (tipoAccion == "Diseño")
+                    {
+                        if (terminadoDibujo)
+                        {
+                            // Mostrar el modal y terminar el método
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ErrorModiciarDiseno').modal('show');", true);
+                            return false;
                         }
                     }
 
-                    // Verificar el valor de ProgramadoVentas
-                    if (programadoVentas)
-                    {
-                        // Mostrar el modal y terminar el método
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ErrorModiciarDiseno').modal('show');", true);
-                        return false;
-                    }
-                }
+              }
 
-
-
-                // Crear el nombre del procedimiento almacenado
-                string storedProcedureName = "sp_ActualizarDiseño";
+                    // Crear el nombre del procedimiento almacenado
+                    string storedProcedureName = "sp_ActualizarDiseño";
 
                 // Crear el comando para ejecutar el procedimiento almacenado
                 using (SqlCommand command = new SqlCommand(storedProcedureName, connection))
@@ -4714,6 +4824,74 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        protected void obtenerContenidoDeBtnOk2()
+        {
+            // Consulta para obtener SC_Terminado y TerminadoDibujo
+            string numeroDiseño = Session["NumeroDiseño2"]?.ToString();
+            if (!string.IsNullOrEmpty(numeroDiseño))
+            {
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+                {
+                    conn.Open();
+                    string query = "SELECT SC_Terminado, TerminadoDibujo FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseño";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@NumeroDiseño", numeroDiseño);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            bool scTerminado = Convert.ToBoolean(reader["SC_Terminado"]);
+                            bool terminadoDibujo = Convert.ToBoolean(reader["TerminadoDibujo"]);
+
+                            if (!scTerminado && terminadoDibujo)
+                            {
+                                BtnProgramar.Text = "TERMINARSC";
+                                BtnProgramar.CssClass = "btn btn-warning shadow btn-sm fw-bold";
+                                BtnProgramar.Enabled = true;
+                            }
+                            else
+                            {
+                                BtnProgramar.Text = "TERMINAR";
+                                BtnProgramar.Enabled = false;
+                            }
+                            if (!terminadoDibujo)
+                            {
+                                BtnProgramar.Enabled = true;
+                                PausarDiseño.Enabled = true;
+                                PausarDiseño.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
+                                EliminarDiseño.Enabled = true;
+                                RegresarDiseño.Enabled = true;
+                                RegresarDiseño.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+                            }
+                        }
+                    }
+                }
+            }
+
+            bool estaPausado;
+            string consultaPausado = "SELECT Pausado FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseño";
+
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(consultaPausado, conn))
+                {
+                    cmd.Parameters.AddWithValue("@NumeroDiseño", numeroDiseño);
+                    conn.Open();
+                    estaPausado = (bool)cmd.ExecuteScalar();
+                }
+            }
+
+            if (estaPausado == false)
+            {
+                PausarDiseño.Text = "<i class='bi bi-stop-circle-fill'></i>";
+            }
+            else
+            {
+                PausarDiseño.Text = "<i class='bi bi-play-circle-fill'></i>";
+            }
+        }
+
         private void ProcesarNumeroDiseño2(DataGridCommandEventArgs e)
         {
             string numeroDiseño = Session["NumeroDiseño2"].ToString();
@@ -4775,7 +4953,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         if (tipoAccion == "Diseño")
                         {
-                            obtenerContenidoDeBtnOk();
+                            obtenerContenidoDeBtnOk2();
                         }
                     }
 

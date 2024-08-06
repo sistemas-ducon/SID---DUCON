@@ -84,222 +84,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (!IsPostBack)
                 {
-
-
-                    tbVenta.Text = DateTime.Now.ToString("yyyy-MM-dd");
-                    dtpFechaEntregaDibujoDespiece.Text = DateTime.Now.ToString("yyyy-MM-dd");
-                    dtpFechaEntregaProduccion.Text = DateTime.Now.ToString("yyyy-MM-dd");
-                    DateTime fechaActual = DateTime.Now;
-                    DateTime fechaMas10Dias = fechaActual.AddDays(10);
-                    dtpEmpaque.Text = fechaMas10Dias.ToString("yyyy-MM-dd");
-                    dtpRealEmpaque.Text = fechaMas10Dias.ToString("yyyy-MM-dd");
-
-                    Session["CargarOTsEjecutada"] = null;
-
-                    habilitarbotones();
-
-                    DeshabilitarBotones(sender, e);
-
-                    BotonesPorDefectoPlano(sender, e);
-
-                    BotonesPorDefectoObjetos(sender, e);
-
-                    BotonesPorDefectoModulos(sender, e);
-
-                    BotonesPorDefectoInsumos(sender, e);
-
-                    listaTextBoxes = new List<TextBox>
-                         {
-                    tbObra,tbDir,tbContac,tbEmail,tbRecibe,tbTel,tbCel,tbPais,tbHTotal,tbVenta,dtpFechaEntregaDibujoDespiece,dtpFechaEntregaProduccion,dtpEmpaque,dtpRealEmpaque,tbSupervisor,
-                    tbBolsa,tbValorPedido,txtNit,txtNombreEmp,txtcontacto,txtMail,txtDireccion,txtMunicipio,txtTelefono,txtCotizacion,txtValorSugerido,txtVcsd,txtVccd,txtOrdenCompra,txtAsesor,txtComision,
-                    txtDiseño,txtSaldo,txtVenta,txtDcto,txtDctoValor,txtVtte,txtVvia,txtGtotal,txtPlano,txtCliente,txtArea,txtContactoPlano,txtAsesorPlano,txtDibuja,txtBolsa
-
-                        };
-
-                    listaDropDownLists = new List<DropDownList>
-                         {
-                   ddlNumbers,ddlZona,dtacboTipoPedido,cboPedidoBase,DtaCboTipoAprobacion,ddlFabrica1,ddlInstala,ddlAsesor,ddlCiudad
-
-                        };
-
-                    txObs2.Disabled = true;
-                    txObs1.Disabled = true;
-                    txResumen.Disabled = true;
-
-                    ValorPorDefectoTexArea();
-
-                    CargarAsesoresEnDropDownList();
-                    DeshabilitarTextBoxes(listaTextBoxes);
-                    DeshabilitarDropDownLists(listaDropDownLists);
-                    Nit.Enabled = false;
-                    Nit.CssClass = "bi bf  btn btn-outline-secondary";
-                    btnCotizacion.Enabled = false;
-                    btnCotizacion.CssClass = "bi bf  btn btn-sm btn-outline-secondary w-100";
-                    tbPedDepen.DataBind();
-                    tbPedDepen.Items.Insert(0, new ListItem(" "));
-                    cboPedidoBase.DataBind();
-                    cboPedidoBase.Items.Insert(0, new ListItem(" "));
-                    DtaCboTipoAprobacion.DataBind();
-                    DtaCboTipoAprobacion.Items.Insert(0, new ListItem(" "));
-                    dtacboTipoPedido.DataBind();
-                    dtacboTipoPedido.Items.Insert(0, new ListItem(" "));
-                    DepartamentoAsesor(); // Se Deberia cargar desde el login 
-
-                    // Validacion para Cargar el Plano  Con variables de Session
-                    if (Session["Id_OT2"] != null && Session["pedido2"] != null)
+                    string tipoAccion = Session["Diseno"] as string;
+                    if (tipoAccion == "Ventas")
                     {
-
-                        // Este bloque carga solo el plano ya que el Id_OT2 es igual al texto Nula
-                        if (Session["Id_OT2"].ToString() == "Nula")
-                        {
-                            if (Session["Id_Plano"] != null)
-                            {
-                                Cargar_Plano2(Session["Id_Plano"].ToString());
-                                Session.Remove("Id_Plano");
-                                Session.Remove("Id_OT2");
-                                Session.Remove("pedido2");
-                                HabilitarBotonesPlano();
-                            }
-
-                            //Activar Tap Plano 
-                            string script = "activarPestana('Plano-tab', 'Plano-Content');";
-                            ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
-
-                        }
-                        // Este bloque consulta la OT con variables de Session de afuera del formulario 
-                        else if (Session["Id_OT2"] != null && Session["pedido2"] != null)
-                        {
-
-
-                            // Este bloque carga solo el plano ya que el Id_OT2 es igual al texto Nula
-                            if (Session["Id_OT2"].ToString() == "")
-                            {
-                                if (Session["Id_Plano"] != null)
-                                {
-                                    Cargar_Plano2(Session["Id_Plano"].ToString());
-                                    Session.Remove("Id_Plano");
-                                    Session.Remove("Id_OT2");
-                                    Session.Remove("pedido2");
-                                    HabilitarBotonesPlano();
-                                }
-
-                                //Activar Tap Plano 
-                                string script = "activarPestana('Plano-tab', 'Plano-Content');";
-                                ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
-
-                            }
-                            else
-                            {
-                                Cargar_OTs2();
-                                List<int> numeros = ObtenerNumerosDesdeLaBaseDeDatos(Session["Id_OT2"].ToString());
-
-                                ddlNumbers.Items.Clear(); // Limpiar las opciones existentes
-
-                                foreach (int numero in numeros)
-                                {
-                                    ddlNumbers.Items.Add(numero.ToString());
-
-                                }
-
-                                ddlNumbers.SelectedValue = Session["pedido2"].ToString();
-
-                                // Se eliminar variables de session para cargar OT 
-                                Session.Remove("Id_OT2");
-                                Session.Remove("pedido2");
-                            }
-
-
-                           
-
-                            if (Session["controlTapPlano"]?.ToString() == "1")
-                            {
-                                //Activar Tap Plano 
-                                string script = "activarPestana('Plano-tab', 'Plano-Content');";
-                                ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
-                                
-                                Session.Remove("controlTapPlano");
-
-                            }
-
-
-                            if (Session["CargarTxt"]?.ToString() == "TXT")
-                            {
-
-                                //Activar Tap Plano 
-                                string script = "activarPestana('Plano-tab', 'Plano-Content');";
-                                ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
-
-                                // Se valida si hay que mostrar el l alaerta de objetos con valor 0 en el despiece 
-                                if (Session["ValorUnd"]?.ToString() == "1")
-                                {
-                                    string mensajeExito = "Se ha detectado que algun objeto del plano tiene valor 0 en el despiece, revisar y actualizar";
-                                    string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
-                                    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
-                                }
-
-                                // Se valida si hay que mostrar el modal de Objetos no existentes 
-                                if (Session["ObjNoEx"].ToString() != "1")
-                                {
-
-                                    // Se carga el datagrid de objetos no existentes 
-                                    DataTable DataObjNoExiste = (DataTable)Session["DatoObjNoExistentes"];
-
-                                    // Eliminar filas duplicadas antes de enlazarlo al DataGrid
-                                    string[] keyColumns = { "ID_Objeto", "Ancho" }; // Columnas clave para identificar duplicados
-                                    DataTable uniqueDataTable = QuitarDuplicado(DataObjNoExiste, keyColumns);
-
-
-
-                                    DataGridObjNoExiste.DataSource = DataObjNoExiste;
-                                    DataGridObjNoExiste.DataBind();
-
-
-
-                                    // Esperar 1 segundo antes de abrir el modal
-                                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "setTimeout(function() { MostralModalObjetosNo(); }, 700);", true);
-
-                                }
-
-                                // Se eliminar variables de session de accion de Cargar TXT 
-                                Session.Remove("CargarTxt");
-                                Session.Remove("DatoObjNoExistentes");
-                                Session.Remove("ObjNoEx");
-                                Session.Remove("ValorUnd");
-
-                              
-                            }
-
-                        }
-
+                        Page_LoadVentas(sender, e);
                     }
-                    // Verificar si la variable de sesión 'MostrarModal' tiene contenido y es true
-                    if (Session["ModalMostrado"] != null && (bool)Session["ModalMostrado"] == true)
+                    if (tipoAccion == "Diseño")
                     {
-                        if (Session["BtnModificarEjecutado"] != null && (bool)Session["BtnModificarEjecutado"] == true)
-                        {
-                            if (Session["NuevoPedido"] == null)
-                            {
-                                if (Session["NuevaOTEjecutada"] == null)
-                                {
-                                    BotonesModificar();
-
-                                    HabilitarTodosLosTextBoxes();
-                                }
-                            }
-                        }
-                        NuevaOTDespuesDeCargarNIT();
-
-                        Session.Remove("ModalMostrado");
+                        Page_LoadDiseño(sender, e);
                     }
-                    else
-                    {
-                        // Si 'MostrarModal' es false o null, establecer 'ModalMostrado' en null
-                        Session["ModalMostrado"] = null;
-                    }
-
-                    CargarVariablesDeSesionContable();
-
-
                 }
 
 
@@ -308,6 +101,230 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 Response.Redirect("Login.aspx");
             }
+
+        }
+
+        protected void Page_LoadDiseño(object sender, EventArgs e)
+        {
+           
+        }
+
+        protected void Page_LoadVentas(object sender, EventArgs e)
+        {
+
+            tbVenta.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            dtpFechaEntregaDibujoDespiece.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            dtpFechaEntregaProduccion.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            DateTime fechaActual = DateTime.Now;
+            DateTime fechaMas10Dias = fechaActual.AddDays(10);
+            dtpEmpaque.Text = fechaMas10Dias.ToString("yyyy-MM-dd");
+            dtpRealEmpaque.Text = fechaMas10Dias.ToString("yyyy-MM-dd");
+
+            Session["CargarOTsEjecutada"] = null;
+
+            habilitarbotones();
+
+            DeshabilitarBotones(sender, e);
+
+            BotonesPorDefectoPlano(sender, e);
+
+            BotonesPorDefectoObjetos(sender, e);
+
+            BotonesPorDefectoModulos(sender, e);
+
+            BotonesPorDefectoInsumos(sender, e);
+
+            listaTextBoxes = new List<TextBox>
+                         {
+                    tbObra,tbDir,tbContac,tbEmail,tbRecibe,tbTel,tbCel,tbPais,tbHTotal,tbVenta,dtpFechaEntregaDibujoDespiece,dtpFechaEntregaProduccion,dtpEmpaque,dtpRealEmpaque,tbSupervisor,
+                    tbBolsa,tbValorPedido,txtNit,txtNombreEmp,txtcontacto,txtMail,txtDireccion,txtMunicipio,txtTelefono,txtCotizacion,txtValorSugerido,txtVcsd,txtVccd,txtOrdenCompra,txtAsesor,txtComision,
+                    txtDiseño,txtSaldo,txtVenta,txtDcto,txtDctoValor,txtVtte,txtVvia,txtGtotal,txtPlano,txtCliente,txtArea,txtContactoPlano,txtAsesorPlano,txtDibuja,txtBolsa
+
+                        };
+
+            listaDropDownLists = new List<DropDownList>
+                         {
+                   ddlNumbers,ddlZona,dtacboTipoPedido,cboPedidoBase,DtaCboTipoAprobacion,ddlFabrica1,ddlInstala,ddlAsesor,ddlCiudad
+
+                        };
+
+            txObs2.Disabled = true;
+            txObs1.Disabled = true;
+            txResumen.Disabled = true;
+
+            ValorPorDefectoTexArea();
+
+            CargarAsesoresEnDropDownList();
+            DeshabilitarTextBoxes(listaTextBoxes);
+            DeshabilitarDropDownLists(listaDropDownLists);
+            Nit.Enabled = false;
+            Nit.CssClass = "bi bf  btn btn-outline-secondary";
+            btnCotizacion.Enabled = false;
+            btnCotizacion.CssClass = "bi bf  btn btn-sm btn-outline-secondary w-100";
+            tbPedDepen.DataBind();
+            tbPedDepen.Items.Insert(0, new ListItem(" "));
+            cboPedidoBase.DataBind();
+            cboPedidoBase.Items.Insert(0, new ListItem(" "));
+            DtaCboTipoAprobacion.DataBind();
+            DtaCboTipoAprobacion.Items.Insert(0, new ListItem(" "));
+            dtacboTipoPedido.DataBind();
+            dtacboTipoPedido.Items.Insert(0, new ListItem(" "));
+            DepartamentoAsesor(); // Se Deberia cargar desde el login 
+
+            // Validacion para Cargar el Plano  Con variables de Session
+            if (Session["Id_OT2"] != null && Session["pedido2"] != null)
+            {
+
+                // Este bloque carga solo el plano ya que el Id_OT2 es igual al texto Nula
+                if (Session["Id_OT2"].ToString() == "Nula")
+                {
+                    if (Session["Id_Plano"] != null)
+                    {
+                        Cargar_Plano2(Session["Id_Plano"].ToString());
+                        Session.Remove("Id_Plano");
+                        Session.Remove("Id_OT2");
+                        Session.Remove("pedido2");
+                        HabilitarBotonesPlano();
+                    }
+
+                    //Activar Tap Plano 
+                    string script = "activarPestana('Plano-tab', 'Plano-Content');";
+                    ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
+
+                }
+                // Este bloque consulta la OT con variables de Session de afuera del formulario 
+                else if (Session["Id_OT2"] != null && Session["pedido2"] != null)
+                {
+
+
+                    // Este bloque carga solo el plano ya que el Id_OT2 es igual al texto Nula
+                    if (Session["Id_OT2"].ToString() == "")
+                    {
+                        if (Session["Id_Plano"] != null)
+                        {
+                            Cargar_Plano2(Session["Id_Plano"].ToString());
+                            Session.Remove("Id_Plano");
+                            Session.Remove("Id_OT2");
+                            Session.Remove("pedido2");
+                            HabilitarBotonesPlano();
+                        }
+
+                        //Activar Tap Plano 
+                        string script = "activarPestana('Plano-tab', 'Plano-Content');";
+                        ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
+
+                    }
+                    else
+                    {
+                        Cargar_OTs2();
+                        List<int> numeros = ObtenerNumerosDesdeLaBaseDeDatos(Session["Id_OT2"].ToString());
+
+                        ddlNumbers.Items.Clear(); // Limpiar las opciones existentes
+
+                        foreach (int numero in numeros)
+                        {
+                            ddlNumbers.Items.Add(numero.ToString());
+
+                        }
+
+                        ddlNumbers.SelectedValue = Session["pedido2"].ToString();
+
+                        // Se eliminar variables de session para cargar OT 
+                        Session.Remove("Id_OT2");
+                        Session.Remove("pedido2");
+                    }
+
+
+
+
+                    if (Session["controlTapPlano"]?.ToString() == "1")
+                    {
+                        //Activar Tap Plano 
+                        string script = "activarPestana('Plano-tab', 'Plano-Content');";
+                        ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
+
+                        Session.Remove("controlTapPlano");
+
+                    }
+
+
+                    if (Session["CargarTxt"]?.ToString() == "TXT")
+                    {
+
+                        //Activar Tap Plano 
+                        string script = "activarPestana('Plano-tab', 'Plano-Content');";
+                        ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
+
+                        // Se valida si hay que mostrar el l alaerta de objetos con valor 0 en el despiece 
+                        if (Session["ValorUnd"]?.ToString() == "1")
+                        {
+                            string mensajeExito = "Se ha detectado que algun objeto del plano tiene valor 0 en el despiece, revisar y actualizar";
+                            string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
+                        }
+
+                        // Se valida si hay que mostrar el modal de Objetos no existentes 
+                        if (Session["ObjNoEx"].ToString() != "1")
+                        {
+
+                            // Se carga el datagrid de objetos no existentes 
+                            DataTable DataObjNoExiste = (DataTable)Session["DatoObjNoExistentes"];
+
+                            // Eliminar filas duplicadas antes de enlazarlo al DataGrid
+                            string[] keyColumns = { "ID_Objeto", "Ancho" }; // Columnas clave para identificar duplicados
+                            DataTable uniqueDataTable = QuitarDuplicado(DataObjNoExiste, keyColumns);
+
+
+
+                            DataGridObjNoExiste.DataSource = DataObjNoExiste;
+                            DataGridObjNoExiste.DataBind();
+
+
+
+                            // Esperar 1 segundo antes de abrir el modal
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "setTimeout(function() { MostralModalObjetosNo(); }, 700);", true);
+
+                        }
+
+                        // Se eliminar variables de session de accion de Cargar TXT 
+                        Session.Remove("CargarTxt");
+                        Session.Remove("DatoObjNoExistentes");
+                        Session.Remove("ObjNoEx");
+                        Session.Remove("ValorUnd");
+
+
+                    }
+
+                }
+
+            }
+            // Verificar si la variable de sesión 'MostrarModal' tiene contenido y es true
+            if (Session["ModalMostrado"] != null && (bool)Session["ModalMostrado"] == true)
+            {
+                if (Session["BtnModificarEjecutado"] != null && (bool)Session["BtnModificarEjecutado"] == true)
+                {
+                    if (Session["NuevoPedido"] == null)
+                    {
+                        if (Session["NuevaOTEjecutada"] == null)
+                        {
+                            BotonesModificar();
+
+                            HabilitarTodosLosTextBoxes();
+                        }
+                    }
+                }
+                NuevaOTDespuesDeCargarNIT();
+
+                Session.Remove("ModalMostrado");
+            }
+            else
+            {
+                // Si 'MostrarModal' es false o null, establecer 'ModalMostrado' en null
+                Session["ModalMostrado"] = null;
+            }
+
+            CargarVariablesDeSesionContable();
+
 
         }
 
@@ -1045,7 +1062,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ObservacionesOt.CssClass = "btn btn-sm shadow button-enabled";
 
             OtPendientes.Enabled = true;
-            OtPendientes.CssClass = "btn btn-sm shadow button-enabled ColorCrema";
+            OtPendientes.CssClass = "btn btn-sm shadow button-enabled ColorCrema"; 
 
         }
 

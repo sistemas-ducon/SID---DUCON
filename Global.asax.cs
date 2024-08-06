@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Security;
 using System.Web.SessionState;
@@ -18,7 +19,7 @@ namespace SISTEMA_INTEGRAL_DUCON
 
         protected void Session_Start(object sender, EventArgs e)
         {
-
+           Session.Timeout = 120;
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)
@@ -43,7 +44,7 @@ namespace SISTEMA_INTEGRAL_DUCON
                 if (httpException.GetHttpCode() == 400)
                 {
                     // Error de tamaño de solicitud excedido
-                    string mensajePersonalizado = "A ocurrido un error, por favor ponerse en contacto ";
+                    string mensajePersonalizado = "Ha ocurrido un error. Por favor, inténtalo de nuevo. Si el problema persiste, ponte en contacto con soporte.";
                     string urlRedireccion = "Ventas/DocumentacionDise.aspx"; // Cambia esto por la URL correcta
                     Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                 }
@@ -51,7 +52,7 @@ namespace SISTEMA_INTEGRAL_DUCON
                 else
                 {
                     // Error de tamaño de solicitud excedido
-                    string mensajePersonalizado = "A ocurrido un error, por favor ponerse en contacto con el departamento de sistemas";
+                    string mensajePersonalizado = "Ha ocurrido un error. Por favor, inténtalo de nuevo. Si el problema persiste, ponte en contacto con soporte.";
                     string urlRedireccion = "Inicio.aspx"; // Cambia esto por la URL correcta
                     Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                 }
