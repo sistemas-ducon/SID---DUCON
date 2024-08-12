@@ -1823,10 +1823,10 @@
                         <div class="container-fluid p-3 shadow-sm bg-light mt-2">
 
                             <h5 class="p-0 m-0 mb-1 text-center">Informacion Contable </h5>
-
-                            <div class="row">
-
-                                <div class="col-sm-3">
+                          
+                            <div runat="server" class="row" id="DivPorDefecto">
+                              
+                                <div class="col-sm-3" id="DivOculto" runat="server">
 
                                     <div class="row pb-2">
 
@@ -1915,10 +1915,10 @@
                                     </div>
 
                                 </div>
+                                   
+                                <div class="col-sm-6" id="Principal" runat="server">
 
-                                <div class="col-sm-6">
-
-                                    <div class="row pb-1 ">
+                                    <div class="row pb-1" id="PrimeraFila" runat="server">
 
                                         <div class="col-sm-3">
                                             <div class="row">
@@ -2011,7 +2011,7 @@
 
                                     </div>
 
-                                    <div class="row pb-1">
+                                    <div class="row pb-1"  id="SegundaFila" runat="server">
 
                                         <div class="col-sm-6">
                                             <div class="input-group input-group-sm">
@@ -2029,7 +2029,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="row pb-1">
+                                    <div class="row pb-1" id="TerceraFila" runat="server">
                                         <div class="col-sm-6">
                                             <div class="input-group input-group-sm">
                                                 <asp:Button ID="btnAsesor1" runat="server" Text="Asesor" class="bi bf" disabled="true" />
@@ -2047,18 +2047,19 @@
 
                                     <div class="row">
 
-                                        <div class="col-sm-1">
+                                        <div class="col-sm-1" id="VentaNota" runat="server">
                                             <label>Venta<br />
                                                 Neta</label>
                                         </div>
-
-                                        <div class="col-sm-9">
+                                        
+                                     
+                                        <div id="divDataGridContainer" runat="server" class="col-sm-9">
 
                                             <div class="row justify-content-center m-1 p-1">
                                                 <div class="border rounded p-2 m-2">
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <div class="table-responsive mb-1" style="max-height: 10rem; overflow-x: auto;">
+                                                            <div class="table-responsive mb-1" style="max-height: 17rem; overflow-x: auto;">
                                                                 <h5 class="datagrid-header text-center">Contable</h5>
                                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGrid" runat="server" DataSourceID="InfoContable" OnItemDataBound="DataGrid_RowDataBound">
                                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
@@ -2096,19 +2097,19 @@
                                             </div>
 
                                         </div>
-
-                                        <div class="col-sm-2">
+                                          
+                                        <div class="col-sm-2" id="TipDeNeg" runat="server">
 
                                             <label>Tipo de Negociación</label>
                                             <textarea class="form-control form-control-sm" id="TextTNegociacion" runat="server" cols="25" rows="6"></textarea>
 
                                         </div>
-
+                                        
                                     </div>
 
                                 </div>
-
-                                <div class="col-sm-3">
+                               
+                                <div class="col-sm-3" id="divDataGridContainer2" runat="server">
 
                                     <div class="Info1">
                                         <asp:Button ID="btnDiseño" runat="server" Text="Diseño" class="bi bf " disabled="true" />

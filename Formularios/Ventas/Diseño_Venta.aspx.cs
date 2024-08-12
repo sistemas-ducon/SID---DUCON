@@ -8364,7 +8364,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void BindDataGrid()
         {
             // Obtener el valor de la variable de sesión Id_PlanoDise
-            string idPlano = Session["Id_PlanoDise"] as string;
+            string idPlano = Session["Numero_Plano"] as string;
             string realizadoPor = Session["RealizadoPorDise"] as string;
 
             // Verificar si la variable de sesión tiene un valor
@@ -8555,7 +8555,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     string planoDise = row.Cells[2].Text;
 
-                    Session["Id_PlanoDise"] = planoDise;
+                    Session["Numero_Plano"] = planoDise;
 
                     Session["RealizadoPorDise"] = row.Cells[9].Text;
                     string planoDiseAreaV = row.Cells[3].Text;
@@ -8866,7 +8866,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             int idNumerico = Convert.ToInt32(row.Cells[1].Text); // Ajustar el índice de la celda según sea necesario
             string lblNumDise2 = lblNumDise.Text; // Obtener el valor del Label
-            string idPlanoDise = Session["Id_PlanoDise"]?.ToString();
+            string idPlanoDise = Session["Numero_Plano"]?.ToString();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -8995,7 +8995,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     return;
                 }
 
-                if (string.IsNullOrEmpty(Session["Id_PlanoDise"] as string) || string.IsNullOrEmpty(Session["Id_NumericoDise"] as string))
+                if (string.IsNullOrEmpty(Session["Numero_Plano"] as string) || string.IsNullOrEmpty(Session["Id_NumericoDise"] as string))
                 {
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#SeleccionFila').modal('show');", true);
                     return;
@@ -9062,7 +9062,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 connection.Open();
 
-                string idPlano = Session["Id_PlanoDise"].ToString();
+                string idPlano = Session["Numero_Plano"].ToString();
                 string idPanelNum = Session["Id_NumericoDise"].ToString();
 
                 // Actualizar tblPlano_Panel
@@ -9243,7 +9243,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             double PrecioVenta = 0;
             double TotalDespiece = 0;
             string numeroDiseño = lblNumDise.Text;
-            string Plano = Session["Id_PlanoDise"].ToString();
+            string Plano = Session["Numero_Plano"].ToString();
 
             if (FileUpload2.HasFile)
             {

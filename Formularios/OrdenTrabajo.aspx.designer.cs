@@ -1482,6 +1482,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.TextBox tbValorPedido;
 
         /// <summary>
+        /// Control DivPorDefecto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl DivPorDefecto;
+
+        /// <summary>
+        /// Control DivOculto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl DivOculto;
+
+        /// <summary>
         /// Control Nit.
         /// </summary>
         /// <remarks>
@@ -1626,6 +1644,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.TextBox txtMensaje;
 
         /// <summary>
+        /// Control Principal.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl Principal;
+
+        /// <summary>
+        /// Control PrimeraFila.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl PrimeraFila;
+
+        /// <summary>
         /// Control btnCotizacion.
         /// </summary>
         /// <remarks>
@@ -1725,6 +1761,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.TextBox txtVccd;
 
         /// <summary>
+        /// Control SegundaFila.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl SegundaFila;
+
+        /// <summary>
         /// Control btnOrdenCompra.
         /// </summary>
         /// <remarks>
@@ -1761,6 +1806,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.Label lblComisionCompart;
 
         /// <summary>
+        /// Control TerceraFila.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TerceraFila;
+
+        /// <summary>
         /// Control btnAsesor1.
         /// </summary>
         /// <remarks>
@@ -1788,6 +1842,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.DropDownList ddlAsesor;
 
         /// <summary>
+        /// Control VentaNota.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl VentaNota;
+
+        /// <summary>
+        /// Control divDataGridContainer.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divDataGridContainer;
+
+        /// <summary>
         /// Control DataGrid.
         /// </summary>
         /// <remarks>
@@ -1806,6 +1878,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.SqlDataSource InfoContable;
 
         /// <summary>
+        /// Control TipDeNeg.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TipDeNeg;
+
+        /// <summary>
         /// Control TextTNegociacion.
         /// </summary>
         /// <remarks>
@@ -1813,6 +1894,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTextArea TextTNegociacion;
+
+        /// <summary>
+        /// Control divDataGridContainer2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divDataGridContainer2;
 
         /// <summary>
         /// Control btnDiseño.
