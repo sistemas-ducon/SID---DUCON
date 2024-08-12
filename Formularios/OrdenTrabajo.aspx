@@ -206,6 +206,18 @@
             $('#modalImprimir2').modal('hide');
 
         }
+
+        // Validar que el boton este habilitado
+        function EsBotonHabilitado(boton) {
+            // Verifica si el botón tiene la clase 'button-disabled'
+            if (boton.classList.contains('button-disabled')) {
+                return false; // No ejecuta la función `OnClientClick`
+            }
+            return true; // Ejecuta la función `OnClientClick`
+        }
+
+
+
     </script>
 
     <script>
@@ -2615,6 +2627,30 @@
                                 </div>
                             </div>
 
+                             <!--Modal Actulizar prototipos  -->
+                            <div id="modalActualizarPrecioProtot" class="modal" tabindex="-1" style="display: none;">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-danger text-white">
+                                            <h5 class="modal-title text-center">Eliminar Objetos</h5>
+
+                                        </div>
+                                        <div class="modal-body border rounded">
+                                            <div class="container-fluid">
+                                                <h6>Esta seguro de actualizar el prototipo: <span id="prototipo"></span>?</h6>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                                <asp:Button runat="server" ID="btnActualizarPrototipo_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-outline-danger" Style="width: 5rem;" OnClick="btnActualizarPrototipo_SI_Click" />
+                                                <asp:Button runat="server" ID="btnActualizarPrototipo_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <!--Modal Objetos no existentes -->
                             <div class="modal fade" id="modalObjNoExistente" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
@@ -2696,11 +2732,11 @@
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Cargar Archivo TXT XY" ID="BtnCarArcTxtXy" OnClick="BtnCarArcTxtXy_Click">
-                                                  <i class="bi bi-folder-plus"></i>
+                                               <i class="bi bi-folder-symlink-fill"></i>
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Plano Bloqueado" ID="BtnPlaBlo" OnClick="BtnPlaBlo_Click">
-                                                     <i class="bi bi-lock"></i>
+                                                    <i class="bi bi-lock-fill"></i>
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Crear o Redefinir Bolsa" ID="BtnCreRefBol">
@@ -2720,31 +2756,30 @@
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Guardar TXT" ID="BtnGuaTxt">
-                                                    <%--<i class="bi bi-save2"></i>--%>
-                                                    <i class="bi bi-sd-card-fill"></i> <%--Icono Guardar--%>
+                                                 <i class="bi bi-floppy-fill"></i>
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Exportar Plano u Orden de Trabajo" ID="BtnExpPlaOrdTra">
-                                                   <i class="bi bi-arrow-up-left-circle"></i>
+                                                   <i class="bi bi-arrow-up-left-circle-fill"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Visualizar/Generar Cotizacion" ID="BtnVisGenCot" OnClick="BtnVisGenCot_Click" OnClientClick="CargarExcel();">
-                                                    <i class="bi bi-bag-plus"></i>
+                                                <asp:LinkButton runat="server" title="Visualizar/Generar Cotizacion" ID="BtnVisGenCot" OnClick="BtnVisGenCot_Click" OnClientClick="return EsBotonHabilitado(this) && CargarExcel();" >
+                                                   <i class="bi bi-bag-plus-fill"></i>
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Objetos no Existentes" ID="BtnObjNoExi" OnClick="BtnObjNoExi_Click">
                                                     <i class="bi bi-text-indent-left"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Actualizar Precio Prototipo" ID="BtnActPrePro">
+                                                <asp:LinkButton runat="server" title="Actualizar Precio Prototipo" ID="BtnActPrePro" OnClick="BtnActPrePro_Click">
                                                      <i class="bi bi-cash-coin"></i>
                                                 </asp:LinkButton>
-
+                                                        
                                                 <asp:LinkButton runat="server" title="Generar Formato Certificado de Origen" ID="BtnGenForCerOrd">
                                                   <i class="bi bi-clipboard-check"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Importar Plano de Actualizacion de Bloques" ID="BtnImpPlaActBlo">
+                                                <asp:LinkButton runat="server" title="Importar Plano de Actualizacion de Bloques" ID="BtnImpPlaActBlo" OnClick="BtnImpPlaActBlo_Click">
                                                  <i class="bi bi-file-arrow-down-fill"></i>
                                                 </asp:LinkButton>
 
@@ -2950,7 +2985,7 @@
                                                                 <asp:BoundColumn DataField="ValorUnd" HeaderText="Valor Und" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="SubTotal" HeaderText="Sub Total" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Id_Panel" HeaderText="" Visible="false" />
-
+                                                                <asp:BoundColumn DataField="RevisadoDibujo" HeaderText="" Visible="false" />
 
 
                                                             </Columns>

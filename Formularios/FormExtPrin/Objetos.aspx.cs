@@ -157,13 +157,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
         protected void Adicionar_Click(object sender, EventArgs e)
         {
-            string tipoAccion = Session["Diseno"] as string;
-            if (tipoAccion == "Diseño")
-            {
-              Session["Numero_Plano"] = Session["Id_PlanoDise"].ToString();
-            }
-
-                string IdObjeto = Id_Objeto_Hid.Value;
+            string IdObjeto = Id_Objeto_Hid.Value;
             float PrecioVentaCalculado;
 
             if (!string.IsNullOrEmpty(IdObjeto))

@@ -394,6 +394,18 @@
     color: #ae9458;
 }
 
+.ColorAmarillo {
+    color: #ae9458;
+}
+
+.ColorVerde {
+      color: #188a3a;
+}
+
+.ColorNaranja {
+    color: #dca229;
+}
+
 @media (max-width: 600px) {
     .panel-plano {
         margin: 1rem 0 1rem 0;

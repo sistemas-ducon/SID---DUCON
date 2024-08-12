@@ -84,6 +84,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (!IsPostBack)
                 {
+                    Page_Comun(sender, e);
+
                     string tipoAccion = Session["Diseno"] as string;
                     if (tipoAccion == "Ventas")
                     {
@@ -104,12 +106,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-        protected void Page_LoadDiseño(object sender, EventArgs e)
-        {
-           
-        }
-
-        protected void Page_LoadVentas(object sender, EventArgs e)
+        protected void Page_Comun(object sender, EventArgs e)
         {
 
             tbVenta.Text = DateTime.Now.ToString("yyyy-MM-dd");
@@ -119,20 +116,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             DateTime fechaMas10Dias = fechaActual.AddDays(10);
             dtpEmpaque.Text = fechaMas10Dias.ToString("yyyy-MM-dd");
             dtpRealEmpaque.Text = fechaMas10Dias.ToString("yyyy-MM-dd");
-
-            Session["CargarOTsEjecutada"] = null;
-
-            habilitarbotones();
-
-            DeshabilitarBotones(sender, e);
-
-            BotonesPorDefectoPlano(sender, e);
-
-            BotonesPorDefectoObjetos(sender, e);
-
-            BotonesPorDefectoModulos(sender, e);
-
-            BotonesPorDefectoInsumos(sender, e);
 
             listaTextBoxes = new List<TextBox>
                          {
@@ -170,6 +153,201 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             dtacboTipoPedido.DataBind();
             dtacboTipoPedido.Items.Insert(0, new ListItem(" "));
             DepartamentoAsesor(); // Se Deberia cargar desde el login 
+
+        }
+
+        protected void Page_LoadDiseño(object sender, EventArgs e)
+        {
+            Session["CargarOTsEjecutada"] = null;
+
+            habilitarbotones();
+
+            DeshabilitarBotones(sender, e);
+
+            BotonesPorDefectoPlano(sender, e);
+
+            BotonesPorDefectoObjetos(sender, e);
+
+            BotonesPorDefectoModulos(sender, e);
+
+            BotonesPorDefectoInsumos(sender, e);
+
+
+
+            // Validacion para Cargar el Plano  Con variables de Session
+            if (Session["Id_OT2"] != null && Session["pedido2"] != null)
+            {
+
+                // Este bloque carga solo el plano ya que el Id_OT2 es igual al texto Nula
+                if (Session["Id_OT2"].ToString() == "Nula")
+                {
+                    if (Session["Id_Plano"] != null)
+                    {
+                        Cargar_Plano2(Session["Id_Plano"].ToString());
+                        Session.Remove("Id_Plano");
+                        Session.Remove("Id_OT2");
+                        Session.Remove("pedido2");
+                        HabilitarBotonesPlano();
+                    }
+
+                    //Activar Tap Plano 
+                    string script = "activarPestana('Plano-tab', 'Plano-Content');";
+                    ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
+
+                }
+                // Este bloque consulta la OT con variables de Session de afuera del formulario 
+                else if (Session["Id_OT2"] != null && Session["pedido2"] != null)
+                {
+
+
+                    // Este bloque carga solo el plano ya que el Id_OT2 es igual al texto Nula
+                    if (Session["Id_OT2"].ToString() == "")
+                    {
+                        if (Session["Id_Plano"] != null)
+                        {
+                            Cargar_Plano2(Session["Id_Plano"].ToString());
+                            Session.Remove("Id_Plano");
+                            Session.Remove("Id_OT2");
+                            Session.Remove("pedido2");
+                            HabilitarBotonesPlano();
+                        }
+
+                        //Activar Tap Plano 
+                        string script = "activarPestana('Plano-tab', 'Plano-Content');";
+                        ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
+
+                    }
+                    else
+                    {
+                        Cargar_OTs2();
+                        List<int> numeros = ObtenerNumerosDesdeLaBaseDeDatos(Session["Id_OT2"].ToString());
+
+                        ddlNumbers.Items.Clear(); // Limpiar las opciones existentes
+
+                        foreach (int numero in numeros)
+                        {
+                            ddlNumbers.Items.Add(numero.ToString());
+
+                        }
+
+                        ddlNumbers.SelectedValue = Session["pedido2"].ToString();
+
+                        // Se eliminar variables de session para cargar OT 
+                        Session.Remove("Id_OT2");
+                        Session.Remove("pedido2");
+                    }
+
+
+
+
+                    if (Session["controlTapPlano"]?.ToString() == "1")
+                    {
+                        //Activar Tap Plano 
+                        string script = "activarPestana('Plano-tab', 'Plano-Content');";
+                        ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
+
+                        Session.Remove("controlTapPlano");
+
+                    }
+
+
+                    if (Session["CargarTxt"]?.ToString() == "TXT")
+                    {
+
+                        //Activar Tap Plano 
+                        string script = "activarPestana('Plano-tab', 'Plano-Content');";
+                        ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
+
+                        // Se valida si hay que mostrar el l alaerta de objetos con valor 0 en el despiece 
+                        if (Session["ValorUnd"]?.ToString() == "1")
+                        {
+                            string mensajeExito = "Se ha detectado que algun objeto del plano tiene valor 0 en el despiece, revisar y actualizar";
+                            string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
+                        }
+
+                        // Se valida si hay que mostrar el modal de Objetos no existentes 
+                        if (Session["ObjNoEx"].ToString() != "1")
+                        {
+
+                            // Se carga el datagrid de objetos no existentes 
+                            DataTable DataObjNoExiste = (DataTable)Session["DatoObjNoExistentes"];
+
+                            // Eliminar filas duplicadas antes de enlazarlo al DataGrid
+                            string[] keyColumns = { "ID_Objeto", "Ancho" }; // Columnas clave para identificar duplicados
+                            DataTable uniqueDataTable = QuitarDuplicado(DataObjNoExiste, keyColumns);
+
+
+
+                            DataGridObjNoExiste.DataSource = DataObjNoExiste;
+                            DataGridObjNoExiste.DataBind();
+
+
+
+                            // Esperar 1 segundo antes de abrir el modal
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "setTimeout(function() { MostralModalObjetosNo(); }, 700);", true);
+
+                        }
+
+                        // Se eliminar variables de session de accion de Cargar TXT 
+                        Session.Remove("CargarTxt");
+                        Session.Remove("DatoObjNoExistentes");
+                        Session.Remove("ObjNoEx");
+                        Session.Remove("ValorUnd");
+
+
+                    }
+
+                }
+
+            }
+            // Verificar si la variable de sesión 'MostrarModal' tiene contenido y es true
+            if (Session["ModalMostrado"] != null && (bool)Session["ModalMostrado"] == true)
+            {
+                if (Session["BtnModificarEjecutado"] != null && (bool)Session["BtnModificarEjecutado"] == true)
+                {
+                    if (Session["NuevoPedido"] == null)
+                    {
+                        if (Session["NuevaOTEjecutada"] == null)
+                        {
+                            BotonesModificar();
+
+                            HabilitarTodosLosTextBoxes();
+                        }
+                    }
+                }
+                NuevaOTDespuesDeCargarNIT();
+
+                Session.Remove("ModalMostrado");
+            }
+            else
+            {
+                // Si 'MostrarModal' es false o null, establecer 'ModalMostrado' en null
+                Session["ModalMostrado"] = null;
+            }
+
+            CargarVariablesDeSesionContable();
+        }
+
+        protected void Page_LoadVentas(object sender, EventArgs e)
+        {
+
+
+            Session["CargarOTsEjecutada"] = null;
+
+            habilitarbotones();
+
+            DeshabilitarBotones(sender, e);
+
+            BotonesPorDefectoPlano(sender, e);
+
+            BotonesPorDefectoObjetos(sender, e);
+
+            BotonesPorDefectoModulos(sender, e);
+
+            BotonesPorDefectoInsumos(sender, e);
+
+
 
             // Validacion para Cargar el Plano  Con variables de Session
             if (Session["Id_OT2"] != null && Session["pedido2"] != null)
@@ -434,7 +612,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
             else
-            {           
+            {
                 txtCotizacion.Enabled = true;
                 txtOrdenCompra.Enabled = true;
                 cbxComisionCompart.Enabled = true;
@@ -1062,7 +1240,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ObservacionesOt.CssClass = "btn btn-sm shadow button-enabled";
 
             OtPendientes.Enabled = true;
-            OtPendientes.CssClass = "btn btn-sm shadow button-enabled ColorCrema"; 
+            OtPendientes.CssClass = "btn btn-sm shadow button-enabled ColorCrema";
 
         }
 
@@ -1094,7 +1272,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 AnularObra,
                 btnNuevoPedido,
                 btnAcabados,
-                btnOk
+                btnOk,
+                BtnVisGenCot
             };
 
             string cssClass = "btn btn-sm shadow button-disabled";
@@ -1496,8 +1675,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Extraer datos y asignarlos a controles
                         AssignDataToControls(leer);
 
-                        EnableButtons();
 
+                        if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
+                        {
+                            // Control de botones para ventas 
+                            EnableButtons();
+                        }
+                        else if(Session["Departamento"].ToString().ToUpper() == "VENTAS")
+                        {
+                            // Control de Botones para Dibujo y despiece de momento mismo metodo
+                            EnableButtons();
+                        }
+                       
                         HabilitarBotonesPlano();
                         // Obtener datos de cotización y asignarlos a controles
                         AssignCotizacionData(id, pedido, txtCotizacion.Text);
@@ -1685,7 +1874,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         txtDiseño.Text = "0";
                         txtSaldo.Text = "0";
                         txtDctoValor.Text = "0";
-                        txtGtotal.Text = "0";             
+                        txtGtotal.Text = "0";
                     }
 
                     drcot.Close();
@@ -2189,23 +2378,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
             {
                 BtnAdiObjPla.Enabled = true;
-                BtnAdiObjPla.CssClass = "btn btn-sm shadow button-enabled";
+                BtnAdiObjPla.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
                 BtnEliObjPla.Enabled = true;
-                BtnEliObjPla.CssClass = "btn btn-sm shadow button-enabled";
+                BtnEliObjPla.CssClass = "btn btn-sm shadow button-enabled ColorNaranja";
 
                 BtnAcaPla.Enabled = true;
-                BtnAcaPla.CssClass = "btn btn-sm shadow button-enabled ";
+                BtnAcaPla.CssClass = "btn btn-sm shadow button-enabled  ";
 
-                BtnLeeArcDesAca.Enabled = true;
-                BtnLeeArcDesAca.CssClass = "btn btn-sm shadow";
+                BtnLeeArcDesAca.Enabled = false;
+                BtnLeeArcDesAca.CssClass = "btn btn-sm shadow button-disabled";
 
 
                 BtnCarArcTxtXy.Enabled = true;
-                BtnCarArcTxtXy.CssClass = "btn btn-sm shadow button-enabled";
+                BtnCarArcTxtXy.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
                 BtnPlaBlo.Enabled = true;
-                BtnPlaBlo.CssClass = "btn btn-sm shadow button-enabled";
+                BtnPlaBlo.CssClass = "btn btn-sm shadow button-enabled ColorAmarillo";
 
 
                 BtnCreRefBol.Enabled = true;
@@ -2220,17 +2409,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 BtnDesPla.CssClass = "btn btn-sm shadow button-enabled";
 
                 BtnGenTxt.Enabled = true;
-                BtnGenTxt.CssClass = "btn btn-sm shadow button-enabled";
+                BtnGenTxt.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
                 BtnGuaTxt.Enabled = true;
-                BtnGuaTxt.CssClass = "btn btn-sm shadow button-enabled";
+                BtnGuaTxt.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
 
                 BtnExpPlaOrdTra.Enabled = true;
-                BtnExpPlaOrdTra.CssClass = "btn btn-sm shadow button-enabled";
+                BtnExpPlaOrdTra.CssClass = "btn btn-sm shadow button-enabled ColorVerde";
 
                 BtnVisGenCot.Enabled = true;
-                BtnVisGenCot.CssClass = "btn btn-sm shadow button-enabled";
+                BtnVisGenCot.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
                 BtnObjNoExi.Enabled = true;
                 BtnObjNoExi.CssClass = "btn btn-sm shadow button-enabled";
@@ -2242,29 +2431,36 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 BtnGenForCerOrd.CssClass = "btn btn-sm shadow button-enabled";
 
                 BtnImpPlaActBlo.Enabled = true;
-                BtnImpPlaActBlo.CssClass = "btn btn-sm shadow button-enabled";
+                BtnImpPlaActBlo.CssClass = "btn btn-sm shadow button-enabled ColorVerde";
+
+                BtnActPrePro.Enabled = true;
+                BtnActPrePro.CssClass = "btn btn-sm shadow button-enabled ColorVerde";
+
+                BtnGenForCerOrd.Enabled = true;
+                BtnGenForCerOrd.CssClass = "btn btn-sm shadow button-enabled";
+
 
             }
             else if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
             {
                 BtnAdiObjPla.Enabled = true;
-                BtnAdiObjPla.CssClass = "btn btn-sm shadow button-enabled";
+                BtnAdiObjPla.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
                 BtnEliObjPla.Enabled = true;
-                BtnEliObjPla.CssClass = "btn btn-sm shadow button-enabled";
+                BtnEliObjPla.CssClass = "btn btn-sm shadow button-enabled ColorNaranja";
 
                 BtnVisGenCot.Enabled = true;
-                BtnVisGenCot.CssClass = "btn btn-sm shadow button-enabled";
+                BtnVisGenCot.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
                 BtnPlaBlo.Enabled = true;
-                BtnPlaBlo.CssClass = "btn btn-sm shadow button-enabled";
+                BtnPlaBlo.CssClass = "btn btn-sm shadow button-enabled ColorAmarillo";
 
 
                 BtnAcaPla.Enabled = true;
-                BtnAcaPla.CssClass = "btn btn-sm shadow button-enabled ";
+                BtnAcaPla.CssClass = "btn btn-sm shadow button-enabled";
 
                 BtnCarArcTxtXy.Enabled = true;
-                BtnCarArcTxtXy.CssClass = "btn btn-sm shadow button-enabled";
+                BtnCarArcTxtXy.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
                 BtnObjNoExi.Enabled = true;
                 BtnObjNoExi.CssClass = "btn btn-sm shadow button-enabled";
@@ -3169,21 +3365,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
 
 
-                
+
                 decimal subTotal;
                 if (decimal.TryParse(datos.SubTotal, out subTotal))
                 {
-                    e.Item.Cells[8].Text = subTotal.ToString("N0"); 
-                    e.Item.Cells[8].HorizontalAlign = HorizontalAlign.Right; 
+                    e.Item.Cells[8].Text = subTotal.ToString("N0");
+                    e.Item.Cells[8].HorizontalAlign = HorizontalAlign.Right;
                 }
 
-                
+
                 if (datos.Tipo == "Total" && decimal.TryParse(datos.SubTotal.Replace("<b>", "").Replace("</b>", ""), out decimal subTotal1))
                 {
-                    e.Item.Cells[8].Text = $"<b>{subTotal1.ToString("N0")}</b>"; 
-                    e.Item.Cells[8].HorizontalAlign = HorizontalAlign.Right; 
-                    e.Item.Cells[8].Font.Bold = true; 
-                    e.Item.Cells[8].Font.Size = 11; 
+                    e.Item.Cells[8].Text = $"<b>{subTotal1.ToString("N0")}</b>";
+                    e.Item.Cells[8].HorizontalAlign = HorizontalAlign.Right;
+                    e.Item.Cells[8].Font.Bold = true;
+                    e.Item.Cells[8].Font.Size = 11;
                 }
             }
         }
@@ -3210,9 +3406,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 //se usa Para darle un color a la fila seleccionada  
                 e.Item.CssClass = "fila-seleccionada";
                 string ID = row.Cells[2].Text;
-                string Descri = row.Cells[9].Text;
+                string Descri = row.Cells[3].Text;
                 string Ancho = row.Cells[5].Text;
-
+                string revisado = row.Cells[10].Text;
+                string Id_Panel = row.Cells[9].Text;
                 LlenarDataGridObjeto(ID);
 
 
@@ -3220,7 +3417,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 // Se envia la descripcion como parametro de busqueda al tap objetos  y se refresca el panel deobjetos 
                 txtCantidad.Text = Ancho;
-                tbCriterio.Text = Descri;
+                tbCriterio.Text = Id_Panel;
                 PanelObjeto.Update();
 
                 btnCambiar.Enabled = true;
@@ -3228,7 +3425,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 Session["IdObjetoEliminarSession"] = ID;
                 BtnQuiObjPla.Enabled = true;
-                BtnQuiObjPla.CssClass = "btn btn-sm shadow button-enabled";
+                BtnQuiObjPla.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
 
                 ObjetoEliminar.InnerText = Descri;
@@ -3241,6 +3438,83 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
 
 
+
+                if (row.Cells[2].Text == Session["ID_Item"]?.ToString())
+                {
+                    // Incrementar la variable de sesión "ClickCount" en el servidor
+                    int clickCount = Convert.ToInt32(Session["ClickCount3"]) + 1;
+                    Session["ClickCount3"] = clickCount;
+
+                    // se valida si es el segundo click en la misma fila 
+                    if (clickCount == 2)
+                    {
+
+                        // Reiniciar la variable de sesión "ClickCount" a 0 para la próxima interacción                        
+                        Session.Remove("ID_Item");
+                        Session.Remove("ClickCount3");
+
+                        if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+                        {
+                            // cambiar de estado;
+                            if (revisado == "True")
+                            {
+                                CambiarEstadoRevisado(ID, 0);
+                            }
+                            else
+                            {
+                                CambiarEstadoRevisado(ID, 1);
+                            }
+
+                            Cargar_Despiece_Plano();
+
+                            // Asignar ID único a la fila
+                            row.Attributes["id"] = "row_" + rowIndex;
+
+                            // Llamar a la función JavaScript para enfocar y desplazar la fila
+                            ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
+                        }
+                         
+
+                    }
+
+                }
+                else
+                {
+                    // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
+                    Session["ClickCount3"] = 1;
+                    Session["ID_Item"] = row.Cells[2].Text;
+
+                }
+
+
+
+
+            }
+        }
+
+
+
+
+        private bool CambiarEstadoRevisado(string ID_Numerico, int Estado)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "UPDATE tblPlano_Panel SET RevisadoDibujo = @Estado WHERE Id_Plano = @IdPlano AND Id_PanelNum = @Id_PanelNum1";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    // Ajusta los valores según los nombres de columnas reales en tu DataRow
+                    cmd.Parameters.AddWithValue("@IdPlano", txtPlano.Text);
+                    cmd.Parameters.AddWithValue("@Id_PanelNum1", ID_Numerico);
+                    cmd.Parameters.AddWithValue("@Estado", Estado);
+
+                    int filaAfectada = cmd.ExecuteNonQuery();
+                    return filaAfectada > 0;
+
+                }
             }
         }
 
@@ -3361,7 +3635,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 //se usa Para darle un color a la fila seleccionada  anderson
                 e.Item.CssClass = "fila-seleccionada";
 
-                
+
 
             }
         }
@@ -3544,7 +3818,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     Session["ClickCount1"] = 1;
                     Session["Id_PanelNum_Session1"] = row.Cells[8].Text;
 
-                  
+
 
                     // Llamar a la función JavaScript para enfocar y desplazar la fila
                     ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
@@ -4495,9 +4769,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             string codigoAsesor = string.Empty;
 
-            string idOT = tbOT.Text; 
-            string consecutivoPedido = ddlNumbers.SelectedValue; 
-  
+            string idOT = tbOT.Text;
+            string consecutivoPedido = ddlNumbers.SelectedValue;
+
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             // Definir la consulta SQL
@@ -4840,7 +5114,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
-           
+
 
 
             TiposDePedidos.SelectCommand = "SELECT Descripcion_TipoPedido, Id_TipoPedido, EstadisticaVenta FROM tblTipoPedido WHERE Activo = '1' AND EstadisticaVenta = '1' ORDER BY Descripcion_TipoPedido";
@@ -4915,8 +5189,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string urlRedireccion = "OrdenTrabajo.aspx";
                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
             }
-           
-                tbVenta.Text = DateTime.Now.ToString("yyyy-MM-dd");
+
+            tbVenta.Text = DateTime.Now.ToString("yyyy-MM-dd");
             dtpFechaEntregaDibujoDespiece.Text = DateTime.Now.ToString("yyyy-MM-dd");
             dtpFechaEntregaProduccion.Text = DateTime.Now.ToString("yyyy-MM-dd");
             DateTime fechaActual = DateTime.Now;
@@ -5326,12 +5600,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Verificar si el plano está vinculado a un pedido
                         string idOT = reader["ID_OT"].ToString();
                         string consecutivoPedido = reader["Consecutivo_Pedido"].ToString();
-                        bool terminadoVentas = ConsultarTerminadoVenta(idOT, consecutivoPedido);
+                        bool terminado = false;
+
+                        if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
+                        {
+                             terminado = ConsultarTerminadoVenta(idOT, consecutivoPedido);
+                        }
+                        else if(Session["Departamento"].ToString().ToUpper() == "DISEÑO")
+                        {
+                            terminado = ConsultarTerminadoDibujo(idOT, consecutivoPedido);
+                        }
+
+
+                        
                         bool afectaBolsa = (bool)reader["AfectaBolsa"];
 
                         reader.Close();
 
-                        if (idOT != "Nula" && terminadoVentas || afectaBolsa)
+                        if (idOT != "Nula" && terminado || afectaBolsa)
                         {
                             string mensajeExito = "No se puede Modificar Ningún Objeto, ya que el plano:  " + txtPlano.Text.Trim() + " esta vinculado a un pedido aprobado para producción o esta afectando a alguna bolsa.";
                             string scriptExito = "alert('" + mensajeExito + "');";
@@ -5348,7 +5634,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             else
                             {
                                 Session["pedido2"] = "";
-                            }                         
+                            }
                             Session["Numero_Plano"] = txtPlano.Text;
                             Session["Id_Plano"] = txtPlano.Text;
                             string url = "FormExtprin/Objetos.aspx";
@@ -5402,12 +5688,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Verificar si el plano está vinculado a un pedido
                         string idOT = reader["ID_OT"].ToString();
                         string consecutivoPedido = reader["Consecutivo_Pedido"].ToString();
-                        bool terminadoVentas = ConsultarTerminadoVenta(idOT, consecutivoPedido);
+                        bool terminado = false;
+
+                        if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
+                        {
+                            terminado = ConsultarTerminadoVenta(idOT, consecutivoPedido);
+                        }
+                        else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
+                        {
+                            terminado = ConsultarTerminadoDibujo(idOT, consecutivoPedido);
+                        }
+
                         bool afectaBolsa = (bool)reader["AfectaBolsa"];
 
                         reader.Close();
 
-                        if (idOT != "Nula" && terminadoVentas || afectaBolsa)
+                        if (idOT != "Nula" && terminado || afectaBolsa)
                         {
                             string mensajeExito = "No se puede Modificar Ningún Objeto, ya que el plano:  " + txtPlano.Text.Trim() + " esta vinculado a un pedido aprobado para producción o esta afectando a alguna bolsa";
                             string scriptExito = "alert('" + mensajeExito + "');";
@@ -5456,6 +5752,36 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
+        private bool QuitarObjetoPlano(string plano, string idObjeto)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = "DELETE FROM tblPlano_Panel WHERE ID_Plano = @plano AND Id_PanelNum = @idObjeto";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@plano", plano);
+                        command.Parameters.AddWithValue("@idObjeto", idObjeto);
+
+                        int filasAfectadas = command.ExecuteNonQuery();
+                        return filasAfectadas > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
+        }
+
+        // consultar terminado 
         private bool ConsultarTerminadoVenta(string IdOt, string pedido)
         {
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -5494,7 +5820,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 return false;
             }
         }
-        private bool QuitarObjetoPlano(string plano, string idObjeto)
+        private bool ConsultarTerminadoDibujo(string IdOt, string pedido)
         {
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
@@ -5504,24 +5830,35 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     connection.Open();
 
-                    string query = "DELETE FROM tblPlano_Panel WHERE ID_Plano = @plano AND Id_PanelNum = @idObjeto";
+                    string query = "SELECT Terminado_Diseño FROM tblOT WHERE Id_OT = @IdOT AND Consecutivo_Pedido = @Pedido";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@plano", plano);
-                        command.Parameters.AddWithValue("@idObjeto", idObjeto);
+                        command.Parameters.AddWithValue("@IdOT", IdOt);
+                        command.Parameters.AddWithValue("@Pedido", pedido);
 
-                        int filasAfectadas = command.ExecuteNonQuery();
-                        return filasAfectadas > 0;
+                        object result = command.ExecuteScalar();
+
+                        // Si result no es nulo y es convertible a bool, entonces devuelve su valor
+                        if (result != null && result != DBNull.Value)
+                        {
+                            return Convert.ToBoolean(result);
+                        }
+                        else
+                        {
+                            // Valor por defecto si no se encuentra un valor adecuado
+                            return false;
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-
+                // Manejar la excepción si es necesario
                 return false;
             }
         }
+       
 
 
 
@@ -5564,12 +5901,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Verificar si el plano está vinculado a un pedido
                         string idOT = reader["ID_OT"].ToString();
                         string consecutivoPedido = reader["Consecutivo_Pedido"].ToString();
-                        bool terminadoVentas = ConsultarTerminadoVenta(idOT, consecutivoPedido);
+                        bool terminado = false;
+
+                        if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
+                        {
+                            terminado = ConsultarTerminadoVenta(idOT, consecutivoPedido);
+                        }
+                        else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
+                        {
+                            terminado = ConsultarTerminadoDibujo(idOT, consecutivoPedido);
+                        }
+
                         bool afectaBolsa = (bool)reader["AfectaBolsa"];
 
                         reader.Close();
 
-                        if (idOT != "Nula" && terminadoVentas || afectaBolsa)
+                        if (idOT != "Nula" && terminado || afectaBolsa)
                         {
                             string mensajeExito = "No se puede Modificar Ningún Objeto, ya que el plano:  " + txtPlano.Text.Trim() + " esta vinculado a un pedido aprobado para producción o esta afectando a alguna bolsa";
                             string scriptExito = "alert('" + mensajeExito + "');";
@@ -5821,12 +6168,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     {
                         string idOT = reader["ID_OT"].ToString();
                         string consecutivoPedido = reader["Consecutivo_Pedido"].ToString();
-                        bool terminadoVentas = ConsultarTerminadoVenta(idOT, consecutivoPedido);
+                        bool terminado = false;
+
+                        if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
+                        {
+                            terminado = ConsultarTerminadoVenta(idOT, consecutivoPedido);
+                        }
+                        else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
+                        {
+                            terminado = ConsultarTerminadoDibujo(idOT, consecutivoPedido);
+                        }
                         bool afectaBolsa = (bool)reader["AfectaBolsa"];
 
                         reader.Close();
 
-                        if (idOT != "Nula" && terminadoVentas || afectaBolsa)
+                        if (idOT != "Nula" && terminado || afectaBolsa)
                         {
                             string mensajeExito = "No se puede Modificar Ningún Objeto, ya que el plano:  " + txtPlano.Text.Trim() + " esta vinculado a un pedido aprobado para producción o esta afectando a alguna bolsa";
                             string scriptExito = "alert('" + mensajeExito + "');";
@@ -6787,12 +7143,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         string idOT = reader["ID_OT"].ToString();
                         string consecutivoPedido = reader["Consecutivo_Pedido"].ToString();
-                        bool terminadoVentas = ConsultarTerminadoVenta(idOT, consecutivoPedido);
+                        bool terminado = false;
+
+                        if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
+                        {
+                            terminado = ConsultarTerminadoVenta(idOT, consecutivoPedido);
+                        }
+                        else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
+                        {
+                            terminado = ConsultarTerminadoDibujo(idOT, consecutivoPedido);
+                        }
                         bool afectaBolsa = (bool)reader["AfectaBolsa"];
 
                         reader.Close();
 
-                        if (idOT != "Nula" && terminadoVentas || afectaBolsa)
+                        if (idOT != "Nula" && terminado || afectaBolsa)
                         {
                             string mensajeExito = "No se puede Modificar Ningún Objeto, ya que el plano:  " + txtPlano.Text.Trim() + " esta vinculado a un pedido aprobado para producción o esta afectando a alguna bolsa";
                             string scriptExito = "alert('" + mensajeExito + "');";
@@ -6813,9 +7178,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 }
 
                             }
-                                string script = @"mostrarModal_TXT_XY();";
-                                ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal_TXT_XY", script, true);
-     
+                            string script = @"mostrarModal_TXT_XY();";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal_TXT_XY", script, true);
+
                         }
                     }
 
@@ -6892,7 +7257,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     string reinstalacion;    // Reinstalacion texto 
                                     bool Reinstalacion = false; //Reinstalacion fload
 
-                                
+
                                     // Lectura linea de TXT 
                                     string linea = reader.ReadLine();
 
@@ -6917,7 +7282,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                                 Session["ObjNoEx"] = "1";
                                                 //Variable de control cuando dan click en TXT 
                                                 Session["CargarTxt"] = "TXT";
-    
+
 
                                                 string mensajePersonalizado3 = "Error en el objeto:  " + Objeto + "\\n \\n El archivo no es compatible con el formato. Causas: \\n 1. El archivo fue Manipulado o Modificado. \\n 2. El archivo no fue generado con el formato preestablecido en AutoCad  ";
                                                 string urlRedireccion3 = "OrdenTrabajo.aspx";
@@ -7047,7 +7412,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                                 //Variable de control cuando dan click en TXT 
                                                 Session["CargarTxt"] = "TXT";
 
-                                                
+
 
                                                 string mensajePersonalizado3 = "Error en el objeto: " + Objeto + "\\n\\nEl archivo no es compatible con el formato. Causas: \\n 1. El archivo fue Manipulado o Modificado. \\n 2. El archivo no fue generado con el formato preestablecido en AutoCad  ";
                                                 string urlRedireccion3 = "OrdenTrabajo.aspx";
@@ -7142,7 +7507,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                                                 ObjNoExiste = true;
                                                             }
 
-                                                            
+
                                                             break; // este break hace detener el ciclo ya que el objeto va a no existentes 
                                                         }
                                                         else
@@ -7176,7 +7541,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                                 }
 
 
-                                                
+
                                                 break; // Este break hace detener el ciclo (do while) ya que el objeto  no Existentes 
                                             }
 
@@ -7343,7 +7708,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                                     if (EscalableObj)
                                                     {
                                                         // Se Crea el Objeto a la Medida requerida con alto y ancho , siempre y cuando sea Escalable
-                                                        CreacionObjPersonalizado_XY(Objeto, Ancho, Altura, Paneles); 
+                                                        CreacionObjPersonalizado_XY(Objeto, Ancho, Altura, Paneles);
 
                                                         // se filtra el objeto con altura 100 (Objeto Base de altura 100)
                                                         DataRow[] Panel_Altura_100 = Paneles.Select("Altura = 100");
@@ -7397,7 +7762,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                                         }
 
                                                         // Consultamos el Id_Numerico del objeto recien Insertado 
-                                                        IdNumerico_ObjetoInsertado = Consultar_Id_Numerico_XY(Objeto, Altura); 
+                                                        IdNumerico_ObjetoInsertado = Consultar_Id_Numerico_XY(Objeto, Altura);
 
 
                                                         // se realiza la insercion del modulo escaladado con la altura deseada  
@@ -7502,7 +7867,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                                                     ObjNoExiste = true;
                                                                 }
 
-                                                               
+
                                                                 break; // este break hace detener el ciclo ya que el objeto va a no existentes 
                                                             }
                                                             else
@@ -7533,7 +7898,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                                     ObjNoExiste = true;
                                                 }
 
-                                                
+
                                                 break; // este break hace detener el ciclo ya que el objeto va a no existentes 
 
                                             }
@@ -7597,7 +7962,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                                                 // se Valida si el objeto empieza por EX y si es asi se realiza validacion 
                                                 if (Objeto.Substring(0, 3).ToUpper() == "EX")
-                                                {                                              
+                                                {
                                                     //Validar cuando el usuario da click en Check de Existentes            
                                                     if (chkElemExit.Checked)
                                                     {
@@ -7674,7 +8039,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             //Variable de control cuando dan click en TXT 
                             Session["CargarTxt"] = "TXT";
 
-                       
+
 
                             string mensajePersonalizado4 = "La extensión del archivo no es permitida. Extensiones permitidas (txt ó .xls)";
                             string urlRedireccion4 = "OrdenTrabajo.aspx";
@@ -8184,7 +8549,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         }
                         else
                         {
-                          
+
                             return 0;
                         }
                     }
@@ -8271,7 +8636,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     connection.Open();
                     cmd.Parameters.AddWithValue("@IDNumerico", idNumerico);
-                 
+
 
                     // Utiliza ExecuteScalar para obtener un solo valor
                     object result = cmd.ExecuteScalar();
@@ -8850,6 +9215,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             // Cambiar en campo bloqueado en la base de datos a 0
                             ActualizarEstadoBloqueado(0);
+                            Cargar_OTs();
                             string scriptNoPermiso = "alert('El plano ha sido desbloqueado');";
                             ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
                         }
@@ -8871,6 +9237,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             // Cambiar en campo bloqueado en la base de datos a 1
                             ActualizarEstadoBloqueado(1);
+                            Cargar_OTs();
                             string scriptNoPermiso = "alert('El plano ha sido bloqueado');";
                             ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
                         }
@@ -8936,11 +9303,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 connection.Open();
 
-                string sSql = "UPDATE tblPlano SET Bloqueado = @NuevoEstado WHERE Plano = @Plano";
+                string sSql = "UPDATE tblPlano SET Bloqueado = @NuevoEstado, RealizadoPor = @Dibujante WHERE Plano = @Plano";
                 using (SqlCommand cmd = new SqlCommand(sSql, connection))
                 {
                     cmd.Parameters.AddWithValue("@NuevoEstado", nuevoEstado);
                     cmd.Parameters.AddWithValue("@Plano", txtPlano.Text);
+                    cmd.Parameters.AddWithValue("@Dibujante", Session["usuariologueado"].ToString());
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -9905,18 +10273,234 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void Terminar(object sender, EventArgs e)
         {
             // Esta redireccion se deja por si la descarga demora un poco mas de lo normal 
-            Session["Id_OT2"] = tbOT.Text;        
+            Session["Id_OT2"] = tbOT.Text;
             if (tbOT.Text != "")
             {
                 Session["pedido2"] = ddlNumbers.SelectedItem.Text;
             }
-            
+
             Response.Redirect("OrdenTrabajo.aspx");
 
         }
 
-        // INICIO LOGICA DEL BOTON OK
 
+        // ACTUALIZAR PRECIO PROTOTIPO 
+        protected void BtnActPrePro_Click(object sender, EventArgs e)
+        {
+
+            // Buscar si existe el prototipo 
+
+            if (ValidarExistePrototipo())
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalActualizarPrecioProtot').modal('show');", true);
+            }
+            else
+            {
+                // Mensahe el prototipo no existe 
+                string mensaje = "No se encontro el prototipo: " + txtPlano.Text;
+                string scriptNoEncontrado = "alert('" + mensaje + "');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showNoEncontrado", scriptNoEncontrado, true);
+            }
+
+        }
+
+        protected void btnActualizarPrototipo_SI_Click(object sender, EventArgs e)
+        {
+            // Actualizar plano panel 
+            if(ActualizarPlanoPanel())
+            {
+                // Actualizar Panel 
+                if (ActualizarPanel())
+                {
+                    Cargar_OTs();
+                    string mensaje = "Se actualizo el precio del prototipo: " + txtPlano.Text;
+                    string scriptNoPermiso = "alert('" + mensaje + "');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
+                }
+                else
+                {
+                    string mensaje = "Ocurrió un error, Por favor intentelo nuevamente";
+                    string scriptNoPermiso = "alert('" + mensaje + "');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
+                }
+
+            }
+            else
+            {
+                string mensaje = "Ocurrió un error, Por favor intentelo nuevamente";
+                string scriptNoPermiso = "alert('" + mensaje + "');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
+            }
+            
+
+            // Mensaje de Exito 
+        }
+
+        public bool ValidarExistePrototipo()
+        {
+            bool existe = false;
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT 1 FROM tblPanel WHERE id_Panel = @Plano"; // Cambié la consulta para que solo devuelva 1 si encuentra un registro
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Plano", txtPlano.Text);
+
+                    connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            existe = true;
+                        }
+                    }
+                }
+            }
+
+            return existe;
+        }
+
+        private bool ActualizarPlanoPanel()
+        {
+           
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "UPDATE tblPlano_Panel Set Precio_Venta = tblPanel.Precio_Venta FROM tblPanel " +
+                          "INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum " +
+                          "WHERE (tblPlano_Panel.Id_Plano = @Plano) ";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    // Aquí ajusta los valores según los nombres de columnas reales en tu DataRow
+                    cmd.Parameters.AddWithValue("@Plano", "N" + txtPlano.Text);
+                    
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+
+                    if (CantidadFilasAfectada > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        private bool ActualizarPanel()
+        {
+            string PrecioVenta1 = ConsultarPrecioVenta1();
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "Update tblPanel set Precio_Venta= @totalValorDespiece , Precio_Anterior = @PrecioVenta1 where Id_Panel= @Plano";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    // Aquí ajusta los valores según los nombres de columnas reales en tu DataRow
+                    cmd.Parameters.AddWithValue("@Plano", txtPlano.Text);
+                    cmd.Parameters.AddWithValue("@totalValorDespiece", lblValorDespiece1.Text);
+                    cmd.Parameters.AddWithValue("@PrecioVenta1", PrecioVenta1);
+
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+
+                    if (CantidadFilasAfectada > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public string ConsultarPrecioVenta1()
+        {
+            string precioVenta = null;
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT Precio_Venta FROM tblPanel WHERE id_Panel = @Plano";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Plano", txtPlano.Text);
+
+                    connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read()) 
+                        {
+                            precioVenta = reader["Precio_Venta"].ToString(); 
+                        }
+                    }
+                }
+            }
+
+            return precioVenta; // Devuelve el valor de Precio_Venta, o null si no se encontró ningún registro
+        }
+
+
+
+        // IMPORTAR PLANO ACTULIZACION BLOQUES 
+        protected void BtnImpPlaActBlo_Click(object sender, EventArgs e)
+        {
+            if (ValidarPermisoActualizacionBloques())
+            {
+                // Realizar la importacion y actualizacion 
+                //El metodo que realiza esta acciones eta comentado en el sid viejo Actualizar_Objetos 
+               
+            }
+            else
+            {
+                // Mensahe el prototipo no existe 
+                string mensaje = "No tiene permisos para importar archivo o plano de actualización de bloques";
+                string scriptNoPermiso = "alert('" + mensaje + "');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
+            }
+        }
+        public bool ValidarPermisoActualizacionBloques()
+        {
+            bool existe = false;
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT * FROM tblPermiso_Empleado WHERE ID_Empleado = @CedulaLogueada AND ID_Permiso = '32'"; 
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@CedulaLogueada", Session["CedulaLogeada"]?.ToString());
+
+                    connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            existe = true;
+                        }
+                    }
+                }
+            }
+
+            return existe;
+        }
+
+        // INICIO LOGICA DEL BOTON OK 
         protected void Boton_Ok1(object sender, EventArgs e)
         {
             ScriptManager.RegisterStartupScript(this, GetType(), "actualizarValorBotonOk", "actualizarValorBotonOk();", true);
@@ -10197,7 +10781,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 case "Diseño":
                 case "COMPRAS":
-                    // Aqui va la parte del boton Ok para el área de diseño  y compras                  
+                    
+                    // SE CONSULTA SI EL PEDIDO TIENE ACABADOS DEFINIDOS POR EL ASESOR
+                    if (ConsultarAcabadosPorAsesor())
+                    {
+
+                    }
+
                     break;
 
                 default:
@@ -10206,6 +10796,46 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         }
+
+
+        // INICIO BOTON OK PARA DIBUJO Y COMPRAS 
+
+       
+
+        // FIN BOTON OK PARA DIBUJO Y COMPRAS
+        public bool ConsultarAcabadosPorAsesor()
+        {
+            bool existe = false;
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT tblOT.Id_OT,tblOT.Consecutivo_Pedido,tblOTAcabados.ID_Acabado,tblOTAcabados.ID_GrupoObjetoparaAcabado," +
+                               " tblOTAcabados.AcabadoVentas FROM tblOTAcabados " +
+                               "INNER JOIN tblOT ON tblOTAcabados.Id_OT = tblOT.Id_OT AND tblOTAcabados.Consecutivo_Pedido = tblOT.Consecutivo_Pedido " +
+                               "WHERE (tblOT.Id_OT = @Id_OT) AND (tblOT.Consecutivo_Pedido = @pedido)";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id_OT", tbOT.Text);
+                    command.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+                    connection.Open();
+                    int count = (int)command.ExecuteScalar();
+
+                    if (count > 0)
+                    {
+                        existe = true;
+                    }
+                }
+            }
+
+            return existe;
+        }
+
+
+        // INICIO BOTON OK PARA VENTAS
 
         //Valiacion de pedido facturable 
         private bool ValidarPedidoFacturable(string idPedido)
@@ -13761,9 +14391,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         }
+        
+        // FIN BOTON OK PARA VENTAS  E INSTALACION 
 
-        // FIN  LOGICA DEL BOTON OK
-
+ 
         //DataGrid Informacion contable 
         protected void DataGrid_RowDataBound(object sender, DataGridItemEventArgs e)
         {
@@ -13844,7 +14475,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
+       
     }
 
 }
