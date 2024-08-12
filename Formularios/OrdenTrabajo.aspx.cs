@@ -109,12 +109,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void Page_Comun(object sender, EventArgs e)
         {
-           
-        }
-
-        protected void Page_LoadVentas(object sender, EventArgs e)
-        {
-
             tbVenta.Text = DateTime.Now.ToString("yyyy-MM-dd");
             dtpFechaEntregaDibujoDespiece.Text = DateTime.Now.ToString("yyyy-MM-dd");
             dtpFechaEntregaProduccion.Text = DateTime.Now.ToString("yyyy-MM-dd");
@@ -526,8 +520,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-        protected void BotonesModificar()
+        protected void DispocicionDebotonesMoficiarPorROL()
         {
+            string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Ventas")
+            {
+                botonesModificar2();
+            }
 
             if (tipoAccion == "Diseño")
             {
@@ -653,8 +652,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     if (divPrincipal != null)
                     {
                         divPrincipal.Attributes["class"] = "col-sm-9"; // Cambiar a 9 columnas
-                        PrimeraFila.Visible = false; 
-                        SegundaFila.Visible = false; 
+                        PrimeraFila.Visible = false;
+                        SegundaFila.Visible = false;
                         TerceraFila.Visible = false;
                         VentaNota.Visible = false;
                         TipDeNeg.Visible = false;
@@ -665,6 +664,52 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
 
+
+        }
+
+        protected void botonesModificar2()
+        {
+            NuevaOt.Enabled = false;
+            NuevaOt.CssClass = "btn btn-sm shadow button-disabled";
+
+            CopiarOt.Enabled = false;
+            CopiarOt.CssClass = "btn btn-sm shadow button-disabled";
+
+            GrabarOt.Enabled = true;
+            GrabarOt.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+            ModificarOt.Enabled = false;
+            ModificarOt.CssClass = "btn btn-sm shadow button-disabled";
+
+            AnularPedido.Enabled = false;
+            AnularPedido.CssClass = "btn btn-sm shadow button-disabled";
+
+            DocumentacionOt.Enabled = false;
+            DocumentacionOt.CssClass = "btn btn-sm shadow button-disabled";
+
+            ObservacionesOt.Enabled = false;
+            ObservacionesOt.CssClass = "btn btn-sm shadow button-disabled";
+
+            imprimirOt.Enabled = false;
+            imprimirOt.CssClass = "btn btn-sm shadow button-disabled";
+
+            OtPendientes.Enabled = false;
+            OtPendientes.CssClass = "btn btn-sm shadow button-disabled";
+
+            ExportarPedido.Enabled = false;
+            ExportarPedido.CssClass = "btn btn-sm shadow button-disabled";
+
+            ObraReactivada.Enabled = true;
+            ObraReactivada.CssClass = "btn btn-sm shadow button-enabled";
+
+            Cancelar.Enabled = true;
+            Cancelar.CssClass = "btn btn-sm shadow button-enabled RojoCancelar";
+
+            btnNuevoPedido.Enabled = false;
+            btnNuevoPedido.CssClass = "btn btn-sm shadow button-disabled";
+
+            btnAcabados.Enabled = false;
+            btnAcabados.CssClass = "btn btn-sm shadow button-disabled";
 
         }
 
@@ -1382,7 +1427,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             CierraOt.CssClass = "btn btn-sm shadow button-enabled";
         }
 
-        protected void DeshabilitarBotones()
+        protected void DeshabilitarBotones(object sender, EventArgs e)
         {
             List<System.Web.UI.Control> botones = new List<System.Web.UI.Control>
             {
@@ -5723,7 +5768,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         //TAB PLANO
 
-        protected void BotonesPorDefectoPlano()
+        protected void BotonesPorDefectoPlano(object sender, EventArgs e)
         {
             List<System.Web.UI.Control> botones = new List<System.Web.UI.Control>
             {
@@ -5763,7 +5808,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-        protected void BotonesPorDefectoObjetos()
+        protected void BotonesPorDefectoObjetos(object sender, EventArgs e)
         {
             List<System.Web.UI.Control> botones = new List<System.Web.UI.Control>
             {
@@ -5801,7 +5846,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
         //TAB MODULOS
-        protected void BotonesPorDefectoModulos()
+        protected void BotonesPorDefectoModulos(object sender, EventArgs e)
         {
             List<System.Web.UI.Control> botones = new List<System.Web.UI.Control>
             {
@@ -5834,7 +5879,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         //TAB INSUMOS
 
-        protected void BotonesPorDefectoInsumos()
+        protected void BotonesPorDefectoInsumos(object sender, EventArgs e)
         {
             List<System.Web.UI.Control> botones = new List<System.Web.UI.Control>
             {
