@@ -157,8 +157,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
         protected void Adicionar_Click(object sender, EventArgs e)
         {
-            
-
             string IdObjeto = Id_Objeto_Hid.Value;
             float PrecioVentaCalculado;
 

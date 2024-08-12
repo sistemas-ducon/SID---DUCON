@@ -42,78 +42,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected global::System.Web.UI.UpdatePanel PanelCliente;
 
         /// <summary>
-        /// Control MensajeError.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal MensajeError;
-
-        /// <summary>
-        /// Control DataGridCompartirCliente.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DataGrid DataGridCompartirCliente;
-
-        /// <summary>
-        /// Control CargarClientes.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.SqlDataSource CargarClientes;
-
-        /// <summary>
-        /// Control DataGridClienteCompart.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DataGrid DataGridClienteCompart;
-
-        /// <summary>
-        /// Control lbNombreAsesor3.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbNombreAsesor3;
-
-        /// <summary>
-        /// Control tbNombreAsesor3.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tbNombreAsesor3;
-
-        /// <summary>
-        /// Control btnElimnarCompartir.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnElimnarCompartir;
-
-        /// <summary>
-        /// Control btnGuardarCompartir.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnGuardarCompartir;
-
-        /// <summary>
         /// Control tbNom.
         /// </summary>
         /// <remarks>
@@ -663,15 +591,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected global::System.Web.UI.WebControls.Label lbDeclaranteRenta;
 
         /// <summary>
-        /// Control lbRegimenIva.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbRegimenIva;
-
-        /// <summary>
         /// Control chxGranContri.
         /// </summary>
         /// <remarks>
@@ -726,6 +645,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected global::System.Web.UI.WebControls.Label lbAgtRetIca;
 
         /// <summary>
+        /// Control lbRegimenIva.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbRegimenIva;
+
+        /// <summary>
         /// Control ddlRegIva.
         /// </summary>
         /// <remarks>
@@ -769,6 +697,78 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnCancelar;
+
+        /// <summary>
+        /// Control MensajeError.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal MensajeError;
+
+        /// <summary>
+        /// Control DataGridCompartirCliente.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DataGrid DataGridCompartirCliente;
+
+        /// <summary>
+        /// Control CargarClientes.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource CargarClientes;
+
+        /// <summary>
+        /// Control DataGridClienteCompart.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DataGrid DataGridClienteCompart;
+
+        /// <summary>
+        /// Control lbNombreAsesor3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbNombreAsesor3;
+
+        /// <summary>
+        /// Control tbNombreAsesor3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbNombreAsesor3;
+
+        /// <summary>
+        /// Control btnElimnarCompartir.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnElimnarCompartir;
+
+        /// <summary>
+        /// Control btnGuardarCompartir.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnGuardarCompartir;
 
         /// <summary>
         /// Control ConFac_content.

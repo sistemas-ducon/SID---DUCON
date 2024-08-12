@@ -405,6 +405,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
                     break;
 
                 case "OrdendeTrabajo":
+                    Session["Diseno"] = "Ventas";
                     pageURL = "OrdenTrabajo.aspx";
                     break;
 

@@ -29,7 +29,7 @@
         }
 
         function ControlTapContactos() {
-           
+
             // Quitar 'active' de la pestaña actualmente activa y su contenido
             $('#Cliente-tab').removeClass('active');
             $('#Cliente-content').removeClass(' show active ');
@@ -44,6 +44,8 @@
     </script>
 
 
+
+
 </head>
 <body translate="no">
     <form id="form1" runat="server">
@@ -54,10 +56,10 @@
                 <ul class="nav nav-tabs gap-2" id="myTabs">
 
                     <li class="nav-item active">
-                        <a class="nav-link text-white" id="Cliente-tab" data-bs-toggle="tab" href="#Cliente-content"><i class="bi bi-person"></i> Cliente</a>
+                        <a class="nav-link text-white" id="Cliente-tab" data-bs-toggle="tab" href="#Cliente-content"><i class="bi bi-person"></i>Cliente</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" id="ConFac-tab" data-bs-toggle="tab" href="#ConFac_content"><i class="bi bi-people-fill"></i> Contacto Factura</a>
+                        <a class="nav-link text-white" id="ConFac-tab" data-bs-toggle="tab" href="#ConFac_content"><i class="bi bi-people-fill"></i>Contacto Factura</a>
                     </li>
 
                 </ul>
@@ -70,111 +72,6 @@
                 <asp:UpdatePanel runat="server" ID="PanelCliente" UpdateMode="Conditional">
                     <ContentTemplate>
 
-                        <div class="modal fade" id="myModal" tabindex="-1">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-danger text-white">
-                                        <h5 class="modal-title">Error de Consulta</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p class="text-center">
-                                            !Ups! 
-                                                <asp:Literal ID="MensajeError" runat="server"></asp:Literal>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="modal fade" id="myModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-xl ">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Compartir Clientes</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-
-                                    <div class="modal-body">
-                                        <div class="row justify-content-center mb-3">
-                                            <div class="border rounded p-2">
-                                                <div class="row">
-                                                    <div class="col-6">
-                                                        <div class="table-responsive mb-1 gap-2" style="max-height: 20rem; overflow-x: auto;">
-                                                            <h5 class="datagrid-header text-center">Asesores</h5>
-                                                            <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGridCompartirCliente" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="CargarClientes">
-                                                                <Columns>
-                                                                    <asp:TemplateColumn HeaderText="...">
-                                                                        <ItemTemplate>
-                                                                            <a href="#" class="btn btn-link" onclick="compartirAsesor(<%# Container.ItemIndex %>); return false;">
-                                                                                <i class="bi bi-pencil-square"></i>
-                                                                            </a>
-                                                                        </ItemTemplate>
-                                                                    </asp:TemplateColumn>
-
-                                                                    <asp:BoundColumn DataField="Asesor" HeaderText="Nombre Asesor" ItemStyle-CssClass="auto-width-column" />
-
-                                                                </Columns>
-                                                            </asp:DataGrid>
-                                                            <asp:SqlDataSource ID="CargarClientes" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="Select  concat(Nombre , ' ' , Apellidos) as Asesor from tblAsesorComercial where Activo=1 order by concat(Nombre , ' ' , Apellidos)"></asp:SqlDataSource>
-
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-6">
-                                                        <div class="table-responsive mb-1 gap-2" style="max-height: 20rem; overflow-x: auto;">
-                                                            <h5 class="datagrid-header text-center">Asesores Compartidos </h5>
-                                                            <asp:DataGrid CssClass="table custom-grid table-hover custom-data-grid" PageSize="5" AllowSorting="true" ID="DataGridClienteCompart" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true">
-                                                                <Columns>
-                                                                    <asp:TemplateColumn HeaderText="...">
-                                                                        <ItemTemplate>
-                                                                            <a href="#" class="btn btn-link" onclick="EliminarAsesor(<%# Container.ItemIndex %>); return false;">
-                                                                                <i class="bi bi-pencil-square"></i>
-                                                                            </a>
-                                                                        </ItemTemplate>
-                                                                    </asp:TemplateColumn>
-
-                                                                    <asp:BoundColumn HeaderText="Nombres Asesor" DataField="Nombre" />
-
-
-                                                                </Columns>
-                                                            </asp:DataGrid>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <div class="input-group input-group-md  mb-2 gap-4">
-                                                    <asp:Label ID="lbNombreAsesor3" class="form-label" Text="Asesor:" runat="server"></asp:Label>
-                                                    <asp:TextBox CssClass="form-control" ID="tbNombreAsesor3" runat="server" disabled="true"></asp:TextBox>
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="row pt-1 mt-1">
-                                            <div class="col-12" style="text-align: right">
-                                                <asp:Button class="btn btn-danger " ID="btnElimnarCompartir" runat="server" UseSubmitBehavior="false" Text="Eliminar" OnClick="EliminarAsesorCompartir" />
-                                            </div>
-                                        </div>
-
-
-                                    </div>
-
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                        <asp:Button ID="btnGuardarCompartir" class="btn btn-primary" runat="server" UseSubmitBehavior="false" Text="Agregar" OnClick="AgregarAsesorCompartir" />
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="container-fluid">
 
                             <div class="row d-flex justify-content-center p-1 m-1 ">
@@ -182,7 +79,7 @@
                                 <div class="col-6">
                                 </div>
 
-                                <div class="col-6">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <div class=" input-group input-group-sm gap-2  ">
                                         <asp:TextBox ID="tbNom" type="Text" class="form-control " runat="server" placeholder="Buscar Nombre" AutoPostBack="true"></asp:TextBox>
                                         <asp:TextBox ID="tbNom1" type="Text" class="form-control " runat="server" AutoPostBack="true" placeholder="Buscar Nit"></asp:TextBox>
@@ -281,21 +178,21 @@
 
                         </div>
 
-                        <div class="container-fluid" style="padding-right:1.6rem;">
+                        <div class="container-fluid" style="padding-right: 1.6rem;">
                             <div class="container-fluid p-2 m-2 border rounded">
                                 <div class="row text-center">
                                     <span id="ErrorValidacionClienteFact" style="color: red;"></span>
                                 </div>
-                                 
+
                                 <div class="row g-2 pt-1 mt-1">
 
-                                    <div class="col-sm-1">
+                                    <div class="col-xs-1 col-sm-2 col-md-2 col-lg-1">
                                         <div class=" input-group input-group-sm  ">
                                             <asp:Label ID="lbFechaCreacion" class="form-label" Text="Fecha Creacion" runat="server"></asp:Label>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-2">
+                                    <div class="col-xs-11 col-sm-4 col-md-4 col-lg-2">
                                         <div class=" input-group input-group-sm gap-2  ">
 
                                             <asp:TextBox ID="tbFechaCreacion" type="date" class="form-control " runat="server"></asp:TextBox>
@@ -303,21 +200,21 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                                         <div class=" input-group input-group-sm gap-2   ">
                                             <asp:Label ID="lbUltimaAct" class="form-label" Text="Ultima Actualización" runat="server"></asp:Label>
                                             <asp:TextBox ID="tbUltimaAct" type="date" class="form-control " runat="server"></asp:TextBox>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-4">
+                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
                                         <div class=" input-group input-group-sm gap-2  ">
                                             <asp:Label ID="lbCompartido" Text="compartido Con" runat="server"></asp:Label>
                                             <asp:TextBox ID="tbCompartido" type="Text" class="form-control " runat="server"></asp:TextBox>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-2">
+                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-2">
                                         <div class=" input-group-sm   ">
                                             <asp:Label ID="lbCompartir" class="form-label pt-3" Text="Compartir" runat="server"></asp:Label>
                                             <asp:CheckBox ID="chxCompartir" CssClass="pt-3" runat="server" OnCheckedChanged="ChxCompartir_CheckedChanged" AutoPostBack="true" />
@@ -329,13 +226,13 @@
 
                                 <div class="row g-2 pt-2">
 
-                                    <div class="col-sm-1">
+                                    <div class="col-xs-1 col-sm-2 col-md-2 col-lg-1">
                                         <div class=" input-group input-group-sm  ">
                                             <asp:Label ID="lbNaturaleza" class="form-label" Text="Naturaleza" runat="server"></asp:Label>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-2">
+                                    <div class="col-xs-11 col-sm-4 col-md-4 col-lg-2">
                                         <div class=" input-group input-group-sm gap-2 ">
 
                                             <asp:DropDownList class="form-control" ID="ddlNaturaleza" runat="server" onchange="cambioNaturalezaCliente();">
@@ -348,7 +245,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                                         <div class="input-group input-group-sm gap-2">
                                             <asp:Label ID="lbTipoDocumento" class="form-label" Text="Tipo Documento" runat="server"></asp:Label>
                                             <asp:DropDownList class="form-control" ID="ddlTipoDoc" runat="server">
@@ -363,14 +260,14 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                                         <div class="input-group input-group-sm gap-2">
                                             <asp:Label ID="lbNumero" class="form-label" Text="Numero" runat="server"></asp:Label>
                                             <asp:TextBox ID="tbNumero" type="text" class="form-control " runat="server"></asp:TextBox>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                                         <div class="input-group input-group-sm gap-2">
                                             <asp:Label ID="lbtipoCliente" class="form-label" Text="Tipo Cliente" runat="server"></asp:Label>
                                             <asp:DropDownList class="form-control" ID="ddlTipoCliente" runat="server">
@@ -385,27 +282,27 @@
 
                                 <div class="row g-2 pt-2">
 
-                                    <div class="col-sm-1">
+                                    <div class="col-xs-1 col-sm-2 col-md-2 col-lg-1">
                                         <div class=" input-group input-group-sm  ">
                                             <asp:Label ID="lbActividad" class="form-label" Text="Actividad" runat="server"></asp:Label>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-2">
+                                    <div class="col-xs-11 col-sm-4 col-md-4 col-lg-2">
                                         <div class=" input-group input-group-sm gap-2">
 
                                             <asp:DropDownList class="form-control" ID="ddlActividad" runat="server"></asp:DropDownList>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                                         <div class=" input-group input-group-sm gap-2">
                                             <asp:Label ID="lbTelefono" class="form-label" Text="Telefono" runat="server"></asp:Label>
                                             <asp:TextBox ID="tbTelefono" type="Text" class="form-control " runat="server"></asp:TextBox>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                                         <div class="input-group input-group-sm gap-2">
                                             <asp:Label ID="lbSector" class="form-label" Text="Sector" runat="server"></asp:Label>
                                             <asp:DropDownList class="form-control" ID="ddlSector" runat="server">
@@ -427,7 +324,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                                         <div class="input-group input-group-sm gap-2">
                                             <asp:Label ID="lbFax" class="form-label" Text="Fax" runat="server"></asp:Label>
                                             <asp:TextBox ID="tbFax" type="Text" class="form-control " runat="server"></asp:TextBox>
@@ -438,25 +335,26 @@
 
                                 <div class="row g-2 pt-2" id="FilaNombre">
 
-                                    <div class="col-sm-1">
+                                    <div class="col-xs-3 col-sm-3 col-md-2 col-lg-1">
                                         <div class=" input-group input-group-sm  ">
                                             <asp:Label ID="lbPriApellido" class="form-label" Text="Primer Apellido" runat="server"></asp:Label>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
+
+                                    <div class="col-xs-9 col-sm-9 col-md-3 col-lg-3">
                                         <div class=" input-group input-group-sm gap-2">
                                             <asp:TextBox ID="tbPriApellido" type="Text" class="form-control " runat="server"></asp:TextBox>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-4" runat="server" id="ColSegApell">
+                                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" runat="server" id="ColSegApell">
                                         <div class="input-group input-group-sm gap-2">
                                             <asp:Label ID="lbSegApellido" class="form-label" Text="Segundo Apellido" runat="server"></asp:Label>
                                             <asp:TextBox ID="tbSegApellido" type="Text" class="form-control " runat="server"></asp:TextBox>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-4" runat="server" id="ColNombre">
+                                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-4" runat="server" id="ColNombre">
                                         <div class="input-group input-group-sm gap-2">
                                             <asp:Label ID="lbNombre" class="form-label" Text="Nombre" runat="server"></asp:Label>
                                             <asp:TextBox ID="tbNombre" type="Text" class="form-control " runat="server"></asp:TextBox>
@@ -467,33 +365,34 @@
 
                                 <div class="row g-2 pt-2">
 
-                                    <div class="col-sm-1">
+                                    <div class="col-xs-9 col-sm-2 col-md-1 col-lg-1">
                                         <div class=" input-group input-group-sm  ">
                                             <asp:Label ID="lbDireccon" class="form-label" Text="Dirección" runat="server"></asp:Label>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-2">
+                                    <div class="col-xs-9 col-sm-3 col-md-4 col-lg-2">
                                         <div class=" input-group input-group-sm gap-2 ">
 
                                             <asp:TextBox ID="tbDireccion" type="Text" class="form-control " runat="server"></asp:TextBox>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
                                         <div class="input-group input-group-sm gap-2">
                                             <asp:Label ID="lbCiudad" class="form-label" Text="Ciudad" runat="server"></asp:Label>
                                             <asp:DropDownList class="form-control" ID="ddlCiudad" runat="server" OnSelectedIndexChanged="ddlCiudad_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-2">
+                                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-2">
                                         <div class="input-group input-group-sm gap-2  ">
                                             <asp:TextBox ID="tbCod" type="Text" class="form-control " runat="server"></asp:TextBox>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-2">
+
+                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-2">
                                         <div class="input-group input-group-sm gap-2">
                                             <asp:Label ID="lbZona" class="form-label" Text="Zona" runat="server"></asp:Label>
                                             <asp:DropDownList class="form-control" ID="ddlZona" runat="server">
@@ -504,7 +403,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-2">
+                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-2">
                                         <div class="input-group input-group-sm gap-2">
                                             <asp:Label ID="lbFormaPago" class="form-label" Text="Forma Pago" runat="server"></asp:Label>
                                             <asp:DropDownList class="form-control" ID="ddlFormaPago" runat="server">
@@ -523,7 +422,7 @@
 
                                 <div class="row g-3 pt-2">
 
-                                    <div class="col-lg-2 col-md-2  col-sm-3 col-xs-3 pt-3">
+                                    <div class="col-lg-2 col-md-3  col-sm-6 col-xs-12 pt-3">
 
                                         <div class="row pb-2">
                                             <div class="input-group input-group-sm mb-2 gap-2">
@@ -536,9 +435,9 @@
                                             <div class="col-12">
                                                 <asp:UpdatePanel ID="Archivo" runat="server" UpdateMode="Conditional">
                                                     <ContentTemplate>
-                                                        <div class=" d-flex flex-column">
+                                                        <div class=" d-flex flex-column input-group-sm">
                                                             <asp:Label ID="lbActRut" runat="server" Text="Actualizar Rut"></asp:Label>
-                                                            <asp:FileUpload CssClass="form-control form-control-sm btn btn-sm btn-secondary" ID="btnActRut" runat="server" Style="width: 14rem" />
+                                                            <asp:FileUpload CssClass="btn btn-sm" ID="btnActRut" runat="server" style="width:13rem;"  />
 
                                                         </div>
                                                     </ContentTemplate>
@@ -551,9 +450,10 @@
 
 
                                         </div>
+
                                     </div>
 
-                                    <div class="col-lg-2 col-md-2  col-sm-3 col-xs-3 pt-3">
+                                    <div class="col-lg-2 col-md-3  col-sm-6 col-xs-12 pt-3">
                                         <div class="row pb-2">
                                             <div class="input-group input-group-sm mb-2 gap-2">
                                                 <asp:Button ID="btnVerRegCli" type="button" Style="width: 10rem; min-width: 5rem;" Text="Ver Reg Cliente" class="btn btn-outline-secondary" runat="server" OnClick="VerRegistro"></asp:Button>
@@ -565,9 +465,9 @@
                                             <div class="col-12">
                                                 <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
                                                     <ContentTemplate>
-                                                        <div class=" d-flex flex-column">
+                                                        <div class=" d-flex flex-column  input-group-sm">
                                                             <asp:Label ID="Label1" runat="server" Text="Actualizar Registro"></asp:Label>
-                                                            <asp:FileUpload CssClass="form-control form-control-sm btn btn-secondary" ID="btnActRegCli" runat="server" Style="width: 14rem" />
+                                                            <asp:FileUpload CssClass="btn btn-sm text-white" ID="btnActRegCli" runat="server" Style="width: 12rem;" />
 
                                                         </div>
                                                     </ContentTemplate>
@@ -583,13 +483,12 @@
 
                                     </div>
 
-                                    <div class="col-lg-8 col-md-8  col-sm-6 col-xs-6 border rounded ">
+                                    <div class="col-lg-6 col-md-6  col-sm-8 col-xs-12 border rounded ">
 
                                         <h6>Información Tributaria</h6>
-
                                         <div class="row g-2">
 
-                                            <div class="col-sm-3">
+                                            <div class="col-sm-4">
                                                 <div class=" input-group input-group-sm gap-2  ">
                                                     <asp:CheckBox ID="chxAgenteRete" runat="server" />
                                                     <asp:Label ID="lbAgeRet" class="form-label pt-1 " Text="Agente Retenedor" runat="server"></asp:Label>
@@ -598,7 +497,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-sm-3">
+                                            <div class="col-sm-4">
                                                 <div class=" input-group input-group-sm gap-2  ">
                                                     <asp:CheckBox ID="chxAutoRete" runat="server" />
                                                     <asp:Label ID="lbAutRetendor" class="form-label pt-1" Text="AutoRetenedor" runat="server"></asp:Label>
@@ -606,59 +505,54 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-sm-3">
+                                            <div class="col-sm-4">
                                                 <div class=" input-group input-group-sm gap-2  ">
                                                     <asp:CheckBox ID="chxDeclarante" runat="server" />
                                                     <asp:Label ID="lbDeclaranteRenta" class="form-label pt-1 " Text="Declarante(Renta)" runat="server"></asp:Label>
                                                 </div>
                                             </div>
 
-                                            <div class="col-sm-3">
-                                                <div class=" input-group input-group-sm gap-2  ">
-                                                    <asp:Label ID="lbRegimenIva" class="form-label " Text="Regimen de Iva" runat="server"></asp:Label>
-
-                                                </div>
-                                            </div>
 
                                         </div>
 
                                         <div class="row g-2">
 
-                                            <div class="col-sm-3">
+                                            <div class="col-sm-4">
                                                 <div class=" input-group input-group-sm gap-2  ">
                                                     <asp:CheckBox ID="chxGranContri" runat="server" />
                                                     <asp:Label ID="lbGranContribuyente" class="form-label pt-1" Text="Gran Contribuyente" runat="server"></asp:Label>
                                                 </div>
                                             </div>
 
-                                            <div class="col-sm-3">
+                                            <div class="col-sm-4">
                                                 <div class=" input-group input-group-sm gap-2  ">
                                                     <asp:CheckBox ID="chxExento" runat="server" />
                                                     <asp:Label ID="lbExcentoRete" class="form-label pt-1" Text="Exento de Retención" runat="server"></asp:Label>
                                                 </div>
                                             </div>
 
-                                            <div class="col-sm-3">
+                                            <div class="col-sm-4">
                                                 <div class=" input-group input-group-sm gap-2  ">
                                                     <asp:CheckBox ID="chxReteIca" runat="server" />
                                                     <asp:Label ID="lbAgtRetIca" class="form-label pt-1" Text="Agente Retenedor ICA" runat="server"></asp:Label>
                                                 </div>
                                             </div>
 
-                                            <div class="col-sm-3">
-                                                <div class=" input-group input-group-sm gap-2  ">
-                                                    <asp:DropDownList class="form-control" ID="ddlRegIva" runat="server">
-                                                        <asp:ListItem Value="">Seleccione</asp:ListItem>
-                                                        <asp:ListItem Value="C - Común">C - Común</asp:ListItem>
-                                                        <asp:ListItem Value="S - Simplificado">S - Simplificado</asp:ListItem>
-                                                        <asp:ListItem Value="N - No Responsable">N - No Responsable</asp:ListItem>
-                                                    </asp:DropDownList>
-                                                </div>
-                                            </div>
-
 
                                         </div>
 
+                                    </div>
+
+                                    <div class="col-lg-2 col-md-12 col-sm-4 col-xs-12">
+                                        <div class="input-group-sm gap-2  ">
+                                            <asp:Label ID="lbRegimenIva" class="form-label " Text="Regimen de Iva" runat="server"></asp:Label>
+                                            <asp:DropDownList class="form-control" ID="ddlRegIva" runat="server">
+                                                <asp:ListItem Value="">Seleccione</asp:ListItem>
+                                                <asp:ListItem Value="C - Común">C - Común</asp:ListItem>
+                                                <asp:ListItem Value="S - Simplificado">S - Simplificado</asp:ListItem>
+                                                <asp:ListItem Value="N - No Responsable">N - No Responsable</asp:ListItem>
+                                            </asp:DropDownList>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -677,6 +571,114 @@
                                     <div class="col-sm-1"></div>
 
 
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!--Modal Error de Consultas -->
+                        <div class="modal fade" id="myModal" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger text-white">
+                                        <h5 class="modal-title">Error de Consulta</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p class="text-center">
+                                            !Ups! 
+                                                <asp:Literal ID="MensajeError" runat="server"></asp:Literal>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Modal para compartir clientes -->
+                        <div class="modal fade" id="myModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl ">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Compartir Clientes</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <div class="row justify-content-center mb-3">
+                                            <div class="border rounded p-2">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <div class="table-responsive mb-1 gap-2" style="max-height: 20rem; overflow-x: auto;">
+                                                            <h5 class="datagrid-header text-center">Asesores</h5>
+                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridCompartirCliente" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="CargarClientes">
+                                                                <Columns>
+                                                                    <asp:TemplateColumn HeaderText="...">
+                                                                        <ItemTemplate>
+                                                                            <a href="#" class="btn btn-link btn-sm Tam" onclick="compartirAsesor(<%# Container.ItemIndex %>); return false;">
+                                                                                <i class="bi bi-pencil-square"></i>
+                                                                            </a>
+                                                                        </ItemTemplate>
+                                                                    </asp:TemplateColumn>
+
+                                                                    <asp:BoundColumn DataField="Asesor" HeaderText="Nombre Asesor" ItemStyle-CssClass="auto-width-column" />
+
+                                                                </Columns>
+                                                            </asp:DataGrid>
+                                                            <asp:SqlDataSource ID="CargarClientes" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="Select  concat(Nombre , ' ' , Apellidos) as Asesor from tblAsesorComercial where Activo=1 order by concat(Nombre , ' ' , Apellidos)"></asp:SqlDataSource>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-6">
+                                                        <div class="table-responsive mb-1 gap-2" style="max-height: 20rem; overflow-x: auto;">
+                                                            <h5 class="datagrid-header text-center">Asesores Compartidos </h5>
+                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridClienteCompart" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true">
+                                                                <Columns>
+                                                                    <asp:TemplateColumn HeaderText="...">
+                                                                        <ItemTemplate>
+                                                                            <a href="#" class="btn btn-link Tam" onclick="EliminarAsesor(<%# Container.ItemIndex %>); return false;">
+                                                                                <i class="bi bi-pencil-square"></i>
+                                                                            </a>
+                                                                        </ItemTemplate>
+                                                                    </asp:TemplateColumn>
+
+                                                                    <asp:BoundColumn HeaderText="Nombres Asesor" DataField="Nombre" />
+
+
+                                                                </Columns>
+                                                            </asp:DataGrid>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="input-group input-group-md  mb-2 gap-4">
+                                                    <asp:Label ID="lbNombreAsesor3" class="form-label" Text="Asesor:" runat="server"></asp:Label>
+                                                    <asp:TextBox CssClass="form-control" ID="tbNombreAsesor3" runat="server" disabled="true"></asp:TextBox>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row pt-1 mt-1">
+                                            <div class="col-12" style="text-align: right">
+                                                <asp:Button class="btn btn-danger " ID="btnElimnarCompartir" runat="server" UseSubmitBehavior="false" Text="Eliminar" OnClick="EliminarAsesorCompartir" />
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <asp:Button ID="btnGuardarCompartir" class="btn btn-primary" runat="server" UseSubmitBehavior="false" Text="Agregar" OnClick="AgregarAsesorCompartir" />
+                                    </div>
 
                                 </div>
                             </div>
@@ -699,7 +701,7 @@
                                 <div class="border rounded p-2">
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="table-responsive mb-2 gap-2" style="max-height: 18rem; height:18rem; overflow-x: auto;">
+                                            <div class="table-responsive mb-2 gap-2" style="max-height: 18rem; height: 18rem; overflow-x: auto;">
                                                 <h5 class="datagrid-header text-center">Contacto Factura </h5>
                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridContacto" runat="server" AutoGenerateColumns="false" DataSourceID="ContacoCliente" OnItemCommand="DatagridContactoClienteFact_LinkButton" OnItemDataBound="DataGridContacto_ItemDataBound">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header p-2" />
@@ -955,6 +957,86 @@
             return isValid;
         }
 
+        function compartirAsesor(rowIndex) {
+            // Convertir el índice de fila a cero basado en lugar de uno basado
+            var adjustedRowIndex = rowIndex + 1;
+
+
+            // Obtener todas las filas del DataGrid
+            var rows = $('#<%= DataGridCompartirCliente.ClientID %> tr');
+
+            // Remover la clase CSS de resaltar de todas las filas
+            rows.removeClass('fila-seleccionada');
+
+            // Agregar la clase CSS de resaltar a la fila seleccionada
+            rows.eq(adjustedRowIndex).addClass('fila-seleccionada');
+
+
+            // Obtener todas las filas del DataGrid
+            var rows = $('#<%= DataGridClienteCompart.ClientID %> tr');
+
+            // Remover la clase CSS de resaltar de todas las filas
+            rows.removeClass('fila-seleccionada');
+
+            // Obtener el nombre y la cédula del asesor de la fila correspondiente en el DataGrid
+            var nombreAsesor = $('#<%= DataGridCompartirCliente.ClientID %> tr:eq(' + adjustedRowIndex + ') td:eq(1)').text();
+
+
+            // Mostrar el nombre y la cédula del asesor en TextBoxes correspondientes
+            $('#<%= tbNombreAsesor3.ClientID %>').val(nombreAsesor);
+
+            document.getElementById("btnElimnarCompartir").classList.add("disabled");
+            document.getElementById("btnGuardarCompartir").classList.remove("disabled");
+
+        }
+
+        function EliminarAsesor(rowIndex) {
+            // Convertir el índice de fila a cero basado en lugar de uno basado
+            var adjustedRowIndex = rowIndex + 1;
+
+            // Obtener todas las filas del DataGrid
+            var rows = $('#<%= DataGridCompartirCliente.ClientID %> tr');
+
+            // Remover la clase CSS de resaltar de todas las filas
+            rows.removeClass('fila-seleccionada');
+
+
+
+
+            // Obtener todas las filas del DataGrid
+            var rows = $('#<%= DataGridClienteCompart.ClientID %> tr');
+
+            // Remover la clase CSS de resaltar de todas las filas
+            rows.removeClass('fila-seleccionada');
+
+            // Agregar la clase CSS de resaltar a la fila seleccionada
+            rows.eq(adjustedRowIndex).addClass('fila-seleccionada');
+
+            // Obtener el nombre y la cédula del asesor de la fila correspondiente en el DataGrid
+            var nombreAsesor = $('#<%= DataGridClienteCompart.ClientID %> tr:eq(' + adjustedRowIndex + ') td:eq(1)').text();
+
+
+            // Mostrar el nombre y la cédula del asesor en TextBoxes correspondientes
+            $('#<%= tbNombreAsesor3.ClientID %>').val(nombreAsesor);
+
+            document.getElementById("btnGuardarCompartir").classList.add("disabled");
+            document.getElementById("btnElimnarCompartir").classList.remove("disabled");
+
+        }
+
+        function check() {
+            document.getElementById("CheckBox1").classList.remove("disabled");
+        }
+
+        function enviarFormulario() {
+            // Realiza el procesamiento necesario en el formulario 2
+            window.close();
+            // Actualiza el formulario 1
+            window.opener.location.reload(); // Recarga el formulario padre
+
+        }
+
+       
     </script>
 
     <script type="text/javascript">
@@ -1019,52 +1101,7 @@
         }
     </script>
 
-    <script>
-        function compartirAsesor(rowIndex) {
-            // Convertir el índice de fila a cero basado en lugar de uno basado
-            var adjustedRowIndex = rowIndex + 1;
 
-            // Obtener el nombre y la cédula del asesor de la fila correspondiente en el DataGrid
-            var nombreAsesor = $('#<%= DataGridCompartirCliente.ClientID %> tr:eq(' + adjustedRowIndex + ') td:eq(1)').text();
-
-
-            // Mostrar el nombre y la cédula del asesor en TextBoxes correspondientes
-            $('#<%= tbNombreAsesor3.ClientID %>').val(nombreAsesor);
-
-            document.getElementById("btnElimnarCompartir").classList.add("disabled");
-            document.getElementById("btnGuardarCompartir").classList.remove("disabled");
-        }
-
-        function EliminarAsesor(rowIndex) {
-            // Convertir el índice de fila a cero basado en lugar de uno basado
-            var adjustedRowIndex = rowIndex + 1;
-
-            // Obtener el nombre y la cédula del asesor de la fila correspondiente en el DataGrid
-            var nombreAsesor = $('#<%= DataGridClienteCompart.ClientID %> tr:eq(' + adjustedRowIndex + ') td:eq(1)').text();
-
-
-            // Mostrar el nombre y la cédula del asesor en TextBoxes correspondientes
-            $('#<%= tbNombreAsesor3.ClientID %>').val(nombreAsesor);
-
-            document.getElementById("btnGuardarCompartir").classList.add("disabled");
-            document.getElementById("btnElimnarCompartir").classList.remove("disabled");
-
-        }
-
-        function check() {
-            document.getElementById("CheckBox1").classList.remove("disabled");
-        }
-
-        function enviarFormulario() {
-            // Realiza el procesamiento necesario en el formulario 2
-            window.close();
-            // Actualiza el formulario 1
-            window.opener.location.reload(); // Recarga el formulario padre
-
-        }
-
-
-    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
