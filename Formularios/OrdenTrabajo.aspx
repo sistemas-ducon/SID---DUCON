@@ -2071,7 +2071,7 @@
                                                 <div class="border rounded p-2 m-2">
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <div class="table-responsive mb-1" style="max-height: 17rem; overflow-x: auto;">
+                                                            <div class="table-responsive mb-1" style="max-height: 9rem; overflow-x: auto;">
                                                                 <h5 class="datagrid-header text-center">Contable</h5>
                                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGrid" runat="server" DataSourceID="InfoContable" OnItemDataBound="DataGrid_RowDataBound">
                                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
