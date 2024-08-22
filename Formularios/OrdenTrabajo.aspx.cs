@@ -42,6 +42,9 @@ using Microsoft.Office.Interop.Excel;
 using System.Security.Cryptography;
 using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 using System.Web.UI.HtmlControls;
+using Org.BouncyCastle.Utilities;
+using static NPOI.SS.Format.CellNumberFormatter;
+using DocumentFormat.OpenXml.Office2010.CustomUI;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
@@ -167,6 +170,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             dtacboTipoPedido.DataBind();
             dtacboTipoPedido.Items.Insert(0, new ListItem(" "));
             DepartamentoAsesor(); // Se Deberia cargar desde el login 
+
+            Session.Remove("AcacadoSeleccionadoSession");
 
         }
 
@@ -669,7 +674,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DispocicionDebotonesMoficiarPorROL();
 
-                listaTextBoxes = new List<TextBox>
+            listaTextBoxes = new List<TextBox>
                 {
                     tbObra,tbDir,tbContac,tbEmail,tbRecibe,tbTel,tbCel,tbPais,tbHTotal,tbVenta,dtpFechaEntregaDibujoDespiece,dtpFechaEntregaProduccion,dtpEmpaque,dtpRealEmpaque,tbSupervisor,
                     tbBolsa,tbValorPedido,txtNit,txtNombreEmp,txtcontacto,txtMail,txtDireccion,txtMunicipio,txtTelefono,txtCotizacion,txtValorSugerido,txtVcsd,txtVccd,txtOrdenCompra,txtAsesor,txtComision,
@@ -677,25 +682,25 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 };
 
-                DeshabilitarTextBoxes(listaTextBoxes);
+            DeshabilitarTextBoxes(listaTextBoxes);
 
-                listaDropDownLists = new List<DropDownList>
+            listaDropDownLists = new List<DropDownList>
                 {
                    ddlNumbers,ddlZona,dtacboTipoPedido,cboPedidoBase,DtaCboTipoAprobacion,ddlFabrica1,ddlInstala,ddlAsesor,ddlCiudad
 
                 };
 
-                DeshabilitarDropDownLists(listaDropDownLists);
+            DeshabilitarDropDownLists(listaDropDownLists);
 
-                tbPedDepen.Enabled = false;
+            tbPedDepen.Enabled = false;
 
-                ddlFabrica1.Enabled = false;
+            ddlFabrica1.Enabled = false;
 
-                tbOT.Enabled = false;
+            tbOT.Enabled = false;
 
-                Nit.Enabled = false;
+            Nit.Enabled = false;
 
-                cbxComisionCompart.Enabled = true;
+            cbxComisionCompart.Enabled = true;
 
 
 
@@ -1624,14 +1629,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (tipoAccion == "Ventas")
             {
                 ddlFabrica1.Enabled = true;
-              
+
                 txObs1.Disabled = false;
                 txObs2.Disabled = true;
             }
             if (tipoAccion == "Diseño")
             {
                 ddlFabrica1.Enabled = false;
-               
+
                 txObs1.Disabled = true;
                 txObs2.Disabled = false;
             }
@@ -1908,7 +1913,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             // Control de Botones para Dibujo y despiece de momento mismo metodo
                             EnableButtons();
                         }
-                       
+
                         HabilitarBotonesPlano();
                         // Obtener datos de cotización y asignarlos a controles
                         AssignCotizacionData(id, pedido, txtCotizacion.Text);
@@ -2595,7 +2600,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
         //FIN MODIFICACION
-
         protected void ValidarAsesor()
         {
             string cedula = txtAsesor.Text.Trim(); // Obtener el valor del TextBox txtAsesor
@@ -3445,6 +3449,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         ScriptManager.RegisterStartupScript(this, GetType(), "showError", scriptError, true);
                     }
                 }
+                else
+                {
+                    //lblSaldoOT.Text = "Sin Bolsa";
+                    //string mensajeError = "La OT " + tbOT.Text + " NO TIENE BOLSA"; 
+                    //string scriptError = "alert('" + mensajeError + "');";
+                    //ScriptManager.RegisterStartupScript(this, GetType(), "showError", scriptError, true);
+                }
 
             }
             else
@@ -3542,7 +3553,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
 
-
         private void LimpiarCamposCotizacion()
 
         {
@@ -3572,9 +3582,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             txtGtotal.Text = "0";
 
         }
-
-
-
 
 
         //MODIFICADO POR CARLOS PINEDA
@@ -3831,8 +3838,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
-
         protected void DataGridDespiecePlano_LinkButton(object source, DataGridCommandEventArgs e)
         {
 
@@ -3920,7 +3925,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             // Llamar a la función JavaScript para enfocar y desplazar la fila
                             ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
                         }
-                         
+
 
                     }
 
@@ -3938,8 +3943,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
         }
-
-
 
 
         private bool CambiarEstadoRevisado(string ID_Numerico, int Estado)
@@ -6039,7 +6042,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
                         {
-                             terminado = ConsultarTerminadoVenta(idOT, consecutivoPedido);
+                            terminado = ConsultarTerminadoVenta(idOT, consecutivoPedido);
                         }
                         else if(Session["Departamento"].ToString().ToUpper() == "DISEÑO")
                         {
@@ -6047,7 +6050,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         }
 
 
-                        
+
                         bool afectaBolsa = (bool)reader["AfectaBolsa"];
 
                         reader.Close();
@@ -6293,7 +6296,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 return false;
             }
         }
-       
+
 
 
 
@@ -6431,15 +6434,25 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         //***** MOSTRAR ACABADOS DEL PLANO   ******
         protected void BtnAcaPla_Click(object sender, EventArgs e)
         {
+            Session["Id_OT2"] = tbOT.Text;
+            Session["pedido2"] = ddlNumbers.SelectedItem.Text;
+
 
             if ((Session["Departamento"].ToString() == "Diseño" || Session["Departamento"].ToString() == "Ventas") && ((tbOT.Text != "" && btnOk.Enabled == true) || tbOT.Text == ""))
             {
                 // Pendiente de realizar algunas actualizaciones !!!!! OJO validar !!!!!!!
             }
 
-            string script = @"mostrarModal();";
-            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script, true);
-        }
+            // limpiar variables de session 
+            Session.Remove("DescripAcabadoSession");
+            Session.Remove("DescripGrupoSession");
+            Session.Remove("DetalleAdicionalSession");
+
+
+            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ModalAcabados').modal('show');", true);
+
+        } 
+
         protected void DataGridAcabadoVentas_ItemCommand(object source, DataGridCommandEventArgs e)
         {
             int rowIndex = Convert.ToInt32(e.CommandArgument);
@@ -6461,7 +6474,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session["DetalleAdicionalSession"] = row.Cells[4].Text;
             Session["DescripGrupoSession"] = row.Cells[5].Text;
 
-
+            Session["AcacadoSeleccionadoSession"] = "1";
 
             btnAgregarAcabado.Enabled = true;
             btnAgregarAcabado.CssClass = "btn btn-sm btn-outline-secondary";
@@ -6470,64 +6483,78 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string script = @"mostrarModal();";
             ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script, true);
 
+
         }
+   
         protected void btnAgregarAcabado_Click(object sender, EventArgs e)
         {
-            if (AgregarAcabado())
+            // valida que se haya seleccionado un acabado 
+            if (Session["AcacadoSeleccionadoSession"]?.ToString() == "1")
             {
+                if (AgregarAcabado())
+                {
+                    // El usuario no tiene permisos para realizar la acción
+                    DataGridAcabados1.DataBind();
+                    string script1 = @"mostrarModal();";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
+                }
+                else
+                {
+                    // El usuario no tiene permisos para realizar la acción
+                    string scriptError = "alert('El acabado no se puedo agregar con exito, intentelo nuevamente mas tarde.');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptError, true);
 
-                // El usuario no tiene permisos para realizar la acción
-                string scriptError = "alert('El acado no se puedo agregar con exito, intentelo nuevamente mas tarde.');";
-                ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptError, true);
-
-                string script = @"mostrarModal();";
-                ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script, true);
+                    ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ModalAcabados').modal('show');", true);
+                }
             }
             else
             {
                 // El usuario no tiene permisos para realizar la acción
-                DataGridAcabados1.DataBind();
-                string scriptExito = "alert('El acabado fue agregado con exito');";
-                ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptExito, true);
+                string scriptError = "alert('No se ha seleccionado un acabado para agregar.');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptError, true);
 
-                string script = @"mostrarModal();";
-                ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script, true);
-
+                string script1 = @"mostrarModal();";
+                ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
             }
 
         }
+    
         public bool AgregarAcabado()
         {
+            // Consulta SQL para insertar un nuevo registro
+            string consultaActual = "INSERT INTO tblOTAcabadoDefinitivo (oadPLano, oadAplicacionAcabado, oadDescripcionAcabado, oadDescripcionGrupoObjeto) " +
+                                    "VALUES (@plano, @AA, @DescripcionAcabado, @DescripcionGrupo)";
 
-            string consultaActual = "INSERT INTO tblOTAcabadoDefinitivo (oadPLano,oadAplicacionAcabado,oadDescripcionAcabado,oadDescripcionGrupoObjeto)" +
-                " VALUES (@plano,@AA, @DescripcionAcabado,@DescripcionGrupo)";
-
+            // Obtener la cadena de conexión
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
+                // Abrir la conexión
                 connection.Open();
 
                 using (SqlCommand command = new SqlCommand(consultaActual, connection))
                 {
+                    // Agregar los parámetros a la consulta
                     command.Parameters.AddWithValue("@plano", txtPlano.Text);
                     command.Parameters.AddWithValue("@AA", "E");
                     command.Parameters.AddWithValue("@DescripcionAcabado", Session["DescripAcabadoSession"].ToString() + " - " + Session["DetalleAdicionalSession"].ToString());
                     command.Parameters.AddWithValue("@DescripcionGrupo", Session["DescripGrupoSession"].ToString());
 
-                    SqlDataReader reader = command.ExecuteReader();
-                    if (reader.HasRows)
-                    {
-                        reader.Close();
+                    // Ejecutar la consulta y obtener el número de filas afectadas
+                    int filasAfectadas = command.ExecuteNonQuery();
 
-                        // Cerramos las variables de session 
+                    // Si se afectó al menos una fila, la operación fue exitosa
+                    if (filasAfectadas > 0)
+                    {
+                        // Limpiar las variables de sesión
                         Session.Remove("DescripAcabadoSession");
                         Session.Remove("DescripGrupoSession");
                         Session.Remove("DetalleAdicionalSession");
+                        Session.Remove("AcacadoSeleccionadoSession");
+
 
                         return true;
-
-
                     }
                     else
                     {
@@ -6535,8 +6562,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
             }
-
-        } // Campo se podria Cargar en el login
+   
+        }    
         public void DepartamentoAsesor()
         {
 
@@ -6566,7 +6593,128 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         } // Campo se podria Cargar en el login
+     
+        protected void DataGridAcabados1_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            int rowIndex = Convert.ToInt32(e.CommandArgument);
+            DataGridItem row = DataGridAcabados1.Items[rowIndex];
 
+            // Se utiliza para darle el color solo a la fila seleccionada 
+            foreach (DataGridItem item in DataGridAcabados1.Items)
+            {
+                if (item != row)
+                {
+                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                }
+            }
+
+            //se usa Para darle un color a la fila seleccionada  anderson
+            e.Item.CssClass = "fila-seleccionada";
+
+
+            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
+            {
+
+                // Validar que la OT no este cerrada para dibujo para permitir el doble click  
+                // Validar  cuando la aplicacion del acabado es diferente de 'E'
+
+
+                // Se compara si el click es en la misma fila con el id del acabado
+                if (row.Cells[7].Text == Session["ID_Acabado"]?.ToString())
+                {
+                    // Incrementar la variable de sesión "ClickCount" en el servidor
+                    int clickCount = Convert.ToInt32(Session["ClickCount3"]) + 1;
+                    Session["ClickCount3"] = clickCount;
+
+                    // se valida si es el segundo click en la misma fila 
+                    if (clickCount == 2)
+                    {
+                        // nombre del acabado a eliminar 
+                        span_NombreAcabado.InnerText = row.Cells[1].Text;
+
+
+                        Session["IdAcabadoElimnar"] = row.Cells[7].Text;
+
+                        // Reiniciar la variable de sesión "ClickCount" a 0 para la próxima interacción                        
+                        Session.Remove("ID_Acabado");
+                        Session.Remove("ClickCount3");
+
+                       
+
+                        // mostrar modal de acabado y modal de confirmar eliminar acabado
+                        string script1 = @"mostrarModal();";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
+
+                        string script2 = @"mostrarModalEliminarAcabado();";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModalEliminarAcabado", script2, true);
+
+                    }
+
+                }
+                else
+                {
+                    // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
+                    Session["ClickCount3"] = 1;
+                    Session["ID_Acabado"] = row.Cells[7].Text;
+
+                    string script = @"mostrarModal();";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script, true);
+
+                }
+            }
+            else
+            {
+                string script = @"mostrarModal();";
+                ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script, true);
+            }
+
+        }
+  
+        protected void btnCerrarAcabadosPlano_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("OrdenTrabajo.aspx");
+        }
+
+        protected void btnEliminarAcabado_SI_Click(object sender, EventArgs e)
+        {
+
+            //Se realiza la eliminacion del acabado 
+            EliminarAcabaDefinitivo();
+            DataGridAcabados1.DataBind();
+
+
+            string script1 = @"mostrarModal();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
+        }
+
+        private void EliminarAcabaDefinitivo()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "Delete  from tblOTAcabadoDefinitivo where id_OTAcabadodefinitivo= @IdAcabadoPlano";
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    cmd.Parameters.AddWithValue("@IdAcabadoPlano", Session["IdAcabadoElimnar"].ToString());
+
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    Session.Remove("IdAcabadoElimnar");
+                }
+            }
+        }
+
+        protected void btneliminarAcabado_NO_Click(object sender, EventArgs e)
+        {
+            string script1 = @"mostrarModal();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
+
+            Session.Remove("IdAcabadoElimnar");
+           
+        }
 
 
         //*****  Incio Boton Leer Autocad Pendiente Implementacion ******
@@ -10766,7 +10914,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string scriptNoPermiso = "alert('" + mensaje + "');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
             }
-            
+
 
             // Mensaje de Exito 
         }
@@ -10801,7 +10949,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private bool ActualizarPlanoPanel()
         {
-           
+
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             string sSql = "UPDATE tblPlano_Panel Set Precio_Venta = tblPanel.Precio_Venta FROM tblPanel " +
                           "INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum " +
@@ -10814,7 +10962,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     // Aquí ajusta los valores según los nombres de columnas reales en tu DataRow
                     cmd.Parameters.AddWithValue("@Plano", "N" + txtPlano.Text);
-                    
+
                     int CantidadFilasAfectada = cmd.ExecuteNonQuery();
 
                     if (CantidadFilasAfectada > 0)
@@ -10877,9 +11025,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     connection.Open();
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        if (reader.Read()) 
+                        if (reader.Read())
                         {
-                            precioVenta = reader["Precio_Venta"].ToString(); 
+                            precioVenta = reader["Precio_Venta"].ToString();
                         }
                     }
                 }
@@ -10897,7 +11045,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 // Realizar la importacion y actualizacion 
                 //El metodo que realiza esta acciones eta comentado en el sid viejo Actualizar_Objetos 
-               
+
             }
             else
             {
@@ -10915,7 +11063,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "SELECT * FROM tblPermiso_Empleado WHERE ID_Empleado = @CedulaLogueada AND ID_Permiso = '32'"; 
+                string query = "SELECT * FROM tblPermiso_Empleado WHERE ID_Empleado = @CedulaLogueada AND ID_Permiso = '32'";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -10954,7 +11102,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 //Para el departamento de Ventas e Instalación 
                 case "VENTAS":
-                case "Instalación":
+                case "INSTALACIÓN":
 
                     //Validar que la cotización sea dieferente de NO TIENE
                     string cotizacion = txtCotizacion.Text; // Asegúrate de reemplazar 'tuTextBox' con el nombre correcto de tu TextBox.
@@ -11184,21 +11332,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     ActualizarBolsaObjeto(id_GrupoObjeto, Cantidad, SubTotal);
                                 }
 
-
                             }
 
-
                         }
-
 
                         //SE REGISTRA EL PEDIDO EN EL ISID
                         if (PasarPedidoISID(false))
                         {
-
                             string mensajePersonalizado = "El pedido fue registrado directamente al ISID para el chequeo financiero.";
                             string urlRedireccion = "OrdenTrabajo.aspx";
                             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-
 
                         }
                         else
@@ -11208,21 +11351,145 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             ScriptManager.RegisterStartupScript(this, GetType(), "showFacturable", scriptContCliNoAct, true);
                         }
 
-
-
                     }
 
                     break;
 
-                case "Diseño":
+                case "DISEÑO":
                 case "COMPRAS":
-                    
+
                     // SE CONSULTA SI EL PEDIDO TIENE ACABADOS DEFINIDOS POR EL ASESOR
                     if (ConsultarAcabadosPorAsesor())
                     {
+                        if (!ConsultarAcabadosPlano())
+                        {
+                            //MINIMAMENTE DEBERIA TENER ACABADOS EN EL PLANO
+                            string script = @"CerrarCargarOK();";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", script, true);
+                            string scriptNoAcabados = "alert('Se detectarón acabados definidos por el asesor y NO pasados a los acabados del plano. No se puede pasar el pedido');";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "showFacturable", scriptNoAcabados, true);
+
+                            return;
+                        }
+                    }
+
+
+                    if (!ConsultarAcabadosDefinitivos())
+                    {
+                        string script = @"CerrarCargarOK();";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", script, true);
+                        string scriptNoAcabados1 = "alert('Se detectarón acabados pendientes por definir, favor revisar acabados del plano. No se puede pasar el pedido');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showFacturable", scriptNoAcabados1, true);
+                        return;
+                    }
+
+                    if (tbValorPedido.Text == "0" && ddlNumbers.SelectedItem.Text != "OAI")
+                    {
+                        if (DataGridDespiecePlano.Items.Count > 2)
+                        {
+                            string script = @"CerrarCargarOK();";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", script, true);
+                            string scriptNoAcabados2 = "alert('Se detecta que este pedido tiene despiece y no fue digitado el valor del TXT, no se puede pasar el pedido a producción. No se puede pasar el pedido');";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "showFacturable", scriptNoAcabados2, true);
+                            return;
+                        }
 
                     }
 
+                    // Consultamos el tipo de pedido y  si es pedidio facturable
+                    if (ValidarPedidoFacturable(dtacboTipoPedido.SelectedValue))
+                    {
+                        //Validamos que el precio sea mayor que cero 
+                        if (Convert.ToDouble(txtVenta.Text) <= 0)
+                        {
+                            // Mensaje SI EL PEDIDO ES FACTURABLE, EL VALOR VENTA DEBE SER MAYOR A CERO                       
+                            string mensajePersonalizado = "El tipo de pedido es facturable, el valor venta debe ser superior a Cero(0).";
+                            string urlRedireccion = "OrdenTrabajo.aspx";
+                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                        }
+                    }
+                    else
+                    {
+                        // Validamos que el precio de venta sea igual cero 
+                        if (Convert.ToDouble(txtVenta.Text) != 0)
+                        {
+                            // SI EL PEDIDO NO ES FACTURABLE, EL VALOR VENTA DEBE SER CERO
+                            string mensajePersonalizado = "El tipo de pedido no es facturable, el valor venta debe ser Cero(0).";
+                            string urlRedireccion = "OrdenTrabajo.aspx";
+                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+                        }
+
+                    }
+
+                    DataTable InfoOT1 = ConsultarInformacionPedidoSaldo();
+                    bool afectaBolsa1 = ConsultaAfectaBolsa();
+
+                    CalcularSaldo2(InfoOT1);
+
+                    if ((TotalObraMas > 0 && Convert.ToDouble(lblSaldoOT.Text) < 0) && afectaBolsa1 == true)
+                    {
+                        if ((Math.Abs(Convert.ToDouble(lblSaldoOT.Text) * 100 / TotalObraMas) > 3))
+                        {
+                            string mensajeError = "El pedido tiene un saldo:  " + Math.Abs(Convert.ToDouble(lblSaldoOT.Text)) + " % en contra no se puede pasar el pedido";
+                            string scriptError = "alert('" + mensajeError + "');";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "showError", scriptError, true);
+                            return;
+                        }
+                    }
+
+                    // SE VERIFICA SI LA FECHA DE EMPAQUE CUMPLE CON LOS TIEMPO MINIMOS
+                    if (!ValidarFechaEmpaque())
+                    {
+
+                        string mensajePersonalizado = "La fecha de empaque no cumple con los tiempos mínimos de producción. Desea continuar pasando el pedido? ";
+                        string urlRedireccion = "OrdenTrabajo.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    }
+
+
+                    // Actualizar fecha y realizado por en tblOT 
+                    ActulizarFechasYRealizadoPor();
+
+
+                    // PARA INFORMAR POR MAIL LA REACTIVACION DE UN PEDIDO ***+*** pendiente por revisar ********
+                    bool ObraReactivada = ConsultarEstadoObraReactivada();
+                    if (ObraReactivada)
+                    {
+                        //Validar que se debe haver en caso se obvervacion 
+                    }
+
+
+                    // PARA REGISTRAR EL REPROCESO  ***+*** pendiente por revisar ********
+                    if (dtacboTipoPedido.SelectedItem.Text.Trim().ToUpper() == "REPROCESO")
+                    {
+                        //  Realizar validacion  de que se hace en reproceso 
+                    }
+
+
+                    //SE ACTUALIZA EL DIBUJANTE DEL PLANO
+                    ActulizarDibujantePlano();                   
+
+                    // SE REGISTRA LA OT PARA EL CIERRE CONTABLE 
+
+                    // Si no existe el registro se realiza la insercion 
+                    if (!ValidarResgistroOtGeneral())
+                    {
+                        // Se realiza la la insercion del nuevo registro para cierre contable 
+                        InsertarRegistroCierreContable();
+                    }
+
+                    //MATRICULAR LOS REPORTES DE LA OBRA REPORTE INFORMACION OT
+                    // SE ELIMINA EL REPORTE OY Y SE CREA UNO NUEVO
+                    EliminarReporteOT();
+                    CrearReporteOt();
+
+                    // REPORTE INFORMACION DEL PLANO   ***+*** REVISAR RUTA DE ESA ACCION  ********
+
+                    EliminarReportePlano();
+                    InsertarReportePLano();
+
+   
                     break;
 
                 default:
@@ -11234,10 +11501,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
         // INICIO BOTON OK PARA DIBUJO Y COMPRAS 
-
-       
-
-        // FIN BOTON OK PARA DIBUJO Y COMPRAS
         public bool ConsultarAcabadosPorAsesor()
         {
             bool existe = false;
@@ -11246,10 +11509,44 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "SELECT tblOT.Id_OT,tblOT.Consecutivo_Pedido,tblOTAcabados.ID_Acabado,tblOTAcabados.ID_GrupoObjetoparaAcabado," +
-                               " tblOTAcabados.AcabadoVentas FROM tblOTAcabados " +
+                // Consulta para seleccionar alguna columna, no importa cuál
+                string query = "SELECT TOP 1 1 FROM tblOTAcabados " +
                                "INNER JOIN tblOT ON tblOTAcabados.Id_OT = tblOT.Id_OT AND tblOTAcabados.Consecutivo_Pedido = tblOT.Consecutivo_Pedido " +
                                "WHERE (tblOT.Id_OT = @Id_OT) AND (tblOT.Consecutivo_Pedido = @pedido)";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Agregar los parámetros a la consulta
+                    command.Parameters.AddWithValue("@Id_OT", tbOT.Text);
+                    command.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+                    connection.Open();
+
+                    // Ejecutar la consulta y usar SqlDataReader para verificar si hay filas
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            existe = true;
+                        }
+                    }
+                }
+            }
+
+            return existe;
+        }
+
+        public bool ConsultarAcabadosPlano()
+        {
+            bool existe = false;
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT TOP 1 1 FROM tblOTAcabadoDefinitivo " +
+                               "INNER JOIN tblPlano ON tblOTAcabadoDefinitivo.oadPLano = tblPlano.Plano " +
+                               "WHERE tblPlano.Id_OT = @Id_OT AND tblPlano.COnsecutivo_Pedido = @pedido";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -11257,17 +11554,200 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     command.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
 
                     connection.Open();
-                    int count = (int)command.ExecuteScalar();
-
-                    if (count > 0)
+                    // Ejecutar la consulta y usar SqlDataReader para verificar si hay filas
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        existe = true;
+                        if (reader.HasRows)
+                        {
+                            existe = true;
+                        }
                     }
                 }
             }
 
             return existe;
         }
+
+        public bool ConsultarAcabadosDefinitivos()
+        {
+            bool existe = false;
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT TOP 1 1 FROM tblOTAcabadoDefinitivo WHERE tblOTAcabadoDefinitivo.oadPLano = @plano " +
+                               "AND (tblOTAcabadoDefinitivo.oadAplicacionAcabado <>'E' AND tblOTAcabadoDefinitivo.oadCodInvDes Is Null)";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@plano", txtPlano.Text);
+
+
+                    connection.Open();
+                    // Ejecutar la consulta y usar SqlDataReader para verificar si hay filas
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            existe = true;
+                        }
+                    }
+                }
+            }
+
+            return existe;
+        }
+
+        public bool ConsultarEstadoObraReactivada()
+        {
+            bool reactivada = false;
+
+            // Define la cadena de conexión (modifica según tu configuración)
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            // Define la consulta SQL
+            string query = "SELECT Reactivada FROM tblOT WHERE Id_OT = @OT AND Consecutivo_Pedido = @Ped";
+
+            // Usamos una conexión SQL
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Creamos el comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Agregar parámetros para prevenir SQL Injection
+                    command.Parameters.AddWithValue("@OT", tbOT.Text);
+                    command.Parameters.AddWithValue("@Ped", ddlNumbers.SelectedItem.Text);
+
+                    // Abrir la conexión
+                    connection.Open();
+
+                    // Ejecutar la consulta y leer el resultado
+                    object result = command.ExecuteScalar();
+
+                    if (result != null && result != DBNull.Value)
+                    {
+                        reactivada = Convert.ToBoolean(result);
+                    }
+                }
+            }
+
+            return reactivada;
+        }
+
+        private void ActulizarFechasYRealizadoPor()
+        {
+            DateTime FechaEmpaque = Convert.ToDateTime(dtpEmpaque.Text);
+
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "UPDATE tblOT SET Fecha_Entrega_Produccion = GETDATE(), Fecha_Despacho_Produccion = @fechaDespacho, Fecha_Real_Despacho_Produccion = @fechaRealDespacho " +
+                              " Fecha_Instalacion= @fechaInstalacion, ResumenObra = @resumenObra, RealizadoPor = @realizadoPor WHERE Id_OT = @OT AND Consecutivo_Pedido = @pedido";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@fechaDespacho", FechaEmpaque.AddDays(1));
+                    cmd.Parameters.AddWithValue("@fechaRealDespacho", FechaEmpaque.AddDays(1));
+                    cmd.Parameters.AddWithValue("@Fecha_Instalacion", FechaEmpaque.AddDays(2));
+                    cmd.Parameters.AddWithValue("@resumenObra", txResumen.InnerText);
+                    cmd.Parameters.AddWithValue("@realizadoPor", Session["usuariologueado"].ToString());
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+                
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+        private void ActulizarDibujantePlano()
+        {
+            DateTime FechaEmpaque = Convert.ToDateTime(dtpEmpaque.Text);
+
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "Update tblPlano set RealizadoPor= @NombreUsuario WHERE plano = @plano";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+  
+                    cmd.Parameters.AddWithValue("@NombreUsuario", Session["usuariologueado"].ToString());
+                    cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+        public bool ValidarResgistroOtGeneral()
+        {
+            bool existe = false;
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Consulta para seleccionar alguna columna, no importa cuál
+                string query = "Select 1 1 from tblOTGeneral where Id_OT= @Id_OT ";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Agregar los parámetros a la consulta
+                    command.Parameters.AddWithValue("@Id_OT", tbOT.Text);
+              
+
+                    connection.Open();
+
+                    // Ejecutar la consulta y usar SqlDataReader para verificar si hay filas
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            existe = true;
+                        }
+                    }
+                }
+            }
+
+            return existe;
+        }
+
+        private void InsertarRegistroCierreContable()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "INSERT INTO tblOTGeneral(Id_OT,Nombre_Cliente,FechaApertura) " +
+                              "VALUES (@OT,@nombreCliente, @fechaApertura)";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@nombreCliente", txtNombreEmp.Text);
+                    cmd.Parameters.AddWithValue("@fechaApertura", tbVenta.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+   
+        // FIN BOTON OK PARA DIBUJO Y COMPRAS
+
 
 
         // INICIO BOTON OK PARA VENTAS
@@ -14826,10 +15306,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         }
-        
+
         // FIN BOTON OK PARA VENTAS  E INSTALACION 
 
- 
+
         //DataGrid Informacion contable 
         protected void DataGrid_RowDataBound(object sender, DataGridItemEventArgs e)
         {

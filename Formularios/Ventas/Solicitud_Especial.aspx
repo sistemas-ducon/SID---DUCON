@@ -1122,7 +1122,7 @@
                                                             <div class="" style="height: 35.5rem;">
 
                                                                 <div class="border rounded p-1 special-border" style="max-height: 20rem; height: 22rem; overflow-x: auto;">
-                                                                    <h6 class="datagrid-header text-center">Recptores de Correo</h6>
+                                                                    <h6 class="datagrid-header text-center">Receptores de Correo</h6>
                                                                     <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm p-1" ID="DataGridReceptorMail" DataSourceID="DSRecptores" runat="server" AutoGenerateColumns="false" OnItemCommand="DataGridReceptorMail_ItemCommand">
                                                                         <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                         <Columns>

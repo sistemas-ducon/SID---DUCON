@@ -138,7 +138,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 e.Item.CssClass = "fila-seleccionada";
 
                 // Almacenar el IdObjeto en el HiddenField
-                Nombre_Objeto_Hid.Value = row.Cells[2].Text;
+                Nombre_Objeto_Hid.Value = row.Cells[1].Text;
                 Ancho_Objeto_Hid.Value = row.Cells[3].Text;
                 Id_Objeto_Hid.Value = row.Cells[7].Text;
                 tbPrecioVenta.Text = row.Cells[8].Text;

@@ -2310,6 +2310,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.UpdatePanel PanelPlano;
 
         /// <summary>
+        /// Control btnCerrarAcabadosPlano.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton btnCerrarAcabadosPlano;
+
+        /// <summary>
         /// Control DataGridAcabados1.
         /// </summary>
         /// <remarks>
@@ -2434,6 +2443,33 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DataGrid DataGridObjNoExiste;
+
+        /// <summary>
+        /// Control span_NombreAcabado.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl span_NombreAcabado;
+
+        /// <summary>
+        /// Control btnEliminarAcabado_SI.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnEliminarAcabado_SI;
+
+        /// <summary>
+        /// Control btneliminarAcabado_NO.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btneliminarAcabado_NO;
 
         /// <summary>
         /// Control BtnAdiObjPla.
