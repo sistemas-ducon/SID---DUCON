@@ -31,50 +31,101 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         }
 
         protected void ValidarBotonGuardarEliminar()
-        {
-            // Verificar si la sesión "NumeroDiseño" tiene un valor y si es un número
+        {  // Verificar si la sesión "NumeroDiseño" tiene un valor y si es un número
             if (Session["NumeroDiseño"] != null && int.TryParse(Session["NumeroDiseño"].ToString(), out int numDise))
             {
-                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+                string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Ventas")
+            {
+              
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-
-                    // Consulta SQL para verificar el campo ProgramadoVentas
-                    string consultaProgramadoVentas = "SELECT ProgramadoVentas FROM tbldiseño WHERE Numero_Diseño = @Numero_Diseño";
-
-                    using (SqlCommand commandProgramadoVentas = new SqlCommand(consultaProgramadoVentas, connection))
+                    using (SqlConnection connection = new SqlConnection(connectionString))
                     {
-                        commandProgramadoVentas.Parameters.AddWithValue("@Numero_Diseño", numDise);
+                        connection.Open();
 
-                        bool programadoVentas = false; // Valor predeterminado
+                        // Consulta SQL para verificar el campo ProgramadoVentas
+                        string consultaProgramadoVentas = "SELECT ProgramadoVentas FROM tbldiseño WHERE Numero_Diseño = @Numero_Diseño";
 
-                        using (SqlDataReader readerProgramadoVentas = commandProgramadoVentas.ExecuteReader())
+                        using (SqlCommand commandProgramadoVentas = new SqlCommand(consultaProgramadoVentas, connection))
                         {
-                            if (readerProgramadoVentas.Read())
+                            commandProgramadoVentas.Parameters.AddWithValue("@Numero_Diseño", numDise);
+
+                            bool programadoVentas = false; // Valor predeterminado
+
+                            using (SqlDataReader readerProgramadoVentas = commandProgramadoVentas.ExecuteReader())
                             {
-                                programadoVentas = readerProgramadoVentas.GetBoolean(0);
+                                if (readerProgramadoVentas.Read())
+                                {
+                                    programadoVentas = readerProgramadoVentas.GetBoolean(0);
+                                }
+                            }
+
+                            // Validar ProgramadoVentas
+                            if (programadoVentas)
+                            {
+
+                                GuardarButton.Enabled = false;
+                                GuardarButton.CssClass = "btn btn-sm button-disabled";
+                                BtnEliminar.Enabled = false;
+                                BtnEliminar.CssClass = "btn btn-sm button-disabled";
+
+                            }
+                            else
+                            {
+
+                                GuardarButton.Enabled = true;
+                                GuardarButton.CssClass = "btn btn-sm btn-outline-dark button-enabled";
+                                BtnEliminar.Enabled = true;
+                                BtnEliminar.CssClass = "btn btn-sm btn-outline-dark button-enabled";
                             }
                         }
+                    }
+                
+            }
+            if (tipoAccion == "Diseño")
+            {
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
-                        // Validar ProgramadoVentas
-                        if (programadoVentas)
-                        {
-                      
-                            GuardarButton.Enabled = false;
-                            GuardarButton.CssClass = "btn btn-sm button-disabled";
-                            BtnEliminar.Enabled = false;
-                            BtnEliminar.CssClass = "btn btn-sm button-disabled";
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
 
-                        }
-                        else
+                        // Consulta SQL para verificar el campo ProgramadoVentas
+                        string consultaterminadoDibujo = "SELECT TerminadoDibujo FROM tbldiseño WHERE Numero_Diseño = @Numero_Diseño";
+
+                        using (SqlCommand commandterminadoDibujo = new SqlCommand(consultaterminadoDibujo, connection))
                         {
-                      
-                            GuardarButton.Enabled = true;
-                            GuardarButton.CssClass = "btn btn-sm btn-outline-dark button-enabled";
-                            BtnEliminar.Enabled = true;
-                            BtnEliminar.CssClass = "btn btn-sm btn-outline-dark button-enabled";
+                            commandterminadoDibujo.Parameters.AddWithValue("@Numero_Diseño", numDise);
+
+                            bool terminadoDibujo = false; // Valor predeterminado
+
+                            using (SqlDataReader readerProgramadoVentas = commandterminadoDibujo.ExecuteReader())
+                            {
+                                if (readerProgramadoVentas.Read())
+                                {
+                                    terminadoDibujo = readerProgramadoVentas.GetBoolean(0);
+                                }
+                            }
+
+                            // Validar ProgramadoVentas
+                            if (terminadoDibujo)
+                            {
+
+                                GuardarButton.Enabled = false;
+                                GuardarButton.CssClass = "btn btn-sm button-disabled";
+                                BtnEliminar.Enabled = false;
+                                BtnEliminar.CssClass = "btn btn-sm button-disabled";
+
+                            }
+                            else
+                            {
+
+                                GuardarButton.Enabled = true;
+                                GuardarButton.CssClass = "btn btn-sm btn-outline-dark button-enabled";
+                                BtnEliminar.Enabled = true;
+                                BtnEliminar.CssClass = "btn btn-sm btn-outline-dark button-enabled";
+                            }
                         }
                     }
                 }

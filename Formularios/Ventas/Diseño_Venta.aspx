@@ -70,7 +70,75 @@
             textBox.value = fileUpload.files[0].name;
         }
         }
+
     </script>
+
+ <script type="text/javascript">
+     function showLoadingAnimation2() {
+         var loadingAnimation2 = $('#loadingAnimation2');
+         var progressBar2 = $('#progressBar2');
+         var progressMessage2 = $('#progressMessage2');
+
+         loadingAnimation2.show(); // Mostrar la animación de carga
+
+         // Array de mensajes
+         var messages2 = ["Cargando...", "Por favor, espere...", "Estamos procesando su solicitud...", "Gracias por su paciencia..."];
+         var messageIndex2 = 0;
+
+         // Cambiar mensajes de forma periódica
+         var interval2 = setInterval(function () {
+             messageIndex2 = (messageIndex2 + 1) % messages2.length; // Cambiar el mensaje
+             progressMessage2.text(messages2[messageIndex2]); // Actualizar el mensaje
+
+             // Simulación de progreso
+             var progress2 = (messageIndex2 + 1) * 25; // Incrementar el progreso
+             progressBar2.css('width', progress2 + '%').attr('aria-valuenow', progress2); // Actualizar la barra de progreso
+         }, 2000); // Cambiar mensaje cada 2 segundos
+
+         // Detener la animación cuando el progreso se complete o se termine la operación
+         $('#<%= Btn.ClientID %>').on('click', function () {
+             clearInterval(interval2);
+             progressBar2.css('width', '100%').attr('aria-valuenow', 100); // Completar la barra de progreso
+         });
+     }
+ </script>
+
+    <script type="text/javascript">
+        function showLoadingAnimation3() {
+            var loadingAnimation2 = $('#loadingAnimation3');
+            var progressBar2 = $('#progressBar3');
+            var progressMessage2 = $('#progressMessage3');
+
+            loadingAnimation2.show(); // Mostrar la animación de carga
+
+            // Array de mensajes
+            var messages2 = ["Cargando...", "Por favor, espere...", "Estamos procesando su solicitud...", "Gracias por su paciencia..."];
+            var messageIndex2 = 0;
+
+            // Cambiar mensajes de forma periódica
+            var interval2 = setInterval(function () {
+                messageIndex2 = (messageIndex2 + 1) % messages2.length; // Cambiar el mensaje
+                progressMessage2.text(messages2[messageIndex2]); // Actualizar el mensaje
+
+                // Simulación de progreso
+                var progress2 = (messageIndex2 + 1) * 25; // Incrementar el progreso
+                progressBar2.css('width', progress2 + '%').attr('aria-valuenow', progress2); // Actualizar la barra de progreso
+            }, 2000); // Cambiar mensaje cada 2 segundos
+
+            // Detener la animación cuando el progreso se complete o se termine la operación
+            $('#<%= BtnAdjuntarOtro.ClientID %>').on('click', function () {
+                clearInterval(interval2);
+                progressBar2.css('width', '100%').attr('aria-valuenow', 100); // Completar la barra de progreso
+            });
+
+            // Detener la animación cuando el progreso se complete o se termine la operación
+            $('#<%= BtnNoAdjuntarOtro.ClientID %>').on('click', function () {
+                clearInterval(interval2);
+                progressBar2.css('width', '100%').attr('aria-valuenow', 100); // Completar la barra de progreso
+            });
+        }
+    </script>
+
 
 <script>
     function triggerFileUpload() {
@@ -1878,7 +1946,7 @@
                                                             <div class="" style="height: 35.5rem;">
 
                                                                 <div class="border rounded p-1 special-border" style="max-height: 20rem; height: 22rem; overflow-x: auto;">
-                                                                    <h6 class="datagrid-header text-center">Recptores de Correo</h6>
+                                                                    <h6 class="datagrid-header text-center">Receptores de Correo</h6>
                                                                     <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm p-1" ID="DataGridReceptorMail" DataSourceID="DSRecptores" runat="server" AutoGenerateColumns="false" OnItemCommand="DataGridReceptorMail_ItemCommand">
                                                                         <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                         <Columns>
@@ -1987,6 +2055,9 @@
         </div>
     </div>
 </div>
+
+                        
+          
 
 
 
@@ -2573,6 +2644,37 @@
             </div>
         </div>
 
+         <div id="ConfirmarTerminarDiseño" class="modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header navbar-custom d-flex align-items-center justify-content-center shadow text-white">
+                                            <h5 class="modal-title text-center">Terminar Diseño</h5>
+
+                                        </div>
+                                        <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                                            <div class="container-fluid">
+                                                <h6><span id="ConfirmarTerminarDiseño2"></span></h6>
+
+                                                   <div id="loadingAnimation2" class="loading-animation" style="display: none;">
+                    <div class="progress">
+                        <div id="progressBar2" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div id="progressMessage2" class="progress-message">Cargando...</div>
+                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                                <asp:Button runat="server" ID="Btn" Text="SI" CssClass="btn btn-sm btn-outline-success text-dark fw-bold linkButtonClicked2" OnClick="TerminarSi_Click" OnClientClick="showLoadingAnimation2();"/>
+                                                <asp:Button runat="server" ID="Button3" Text="NO" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-danger text-dark fw-bold linkButtonClicked2" OnClick="NOTerminarDiseño_Click" />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
         <div class="modal" id="ProgramarDiseñoCotizacion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -2680,42 +2782,6 @@
     </div>
 </div>
 
-               <div class="modal fade" id="AdjuntarOtroArchivo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header navbar-custom d-flex align-items-center justify-content-center">
-                <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID_DUCON</h5>
-            </div>
-            <div class="modal-body row align-items-center form-control-sm justify-content-center">
-                <div class="row">
-                <p>Desea adjuntar algún archivo o plano al mail del diseño terminado?</p>
-                    </div>
-                  <div class="row">
-                    <p class="text-muted">Nota: Si necesita adjuntar varios archivos, estos deben ser seleccionados desde la misma carpeta.</p>
-                </div>
-            </div>
-            <div class="modal-footer d-flex align-items-center justify-content-center">
-               
-                     <div class="row">
-                         <div class="col-3">
-             <asp:LinkButton runat="server" title="Nuevo plano" ID="LinkButton5" OnClientClick="triggerFileUpload2(); return false;">
-                        <i class="bi bi-cloud-arrow-up-fill ColorAzulActivo masGrande"></i>
-                    </asp:LinkButton>
-                          </div>
-                          <div class="col-9 mt-3">
-                   <asp:FileUpload runat="server" ID="FileUpload1" AllowMultiple="true" Style="display: none;" OnChange="showFileName2();" />
-                    <asp:TextBox runat="server" ID="TextBox1" CssClass="form-control linkButtonClicked2" ReadOnly="True"></asp:TextBox>
-                    </div>
-                         </div>
-                </div>
-              <div class="modal-footer d-flex align-items-center justify-content-center">
-                   <asp:Button runat="server" type="button" class="btn btn-sm btn-outline-success text-dark fw-bold linkButtonClicked2" data-bs-dismiss="modal" Text="ADJUNTAR" aria-label="Close" OnClick="AdjuntarOtroArchivo_Click"></asp:Button>
-              <asp:Button runat="server" type="button" class="btn btn-sm btn-outline-danger text-dark fw-bold linkButtonClicked2" data-bs-dismiss="modal" Text="NO" aria-label="Close" OnClick="EnviarCorreoTerminado_Click"></asp:Button>
-
-            </div>
-        </div>
-    </div>
-</div>
 
 
 
@@ -2754,10 +2820,103 @@
                             </div>
                         </div>
 
+             <div class="modal fade" id="AdjuntarOtroArchivo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header navbar-custom d-flex align-items-center justify-content-center">
+                <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID_DUCON</h5>
+            </div>
+            <div class="modal-body row align-items-center form-control-sm justify-content-center">
+                <div class="row">
+                <p>Desea adjuntar algún archivo o plano al mail del diseño terminado?</p>
+                    </div>
+                  <div class="row">
+                    <p class="text-muted">Nota: Si necesita adjuntar varios archivos, estos deben ser seleccionados desde la misma carpeta.</p>
+                </div>
+            </div>
+            <div class="modal-footer d-flex align-items-center justify-content-center">
+                     <div class="row">
+                         <div class="col-3">
+             <asp:LinkButton runat="server" title="Nuevo plano" ID="LinkButton5" OnClientClick="triggerFileUpload2(); return false;">
+                        <i class="bi bi-cloud-arrow-up-fill ColorAzulActivo masGrande"></i>
+                    </asp:LinkButton>
+                          </div>
+                          <div class="col-9 mt-3">
+                   <asp:FileUpload runat="server" ID="FileUpload1" AllowMultiple="true" Style="display: none;" OnChange="showFileName2();" />
+                    <asp:TextBox runat="server" ID="TextBox1" CssClass="form-control linkButtonClicked2" ReadOnly="True"></asp:TextBox>
+                    </div>
+                         </div>
+                <div class="row container">
+                    <div id="loadingAnimation3" class="loading-animation" style="display: none;">
+                    <div class="progress">
+                        <div id="progressBar3" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div id="progressMessage3" class="progress-message">Cargando...</div>
+                </div>
+                    </div>
+                </div>
+              <div class="modal-footer d-flex align-items-center justify-content-center">
+                   <asp:Button runat="server" type="button" ID="BtnAdjuntarOtro" class="btn btn-sm btn-outline-success text-dark fw-bold linkButtonClicked2" Text="ADJUNTAR" OnClick="AdjuntarOtroArchivo_Click" OnClientClick="showLoadingAnimation3();"></asp:Button>
+              <asp:Button runat="server" type="button" ID="BtnNoAdjuntarOtro" class="btn btn-sm btn-outline-danger text-dark fw-bold linkButtonClicked2" Text="NO" OnClick="EnviarCorreoTerminado_Click" OnClientClick="showLoadingAnimation3();"></asp:Button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
          
     </form>
 
-    
+    <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        // Seleccionar el tab específico por su ID
+        var planoContent = document.getElementById('<%= UpdatePanel2.ClientID %>');
+
+        // Agregar un listener para capturar la tecla "Enter"
+        planoContent.addEventListener("keydown", function(event) {
+            // Verificar si la tecla presionada es "Enter"
+            if (event.key === "Enter") {
+                event.preventDefault(); // Evitar el comportamiento predeterminado de "Enter"
+                // Disparar el click en el LinkButton
+                document.getElementById('<%= But.ClientID %>').click();
+            }
+        });
+    });
+</script>
+
+     <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        // Seleccionar el tab específico por su ID
+        var planoContent = document.getElementById('<%= UpdatePanel3.ClientID %>');
+
+        // Agregar un listener para capturar la tecla "Enter"
+        planoContent.addEventListener("keydown", function(event) {
+            // Verificar si la tecla presionada es "Enter"
+            if (event.key === "Enter") {
+                event.preventDefault(); // Evitar el comportamiento predeterminado de "Enter"
+                // Disparar el click en el LinkButton
+                document.getElementById('<%= BtnBuscarPlano.ClientID %>').click();
+            }
+        });
+    });
+</script>
+
+    <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        // Seleccionar el tab específico por su ID
+        var planoContent = document.getElementById('<%= UpdateDiseñoBitacora.ClientID %>');
+
+        // Agregar un listener para capturar la tecla "Enter"
+        planoContent.addEventListener("keydown", function(event) {
+            // Verificar si la tecla presionada es "Enter"
+            if (event.key === "Enter") {
+                event.preventDefault(); // Evitar cualquier acción asociada con "Enter"
+            }
+        });
+    });
+</script>
+
+
 
     <script>
         function activarTab(tabId) {

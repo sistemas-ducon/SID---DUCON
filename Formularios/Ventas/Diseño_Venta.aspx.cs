@@ -216,7 +216,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (Session["NumeroDiseño2"] != null && !string.IsNullOrEmpty(Session["NumeroDiseño2"].ToString()))
             {
+                AccionesAlCargarDiseño();
                 ProcesarNumeroDiseño2(null);
+                scripTabDise();
 
                 if (Session["Despiece"]?.ToString() == "1")
                 {
@@ -240,7 +242,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }, 500);
                 ", true);
 
-                     
+
                     }
 
                     // Limpiar la sesión
@@ -252,6 +254,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Limpia las variables de sesión
             Session.Remove("PrimerClicTime");
+            Session.Remove("Id_NumericoDise");
+
         }
 
         
@@ -859,7 +863,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Generar y guardar el archivo Excel
             string rutaArchivo = GuardarExcel(numeroDiseno);
-
+         
             // Envío de correos electrónicos
             EnviarCorreosDeNotificacion(NombreUsuario, rutaArchivo);
         }
@@ -927,8 +931,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     ViewState["NombreUsuario"] = NombreUsuario;
                     ViewState["RutaArchivo"] = rutaArchivo;
 
-                    // Mostrar el modal
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#AdjuntarOtroArchivo').modal('show');", true);
+                    scripTabDise();
+
+                    // Mostrar el modal con un retraso de 2 segundos
+                    ScriptManager.RegisterStartupScript(UpdatePanel1, UpdatePanel1.GetType(), "ShowModalAfterDelay", @"
+                    setTimeout(function() {
+                        $('#AdjuntarOtroArchivo').modal('show');
+                    }, 500);
+                ", true);
                 }
             }
         }
@@ -954,6 +964,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ViewState["NombreUsuario"].ToString(),
                 rutaCompleta
             );
+            Session["Numero_Diseño2"] = lblNumDise.Text;
+
+            Response.Redirect("/Formularios/Ventas/Diseño_Venta.aspx");
         }
 
 
@@ -1265,6 +1278,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string mensajePersonalizado = "El diseño no fue programardo";
             string urlRedireccion = "Ventas/Diseño_Venta.aspx";
             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+        }
+
+        protected void NOTerminarDiseño_Click(object sender, EventArgs e)
+        {
+            string numeroDiseño = lblNumDise.Text;
+
+            Session["NumeroDiseño2"] = numeroDiseño;
+
+
+            Response.Redirect("/Formularios/Ventas/Diseño_Venta.aspx");
 
         }
 
@@ -2737,7 +2761,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 int numeroDiseno = Convert.ToInt32(Session["NumeroDiseño"]);
 
                 string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-                string queryString = "SELECT ProgramadoVentas FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseno";
+                string queryString = "SELECT ProgramadoVentas, TerminadoDibujo FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseno";
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
@@ -2749,14 +2773,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         SqlDataReader reader = command.ExecuteReader();
                         if (reader.Read())
                         {
-                            // Obtener el valor de la columna ProgramadoVentas
-                            int programadoVentas = Convert.ToInt32(reader["ProgramadoVentas"]);
+                            string tipoAccion = Session["Diseno"] as string;
+                            if (tipoAccion == "Ventas")
+                            {
+                                // Obtener el valor de la columna ProgramadoVentas
+                                int programadoVentas = Convert.ToInt32(reader["ProgramadoVentas"]);
 
-                            // Ajustar la propiedad Enabled del botón BtnProgramar
-                            BtnProgramar.Enabled = (programadoVentas == 0);
-                            BtnProgramar.CssClass = "btn btn-sm shadow btn-warning fw-bold";
+                                // Ajustar la propiedad Enabled del botón BtnProgramar
+                                BtnProgramar.Enabled = (programadoVentas == 0);
+                                BtnProgramar.CssClass = "btn btn-sm shadow btn-warning fw-bold";
 
 
+                            }
+                            if (tipoAccion == "Diseño")
+                            {
+                                // Obtener el valor de la columna ProgramadoVentas
+                                int TerminadoDibujo = Convert.ToInt32(reader["TerminadoDibujo"]);
+
+                                // Ajustar la propiedad Enabled del botón BtnProgramar
+                                BtnProgramar.Enabled = (TerminadoDibujo == 0);
+                                BtnProgramar.CssClass = "btn btn-sm shadow btn-warning fw-bold";
+                            }
                         }
                         reader.Close();
                     }
@@ -2774,7 +2811,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 int numeroDiseno = Convert.ToInt32(Session["NumeroDiseño2"]);
 
                 string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-                string queryString = "SELECT ProgramadoVentas FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseno";
+                string queryString = "SELECT ProgramadoVentas, TerminadoDibujo FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseno";
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
@@ -2786,12 +2823,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         SqlDataReader reader = command.ExecuteReader();
                         if (reader.Read())
                         {
-                            // Obtener el valor de la columna ProgramadoVentas
-                            int programadoVentas = Convert.ToInt32(reader["ProgramadoVentas"]);
+                            string tipoAccion = Session["Diseno"] as string;
+                            if (tipoAccion == "Ventas")
+                            {
+                                // Obtener el valor de la columna ProgramadoVentas
+                                int programadoVentas = Convert.ToInt32(reader["ProgramadoVentas"]);
 
-                            // Ajustar la propiedad Enabled del botón BtnProgramar
-                            BtnProgramar.Enabled = (programadoVentas == 0);
-                            BtnProgramar.CssClass = "btn btn-sm shadow btn-warning fw-bold";
+                                // Ajustar la propiedad Enabled del botón BtnProgramar
+                                BtnProgramar.Enabled = (programadoVentas == 0);
+                                BtnProgramar.CssClass = "btn btn-sm shadow btn-warning fw-bold";
+
+
+                            }
+                            if (tipoAccion == "Diseño")
+                            {
+                                // Obtener el valor de la columna ProgramadoVentas
+                                int TerminadoDibujo = Convert.ToInt32(reader["TerminadoDibujo"]);
+
+                                // Ajustar la propiedad Enabled del botón BtnProgramar
+                                BtnProgramar.Enabled = (TerminadoDibujo == 0);
+                                BtnProgramar.CssClass = "btn btn-sm shadow btn-warning fw-bold";
+                            }
 
                             // Si el botón está habilitado, actualizar los TextBox con las fechas
                             if (BtnProgramar.Enabled)
@@ -3125,6 +3177,32 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Habilitar el botón "Modificar"
                 Modificar.Enabled = false;
                 Modificar.CssClass = "btn btn-sm shadow button-disabled";
+
+                DocBitacora.Enabled = true;
+                DocBitacora.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+                // Habilitar el botón "AdicionarElemento"
+                AdicionarElemento.Enabled = true;
+                AdicionarElemento.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
+
+                BtnVisCotPreAct.Enabled = true;
+                BtnVisCotPreAct.CssClass = "btn btn-sm button-enabled";
+            }
+            if (tipoAccion == "Diseño")
+            {
+                NuevoDisBit.Enabled = true;
+                NuevoDisBit.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
+
+                Grabar.Enabled = false;
+                Grabar.CssClass = "btn btn-sm shadow button-disabled";
+
+                // Habilitar el botón "ActualizarDiseno"
+                ActualizarDiseno.Enabled = true;
+                ActualizarDiseno.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+                // Habilitar el botón "Modificar"
+                Modificar.Enabled = true;
+                Modificar.CssClass = "btn btn-sm shadow button-enabled";
 
                 DocBitacora.Enabled = true;
                 DocBitacora.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
@@ -5730,8 +5808,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 TextArch.Text = "";
             }
         }
-
-        //EVENTOS RECEPCION
 
         //EVENTOS RECEPCION
 
@@ -9015,10 +9091,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
-            if (tipoAccion == "Ventas")
-            {
-                // Código para "Ventas" aquí
-            }
+          
         }
 
         private PanelInfo GetPanelInfoByIdNumerico(string idNumerico)
@@ -10855,7 +10928,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string Aplicacion = ConsultarAreaAplicacion();
 
                 //Enviar la notificacion por Correo 
-                string destinatarios = (tbReceptorCorreo.Text + ";" + tbRecepTipoObs.Text).Trim(';').Trim(' ');
+                string cedulaLogeada = Session["CedulaLogeada"].ToString();
+                string mailUsuario = ObtenerMailUsuario(cedulaLogeada);
+                string destinatarios = (tbReceptorCorreo.Text + ";" + mailUsuario + tbRecepTipoObs.Text).Trim(';').Trim(' ');
                 string cuerpo = @"
                     <!DOCTYPE html>
                     <html lang='es'>
