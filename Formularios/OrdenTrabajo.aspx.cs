@@ -173,6 +173,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             Session.Remove("AcacadoSeleccionadoSession");
 
+            btnPlanoOT.Enabled = false;
+            btnPlanoOT.CssClass = "btn btn-sm shadow-sm button-disabled";
+
         }
 
         protected void Page_LoadDiseño(object sender, EventArgs e)
@@ -1867,6 +1870,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             string valorTextBox = tbObra.Text.Trim();
 
+
+            bool estaCerrada = EstaCerrada(id, pedido);
+            string textoPlano = txtPlano.Text;
+
+            if (textoPlano == null || textoPlano == "")
+            {
+                btnOk.Enabled = false;
+                btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
+            }
+            else
+            {
+                btnOk.Enabled = true;
+                btnOk.CssClass = "btn btn-sm shadow button-enabled rojo fw-bold";
+            }
+
             // Guardar el valor en una variable de sesión
             Session["ValorDeObra"] = valorTextBox;
 
@@ -2517,55 +2535,63 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
+            if (estaAbierta == false && estaAbiertaVentas)
+            {
+                DeshabilitarOt.Enabled = true;
+                DeshabilitarOt.CssClass = "btn btn-sm shadow button-enabled";
+            }
+            else
+            {
+                DeshabilitarOt.Enabled = false;
+                DeshabilitarOt.CssClass = "btn btn-sm shadow button-disabled";
+            }
+
             if (estaAbiertaVentas)
             {
                 HabilitarPedido.Enabled = true;
-                HabilitarPedido.CssClass = "btn btn-sm shadow button-enabled ";
+                HabilitarPedido.CssClass = "btn btn-sm shadow button-enabled";
+            }
+            else
+            {
+                HabilitarPedido.Enabled = false;
+                HabilitarPedido.CssClass = "btn btn-sm shadow button-disabled";
             }
 
                 // Habilite o deshabilite el botón
-                if (estaAbierta)
+            if (estaAbierta)
             {
-                btnOk.Enabled = true;
-                btnOk.CssClass = "btn btn-sm shadow button-enabled rojo fw-bold";
-
                 ModificarOt.Enabled = true;
                 ModificarOt.CssClass = "btn btn-sm shadow button-enabled";
 
                 AnularPedido.Enabled = true;
                 AnularPedido.CssClass = "btn btn-sm shadow button-enabled ";
-
-              
             }
             else
             {
-                btnOk.Enabled = false;
-                btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
-
                 ModificarOt.Enabled = false;
                 ModificarOt.CssClass = "btn btn-sm shadow button-disabled";
 
                 AnularPedido.Enabled = false;
                 AnularPedido.CssClass = "btn btn-sm shadow button-disabled ";
 
-                HabilitarPedido.Enabled = false;
-                HabilitarPedido.CssClass = "btn btn-sm shadow button-disabled";
-
             }
-
-
-
+           
 
             if (estaCerrada) // Habilitar solo si está abierta y no está cerrada
             {
                 btnNuevoPedido.Enabled = true;
                 btnNuevoPedido.CssClass = "btn btn-sm shadow button-enabled";
 
+                btnPlanoOT.Enabled = true;
+                btnPlanoOT.CssClass = "btn btn-sm shadow-sm button-enabled";      
             }
             else
             {
                 btnNuevoPedido.Enabled = false;
-                btnNuevoPedido.CssClass = "btn btn-sm shadow button-disabled";
+                btnNuevoPedido.CssClass = "btn btn-sm shadow-sm button-disabled";
+
+                btnPlanoOT.Enabled = false;
+                btnPlanoOT.CssClass = "btn btn-sm shadow-sm button-disabled";
             }
 
             ExportarPedido.Enabled = false;
@@ -3244,6 +3270,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string valorTextBox = tbObra.Text.Trim(); // Obtener el valor del TextBox
 
 
+
             // Guardar el valor en una variable de sesión
             Session["ValorDeObra"] = valorTextBox;
 
@@ -3314,6 +3341,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
             string valorTextBox = tbObra.Text.Trim(); // Obtener el valor del TextBox
+
+
+            bool estaCerrada = EstaCerrada(id, pedido);
+            string textoPlano = txtPlano.Text;
+
+            if (textoPlano == null || textoPlano == "")
+            {
+                btnOk.Enabled = false;
+                btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
+            }
+            else
+            {
+                btnOk.Enabled = true;
+                btnOk.CssClass = "btn btn-sm shadow button-enabled rojo fw-bold";
+            }
 
 
             // Guardar el valor en una variable de sesión
@@ -15768,6 +15810,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
+            Session["Id_OT2"] = tbOT;
+            Session["pedido2"] = consecutivoPedido;
+
             // Registrar movimiento (opcional)
             // RegistrarMovimiento($"El Usuario Con cédula: {cedulaLogueada} Habilita la Orden de Trabajo: {tbOT} con el Pedido: {consecutivoPedido} Para el departamento comercial");
         }
@@ -15781,14 +15826,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void btnCerrarDevolver_Click(object sender, EventArgs e)
         {
-            // Cerrar ambos modales y activar la pestaña
-            string script = @"
-        $('#ObservacionRegresar').modal('hide');
-        $('#ConfirmarRegresoDelDiseno').modal('hide');
-        setTimeout(function() {
-            activarPestana('Diseño-BitacoraFPV-001-tab', 'Diseño-BitacoraFPV-001-content');
-        }, 500);"; // Ajusta el tiempo de espera según sea necesario
-            ClientScript.RegisterStartupScript(this.GetType(), "cerrarModalesYActivarPestanaScript", script, true);
+            Session["Id_OT2"] = tbOT.Text;
+            Session["pedido2"] = ddlNumbers.Text;
+
+            Response.Redirect("OrdenTrabajo.aspx");
+
+        //    // Cerrar ambos modales y activar la pestaña
+        //    string script = @"
+        //$('#ObservacionRegresar').modal('hide');
+        //$('#ConfirmarRegresoDelDiseno').modal('hide');
+        //setTimeout(function() {
+        //    activarPestana('Diseño-BitacoraFPV-001-tab', 'Diseño-BitacoraFPV-001-content');
+        //}, 500);"; // Ajusta el tiempo de espera según sea necesario
+        //    ClientScript.RegisterStartupScript(this.GetType(), "cerrarModalesYActivarPestanaScript", script, true);
         }
 
         protected void DataGridReceptorMail_ItemCommand(object source, DataGridCommandEventArgs e)
@@ -16013,6 +16063,193 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             return correo;
         }
+
+        public void DeshabilitarOt_Click(object sender, EventArgs e)
+        {
+            string tipoPedido = dtacboTipoPedido.SelectedItem.Text;
+            string idOT = tbOT.Text;
+            string consecutivo = ddlNumbers.Text;
+            string plano = lbPlano.Text;
+            string bolsa = tbBolsa.Text;
+            string nombreObra = tbObra.Text;
+            string cedula = Session["CedulaLogeada"].ToString();
+            string nombreUsuario = Session["usuariologueado"].ToString();
+            string mailUsuario = ObtenerMailUsuario(cedula);
+            string afectaBolsa = "0";
+
+            // Cadena de conexión a las bases de datos
+            string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            // Usar `using` para asegurar la correcta disposición de los recursos
+            using (SqlConnection conISID = new SqlConnection(connectionStringISID))
+            using (SqlConnection conSID = new SqlConnection(connectionStringSID))
+            {
+                conISID.Open();
+                conSID.Open();
+
+                // Obtener la descripción del tipo de pedido y AfectaBolsa
+                string consultaTipoPedido = "SELECT Descripcion_TipoPedido, AfectaBolsa FROM tblTipoPedido WHERE ORIENTACION='COMERCIAL' ORDER BY Descripcion_TipoPedido ASC";
+                using (SqlCommand cmdTipoPedido = new SqlCommand(consultaTipoPedido, conISID))
+                {
+                    using (SqlDataReader rsTipoPedido = cmdTipoPedido.ExecuteReader())
+                    {
+                        if (rsTipoPedido.Read())
+                        {
+                            string descripcionTipoPedido = rsTipoPedido["Descripcion_TipoPedido"].ToString();
+                            afectaBolsa = rsTipoPedido["AfectaBolsa"].ToString();
+                        }
+                    }
+                }
+
+                // Verificar si se puede detener el pedido
+                string sSql = $"SELECT * FROM tblDespacho WHERE OT='{idOT}' AND Pedido={consecutivo}";
+                using (SqlCommand cmd = new SqlCommand(sSql, conISID))
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (!reader.HasRows)
+                        {
+                            // Cerrar el DataReader antes de realizar otras operaciones
+                            reader.Close();
+
+                            // Actualizar tblReporteOT
+                            sSql = $"UPDATE tblReporteOT SET Terminado_Diseño=0, ValorPedido=0, Terminada_Produccion=0 WHERE Id_OT='{idOT}' AND Consecutivo_Pedido={consecutivo}";
+                            EjecutarConsulta(sSql, conISID);
+
+                            // Actualizar tblOT
+                            sSql = $"UPDATE tblOT SET Terminado_Diseño=0, Importacion=0, Terminada_Almacen=0, Terminada_Compras=0, Terminada_Produccion=0, Terminada_Despacho=0, Terminada_Instalacion=0, Terminada_Facturacion=0, Reactivada=1 WHERE Id_OT='{idOT}' AND Consecutivo_Pedido={consecutivo}";
+                            EjecutarConsulta(sSql, conSID);
+
+                            MessageBox.Show($"Se ha parado satisfactoriamente el pedido: {idOT} - {consecutivo}. Se enviará correo electrónico de notificación", "Parar pedido", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Al pedido: {idOT} - {consecutivo}. Se le ha habilitado para despacho al menos un paquete. No se puede parar.", "Parar Pedido", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            return;
+                        }
+                    }
+                }
+
+                // Eliminar de la base de datos los reportes relacionados
+                EjecutarConsulta($"DELETE FROM tblReporteDespiece WHERE id_Plano='{plano}'", conSID);
+                EjecutarConsulta($"DELETE FROM tblReporteMedidasdeCorte WHERE OT='{idOT}' AND Pedido={consecutivo}", conSID);
+                EjecutarConsulta($"DELETE FROM tblEmpaque WHERE Id_OT='{idOT}' AND Pedido={consecutivo}", conSID);
+                EjecutarConsulta($"DELETE FROM tblReporteConsumoTotalInsumo WHERE OT='{idOT}' AND Pedido={consecutivo}", conSID);
+                EjecutarConsulta($"DELETE FROM tblReporteModuloMedidaFinal WHERE OT='{idOT}' AND Pedido={consecutivo}", conSID);
+                EjecutarConsulta($"DELETE FROM tblReporteManodeObra WHERE OT='{idOT}' AND Pedido={consecutivo}", conSID);
+                EjecutarConsulta($"DELETE FROM tblreportePlano WHERE Id_OT='{idOT}' AND Consecutivo_Pedido={consecutivo}", conSID);
+
+                // Regresar a la bolsa los elementos del pedido si aplica
+                if (Convert.ToBoolean(afectaBolsa))
+                {
+                    sSql = $"SELECT tblPlano_Panel.Id_Plano, tblGrupoObjeto.ID_GrupoObjeto, tblGrupoObjeto.Descripcion_Grupo, SUM(tblPlano_Panel.Cantidad) AS Cantidad, tblGrupoObjeto.GOBloqueaPedido " +
+                           $"FROM tblGrupoObjeto INNER JOIN (tblPanel INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum) ON tblGrupoObjeto.ID_GrupoObjeto = tblPanel.Id_GrupoObjeto " +
+                           $"GROUP BY tblPlano_Panel.Id_Plano, tblGrupoObjeto.ID_GrupoObjeto, tblGrupoObjeto.Descripcion_Grupo, tblGrupoObjeto.GOBloqueaPedido " +
+                           $"HAVING (tblPlano_Panel.Id_Plano='{plano}') ORDER BY tblGrupoObjeto.ID_GrupoObjeto ASC";
+                    using (SqlCommand cmdResumenPedido = new SqlCommand(sSql, conSID))
+                    {
+                        using (SqlDataReader rsResumenPedido = cmdResumenPedido.ExecuteReader())
+                        {
+                            if (rsResumenPedido.HasRows)
+                            {
+                                while (rsResumenPedido.Read())
+                                {
+                                    string updateSql = $"UPDATE tblOtBolsa SET otbolCantidadPedida = otbolCantidadPedida - {rsResumenPedido["Cantidad"]} " +
+                                                       $"WHERE otbolBolsa = '{bolsa}' AND otbolIDGrupoObjeto = {rsResumenPedido["ID_GrupoObjeto"]}";
+                                    EjecutarConsulta(updateSql, conSID);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Mensaje de aviso
+                MessageBox.Show($"Favor AVISAR a PRODUCCIÓN que la Orden de Trabajo : {idOT} con el Pedido: {consecutivo} se le realizarán CAMBIOS", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                RegistrarMovimiento($"El Usuario Con cédula: {cedula} Para la Orden de Trabajo: {idOT} con el Pedido: {consecutivo} Para Producción");
+
+                // Enviar notificación por correo
+                string consultaUsosVarios = "SELECT mail FROM tblUsosVarios WHERE ObjetivoMail = 'mailparapararpedido'";
+                string enviadoA = string.Empty;
+                using (SqlCommand cmdUsosVarios = new SqlCommand(consultaUsosVarios, conSID))
+                {
+                    using (SqlDataReader rsUsosVarios = cmdUsosVarios.ExecuteReader())
+                    {
+                        if (rsUsosVarios.Read())
+                        {
+                            enviadoA = rsUsosVarios["mail"].ToString();
+                        }
+                    }
+                }
+
+                MessageBox.Show($"Se enviará una notificación de PARAR EL PEDIDO por mail a: {enviadoA}. Favor NO cerrar Microsoft Outlook para el envío inmediato del mismo", "Mail Notificación de Pedido", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                string asuntoMail = $"PARAR PRODUCCIÓN PEDIDO: {idOT}-{consecutivo}  {nombreObra}";
+                string descripcionMail = $"Fecha: {DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}<br>" +
+                                         $"Señores<br>{0}<br>Departamento de Producción<br><br>" +
+                                         $"El Usuario: {nombreUsuario}, informa PARAR LA PRODUCCIÓN del pedido {idOT}-{consecutivo} Bajo el nombre de: {nombreObra}.<br><br>" +
+                                         "PostData. Cuando se reactive el Pedido, el sistema le enviará un mail con los últimos ajustes.<br>";
+
+                // Receptores de correo
+                string receptorMail = ProcesarCorreos(enviadoA, mailUsuario);
+                sSql = $"EXEC duc_sp_correo '{receptorMail}', '{asuntoMail}', '{descripcionMail}', '', '{nombreUsuario}'";
+                EjecutarConsulta(sSql, conSID);
+
+                Response.Redirect("OrdenTrabajo.aspx");
+
+
+            }
+        }
+
+        // Método para ejecutar consultas reutilizando la conexión abierta
+        private void EjecutarConsulta(string query, SqlConnection connection)
+        {
+            using (SqlCommand cmd = new SqlCommand(query, connection))
+            {
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        // Método para procesar correos electrónicos
+        private string ProcesarCorreos(string enviadoA, string mailUsuario)
+        {
+            string receptorMail = "";
+            string[] correos = enviadoA.Split(';');
+
+            foreach (string correo in correos)
+            {
+                if (ValidarCadenaMail(correo))
+                {
+                    receptorMail += $";{correo}";
+                }
+            }
+
+            if (ValidarCadenaMail(mailUsuario))
+            {
+                receptorMail = $"{mailUsuario}{receptorMail}";
+            }
+
+            return receptorMail;
+        }
+
+        // Método para validar correos electrónicos (puede necesitar una implementación específica)
+        private bool ValidarCadenaMail(string correo)
+        {
+            // Aquí puedes implementar la lógica para validar correos electrónicos
+            return !string.IsNullOrEmpty(correo) && correo.Contains("@");
+        }
+
+        // Ejemplo de método para registrar movimiento (dependiendo de tu implementación)
+        private void RegistrarMovimiento(string mensaje)
+        {
+            // Lógica para registrar movimiento
+        }
+
+
+       
+
+    
+
     }
 
 }

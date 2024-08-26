@@ -1362,7 +1362,7 @@
                                                      <i class="bi bi-receipt-cutoff"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Deshabilitar Orden de Trabajo para Producción" ID="DeshabilitarOt">
+                                                <asp:LinkButton runat="server" title="Deshabilitar Orden de Trabajo para Producción" ID="DeshabilitarOt" OnClick="DeshabilitarOt_Click">
                                                   <i class="bi bi-sign-stop"></i>
                                                 </asp:LinkButton>
 
@@ -1757,7 +1757,7 @@
                                 <div class="row">
                                     <div class="col-lg-5 col-md-6 col-sm-12 col-xs-12">
                                         <div class="input-group input-group-sm mb-2 gap-4">
-                                            <asp:Button class="btn btn-outline-secondary" Text="Plano+" runat="server" type="button" disabled="disabled"></asp:Button>
+                                            <asp:Button class="btn btn-outline-secondary" Text="Plano+" runat="server" type="button" ID="btnPlanoOT"></asp:Button>
                                             <asp:Label type="text" class="form-label fw-bold" runat="server" ID="lbPlano" Text="Plano" />
                                         </div>
                                     </div>
@@ -2071,7 +2071,7 @@
                                         
                                      
                                         <div id="divDataGridContainer" runat="server" class="col-sm-9">
-
+                                            
                                             <div class="row justify-content-center m-1 p-1">
                                                 <div class="border rounded p-2 m-2">
                                                     <div class="row">
@@ -4057,11 +4057,11 @@
         }
     </script>
 
-
+      <script>   
          function CerrarModalDevolver() {
              $('#ConfirmarRegresoDelDiseno').modal('hide');
          }
-     </script>
+      </script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
