@@ -189,7 +189,6 @@
                             </div>
 
                             <div class="row g-2 mb-2">
-
                                 <div class="col-sm-1">
                                     <div class=" input-group input-group-sm gap-2  ">
                                         <asp:Label ID="lbCliente" Text="Cliente" runat="server"></asp:Label>
@@ -254,7 +253,7 @@
                                 <div class="col-sm-5">
                                     <div class=" input-group input-group-sm gap-2  justify-content-around  ">
                                         <asp:Button ID="btnCargarPlano" CssClass="btn btn-outline-secondary" runat="server" Text="Cargar Plano" OnClick="btnCargarPlano_Click" />
-                                        <asp:Button ID="btnAsignar" CssClass="btn btn-outline-secondary" runat="server" Text="Asignar" />
+                                        <asp:Button ID="btnAsignar" CssClass="btn btn-outline-secondary" runat="server" Text="Asignar" OnClick="btnAsignar_Click"/>
                                         <asp:Button ID="btnBuscar" CssClass="btn btn-outline-secondary" runat="server" Text="Buscar" OnClick="BuscarPlano_Boton" />
 
                                     </div>

@@ -1757,7 +1757,7 @@
                                 <div class="row">
                                     <div class="col-lg-5 col-md-6 col-sm-12 col-xs-12">
                                         <div class="input-group input-group-sm mb-2 gap-4">
-                                            <asp:Button class="btn btn-outline-secondary" Text="Plano+" runat="server" type="button" ID="btnPlanoOT"></asp:Button>
+                                            <asp:Button class="btn btn-outline-secondary" Text="Plano" runat="server" type="button" ID="btnPlanoOT" OnClick="btnPlanoOT_Click"></asp:Button>
                                             <asp:Label type="text" class="form-label fw-bold" runat="server" ID="lbPlano" Text="Plano" />
                                         </div>
                                     </div>
@@ -1818,7 +1818,7 @@
                                             <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
                                                 <div class="input-group input-group-sm mb-2 gap-2">
                                                     <asp:Label class="form-label" Text="V. Pedido" runat="server" ID="Label1"></asp:Label>
-                                                    <asp:Button class="btn btn-outline-secondary" Text="TXT" runat="server" type="button" disabled="disabled"></asp:Button>
+                                                    <asp:Button class="btn btn-outline-secondary" Text="TXT" runat="server" type="button" ID="BtnTxtOT" OnClick="BtnTxtOT_Click"></asp:Button>
                                                 </div>
                                             </div>
                                         </div>
@@ -3936,7 +3936,68 @@
             </div>
         </div>
 
+    <div class="modal fade" id="MensajeConfirmacionEintrucciones" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content border-0 shadow-sm">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Confirmación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <h6 class="text-secondary mb-4">Antes de continuar, considere lo siguiente:</h6>
+                <ul class="list-unstyled mb-4">
+                    <li class="d-flex align-items-center mb-2">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        Canto de las Superficies
+                    </li>
+                    <li class="d-flex align-items-center mb-2">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        Pisa Vidrios (L3500PT 07 y 09)
+                    </li>
+                    <li class="d-flex align-items-center mb-2">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        Remates y Empates Polietilenos
+                    </li>
+                    <li class="d-flex align-items-center mb-2">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        Pasa Cables
+                    </li>
+                    <li class="d-flex align-items-center mb-2">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        Superficies sin Refilar
+                    </li>
+                    <li class="d-flex align-items-center mb-2">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        Troqueles y Fresados
+                    </li>
+                </ul>
+                <p class="text-muted text-center mb-0">¿Desea continuar?</p>
+            </div>
+            <div class="modal-footer border-0 d-flex justify-content-center">
+                <asp:button type="button" class="btn btn-success text-white fw-bold px-4" id="BtnContinuar" Text="CONTINUAR" runat="server" OnClick="BtnContinuar_Click"></asp:button>
+                <button type="button" class="btn btn-danger text-white fw-bold px-4" id="BtnCancelar" data-bs-dismiss="modal" aria-label="Close">CANCELAR</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+         <div class="modal fade" id="DesPlaOT" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content border-0 shadow-sm">
+            <div class="modal-header shadow RojoEfecto text-white">
+                <h5 class="modal-title">Confirmación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 border shadow-sm">
+              <p><span id="DesPlaOT2"></span></p>
+            </div>
+            <div class="modal-footer border-0 d-flex justify-content-center">
+                <asp:button type="button" class="btn btn-success text-white fw-bold px-4" id="BtnDesPlaOT" Text="ACEPTAR" runat="server" OnClick="BtnDesPlaOT_Click"></asp:button>
+                <button type="button" class="btn btn-danger text-white fw-bold px-4" id="BtnCancelarDesPlaOT" data-bs-dismiss="modal" aria-label="Close">CANCELAR</button>
+            </div>
+        </div>
+    </div>
+</div>
 
     </form>
 

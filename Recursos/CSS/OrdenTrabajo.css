@@ -510,3 +510,11 @@
     background: radial-gradient(circle, #94a8bc, #3e4559e6); /* Radial gradient */
 }
 
+.RojoEfecto {
+    background: repeating-linear-gradient(45deg, #953232, #752929 100px);
+}
+
+.AzulEfecto {
+    background: repeating-linear-gradient(45deg, #151947, #2e4575 100px);
+}
+

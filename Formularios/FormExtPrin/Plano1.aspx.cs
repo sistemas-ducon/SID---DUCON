@@ -385,12 +385,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 ELiminarPlano.Enabled = true;
                 ELiminarPlano.CssClass = "btn btn-sm shadow button-enabled";
 
-                btnCargarPlano.Enabled = true;
 
-                Session["Id_OT2"] = row.Cells[4].Text;              
+
+                if (Session["DiferenciarOTPlano"]?.ToString() == "2")
+                {
+                    Session["Id_OT2"] = row.Cells[4].Text;
+                    btnCargarPlano.Enabled = true;
+
+                }
+                if (Session["DiferenciarOTPlano"]?.ToString() == "1")
+                {
+                    //Id_OT2 y pedido2 siguen con el mismo valor 
+
+                    btnAsignar.Enabled = true;
+                }
                 Session["Id_Plano"] = row.Cells[1].Text;
 
-                
+
                 ControlBotonesModificarPlanoDataGrid();
 
 
@@ -404,23 +415,45 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     // se valida si es el segundo click en la misma fila 
                     if (clickCount == 2)
                     {
-                        string script = "<script>enviarFormulario();</script>";
-                        ScriptManager.RegisterStartupScript(this, GetType(), "enviarFormulario", script, false);
+                        if (Session["DiferenciarOTPlano"]?.ToString() == "2")
+                        {
+                            string script = "<script>enviarFormulario();</script>";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "enviarFormulario", script, false);
 
-                        // Reiniciar la variable de sesión "ClickCount" a 0 para la próxima interacción
-                        Session["ClickCount"] = 0;
+                            // Reiniciar la variable de sesión "ClickCount" a 0 para la próxima interacción
+                            Session["ClickCount"] = 0;
 
-                        //Variable para controlar Activar Tap Plano en orden Trabajo 
-                        Session["controlTapPlano"] = "1";
+                            //Variable para controlar Activar Tap Plano en orden Trabajo 
+                            Session["controlTapPlano"] = "1";
+                        }
+                        if (Session["DiferenciarOTPlano"]?.ToString() == "1")
+                        {
+                         
+
+                            // Reiniciar la variable de sesión "ClickCount" a 0 para la próxima interacción
+                            Session["ClickCount"] = 0;
+
+                        
+
+                            metodoAsignar();
+                        }
+
+
+
                     }
- 
                 }
                 else
                 {
                     // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
                     Session["ClickCount"] = 1;
-
-                    Session["pedido2"] = row.Cells[5].Text;
+                    if (Session["DiferenciarOTPlano"]?.ToString() == "2")
+                    {
+                        Session["pedido2"] = row.Cells[5].Text;
+                    }
+                    if (Session["DiferenciarOTPlano"]?.ToString() == "1")
+                    {
+                        //Id_OT2 y pedido2 siguen con el mismo valor 
+                    }
                     Session["Id_Plano1"] = row.Cells[1].Text;
                 }
 
@@ -439,8 +472,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
         protected void tbPlano_TextChanged(object sender, EventArgs e)
         {
-            DataGridPlano1.DataSourceID = "CargarPlano";
-            DataGridPlano1.DataBind();
+            if (Session["DiferenciarOTPlano"]?.ToString() == "2")
+            {
+                DataGridPlano1.DataSourceID = "CargarPlano";
+                DataGridPlano1.DataBind();
+            }
+            else if (Session["DiferenciarOTPlano"]?.ToString() == "1")
+            {
+                // Cambiar la consulta SQL del SqlDataSource
+                SqlDataSource cargarPlanoSource = (SqlDataSource)FindControl("CargarPlano");
+                cargarPlanoSource.SelectCommand = "SELECT TOP 300 * FROM tblPlano WHERE Plano LIKE '%' + @Plano + '%' AND Nombre_Cliente LIKE '%' + @Cliente + '%' AND Id_OT = 'Nula' ORDER BY Plano";
+
+                // Reasignar el SqlDataSource al DataGrid y actualizar los datos
+                DataGridPlano1.DataSourceID = null;  // Esto es importante para que se pueda aplicar el nuevo SelectCommand
+                DataGridPlano1.DataSource = cargarPlanoSource;
+                DataGridPlano1.DataBind();
+            }
         }
 
         private bool UsuarioTienePermiso()
@@ -832,17 +879,31 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
         protected void BuscarPlano_Boton(object sender, EventArgs e)
         {
-            DataGridPlano1.DataSourceID = "CargarPlano";
-            DataGridPlano1.DataBind();
+            if (Session["DiferenciarOTPlano"]?.ToString() == "2")
+            {
+                DataGridPlano1.DataSourceID = "CargarPlano";
+                DataGridPlano1.DataBind();
+            }
+            else if (Session["DiferenciarOTPlano"]?.ToString() == "1")
+            {
+                // Cambiar la consulta SQL del SqlDataSource
+                SqlDataSource cargarPlanoSource = (SqlDataSource)FindControl("CargarPlano");
+                cargarPlanoSource.SelectCommand = "SELECT TOP 300 * FROM tblPlano WHERE Plano LIKE '%' + @Plano + '%' AND Nombre_Cliente LIKE '%' + @Cliente + '%' AND Id_OT = 'Nula' ORDER BY Plano";
+
+                // Reasignar el SqlDataSource al DataGrid y actualizar los datos
+                DataGridPlano1.DataSourceID = null;  // Esto es importante para que se pueda aplicar el nuevo SelectCommand
+                DataGridPlano1.DataSource = cargarPlanoSource;
+                DataGridPlano1.DataBind();
+            }
 
             ControlInicialLinkButtons();
             ControlInicialButtons();
             DeshabilitarTextBoxes(listaTextBoxes);
             DeshabilitarDropDownLists(listaDropDownLists);
             DeshabilitarCheckBoxes();
-
-
         }
+
+
 
         protected void EliminarPlano_Click(Object sender, EventArgs e)
         {
@@ -932,6 +993,41 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             string script = "<script>enviarFormulario();</script>";
             ScriptManager.RegisterStartupScript(this, GetType(), "enviarFormulario", script, false);
         }
-    }
 
+        protected void btnAsignar_Click(object sender, EventArgs e)
+        {
+            metodoAsignar();
+        }
+
+        protected void metodoAsignar()
+        {
+            string idPlano = Session["Id_Plano"]?.ToString();
+            string idOT = Session["Id_OT2"]?.ToString();
+            string pedido = Session["pedido2"]?.ToString();
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            // Construir la consulta SQL
+            string sSql = $"UPDATE tblPlano SET Id_OT = '{idOT}', Consecutivo_Pedido = {pedido} WHERE Plano = '{idPlano}'";
+
+            // Ejecutar la consulta
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(sSql, connection);
+                connection.Open();
+
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected > 0)
+                {
+                    Response.Redirect("~/Formularios/OrdenTrabajo.aspx");
+                }
+                else
+                {
+
+                }
+            }
+        }
+
+    }
 }

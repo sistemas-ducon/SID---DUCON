@@ -122,7 +122,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             Session["CargarOTsEjecutada"] = null;
 
-          
+
 
             DeshabilitarBotones(sender, e);
 
@@ -238,6 +238,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                     else
                     {
+                        if (Session["Id_Plano"] != null)
+                        {
+                            Cargar_Plano2(Session["Id_Plano"].ToString());
+                            Session.Remove("Id_Plano");
+                            HabilitarBotonesPlano();
+                        }
                         Cargar_OTs2Dise();
                         List<int> numeros = ObtenerNumerosDesdeLaBaseDeDatos(Session["Id_OT2"].ToString());
 
@@ -1148,7 +1154,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
-            if (Session["NuevaOTEjecutada"] == null )
+            if (Session["NuevaOTEjecutada"] == null)
             {
                 if (Session["NuevoPedido"] == null)
                 {
@@ -1315,7 +1321,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             int Venta = Convert.ToInt32(txtVenta.Text);
             lbValorTotObra.InnerText = Venta.ToString("N0");
 
-            int ValoDescuento = (Venta * Descuento)/100;
+            int ValoDescuento = (Venta * Descuento) / 100;
             lbValorDto.InnerText = ValoDescuento.ToString("N0");
 
             int SubTotal = Venta - ValoDescuento;
@@ -1348,9 +1354,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BtnObservaciones_Click(object sender, EventArgs e)
         {
-            if(tbOT.Text.Trim() != "")
+            if (tbOT.Text.Trim() != "")
             {
-                if(ddlNumbers.Items.Count > 0 && ddlNumbers.SelectedItem != null)
+                if (ddlNumbers.Items.Count > 0 && ddlNumbers.SelectedItem != null)
                 {
                     Session["Id_OT"] = tbOT.Text;
                     Session["pedido"] = ddlNumbers.SelectedItem.Text;
@@ -1648,7 +1654,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             TextTNegociacion.Disabled = false;
         }
 
-     
+
 
         public void DeshabilitarDropDownLists(List<DropDownList> dropDownLists)
         {
@@ -1926,7 +1932,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             // Control de botones para ventas 
                             EnableButtons();
                         }
-                        else if(Session["Departamento"].ToString().ToUpper() == "VENTAS")
+                        else if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
                         {
                             // Control de Botones para Dibujo y despiece de momento mismo metodo
                             EnableButtons();
@@ -2557,7 +2563,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 HabilitarPedido.CssClass = "btn btn-sm shadow button-disabled";
             }
 
-                // Habilite o deshabilite el botón
+            // Habilite o deshabilite el botón
             if (estaAbierta)
             {
                 ModificarOt.Enabled = true;
@@ -2575,7 +2581,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 AnularPedido.CssClass = "btn btn-sm shadow button-disabled ";
 
             }
-           
+
 
             if (estaCerrada) // Habilitar solo si está abierta y no está cerrada
             {
@@ -2583,7 +2589,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 btnNuevoPedido.CssClass = "btn btn-sm shadow button-enabled";
 
                 btnPlanoOT.Enabled = true;
-                btnPlanoOT.CssClass = "btn btn-sm shadow-sm button-enabled";      
+                btnPlanoOT.CssClass = "btn btn-sm shadow-sm button-enabled";
             }
             else
             {
@@ -3676,6 +3682,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 txtBolsa.Text = dr["Bolsa"].ToString();
                 txtContactoPlano.Text = dr["Contacto_Cliente"].ToString();
                 txtAsesorPlano.Text = dr["AsesorComercial"].ToString();
+
+                btnPlanoOT.Text = "Plano-";
+            }
+            else
+            {
+                btnPlanoOT.Text = "Plano+";
+                lbPlano.Text = string.Empty;
+                txtPlano.Text = string.Empty;
+                txtCliente.Text = string.Empty;
+                txtArea.Text = string.Empty;
+                txtAsesorPlano.Text = string.Empty;
+                txtDibuja.Text = string.Empty;
+                txtBolsa.Text = string.Empty;
+                txtContactoPlano.Text = string.Empty;
+                txtAsesorPlano.Text = string.Empty;
             }
 
         }
@@ -4372,6 +4393,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void Redireccion_Plano1(object sender, EventArgs e)
         {
+            Session["DiferenciarOTPlano"] = 2;
+
             string url = "FormExtPrin/Plano1.aspx";
             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
             ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
@@ -5459,6 +5482,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             cbxComisionCompart.Enabled = true;
+
+            string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Ventas")
+            {
+                BtnTxtOT.Enabled = false;
+            }
+            if (tipoAccion == "Diseño")
+            {
+                BtnTxtOT.Enabled = true;
+            }
         }
 
         protected void NoModificarNIT_Click(object sender, EventArgs e)
@@ -6086,7 +6119,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             terminado = ConsultarTerminadoVenta(idOT, consecutivoPedido);
                         }
-                        else if(Session["Departamento"].ToString().ToUpper() == "DISEÑO")
+                        else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
                         {
                             terminado = ConsultarTerminadoDibujo(idOT, consecutivoPedido);
                         }
@@ -6107,7 +6140,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         else
                         {
                             Session["Id_OT2"] = tbOT.Text;
-                            if(tbOT.Text != "")
+                            if (tbOT.Text != "")
                             {
                                 Session["pedido2"] = ddlNumbers.SelectedItem.Text;
                             }
@@ -6493,7 +6526,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ModalAcabados').modal('show');", true);
 
-        } 
+        }
 
         protected void DataGridAcabadoVentas_ItemCommand(object source, DataGridCommandEventArgs e)
         {
@@ -6527,7 +6560,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
         }
-   
+
         protected void btnAgregarAcabado_Click(object sender, EventArgs e)
         {
             // valida que se haya seleccionado un acabado 
@@ -6560,7 +6593,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         }
-    
+
         public bool AgregarAcabado()
         {
             // Consulta SQL para insertar un nuevo registro
@@ -6604,8 +6637,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
             }
-   
-        }    
+
+        }
         public void DepartamentoAsesor()
         {
 
@@ -6635,7 +6668,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         } // Campo se podria Cargar en el login
-     
+
         protected void DataGridAcabados1_ItemCommand(object source, DataGridCommandEventArgs e)
         {
             int rowIndex = Convert.ToInt32(e.CommandArgument);
@@ -6681,7 +6714,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         Session.Remove("ID_Acabado");
                         Session.Remove("ClickCount3");
 
-                       
+
 
                         // mostrar modal de acabado y modal de confirmar eliminar acabado
                         string script1 = @"mostrarModal();";
@@ -6711,7 +6744,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         }
-  
+
         protected void btnCerrarAcabadosPlano_Click(object sender, EventArgs e)
         {
             Response.Redirect("OrdenTrabajo.aspx");
@@ -6755,7 +6788,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
 
             Session.Remove("IdAcabadoElimnar");
-           
+
         }
 
 
@@ -7858,7 +7891,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                             BorrarPenelesDelPlano1();
 
-                            using (StreamReader reader = new StreamReader(LeerAcad_XY.PostedFile.InputStream, Encoding.GetEncoding("ISO-8859-1") ))
+                            using (StreamReader reader = new StreamReader(LeerAcad_XY.PostedFile.InputStream, Encoding.GetEncoding("ISO-8859-1")))
                             {
                                 // Leemos cada línea del archivo TXT 
                                 while (!reader.EndOfStream)
@@ -8121,7 +8154,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                                             {
                                                                 if (chkElemExit.Checked)
                                                                 {
-                                                                    DatoObjNoExistentes.Rows.Add(Objeto, (Ancho ).ToString(), "", "1", "");
+                                                                    DatoObjNoExistentes.Rows.Add(Objeto, (Ancho).ToString(), "", "1", "");
                                                                     ObjNoExiste = true;
                                                                 }
 
@@ -8152,7 +8185,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                                 {
                                                     if (chkElemExit.Checked)
                                                     {
-                                                        DatoObjNoExistentes.Rows.Add(Objeto, (Ancho * 100 ).ToString(), "", "1", "");
+                                                        DatoObjNoExistentes.Rows.Add(Objeto, (Ancho * 100).ToString(), "", "1", "");
                                                         ObjNoExiste = true;
 
                                                     }
@@ -8161,7 +8194,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                                 }
                                                 else
                                                 {
-                                                    DatoObjNoExistentes.Rows.Add(Objeto, (Ancho *100).ToString(), "", "1", "No Existe");
+                                                    DatoObjNoExistentes.Rows.Add(Objeto, (Ancho * 100).ToString(), "", "1", "No Existe");
                                                     ObjNoExiste = true;
                                                 }
 
@@ -8480,7 +8513,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                                                     //Validar cuando el usuario da click en Check de Existentes            
                                                                     if (chkElemExit.Checked)
                                                                     {
-                                                                        DatoObjNoExistentes.Rows.Add(Objeto, (Ancho ).ToString(), Altura.ToString(), "1", "");
+                                                                        DatoObjNoExistentes.Rows.Add(Objeto, (Ancho).ToString(), Altura.ToString(), "1", "");
                                                                         ObjNoExiste = true;
 
                                                                     }
@@ -8488,7 +8521,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                                                 }
                                                                 else
                                                                 {
-                                                                    DatoObjNoExistentes.Rows.Add(Objeto, (Ancho ).ToString(),Altura.ToString(), "1", "No se puede Escalar");
+                                                                    DatoObjNoExistentes.Rows.Add(Objeto, (Ancho).ToString(), Altura.ToString(), "1", "No se puede Escalar");
                                                                     ObjNoExiste = true;
                                                                 }
 
@@ -8514,12 +8547,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                                 string Abreviatura = Objeto.Substring(0, 2);
                                                 if (Abreviatura == "EX")
                                                 {
-                                                    DatoObjNoExistentes.Rows.Add(Objeto, (Ancho * 100 ).ToString(), "", "1", "");
+                                                    DatoObjNoExistentes.Rows.Add(Objeto, (Ancho * 100).ToString(), "", "1", "");
                                                     ObjNoExiste = true;
                                                 }
                                                 else
                                                 {
-                                                    DatoObjNoExistentes.Rows.Add(Objeto, (Ancho * 100 ).ToString(), "", "1", "No Existe");
+                                                    DatoObjNoExistentes.Rows.Add(Objeto, (Ancho * 100).ToString(), "", "1", "No Existe");
                                                     ObjNoExiste = true;
                                                 }
 
@@ -8592,7 +8625,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                                     if (chkElemExit.Checked)
                                                     {
                                                         //Pendiente realizar un Insert de ELemento EX
-                                                        InsertarElementosEX(idObjeto,precioVenta);
+                                                        InsertarElementosEX(idObjeto, precioVenta);
                                                     }
 
                                                     //Variable control para REINSTALACION
@@ -9406,7 +9439,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     cmd.Parameters.AddWithValue("@Cantidad", ValoresInser[3]);
                     cmd.Parameters.AddWithValue("@Observaciones", ValoresInser[4]);
                     cmd.Parameters.AddWithValue("@PanModResponsable", ValoresInser[5]);
-                    cmd.Parameters.AddWithValue("@FechaConfiguracion", Convert.ToDateTime( ValoresInser[6]));
+                    cmd.Parameters.AddWithValue("@FechaConfiguracion", Convert.ToDateTime(ValoresInser[6]));
 
                     cmd.ExecuteNonQuery();
                 }
@@ -10932,7 +10965,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void btnActualizarPrototipo_SI_Click(object sender, EventArgs e)
         {
             // Actualizar plano panel 
-            if(ActualizarPlanoPanel())
+            if (ActualizarPlanoPanel())
             {
                 // Actualizar Panel 
                 if (ActualizarPanel())
@@ -11510,7 +11543,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
                     //SE ACTUALIZA EL DIBUJANTE DEL PLANO
-                    ActulizarDibujantePlano();                   
+                    ActulizarDibujantePlano();
 
                     // SE REGISTRA LA OT PARA EL CIERRE CONTABLE 
 
@@ -11531,7 +11564,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     EliminarReportePlano();
                     InsertarReportePLano();
 
-   
+
                     break;
 
                 default:
@@ -11698,7 +11731,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     cmd.Parameters.AddWithValue("@realizadoPor", Session["usuariologueado"].ToString());
                     cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
                     cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
-                
+
 
                     // Variable para validar en depuracion si se afecto alguna linea con este query 
                     int CantidadFilasAfectada = cmd.ExecuteNonQuery();
@@ -11720,7 +11753,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 using (SqlCommand cmd = new SqlCommand(sSql, connection))
                 {
                     connection.Open();
-  
+
                     cmd.Parameters.AddWithValue("@NombreUsuario", Session["usuariologueado"].ToString());
                     cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
 
@@ -11746,7 +11779,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     // Agregar los parámetros a la consulta
                     command.Parameters.AddWithValue("@Id_OT", tbOT.Text);
-              
+
 
                     connection.Open();
 
@@ -11787,7 +11820,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-   
+
         // FIN BOTON OK PARA DIBUJO Y COMPRAS
 
 
@@ -15831,14 +15864,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             Response.Redirect("OrdenTrabajo.aspx");
 
-        //    // Cerrar ambos modales y activar la pestaña
-        //    string script = @"
-        //$('#ObservacionRegresar').modal('hide');
-        //$('#ConfirmarRegresoDelDiseno').modal('hide');
-        //setTimeout(function() {
-        //    activarPestana('Diseño-BitacoraFPV-001-tab', 'Diseño-BitacoraFPV-001-content');
-        //}, 500);"; // Ajusta el tiempo de espera según sea necesario
-        //    ClientScript.RegisterStartupScript(this.GetType(), "cerrarModalesYActivarPestanaScript", script, true);
+            //    // Cerrar ambos modales y activar la pestaña
+            //    string script = @"
+            //$('#ObservacionRegresar').modal('hide');
+            //$('#ConfirmarRegresoDelDiseno').modal('hide');
+            //setTimeout(function() {
+            //    activarPestana('Diseño-BitacoraFPV-001-tab', 'Diseño-BitacoraFPV-001-content');
+            //}, 500);"; // Ajusta el tiempo de espera según sea necesario
+            //    ClientScript.RegisterStartupScript(this.GetType(), "cerrarModalesYActivarPestanaScript", script, true);
         }
 
         protected void DataGridReceptorMail_ItemCommand(object source, DataGridCommandEventArgs e)
@@ -16245,14 +16278,63 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Lógica para registrar movimiento
         }
 
+        protected void btnPlanoOT_Click(object sender, EventArgs e)
+        {
 
-       
+            if (btnPlanoOT.Text == "Plano+")
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeConfirmacionEintrucciones').modal('show');", true);
+            }
+            else
+            {
+                string contenidoModalOT = "¿Está seguro de desvincular el plano " + txtPlano.Text + " con la Orden de Trabajo " + tbOT.Text + " con el pedido " + ddlNumbers.Text + " ?";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#DesPlaOT').modal('show'); $('#DesPlaOT2').text('" + contenidoModalOT + "');", true);
+            }
+        }
 
-    
+        protected void BtnContinuar_Click(object sender, EventArgs e)
+        {
+            Session["Id_OT2"] = tbOT.Text;
+            Session["pedido2"] = ddlNumbers.Text;
+            Session["DiferenciarOTPlano"] = 1;
+
+            Response.Redirect("FormExtPrin/Plano1.aspx");
+        }
+
+        protected void BtnDesPlaOT_Click(object sender, EventArgs e)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string Cedula = Session["CedulaLogeada"]?.ToString();
+
+            // Actualizar la base de datos para desvincular el plano
+            string sSql = $"UPDATE tblplano SET Id_OT= 'Nula', COnsecutivo_Pedido=0 WHERE Plano= '{txtPlano.Text.Trim()}'";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(sSql, connection);
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+
+            Session["Id_OT2"] = tbOT.Text;
+            Session["pedido2"] = ddlNumbers.Text;
+
+            Response.Redirect("OrdenTrabajo.aspx");
+
+            // Registrar el movimiento
+            RegistrarMovimiento($"El Usuario con cédula: {Cedula} desvincula el plano {txtPlano.Text} con la OT: {tbOT.Text} con el pedido: {ddlNumbers.Text}");
+        }
+
+        protected void BtnTxtOT_Click(object sender, EventArgs e)
+        {
+            if (tbOT.Text != null)
+            {
+                tbValorPedido.Text = lblValorDespiece1.Text;
+            }
+        }
 
     }
-
 }
+
 
 
 
