@@ -1884,7 +1884,29 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             bool estaCerrada = EstaCerrada(id, pedido);
-        
+
+            bool estaAbierta = VerificarEstadoOt(id, pedido, 0);
+            string textoPlano = txtPlano.Text;
+            if (estaAbierta)
+            {
+                if (textoPlano == null || textoPlano == "")
+                {
+                    btnOk.Enabled = false;
+                    btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
+                }
+                else
+                {
+                    btnOk.Enabled = true;
+                    btnOk.CssClass = "btn btn-sm shadow button-enabled rojo fw-bold";
+                }
+            }
+            else
+            {
+                btnOk.Enabled = false;
+                btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
+            }
+         
+
             // Guardar el valor en una variable de sesión
             Session["ValorDeObra"] = valorTextBox;
 
@@ -2497,24 +2519,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             bool estaCerrada = EstaCerrada(id, pedido);
 
-            // Realice la consulta
-            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
-            {
-                sqlconectar.Open();
-                using (SqlCommand cmd = new SqlCommand("select * from tblOT where Id_OT = @Id and Consecutivo_Pedido = @Con and Terminado_Diseño = @C", sqlconectar))
-                {
-                    cmd.Parameters.AddWithValue("@Id", id);
-                    cmd.Parameters.AddWithValue("@Con", pedido);
-                    cmd.Parameters.AddWithValue("@C", 0);
-
-                    SqlDataReader leer = cmd.ExecuteReader();
-
-                    if (leer.Read())
-                    {
-                        estaAbierta = true;
-                    }
-                }
-            }
+          
+             estaAbierta = VerificarEstadoOt(id, pedido, 0);
 
             // Realice la consulta
             using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
@@ -2560,20 +2566,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Habilite o deshabilite el botón
             if (estaAbierta)
             {
-                string textoPlano = txtPlano.Text;
-
-                if (textoPlano == null || textoPlano == "")
-                {
-                    btnOk.Enabled = false;
-                    btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
-                }
-                else
-                {
-                    btnOk.Enabled = true;
-                    btnOk.CssClass = "btn btn-sm shadow button-enabled rojo fw-bold";
-                }
-
-
                 ModificarOt.Enabled = true;
                 ModificarOt.CssClass = "btn btn-sm shadow button-enabled";
 
@@ -2584,9 +2576,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
-                btnOk.Enabled = false;
-                btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
-
                 ModificarOt.Enabled = false;
                 ModificarOt.CssClass = "btn btn-sm shadow button-disabled";
 
@@ -2595,22 +2584,33 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
 
+            if (estaCerrada && estaAbierta) // Habilitar solo si está abierta y no está cerrada
+            {
+                btnPlanoOT.Enabled = true;
+                btnPlanoOT.CssClass = "btn btn-sm shadow-sm button-enabled";
+
+                BtnTxtOT.Enabled = true;
+                BtnTxtOT.CssClass = "btn btn-sm shadow-sm button-enabled";
+            }
+            else
+            {
+                btnPlanoOT.Enabled = false;
+                btnPlanoOT.CssClass = "btn btn-sm shadow-sm button-disabled";
+
+                BtnTxtOT.Enabled = false;
+                BtnTxtOT.CssClass = "btn btn-sm shadow-sm button-disabled";
+            }
 
             if (estaCerrada) // Habilitar solo si está abierta y no está cerrada
             {
                 btnNuevoPedido.Enabled = true;
                 btnNuevoPedido.CssClass = "btn btn-sm shadow button-enabled";
-
-                btnPlanoOT.Enabled = true;
-                btnPlanoOT.CssClass = "btn btn-sm shadow-sm button-enabled";
             }
             else
             {
                 btnNuevoPedido.Enabled = false;
                 btnNuevoPedido.CssClass = "btn btn-sm shadow-sm button-disabled";
 
-                btnPlanoOT.Enabled = false;
-                btnPlanoOT.CssClass = "btn btn-sm shadow-sm button-disabled";
             }
 
             ExportarPedido.Enabled = false;
@@ -2642,6 +2642,31 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             EntregaPerfecta.Enabled = true;
             EntregaPerfecta.CssClass = "btn btn-sm shadow button-enabled";
+        }
+
+        private bool VerificarEstadoOt(string id, string pedido, int terminadoDiseno)
+        {
+            bool estaAbierta = false;
+
+            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                sqlconectar.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT * FROM tblOT WHERE Id_OT = @Id AND Consecutivo_Pedido = @Con AND Terminado_Diseño = @C", sqlconectar))
+                {
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    cmd.Parameters.AddWithValue("@Con", pedido);
+                    cmd.Parameters.AddWithValue("@C", terminadoDiseno);
+
+                    SqlDataReader leer = cmd.ExecuteReader();
+
+                    if (leer.Read())
+                    {
+                        estaAbierta = true;
+                    }
+                }
+            }
+
+            return estaAbierta;
         }
 
         //FIN MODIFICACION
@@ -3363,7 +3388,28 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             bool estaCerrada = EstaCerrada(id, pedido);
-           
+
+            bool estaAbierta = VerificarEstadoOt(id, pedido, 0);
+            string textoPlano = txtPlano.Text;
+            if (estaAbierta)
+            {
+                if (textoPlano == null || textoPlano == "")
+                {
+                    btnOk.Enabled = false;
+                    btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
+                }
+                else
+                {
+                    btnOk.Enabled = true;
+                    btnOk.CssClass = "btn btn-sm shadow button-enabled rojo fw-bold";
+                }
+            }
+            else
+            {
+                btnOk.Enabled = false;
+                btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
+            }
+
             // Guardar el valor en una variable de sesión
             Session["ValorDeObra"] = valorTextBox;
 
