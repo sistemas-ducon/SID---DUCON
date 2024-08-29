@@ -300,19 +300,19 @@
 
 
                     <li class="nav-item">
-                        <a class="nav-link text-white active" id="OTs-tab" data-bs-toggle="tab" href="#OTs-Content"><i class="bi bi-person-fill-gear"></i>Ordenes Trabajo</a>
+                        <a class="nav-link text-white active" id="OTs-tab" data-bs-toggle="tab" href="#OTs-Content"><i class="bi bi-person-fill-gear"></i> Ordenes Trabajo</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" id="Plano-tab" data-bs-toggle="tab" href="#Plano-Content"><i class="bi bi-file-image-fill"></i>Plano</a>
+                        <a class="nav-link text-white" id="Plano-tab" data-bs-toggle="tab" href="#Plano-Content"><i class="bi bi-file-image-fill"></i> Plano</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-whiite " id="Objeto-tab" data-bs-toggle="tab" href="#Objeto-Content"><i class="bi bi-box-fill"></i>Objetos</a>
+                        <a class="nav-link text-whiite " id="Objeto-tab" data-bs-toggle="tab" href="#Objeto-Content"><i class="bi bi-box-fill"></i> Objetos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" id="Modulo-tab" data-bs-toggle="tab" href="#Modulo-Content"><i class="bi bi-inboxes-fill"></i>Modulos</a>
+                        <a class="nav-link text-white" id="Modulo-tab" data-bs-toggle="tab" href="#Modulo-Content"><i class="bi bi-inboxes-fill"></i> Modulos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white " id="Insumo-tab" data-bs-toggle="tab" href="#Insumo-Content"><i class="bi bi-grid-3x3-gap-fill"></i>Insumos</a>
+                        <a class="nav-link text-white " id="Insumo-tab" data-bs-toggle="tab" href="#Insumo-Content"><i class="bi bi-grid-3x3-gap-fill"></i> Insumos</a>
                     </li>
                 </ul>
             </div>
@@ -1813,7 +1813,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                                         <div class="row">
                                             <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
                                                 <div class="input-group input-group-sm mb-2 gap-2">
@@ -1824,7 +1824,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="col-lg-5 col-md-6 col-sm-12 col-xs-12">
                                         <div class="input-group  mb-1 gap-2">
                                             <asp:TextBox ID="tbValorPedido" CssClass="form-control text-end" runat="server"></asp:TextBox>
                                         </div>
@@ -1840,9 +1840,9 @@
                         <div class="container-fluid p-3 shadow-sm bg-light mt-2">
 
                             <h5 class="p-0 m-0 mb-1 text-center">Informacion Contable </h5>
-                          
+
                             <div runat="server" class="row" id="DivPorDefecto">
-                              
+
                                 <div class="col-sm-3" id="DivOculto" runat="server">
 
                                     <div class="row pb-2">
@@ -1861,7 +1861,7 @@
 
                                         <div class="col-sm-12">
                                             <div class=" input-group input-group-sm" style="gap:0.7rem;" >
-                                                 <asp:Label class="form-label" Text="Contacto" runat="server" ID="lblContacto"></asp:Label>
+                                                <asp:Label class="form-label" Text="Contacto" runat="server" ID="lblContacto"></asp:Label>
                                                 <asp:TextBox type="text" class="form-control" runat="server" ID="txtcontacto"></asp:TextBox>
                                             </div>
                                         </div>
@@ -1872,18 +1872,18 @@
 
                                         <div class="col-md-12">
                                             <div class=" input-group input-group-sm" style="gap:2.7rem;">
-                                                  <asp:Label class="form-label" Text="Mail" runat="server" ID="lblMail"></asp:Label>
+                                                <asp:Label class="form-label" Text="Mail" runat="server" ID="lblMail"></asp:Label>
                                                 <asp:TextBox type="text" class="form-control" runat="server" ID="txtMail"></asp:TextBox>
                                             </div>
                                         </div>
 
                                     </div>
 
-                                    <div class="row pb-2">                       
+                                    <div class="row pb-2">
 
                                         <div class=" col-sm-12 col-xs-12">
                                             <div class=" input-group input-group-sm" style="gap:0.5rem;">
-                                                 <asp:Label class="form-label" Text="Dirección" runat="server" ID="lblDireccion"></asp:Label>
+                                                <asp:Label class="form-label" Text="Dirección" runat="server" ID="lblDireccion"></asp:Label>
                                                 <asp:TextBox type="text" class="form-control" runat="server" ID="txtDireccion"></asp:TextBox>
                                             </div>
                                         </div>
@@ -1891,10 +1891,10 @@
                                     </div>
 
                                     <div class="row pb-2">
-                                       
+
                                         <div class=" col-sm-12 col-xs-12">
                                             <div class=" input-group input-group-sm gap-1 ">
-                                                 <asp:Label class="form-label" Text="Municipio" runat="server" ID="lblMunicipio"></asp:Label>
+                                                <asp:Label class="form-label" Text="Municipio" runat="server" ID="lblMunicipio"></asp:Label>
                                                 <asp:TextBox type="text" class="form-control" runat="server" ID="txtMunicipio"></asp:TextBox>
                                             </div>
                                         </div>
@@ -1905,7 +1905,7 @@
 
                                         <div class="col-sm-12 col-xs-12">
                                             <div class=" input-group input-group-sm " style="gap:0.8rem;">
-                                                 <asp:Label class="form-label" Text="Telefono" runat="server" ID="lblTelefono"></asp:Label>
+                                                <asp:Label class="form-label" Text="Telefono" runat="server" ID="lblTelefono"></asp:Label>
                                                 <asp:TextBox type="text" class="form-control" runat="server" ID="txtTelefono"></asp:TextBox>
                                             </div>
                                         </div>
@@ -1915,7 +1915,7 @@
                                     <div class="row pb-2">
                                         <div class="col-sm-12 col-xs-12">
                                             <div class=" input-group input-group-sm gap-1 ">
-                                                  <asp:Label class="form-label" Text="Obs. Contable " runat="server" ID="lblObs"></asp:Label>
+                                                <asp:Label class="form-label" Text="Obs. Contable " runat="server" ID="lblObs"></asp:Label>
                                                 <textarea class="form-control form-control-sm" id="ObservacionCont" runat="server" cols="20" rows="3" high="60px"></textarea>
                                             </div>
                                         </div>
@@ -1932,7 +1932,7 @@
                                     </div>
 
                                 </div>
-                                   
+
                                 <div class="col-sm-6" id="Principal" runat="server">
 
                                     <div class="row pb-1" id="PrimeraFila" runat="server">
@@ -2068,8 +2068,8 @@
                                             <label>Venta<br />
                                                 Neta</label>
                                         </div>
-                                        
-                                     
+
+
                                         <div id="divDataGridContainer" runat="server" class="col-sm-9">
                                             
                                             <div class="row justify-content-center m-1 p-1">
@@ -2114,18 +2114,18 @@
                                             </div>
 
                                         </div>
-                                          
+
                                         <div class="col-sm-2" id="TipDeNeg" runat="server">
 
                                             <label>Tipo de Negociación</label>
                                             <textarea class="form-control form-control-sm" id="TextTNegociacion" runat="server" cols="25" rows="6"></textarea>
 
                                         </div>
-                                        
+
                                     </div>
 
                                 </div>
-                               
+
                                 <div class="col-sm-3" id="divDataGridContainer2" runat="server">
 
                                     <div class="Info1">
@@ -2189,8 +2189,8 @@
                                     </div>
                                     <div class="modal-footer">
                                         <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                            <asp:Button runat="server" ID="btnOK_Si" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-outline-primary" OnClick="Boton_Ok" AutoPostBack="true" Style="width: 5rem;" OnClientClick="CargarOK();" />
-                                            <asp:Button runat="server" ID="btnOK_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                            <asp:Button runat="server" ID="btnOK_Si" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-primary" AutoPostBack="true" Style="width: 5rem;" OnClick="Boton_Ok" OnClientClick="CargarOK();" />
+                                            <asp:Button runat="server" ID="btnOK_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
                                         </div>
 
                                     </div>
@@ -2410,45 +2410,288 @@
                             </div>
                         </div>
 
-                        
-                                 <!--Modal confirmar Devolver diseño  -->
-                            <div id="ConfirmarRegresoDelDiseno" class="modal" tabindex="-1" style="display: none;">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header navbar-custom d-flex align-items-center justify-content-center shadow text-white">
-                                            <h5 class="modal-title text-center">Habilitar Orden de Trabajo para Ventas</h5>
 
-                                        </div>
-                                        <div class="modal-body border rounded">
-                                            <div class="row">
-                                                <div class="col-1">
-                                                    <p>?</p>
-                                                </div>
-                                                <div class="col-11">
+                        <!--Modal confirmar Devolver diseño  -->
+                        <div id="ConfirmarRegresoDelDiseno" class="modal" tabindex="-1" style="display: none;">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header navbar-custom d-flex align-items-center justify-content-center shadow text-white">
+                                        <h5 class="modal-title text-center">Habilitar Orden de Trabajo para Ventas</h5>
+
+                                    </div>
+                                    <div class="modal-body border rounded">
+                                        <div class="row">
+                                            <div class="col-1">
+                                                <p>?</p>
+                                            </div>
+                                            <div class="col-11">
                                                 <h6><span id="ConfirmarRegresoDelDiseno2"></span></h6>
                                             </div>
-                                                </div>
                                         </div>
-                                        <div class="modal-footer">
-                                            <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                                <asp:Button runat="server" ID="btnDevolverSolicitud_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="AbrirModalObservaciones_Click" />
-                                                <asp:Button runat="server" ID="btnDevolver_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" OnClientClick="ControlBtnCliente(); return false;" />
-                                            </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                            <asp:Button runat="server" ID="btnDevolverSolicitud_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn  btn-outline-primary" Style="width: 5rem;" OnClick="AbrirModalObservaciones_Click" />
+                                            <asp:Button runat="server" ID="btnDevolver_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" OnClientClick="ControlBtnCliente(); return false;" />
+                                        </div>
 
-                                        </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
 
-                           <!--Modal Observacion  -->
-                            <div id="ObservacionDevolverDetener" class="modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" style="display: none;">
+                        <!--Modal Observacion  -->
+                        <div id="ObservacionDevolverDetener" class="modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" style="display: none;">
+                            <div class="modal-dialog modal-fullscreen">
+                                <div class="modal-content">
+
+                                    <div class="modal-header p-0 text-white" style="background-color: #23273be6">
+                                        <h5 class="modal-title text-center" style="padding-left: 2rem;">Observacion </h5>
+                                        <asp:LinkButton ID="btnCerrarDetener" data-bs-dismiss="modal" runat="server" aria-label="Close" Style="color: white !important; margin-right: 1.5rem; font-size: 1.8rem; text-decoration: none;" OnClick="btnCerrarDevolver_Click">
+                                            <i class="bi bi-x-circle"></i>
+                                        </asp:LinkButton>
+
+                                    </div>
+
+                                    <div class="modal-body border rounded">
+
+                                        <div class="container-fluid">
+
+                                            <div class="container pt-2">
+
+                                                <div class="row pt-2 border p-3 rounded shadow g-2">
+
+                                                    <div class="col-md-6 mt-2 p-3 border rounded  p-1">
+
+                                                        <div class="row g-1 pb-2">
+
+                                                            <div class="col-md-1">
+                                                                <div class="input-group input-group-sm ">
+                                                                    <asp:Label ID="lbOt" CssClass="form-label fw-bold" runat="server" Text="OT: "></asp:Label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-5">
+                                                                <div class="input-group input-group-sm ">
+                                                                    <asp:TextBox ID="tbOTObservacion" CssClass="form-control form-control-sm" ReadOnly="true" runat="server"></asp:TextBox>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6">
+                                                                <div class="input-group input-group-sm gap-2">
+                                                                    <asp:Label ID="lbPed" CssClass="form-label fw-bold" runat="server" Text="Pedido: "></asp:Label>
+                                                                    <asp:TextBox ID="tbPed" CssClass="form-control form-control-sm" ReadOnly="true" runat="server"></asp:TextBox>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="row g-1 pb-2 pt-2">
+
+                                                            <div class="col-md-1">
+                                                                <div class="input-group input-group-sm">
+                                                                    <asp:Label ID="lbObra" CssClass="form-label" runat="server" Text="Obra: "></asp:Label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-11">
+                                                                <div class="input-group input-group-sm gap-2">
+
+                                                                    <asp:TextBox ID="btObraObs" CssClass="form-control form-control-sm" ReadOnly="true" runat="server"></asp:TextBox>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="row g-1 mt-2">
+
+                                                            <div class="col-md-1">
+                                                                <div class="input-group input-group-sm">
+                                                                    <asp:Label ID="Label21" runat="server" CssClass="form-label-sm fw-bold" Text="T.Obs."></asp:Label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-7">
+                                                                <div class="input-group input-group-sm gap-2">
+
+                                                                    <asp:DropDownList ID="ddlTipoObservacion" runat="server" CssClass="form-control form-control-sm" DataTextField="TipoObservacion" DataValueField="Id_TipoObservacion" DataSourceID="TipoObservacion" OnSelectedIndexChanged="ddlTipoObservacion_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+
+                                                                    <asp:SqlDataSource runat="server" ID="TipoObservacion" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL %>" SelectCommand="SELECT 
+                                                                                        Id_TipoObservacion, Aplicacion,Descripcion, Aplicacion + ' - ' + Descripcion as TipoObservacion,
+                                                                                        DestinatarioPorDefecto,Programable, AlDirectorComercial
+                                                                                        FROM tblTipoObservacion 
+                                                                                        WHERE Aplicacion Like '%DEVOLUCION DE PEDIDO%' 
+                                                                                        AND Activa = 1
+                                                                                        ORDER BY Aplicacion ASC , Descripcion ASC"></asp:SqlDataSource>
+
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="input-group input-group-sm gap-2">
+                                                                    <asp:Label ID="Label22" runat="server" CssClass="col-form-label-sm" Text="F.Actividad"></asp:Label>
+                                                                    <asp:TextBox ID="tbfechaActividad" runat="server" CssClass="form-control form-control-sm" type="date"></asp:TextBox>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <h6>Observación</h6>
+                                                                <textarea id="txObservacion" runat="server" class="form-control form-control-sm" style="height: 25rem;"> </textarea>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="col-md-6 p-2 mt-2 border">
+
+                                                        <div class="" style="height: 35.5rem;">
+
+                                                            <div class="border rounded p-1 special-border" style="max-height: 20rem; height: 22rem; overflow-x: auto;">
+                                                                <h6 class="datagrid-header text-center">Receptores de Correo</h6>
+                                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm p-1" ID="DataGridReceptorMail" DataSourceID="DSRecptores" runat="server" AutoGenerateColumns="false" OnItemCommand="DataGridReceptorMail_ItemCommand">
+                                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                                    <Columns>
+                                                                        <asp:TemplateColumn HeaderText="...">
+                                                                            <ItemTemplate>
+                                                                                <asp:LinkButton ID="lnkView" runat="server" CssClass="Tam" CommandName="VerMail" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" OnClientClick="CerrarModalDevolver();" />
+                                                                            </ItemTemplate>
+                                                                        </asp:TemplateColumn>
+                                                                        <asp:BoundColumn HeaderText="Departamento/Cargo" DataField="Cargo" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                                        <asp:BoundColumn HeaderText="Nombre" DataField="NombreCompleto" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn HeaderText="" DataField="Mail" Visible="false" />
+                                                                        <asp:BoundColumn HeaderText="" DataField="Cedula" Visible="false" />
+
+                                                                    </Columns>
+                                                                </asp:DataGrid>
+
+                                                                <asp:SqlDataSource ID="DSRecptores" runat="server" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL%>"
+                                                                    SelectCommand="SELECT Cedula, Nombre + ' ' + Apellidos AS NombreCompleto, Cargo,Mail FROM tblEmpleado
+                                                                                   WHERE Activo = 1 AND ReceptorObservaciones = 1 ORDER BY Cargo ASC, Nombre ASC"></asp:SqlDataSource>
+
+                                                            </div>
+
+                                                            <div class="container-fluid pt-2 ">
+
+                                                                <div class="row pt-2 ">
+                                                                    <div class="col-6">
+                                                                        <asp:Label ID="Label23" runat="server" Text="Receptores por defecto" CssClass="col-form-label-sm fw-bold"></asp:Label>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row pt-2 ">
+                                                                    <div class="col-12">
+                                                                        <asp:TextBox ID="tbReceptorCorreo" ReadOnly="true" runat="server" CssClass=" form-control form-control-sm"></asp:TextBox>
+                                                                    </div>
+
+                                                                </div>
+
+                                                                <div class="row pt-2 ">
+                                                                    <div class="col-12">
+                                                                        <asp:TextBox ID="tbRecepTipoObs" ReadOnly="true" runat="server" CssClass=" form-control form-control-sm" placeHolder="Correos por tipo de observación"></asp:TextBox>
+                                                                    </div>
+
+                                                                </div>
+
+                                                                <div class="row pt-2 ">
+                                                                    <div class="col-12">
+                                                                        <asp:TextBox ID="tbCedulaRecp" runat="server" CssClass=" form-control form-control-sm" Visible="false"></asp:TextBox>
+                                                                        <asp:TextBox ID="tbNombreRecp" runat="server" CssClass=" form-control form-control-sm" Visible="false"></asp:TextBox>
+                                                                    </div>
+
+                                                                </div>
+
+                                                                <div class="row  mt-4">
+
+                                                                    <div class="col-md-7">
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <asp:Button ID="BtnGrabarObservacion" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Grabar Observacion" OnClick="BtnGrabarObservacion_Click" />
+                                                                    </div>
+                                                                </div>
+
+
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                          <!--Modal Confirmacion Despiece Digitado OK-->
+                        <div id="modalConfiDespieDigitado" class="modal" tabindex="-1" style="display: none;">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary text-white">
+                                        <h6 class="modal-title  text-center">Despiece no digitado</h6>
+
+                                    </div>
+                                    <div class="modal-body border rounded">
+                                        <div class="container-fluid">
+                                            <h6>Se detecta que el valor del pedido no fue digitado, desea continuar?</h6>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                            <asp:Button runat="server" ID="btnContinuarOk_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-primary" AutoPostBack="true" Style="width: 5rem;" OnClick="btnContinuarOk_SI_Click" />
+                                            <asp:Button runat="server" ID="btnContinuarOk_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                          <!--Modal Confirmacion Fecha Empaque OK-->
+                        <div id="modalConfiFechaEmpaque" class="modal" tabindex="-1" style="display: none;">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary text-white">
+                                        <h6 class="modal-title  text-center">Termino mínimo producción</h6>
+
+                                    </div>
+                                    <div class="modal-body border rounded">
+                                        <div class="container-fluid">
+                                            <h6>La fecha de empaque no cumple con los tiempos mínimos de producción. Desea continuar pasando el pedido?</h6>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                            <asp:Button runat="server" ID="btnContinuarOk1_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-primary" AutoPostBack="true" Style="width: 5rem;"  OnClick="btnContinuarOk1_SI_Click"/>
+                                            <asp:Button runat="server" ID="btnContinuarOk1_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                         <!--Modal Observacion Boton Ok dibujo  -->
+                        <div id="ObservacionBotonOkDibujo" class="modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" style="display: none;">
                                 <div class="modal-dialog modal-fullscreen">
                                     <div class="modal-content">
 
                                         <div class="modal-header p-0 text-white" style="background-color: #23273be6">
-                                            <h5 class="modal-title text-center" style="padding-left: 2rem;">Observacion </h5>    
-                                            <asp:LinkButton ID="btnCerrarDetener" data-bs-dismiss="modal" runat="server" aria-label="Close" Style="color: white !important; margin-right: 1.5rem; font-size: 1.8rem; text-decoration: none;" OnClick="btnCerrarDevolver_Click">
+                                            <h6 class="modal-title text-center" style="padding-left: 2rem;">Observacion </h6>
+                                            <asp:LinkButton ID="btnCerrarObservacionOKDibujo" data-bs-dismiss="modal" runat="server" aria-label="Close" Style="color: white !important; margin-right: 1.5rem; font-size: 1.8rem; text-decoration: none;" OnClick="btnCerrarObservacionOKDibujo_Click">
                                             <i class="bi bi-x-circle"></i>
                                             </asp:LinkButton>
 
@@ -2468,20 +2711,20 @@
 
                                                                 <div class="col-md-1">
                                                                     <div class="input-group input-group-sm ">
-                                                                        <asp:Label ID="lbOt" CssClass="form-label fw-bold" runat="server" Text="OT: "></asp:Label>
+                                                                        <asp:Label ID="lbOt1" CssClass="form-label fw-bold" runat="server" Text="OT: "></asp:Label>
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="col-md-5">
                                                                     <div class="input-group input-group-sm ">
-                                                                        <asp:TextBox ID="tbOTObservacion" CssClass="form-control form-control-sm" ReadOnly="true" runat="server"></asp:TextBox>
+                                                                        <asp:TextBox ID="tbOt1" CssClass="form-control form-control-sm" ReadOnly="true" runat="server"></asp:TextBox>
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="col-md-6">
                                                                     <div class="input-group input-group-sm gap-2">
-                                                                        <asp:Label ID="lbPed" CssClass="form-label fw-bold" runat="server" Text="Pedido: "></asp:Label>
-                                                                        <asp:TextBox ID="tbPed" CssClass="form-control form-control-sm" ReadOnly="true" runat="server"></asp:TextBox>
+                                                                        <asp:Label ID="Label10" CssClass="form-label fw-bold" runat="server" Text="Pedido: "></asp:Label>
+                                                                        <asp:TextBox ID="tbPed1" CssClass="form-control form-control-sm" ReadOnly="true" runat="server"></asp:TextBox>
                                                                     </div>
                                                                 </div>
 
@@ -2491,14 +2734,14 @@
 
                                                                 <div class="col-md-1">
                                                                     <div class="input-group input-group-sm">
-                                                                        <asp:Label ID="lbObra" CssClass="form-label" runat="server" Text="Obra: "></asp:Label>
+                                                                        <asp:Label ID="lbObra1" CssClass="form-label" runat="server" Text="Obra: "></asp:Label>
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="col-md-11">
                                                                     <div class="input-group input-group-sm gap-2">
 
-                                                                        <asp:TextBox ID="btObraObs" CssClass="form-control form-control-sm" ReadOnly="true" runat="server"></asp:TextBox>
+                                                                        <asp:TextBox ID="tbObra1" CssClass="form-control form-control-sm" ReadOnly="true" runat="server"></asp:TextBox>
                                                                     </div>
 
                                                                 </div>
@@ -2509,20 +2752,20 @@
 
                                                                 <div class="col-md-1">
                                                                     <div class="input-group input-group-sm">
-                                                                        <asp:Label ID="Label21" runat="server" CssClass="form-label-sm fw-bold" Text="T.Obs."></asp:Label>
+                                                                        <asp:Label ID="lbObs" runat="server" CssClass="form-label-sm fw-bold" Text="T.Obs."></asp:Label>
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="col-md-7">
                                                                     <div class="input-group input-group-sm gap-2">
 
-                                                                        <asp:DropDownList ID="ddlTipoObservacion" runat="server" CssClass="form-control form-control-sm" DataTextField="TipoObservacion" DataValueField="Id_TipoObservacion" DataSourceID="TipoObservacion" OnSelectedIndexChanged="ddlTipoObservacion_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                                                                        <asp:DropDownList ID="ddlTipoObsBotonOkDibujo" runat="server" CssClass="form-control form-control-sm" DataTextField="TipoObservacion" DataValueField="Id_TipoObservacion" DataSourceID="DSTipoObserOKDibujo" OnSelectedIndexChanged="ddlTipoObsBotonOkDibujo_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
 
-                                                                       <asp:SqlDataSource runat="server" ID="TipoObservacion" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL %>" SelectCommand="SELECT 
+                                                                        <asp:SqlDataSource runat="server" ID="DSTipoObserOKDibujo" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL %>" SelectCommand="SELECT 
                                                                                         Id_TipoObservacion, Aplicacion,Descripcion, Aplicacion + ' - ' + Descripcion as TipoObservacion,
                                                                                         DestinatarioPorDefecto,Programable, AlDirectorComercial
                                                                                         FROM tblTipoObservacion 
-                                                                                        WHERE Aplicacion Like '%DEVOLUCION DE PEDIDO%' 
+                                                                                        WHERE Aplicacion Like '%REACTIVACIÓN DE PEDIDO%' 
                                                                                         AND Activa = 1
                                                                                         ORDER BY Aplicacion ASC , Descripcion ASC"></asp:SqlDataSource>
 
@@ -2531,8 +2774,8 @@
 
                                                                 <div class="col-md-4">
                                                                     <div class="input-group input-group-sm gap-2">
-                                                                        <asp:Label ID="Label22" runat="server" CssClass="col-form-label-sm" Text="F.Actividad"></asp:Label>
-                                                                        <asp:TextBox ID="tbfechaActividad" runat="server" CssClass="form-control form-control-sm" type="date"></asp:TextBox>
+                                                                        <asp:Label ID="Label13" runat="server" CssClass="col-form-label-sm" Text="F.Actividad"></asp:Label>
+                                                                        <asp:TextBox ID="tbFechaActividadOkDibujo" runat="server" CssClass="form-control form-control-sm" type="date"></asp:TextBox>
                                                                     </div>
                                                                 </div>
 
@@ -2541,7 +2784,7 @@
                                                             <div class="row">
                                                                 <div class="col-md-12">
                                                                     <h6>Observación</h6>
-                                                                    <textarea id="txObservacion" runat="server" class="form-control form-control-sm" style="height: 25rem;"> </textarea>
+                                                                    <textarea id="txObserOkDibujo" runat="server" class="form-control form-control-sm" style="height: 15rem;"> </textarea>
                                                                 </div>
                                                             </div>
 
@@ -2553,12 +2796,12 @@
 
                                                                 <div class="border rounded p-1 special-border" style="max-height: 20rem; height: 22rem; overflow-x: auto;">
                                                                     <h6 class="datagrid-header text-center">Receptores de Correo</h6>
-                                                                    <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm p-1" ID="DataGridReceptorMail" DataSourceID="DSRecptores" runat="server" AutoGenerateColumns="false" OnItemCommand="DataGridReceptorMail_ItemCommand">
+                                                                    <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm p-1" ID="DataGridReceptoresMail" DataSourceID="DSReceptoresMail" runat="server" AutoGenerateColumns="false" OnItemCommand="DataGridReceptoresMail_ItemCommand">
                                                                         <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                         <Columns>
                                                                             <asp:TemplateColumn HeaderText="...">
                                                                                 <ItemTemplate>
-                                                                                    <asp:LinkButton ID="lnkView" runat="server" CssClass="Tam" CommandName="VerMail" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" OnClientClick="CerrarModalDevolver();" />
+                                                                                    <asp:LinkButton ID="lnkView" runat="server" CssClass="Tam" CommandName="VerMailOKDibujo" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
                                                                                 </ItemTemplate>
                                                                             </asp:TemplateColumn>
                                                                             <asp:BoundColumn HeaderText="Departamento/Cargo" DataField="Cargo" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
@@ -2569,8 +2812,8 @@
                                                                         </Columns>
                                                                     </asp:DataGrid>
 
-                                                                    <asp:SqlDataSource ID="DSRecptores" runat="server" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL%>"
-                                                                        SelectCommand="SELECT Cedula, Nombre + ' ' + Apellidos AS NombreCompleto, Cargo,Mail FROM tblEmpleado
+                                                                    <asp:SqlDataSource ID="DSReceptoresMail" runat="server" ConnectionString="<%$ ConnectionStrings:BD_ISIDSQL%>"
+                                                                        SelectCommand="SELECT Cedula, Nombre + ' ' + Apellidos AS NombreCompleto, Cargo,Mail    FROM tblEmpleado
                                                                                    WHERE Activo = 1 AND ReceptorObservaciones = 1 ORDER BY Cargo ASC, Nombre ASC"></asp:SqlDataSource>
 
                                                                 </div>
@@ -2579,28 +2822,28 @@
 
                                                                     <div class="row pt-2 ">
                                                                         <div class="col-6">
-                                                                            <asp:Label ID="Label23" runat="server" Text="Receptores por defecto" CssClass="col-form-label-sm fw-bold"></asp:Label>
+                                                                            <asp:Label ID="lbRecep" runat="server" Text="Receptores por defecto" CssClass="col-form-label-sm fw-bold"></asp:Label>
                                                                         </div>
                                                                     </div>
 
                                                                     <div class="row pt-2 ">
                                                                         <div class="col-12">
-                                                                            <asp:TextBox ID="tbReceptorCorreo" ReadOnly="true" runat="server" CssClass=" form-control form-control-sm"></asp:TextBox>
-                                                                        </div>
-
-                                                                    </div>
-
-                                                                    <div class="row pt-2 ">
-                                                                        <div class="col-12">
-                                                                            <asp:TextBox ID="tbRecepTipoObs" ReadOnly="true" runat="server" CssClass=" form-control form-control-sm" placeHolder="Correos por tipo de observación"></asp:TextBox>
+                                                                            <asp:TextBox ID="tbReceptorCorreo1" ReadOnly="true" runat="server" CssClass=" form-control form-control-sm"></asp:TextBox>
                                                                         </div>
 
                                                                     </div>
 
                                                                     <div class="row pt-2 ">
                                                                         <div class="col-12">
-                                                                            <asp:TextBox ID="tbCedulaRecp" runat="server" CssClass=" form-control form-control-sm" Visible="false"></asp:TextBox>
-                                                                            <asp:TextBox ID="tbNombreRecp" runat="server" CssClass=" form-control form-control-sm" Visible="false"></asp:TextBox>
+                                                                            <asp:TextBox ID="tbRecepTipoObs1" ReadOnly="true" runat="server" CssClass=" form-control form-control-sm" placeHolder="Correos por tipo de observación"></asp:TextBox>
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                    <div class="row pt-2 ">
+                                                                        <div class="col-12">
+                                                                            <asp:TextBox ID="tbCedulaRecp1" runat="server" CssClass=" form-control form-control-sm" Visible="false"></asp:TextBox>
+                                                                            <asp:TextBox ID="tbNombreRecp1" runat="server" CssClass=" form-control form-control-sm" Visible="false"></asp:TextBox>
                                                                         </div>
 
                                                                     </div>
@@ -2610,7 +2853,7 @@
                                                                         <div class="col-md-7">
                                                                         </div>
                                                                         <div class="col-md-3">
-                                                                            <asp:Button ID="BtnGrabarObservacion" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Grabar Observacion" OnClick="BtnGrabarObservacion_Click" />
+                                                                            <asp:Button ID="btnGrabarObservacionOkDibujo" CssClass="btn btn-sm btn-outline-secondary" runat="server" Text="Grabar Observacion" OnClick="btnGrabarObservacionOkDibujo_Click" />
                                                                         </div>
                                                                     </div>
 
@@ -2633,6 +2876,7 @@
                                 </div>
                             </div>
 
+
                     </ContentTemplate>
 
                     <Triggers>
@@ -2653,7 +2897,7 @@
                                     <div class="modal-content ">
                                         <div class="modal-header" style="background:radial-gradient(circle, #afb5b9, #23273be6)">
                                             <h5 class="modal-title text-white" id="exampleModalLabel">Acabados Plano</h5>
-                                             <asp:LinkButton ID="btnCerrarAcabadosPlano" data-bs-dismiss="modal" runat="server" aria-label="Close" Style="color: white !important; margin-right: 1.5rem; font-size: 1.8rem; text-decoration: none;" OnClick="btnCerrarAcabadosPlano_Click">
+                                            <asp:LinkButton ID="btnCerrarAcabadosPlano" data-bs-dismiss="modal" runat="server" aria-label="Close" Style="color: white !important; margin-right: 1.5rem; font-size: 1.8rem; text-decoration: none;" OnClick="btnCerrarAcabadosPlano_Click">
                                             <i class="bi bi-x-circle"></i>
                                             </asp:LinkButton>
                                         </div>
@@ -2722,14 +2966,14 @@
                                                     <div class="row">
 
                                                         <div class="col-8">
-                                                            <div class="table-responsive mb-1 gap-2" style="max-height: 15rem; height:15rem;s overflow-x: auto;">
+                                                            <div class="table-responsive mb-1 gap-2" style="max-height: 15rem; height:15rem; overflow-x: auto;">
                                                                 <h5 class="datagrid-header text-center">Acabado Ventas</h5>
                                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridAcabadoVentas" runat="server" AutoGenerateColumns="false" DataSourceID="AcabadosVentas" OnItemCommand="DataGridAcabadoVentas_ItemCommand">
                                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                     <Columns>
                                                                         <asp:TemplateColumn HeaderText="...">
                                                                             <ItemTemplate>
-                                                                                <asp:LinkButton ID="lnkAcabV" CssClass="Tam" ToolTip="VerDocumento" runat="server" CommandName="VerDocumento1" CommandArgument='<%# Container.ItemIndex %>'   Text="<i class='bi bi-pencil-square'></i>" />
+                                                                                <asp:LinkButton ID="lnkAcabV" CssClass="Tam" ToolTip="VerDocumento" runat="server" CommandName="VerDocumento1" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>" />
                                                                             </ItemTemplate>
                                                                         </asp:TemplateColumn>
 
@@ -2761,7 +3005,7 @@
                                                         </div>
 
                                                         <div class="col-3 pt-4 mt-4 text-end">
-                                                            
+
                                                             <asp:Button ID="btnAgregarAcabado" runat="server" Text="Acabado de Plano" class="btn btn-sm btn-outline-secondary" OnClick="btnAgregarAcabado_Click" />
                                                         </div>
 
@@ -2853,7 +3097,7 @@
                                 </div>
                             </div>
 
-                             <!--Modal Actulizar prototipos  -->
+                            <!--Modal Actulizar prototipos  -->
                             <div id="modalActualizarPrecioProtot" class="modal" tabindex="-1" style="display: none;">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
@@ -2925,7 +3169,7 @@
                                 </div>
                             </div>
 
-                              <!--Modal Eliminar Acabado Plano -->
+                            <!--Modal Eliminar Acabado Plano -->
                             <div id="confirmarEliminarAcabado" class="modal" tabindex="-1" style="display: none;">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
@@ -2941,8 +3185,8 @@
                                         </div>
                                         <div class="modal-footer">
                                             <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                                <asp:Button runat="server" ID="btnEliminarAcabado_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-outline-danger" Style="width: 5rem;" OnClick="btnEliminarAcabado_SI_Click" />
-                                                <asp:Button runat="server" ID="btneliminarAcabado_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" OnClick="btneliminarAcabado_NO_Click" />
+                                                <asp:Button runat="server" ID="btnEliminarAcabado_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-danger" Style="width: 5rem;" OnClick="btnEliminarAcabado_SI_Click" />
+                                                <asp:Button runat="server" ID="btneliminarAcabado_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-secondary" Style="width: 5rem;" OnClick="btneliminarAcabado_NO_Click" />
                                             </div>
 
                                         </div>
@@ -3025,7 +3269,7 @@
                                                 <asp:LinkButton runat="server" title="Actualizar Precio Prototipo" ID="BtnActPrePro" OnClick="BtnActPrePro_Click">
                                                      <i class="bi bi-cash-coin"></i>
                                                 </asp:LinkButton>
-                                                        
+
                                                 <asp:LinkButton runat="server" title="Generar Formato Certificado de Origen" ID="BtnGenForCerOrd">
                                                   <i class="bi bi-clipboard-check"></i>
                                                 </asp:LinkButton>
@@ -3837,7 +4081,7 @@
 
 
         <!--Modal de carga para el proceso de Boton OK-->
-        <div class="modal fade" id="OkCargando" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
+        <div class="modal fade" id="OkCargando" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
             <div class="modal-dialog modal-dialog-centered ">
                 <div class="modal-content">
                     <div class="modal-header pb-1 mb-1 bg-primary text-white">
@@ -4116,13 +4360,12 @@
 
             }
         }
-    </script>
 
-      <script>   
-         function CerrarModalDevolver() {
-             $('#ConfirmarRegresoDelDiseno').modal('hide');
-         }
-      </script>
+
+        function CerrarModalDevolver() {
+            $('#ConfirmarRegresoDelDiseno').modal('hide');
+        }
+    </script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
