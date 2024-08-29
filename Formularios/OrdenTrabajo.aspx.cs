@@ -1884,19 +1884,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             bool estaCerrada = EstaCerrada(id, pedido);
-            string textoPlano = txtPlano.Text;
-
-            if (textoPlano == null || textoPlano == "")
-            {
-                btnOk.Enabled = false;
-                btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
-            }
-            else
-            {
-                btnOk.Enabled = true;
-                btnOk.CssClass = "btn btn-sm shadow button-enabled rojo fw-bold";
-            }
-
+        
             // Guardar el valor en una variable de sesión
             Session["ValorDeObra"] = valorTextBox;
 
@@ -2572,6 +2560,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Habilite o deshabilite el botón
             if (estaAbierta)
             {
+                string textoPlano = txtPlano.Text;
+
+                if (textoPlano == null || textoPlano == "")
+                {
+                    btnOk.Enabled = false;
+                    btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
+                }
+                else
+                {
+                    btnOk.Enabled = true;
+                    btnOk.CssClass = "btn btn-sm shadow button-enabled rojo fw-bold";
+                }
+
+
                 ModificarOt.Enabled = true;
                 ModificarOt.CssClass = "btn btn-sm shadow button-enabled";
 
@@ -2582,6 +2584,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
+                btnOk.Enabled = false;
+                btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
+
                 ModificarOt.Enabled = false;
                 ModificarOt.CssClass = "btn btn-sm shadow button-disabled";
 
@@ -3358,20 +3363,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             bool estaCerrada = EstaCerrada(id, pedido);
-            string textoPlano = txtPlano.Text;
-
-            if (textoPlano == null || textoPlano == "")
-            {
-                btnOk.Enabled = false;
-                btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
-            }
-            else
-            {
-                btnOk.Enabled = true;
-                btnOk.CssClass = "btn btn-sm shadow button-enabled rojo fw-bold";
-            }
-
-
+           
             // Guardar el valor en una variable de sesión
             Session["ValorDeObra"] = valorTextBox;
 
