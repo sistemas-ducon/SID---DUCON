@@ -182,6 +182,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             btnPlanoOT.Enabled = false;
             btnPlanoOT.CssClass = "btn btn-sm shadow-sm button-disabled";
 
+            BtnTxtOT.Enabled = false;
+
         }
 
         protected void Page_LoadDiseño(object sender, EventArgs e)
@@ -2588,17 +2590,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 btnPlanoOT.Enabled = true;
                 btnPlanoOT.CssClass = "btn btn-sm shadow-sm button-enabled";
-
-                BtnTxtOT.Enabled = true;
-                BtnTxtOT.CssClass = "btn btn-sm shadow-sm button-enabled";
             }
             else
             {
                 btnPlanoOT.Enabled = false;
                 btnPlanoOT.CssClass = "btn btn-sm shadow-sm button-disabled";
-
-                BtnTxtOT.Enabled = false;
-                BtnTxtOT.CssClass = "btn btn-sm shadow-sm button-disabled";
             }
 
             if (estaCerrada) // Habilitar solo si está abierta y no está cerrada
@@ -2642,6 +2638,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             EntregaPerfecta.Enabled = true;
             EntregaPerfecta.CssClass = "btn btn-sm shadow button-enabled";
+
+            BtnTxtOT.Enabled = false;
         }
 
         private bool VerificarEstadoOt(string id, string pedido, int terminadoDiseno)
@@ -5510,7 +5508,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BtnModificar_Click(object sender, EventArgs e)
         {
-
             ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#LlenarNITModificar').modal('show');", true);
 
             Session["BtnModificarEjecutado"] = true;
@@ -5524,18 +5521,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             ddlFabrica1.Enabled = false;
 
-
-
             cbxComisionCompart.Enabled = true;
 
             string tipoAccion = Session["Diseno"] as string;
             if (tipoAccion == "Ventas")
             {
                 BtnTxtOT.Enabled = false;
+                btnPlanoOT.Enabled = false;
             }
             if (tipoAccion == "Diseño")
             {
                 BtnTxtOT.Enabled = true;
+                btnPlanoOT.Enabled = false;
             }
         }
 
@@ -5758,6 +5755,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             LimpiarCamposCotizacion();
 
+            string tipoAccion = Session["Diseno"] as string;
+            if (tipoAccion == "Ventas")
+            {
+                BtnTxtOT.Enabled = false;
+            }
+            if (tipoAccion == "Diseño")
+            {
+                BtnTxtOT.Enabled = true;
+            }
         }
 
         private string ObtenerIdContactoCliente(string idOT, string consecutivoPedido)
