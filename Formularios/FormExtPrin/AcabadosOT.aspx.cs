@@ -267,8 +267,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     }
                     else
                     {
-                        // Si hay id_OT y pedido, verifica la condición
-                        bool condicionCumplida = VerificarCondicion(idOT, pedido);
+                        bool condicionCumplida = false;
+                        string tipoAccion = Session["Diseno"] as string;
+                        if (tipoAccion == "Ventas")
+                        {
+                            // Si hay id_OT y pedido, verifica la condición
+                             condicionCumplida = VerificarCondicion(idOT, pedido);
+                        }
+                        if (tipoAccion == "Diseño")
+                        {
+                            condicionCumplida = VerificarCondicionDise(idOT, pedido);
+                        }
+
                         if (condicionCumplida)
                         {
                             Button3.Enabled = true;
@@ -277,7 +287,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             BtnCopAca.Enabled = true;
                             BtnCopAca.CssClass = "btn shadow btn-light linkButtonClicked2 grande button-enabled";
                             LinkButton1.Enabled = true;
-                            LinkButton1.CssClass = "btn shadow btn-light linkButtonClicked2 grande button-enabled";
+                            LinkButton1.CssClass = "btn shadow-sm AzulEfecto text-white grande button-enabled";
                             TextBox2.Enabled = true;
                             TextBox2.CssClass = "form-control shadow grande linkButtonClicked button-enabled";
                         }
@@ -289,7 +299,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             BtnCopAca.Enabled = false;
                             BtnCopAca.CssClass = "btn shadow btn-light linkButtonClicked2 grande button-disabled";
                             LinkButton1.Enabled = false;
-                            LinkButton1.CssClass = "btn shadow btn-light linkButtonClicked2 grande button-disabled";
+                            LinkButton1.CssClass = "btn shadow-sm AzulEfecto text-white grande button-disabled";
                             TextBox2.Enabled = false;
                             TextBox2.CssClass = "form-control shadow grande linkButtonClicked button-disabled";
                         }
@@ -330,6 +340,43 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 // Consulta SQL para verificar la condición en la base de datos
                 string consultaSQL = "SELECT COUNT(*) FROM tblOT " +
                                      $"WHERE Id_OT = '{idOT}' AND Consecutivo_Pedido = '{consecutivoPedido}' AND Terminado_Ventas = '0'";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(consultaSQL, connection))
+                    {
+                        connection.Open();
+                        int count = Convert.ToInt32(command.ExecuteScalar());
+
+                        // Si se obtiene al menos un resultado (count > 0), la condición se cumple
+                        condicionCumplida = (count > 0);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                Response.Write("Error al verificar la condición desde la base de datos: " + ex.Message);
+            }
+
+            // Retorna el resultado de la verificación de la condición
+            return condicionCumplida;
+        }
+
+        private bool VerificarCondicionDise(string idOT, string consecutivoPedido)
+        {
+
+
+            bool condicionCumplida = false;
+
+            try
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+                // Consulta SQL para verificar la condición en la base de datos
+                string consultaSQL = "SELECT COUNT(*) FROM tblOT " +
+                                     $"WHERE Id_OT = '{idOT}' AND Consecutivo_Pedido = '{consecutivoPedido}' AND Terminado_Diseño = '0'";
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {

@@ -71,10 +71,10 @@
                         <div class="container-fluid  mt-3">
                             <div class="row justify-content-between">
                                 <div class="col-6">
-                                            <asp:Button ID="Button1" runat="server" Text="Eliminar Acabado" CssClass="btn btn-dark btn-sm" Enabled="false" OnClick="EliminarAcabado_Click"/>
+                                            <asp:Button ID="Button1" runat="server" Text="Eliminar Acabado" CssClass="btn RojoEfecto text-white fw-bold btn-sm" Enabled="false" OnClick="EliminarAcabado_Click"/>
                                 </div>
                                 <div class="col-6 text-end">
-                                    <asp:Button ID="Button2" runat="server" Text="Cambiar Acabado" CssClass="btn btn-dark btn-sm" Enabled="false" />
+                                    <asp:Button ID="Button2" runat="server" Text="Cambiar Acabado" CssClass="btn AzulEfecto text-white fw-bold btn-sm" Enabled="false" />
                                 </div>
                             </div>
                         </div>
@@ -224,7 +224,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-2">
-                                                        <asp:Button ID="Button3" runat="server" Text="Grabar Acabado" CssClass="btn btn-dark btn-sm" Enabled="false" OnClick="BtnGrabar_Click" />
+                                                        <asp:Button ID="Button3" runat="server" Text="Grabar Acabado" CssClass="btn VerdeEfecto text-white fw-bold btn-sm" Enabled="false" OnClick="BtnGrabar_Click" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -247,7 +247,7 @@
                                                 </div>
 
                                                 <div class="d-flex flex-wrap">
-                                                            <asp:LinkButton runat="server" ID="LinkButton1" CssClass="btn shadow-sm btn-light linkButtonClicked2 grande" Text="Copiar Acabados OT" OnClick="BtnCopAcaOT_Click"/>              
+                                                            <asp:LinkButton runat="server" ID="LinkButton1" CssClass="btn shadow-sm AzulEfecto text-white" Text="Copiar Acabados OT" OnClick="BtnCopAcaOT_Click"/>              
 
                                                 </div>
 
@@ -270,11 +270,11 @@
         <div class="modal fade" id="CopiarAcabadosOT" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                                    <div class="modal-title d-flex align-items-center justify-content-center text-white p-2" style="background:#0863a4">
+                                    <div class="modal-title d-flex align-items-center justify-content-center text-white p-2 AzulOscuroEfecto fw-bold shadow">
                         <h5 class="modal-title d-flex align-items-center justify-content-center text-white">COPIAR ACABADOS DE OTRA OT</h5>
 
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body bg-light">
                         <div class="row">
                             <div class="col-12">
                                 <p><span id="CopiarAcabadosOT2"></span></p>
@@ -284,20 +284,20 @@
                             <div class="col-8">
                                 <div class="input-group input-group-sm gap-2">
                                     <asp:Label class="form-label" Text="OT" runat="server" ID="lblOT"></asp:Label>
-                                    <asp:TextBox ID="tbOT" runat="server" CssClass="form-control" placeholder="Escriba número de OT"></asp:TextBox>
+                                    <asp:TextBox ID="tbOT" runat="server" CssClass="form-control linkButtonClicked2" placeholder="Escriba número de OT"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="input-group input-group-sm gap-2">
                                     <asp:Label class="form-label" Text="Pedido" runat="server" ID="lblPedido"></asp:Label>
-                                    <asp:TextBox ID="TextBox3" runat="server" CssClass="form-control" placeholder="Pedido"></asp:TextBox>
+                                    <asp:TextBox ID="TextBox3" runat="server" CssClass="form-control linkButtonClicked2" placeholder="Pedido"></asp:TextBox>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer  d-flex align-items-center justify-content-center">
-                        <asp:Button runat="server" type="button" class="btn btn-sm linkButtonClicked2 shadow-sm btn-outline-dark" data-bs-dismiss="modal" Text="Aceptar" OnClick="BtnAceptar_Click" aria-label="Close"></asp:Button>
-                        <asp:Button runat="server" type="button" class="btn btn-sm linkButtonClicked2 shadow-sm btn-outline-dark" data-bs-dismiss="modal" Text="Cerrar" aria-label="Close"></asp:Button>
+                    <div class="modal-footer  d-flex align-items-center justify-content-center bg-light">
+                        <asp:Button runat="server" type="button" class="btn btn-sm linkButtonClicked2 shadow-sm btn-outline-dark fw-bold" data-bs-dismiss="modal" Text="Aceptar" OnClick="BtnAceptar_Click" aria-label="Close"></asp:Button>
+                        <asp:Button runat="server" type="button" class="btn btn-sm linkButtonClicked2 shadow-sm btn-outline-dark fw-bold" data-bs-dismiss="modal" Text="Cerrar" aria-label="Close"></asp:Button>
                     </div>
                 </div>
             </div>
@@ -307,7 +307,7 @@
                 <div class="modal" id="miModalll" tabindex="-1" style="display: none;">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
-                            <div class="modal-header bg-dark">
+                            <div class="modal-header AzulOscuroEfecto fw-bold shadow">
                                 <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Acabado de la obra</h5>
                         <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -323,7 +323,7 @@
                    <div class="modal fade" id="ErrorCopAca" tabindex="-1" style="display: none;">
             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
-                                    <div class="modal-header bg-danger">
+                                    <div class="modal-header AzulOscuroEfecto fw-bold shadow">
                                         <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID_DUCON</h5>
 
                                     </div>
@@ -342,8 +342,8 @@
                 <div class="modal" id="miModalError" tabindex="-1" style="display: none;">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <div class="modal-header bg-dark">
-                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Error</h5>
+                    <div class="modal-header AzulOscuroEfecto fw-bold shadow">
+                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID_DUCON</h5>
                         <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
@@ -358,7 +358,7 @@
       <div class="modal" id="DefinirAcabado" tabindex="-1" style="display: none;">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <div class="modal-header bg-dark">
+                    <div class="modal-header AzulOscuroEfecto fw-bold shadow">
                         <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Definir Acabado</h5>
                         <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -376,7 +376,7 @@
                    <div class="modal" id="EliminarAcabado" tabindex="-1" style="display: none;">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <div class="modal-header bg-dark">
+                    <div class="modal-header AzulOscuroEfecto fw-bold shadow">
                         <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Eliminar Acabado</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>

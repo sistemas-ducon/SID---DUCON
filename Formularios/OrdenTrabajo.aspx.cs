@@ -4626,52 +4626,137 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
 
+        //protected void ValidarMesesDesdeUltimaVenta()
+        //{
+        //    // Obtener el valor del NIT desde el TextBox
+        //    string nit = txtNit.Text.Trim();
+
+        //    // Verificar que el NIT no esté vacío
+        //    if (!string.IsNullOrEmpty(nit))
+        //    {
+        //        // Utilizar un bloque using para garantizar la liberación de recursos
+        //        using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+        //        {
+        //            connection.Open();
+
+        //            // Crear un nuevo comando SQL
+        //            using (SqlCommand command = new SqlCommand("SELECT DATEDIFF(MONTH, MAX(ot.Fecha_Confirmacion_Venta), GETDATE()) AS MesesDesdeUltimaVenta " +
+        //                                                        "FROM tblClienteObraContacto coc " +
+        //                                                        "INNER JOIN tblOT ot ON coc.IdContacto = ot.IDContacto_Cliente " +
+        //                                                        "INNER JOIN tblAsesorComercial ac ON ot.Codigo_Asesor = ac.CodigoAsesor " +
+        //                                                        "WHERE coc.cocNIT = @NIT;", connection))
+        //            {
+        //                // Añadir parámetro
+        //                command.Parameters.AddWithValue("@NIT", nit);
+
+        //                // Ejecutar la consulta y obtener el resultado
+        //                object result = command.ExecuteScalar();
+
+        //                // Verificar si el resultado no es nulo
+        //                if (result != null && result != DBNull.Value)
+        //                {
+        //                    // Convertir el resultado a entero
+        //                    int mesesDesdeUltimaVenta = Convert.ToInt32(result);
+
+        //                    // Verificar si el valor es menor a 13
+        //                    if (mesesDesdeUltimaVenta < 13)
+        //                    {
+
+        //                        InsertarNuevoPedido();
+        //                        InsertarPlanoPedido();
+
+        //                    }
+        //                    else
+        //                    {
+        //                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ActualizarCliente').modal('show');", true);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#NITvacio').modal('show');", true);
+        //    }
+        //}
+
         protected void ValidarMesesDesdeUltimaVenta()
         {
             // Obtener el valor del NIT desde el TextBox
             string nit = txtNit.Text.Trim();
-
             // Verificar que el NIT no esté vacío
             if (!string.IsNullOrEmpty(nit))
             {
-                // Utilizar un bloque using para garantizar la liberación de recursos
-                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+                // Verificar que el NIT no esté vacío y que el departamento sea "Ventas"
+                string tipoAccion = Session["Diseno"] as string;
+                if (tipoAccion == "Ventas")
                 {
-                    connection.Open();
-
-                    // Crear un nuevo comando SQL
-                    using (SqlCommand command = new SqlCommand("SELECT DATEDIFF(MONTH, MAX(ot.Fecha_Confirmacion_Venta), GETDATE()) AS MesesDesdeUltimaVenta " +
-                                                                "FROM tblClienteObraContacto coc " +
-                                                                "INNER JOIN tblOT ot ON coc.IdContacto = ot.IDContacto_Cliente " +
-                                                                "INNER JOIN tblAsesorComercial ac ON ot.Codigo_Asesor = ac.CodigoAsesor " +
-                                                                "WHERE coc.cocNIT = @NIT;", connection))
+                    using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
                     {
-                        // Añadir parámetro
-                        command.Parameters.AddWithValue("@NIT", nit);
+                        connection.Open();
 
-                        // Ejecutar la consulta y obtener el resultado
-                        object result = command.ExecuteScalar();
-
-                        // Verificar si el resultado no es nulo
-                        if (result != null && result != DBNull.Value)
+                        // Primera consulta: DATEDIFF para obtener meses desde la última venta
+                        using (SqlCommand command = new SqlCommand(
+                            "SELECT DATEDIFF(MONTH, MAX(ot.Fecha_Confirmacion_Venta), GETDATE()) " +
+                            "FROM tblClienteObraContacto coc " +
+                            "INNER JOIN tblOT ot ON coc.IdContacto = ot.IDContacto_Cliente " +
+                            "INNER JOIN tblAsesorComercial ac ON ot.Codigo_Asesor = ac.CodigoAsesor " +
+                            "WHERE coc.cocNIT = @NIT;", connection))
                         {
-                            // Convertir el resultado a entero
-                            int mesesDesdeUltimaVenta = Convert.ToInt32(result);
+                            command.Parameters.AddWithValue("@NIT", nit);
 
-                            // Verificar si el valor es menor a 13
-                            if (mesesDesdeUltimaVenta < 13)
+                            object result = command.ExecuteScalar();
+
+                            if (result == null || result == DBNull.Value)
                             {
-
-                                InsertarNuevoPedido();
-                                InsertarPlanoPedido();
-
+                                // Si la consulta devuelve null, muestra un mensaje y detén la ejecución
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ActualizarCliente').modal('show');", true);
+                                return;
                             }
                             else
                             {
-                                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ActualizarCliente').modal('show');", true);
+                                int mesesDesdeUltimaVenta = Convert.ToInt32(result);
+
+                                // Segunda consulta: Obtener fecha de última actualización
+                                using (SqlCommand command2 = new SqlCommand(
+                                    "SELECT UltimaActualizacion " +
+                                    "FROM tblClienteObra " +
+                                    "WHERE Nit = @NIT;", connection))
+                                {
+                                    command2.Parameters.AddWithValue("@NIT", nit);
+
+                                    object ultimaActualizacion = command2.ExecuteScalar();
+
+                                    if (ultimaActualizacion != null && ultimaActualizacion != DBNull.Value)
+                                    {
+                                        DateTime fechaUltimaActualizacion = Convert.ToDateTime(ultimaActualizacion);
+                                        int mesesDesdeUltimaActualizacion = (int)(DateTime.Now - fechaUltimaActualizacion).TotalDays / 30;
+
+                                        if (mesesDesdeUltimaActualizacion >= 13 && mesesDesdeUltimaVenta >= 13)
+                                        {
+                                            // Si ambos valores son mayores o iguales a 13, muestra un mensaje y detén la ejecución
+                                            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ActualizarCliente').modal('show');", true);
+                                            return;
+                                        }
+                                        else
+                                        {
+                                            // Si todo está bien, continuar con la inserción
+                                            InsertarNuevoPedido();
+                                            InsertarPlanoPedido();
+                                        }
+                                    }
+                                }
                             }
+
+
                         }
                     }
+                }
+                else
+                {
+                    // Si todo está bien, continuar con la inserción
+                    InsertarNuevoPedido();
+                    InsertarPlanoPedido();
                 }
             }
             else
@@ -4679,6 +4764,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#NITvacio').modal('show');", true);
             }
         }
+
 
         protected void InsertarPlanoPedido()
         {
@@ -7357,7 +7443,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         private int Consultar_Id_Numerico(string objeto, float ancho)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString; 
             string sSql = "SELECT Id_Numerico FROM tblPanel WHERE Id_Panel = @Id_Panel AND Ancho = @Ancho";
 
             using (SqlConnection connection = new SqlConnection(connectionString))

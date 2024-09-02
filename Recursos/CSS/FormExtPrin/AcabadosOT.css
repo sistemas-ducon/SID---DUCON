@@ -66,3 +66,19 @@
     border-bottom: 2px solid #ccc; /* Elimina el borde inferior */
     border-right: 2px solid #ccc; /* Elimina el borde derecho */
 }
+
+.AzulEfecto {
+    background: repeating-linear-gradient(45deg, #151947, #2e4575 100px);
+}
+
+.RojoEfecto {
+    background: repeating-linear-gradient(45deg, #953232, #752929 100px);
+}
+
+.VerdeEfecto {
+    background: repeating-linear-gradient(45deg, #1f9160, #0e4623 100px)
+}
+
+.AzulOscuroEfecto {
+    background: repeating-linear-gradient(45deg, #08090c, #1d2942 100px);
+}

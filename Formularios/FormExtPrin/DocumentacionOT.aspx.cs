@@ -198,25 +198,47 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     // Ruta completa para guardar el archivo
                     string rutaArchivo = Path.Combine(rutaCompleta, nombreArchivo);
 
-                    try
-                    {               
-                    // Guardar el archivo en la ruta 
-                    DoctOT.SaveAs(rutaArchivo);
+                try
+                {
+                    // Validar si el archivo ya existe en la base de datos
+                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+                    bool archivoExiste = false;
 
-                   
-                    FileAttributes atributosArchivo = File.GetAttributes(rutaArchivo);
-                    if ((atributosArchivo & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                    using (SqlConnection connection = new SqlConnection(connectionString))
                     {
-                        // Si el archivo tiene el atributo de solo lectura, lo quitamos
-                        File.SetAttributes(rutaArchivo, atributosArchivo & ~FileAttributes.ReadOnly);
+                        connection.Open();
+                        string queryVerificar = "SELECT COUNT(*) FROM tblDocumentacion WHERE Archivo = @Archivo";
+                        using (SqlCommand commandVerificar = new SqlCommand(queryVerificar, connection))
+                        {
+                            commandVerificar.Parameters.AddWithValue("@Archivo", nombreArchivo);
+                            archivoExiste = (int)commandVerificar.ExecuteScalar() > 0;
+                        }
                     }
 
+                    if (archivoExiste)
+                    {
+                        // Si el archivo ya existe, muestra un mensaje de error y no hace la inserción
+                        string scriptArchivoExiste = "alert('El archivo ya pertenece al pedido. No se puede adicionar');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showArchivoExiste", scriptArchivoExiste, true);
+                    }
+                    else
+                    {
 
-                    // Realizaos la Insercion 
+                        // Guardar el archivo en la ruta 
+                        DoctOT.SaveAs(rutaArchivo);
 
-                    string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
-                        if(ddlTipoDoc.SelectedItem.Text == "DLLO.ESPECIAL")
+                        FileAttributes atributosArchivo = File.GetAttributes(rutaArchivo);
+                        if ((atributosArchivo & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                        {
+                            // Si el archivo tiene el atributo de solo lectura, lo quitamos
+                            File.SetAttributes(rutaArchivo, atributosArchivo & ~FileAttributes.ReadOnly);
+                        }
+
+
+
+
+                        if (ddlTipoDoc.SelectedItem.Text == "DLLO.ESPECIAL")
                         {
                             using (SqlConnection connection = new SqlConnection(connectionString))
                             {
@@ -302,13 +324,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         }
 
                     }
+                }
 
-                    catch (Exception ex)
-                    {
+                catch (Exception ex)
+                {
 
-                        string scriptNoSeleccionado = "alert('Se ha producido un error al intentar guardar el archivo.');";
-                        ScriptManager.RegisterStartupScript(this, GetType(), "showNoSeleccionado", scriptNoSeleccionado, true);
-                    }
+                    string scriptNoSeleccionado = "alert('Se ha producido un error al intentar guardar el archivo.');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showNoSeleccionado", scriptNoSeleccionado, true);
+                }
                 
 
             }
@@ -323,13 +346,51 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
         protected void bntElimnar_Click(object sender, EventArgs e)
         {
-
-
             string idDocumento = Session["Id_DocumentoOT"].ToString();
             string NombreArchivo = Session["NombreArchivoOT"].ToString();
             string NombreCarpeta = Session["NombreCarpetaOT"].ToString();
+            string nombreUsuario = Session["usuariologueado"].ToString(); 
+            string pedidoSeleccionado = Session["pedido2"].ToString();
 
+            // Validar permisos y condiciones antes de proceder con la eliminación
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                connection.Open();
 
+                string query = "SELECT Usuario, Pedido FROM tblDocumentacion WHERE ID_Documento = @idDocumento";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@idDocumento", idDocumento);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            string usuarioDocumento = reader["Usuario"].ToString();
+                            string pedidoDocumento = reader["Pedido"].ToString();
+
+                            if ((ValidarPermisoArea()|| usuarioDocumento == nombreUsuario) && pedidoSeleccionado == pedidoDocumento)
+                            {
+                                // Si se validan los permisos, continúa con la eliminación
+                                EliminarDocumento(idDocumento, NombreArchivo, NombreCarpeta);
+                            }
+                            else
+                            {
+                                // Si no se validan los permisos, muestra un mensaje de error o redirecciona
+                                string mensajeError = "No tienes permiso para eliminar este documento o el pedido no coincide.";
+                                string urlRedireccionError = "FormExtPrin/DocumentacionOT.aspx";
+                                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajeError)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccionError)}");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void EliminarDocumento(string idDocumento, string NombreArchivo, string NombreCarpeta)
+        {
+        
             // Eliminamos el documento de la carpeta
             string rutaBase = @"\\Srvfs\s_i_ducon$\Documentacion de Obras\" + NombreCarpeta;
             // string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion\" + NombreCarpeta;
@@ -362,9 +423,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado4)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion4)}");
             }
 
-
-
-
             try
             {
                 if (File.Exists(rutaArchivo))
@@ -391,9 +449,40 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 string urlRedireccion3 = "FormExtPrin/DocumentacionOT.aspx";
                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado3)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion3)}");
             }
+        }
 
-           
+        private bool ValidarPermisoArea()
+        {
+            // Obtén el valor de la variable de sesión 'CedulaLogeada'
+            string cedulaLogeada = Session["CedulaLogeada"].ToString();
 
+            // Cadena de conexión
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            // Valor para identificar si el permiso es encontrado
+            bool tienePermiso = false;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                // Consulta SQL para validar si el empleado tiene el permiso con ID_Permiso 28
+                string query = "SELECT COUNT(*) FROM tblPermiso_Empleado WHERE ID_Empleado = @CedulaLogeada AND ID_Permiso = 28";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Agregar el parámetro de la cédula
+                    command.Parameters.AddWithValue("@CedulaLogeada", cedulaLogeada);
+
+                    // Ejecutar la consulta y verificar si el permiso existe
+                    int count = (int)command.ExecuteScalar();
+
+                    // Si el count es mayor que 0, significa que tiene el permiso
+                    tienePermiso = count > 0;
+                }
+            }
+
+            return tienePermiso;
         }
 
         protected void DataGridDoc_ItemCommand(object source, DataGridCommandEventArgs e)
