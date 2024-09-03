@@ -19,9 +19,11 @@
 
 
     <div class="wrapper">
+        
    <h1 class="text-center">INICIAR SESIÓN</h1>
-           <img src="https://i.ibb.co/n3kbMcW/loginimg-Ok.jpg" />
-               
+   
+        <img src="../Recursos/IMG/SIDLogoLogin.png" />
+
           <form id="formulario_login" runat="server" class="needs-validation">
                
              

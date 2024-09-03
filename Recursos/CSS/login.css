@@ -9,7 +9,7 @@
 }
 
 body {
-    background-image: url("https://i.ibb.co/jwgz7FH/LOGIN.jpg");
+    background-image: url('../img/loginfondo.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     height: 100vh;
@@ -36,7 +36,7 @@ body {
     margin-bottom: 12px;
 }
 .todo {
-    background-image: url("https://cdn.pixabay.com/photo/2014/02/13/07/28/security-265130_1280.jpg");
+   /* background-image: url("https://cdn.pixabay.com/photo/2014/02/13/07/28/security-265130_1280.jpg");*/
     position: absolute;
     background-repeat: no-repeat;
     background-size: cover;

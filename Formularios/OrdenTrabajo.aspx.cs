@@ -3344,7 +3344,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             {
                                 string IDCLienteConstacto = leer["IDContacto_Cliente"].ToString();
                                 CargarDatosContables(IDCLienteConstacto);
-
+                                Session["IdContactoFactSession"] = IDCLienteConstacto;
                             }
 
                             // Extraer datos y asignarlos a controles

@@ -43,11 +43,13 @@
 </head>
 <body >
     <form id="Form1" runat="server" >
+
+
        <asp:ScriptManager runat="server" />
 
         <header style="background-color: #081a2c ">
 
-           <%--<img src="https://i.ibb.co/c8cmwQ0/Actuallogo-SIDOKblanco.png" style="margin: 0rem" width="160px" height="40" />--%>
+  
 
         </header>
         <asp:UpdatePanel ID="PanelModulo" runat="server">
@@ -58,7 +60,9 @@
                         <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation"  />
                             <span class="navbar-toggler-icon form-control-sm"></span>
                         </button>
-                        <img src="https://i.ibb.co/c8cmwQ0/Actuallogo-SIDOKblanco.png" style="margin: 0.5rem; width:10rem; height:2.5rem;"/> <%---Logo de la aplicacion---%>
+                       <img src="../Recursos/IMG/LogoSidMenuDuc.png" style="margin: 0.5rem; width:7rem; height:2.5rem;" /> <%---Logo de la aplicacion---%>
+                        
+                   
                        
                         <div class="collapse navbar-collapse navbar-expand " id="navbarScroll">
                             <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll " style="margin-left: 2.0rem;">

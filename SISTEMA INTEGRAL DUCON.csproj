@@ -276,6 +276,10 @@
     <Content Include="Recursos\CSS\Ventas\Render_Venta.css" />
     <Content Include="Recursos\CSS\Ventas\SolicitudesEspeciales.css" />
     <Content Include="Recursos\CSS\Ventas\Visita_Asesores.css" />
+    <Content Include="Recursos\IMG\FondoAppSID.png" />
+    <Content Include="Recursos\IMG\LOGINFONDO.jpg" />
+    <Content Include="Recursos\IMG\LogoSidMenuDuc.png" />
+    <Content Include="Recursos\IMG\SIDLogoLogin.png" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -577,7 +581,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="JavaScript\" />
-    <Folder Include="Recursos\IMG\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
