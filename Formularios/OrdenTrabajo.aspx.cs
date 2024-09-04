@@ -12822,15 +12822,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (ddlTipoObsBotonOkDibujo.SelectedValue == " ")
             {
 
-
-
                 // Mensaje de alerta
                 string script1 = "alert('Por favor seleccione el tipo de observación.');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", script1, true);
                 ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionBotonOkDibujo').modal('show');", true);
                 string delayedScript1 = @"setTimeout(function() {CerrarCargarOK();}, 700);";  // 700 ms = 0.7 segundos
                 ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", delayedScript1, true);
-
 
                 valido = false;
             }
@@ -12855,7 +12852,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string script1 = "alert('No se ha seleccionado una OT para generar una observacion');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", script1, true);
                 ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionBotonOkDibujo').modal('show');", true);
-
 
                 string delayedScript1 = @"setTimeout(function() {CerrarCargarOK();}, 700);";  // 700 ms = 0.7 segundos
                 ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", delayedScript1, true);
@@ -12893,7 +12889,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             return areaAplicacion;
         }
-
 
         // Reporte de Reproceso en Boton OK Dibujo 
         public string ObtenerResumenDespice(string lblPlano)
