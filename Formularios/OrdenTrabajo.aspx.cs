@@ -1907,7 +1907,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 btnOk.Enabled = false;
                 btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
             }
-         
+
 
             // Guardar el valor en una variable de sesión
             Session["ValorDeObra"] = valorTextBox;
@@ -2521,8 +2521,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             bool estaCerrada = EstaCerrada(id, pedido);
 
-          
-             estaAbierta = VerificarEstadoOt(id, pedido, 0);
+
+            estaAbierta = VerificarEstadoOt(id, pedido, 0);
 
             // Realice la consulta
             using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
@@ -6810,6 +6810,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             int rowIndex = Convert.ToInt32(e.CommandArgument);
             DataGridItem row = DataGridAcabados1.Items[rowIndex];
+            string ApliAcabado = row.Cells[6].Text;
 
             // Se utiliza para darle el color solo a la fila seleccionada 
             foreach (DataGridItem item in DataGridAcabados1.Items)
@@ -6841,25 +6842,36 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     // se valida si es el segundo click en la misma fila 
                     if (clickCount == 2)
                     {
-                        // nombre del acabado a eliminar 
-                        span_NombreAcabado.InnerText = row.Cells[1].Text;
+
+                        if(ApliAcabado != "E")
+                        {
+                            // Validar que hacer cuando un Aplicado acabado es diferente E
+                           
+                           // Muestra un modal para administrar el acabado 
+
+                        }
+                        else
+                        {
+                            // nombre del acabado a eliminar 
+                            span_NombreAcabado.InnerText = row.Cells[1].Text;
 
 
-                        Session["IdAcabadoElimnar"] = row.Cells[7].Text;
+                            Session["IdAcabadoElimnar"] = row.Cells[7].Text;
 
-                        // Reiniciar la variable de sesión "ClickCount" a 0 para la próxima interacción                        
-                        Session.Remove("ID_Acabado");
-                        Session.Remove("ClickCount3");
+                            // Reiniciar la variable de sesión "ClickCount" a 0 para la próxima interacción                        
+                            Session.Remove("ID_Acabado");
+                            Session.Remove("ClickCount3");
 
 
 
-                        // mostrar modal de acabado y modal de confirmar eliminar acabado
-                        string script1 = @"mostrarModal();";
-                        ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
+                            // mostrar modal de acabado y modal de confirmar eliminar acabado
+                            string script1 = @"mostrarModal();";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
 
-                        string script2 = @"mostrarModalEliminarAcabado();";
-                        ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModalEliminarAcabado", script2, true);
+                            string script2 = @"mostrarModalEliminarAcabado();";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModalEliminarAcabado", script2, true);
 
+                        }
                     }
 
                 }
@@ -6911,9 +6923,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     cmd.Parameters.AddWithValue("@IdAcabadoPlano", Session["IdAcabadoElimnar"].ToString());
 
                     connection.Open();
-                    cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
+                  
                     SqlDataReader reader = cmd.ExecuteReader();
-
                     Session.Remove("IdAcabadoElimnar");
                 }
             }
@@ -11267,6 +11278,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
             }
         }
+
         public bool ValidarPermisoActualizacionBloques()
         {
             bool existe = false;
@@ -11300,6 +11312,72 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
             {
+
+                // SE CONSULTA SI EL PEDIDO TIENE ACABADOS DEFINIDOS POR EL ASESOR 
+                if (ConsultarAcabadosPorAsesor())
+                {
+                    if (!ConsultarAcabadosPlano())
+                    {
+                        //MINIMAMENTE DEBERIA TENER ACABADOS EN EL PLANO 
+                        string script = @"CerrarCargarOK();";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", script, true);
+                        string scriptNoAcabados = "alert('Se detectarón acabados definidos por el asesor y NO pasados a los acabados del plano. No se puede pasar el pedido');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showFacturable", scriptNoAcabados, true);
+                        return;
+                    }
+                }
+
+                Cargar_AcabadosPlanoDibujo();
+
+                if (ConsultarAcabadosDefinitivos())
+                {
+                    string script = @"CerrarCargarOK();";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", script, true);
+                    string scriptNoAcabados1 = "alert('Se detectaron acabados pendientes por definir, favor revisar acabados del plano. No se puede pasar el pedido');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showFacturable", scriptNoAcabados1, true);
+                    return;
+                }
+
+                if (tbValorPedido.Text == "0" && ddlNumbers.SelectedItem.Text != "OAI")
+                {
+                    if (ValidarCantidadElementosDespiece() > 2)
+                    {
+                        string script = @"CerrarCargarOK();";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", script, true);
+                        string scriptNoAcabados2 = "alert('Se detecta que este pedido tiene despiece y no fue digitado el valor del TXT, no se puede pasar el pedido a producción.');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showFacturable", scriptNoAcabados2, true);
+                        return;
+                    }
+                }
+
+                // Consultamos el tipo de pedido y  si es pedidio facturable
+                if (ValidarPedidoFacturable(dtacboTipoPedido.SelectedValue))
+                {
+                    //Validamos que el precio sea mayor que cero 
+                    if (Convert.ToDouble(txtVenta.Text) <= 0)
+                    {
+                        // Mensaje SI EL PEDIDO ES FACTURABLE, EL VALOR VENTA DEBE SER MAYOR A CERO                       
+                        string mensajePersonalizado = "El tipo de pedido es facturable, el valor venta debe ser superior a Cero(0).";
+                        string urlRedireccion = "OrdenTrabajo.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    }
+                }
+                else
+                {
+                    // Validamos que el precio de venta sea igual cero 
+                    if (Convert.ToDouble(txtVenta.Text) != 0)
+                    {
+                        // SI EL PEDIDO NO ES FACTURABLE, EL VALOR VENTA DEBE SER CERO
+                        string mensajePersonalizado = "El tipo de pedido no es facturable, el valor venta debe ser Cero(0).";
+                        string urlRedireccion = "OrdenTrabajo.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+                    }
+
+                }
+
+
+
                 if (tbValorPedido.Text == "0" && ddlNumbers.SelectedItem.Text != "OAI")
                 {
                     if (ValidarCantidadElementosDespiece() < 2)
@@ -11636,70 +11714,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     break;
 
                 case "DISEÑO":
-                case "COMPRAS":  
-                    
-                    // SE CONSULTA SI EL PEDIDO TIENE ACABADOS DEFINIDOS POR EL ASESOR 
-                    if (ConsultarAcabadosPorAsesor())
-                    {
-                        if (!ConsultarAcabadosPlano())
-                        {
-                            //MINIMAMENTE DEBERIA TENER ACABADOS EN EL PLANO 
-                            string script = @"CerrarCargarOK();";
-                            ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", script, true);
-                            string scriptNoAcabados = "alert('Se detectarón acabados definidos por el asesor y NO pasados a los acabados del plano. No se puede pasar el pedido');";
-                            ScriptManager.RegisterStartupScript(this, GetType(), "showFacturable", scriptNoAcabados, true);
-                            return;
-                        }
-                    }
-
-                    Cargar_AcabadosPlanoDibujo();
-
-                    if (ConsultarAcabadosDefinitivos())
-                    {
-                        string script = @"CerrarCargarOK();";
-                        ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", script, true);
-                        string scriptNoAcabados1 = "alert('Se detectaron acabados pendientes por definir, favor revisar acabados del plano. No se puede pasar el pedido');";
-                        ScriptManager.RegisterStartupScript(this, GetType(), "showFacturable", scriptNoAcabados1, true);
-                        return;
-                    }
-
-                    if (tbValorPedido.Text == "0" && ddlNumbers.SelectedItem.Text != "OAI")
-                    {
-                        if (ValidarCantidadElementosDespiece() > 2)
-                        {
-                            string script = @"CerrarCargarOK();";
-                            ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", script, true);
-                            string scriptNoAcabados2 = "alert('Se detecta que este pedido tiene despiece y no fue digitado el valor del TXT, no se puede pasar el pedido a producción.');";
-                            ScriptManager.RegisterStartupScript(this, GetType(), "showFacturable", scriptNoAcabados2, true);
-                            return;
-                        }
-                    }
-
-                    // Consultamos el tipo de pedido y  si es pedidio facturable
-                    if (ValidarPedidoFacturable(dtacboTipoPedido.SelectedValue))
-                    {
-                        //Validamos que el precio sea mayor que cero 
-                        if (Convert.ToDouble(txtVenta.Text) <= 0)
-                        {
-                            // Mensaje SI EL PEDIDO ES FACTURABLE, EL VALOR VENTA DEBE SER MAYOR A CERO                       
-                            string mensajePersonalizado = "El tipo de pedido es facturable, el valor venta debe ser superior a Cero(0).";
-                            string urlRedireccion = "OrdenTrabajo.aspx";
-                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-                        }
-                    }
-                    else
-                    {
-                        // Validamos que el precio de venta sea igual cero 
-                        if (Convert.ToDouble(txtVenta.Text) != 0)
-                        {
-                            // SI EL PEDIDO NO ES FACTURABLE, EL VALOR VENTA DEBE SER CERO
-                            string mensajePersonalizado = "El tipo de pedido no es facturable, el valor venta debe ser Cero(0).";
-                            string urlRedireccion = "OrdenTrabajo.aspx";
-                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-
-                        }
-
-                    }
+                case "COMPRAS":
 
                     DataTable InfoOT1 = ConsultarInformacionPedidoSaldo();
                     bool afectaBolsa1 = ConsultaAfectaBolsa();
@@ -11725,10 +11740,33 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     ActulizarFechasYRealizadoPor();
 
 
-                    // PARA REGISTRAR EL REPROCESO  ***+******** PENDIENTE POR DESARROLLAR E IMPLEMENTAR ************
+                    // PARA REGISTRAR EL REPROCESO 
                     if (dtacboTipoPedido.SelectedItem.Text.Trim().ToUpper() == "REPROCESO")
                     {
-                        //  Realizar validacion  de que se hace en reproceso 
+                        // ELiminar Detalle Reproceso 
+                        EliminarDetalleReproceso();
+
+                        // se cargan los datos en el modal de observaciones 
+                        tbObraReproceso.Text = tbObra.Text;
+                        tbOtReproceso.Text = tbOT.Text;
+                        tbPedidoReproceso.Text = ddlNumbers.SelectedItem.Text;
+                        txObsReproceso.InnerText = txObs2.InnerText;
+
+                        tbObraReproceso.Enabled = false;
+                        tbOtReproceso.Enabled = false;
+                        tbPedidoReproceso.Enabled = false;
+
+                        txObsReproceso.Disabled = true;
+
+    
+                        string delayedScript = @" setTimeout(function() {CerrarCargarOK();}, 700);";  
+                        ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", delayedScript, true);
+
+                        // Se abre el modal de inmediato
+                        ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalReproceBotonOkDibujo').modal('show');", true);
+
+                        return;
+
                     }
 
                     // PARA INFORMAR POR MAIL LA REACTIVACION DE UN PEDIDO 
@@ -11739,8 +11777,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         tbObra1.Text = tbObra.Text;
                         tbOt1.Text = tbOT.Text;
                         tbPed1.Text = ddlNumbers.SelectedItem.Text;
+                        txObserOkDibujo.InnerText = "DESCRIBIR LOS CAMBIOS EN EL PEDIDO";
 
-                        // Agregamod vacio en ddlTipoObservacion 
+                        // Agregamos vacio en ddlTipoObservacion 
                         ddlTipoObsBotonOkDibujo.Items.Insert(0, new System.Web.UI.WebControls.ListItem(" "));
                         ddlTipoObsBotonOkDibujo.SelectedIndex = 0;
 
@@ -11751,13 +11790,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         // Consultamos el correo por defecto de la solicitud especial 
                         ConsultarCorreoOT(tbOT.Text, ddlNumbers.SelectedItem.Text);
-
-                        string script1 = @"CerrarCargarOK();";
-                        ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", script1, true);
+ 
+                        string delayedScript1 = @"setTimeout(function() {CerrarCargarOK();}, 700);";  // 700 ms = 0.7 segundos
+                        ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", delayedScript1, true);
+                        
                         // Se abre el modal de la observacion 
                         ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionBotonOkDibujo').modal('show');", true);
                         return;
-
 
                     }
 
@@ -11824,7 +11863,87 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         // Actualizar Terminado Dibujo 
                         ActualizarTerminadoDibujo();
-                       
+
+                        string destinatarios = ""; // Consultar a que destinatario se debe enviar 
+
+                        //Correo , por si la obra es un reproceso 
+                        if (dtacboTipoPedido.SelectedItem.Text.ToUpper() == "REPROCESO")
+                        {
+                            destinatarios = "carteraducon@ducon.com.co;auxiliarcartera@ducon.com.co;cartera1@ducon.com.co;practicantecartera@ducon.com.co";
+                        }
+                        // Correo para informar Obra 
+                        string correosExportarObra = ConsultarCorreoExportarObra();
+
+                        // Correo Asesor de la OT 
+                        string CorreoAsesorOT = ConsultarAsesorCorreoOT();
+
+                        // Validar si el dibujante debe recibir un correo ???? 
+
+                        destinatarios += CorreoAsesorOT + ";" + correosExportarObra;
+
+                        // Se consulta el consolidado del despice para mostrar en el correo 
+                        string resumenDespice = ObtenerResumenDespice(txtPlano.Text);
+
+
+                        string cuerpo = @"
+                    <!DOCTYPE html>
+                    <html lang='es'>
+                    <head>
+                        <meta charset='UTF-8'>
+                        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+                        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                        <style>
+                            body {
+                                font-family: Arial, sans-serif;
+                                font-size: 14px;
+                                line-height: 1.6;
+                                margin: 0;
+                                padding: 0;
+                                background-color: #f9f9f9;
+                            }
+                            .container {
+                                max-width: 37rem;
+                                margin: 20px auto;
+                                padding: 20px;
+                                border: 1px solid #ccc;
+                                border-radius: 5px;
+                                background-color: #fff;
+                            }
+                            h2 {
+                                color: #333;
+                                font-size: 24px;
+                                margin-bottom: 20px;
+                            }
+                            p {
+                                margin-bottom: 10px;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class='container'>
+                            <h3>Notificación OT Terminada Dibujo y Despiece </h2>
+                            <p><strong>Señores:  </strong> Departamento de Producción </p>
+                            <p><strong>El Pedido: </strong>" + tbOT.Text + "-" + ddlNumbers.SelectedItem.Text + ", acaba de ser programado para el proceso productivo con la siguiente informacion. " + @"</p>
+                            <p><strong>INFORMACIÓN DEL PEDIDO  </strong></p>
+                            <p><strong>Tipo de Pedido: </strong> " + dtacboTipoPedido.SelectedItem.Text + @"</p>
+                            <p><strong>Número Pedido: </strong> " + tbOT.Text + "-" + ddlNumbers.SelectedItem.Text + @"</p>
+                            <p><strong>Fecha Ok Venta: </strong> " + dtpFechaEntregaDibujoDespiece.Text + @"</p>
+                            <p><strong>Fecha de Ingreso a Producción: </strong> " + dtpFechaEntregaProduccion.Text + @"</p>
+                            <p><strong>Dibujante: </strong> " + txtDibuja.Text + @"</p                       
+                            <p><strong>Fecha de empaque: </strong> " + dtpEmpaque.Text + @"</p>
+                            <p><strong>Dirección de Despacho: </strong> " + tbDir.Text + "/" + ddlCiudad.SelectedItem.Text + @"</p>
+                            <p><strong>Contacto: </strong> " + tbContac.Text + @"</p>
+                            <p><strong>Teléfono: </strong> " + tbTel.Text + @"</p>
+                            <p><strong>Celular: </strong> " + tbCel.Text + @"</p>
+                            <p><strong>RESUMEN DEL DESPIECE</strong></p>" +
+                             resumenDespice + 
+                         @"</div>
+                    </body>
+                    </html>";
+
+                        //Enviar correo de notificacion
+                        EnviarCorreoBotonOkdibujo(destinatarios, cuerpo);
+
 
                         // Mostrar Mensaje de Exito 
                         string mensajePersonalizado = "Se ha completado satisfactoriamente el registro del pedido en el ISID";
@@ -11851,6 +11970,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
         // INICIO BOTON OK PARA DIBUJO Y COMPRAS 
+
+      
+        // Validar Acabados del Asesor y del plano
         public bool ConsultarAcabadosPorAsesor()
         {
             bool existe = false;
@@ -11949,526 +12071,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return existe;
         }
 
-        public bool ConsultarEstadoObraReactivada()
-        {
-            bool reactivada = false;
 
-            // Define la cadena de conexión (modifica según tu configuración)
-            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-
-            // Define la consulta SQL
-            string query = "SELECT Reactivada FROM tblOT WHERE Id_OT = @OT AND Consecutivo_Pedido = @Ped";
-
-            // Usamos una conexión SQL
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                // Creamos el comando SQL
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    // Agregar parámetros para prevenir SQL Injection
-                    command.Parameters.AddWithValue("@OT", tbOT.Text);
-                    command.Parameters.AddWithValue("@Ped", ddlNumbers.SelectedItem.Text);
-
-                    // Abrir la conexión
-                    connection.Open();
-
-                    // Ejecutar la consulta y leer el resultado
-                    object result = command.ExecuteScalar();
-
-                    if (result != null && result != DBNull.Value)
-                    {
-                        reactivada = Convert.ToBoolean(result);
-                    }
-                }
-            }
-
-            return reactivada;
-        }
-
-        private void ActulizarFechasYRealizadoPor()
-        {
-            DateTime FechaEmpaque = Convert.ToDateTime(dtpEmpaque.Text);
-
-            // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string sSql = "UPDATE tblOT SET Fecha_Entrega_Produccion = GETDATE(), Fecha_Despacho_Produccion = @fechaDespacho, Fecha_Real_Despacho_Produccion = @fechaRealDespacho, " +
-                              " Fecha_Instalacion= @fechaInstalacion, ResumenObra = @resumenObra, RealizadoPor = @realizadoPor WHERE Id_OT = @OT AND Consecutivo_Pedido = @pedido";
-
-                using (SqlCommand cmd = new SqlCommand(sSql, connection))
-                {
-                    connection.Open();
-                    cmd.Parameters.AddWithValue("@fechaDespacho", FechaEmpaque.AddDays(1));
-                    cmd.Parameters.AddWithValue("@fechaRealDespacho", FechaEmpaque.AddDays(1));
-                    cmd.Parameters.AddWithValue("@Fecha_Instalacion", FechaEmpaque.AddDays(2));
-                    cmd.Parameters.AddWithValue("@resumenObra", txResumen.InnerText);
-                    cmd.Parameters.AddWithValue("@realizadoPor", Session["usuariologueado"].ToString());
-                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
-                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
-
-
-                    // Variable para validar en depuracion si se afecto alguna linea con este query 
-                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
-                }
-
-            }
-        }
-
-        private void ActulizarDibujantePlano()
-        {
-            DateTime FechaEmpaque = Convert.ToDateTime(dtpEmpaque.Text);
-
-            // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string sSql = "UPDATE tblPlano SET RealizadoPor= @NombreUsuario WHERE plano = @plano";
-
-                using (SqlCommand cmd = new SqlCommand(sSql, connection))
-                {
-                    connection.Open();
-
-                    cmd.Parameters.AddWithValue("@NombreUsuario", Session["usuariologueado"].ToString());
-                    cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
-
-                    // Variable para validar en depuracion si se afecto alguna linea con este query 
-                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
-                }
-
-            }
-        }
-
-        public bool ValidarResgistroOtGeneral()
-        {
-            bool existe = false;
-
-            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                // Consulta para seleccionar alguna columna, no importa cuál
-                string query = "SELECT TOP 1 1 FROM tblOTGeneral WHERE Id_OT= @Id_OT ";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    // Agregar los parámetros a la consulta
-                    command.Parameters.AddWithValue("@Id_OT", tbOT.Text);
-
-
-                    connection.Open();
-
-                    // Ejecutar la consulta y usar SqlDataReader para verificar si hay filas
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            existe = true;
-                        }
-                    }
-                }
-            }
-
-            return existe;
-        }
-
-        private void InsertarRegistroCierreContable()
-        {
-            // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string sSql = "INSERT INTO tblOTGeneral(Id_OT,Nombre_Cliente,FechaApertura) " +
-                              "VALUES (@OT,@nombreCliente, @fechaApertura)";
-
-                using (SqlCommand cmd = new SqlCommand(sSql, connection))
-                {
-                    connection.Open();
-                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
-                    cmd.Parameters.AddWithValue("@nombreCliente", txtNombreEmp.Text);
-                    cmd.Parameters.AddWithValue("@fechaApertura", tbVenta.Text);
-
-                    // Variable para validar en depuracion si se afecto alguna linea con este query 
-                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
-                }
-
-            }
-        }
-
-        private void Reporte_Medidas_Corte_Produccion()
-        {
-            // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                // Nombre del procedimiento almacenado
-                string storedProcedureName = "sp_GenerarRegistrosParaReportesPlano ";
-
-                using (SqlCommand cmd = new SqlCommand(storedProcedureName, connection))
-                {
-                    connection.Open();
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    // Parámetros del procedimiento almacenado
-                    cmd.Parameters.AddWithValue("@Plan", txtPlano.Text);
-                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
-                    cmd.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
-                    cmd.Parameters.AddWithValue("@@Tipo_Ped", dtacboTipoPedido.SelectedItem.Text);
-
-                    // Ejecutar el procedimiento almacenado
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
-
-        private void Reporte_Ingresar_Objetos_Para_Empaque()
-        {
-            int AplicaEmpaque = 0;
-
-            // se eliminar dos datos de tblEmpaque
-            EliminarRegistroEmpaque();
-
-            //SE CONSULTA Y REGISTRAN OBJETOS Y MENUDA PARA INSTALACIÓN
-            RegistrarMenudaInstalacion();
-
-            // SE CONSULTA SI EL PEDIDO CONTIENE UN MUEBLE ESPECIAL
-            if (ValidarMuebleEspecial())
-            {
-                // Hay Objetos especiales 
-                DataTable RegistroMuebleEspecial = ConsultarRegistroMuebleEspecial();
-
-                foreach (DataRow row in RegistroMuebleEspecial.Rows)
-                {
-                    string archivo = row["Archivo"].ToString();
-                    string rutaBase = @"\\Srvfs\s_i_ducon$\Documentacion de Obras";
-                    string rutaCarpeta = Path.Combine(rutaBase, tbOT.Text);
-                    string rutaCompleta = Path.Combine(rutaCarpeta, archivo);
-
-                    LeerExcelYInsertar(rutaCompleta);
-
-                }
-            }
-            // Validar si aplica o no empaque 
-
-            if (!ValidarFechaEmpaque())
-            {
-                AplicaEmpaque = 1;
-            }
-
-            ActualizarEmpaqueOT(AplicaEmpaque);
-
-        }
-
-        private void EliminarRegistroEmpaque()
-        {
-            // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string sSql = "DELETE FROM tblEmpaque WHERE Plano= @plano";
-
-                using (SqlCommand cmd = new SqlCommand(sSql, connection))
-                {
-                    connection.Open();
-                    cmd.Parameters.AddWithValue("@plano", tbOT.Text);
-
-
-                    // Variable para validar en depuracion si se afecto alguna linea con este query 
-                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
-                }
-
-            }
-        }
-
-        private void RegistrarMenudaInstalacion()
-        {
-
-            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                // Nombre del procedimiento almacenado
-                string storedProcedureName = "sp_registrarelementosparaempaque";
-
-                using (SqlCommand cmd = new SqlCommand(storedProcedureName, connection))
-                {
-                    connection.Open();
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    // Parámetros del procedimiento almacenado
-                    cmd.Parameters.AddWithValue("@Plan", txtPlano.Text);
-
-                    // Ejecutar el procedimiento almacenado
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
-
-        public bool ValidarMuebleEspecial()
-        {
-            bool existe = false;
-
-            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                // Consulta para seleccionar alguna columna, no importa cuál
-                string query = "SELECT TOP 1 1 FROM tblDocumentacion WHERE Id_OT = @OT AND Pedido = @pedido AND MuebleEspecial = 1 ";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    // Agregar los parámetros a la consulta
-                    command.Parameters.AddWithValue("@OT", tbOT.Text);
-                    command.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
-
-
-                    connection.Open();
-
-                    // Ejecutar la consulta y usar SqlDataReader para verificar si hay filas
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            existe = true;
-                        }
-                    }
-                }
-            }
-
-            return existe;
-        }
-
-        private DataTable ConsultarRegistroMuebleEspecial()
-        {
-            DataTable dataTable = new DataTable();
-
-            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-
-            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
-            {
-                connectionSID.Open();
-
-                string sSql = "SELECT * FROM tblDocumentacion WHERE Id_OT = @OT AND Pedido = @pedido AND MuebleEspecial = 1 ";
-
-                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
-                {
-                    // Agregar los parámetros a la consulta
-                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
-                    cmd.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
-
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
-                    {
-                        adapter.Fill(dataTable);
-                    }
-                }
-            }
-
-            // Retorna la DataTable
-            return dataTable;
-        }
-
-        public void LeerExcelYInsertar(string ArchivoEspecial)
-        {
-            // Verificar si el archivo existe
-            if (File.Exists(ArchivoEspecial))
-            {
-                // Crear la conexión con la base de datos
-                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-
-                    // Leer el contenido del archivo Excel usando NPOI
-                    using (FileStream fs = new FileStream(ArchivoEspecial, FileMode.Open, FileAccess.Read))
-                    {
-                        IWorkbook workbook = null;
-
-                        string extension = Path.GetExtension(ArchivoEspecial);
-                        if (extension.Equals(".xls"))
-                        {
-                            workbook = new HSSFWorkbook(fs); // Para archivos .xls (Excel 97-2003)
-                        }
-                        else if (extension.Equals(".xlsx"))
-                        {
-                            workbook = new XSSFWorkbook(fs); // Para archivos .xlsx (Excel 2007+)
-                        }
-
-                        // Obtener la primera hoja del archivo
-                        ISheet sheet = workbook.GetSheetAt(0);
-                        int filaexcel = 1; // Inicia en la fila 2 
-
-                        // Iterar sobre las filas hasta que la celda en la primera columna esté vacía
-                        while (sheet.GetRow(filaexcel) != null && sheet.GetRow(filaexcel).GetCell(0) != null)
-                        {
-                            // Convertir el contenido de la columna 5 (E) a mayúsculas y buscar "INSTA"
-                            string columnaE = sheet.GetRow(filaexcel).GetCell(4).ToString().ToUpper();
-                            if (columnaE.Contains("INSTA"))
-                            {
-                                // Insertar en la base de datos
-                                string sSql = "Insert Into tblEmpaque(Id_OT,Pedido,Plano,Objeto,Ancho,altura,profundidad,Descripción_Objeto,Cantidad_Solicitada,Procedencia,Descripcion_Grupo,UndXPaquete)" +
-                                              " Values(@Id_OT, @Pedido, @Plano, @Objeto, 0, 0, 1, @DescripcionObjeto, @CantidadSolicitada, 'DESARROLLO', 'MUEBLE ESPECIAL', 1)";
-
-                                using (SqlCommand command = new SqlCommand(sSql, connection))
-                                {
-                                    command.Parameters.AddWithValue("@Id_OT", tbOT.Text);
-                                    command.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
-                                    command.Parameters.AddWithValue("@Plano", txtPlano.Text);
-                                    string objeto = "D-PartNo." + sheet.GetRow(filaexcel).GetCell(0).ToString() + " - " + sheet.GetRow(filaexcel).GetCell(1).ToString();
-                                    command.Parameters.AddWithValue("@Objeto", objeto);
-                                    command.Parameters.AddWithValue("@DescripcionObjeto", objeto);
-                                    command.Parameters.AddWithValue("@CantidadSolicitada", Convert.ToInt32(sheet.GetRow(filaexcel).GetCell(2).ToString()));
-
-                                    // Ejecutar la inserción
-                                    command.ExecuteNonQuery();
-                                }
-                            }
-
-                            filaexcel++; // Mover a la siguiente fila
-                        }
-                    }
-                }
-            }
-            else
-            {
-                // Manejar el caso en que el archivo no existe
-                // Console.WriteLine("El archivo no existe.");
-            }
-        }
-
-        private void ActualizarEmpaqueOT(int AplicaEmpaque)
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string sSql = "UPDATE tblOT SET Aplica_Empaque = @aplicaEmp  WHERE Id_OT = @OT AND Consecutivo_Pedido = @pedido";
-
-                using (SqlCommand cmd = new SqlCommand(sSql, connection))
-                {
-                    connection.Open();
-                    cmd.Parameters.AddWithValue("@aplicaEmp", AplicaEmpaque);
-                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
-                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
-
-
-                    // Variable para validar en depuracion si se afecto alguna linea con este query 
-                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
-                }
-
-            }
-        }
-
-        private DataTable ConsultarAcabadoDeinitivos()
-        {
-            DataTable dataTable = new DataTable();
-
-            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-
-            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
-            {
-                connectionSID.Open();
-
-                string sSql = "SELECT tblOTAcabadoDefinitivo.id_OTAcabadoDefinitivo, tblOTAcabadoDefinitivo.oadPLano,tblOTAcabadoDefinitivo.oadDescripcionGrupoObjeto, " +
-                              "tblOTAcabadoDefinitivo.oadID_Familia, tblOTAcabadoDefinitivo.oadDescripcion_Familia, tblOTAcabadoDefinitivo.oadIDGrupoAcabado, " +
-                              "tblOTAcabadoDefinitivo.oadDesGrupoAcabado, tblOTAcabadoDefinitivo.oadId_Insumo, tblOTAcabadoDefinitivo.oadCodInvOri, " +
-                              "tblOTAcabadoDefinitivo.oadDescripcion_Insumo, tblOTAcabadoDefinitivo.oadCodInvDes, tblOTAcabadoDefinitivo.oadDescripcionAcabado, " +
-                              "tblOTAcabadoDefinitivo.oadAplicacionAcabado,tblOTAcabadoDefinitivo.oadActivo " +
-                              "FROM tblOTAcabadoDefinitivo " +
-                              "WHERE tblOTAcabadoDefinitivo.oadPlano = @plano " +
-                              "ORDER BY tblOTAcabadoDefinitivo.oadDescripcionGrupoObjeto ASC, " +
-                              "tblOTAcabadoDefinitivo.oadAplicacionAcabado ASC,tblOTAcabadoDefinitivo.oadDescripcion_Familia ASC";
-
-                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
-                {
-                    cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
-
-
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
-                    {
-                        adapter.Fill(dataTable);
-                    }
-                }
-            }
-
-            // Retorna la DataTable
-            return dataTable;
-        }
-
-        private void ActualizarObservacionPedidoReporteOT(string acabados)
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string sSql = "UPDATE tblReporteOT SET Observacion_Pedido = @acabados, Fecha_Entrega_Produccion= GETDATE()," +
-                              "ResumenObra= @resumenObra   WHERE Id_OT = @OT AND Consecutivo_Pedido = @pedido";
-
-                using (SqlCommand cmd = new SqlCommand(sSql, connection))
-                {
-                    connection.Open();
-                    cmd.Parameters.AddWithValue("@acabados", acabados);
-                    cmd.Parameters.AddWithValue("@resumenObra", txResumen.InnerText);
-                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
-                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
-
-
-                    // Variable para validar en depuracion si se afecto alguna linea con este query 
-                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
-                }
-
-            }
-        }
-
-        private void ActulizarObjetosEscalables()
-        {
-            DateTime FechaEmpaque = Convert.ToDateTime(dtpEmpaque.Text);
-
-            // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string sSql = "UPDATE tblPanel SET Chequeado =1, Responsable = @nombreUsuario,FechaChequeo =GETDATE() WHERE " +
-                              "(Id_Panel IN(SELECT tblPanel_1.Id_Panel FROM tblPanel AS tblPanel_1 " +
-                              "INNER JOIN tblPlano_Panel ON tblPanel_1.Id_Numerico = tblPlano_Panel.Id_PanelNum  " +
-                              "WHERE (tblPlano_Panel.Id_Plano = @plano) AND (tblPanel_1.Escalable = 1) AND (tblPanel_1.Chequeado = 0) GROUP BY tblPanel_1.Id_Panel))";
-
-                using (SqlCommand cmd = new SqlCommand(sSql, connection))
-                {
-                    connection.Open();
-                    cmd.Parameters.AddWithValue("@nombreUsuario", Session["usuariologueado"].ToString());
-                    cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
-
-                    // Variable para validar en depuracion si se afecto alguna linea con este query 
-                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
-                }
-
-            }
-        }
-
-        private void ActulizarObjetosNoEscalables()
-        {
-            DateTime FechaEmpaque = Convert.ToDateTime(dtpEmpaque.Text);
-
-            // Consulta para verificar si el usuario tiene permisos
-            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string sSql = "UPDATE tblPanel SET Chequeado =1, Responsable = @nombreUsuario,FechaChequeo =GETDATE() WHERE " +
-                              "Id_Panel IN(SELECT tblPanel_1.Id_Panel FROM tblPanel AS tblPanel_1 INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum " +
-                              "WHERE tblPlano_Panel.Id_Plano = @plano AND tblPanel.Chequeado = 0 AND tblPanel.Escalable = 0 ) ";
-
-                using (SqlCommand cmd = new SqlCommand(sSql, connection))
-                {
-                    connection.Open();
-                    cmd.Parameters.AddWithValue("@nombreUsuario", Session["usuariologueado"].ToString());
-                    cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
-
-                    // Variable para validar en depuracion si se afecto alguna linea con este query 
-                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
-                }
-
-            }
-        }
-
+        // Metodos  Cargar Acabado Plano Dibujo 
         private void Cargar_AcabadosPlanoDibujo()
         {
             bool TerminadoDibujo = btnOk.Enabled;
@@ -12837,6 +12441,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        // Conteo Cantidad elementos en el plano 
         public int ValidarCantidadElementosDespiece()
         {
             int cantidadFilas = 0;
@@ -12870,20 +12475,28 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return cantidadFilas;
         }
 
-        private void ActualizarTerminadoDibujo()
+        private void ActulizarFechasYRealizadoPor()
         {
-            // Consulta para verificar si el usuario tiene permisos
+            DateTime FechaEmpaque = Convert.ToDateTime(dtpEmpaque.Text);
 
+            // Consulta para verificar si el usuario tiene permisos
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sSql = "UPDATE tblOT SET Terminado_Diseño=1,Terminado_Ventas=1 WHERE tblOT.Id_OT = @OT AND Consecutivo_Pedido = @pedido ";
+                string sSql = "UPDATE tblOT SET Fecha_Entrega_Produccion = GETDATE(), Fecha_Despacho_Produccion = @fechaDespacho, Fecha_Real_Despacho_Produccion = @fechaRealDespacho, " +
+                              " Fecha_Instalacion= @fechaInstalacion, ResumenObra = @resumenObra, RealizadoPor = @realizadoPor WHERE Id_OT = @IdOT AND Consecutivo_Pedido = @pedido";
 
                 using (SqlCommand cmd = new SqlCommand(sSql, connection))
                 {
                     connection.Open();
-                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@fechaDespacho", FechaEmpaque.AddDays(1));
+                    cmd.Parameters.AddWithValue("@fechaRealDespacho", FechaEmpaque.AddDays(1));
+                    cmd.Parameters.AddWithValue("@fechaInstalacion", FechaEmpaque.AddDays(2));
+                    cmd.Parameters.AddWithValue("@resumenObra", txResumen.InnerText);
+                    cmd.Parameters.AddWithValue("@realizadoPor", Session["usuariologueado"].ToString());
+                    cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
                     cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
 
                     // Variable para validar en depuracion si se afecto alguna linea con este query 
                     int CantidadFilasAfectada = cmd.ExecuteNonQuery();
@@ -12891,6 +12504,43 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
         }
+
+        public bool ConsultarEstadoObraReactivada()
+        {
+            bool reactivada = false;
+
+            // Define la cadena de conexión (modifica según tu configuración)
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            // Define la consulta SQL
+            string query = "SELECT Reactivada FROM tblOT WHERE Id_OT = @OT AND Consecutivo_Pedido = @Ped";
+
+            // Usamos una conexión SQL
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Creamos el comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Agregar parámetros para prevenir SQL Injection
+                    command.Parameters.AddWithValue("@OT", tbOT.Text);
+                    command.Parameters.AddWithValue("@Ped", ddlNumbers.SelectedItem.Text);
+
+                    // Abrir la conexión
+                    connection.Open();
+
+                    // Ejecutar la consulta y leer el resultado
+                    object result = command.ExecuteScalar();
+
+                    if (result != null && result != DBNull.Value)
+                    {
+                        reactivada = Convert.ToBoolean(result);
+                    }
+                }
+            }
+
+            return reactivada;
+        }
+
 
         // Observacion para boton ok dibujo
         private void ConsultarCorreoOT(string OT, string PED)
@@ -13171,28 +12821,40 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (ddlTipoObsBotonOkDibujo.SelectedValue == " ")
             {
+
                 // Mensaje de alerta
                 string script1 = "alert('Por favor seleccione el tipo de observación.');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", script1, true);
                 ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionBotonOkDibujo').modal('show');", true);
+                string delayedScript1 = @"setTimeout(function() {CerrarCargarOK();}, 700);";  // 700 ms = 0.7 segundos
+                ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", delayedScript1, true);
+
                 valido = false;
             }
 
             if (txObserOkDibujo.InnerText.Trim() == "")
             {
+
                 // Mensaje de alerta
                 string script1 = "alert('Por favor escriba  la justificación de la observación.');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", script1, true);
                 ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionBotonOkDibujo').modal('show');", true);
+
+                string delayedScript1 = @"setTimeout(function() {CerrarCargarOK();}, 700);";  // 700 ms = 0.7 segundos
+                ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", delayedScript1, true);
                 valido = false;
             }
 
             if (tbOt1.Text == "")
             {
+
                 // Mensaje de alerta
                 string script1 = "alert('No se ha seleccionado una OT para generar una observacion');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", script1, true);
                 ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionBotonOkDibujo').modal('show');", true);
+
+                string delayedScript1 = @"setTimeout(function() {CerrarCargarOK();}, 700);";  // 700 ms = 0.7 segundos
+                ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", delayedScript1, true);
                 valido = false;
             }
 
@@ -13228,19 +12890,1059 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return areaAplicacion;
         }
 
-        private void ContinuacionBotonOkDibujo()
+        // Reporte de Reproceso en Boton OK Dibujo 
+        public string ObtenerResumenDespice(string lblPlano)
         {
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            string sSql = "SELECT tblGrupoObjeto.Descripcion_Grupo, SUM(tblPlano_Panel.Cantidad) AS Cantidad " +
+                          "FROM (tblGrupoObjeto INNER JOIN tblPanel ON tblGrupoObjeto.ID_GrupoObjeto = tblPanel.Id_GrupoObjeto) " +
+                          "INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum " +
+                          "WHERE tblPlano_Panel.ID_Plano = @plano " +
+                          "GROUP BY tblGrupoObjeto.Descripcion_Grupo " +
+                          "ORDER BY tblGrupoObjeto.Descripcion_Grupo";
+
+
+            using (SqlConnection connection = new SqlConnection(connectionStringSID))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    cmd.Parameters.AddWithValue("@plano", lblPlano);  // Asigna el valor del parámetro lblPlano
+
+                    // StringBuilder para construir el resumen
+                    StringBuilder resumen = new StringBuilder();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Lee los resultados y construye el resumen
+                        while (reader.Read())
+                        {
+                            resumen.Append("<p><strong>" + reader["Descripcion_Grupo"].ToString() + ": </strong>" + " Cantidad: " + reader["Cantidad"].ToString() + "</p>");
+                        }
+                    }
+                    return resumen.ToString();  // Devuelve el resumen en formato HTML
+                }
+            }
+        }
+
+        protected void ddlElemento_DataBound(object sender, EventArgs e)
+        {
+            ddlElemento.Items.Insert(0, new ListItem("", ""));
+        }
+
+        protected void ddlArea1_DataBound(object sender, EventArgs e)
+        {
+            // Agregar el primer  elemento de los datagrid como ""
+            ddlArea1.Items.Insert(0, new ListItem("", ""));
+        }
+
+        protected void btnCerrarReprocesoOKDibujo_Click(object sender, EventArgs e)
+        {
+            Session["Id_OT2"] = tbOT.Text;
+            Session["pedido2"] = ddlNumbers.SelectedItem.Text;
+
+
+            string mensajePersonalizado = "Favor analizar el reproceso";
+            string urlRedireccion = "OrdenTrabajo.aspx";
+            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+        }
+
+        private void EliminarDetalleReproceso()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "DELETE FROM tblReprocesoDetalle WHERE Ot= @OT AND Pedido = @ped";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@ped", ddlNumbers.SelectedItem.Text);
+
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+        protected void AgregarDetalleReproceso_Click(object sender, EventArgs e)
+        {
+            if (ddlElemento.SelectedItem.Text.Trim() == "")
+            {
+
+                // Mensaje de no ingresado 
+                MensajeError.InnerText = "Por favor, seleccione un elemeno";
+                MensajeError.Visible = true;
+
+                string delayedScript1 = @"setTimeout(function() {CerrarCargarOK();}, 2000);";  // 1000 ms = 1 segundos
+                ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", delayedScript1, true);
+                // Se abre el modal de la reproceso 
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalReproceBotonOkDibujo').modal('show');", true);
+
+                return;
+            }
+            else if (ddlArea1.SelectedItem.Text.Trim() == "")
+            {
+                // Mensaje de no ingresado 
+                MensajeError.InnerText = "Por favor, seleccione un área";
+                MensajeError.Visible = true;
+
+                string delayedScript1 = @"setTimeout(function() {CerrarCargarOK();}, 2000);";  // 1000 ms = 1 segundos
+                ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", delayedScript1, true);
+                // Se abre el modal de la reproceso 
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalReproceBotonOkDibujo').modal('show');", true);
+
+                return;
+            }
+            else if (tbCantidad.Text.Trim() == "")
+            {
+                // Mensaje de no ingresado 
+                MensajeError.InnerText = "Por favor, ingrese la cantidad";
+                MensajeError.Visible = true;
+                string delayedScript1 = @"setTimeout(function() {CerrarCargarOK();}, 2000);";  // 1000 ms = 1 segundos
+                ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", delayedScript1, true);
+                // Se abre el modal de la reproceso 
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalReproceBotonOkDibujo').modal('show');", true);
+
+                return;
+            }
+
+
+            // Se inserta el detalle del reproceso
+            InsertDetalleReproceso();
+
+
+            string destinatarios = ConsultarMailReproceso();
+            string cuerpo = @"
+                    <!DOCTYPE html>
+                    <html lang='es'>
+                    <head>
+                        <meta charset='UTF-8'>
+                        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+                        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                        <title>Notificación de Reproceso</title>
+                        <style>
+                            body {
+                                font-family: Arial, sans-serif;
+                                font-size: 14px;
+                                line-height: 1.6;
+                                margin: 0;
+                                padding: 0;
+                                background-color: #f9f9f9;
+                            }
+                            .container {
+                                max-width: 37rem;
+                                margin: 20px auto;
+                                padding: 20px;
+                                border: 1px solid #ccc;
+                                border-radius: 5px;
+                                background-color: #fff;
+                            }
+                            h2 {
+                                color: #333;
+                                font-size: 24px;
+                                margin-bottom: 20px;
+                            }
+                            p {
+                                margin-bottom: 10px;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class='container'>
+                            <h2>Notificación de Reproceso</h2>
+                            <p>Fecha de observación: " + DateTime.Now.ToString() + @"</p>
+                            <p>Por medio de la presente se informa que se ha asignado un reproceso al área: <strong> " + ddlArea1.SelectedItem.Text + @"</strong>, de la cual es responsable.</p>
+                            <p>Proyecto: " + tbOtReproceso.Text + "-" + tbPedidoReproceso.Text + " " + tbObraReproceso.Text + @"</p>
+                            <p>Elemento: " + ddlElemento.SelectedItem.Text + @"</p>
+                            <p>Agradecemos su colaboración ingresando al sistema de reprocesos.</p>
+                        </div>
+                    </body>
+                    </html>";
+
+            //ejecutar el procedimiento almacenado que envia el correo 
+            EnviarCorreoReproceso(destinatarios, cuerpo);
+
+
+
+
+            bool ObraReactivada = ConsultarEstadoObraReactivada();
+            if (ObraReactivada)
+            {
+                // se cargan los datos en el modal de observaciones 
+                tbObra1.Text = tbObra.Text;
+                tbOt1.Text = tbOT.Text;
+                tbPed1.Text = ddlNumbers.SelectedItem.Text;
+                txObserOkDibujo.InnerText = "DESCRIBIR LOS CAMBIOS EN EL PEDIDO";
+
+
+                // Agregamods vacio en ddlTipoObservacion 
+                ddlTipoObsBotonOkDibujo.Items.Insert(0, new System.Web.UI.WebControls.ListItem(" "));
+                ddlTipoObsBotonOkDibujo.SelectedIndex = 0;
+
+                // Ponemos la fecha del dia por defecto 
+                DateTime Fecha = DateTime.Now;
+                tbFechaActividadOkDibujo.Text = Fecha.ToString("yyyy-MM-dd");
+                tbFechaActividadOkDibujo.Enabled = false;
+
+                // Consultamos el correo por defecto de la solicitud especial 
+                ConsultarCorreoOT(tbOT.Text, ddlNumbers.SelectedItem.Text);
+
+                string delayedScript1 = @"setTimeout(function() {CerrarCargarOK();}, 2000);";  // 1000 ms = 1 segundos
+                ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", delayedScript1, true);
+                // Se abre el modal de la observacion 
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionBotonOkDibujo').modal('show');", true);
+                return;
+            }
+
+            ContinuacionBotonOkDibujo();
 
         }
 
-            // FIN BOTON OK PARA DIBUJO Y COMPRAS
+        private void InsertDetalleReproceso()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "INSERT tblReprocesoDetalle(Id_Elemento,Id_Area,OT,Pedido,Precio,cantidad)" +
+                              "VALUES (@ID_Ele, @ID_Area, @OT, @Ped, @Precio, @Cantidad)";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@ID_Ele", ddlElemento.SelectedValue);
+                    cmd.Parameters.AddWithValue("@ID_Area", ddlArea1.SelectedValue);
+                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@Ped", ddlNumbers.SelectedItem.Text);
+                    cmd.Parameters.AddWithValue("@Precio", "");
+                    cmd.Parameters.AddWithValue("@Cantidad", tbCantidad.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+        public string ConsultarMailReproceso()
+        {
+            string mailResponsable = null;
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+            string query = "SELECT mailResponsable FROM tblAreaReproceso WHERE Descripcion like @area";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@area", ddlArea1.SelectedItem.Text);
+
+                    connection.Open();
+                    object result = command.ExecuteScalar();
+
+                    // Verificar si el resultado no es nulo
+                    if (result != null)
+                    {
+                        // Convertir el resultado a string
+                        mailResponsable = result.ToString();
+                    }
+                }
+            }
+
+            return mailResponsable;
+        }
+
+        public void EnviarCorreoReproceso(string destinatarios, string cuerpo)
+        {
+            string nombreProcedimiento = "duc_sp_Correo";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(nombreProcedimiento, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Definir los parámetros del procedimiento almacenado
+                    command.Parameters.AddWithValue("@Destinatarios", destinatarios);
+                    command.Parameters.AddWithValue("@asunto", "Notificación Reproceso");
+                    command.Parameters.AddWithValue("@cuerpo", cuerpo);
+                    command.Parameters.AddWithValue("@adjuntos", "");
+                    command.Parameters.AddWithValue("@usuario", Session["usuariologueado"].ToString());
+
+                    try
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (SqlException ex)
+                    {
+                        // Manejar la excepción (opcional)
+
+                    }
+                }
+            }
+        }
 
 
 
-            // INICIO BOTON OK PARA VENTAS
 
-            //Valiacion de pedido facturable 
-            private bool ValidarPedidoFacturable(string idPedido)
+        // Actualizar Realizado por en el plano 
+        private void ActulizarDibujantePlano()
+        {
+            DateTime FechaEmpaque = Convert.ToDateTime(dtpEmpaque.Text);
+
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "UPDATE tblPlano SET RealizadoPor= @NombreUsuario WHERE plano = @plano";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+
+                    cmd.Parameters.AddWithValue("@NombreUsuario", Session["usuariologueado"].ToString());
+                    cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+
+        //Registro Cierre contable 
+        public bool ValidarResgistroOtGeneral()
+        {
+            bool existe = false;
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Consulta para seleccionar alguna columna, no importa cuál
+                string query = "SELECT TOP 1 1 FROM tblOTGeneral WHERE Id_OT= @Id_OT ";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Agregar los parámetros a la consulta
+                    command.Parameters.AddWithValue("@Id_OT", tbOT.Text);
+
+
+                    connection.Open();
+
+                    // Ejecutar la consulta y usar SqlDataReader para verificar si hay filas
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            existe = true;
+                        }
+                    }
+                }
+            }
+
+            return existe;
+        }
+
+        private void InsertarRegistroCierreContable()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "INSERT INTO tblOTGeneral(Id_OT,Nombre_Cliente,FechaApertura) " +
+                              "VALUES (@OT,@nombreCliente, @fechaApertura)";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@nombreCliente", txtNombreEmp.Text);
+                    cmd.Parameters.AddWithValue("@fechaApertura", tbVenta.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+
+        // Reporte medidas corte produccion
+        private void Reporte_Medidas_Corte_Produccion()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Nombre del procedimiento almacenado
+                string storedProcedureName = "sp_GenerarRegistrosParaReportesPlano ";
+
+                using (SqlCommand cmd = new SqlCommand(storedProcedureName, connection))
+                {
+                    connection.Open();
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    // Parámetros del procedimiento almacenado
+                    cmd.Parameters.AddWithValue("@Plan", txtPlano.Text);
+                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+                    cmd.Parameters.AddWithValue("@Tipo_Ped", dtacboTipoPedido.SelectedItem.Text);
+
+                    // Ejecutar el procedimiento almacenado
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
+        // Reporte Objetos para empaque 
+        private void Reporte_Ingresar_Objetos_Para_Empaque()
+        {
+            int AplicaEmpaque = 0;
+
+            // se eliminar dos datos de tblEmpaque
+            EliminarRegistroEmpaque();
+
+            //SE CONSULTA Y REGISTRAN OBJETOS Y MENUDA PARA INSTALACIÓN
+            RegistrarMenudaInstalacion();
+
+            // SE CONSULTA SI EL PEDIDO CONTIENE UN MUEBLE ESPECIAL
+            if (ValidarMuebleEspecial())
+            {
+                // Hay Objetos especiales 
+                DataTable RegistroMuebleEspecial = ConsultarRegistroMuebleEspecial();
+
+                foreach (DataRow row in RegistroMuebleEspecial.Rows)
+                {
+                    string archivo = row["Archivo"].ToString();
+                    string rutaBase = @"\\Srvfs\s_i_ducon$\Documentacion de Obras";
+                    string rutaCarpeta = Path.Combine(rutaBase, tbOT.Text);
+                    string rutaCompleta = Path.Combine(rutaCarpeta, archivo);
+
+                    LeerExcelYInsertar(rutaCompleta);
+
+                }
+            }
+            // Validar si aplica o no empaque 
+
+            if (!ValidarFechaEmpaque())
+            {
+                AplicaEmpaque = 1;
+            }
+
+            ActualizarEmpaqueOT(AplicaEmpaque);
+
+        }
+
+        private void EliminarRegistroEmpaque()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "DELETE FROM tblEmpaque WHERE Plano= @plano";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@plano", tbOT.Text);
+
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+        private void RegistrarMenudaInstalacion()
+        {
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Nombre del procedimiento almacenado
+                string storedProcedureName = "sp_registrarelementosparaempaque";
+
+                using (SqlCommand cmd = new SqlCommand(storedProcedureName, connection))
+                {
+                    connection.Open();
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    // Parámetros del procedimiento almacenado
+                    cmd.Parameters.AddWithValue("@Plan", txtPlano.Text);
+
+                    // Ejecutar el procedimiento almacenado
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public bool ValidarMuebleEspecial()
+        {
+            bool existe = false;
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Consulta para seleccionar alguna columna, no importa cuál
+                string query = "SELECT TOP 1 1 FROM tblDocumentacion WHERE Id_OT = @OT AND Pedido = @pedido AND MuebleEspecial = 1 ";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Agregar los parámetros a la consulta
+                    command.Parameters.AddWithValue("@OT", tbOT.Text);
+                    command.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+
+
+                    connection.Open();
+
+                    // Ejecutar la consulta y usar SqlDataReader para verificar si hay filas
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            existe = true;
+                        }
+                    }
+                }
+            }
+
+            return existe;
+        }
+
+        private DataTable ConsultarRegistroMuebleEspecial()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT * FROM tblDocumentacion WHERE Id_OT = @OT AND Pedido = @pedido AND MuebleEspecial = 1 ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    // Agregar los parámetros a la consulta
+                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+
+        public void LeerExcelYInsertar(string ArchivoEspecial)
+        {
+            // Verificar si el archivo existe
+            if (File.Exists(ArchivoEspecial))
+            {
+                // Crear la conexión con la base de datos
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    // Leer el contenido del archivo Excel usando NPOI
+                    using (FileStream fs = new FileStream(ArchivoEspecial, FileMode.Open, FileAccess.Read))
+                    {
+                        IWorkbook workbook = null;
+
+                        string extension = Path.GetExtension(ArchivoEspecial);
+                        if (extension.Equals(".xls"))
+                        {
+                            workbook = new HSSFWorkbook(fs); // Para archivos .xls (Excel 97-2003)
+                        }
+                        else if (extension.Equals(".xlsx"))
+                        {
+                            workbook = new XSSFWorkbook(fs); // Para archivos .xlsx (Excel 2007+)
+                        }
+
+                        // Obtener la primera hoja del archivo
+                        ISheet sheet = workbook.GetSheetAt(0);
+                        int filaexcel = 1; // Inicia en la fila 2 
+
+                        // Iterar sobre las filas hasta que la celda en la primera columna esté vacía
+                        while (sheet.GetRow(filaexcel) != null && sheet.GetRow(filaexcel).GetCell(0) != null)
+                        {
+                            // Convertir el contenido de la columna 5 (E) a mayúsculas y buscar "INSTA"
+                            string columnaE = sheet.GetRow(filaexcel).GetCell(4).ToString().ToUpper();
+                            if (columnaE.Contains("INSTA"))
+                            {
+                                // Insertar en la base de datos
+                                string sSql = "Insert Into tblEmpaque(Id_OT,Pedido,Plano,Objeto,Ancho,altura,profundidad,Descripción_Objeto,Cantidad_Solicitada,Procedencia,Descripcion_Grupo,UndXPaquete)" +
+                                              " Values(@Id_OT, @Pedido, @Plano, @Objeto, 0, 0, 1, @DescripcionObjeto, @CantidadSolicitada, 'DESARROLLO', 'MUEBLE ESPECIAL', 1)";
+
+                                using (SqlCommand command = new SqlCommand(sSql, connection))
+                                {
+                                    command.Parameters.AddWithValue("@Id_OT", tbOT.Text);
+                                    command.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+                                    command.Parameters.AddWithValue("@Plano", txtPlano.Text);
+                                    string objeto = "D-PartNo." + sheet.GetRow(filaexcel).GetCell(0).ToString() + " - " + sheet.GetRow(filaexcel).GetCell(1).ToString();
+                                    command.Parameters.AddWithValue("@Objeto", objeto);
+                                    command.Parameters.AddWithValue("@DescripcionObjeto", objeto);
+                                    command.Parameters.AddWithValue("@CantidadSolicitada", Convert.ToInt32(sheet.GetRow(filaexcel).GetCell(2).ToString()));
+
+                                    // Ejecutar la inserción
+                                    command.ExecuteNonQuery();
+                                }
+                            }
+
+                            filaexcel++; // Mover a la siguiente fila
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // Manejar el caso en que el archivo no existe
+                // Console.WriteLine("El archivo no existe.");
+            }
+        }
+
+        private void ActualizarEmpaqueOT(int AplicaEmpaque)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "UPDATE tblOT SET Aplica_Empaque = @aplicaEmp  WHERE Id_OT = @OT AND Consecutivo_Pedido = @pedido";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@aplicaEmp", AplicaEmpaque);
+                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+
+
+        // Para actualizar observacion del pedido en el reporte OT
+        private DataTable ConsultarAcabadoDeinitivos()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT tblOTAcabadoDefinitivo.id_OTAcabadoDefinitivo, tblOTAcabadoDefinitivo.oadPLano,tblOTAcabadoDefinitivo.oadDescripcionGrupoObjeto, " +
+                              "tblOTAcabadoDefinitivo.oadID_Familia, tblOTAcabadoDefinitivo.oadDescripcion_Familia, tblOTAcabadoDefinitivo.oadIDGrupoAcabado, " +
+                              "tblOTAcabadoDefinitivo.oadDesGrupoAcabado, tblOTAcabadoDefinitivo.oadId_Insumo, tblOTAcabadoDefinitivo.oadCodInvOri, " +
+                              "tblOTAcabadoDefinitivo.oadDescripcion_Insumo, tblOTAcabadoDefinitivo.oadCodInvDes, tblOTAcabadoDefinitivo.oadDescripcionAcabado, " +
+                              "tblOTAcabadoDefinitivo.oadAplicacionAcabado,tblOTAcabadoDefinitivo.oadActivo " +
+                              "FROM tblOTAcabadoDefinitivo " +
+                              "WHERE tblOTAcabadoDefinitivo.oadPlano = @plano " +
+                              "ORDER BY tblOTAcabadoDefinitivo.oadDescripcionGrupoObjeto ASC, " +
+                              "tblOTAcabadoDefinitivo.oadAplicacionAcabado ASC,tblOTAcabadoDefinitivo.oadDescripcion_Familia ASC";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
+
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+
+        private void ActualizarObservacionPedidoReporteOT(string acabados)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "UPDATE tblReporteOT SET Observacion_Pedido = @acabados, Fecha_Entrega_Produccion= GETDATE()," +
+                              "ResumenObra= @resumenObra   WHERE Id_OT = @OT AND Consecutivo_Pedido = @pedido";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@acabados", acabados);
+                    cmd.Parameters.AddWithValue("@resumenObra", txResumen.InnerText);
+                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+
+        // Actualizar objetos despues de pasar el pedidio al ISID
+        private void ActulizarObjetosEscalables()
+        {
+            DateTime FechaEmpaque = Convert.ToDateTime(dtpEmpaque.Text);
+
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "UPDATE tblPanel SET Chequeado =1, Responsable = @nombreUsuario,FechaChequeo =GETDATE() WHERE " +
+                              "(Id_Panel IN(SELECT tblPanel_1.Id_Panel FROM tblPanel AS tblPanel_1 " +
+                              "INNER JOIN tblPlano_Panel ON tblPanel_1.Id_Numerico = tblPlano_Panel.Id_PanelNum  " +
+                              "WHERE (tblPlano_Panel.Id_Plano = @plano) AND (tblPanel_1.Escalable = 1) AND (tblPanel_1.Chequeado = 0) GROUP BY tblPanel_1.Id_Panel))";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@nombreUsuario", Session["usuariologueado"].ToString());
+                    cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+        private void ActulizarObjetosNoEscalables()
+        {
+            DateTime FechaEmpaque = Convert.ToDateTime(dtpEmpaque.Text);
+
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "UPDATE tblPanel SET Chequeado =1, Responsable = @nombreUsuario,FechaChequeo =GETDATE() WHERE " +
+                              "Id_Panel IN(SELECT tblPanel_1.Id_Panel FROM tblPanel AS tblPanel_1 INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum " +
+                              "WHERE tblPlano_Panel.Id_Plano = @plano AND tblPanel.Chequeado = 0 AND tblPanel.Escalable = 0 ) ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@nombreUsuario", Session["usuariologueado"].ToString());
+                    cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+       
+        // Metodo para continuar la acccion despues de Reproceso u Obra Reactivada 
+        private void ContinuacionBotonOkDibujo()
+        {
+            //SE ACTUALIZA EL DIBUJANTE DEL PLANO
+            ActulizarDibujantePlano();
+
+            // SE REGISTRA LA OT PARA EL CIERRE CONTABLE 
+
+            // Si no existe el registro se realiza la insercion 
+            if (!ValidarResgistroOtGeneral())
+            {
+                // Se realiza la la insercion del nuevo registro para cierre contable 
+                InsertarRegistroCierreContable();
+            }
+
+            //MATRICULAR LOS REPORTES DE LA OBRA REPORTE INFORMACION OT
+            // SE ELIMINA EL REPORTE OY Y SE CREA UNO NUEVO
+            EliminarReporteOT();
+            CrearReporteOt();
+
+            // REPORTE INFORMACION DEL PLANO   ***+*** REVISAR RUTA DE ESA ACCION  ********
+            EliminarReportePlano();
+            InsertarReportePLano();
+
+            if (ValidarCantidadElementosDespiece() > 2)
+            {
+                EliminarPlanoPanelCot();
+                InsertarPLanoPanelCot();
+
+                EliminarReporteDespiece();
+                InsertarReporteDespiece();
+
+                Reporte_Medidas_Corte_Produccion();
+
+                EliminarPlanoPanelCot();
+            }
+
+            Reporte_Ingresar_Objetos_Para_Empaque();
+
+            string acabados = "";
+
+            DataTable AcaadosDefinitivos = ConsultarAcabadoDeinitivos();
+            if (AcaadosDefinitivos.Rows.Count > 0)
+            {
+                foreach (DataRow row in AcaadosDefinitivos.Rows)
+                {
+                    acabados += row["OadDescripcionGrupoObjeto"].ToString() + " - " + row["oadDescripcion_Familia"].ToString() + " - " + row["oadDescripcionAcabado"].ToString() + " - " + row["oadCodInvDes"].ToString();
+                }
+
+            }
+
+            acabados += "\n" + txObs2.InnerText;
+            ActualizarObservacionPedidoReporteOT(acabados);
+
+            if (PasarPedidoISID(true))
+            {
+                //SE CHEQUEAN LOS OBJETOS PENDIENTES POR CHEQUEAR
+
+                //Se chequean los objetos escalables
+                ActulizarObjetosEscalables();
+
+                // Se chequean los objetos no escalables
+                ActulizarObjetosNoEscalables();
+
+                // Actualizar Terminado Dibujo 
+                ActualizarTerminadoDibujo();
+
+                // Se consulta el consolidado del despice para mostrar en el correo 
+                string resumenDespice = ObtenerResumenDespice(txtPlano.Text);
+
+                string destinatarios = ""; // Consultar a que destinatario se debe enviar 
+
+                //Enviar la notificacion por Correo de terminacion OT 
+                if (dtacboTipoPedido.SelectedItem.Text.ToUpper() == "REPROCESO")
+                {
+                    destinatarios = "carteraducon@ducon.com.co;auxiliarcartera@ducon.com.co;cartera1@ducon.com.co;practicantecartera@ducon.com.co";
+                }
+
+                string correosExportarObra = ConsultarCorreoExportarObra();
+
+                string CorreoAsesorOT = ConsultarAsesorCorreoOT();
+
+                destinatarios += CorreoAsesorOT + ";" + correosExportarObra;
+;
+                string cuerpo = @"
+                    <!DOCTYPE html>
+                    <html lang='es'>
+                    <head>
+                        <meta charset='UTF-8'>
+                        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+                        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                        <style>
+                            body {
+                                font-family: Arial, sans-serif;
+                                font-size: 14px;
+                                line-height: 1.6;
+                                margin: 0;
+                                padding: 0;
+                                background-color: #f9f9f9;
+                            }
+                            .container {
+                                max-width: 37rem;
+                                margin: 20px auto;
+                                padding: 20px;
+                                border: 1px solid #ccc;
+                                border-radius: 5px;
+                                background-color: #fff;
+                            }
+                            h2 {
+                                color: #333;
+                                font-size: 24px;
+                                margin-bottom: 20px;
+                            }
+                            p {
+                                margin-bottom: 10px;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class='container'>
+                            <h3>Notificación OT Terminada Dibujo y Despiece </h2>
+                            <p><strong>Señores:  </strong> Departamento de Producción </p>
+                            <p><strong>El Pedido: </strong>" + tbOT.Text + "-" + ddlNumbers.SelectedItem.Text + ", acaba de ser programado para el proceso productivo con la siguiente informacion. " + @"</p>
+                            <p><strong>INFORMACIÓN DEL PEDIDO  </strong></p>
+                            <p><strong>Tipo de Pedido: </strong> " + dtacboTipoPedido.SelectedItem.Text + @"</p>
+                            <p><strong>Número Pedido: </strong> " + tbOT.Text + "-" + ddlNumbers.SelectedItem.Text + @"</p>
+                            <p><strong>Fecha Ok Venta: </strong> " + dtpFechaEntregaDibujoDespiece.Text + @"</p>
+                            <p><strong>Fecha de Ingreso a Producción: </strong> " + dtpFechaEntregaProduccion.Text + @"</p>
+                            <p><strong>Dibujante: </strong> " + txtDibuja.Text + @"</p                       
+                            <p><strong>Fecha de empaque: </strong> " + dtpEmpaque.Text + @"</p>
+                            <p><strong>Dirección de Despacho: </strong> " + tbDir.Text + "/" + ddlCiudad.SelectedItem.Text + @"</p>
+                            <p><strong>Contacto: </strong> " + tbContac.Text + @"</p>
+                            <p><strong>Teléfono: </strong> " + tbTel.Text + @"</p>
+                            <p><strong>Celular: </strong> " + tbCel.Text + @"</p>
+                            <p><strong>RESUMEN DEL DESPIECE</strong></p>" +
+                                           resumenDespice +
+                                       @"</div>
+                    </body>
+                    </html>";
+
+                //Enviar correo de notificacion
+                EnviarCorreoBotonOkdibujo(destinatarios, cuerpo);
+
+
+                // Mostrar Mensaje de Exito 
+                string mensajePersonalizado = "Se ha completado satisfactoriamente el registro del pedido en el ISID";
+                string urlRedireccion = "OrdenTrabajo.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+            }
+            else
+            {
+                string mensajePersonalizado = "NO. NO fue satisfactorio el registro del pedido en el ISID, favor terminar nuevamente el pedido.";
+                string urlRedireccion = "OrdenTrabajo.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            }
+
+        }
+
+
+        // Actualizar Terminado Dibujo
+        private void ActualizarTerminadoDibujo()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "UPDATE tblOT SET Terminado_Diseño=1,Terminado_Ventas=1 WHERE tblOT.Id_OT = @OT AND Consecutivo_Pedido = @pedido ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+       
+        // Notificacion Correo OT Terminada Dibujo 
+        public void EnviarCorreoBotonOkdibujo(string destinatarios, string cuerpo)
+        {
+            string nombreProcedimiento = "duc_sp_Correo";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(nombreProcedimiento, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Definir los parámetros del procedimiento almacenado
+                    command.Parameters.AddWithValue("@Destinatarios", destinatarios);
+                    command.Parameters.AddWithValue("@asunto", "Producir Pedido: " + dtacboTipoPedido.SelectedItem.Text + "  " + tbOT.Text + "-" + tbPed1.Text + tbObra.Text);
+                    command.Parameters.AddWithValue("@cuerpo", cuerpo);
+                    command.Parameters.AddWithValue("@adjuntos", "");
+                    command.Parameters.AddWithValue("@usuario", Session["usuariologueado"].ToString());
+
+                    try
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+
+                    }
+                    catch (SqlException ex)
+                    {
+                        // Manejar la excepción (opcional)
+                        //error.Visible = true;
+                        // error.Text = ex.Message;
+                    }
+                }
+            }
+        }
+
+        public string ConsultarCorreoExportarObra()
+        {
+            string correo = "";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT  mail FROM tblUsosVarios WHERE ObjetivoMail = 'mailparaExportarObra'";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    try
+                    {
+                        connection.Open();
+                        correo = Convert.ToString(command.ExecuteScalar());
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejar la excepción 
+                        //Console.WriteLine("Error al ejecutar la consulta: " + ex.Message);
+                    }
+                }
+            }
+
+            return correo;
+        }
+
+        public string ConsultarAsesorCorreoOT()
+        {
+            string correo = "";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = " SELECT * FROM tblAsesorComercial WHERE CodigoAsesor = @CodigoAse ";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@CodigoAse", txtAsesor.Text);
+                    try
+                    {
+                        connection.Open();
+                        correo = Convert.ToString(command.ExecuteScalar());
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejar la excepción 
+                        //Console.WriteLine("Error al ejecutar la consulta: " + ex.Message);
+                    }
+                }
+            }
+
+            return correo;
+        }
+
+
+
+
+
+        // FIN BOTON OK PARA DIBUJO Y COMPRAS
+
+
+
+        // INICIO BOTON OK PARA VENTAS
+
+        //Valiacion de pedido facturable 
+        private bool ValidarPedidoFacturable(string idPedido)
         {
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
@@ -16562,7 +17264,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
 
                 string Plano = row["Plano"].ToString();
-                string Descripción = row["Descripción"].ToString();
                 string Objeto = row["Objeto"].ToString();
                 string Ancho = row["Ancho"].ToString();
                 string Altura = row["Altura"].ToString();
@@ -17743,6 +18444,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+      
     }
 }
 
