@@ -15,26 +15,27 @@
     
 <body>
     
-   <div class="login">
+   <div class="login": style="text-align:center" >
 
 
     <div class="wrapper">
         
    <h1 class="text-center">INICIAR SESIÓN</h1>
    
-        <img src="../Recursos/IMG/SIDLogoLogin.png" />
+        <img src="../Recursos/IMG/LoginImgSID.png" /> <%--lOGO DEL LOGIN--%>
 
           <form id="formulario_login" runat="server" class="needs-validation">
                
+                 
              
                    
                     <div class="form-group was-validated">
-                        <asp:Label ID="lblUsuario" runat="server" Text="Usuario" CssClass="form-label"></asp:Label>
+                        <%--<asp:Label ID="lblUsuario" runat="server" Text="Usuario" CssClass="form-label"></asp:Label>--%>
                        <asp:TextBox ID="tbUsuario" runat="server" CssClass="form-control" placeholder="Ingrese el usuario"></asp:TextBox>
                         <div class="invalid-feedback"> Escriba correctamente el ususario</div>
                         </div>
                    <div class="form-group was-validated">
-                       <asp:Label ID="lblPassword" runat="server" Text="Contraseña" CssClass="form-label"></asp:Label>
+                      <%-- <asp:Label ID="lblPassword" runat="server" Text="Contraseña" CssClass="form-label"></asp:Label>--%>
                         <asp:TextBox ID="tbPassword" CssClass="form-control" TextMode="Password" runat="server" placeholder="Ingrese la contraseña"></asp:TextBox>
                        <div class="invalid-feedback"> Escriba correctamente la contraseña</div>
                     </div>

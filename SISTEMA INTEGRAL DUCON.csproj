@@ -276,10 +276,10 @@
     <Content Include="Recursos\CSS\Ventas\Render_Venta.css" />
     <Content Include="Recursos\CSS\Ventas\SolicitudesEspeciales.css" />
     <Content Include="Recursos\CSS\Ventas\Visita_Asesores.css" />
-    <Content Include="Recursos\IMG\FondoAppSidInicio.png" />
+    <Content Include="Recursos\IMG\FondoAppInicioSID.png" />
+    <Content Include="Recursos\IMG\FondoLogoMenuInicioSinFondo.png" />
     <Content Include="Recursos\IMG\LOGINFONDO.jpg" />
-    <Content Include="Recursos\IMG\LogoSidMenuDuc.png" />
-    <Content Include="Recursos\IMG\SIDLogoLogin.png" />
+    <Content Include="Recursos\IMG\LoginImgSID.png" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
