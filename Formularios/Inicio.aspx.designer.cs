@@ -249,15 +249,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
         protected global::System.Web.UI.WebControls.LinkButton Linkbutton30;
 
         /// <summary>
-        /// Control Linkbutton31.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton Linkbutton31;
-
-        /// <summary>
         /// Control Linkbutton32.
         /// </summary>
         /// <remarks>
