@@ -884,7 +884,7 @@
             } else if (Telefono === "") {
                 ErrorValidacionClienteFact.innerHTML = "El campo Telefono es obligatorio.";
                 isValid = false;
-            } else if (Sector === "Seleccione") {
+            } else if (Sector === "") {
                 ErrorValidacionClienteFact.innerHTML = "El campo Sector es obligatorio.";
                 isValid = false;
             } else if (PriApellido === "") {

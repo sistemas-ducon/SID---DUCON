@@ -29,18 +29,19 @@
                  
              
                    
-                    <div class="form-group was-validated">
+                    <div class="form-group was-validated mb-2" >
                         <%--<asp:Label ID="lblUsuario" runat="server" Text="Usuario" CssClass="form-label"></asp:Label>--%>
                        <asp:TextBox ID="tbUsuario" runat="server" CssClass="form-control" placeholder="Ingrese el usuario"></asp:TextBox>
                         <div class="invalid-feedback"> Escriba correctamente el ususario</div>
                         </div>
-                   <div class="form-group was-validated">
+
+                   <div class="form-group was-validated mb-2">
                       <%-- <asp:Label ID="lblPassword" runat="server" Text="Contraseña" CssClass="form-label"></asp:Label>--%>
                         <asp:TextBox ID="tbPassword" CssClass="form-control" TextMode="Password" runat="server" placeholder="Ingrese la contraseña"></asp:TextBox>
                        <div class="invalid-feedback"> Escriba correctamente la contraseña</div>
                     </div>
                 
-                 <div class="form-group form-check">
+                 <div class="form-group form-check mb-2">
                        
                         <asp:TextBox ID="tbcheckbox" type="checkbox" runat="server" CssClass="form-check-input"></asp:TextBox>
                      <asp:Label ID="lblcheckbox" runat="server" Text="Recordar contraseña" CssClass="form-check-label"></asp:Label>
