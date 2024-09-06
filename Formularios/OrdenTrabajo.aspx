@@ -4126,17 +4126,17 @@
 
     <div class="d-flex flex-wrap align-items-center" runat="server" id="contentToToggle" Visible="false">
         <div class="d-flex align-items-center me-2">
-            <asp:Label ID="Label9" runat="server" CssClass="me-2 col-form-label-sm" Text="Tipo Insumo"></asp:Label>
+            <asp:Label ID="LblTipoInsumo" runat="server" CssClass="me-2 col-form-label-sm" Text="Tipo Insumo"></asp:Label>
              <asp:DropDownList ID="DropDownList1" runat="server" CssClass="form-control form-control-sm" OnTextChanged="DropDownList1_TextChanged" AutoPostBack="true" DataTextField="Descripcion_Insumo" DataValueField="Id_Insumo"/>                                  
         </div>
 
         <div class="d-flex align-items-center me-2">
-            <asp:Label ID="Label11" runat="server" CssClass="me-2 col-form-label-sm" Text="Criterio"></asp:Label>
+            <asp:Label ID="LblCriterio" runat="server" CssClass="me-2 col-form-label-sm" Text="Criterio"></asp:Label>
             <asp:TextBox ID="TextCriterio" runat="server" CssClass="form-control me-2 form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterio_TextChanged"></asp:TextBox>
         </div>
 
         <div class="d-flex align-items-center me-2">
-            <asp:Label ID="Label12" runat="server" CssClass="me-2 col-form-label-sm" Text="Inv"></asp:Label>
+            <asp:Label ID="LblInv" runat="server" CssClass="me-2 col-form-label-sm" Text="Inv"></asp:Label>
             <asp:TextBox ID="TextInv" runat="server" CssClass="form-control me-2 form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterio_TextChanged"></asp:TextBox>
         </div>
 
