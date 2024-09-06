@@ -199,6 +199,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             BotonesPorDefectoInsumos(sender, e);
 
+            CargarDatosInsumos();
+
 
 
             // Validacion para Cargar el Plano  Con variables de Session
@@ -362,9 +364,37 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             CargarVariablesDeSesionContable();
         }
 
+        private void CargarDatosInsumos()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                string query = @"SELECT TOP 200 tblInsumo.*, tblTipoInsumo.Descripcion, tblUnidad_Medida.Abreviado 
+                            FROM tblUnidad_Medida 
+                            INNER JOIN (tblTipoInsumo 
+                                INNER JOIN tblInsumo ON tblTipoInsumo.Id_TipoInsumo = tblInsumo.Id_TipoInsumo) 
+                                ON tblUnidad_Medida.Id_UnidadMedida = tblInsumo.Id_UnidadMedida 
+                            ORDER BY Descripcion_Insumo";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                sda.Fill(dt);
+
+                DataGridInsumo.DataSource = dt;
+                DataGridInsumo.DataBind();
+            }
+        }
+
         protected void Page_LoadVentas(object sender, EventArgs e)
         {
+            string scriptDisableTabs = @"
+        document.getElementById('Modulo-tab').classList.add('disabled');
+        document.getElementById('Insumo-tab').classList.add('disabled');
+        document.getElementById('Modulo-Content').classList.add('d-none');
+        document.getElementById('Insumo-Content').classList.add('d-none');";
 
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "disableTabsScript", scriptDisableTabs, true);
 
             Session["CargarOTsEjecutada"] = null;
 
@@ -3272,6 +3302,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 string IDCLienteConstacto = leer["IDContacto_Cliente"].ToString();
                                 CargarDatosContables(IDCLienteConstacto);
 
+                                Session["IdContactoFactSession"] = IDCLienteConstacto;
                             }
 
                             // Extraer datos y asignarlos a controles
@@ -3344,6 +3375,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             {
                                 string IDCLienteConstacto = leer["IDContacto_Cliente"].ToString();
                                 CargarDatosContables(IDCLienteConstacto);
+
+                                Session["IdContactoFactSession"] = IDCLienteConstacto;
 
                             }
 
@@ -6190,8 +6223,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 LinkButton11,
                 LinkButton12,
                 LinkButton13,
-                LinkButton14,
-                LinkButton15
             };
 
             string cssClass = "btn btn-sm shadow button-disabled";
@@ -6207,6 +6238,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
 
+        }
+
+        protected void BtnBuscarInsumo_Click(object sender, EventArgs e)
+        {
+            // Alternar la visibilidad del contenido
+            contentToToggle.Visible = !contentToToggle.Visible;
+
+            CargarTipoInsumo();
+        }
+
+        private void CargarTipoInsumo()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string query = "Select Id_TipoInsumo, Descripcion from tblTipoInsumo order by descripcion";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                DataSet ds = new DataSet();
+                da.Fill(ds, "TipoInsumo");
+
+                DropDownList1.DataSource = ds.Tables["TipoInsumo"];
+                DropDownList1.DataTextField = "Descripcion";
+                DropDownList1.DataValueField = "Id_TipoInsumo";
+             
+                DropDownList1.DataBind();
+                DropDownList1.Items.Insert(0, new ListItem(" "));
+            }
         }
 
         // Plano  
@@ -17743,6 +17802,130 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        protected void DropDownList1_TextChanged(object sender, EventArgs e)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                string query = @"
+            SELECT TOP 200 tblInsumo.*, tblTipoInsumo.Descripcion, tblUnidad_Medida.Abreviado
+            FROM tblInsumo
+            INNER JOIN tblTipoInsumo ON tblTipoInsumo.ID_TipoInsumo = tblInsumo.Id_TipoInsumo
+            INNER JOIN tblUnidad_Medida ON tblUnidad_Medida.Id_UnidadMedida = tblInsumo.Id_UnidadMedida
+            WHERE tblInsumo.Descripcion_Insumo LIKE '%' + @TextCriterio + '%'
+            AND tblInsumo.ID_Inventario LIKE '%' + @TextInv + '%'
+            AND tblTipoInsumo.Descripcion LIKE @TipoInsumo
+            ORDER BY tblInsumo.Descripcion_Insumo";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@TextCriterio", TextCriterio.Text);
+                cmd.Parameters.AddWithValue("@TextInv", TextInv.Text);
+                cmd.Parameters.AddWithValue("@TipoInsumo", DropDownList1.SelectedItem.Text + "%");
+
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                sda.Fill(dt);
+
+                DataGridInsumo.DataSource = dt;
+                DataGridInsumo.DataBind();
+                PanelInsumo.Update();
+
+            }
+        }
+
+        protected void TextCriterio_TextChanged(object sender, EventArgs e)
+        {
+            
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    // Consulta SQL ajustada
+                    string query = @"
+            SELECT TOP 200 tblInsumo.*, tblTipoInsumo.Descripcion, tblUnidad_Medida.Abreviado
+            FROM tblInsumo, tblTipoInsumo, tblUnidad_Medida
+            WHERE tblInsumo.Descripcion_Insumo LIKE '%' + @TextCriterio + '%'
+            AND tblInsumo.ID_Inventario LIKE '%' + @TextInv + '%'
+            AND tblTipoInsumo.ID_TipoInsumo = tblInsumo.Id_TipoInsumo
+            AND tblUnidad_Medida.Id_UnidadMedida = tblInsumo.Id_UnidadMedida
+            AND tblTipoInsumo.Descripcion LIKE '%' + @TipoInsumo + '%'
+            ORDER BY tblInsumo.Descripcion_Insumo";
+
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@TextCriterio", TextCriterio.Text);
+                    cmd.Parameters.AddWithValue("@TextInv", TextInv.Text);
+                    cmd.Parameters.AddWithValue("@TipoInsumo", DropDownList1.SelectedItem.Text);
+
+                    SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    sda.Fill(dt);
+
+                DataGridInsumo.DataSource = dt;
+                DataGridInsumo.DataBind();
+                    PanelInsumo.Update();
+               }
+            
+        }
+
+        protected void DataGridInsumo_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+                if (e.CommandName == "SelectInsumo")
+                {
+                    int rowIndex = Convert.ToInt32(e.CommandArgument);
+                    DataGridItem row = DataGridInsumo.Items[rowIndex];
+
+                    // capturamos los campos de la fila del datagrid 
+                    foreach (DataGridItem item in DataGridInsumo.Items)
+                    {
+                        if (item != row)
+                        {
+                            item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                        }
+                    }
+
+                    e.Item.CssClass = "fila-seleccionada1";
+
+                    Session["Id_Insumo"] = row.Cells[1].Text;
+
+                    DateTime? primerClicTime = Session["PrimerClicTime5"] as DateTime?;
+                    if (primerClicTime != null && (DateTime.Now - primerClicTime.Value).TotalSeconds <= 1)
+                    {
+                        // Se compara si el click es en la misma fila
+                        if (row.Cells[1].Text == Session["Id_OTdise5"]?.ToString())
+                        {
+                            // Incrementar la variable de sesión "ClickCount" en el servidor
+                            int clickCount = Convert.ToInt32(Session["ClickCount5"]) + 1;
+                            Session["ClickCount5"] = clickCount;
+
+                            e.Item.CssClass = "fila-seleccionada1";
+
+                            // Se valida si es el segundo click en la misma fila 
+                            if (clickCount == 2)
+                            {
+                            string url = "DiseñoYDesarrollo/frmInsumos.aspx";
+                            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+                            }
+                        }
+
+                        // Limpia las variables de sesión
+                        Session.Remove("PrimerClicTime5");
+                    }
+                    else
+                    {
+
+                        e.Item.CssClass = "fila-seleccionada1";
+                        // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
+                        Session["ClickCount5"] = 1;
+                        Session["Id_OTdise5"] = row.Cells[1].Text;
+                        Session["PrimerClicTime5"] = DateTime.Now; // Establecer el tiempo del primer clic
+
+
+                    }
+
+               
+                
+            }
+        }
     }
 }
 

@@ -3944,31 +3944,32 @@
 
                                             <div class="contenedor-icono">
 
-                                                <asp:LinkButton runat="server" title="Nuevo Insumo" ID="LinkButton9">
+                                                <asp:LinkButton runat="server" title="Nuevo Insumo" ID="LinkButton9" CssClass="btn btn-sm shadow button-disabled">
                                                    <i class="bi bi-file-earmark"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="" ID="LinkButton10">
+                                                <asp:LinkButton runat="server" title="" ID="LinkButton10" CssClass="btn btn-sm shadow button-disabled">
                                                   <i class="bi bi-file-earmark-ruled"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Modificar Insumo" ID="LinkButton11">
+                                                <asp:LinkButton runat="server" title="Modificar Insumo" ID="LinkButton11" CssClass="btn btn-sm shadow button-disabled">
                                                    <i class="bi bi-wrench"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Eliminar Insumo" ID="LinkButton12">
+                                                <asp:LinkButton runat="server" title="Eliminar Insumo" ID="LinkButton12" CssClass="btn btn-sm shadow button-disabled">
                                                    <i class="bi bi-database-x"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Copiar Insumo" ID="LinkButton13">
+                                                <asp:LinkButton runat="server" title="Copiar Insumo" ID="LinkButton13" CssClass="btn btn-sm shadow button-disabled">
                                                     <i class="bi bi-files"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Buscar Insumo" ID="LinkButton14">
-                                                   <i class="bi bi-search"></i>
+                                                <asp:LinkButton runat="server" title="Buscar Insumo" ID="BtnBuscarInsumo" CssClass="btn btn-sm shadow button-enabled" OnClick="BtnBuscarInsumo_Click">
+                                                 <i class="bi bi-search"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Actualizar" ID="LinkButton15">
+
+                                                <asp:LinkButton runat="server" title="Actualizar" ID="LinkButton15" CssClass="btn btn-sm shadow button-enabled">
                                                    <i class="bi bi-disc"></i>
                                                 </asp:LinkButton>
 
@@ -3979,6 +3980,76 @@
                                 </div>
                             </nav>
 
+                          <div class="card shadow">
+                <div class="card-header d-flex justify-content-between align-items-center">
+    <asp:Button ID="btnPanelInsumo" runat="server" CssClass="btn linkButtonClicked2 fw-bold shadow text-dark" Text="Panel Insumo" />
+
+    <div class="d-flex flex-wrap align-items-center" runat="server" id="contentToToggle" Visible="false">
+        <div class="d-flex align-items-center me-2">
+            <asp:Label ID="Label9" runat="server" CssClass="me-2 col-form-label-sm" Text="Tipo Insumo"></asp:Label>
+             <asp:DropDownList ID="DropDownList1" runat="server" CssClass="form-control form-control-sm" OnTextChanged="DropDownList1_TextChanged" AutoPostBack="true" DataTextField="Descripcion_Insumo" DataValueField="Id_Insumo"/>                                  
+        </div>
+
+        <div class="d-flex align-items-center me-2">
+            <asp:Label ID="Label11" runat="server" CssClass="me-2 col-form-label-sm" Text="Criterio"></asp:Label>
+            <asp:TextBox ID="TextCriterio" runat="server" CssClass="form-control me-2 form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterio_TextChanged"></asp:TextBox>
+        </div>
+
+        <div class="d-flex align-items-center me-2">
+            <asp:Label ID="Label12" runat="server" CssClass="me-2 col-form-label-sm" Text="Inv"></asp:Label>
+            <asp:TextBox ID="TextInv" runat="server" CssClass="form-control me-2 form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterio_TextChanged"></asp:TextBox>
+        </div>
+
+        <div class="d-flex align-items-center me-2">
+            <asp:Label ID="Label14" runat="server" CssClass="me-2 col-form-label-sm" Text="Nuevo Cod. Inv"></asp:Label>
+            <asp:TextBox ID="TextBox4" runat="server" CssClass="form-control me-2 form-control-sm"></asp:TextBox>
+        </div>
+
+        <asp:Button ID="btnAdditional1" runat="server" CssClass="btn linkButtonClicked2 fw-bold RojoEfecto shadow text-white text-dark me-2 form-control-sm" Text="Cambiar Cod Inv" Enabled="false"/>
+
+        <div class="d-flex align-items-center me-2">
+            <asp:Label ID="Label15" runat="server" CssClass="me-2 col-form-label-sm" Text="Costo"></asp:Label>
+            <asp:TextBox ID="TextNuevoCosto" runat="server" CssClass="form-control me-2 form-control-sm"></asp:TextBox>
+        </div>
+
+        <asp:Button ID="BtnActCos" runat="server" CssClass="btn linkButtonClicked2 fw-bold me-2 RojoEfecto text-white shadow text-dark form-control-sm" Text="Actualizar Costo" Enabled="false"/>
+    </div>
+</div>
+
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="table-responsive table-responsive-sm gap-2 border" style="max-height: 45rem; overflow-x: auto;">
+                                    <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGridInsumo" runat="server" AutoGenerateColumns="false" OnItemCommand="DataGridInsumo_ItemCommand">
+                                        <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                        <Columns>
+                                            <asp:TemplateColumn>
+                                                <ItemTemplate>
+                                                    <asp:LinkButton ID="SelectInsumoID" runat="server" CommandName="SelectInsumo" CommandArgument='<%# Container.ItemIndex %>'
+                                                        Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                </ItemTemplate>
+                                            </asp:TemplateColumn>
+                                            <asp:BoundColumn DataField="Id_Insumo" HeaderText="Insumo" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                            <asp:BoundColumn DataField="ID_Inventario" HeaderText="Cod.Inv" ItemStyle-CssClass="auto-width-column" />
+                                            <asp:BoundColumn DataField="Descripcion_Insumo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
+                                            <asp:BoundColumn DataField="Descripcion" HeaderText="Tipo Insumo" ItemStyle-CssClass="auto-width-column" />
+                                            <asp:BoundColumn DataField="Valor_Unitario" HeaderText="Valor Unitario" ItemStyle-CssClass="auto-width-column" />
+                                            <asp:BoundColumn DataField="Abreviado" HeaderText="Causa Observación" ItemStyle-CssClass="auto-width-column" />
+                                            <asp:BoundColumn DataField="Factor_Ganancia" HeaderText="F.G" ItemStyle-CssClass="auto-width-column" />
+                                            <asp:BoundColumn DataField="Factor_Desperdicio" HeaderText="F.D" ItemStyle-CssClass="auto-width-column" />
+                                            <asp:BoundColumn DataField="AplicacionAcabado" HeaderText="A.A" ItemStyle-CssClass="auto-width-column" />
+                                            <asp:BoundColumn DataField="FechaCreacion" HeaderText="Creación" ItemStyle-CssClass="auto-width-column" />
+                                            <asp:BoundColumn DataField="FechaActualizacion" HeaderText="U.Actualización" ItemStyle-CssClass="auto-width-column" />
+                                            <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
+                                        </Columns>
+                                    </asp:DataGrid>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Card container -->
                         </div>
                     </ContentTemplate>
                 </asp:UpdatePanel>
@@ -4366,6 +4437,8 @@
             $('#ConfirmarRegresoDelDiseno').modal('hide');
         }
     </script>
+
+    
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

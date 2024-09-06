@@ -14,6 +14,8 @@
     margin: 5px;
 }
 
+
+
 .disabled {
     opacity: 0.6; /* Cambia la opacidad para indicar que el elemento está deshabilitado */
     pointer-events: none; /* Evita la interacción con el elemento deshabilitado */
@@ -518,7 +520,5 @@
     background: repeating-linear-gradient(45deg, #151947, #2e4575 100px);
 }
 
-.AzulOscuroEfecto {
-    background: repeating-linear-gradient(45deg, #1b1d35, #26375a 100px);
-}
+
 

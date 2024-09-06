@@ -24,3 +24,95 @@
     background-color: black !important; /*Se Cambia el color de la fila Seleccionada  */
     color: white !important;
 }
+
+.fila-seleccionada1 {
+    background: repeating-linear-gradient(45deg, #848588, #909295 80px);
+    color: white !important;
+}
+
+/* En tu archivo CSS personalizado */
+.custom-gap-6 {
+    gap: 4.4rem; /* Ajusta este valor según tus necesidades */
+}
+
+.custom-gap-7 {
+    gap: 4.7rem; /* Ajusta este valor según tus necesidades */
+}
+
+.custom-gap-8 {
+    gap: 3.4rem; /* Ajusta este valor según tus necesidades */
+}
+
+.custom-gap-in {
+    gap: 3.1rem; /* Ajusta este valor según tus necesidades */
+}
+
+.linkButtonClicked2 {
+    border-top: none; /* Borde en la parte superior */
+    border-left: none; /* Borde en el lado izquierdo */
+    border-bottom: 3px solid #949daa; /* Elimina el borde inferior */
+    border-right: 3px solid #4d5c69; /* Elimina el borde derecho */
+}
+
+.VerdeEfecto {
+    background: repeating-linear-gradient(45deg, #154716, #39633e 80px);
+}
+
+.RojoEfecto {
+    background: repeating-linear-gradient(45deg, #391111, #631919 80px);
+}
+
+.GrisEfecto {
+    background: repeating-linear-gradient(45deg, #848588, #909295 400px);
+}
+
+.nav-tabs .nav-link {
+    color: #ffffff; /* White text */
+    border: none;
+    background-color: transparent;
+}
+
+    .nav-tabs .nav-link.active {
+        color: #ffffff; /* White text for active link */
+        background-color: transparent;
+        border: none;
+        border-bottom: 3px solid #ffffff; /* White border */
+    }
+
+    .nav-tabs .nav-link:hover {
+        color: #f8f9fa; /* Light text on hover */
+    }
+
+    .nav-tabs .nav-link:focus {
+        color: #f8f9fa; /* Light text on focus */
+        outline: none;
+    }
+
+.fondoSuave {
+    background: repeating-linear-gradient(45deg, #f9f9f9, #f1f1f1 300px);
+}
+
+.Grande{
+    font-size:1rem;
+}
+.Verde {
+    color: #00910c;
+}
+
+/* Estilo para botones habilitados */
+.button-enabled {
+    background-color: #fff; /* Color de fondo para botones habilitados */
+    color: #212529; /* Color de texto para botones habilitados */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    border-bottom: 2px solid #ccc; /* Borde en la parte inferior */
+    border-right: 2px solid #ccc; /* Borde en el lado derecho */
+}
+
+/* Estilo para botones deshabilitados */
+.button-disabled {
+    background-color: #ededed; /* Color de fondo para botones deshabilitados */
+    color: #888; /* Color de texto para botones deshabilitados */
+    cursor: not-allowed; /* Cambia el cursor al estilo "no permitido" */
+    border-bottom: 2px solid #ccc; /* Borde en la parte inferior */
+    border-right: 2px solid #ccc; /* Borde en el lado derecho */
+}

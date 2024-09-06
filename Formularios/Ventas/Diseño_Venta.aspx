@@ -2867,6 +2867,27 @@
          
     </form>
 
+      <script>
+          // Escuchar el evento keydown en el documento
+          document.addEventListener('keydown', function (event) {
+              // Verificar si la tecla presionada es "Enter" (código de tecla 13)
+              if (event.key === "Enter") {
+                  // Obtener el elemento que tiene el foco actualmente
+                  var focusedElement = document.activeElement;
+
+                  // Verificar si el elemento enfocado no es un textarea
+                  if (focusedElement.tagName !== 'TEXTAREA') {
+                      // Prevenir la acción predeterminada del evento
+                      event.preventDefault();
+
+                  }
+
+
+
+              }
+          });
+      </script>
+
     <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function() {
         // Seleccionar el tab específico por su ID
@@ -2876,13 +2897,19 @@
         planoContent.addEventListener("keydown", function(event) {
             // Verificar si la tecla presionada es "Enter"
             if (event.key === "Enter") {
+
+                if (focusedElement.tagName !== 'TEXTAREA') {
+                    // Prevenir la acción predeterminada del evento
+                    event.preventDefault();
+
+                }
                 event.preventDefault(); // Evitar el comportamiento predeterminado de "Enter"
                 // Disparar el click en el LinkButton
                 document.getElementById('<%= But.ClientID %>').click();
             }
         });
     });
-</script>
+    </script>
 
      <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function() {
@@ -2893,13 +2920,19 @@
         planoContent.addEventListener("keydown", function(event) {
             // Verificar si la tecla presionada es "Enter"
             if (event.key === "Enter") {
+
+                if (focusedElement.tagName !== 'TEXTAREA') {
+                    // Prevenir la acción predeterminada del evento
+                    event.preventDefault();
+
+                }
                 event.preventDefault(); // Evitar el comportamiento predeterminado de "Enter"
                 // Disparar el click en el LinkButton
                 document.getElementById('<%= BtnBuscarPlano.ClientID %>').click();
             }
         });
     });
-</script>
+     </script>
 
     <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function() {
@@ -2910,11 +2943,17 @@
         planoContent.addEventListener("keydown", function(event) {
             // Verificar si la tecla presionada es "Enter"
             if (event.key === "Enter") {
+
+                if (focusedElement.tagName !== 'TEXTAREA') {
+                    // Prevenir la acción predeterminada del evento
+                    event.preventDefault();
+
+                }
                 event.preventDefault(); // Evitar cualquier acción asociada con "Enter"
             }
         });
     });
-</script>
+    </script>
 
 
 
@@ -3054,7 +3093,7 @@
        }
    </script>
 
-  
+   
      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

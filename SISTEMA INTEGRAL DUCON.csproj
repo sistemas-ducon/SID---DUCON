@@ -216,6 +216,7 @@
     <Content Include="Formularios\Consultas\DocumentacionReproceso.aspx" />
     <Content Include="Formularios\Consultas\OT_ManualesSid.aspx" />
     <Content Include="Formularios\Consultas\Reproceso.aspx" />
+    <Content Include="Formularios\DiseñoYDesarrollo\frmInsumos.aspx" />
     <Content Include="Formularios\DiseñoYDesarrollo\ObjetosDibujo.aspx" />
     <Content Include="Formularios\FormExtPrin\AcabadosOT.aspx" />
     <Content Include="Formularios\FormExtPrin\DocumentacionOT.aspx" />
@@ -337,6 +338,13 @@
     </Compile>
     <Compile Include="Formularios\Consultas\Reproceso.aspx.designer.cs">
       <DependentUpon>Reproceso.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\DiseñoYDesarrollo\frmInsumos.aspx.cs">
+      <DependentUpon>frmInsumos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\DiseñoYDesarrollo\frmInsumos.aspx.designer.cs">
+      <DependentUpon>frmInsumos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\DiseñoYDesarrollo\ObjetosDibujo.aspx.cs">
       <DependentUpon>ObjetosDibujo.aspx</DependentUpon>
