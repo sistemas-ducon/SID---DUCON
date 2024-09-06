@@ -18,15 +18,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         private string CadenaConexionSID = "BD_SIDSQL";
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+            if (Session["usuariologueado"] != null)
             {
-                InicializarBotones();
-                CargarInsumo();
-                GuardarVistas();
-                DeshabilitarControlesExceptoCerrar(this.container);
-                DropAdiAca.DataBind();
-                DropAdiAca.Items.Insert(0, new ListItem(" "));
+                if (!IsPostBack)
+                {
+                    InicializarBotones();
+                    CargarInsumo();
+                    GuardarVistas();
+                    DeshabilitarControlesExceptoCerrar(this.container);
+                    DropAdiAca.DataBind();
+                    DropAdiAca.Items.Insert(0, new ListItem(" "));
 
+                }
+            }
+            else
+            {
+                Response.Redirect("Login.aspx");
             }
         }
 
