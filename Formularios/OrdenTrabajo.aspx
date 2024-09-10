@@ -4122,7 +4122,7 @@
 
                           <div class="card shadow">
                 <div class="card-header d-flex justify-content-between align-items-center">
-    <asp:Button ID="btnPanelInsumo" runat="server" CssClass="btn linkButtonClicked2 fw-bold shadow text-dark" Text="Panel Insumo" />
+  
 
     <div class="d-flex flex-wrap align-items-center" runat="server" id="contentToToggle" Visible="false">
         <div class="d-flex align-items-center me-2">

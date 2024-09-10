@@ -27,14 +27,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     GuardarVistas();
                     DeshabilitarControlesExceptoCerrar(this.container);
                     DropAdiAca.DataBind();
-                    DropAdiAca.Items.Insert(0, new ListItem(" "));
+                    DropAdiAca.Items.Insert(0, new ListItem(""));
+                    desabilitarTextbox();
 
+                    if (Session["CRUDTipoInsumo"]?.ToString() == "3")
+                    {
+                        // Activar Tab Plano 
+                        string script = "activarPestana('TipoInsumoGrupoAcabados-tab', 'TipoInsumoGrupoAcabados-content');";
+                        ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
+                    }
                 }
             }
             else
             {
-                Response.Redirect("Login.aspx");
+                Response.Redirect("~/Formularios/Login.aspx");
             }
+        }
+
+        protected void desabilitarTextbox()
+        {
+            TextDescripcion.Enabled = false;
+            DropAdiAca.Enabled = false;
+            DropAdiAca.CssClass = "form-control form-control-sm";
+
+            TextDescripcion2.Enabled = false;
+            TextCodInv.Enabled = false;
+            TextDescripcionAcabado.Enabled = false;
+            CheckBoxLinea.Enabled = false;
+            CheckBoxActivo.Enabled = false;
         }
 
         protected void GuardarVistas()
@@ -361,7 +381,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         {
             string query = @"
         SELECT tblAcabado.CodInventario, tblAcabado.Descripcion_Acabado, tblAcabado.DeLinea,
-               tblAcabado.Activo
+               tblAcabado.Activo, ID_Acabado
         FROM tblGrupodeAcabado
         INNER JOIN tblAcabado ON tblGrupodeAcabado.ID_GrupoAcabado = tblAcabado.ID_GrupoAcabado
         WHERE tblAcabado.ID_GrupoAcabado = @ID_GrupoAcabado
@@ -405,7 +425,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                 // Capturamos los campos de la fila del DataGrid
                 TextDescripcion.Text = (row.Cells[2].Text != "&nbsp;" && !string.IsNullOrEmpty(row.Cells[2].Text)) ? row.Cells[2].Text : string.Empty;
-                DropAdiAca.Text = (row.Cells[3].Text != "&nbsp;" && !string.IsNullOrEmpty(row.Cells[3].Text)) ? row.Cells[3].Text : string.Empty;
+                string valor = row.Cells[4].Text;
+                DropAdiAca.SelectedValue = (valor != "&nbsp;" && !string.IsNullOrEmpty(valor) && DropAdiAca.Items.FindByValue(valor) != null)
+                    ? valor
+                    : string.Empty; // Asigna un valor por defecto si es inválido
+
 
                 // Aplicamos la clase CSS a la fila seleccionada
                 foreach (DataGridItem item in DataGrid2.Items)
@@ -418,12 +442,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                 e.Item.CssClass = "fila-seleccionada1";
 
+                Session["ID_TipoInsumo"] = row.Cells[1].Text;
+
+                // Store the selected row index in the DataGrid attribute
+                DataGrid2.Attributes["SelectedRowIndex"] = rowIndex.ToString();
+
+                // Scroll to the row
+                row.Attributes["id"] = "DataGrid2_row_" + rowIndex;
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DataGrid2_row_" + rowIndex + "');", true);
+
                 // Habilitar el botón Modificar
                 BtnModAca.Enabled = true;
                 BtnModAca.CssClass = "btn button-enabled shadow-sm text-dark btn-sm mb-2";
             }
         }
-
 
         protected void DataGrid3_ItemCommand(object source, DataGridCommandEventArgs e)
         {
@@ -433,7 +465,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 DataGridItem row = DataGrid3.Items[rowIndex];
 
                 // capturamos los campos de la fila del DataGrid
-                string idGrupoAcabado = row.Cells[1].Text;
+                Session["Id_GrupoAcabado"] = row.Cells[1].Text;
+                string idGrupoAcabado = Session["Id_GrupoAcabado"].ToString();
+
                 TextDescripcion2.Text = row.Cells[2].Text;
 
                 // Aplicamos la clase CSS a la fila seleccionada
@@ -450,6 +484,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 BtnModAca2.Enabled = true;
                 BtnModAca2.CssClass = "btn button-enabled shadow-sm text-dark btn-sm";
 
+                // Store the selected row index in the DataGrid attribute
+                DataGrid3.Attributes["SelectedRowIndex"] = rowIndex.ToString();
+
+                // Scroll to the row
+                row.Attributes["id"] = "DataGrid3_row_" + rowIndex;
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DataGrid3_row_" + rowIndex + "');", true);
+
                 // Llamamos al método que carga el DataGrid4 con el ID seleccionado
                 CargarAcabadosPorGrupo(idGrupoAcabado);
             }
@@ -463,16 +504,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 DataGridItem row = DataGrid4.Items[rowIndex];
 
                 // capturamos los campos de la fila del DataGrid
-                TextAcabados.Text = row.Cells[2].Text;
-                TextAcabadosPequeño.Text = row.Cells[1].Text;
+                TextDescripcionAcabado.Text = row.Cells[2].Text;
+                TextCodInv.Text = row.Cells[1].Text;
+
+                Session["IDAcabado"] = row.Cells[5].Text;
 
 
                 bool deLinea = Convert.ToBoolean(row.Cells[3].Text.Trim()); // Convertir el valor de "DeLinea"
                 bool activo = Convert.ToBoolean(row.Cells[4].Text.Trim());  // Convertir el valor de "Activo"
 
                 // Asignar el valor a los CheckBox
-                CheckBox.Checked = deLinea;
-                CheckBox2.Checked = activo;
+                CheckBoxLinea.Checked = deLinea;
+                CheckBoxActivo.Checked = activo;
 
                 // Aplicamos la clase CSS a la fila seleccionada
                 foreach (DataGridItem item in DataGrid4.Items)
@@ -487,6 +530,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                 BtnModAca3.Enabled = true;
                 BtnModAca3.CssClass = "btn button-enabled shadow-sm text-dark btn-sm";
+
+                // Store the selected row index in the DataGrid attribute
+                DataGrid4.Attributes["SelectedRowIndex"] = rowIndex.ToString();
+
+                // Scroll to the row
+                row.Attributes["id"] = "DataGrid4_row_" + rowIndex;
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DataGrid4_row_" + rowIndex + "');", true);
 
             }
         }
@@ -513,6 +563,345 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
             BtnAdiAca.Enabled = false;
             BtnAdiAca.CssClass = "btn button-disabled shadow-sm text-dark btn-sm mb-2";
+
+            Session["CRUDTipoInsumo"] = 1;
+        }
+
+        protected void BtnGraAca_Click(object sender, EventArgs e)
+        {
+            string descripcionTipoInsumo = TextDescripcion.Text;
+            string grupoAcabadoID = DropAdiAca.SelectedValue;
+            string grupoAcabado = DropAdiAca.SelectedItem.Text;
+
+            // Validar que la descripción no esté vacía
+            if (string.IsNullOrEmpty(descripcionTipoInsumo))
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#LlenarDescripcion').modal('show');", true);
+                return;
+            }
+
+            string query = string.Empty;
+            int ID_TipoInsumo;
+
+            // Conexión a la base de datos
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                conn.Open();
+
+                if (Session["CRUDTipoInsumo"]?.ToString() == "1")
+                {
+                    // Obtener el máximo Id_TipoInsumo
+                    query = "SELECT ISNULL(MAX(Id_TipoInsumo), 0) + 1 FROM tblTipoInsumo";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    ID_TipoInsumo = Convert.ToInt32(cmd.ExecuteScalar());
+
+                    // Insertar un nuevo registro en tblTipoInsumo
+                    if (string.IsNullOrEmpty(grupoAcabado))
+                    {
+                        query = "INSERT INTO tblTipoInsumo (Id_TipoInsumo, Descripcion) VALUES (@Id_TipoInsumo, @Descripcion)";
+                    }
+                    else
+                    {
+                        query = "INSERT INTO tblTipoInsumo (Id_TipoInsumo, Descripcion, IDGrupoAcabado, DesGrupoAcabado) " +
+                                "VALUES (@Id_TipoInsumo, @Descripcion, @IDGrupoAcabado, @DesGrupoAcabado)";
+                    }
+
+                    cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@Id_TipoInsumo", ID_TipoInsumo);
+                    cmd.Parameters.AddWithValue("@Descripcion", descripcionTipoInsumo);
+                    cmd.Parameters.AddWithValue("@IDGrupoAcabado", grupoAcabadoID);
+                    cmd.Parameters.AddWithValue("@DesGrupoAcabado", grupoAcabado);
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeExito').modal('show');", true);
+                    }
+                    else
+                    {
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeError').modal('show');", true);
+                    }
+                }
+                if (Session["CRUDTipoInsumo"]?.ToString() == "2")
+                {
+                    // Modificar el registro existente
+                    ID_TipoInsumo = Convert.ToInt32(Session["ID_TipoInsumo"]);  // Asumimos que este valor está almacenado en la sesión
+
+                    if (string.IsNullOrEmpty(grupoAcabado))
+                    {
+                        query = "UPDATE tblTipoInsumo SET Descripcion = @Descripcion WHERE Id_TipoInsumo = @Id_TipoInsumo";
+                    
+                    }
+                    else
+                    {
+                        query = "UPDATE tblTipoInsumo SET Descripcion = @Descripcion, IDGrupoAcabado = @IDGrupoAcabado, " +
+                                "DesGrupoAcabado = @DesGrupoAcabado WHERE Id_TipoInsumo = @Id_TipoInsumo";
+                    }
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@Id_TipoInsumo", ID_TipoInsumo);
+                    cmd.Parameters.AddWithValue("@Descripcion", descripcionTipoInsumo);
+                    cmd.Parameters.AddWithValue("@IDGrupoAcabado", grupoAcabadoID);
+                    cmd.Parameters.AddWithValue("@DesGrupoAcabado", grupoAcabado);
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeExito').modal('show');", true);
+                    }
+                    else
+                    {
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeError').modal('show');", true);
+                    }
+                }
+                Session["CRUDTipoInsumo"] = 3;
+                Response.Redirect("frmInsumos.aspx");
+            }
+        }
+
+        protected void BtnModAca_Click(object sender, EventArgs e)
+        {
+            // Habilitar los campos para editar
+            TextDescripcion.Enabled = true;
+
+            DropAdiAca.Enabled = true;
+
+            // Desactivar el botón "Adicionar" mientras se modifica
+            BtnAdiAca.Enabled = false;
+            BtnAdiAca.CssClass = "btn button-disabled shadow-sm text-dark btn-sm mb-2";
+
+            // Desactivar el botón "Modificar" porque ya estamos en modo de modificación
+            BtnModAca.Enabled = false;
+            BtnModAca.CssClass = "btn button-disabled shadow-sm text-dark btn-sm mb-2";
+
+            // Habilitar el botón "Grabar" para guardar los cambios
+            BtnGraAca.Enabled = true;
+            BtnGraAca.CssClass = "btn button-enabled shadow-sm text-dark btn-sm mb-2";
+
+            Session["CRUDTipoInsumo"] = 2;
+        }
+
+        protected void BtnGraAca2_Click(object sender, EventArgs e)
+        {
+            string descripcionGrupo = TextDescripcion2.Text;
+
+            if (!string.IsNullOrEmpty(descripcionGrupo))
+            {
+                // Conexión a la base de datos
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+                {
+                    conn.Open();
+
+                    string query = string.Empty;
+
+                    if (Session["CRUDGrupoAcabado"]?.ToString() == "1")
+                    {
+                        query = "INSERT INTO tblGrupodeAcabado (Descripcion_Grupo) VALUES (@DescripcionGrupo)";
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@DescripcionGrupo", descripcionGrupo);
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeExito').modal('show');", true);
+                        }
+                        else
+                        {
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeError').modal('show');", true);
+                        }
+                    }
+
+                    if (Session["CRUDGrupoAcabado"]?.ToString() == "2")
+                    {
+                        int idGrupoAcabado = Convert.ToInt32(Session["Id_GrupoAcabado"]);  // Se asume que el Id_GrupoAcabado está en la sesión
+                        query = "UPDATE tblGrupodeAcabado SET Descripcion_Grupo = @DescripcionGrupo WHERE Id_GrupoAcabado = @IdGrupoAcabado";
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@DescripcionGrupo", descripcionGrupo);
+                        cmd.Parameters.AddWithValue("@IdGrupoAcabado", idGrupoAcabado);
+                        cmd.ExecuteNonQuery();
+
+                        // También se actualiza en tblTipoInsumo
+                        query = "UPDATE tblTipoInsumo SET DesGrupoAcabado = @DescripcionGrupo WHERE IdGrupoAcabado = @IdGrupoAcabado";
+                        cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@DescripcionGrupo", descripcionGrupo);
+                        cmd.Parameters.AddWithValue("@IdGrupoAcabado", idGrupoAcabado);
+                        cmd.ExecuteNonQuery();
+                    }
+                    Session["CRUDTipoInsumo"] = 3;
+                    Response.Redirect("frmInsumos.aspx");
+                }
+            }
+            else
+            {
+                // Mostrar alerta si la descripción está vacía
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('El campo: descripción tipo insumo es obligatorio.');", true);
+            }
+        }
+
+        protected void BtnAdiAca2_Click(object sender, EventArgs e)
+        {
+            TextDescripcion2.Enabled = true;
+            TextDescripcion2.Text = string.Empty;
+
+            BtnAdiAca2.Enabled = false;
+            BtnAdiAca2.CssClass = "btn button-disabled shadow-sm text-dark btn-sm";
+
+            BtnModAca2.Enabled = false;
+            BtnModAca2.CssClass = "btn button-disabled shadow-sm text-dark btn-sm";
+
+            BtnGraAca2.Enabled = true;
+            BtnGraAca2.CssClass = "btn button-enabled shadow-sm text-dark btn-sm";
+
+            TextDescripcion2.Focus();
+
+            Session["CRUDGrupoAcabado"] = 1;
+        }
+
+        protected void BtnModAca2_Click(object sender, EventArgs e)
+        {
+
+            TextDescripcion2.Enabled = true;
+            TextDescripcion2.CssClass = "form-control form-control-sm";
+
+            BtnAdiAca2.Enabled = false;
+            BtnAdiAca2.CssClass = "btn button-disabled shadow-sm text-dark btn-sm mb-2";
+
+            BtnModAca.Enabled = false;
+            BtnAdiAca2.CssClass = "btn button-disabled shadow-sm text-dark btn-sm mb-2";
+
+            BtnGraAca2.Enabled = true;
+            BtnGraAca2.CssClass = "btn button-enabled shadow-sm text-dark btn-sm mb-2";
+
+            Session["CRUDGrupoAcabado"] = 2;
+        }
+
+        protected void BtnAdiAca3_Click(object sender, EventArgs e)
+        {
+           
+                // Habilitar los campos de texto y checkbox
+                TextCodInv.Enabled = true;
+                TextDescripcionAcabado.Enabled = true;
+                CheckBoxLinea.Enabled = true;
+                CheckBoxActivo.Enabled = true;
+
+                // Limpiar los valores de los campos de texto y checkboxes
+                TextCodInv.Text = "";
+                TextDescripcionAcabado.Text = "";
+
+            // Establecer el foco en el campo txtCodInventario
+            TextCodInv.Focus();
+
+                // Habilitar el botón "Grabar"
+                BtnGraAca3.Enabled = true;
+            BtnGraAca3.CssClass = "btn button-enabled shadow-sm text-dark btn-sm";
+
+
+            BtnAdiAca3.Enabled = false;
+            BtnAdiAca3.CssClass = "btn button-disabled shadow-sm text-dark btn-sm";
+
+            BtnModAca3.Enabled = false;
+            BtnModAca3.CssClass = "btn button-disabled shadow-sm text-dark btn-sm";
+
+            Session["CRUDAcabados"] = 1;
+
+        }
+
+        protected void BtnModAca3_Click(object sender, EventArgs e)
+        {
+
+            // Habilitar los campos de texto y checkboxes para edición
+            TextCodInv.Enabled = true;
+            TextDescripcionAcabado.Enabled = true;
+            CheckBoxLinea.Enabled = true;
+            CheckBoxActivo.Enabled = true;
+
+                // Deshabilitar los botones "Adicionar" y "Modificar"
+            BtnAdiAca3.Enabled = false;
+            BtnAdiAca3.CssClass = "btn button-disabled shadow-sm text-dark btn-sm";
+
+            BtnModAca3.Enabled = false;
+            BtnModAca3.CssClass = "btn button-disabled shadow-sm text-dark btn-sm";
+
+            // Habilitar el botón "Grabar"
+            BtnGraAca3.Enabled = true;
+            BtnGraAca3.CssClass = "btn button-enabled shadow-sm text-dark btn-sm";
+
+            Session["CRUDAcabados"] = 2;
+        }
+
+        protected void BtnGraAca3_Click(object sender, EventArgs e)
+        {
+
+            // Verificar si los campos requeridos no están vacíos
+            if (!string.IsNullOrWhiteSpace(TextCodInv.Text) &&
+                !string.IsNullOrWhiteSpace(TextDescripcionAcabado.Text) &&
+                CheckBoxLinea.Checked && CheckBoxActivo.Checked)
+            {
+                string sSql = "";
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+                {
+                    conn.Open();
+
+                    if (Session["CRUDAcabados"]?.ToString() == "1")
+                    {
+                        string idGrupoAcabado = Session["Id_GrupoAcabado"].ToString();
+                        // Insertar nuevo registro en la tabla tblacabado
+                        sSql = "INSERT INTO tblacabado (CodInventario, Descripcion_Acabado, ID_GrupoAcabado, Delinea, Activo) " +
+                               "VALUES (@CodInventario, @DescripcionAcabado, @IDGrupoAcabado, @Delinea, @Activo)";
+
+                        using (SqlCommand cmd = new SqlCommand(sSql, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@CodInventario", TextCodInv.Text);
+                            cmd.Parameters.AddWithValue("@DescripcionAcabado", TextDescripcionAcabado.Text);
+                            cmd.Parameters.AddWithValue("@IDGrupoAcabado", idGrupoAcabado); 
+                            cmd.Parameters.AddWithValue("@Delinea", CheckBoxLinea.Checked ? 1 : 0);
+                            cmd.Parameters.AddWithValue("@Activo", CheckBoxActivo.Checked ? 1 : 0);
+
+                            int rowsAffected = cmd.ExecuteNonQuery();
+                            if (rowsAffected > 0)
+                            {
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeExito').modal('show');", true);
+                            }
+                            else
+                            {
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeError').modal('show');", true);
+                            }
+                        }
+                    }
+
+                    if (Session["CRUDAcabados"]?.ToString() == "2")
+                    {
+                        string idAcabado = Session["IDAcabado"].ToString();
+                        // Actualizar registro existente en la tabla tblacabado
+                        sSql = "UPDATE tblacabado SET CodInventario = @CodInventario, Descripcion_Acabado = @DescripcionAcabado, " +
+                               "Delinea = @Delinea, Activo = @Activo WHERE ID_Acabado = @IDAcabado";
+
+                        using (SqlCommand cmd = new SqlCommand(sSql, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@CodInventario", TextCodInv.Text);
+                            cmd.Parameters.AddWithValue("@DescripcionAcabado", TextDescripcionAcabado.Text);
+                            cmd.Parameters.AddWithValue("@Delinea", CheckBoxLinea.Checked ? 1 : 0);
+                            cmd.Parameters.AddWithValue("@Activo", CheckBoxActivo.Checked ? 1 : 0);
+                            cmd.Parameters.AddWithValue("@IDAcabado", idAcabado);
+
+                            int rowsAffected = cmd.ExecuteNonQuery();
+                            if (rowsAffected > 0)
+                            {
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeExito').modal('show');", true);
+                            }
+                            else
+                            {
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeError').modal('show');", true);
+                            }
+                        }
+                    }
+                }
+                Session["CRUDTipoInsumo"] = 3;
+                Response.Redirect("frmInsumos.aspx");
+            }
+            else
+            {
+               
+            }
         }
 
     }

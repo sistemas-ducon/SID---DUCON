@@ -393,39 +393,39 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         protected global::System.Web.UI.WebControls.DataGrid DataGrid4;
 
         /// <summary>
-        /// Control TextAcabadosPequeño.
+        /// Control TextCodInv.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextAcabadosPequeño;
+        protected global::System.Web.UI.WebControls.TextBox TextCodInv;
 
         /// <summary>
-        /// Control TextAcabados.
+        /// Control TextDescripcionAcabado.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextAcabados;
+        protected global::System.Web.UI.WebControls.TextBox TextDescripcionAcabado;
 
         /// <summary>
-        /// Control CheckBox.
+        /// Control CheckBoxLinea.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox CheckBox;
+        protected global::System.Web.UI.WebControls.CheckBox CheckBoxLinea;
 
         /// <summary>
-        /// Control CheckBox2.
+        /// Control CheckBoxActivo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox CheckBox2;
+        protected global::System.Web.UI.WebControls.CheckBox CheckBoxActivo;
     }
 }

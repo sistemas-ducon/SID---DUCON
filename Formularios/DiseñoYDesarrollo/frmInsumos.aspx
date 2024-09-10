@@ -19,11 +19,48 @@
 
     <link type="text/css" href="../../Recursos/CSS/DiseñoYDesarrollo/ObjetosDibujo.css" rel="stylesheet" />
     <title>Insumos - Consultar</title>
+          <script>
+              function focusAndScrollToRow(rowId) {
+                  var row = document.getElementById(rowId);
+                  if (row) {
+                      row.setAttribute('tabindex', '-1'); // Make it focusable
+                      row.focus();
+                      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }
+              }
+          </script>
+       <script>
+           function activarPestana(pestanaId, contenidoId) {
+               // Desactivar la pestaña actualmente activa
+               var activeTab = document.querySelector(".nav-link.active");
+               if (activeTab) {
+                   activeTab.classList.remove("active");
+               }
+
+               var activePane = document.querySelector(".tab-pane.show.active");
+               if (activePane) {
+                   activePane.classList.remove("show", "active");
+               }
+
+               // Mostrar y activar la nueva pestaña
+               var newTab = document.getElementById(pestanaId);
+               var newPane = document.getElementById(contenidoId);
+
+               if (newTab) {
+                   newTab.style.display = 'block';
+                   newTab.classList.add("active");
+               }
+
+               if (newPane) {
+                   newPane.classList.add("show", "active");
+               }
+           }
+       </script>
 </head>
 <body>
     <form id="form1" runat="server">
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
-        <nav class="navbar navbar-light GrisEfecto shadow">
+        <nav class="navbar navbar-light bg-light navbar-custom">
             <div class="container d-flex justify-content-center">
                 <ul class="nav nav-tabs" id="myTabs">
 
@@ -260,6 +297,7 @@
                                                         <asp:BoundColumn DataField="Id_TipoInsumo" HeaderText="ID" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="Descripcion" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="DesGrupoAcabado" HeaderText="Grupo Acabado" ItemStyle-CssClass="auto-width-column" />
+                                                         <asp:BoundColumn DataField="IDGrupoAcabado" HeaderText="" ItemStyle-CssClass="auto-width-column" Visible="false" />
                                                     </Columns>
                                                 </asp:DataGrid>
                                             </div>
@@ -278,10 +316,14 @@
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group input-group-sm">
-                                                  <asp:DropDownList ID="DropAdiAca" runat="server" class="form-control form-control-sm" DataSourceID="TipoInsumo" DataTextField="Descripcion" DataValueField="Id_TipoInsumo">
-                                                    </asp:DropDownList>
-                                                    <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="Select * from tbltipoInsumo ORDER BY Descripcion asc"></asp:SqlDataSource>
-                                                </div>
+                                               <asp:DropDownList ID="DropAdiAca" runat="server" class="form-control form-control-sm" 
+    DataSourceID="SqlDataSource2" DataTextField="Descripcion_Grupo" DataValueField="ID_GrupoAcabado">
+</asp:DropDownList>
+<asp:SqlDataSource ID="SqlDataSource2" runat="server" 
+    ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" 
+    SelectCommand="SELECT ID_GrupoAcabado, Descripcion_Grupo FROM tblGrupodeAcabado ORDER BY Descripcion_Grupo ASC">
+</asp:SqlDataSource>
+            </div>
                                             </div>
                                         </div>
 
@@ -293,10 +335,10 @@
                                             <asp:LinkButton runat="server" title="Adicionar Acabado" ID="BtnAdiAca" CssClass="btn linkButtonClicked2 shadow-sm text-dark btn-sm mb-2 justify-content-around" OnClick="BtnAdiAca_Click">
                                                <i class="bi bi-plus-square-fill Grande"></i>
                                             </asp:LinkButton>
-                                            <asp:LinkButton runat="server" title="Modificar Acabado" ID="BtnModAca" CssClass="btn linkButtonClicked2 shadow-sm text-dark btn-sm mb-2">
+                                            <asp:LinkButton runat="server" title="Modificar Acabado" ID="BtnModAca" CssClass="btn linkButtonClicked2 shadow-sm text-dark btn-sm mb-2" OnClick="BtnModAca_Click">
                                                <i class="bi bi-wrench-adjustable Grande"></i> 
                                             </asp:LinkButton>
-                                            <asp:LinkButton runat="server" title="Grabar" ID="BtnGraAca" CssClass="btn linkButtonClicked2 shadow-sm text-dark btn-sm mb-2">
+                                            <asp:LinkButton runat="server" title="Grabar" ID="BtnGraAca" CssClass="btn linkButtonClicked2 shadow-sm text-dark btn-sm mb-2" OnClick="BtnGraAca_Click">
                                                <i class="bi-floppy-fill Grande"></i> 
                                             </asp:LinkButton>
                                         </div>
@@ -308,20 +350,20 @@
                                 <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 mb-3">
                                     <div class="p-3" style="height: 24rem;">
                                         <div class="input-group input-group-sm mt-2 gap-2">
-                                            <asp:LinkButton runat="server" title="Adicionar Acabado" ID="BtnAdiAca2" CssClass="btn linkButtonClicked2 shadow-sm text-dark btn-sm mb-2">
+                                            <asp:LinkButton runat="server" title="Adicionar Acabado" ID="BtnAdiAca2" CssClass="btn linkButtonClicked2 shadow-sm text-dark btn-sm mb-2" OnClick="BtnAdiAca2_Click">
                                                <i class="bi bi-plus-square-fill Grande"></i>
                                             </asp:LinkButton>
-                                            <asp:LinkButton runat="server" title="Modificar Acabado" ID="BtnModAca2" CssClass="btn linkButtonClicked2 shadow-sm text-dark btn-sm mb-2">
+                                            <asp:LinkButton runat="server" title="Modificar Acabado" ID="BtnModAca2" CssClass="btn linkButtonClicked2 shadow-sm text-dark btn-sm mb-2" OnClick="BtnModAca2_Click">
                                                <i class="bi bi-wrench-adjustable Grande"></i> 
                                             </asp:LinkButton>
-                                            <asp:LinkButton runat="server" title="Grabar" ID="BtnGraAca2" CssClass="btn linkButtonClicked2 shadow-sm text-dark btn-sm mb-2">
+                                            <asp:LinkButton runat="server" title="Grabar" ID="BtnGraAca2" CssClass="btn linkButtonClicked2 shadow-sm text-dark btn-sm mb-2" OnClick="BtnGraAca2_Click">
                                                <i class="bi-floppy-fill Grande"></i> 
                                             </asp:LinkButton>
                                         </div>
                                         <div class="card h-100 mt-2" style="max-height: 19rem; max-width: auto; overflow-x: auto;">
                                             <div class="card-header p-1 text-center">
                                                 <h6>Grupo de Acabado</h6>
-                                            </div>
+                                            </div>     
                                             <div class="card-body p-1">
                                                 <asp:DataGrid CssClass="table table-bordered table-responsive table-sm table-hover form-control-sm bg-white shadow-sm" OnItemCommand="DataGrid3_ItemCommand"
                                                     ID="DataGrid3" runat="server" AutoGenerateColumns="false">
@@ -351,13 +393,13 @@
                                 <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12 mb-3">
                                     <div class="p-3" style="height: 24rem;">
                                         <div class="input-group input-group-sm mt-2 gap-2">
-                                            <asp:LinkButton runat="server" title="Adicionar Acabado" ID="BtnAdiAca3" CssClass="btn linkButtonClicked2 shadow-sm text-dark btn-sm mb-2">
+                                            <asp:LinkButton runat="server" title="Adicionar Acabado" ID="BtnAdiAca3" CssClass="btn linkButtonClicked2 shadow-sm text-dark btn-sm mb-2" OnClick="BtnAdiAca3_Click">
                                                <i class="bi bi-plus-square-fill Grande"></i>
                                             </asp:LinkButton>
-                                            <asp:LinkButton runat="server" title="Modificar Acabado" ID="BtnModAca3" CssClass="btn linkButtonClicked2 shadow-sm text-dark btn-sm mb-2">
+                                            <asp:LinkButton runat="server" title="Modificar Acabado" ID="BtnModAca3" CssClass="btn linkButtonClicked2 shadow-sm text-dark btn-sm mb-2" OnClick="BtnModAca3_Click">
                                                <i class="bi bi-wrench-adjustable Grande"></i> 
                                             </asp:LinkButton>
-                                            <asp:LinkButton runat="server" title="Grabar" ID="BtnGraAca3" CssClass="btn linkButtonClicked2 shadow-sm text-dark btn-sm mb-2">
+                                            <asp:LinkButton runat="server" title="Grabar" ID="BtnGraAca3" CssClass="btn linkButtonClicked2 shadow-sm text-dark btn-sm mb-2" OnClick="BtnGraAca3_Click">
                                                <i class="bi-floppy-fill Grande"></i> 
                                             </asp:LinkButton>
                                         </div>
@@ -381,19 +423,20 @@
                                                         <asp:BoundColumn DataField="Descripcion_Acabado" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="DeLinea" HeaderText="L" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="Activo" HeaderText="A" ItemStyle-CssClass="auto-width-column" />
+                                                         <asp:BoundColumn DataField="ID_Acabado" HeaderText="A" ItemStyle-CssClass="auto-width-column" Visible="false"/>
                                                     </Columns>
                                                 </asp:DataGrid>
                                             </div>
                                         </div>
 
                                        <div class="input-group input-group-sm mt-2 gap-2">
-    <asp:TextBox runat="server" CssClass="form-control form-control-sm col-lg-1" ID="TextAcabadosPequeño"></asp:TextBox>
+    <asp:TextBox runat="server" CssClass="form-control form-control-sm col-lg-1" ID="TextCodInv"></asp:TextBox>
     
-    <asp:TextBox runat="server" CssClass="form-control form-control-sm col-lg-9" ID="TextAcabados"></asp:TextBox>
+    <asp:TextBox runat="server" CssClass="form-control form-control-sm col-lg-9" ID="TextDescripcionAcabado"></asp:TextBox>
     
-    <asp:CheckBox runat="server" CssClass="form-check col-lg-1" ID="CheckBox" />
+    <asp:CheckBox runat="server" CssClass="form-check col-lg-1" ID="CheckBoxLinea" />
 
-    <asp:CheckBox runat="server" CssClass="form-check col-lg-1" ID="CheckBox2" />
+    <asp:CheckBox runat="server" CssClass="form-check col-lg-1" ID="CheckBoxActivo" />
 </div>
 
 
@@ -401,6 +444,73 @@
                                 </div>
                             </div>
                         </div>
+
+
+                        
+                <div class="modal" id="LlenarDescripcion" tabindex="-1" style="display: none;">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header RojoEfecto fw-bold shadow">
+                                <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID_DUCON </h5>
+                        <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                        <p>Los campos descripcion y tipo insumo son obligatorios</span></p>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                        <div class="modal" id="MensajeExito" tabindex="-1" style="display: none;">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header VerdeEfecto fw-bold shadow">
+                                <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID_DUCON</h5>
+                        <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                        <p>Los datos se insertaron exitosamente</span></p>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                          <div class="modal" id="MensaMensajeExitoActualizacionjeExito" tabindex="-1" style="display: none;">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header VerdeEfecto fw-bold shadow">
+                                <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID_DUCON</h5>
+                        <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                        <p>Los datos se actualizaron exitosamente</span></p>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                        
+                        <div class="modal" id="MensajeError" tabindex="-1" style="display: none;">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header RojoEfecto fw-bold shadow">
+                                <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID_DUCON</h5>
+                        <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                        <p>Porfavor intentelo de nuevo, y si el error persiste comuniquese con el departamento de sistemas</span></p>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </div>
