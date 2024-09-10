@@ -304,6 +304,9 @@
             }, 1000);  // 2000 milisegundos = 2 segundos
         }
 
+        function mostrarDefinirAcabado() {
+            $('#modalDefinirAcabado').modal('show');
+        }
 
     </script>
 
@@ -320,7 +323,7 @@
 
 
                     <li class="nav-item">
-                        <a class="nav-link text-white active" id="OTs-tab" data-bs-toggle="tab" href="#OTs-Content"><i class="bi bi-person-fill-gear"></i>Ordenes Trabajo</a>
+                        <a class="nav-link text-white active" id="OTs-tab" data-bs-toggle="tab" href="#OTs-Content"><i class="bi bi-person-fill-gear"></i> Ordenes Trabajo</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" id="Plano-tab" data-bs-toggle="tab" href="#Plano-Content"><i class="bi bi-file-image-fill"></i> Plano</a>
@@ -1425,6 +1428,7 @@
                         </div>
 
                         <div class="container-fluid p-3 shadow-sm bg-light">
+
                             <div class="row">
 
                                 <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
@@ -2085,7 +2089,8 @@
                                     <div class="row">
 
                                         <div class="col-sm-1" id="VentaNota" runat="server">
-                                            <label>Venta<br />
+                                            <label>
+                                                Venta<br />
                                                 Neta</label>
                                         </div>
 
@@ -2460,7 +2465,6 @@
                             </div>
                         </div>
 
-
                         <!--Modal Observacion  -->
                         <div id="ObservacionDevolverDetener" class="modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" style="display: none;">
                             <div class="modal-dialog modal-fullscreen">
@@ -2702,7 +2706,6 @@
                                 </div>
                             </div>
                         </div>
-
 
                         <!--Modal Observacion Boton Ok dibujo  -->
                         <div id="ObservacionBotonOkDibujo" class="modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" style="display: none;">
@@ -3065,6 +3068,9 @@
                                                                         <asp:BoundColumn DataField="oadDescripcionAcabado" HeaderText="Acabado" ItemStyle-CssClass="auto-width-column" />
                                                                         <asp:BoundColumn DataField="oadAplicacionAcabado" HeaderText="A.A" ItemStyle-CssClass="auto-width-column" />
                                                                         <asp:BoundColumn DataField="id_OTAcabadoDefinitivo" HeaderText="" ItemStyle-CssClass="auto-width-column" Visible="false" />
+                                                                        <asp:BoundColumn DataField="oadIDGrupoAcabado" HeaderText="" ItemStyle-CssClass="auto-width-column" Visible="false" />
+                                                                        <asp:BoundColumn DataField="oadId_Insumo" HeaderText="" ItemStyle-CssClass="auto-width-column" Visible="false" />
+                                                                        <asp:BoundColumn DataField="oadID_Familia" HeaderText="" ItemStyle-CssClass="auto-width-column" Visible="false" />
                                                                     </Columns>
                                                                 </asp:DataGrid><asp:SqlDataSource runat="server" ID="AcabadosFinales" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT
                                                                                     tblOTAcabadoDefinitivo.id_OTAcabadoDefinitivo,
@@ -3178,8 +3184,8 @@
                                         </div>
                                         <div class="modal-footer">
                                             <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                                <asp:Button runat="server" ID="eliminarObjeto" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-outline-danger" Style="width: 5rem;" OnClick="BtnEliObjPla_Click" />
-                                                <asp:Button runat="server" ID="CerrarEliminar" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                                <asp:Button runat="server" ID="eliminarObjeto" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-danger" Style="width: 5rem;" OnClick="BtnEliObjPla_Click" />
+                                                <asp:Button runat="server" ID="CerrarEliminar" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
                                             </div>
 
                                         </div>
@@ -3203,8 +3209,8 @@
                                         </div>
                                         <div class="modal-footer">
                                             <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                                <asp:Button runat="server" ID="quitarObjeto" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-outline-danger" Style="width: 5rem;" OnClick="BtnQuiObjPla_Click" />
-                                                <asp:Button runat="server" ID="CerrarQ" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-outline-secondary" Style="width: 5rem;" />
+                                                <asp:Button runat="server" ID="quitarObjeto" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-danger" Style="width: 5rem;" OnClick="BtnQuiObjPla_Click" />
+                                                <asp:Button runat="server" ID="CerrarQ" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
                                             </div>
 
                                         </div>
@@ -3308,6 +3314,232 @@
                                 </div>
                             </div>
 
+                            <!--Modal Definir Acabado -->
+                            <div class="modal" id="modalDefinirAcabado" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" style="display: none;">
+                                <div class="modal-dialog modal-xl modal-dialog-centered ">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header pb-2 text-white" style="background: radial-gradient(circle, #afb5b9, #23273be6)">
+                                            <h6 class="text-white m-0">Definir Acabado</h6>
+                                            <asp:Label ID="lb_ID_AcadoMod" runat="server" Text="Label" Visible="true"></asp:Label>
+                                            <button type="button" class="btn-close btn-close-white" style="color: white!important;" data-bs-dismiss="modal" aria-label="Close" title="Cerrar y volver a OT"></button>
+                                        </div>
+
+                                        <div class="row p-1 pt-2">
+
+                                            <div class="col-md-4 pt-1" style="padding-left: 1rem;">
+                                                <div class="input-group input-group-sm gap-2">
+                                                    <asp:Label ID="lbbus" runat="server" Text="Buscar"></asp:Label>
+                                                    <asp:TextBox ID="tbBuscarAcaba" CssClass="form-control form-control-sm" runat="server" OnTextChanged="tbBuscarAcaba_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                                    <asp:LinkButton class="icong button-enabled btn btn-sm  shadow-sm ColorAzulActivo " runat="server" ToolTip="Buscar" ID="btnBuscarAcab" OnClick="btnBuscarAcab_Click">                                 
+                                                         <i class="bi bi-search"></i>
+                                                    </asp:LinkButton>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3 pt-1">
+                                                <div class="input-group input-group-sm gap-1 justify-content-center">
+                                                    <asp:CheckBox ID="chkTodoAcabados" runat="server" AutoPostBack="true" OnCheckedChanged="chkTodoAcabados_CheckedChanged" />
+                                                    <asp:Label ID="lbTodos" runat="server" Text="Todos los Acabados"></asp:Label>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-md-5">
+                                                <div class="input-group input-group-sm  justify-content-end p-1 ">
+
+                                                    <div class="contenedor-icono gap-2">
+                                                        <asp:LinkButton class="icong button-disabled btn btn-sm  shadow-sm " runat="server" ToolTip="Ver Origen" ID="btnVerOrigen" OnClick="btnVerOrigen_Click">                                 
+                                                         <i class="bi bi-star-half"></i>
+                                                        </asp:LinkButton>
+
+                                                        <asp:LinkButton class="icong button-disabled  btn btn-sm shadow-sm" runat="server" ToolTip="Adicionar Acabado" ID="btnAdicionarAcabado" OnClick="btnAdicionarAcabado_Click">                                 
+                                                            <i class="bi bi-plus-circle-fill"></i>
+                                                        </asp:LinkButton>
+
+                                                        <asp:LinkButton class="icong button-disabled  btn btn-sm   shadow-sm " runat="server" ToolTip="Modificar Acabado" ID="btnModificarAcabado" OnClick="btnModificarAcabado_Click">                                 
+                                                            <i class="bi bi-wrench-adjustable"></i>
+                                                        </asp:LinkButton>
+
+                                                        <asp:LinkButton class="icong button-disabled btn btn-sm  shadow-sm   " runat="server" ToolTip="Grabar" ID="btnGrabarRedAcabadoNue" OnClick="btnGrabarRedAcabadoNue_Click">                               
+                                                            <i class="bi bi-floppy-fill"></i>
+                                                        </asp:LinkButton>
+
+                                                        <asp:LinkButton class="icong button-disabled btn btn-sm shadow-sm " Visible="false" runat="server" ToolTip="Grabar" ID="btnGrabarRedAcaMod" OnClick="btnGrabarRedAcaMod_Click">                               
+                                                            <i class="bi bi-floppy-fill"></i>
+                                                        </asp:LinkButton>
+
+                                                           <asp:LinkButton class="icong button-disabled btn btn-sm shadow-sm "  runat="server" ToolTip="Refrescar" ID="btnRefrescar" OnClick="btnRefrescar_Click">                               
+                                                            <i class="bi bi-arrow-clockwise"></i>
+                                                        </asp:LinkButton>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="modal-body">
+
+                                            <div class="row justify-content-center mb-1">
+
+                                                <div class="border rounded shadow-sm ">
+
+                                                    <div class="row p-3">
+
+                                                        <div class="col-6">
+                                                            <div class="table-responsive mb-1 gap-2" style="max-height: 20rem; height: 20rem; overflow-x: auto;">
+                                                                <h6 class="datagrid-header text-start">Acabados</h6>
+                                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridDefinirAcabado" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemCommand="DataGridDefinirAcabado_ItemCommand">
+                                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                                    <Columns>
+
+                                                                        <asp:TemplateColumn HeaderText=". . .">
+                                                                            <ItemTemplate>
+                                                                                <asp:LinkButton ID="lnkRedAca" CssClass="Tam" ToolTip="VerRedAcabado" runat="server" CommandName="VerDocumento1" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>" />
+                                                                            </ItemTemplate>
+                                                                        </asp:TemplateColumn>
+
+                                                                        <asp:BoundColumn DataField="CodInventario" HeaderText="Cod Inventario" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="Descripcion_Acabado" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="DeLinea" HeaderText="Linea" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="Activo" HeaderText="Activo" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="CreadoPor" HeaderText="Creado Por" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="FechaCreacion" HeaderText="Fecha Creación" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="ModificadoPor" HeaderText="Modificado Por" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="FechaModificacion" HeaderText="Fecha Modificacón" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="ID_Acabado" Visible="false" ItemStyle-CssClass="auto-width-column" />
+
+                                                                    </Columns>
+                                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="DsDefinirAcabado" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT * FROM tblGrupodeAcabado 
+                                                            INNER JOIN tblAcabado ON tblGrupodeAcabado.ID_GrupoAcabado = tblAcabado.ID_GrupoAcabado 
+                                                            INNER JOIN  tblOTAcabados ON tblAcabado.ID_Acabado = tblOTAcabados.ID_Acabado 
+                                                            WHERE (tblAcabado.Descripcion_Acabado LIKE '%'+ @DescriAcabado +'%') 
+                                                            AND (tblAcabado.ID_GrupoAcabado = @ID_GrupoAca) 
+                                                            AND (tblOTAcabados.Id_OT = @OT) 
+                                                            AND (tblOTAcabados.Consecutivo_Pedido = @Ped) 
+                                                            ORDER BY tblAcabado.Descripcion_Acabado">
+                                                                    <SelectParameters>
+                                                                        <asp:ControlParameter ControlID="tbBuscarAcaba" PropertyName="Text" DefaultValue="%" Name="DescriAcabado"></asp:ControlParameter>
+                                                                        <asp:Parameter Name="ID_GrupoAca"></asp:Parameter>
+                                                                        <asp:ControlParameter ControlID="tbOT" PropertyName="Text" DefaultValue="" Name="OT"></asp:ControlParameter>
+                                                                        <asp:ControlParameter ControlID="ddlNumbers" PropertyName="SelectedValue" Name="Ped"></asp:ControlParameter>
+                                                                    </SelectParameters>
+                                                                </asp:SqlDataSource>
+                                                                <asp:SqlDataSource runat="server" ID="DsDefinirAcabado1" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT 
+                                                    tblAcabado.* FROM tblGrupodeAcabado INNER JOIN  tblAcabado ON tblGrupodeAcabado.ID_GrupoAcabado = tblAcabado.ID_GrupoAcabado 
+                                                    WHERE tblAcabado.Descripcion_Acabado LIKE '%' + @DescripcionAcabado + '%' AND tblAcabado.ID_GrupoAcabado = @ID_GrupoAcabado 
+                                                    ORDER BY  tblAcabado.Descripcion_Acabado;">
+                                                                    <SelectParameters>
+                                                                        <asp:ControlParameter ControlID="tbBuscarAcaba" PropertyName="Text" DefaultValue="%" Name="DescripcionAcabado"></asp:ControlParameter>
+                                                                        <asp:Parameter Name="ID_GrupoAcabado"></asp:Parameter>
+                                                                    </SelectParameters>
+                                                                </asp:SqlDataSource>
+
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-6 " runat="server" id="DivOrigenAcabado" visible="false">
+                                                            <div class="table-responsive mb-1 gap-2" style="max-height: 20rem; height: 20rem; overflow-x: auto;">
+                                                                <h6 class="datagrid-header text-center">Origen</h6>
+                                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridOrigenAcabado" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true">
+                                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                                    <Columns>
+                                                                        <asp:BoundColumn DataField="Descripcion_Insumo" HeaderText="Insumo" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="Descripcion_Modulo" HeaderText="Módulo" ItemStyle-CssClass="auto-width-column" />
+                                                                        <asp:BoundColumn DataField="Descripcion_Panel" HeaderText="Objeto" ItemStyle-CssClass="auto-width-column" />
+                                                                    </Columns>
+                                                                </asp:DataGrid><asp:SqlDataSource runat="server" ID="DSOrigenAca" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT
+                                                                        tblPanel.Descripcion_Panel,
+                                                                        tblModulo.Descripcion_Modulo,
+                                                                        tblPlano_Panel.Id_Plano,
+                                                                        tblInsumo.Descripcion_Insumo, 
+                                                                        tblInsumo.AplicacionAcabado 
+                                                                        FROM (tblPanel
+                                                                        INNER JOIN ((tblModulo 
+                                                                        INNER JOIN ((tblTipoInsumo 
+                                                                        INNER JOIN tblInsumo ON tblTipoInsumo.Id_TipoInsumo = tblInsumo.Id_TipoInsumo) 
+                                                                        INNER JOIN tblModulo_Insumo ON tblInsumo.Id_Insumo = tblModulo_Insumo.Id_Insumo) ON tblModulo.Id_Modulo = tblModulo_Insumo.Id_Modulo) 
+                                                                        INNER JOIN tblPanel_Modulo ON tblModulo.Id_Modulo = tblPanel_Modulo.Id_Modulo) ON tblPanel.Id_Numerico = tblPanel_Modulo.Id_PanelNum) 
+                                                                        INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum 
+                                                                        WHERE 
+                                                                        (((tblPlano_Panel.Id_Plano)=@Plano) 
+                                                                        AND ((tblInsumo.AplicacionAcabado)= @AplicadoA) 
+                                                                        AND ((tblTipoInsumo.IDGrupoAcabado)= @Id_Acabado))">
+                                                                    <SelectParameters>
+                                                                        <asp:ControlParameter ControlID="txtPlano" PropertyName="Text" Name="Plano"></asp:ControlParameter>
+                                                                        <asp:Parameter Name="AplicadoA"></asp:Parameter>
+                                                                        <asp:Parameter Name="Id_Acabado"></asp:Parameter>
+
+                                                                    </SelectParameters>
+                                                                </asp:SqlDataSource>
+
+                                                                <asp:SqlDataSource runat="server" ID="DsOrigenAcab1" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT 
+                                                                                    tblPanel.Descripcion_Panel,
+                                                                                    tblModulo.Descripcion_Modulo,
+                                                                                    tblPlano_Panel.Id_Plano,
+                                                                                    tblInsumo.Descripcion_Insumo,
+                                                                                    tblModulo.ID_Familia 
+                                                                                    FROM (tblPanel 
+                                                                                    INNER JOIN ((tblModulo 
+                                                                                    INNER JOIN ((tblTipoInsumo 
+                                                                                    INNER JOIN tblInsumo ON tblTipoInsumo.Id_TipoInsumo = tblInsumo.Id_TipoInsumo) 
+                                                                                    INNER JOIN tblModulo_Insumo ON tblInsumo.Id_Insumo = tblModulo_Insumo.Id_Insumo) ON tblModulo.Id_Modulo = tblModulo_Insumo.Id_Modulo) 
+                                                                                    INNER JOIN tblPanel_Modulo ON tblModulo.Id_Modulo = tblPanel_Modulo.Id_Modulo) ON tblPanel.Id_Numerico = tblPanel_Modulo.Id_PanelNum) 
+                                                                                    INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum
+                                                                                    WHERE (((tblPlano_Panel.Id_Plano)=@Plano) 
+                                                                                    AND ((tblTipoInsumo.IDGrupoAcabado)=@IdGrupoAcab) 
+                                                                                    AND ((tblInsumo.Id_Insumo)= @ID_Insumo) 
+                                                                                    AND ((tblModulo.ID_Familia)=@IdFamilia))">
+                                                                    <SelectParameters>
+                                                                        <asp:ControlParameter ControlID="txtPlano" PropertyName="Text" Name="Plano"></asp:ControlParameter>
+                                                                        <asp:Parameter Name="ID_Insumo"></asp:Parameter>
+                                                                        <asp:Parameter Name="IdGrupoAcab"></asp:Parameter>
+                                                                         <asp:Parameter Name="IdFamilia"></asp:Parameter>
+
+                                                                    </SelectParameters>
+                                                                </asp:SqlDataSource>
+
+
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row pt-3">
+                                                <div class="col-md-2">
+                                                    <asp:TextBox ID="tbCodInventario" Enabled="false" CssClass="form-control form-control-sm" placeHolder="Codigo Inventario" runat="server"></asp:TextBox>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <asp:TextBox ID="tbDescripAcaba" Enabled="false" CssClass="form-control form-control-sm" placeHolder="Descripción" runat="server"></asp:TextBox>
+                                                </div>
+
+                                                <div class="col-md-2"></div>
+
+                                                <div class="col-md-2">
+                                                    <asp:CheckBox ID="chkAcabadoActivo" Enabled="false" ToolTip="Activo" runat="server" />
+                                                    <asp:Label ID="Label14" runat="server" Text="Estado Acabado"></asp:Label>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <asp:CheckBox ID="chkLinea" Enabled="false" ToolTip="Linea" runat="server" />
+                                                    <asp:Label ID="Label15" runat="server" Text="Linea"></asp:Label>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
                             <!--Modal Eliminar Acabado Plano -->
                             <div id="confirmarEliminarAcabado" class="modal" tabindex="-1" style="display: none;">
                                 <div class="modal-dialog modal-dialog-centered">
@@ -3318,7 +3550,7 @@
                                         </div>
                                         <div class="modal-body border rounded">
                                             <div class="container-fluid">
-                                                <h6>Desea eliminar el acabado: <span runat="server" id="span_NombreAcabado"></span> para objeto especial? </h6>
+                                                <h6>Desea eliminar el acabado: <span runat="server" id="span_NombreAcabado"></span>para objeto especial? </h6>
                                             </div>
 
                                         </div>
@@ -4290,7 +4522,6 @@
             </div>
         </div>
 
-
         <!--Modal de carga para el proceso de Boton OK-->
         <div class="modal fade" id="OkCargando" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
             <div class="modal-dialog modal-dialog-centered ">
@@ -4531,12 +4762,34 @@
     </script>
 
     <script type="text/javascript">
-        function handleEnterKeyPress(event) {
-            if (event.keyCode === 13) {
-                event.preventDefault();  // Evitar que se envíe el formulario
-                document.getElementById('<%= btnBuscarActivos.ClientID %>').click(); // Hacer clic en el botón de búsqueda
+
+        // Escuchar el evento keydown en el documento
+        document.addEventListener('keydown', function (event) {
+            // Verificar si la tecla presionada es "Enter" (código de tecla 13)
+            if (event.key === "Enter") {
+                // Obtener el elemento que tiene el foco actualmente
+                var focusedElement = document.activeElement;
+
+                // Verificar si el elemento enfocado no es un textarea
+                if (focusedElement.tagName !== 'TEXTAREA') {
+                    // Prevenir la acción predeterminada del evento
+                    event.preventDefault();
+
+                }
+
+                if (focusedElement.id === "tbBuscarAcaba" || focusedElement.id === "tbBuscarAcaba" || focusedElement.id === "tbBuscarAcaba") {
+                    event.preventDefault();
+
+                } else if (focusedElement.id === "ddlGrupo" || focusedElement.id === "tbCriterio" || focusedElement.id === "tbAltura" || focusedElement.id === "tbAncho") {
+                    document.getElementById('<%= btnBuscarActivos.ClientID %>').click(); // Hacer clic en el botón de búsqueda
+
+                } else {
+                    event.preventDefault();  // Evitar que se envíe el formulario
+                }
+
             }
-        }
+        });
+
     </script>
 
     <script>   

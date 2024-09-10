@@ -1448,7 +1448,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 btnNuevoPedido,
                 btnAcabados,
                 btnOk,
-                BtnVisGenCot
+                BtnVisGenCot,
+                btnVerOrigen,
+                btnAgregarAcabado,
+                btnModificarAcabado,
+                btnGrabarRedAcabadoNue,
+                btnGrabarRedAcaMod
+
             };
 
             string cssClass = "btn btn-sm shadow button-disabled";
@@ -6701,7 +6707,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
 
-
         //***** MOSTRAR ACABADOS DEL PLANO   ******
         protected void BtnAcaPla_Click(object sender, EventArgs e)
         {
@@ -6711,7 +6716,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if ((Session["Departamento"].ToString() == "Diseño" || Session["Departamento"].ToString() == "Ventas") && ((tbOT.Text != "" && btnOk.Enabled == true) || tbOT.Text == ""))
             {
-                // Pendiente de realizar algunas actualizaciones !!!!! OJO validar !!!!!!!
+                Cargar_AcabadosPlanoDibujo();
+                DataGridAcabados1.DataBind();
             }
 
             // limpiar variables de session 
@@ -6870,6 +6876,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             int rowIndex = Convert.ToInt32(e.CommandArgument);
             DataGridItem row = DataGridAcabados1.Items[rowIndex];
             string ApliAcabado = row.Cells[6].Text;
+            Session["AplicadoASession"] = row.Cells[6].Text;
+            Session["IDGruAcaSession"] = row.Cells[8].Text;
+            Session["IDInsumoASession"] = row.Cells[9].Text;
+            Session["IDFamiliarSession"] = row.Cells[10].Text;
 
             // Se utiliza para darle el color solo a la fila seleccionada 
             foreach (DataGridItem item in DataGridAcabados1.Items)
@@ -6883,6 +6893,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             //se usa Para darle un color a la fila seleccionada  anderson
             e.Item.CssClass = "fila-seleccionada";
 
+            // Asignar ID único a la fila
+            row.Attributes["id"] = "row_" + rowIndex;
 
             if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
             {
@@ -6904,9 +6916,48 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         if(ApliAcabado != "E")
                         {
-                            // Validar que hacer cuando un Aplicado acabado es diferente E
-                           
-                           // Muestra un modal para administrar el acabado 
+
+                            // Cambiar el IDGrupoAcabado del DataSource 
+
+                            // Dependiente del CheckBox Se carga uno u otro DataSource
+                            if (chkTodoAcabados.Checked)
+                            {
+                                DsDefinirAcabado1.SelectParameters["ID_GrupoAcabado"].DefaultValue = Session["IDGruAcaSession"].ToString();
+
+                                DataGridDefinirAcabado.DataSourceID = "DsDefinirAcabado1";
+
+                                DataGridDefinirAcabado.DataBind();
+                            }
+                            else
+                            {
+                                DsDefinirAcabado.SelectParameters["ID_GrupoAca"].DefaultValue = Session["IDGruAcaSession"].ToString();
+
+                                DataGridDefinirAcabado.DataSourceID = "DsDefinirAcabado";
+
+                                DataGridDefinirAcabado.DataBind();
+                            }
+
+                            btnVerOrigen.Enabled = true;
+                            btnVerOrigen.CssClass = "icong button-enabled btn btn-sm  shadow-sm ColorAzulActivo";
+
+                            btnAdicionarAcabado.Enabled = true;
+                            btnAdicionarAcabado.CssClass = "icong button-enabled btn btn-sm  shadow-sm ColorAzulActivo";
+
+                            btnRefrescar.Enabled = true;
+                            btnRefrescar.CssClass = "icong button-enabled btn btn-sm  shadow-sm ColorAzulActivo";
+
+
+                            // Muestra un modal para administrar el acabado 
+
+                            string script1 = @"mostrarModal();";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
+
+                            string script2 = @"mostrarDefinirAcabado();";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
+
+                            // Reiniciar la variable de sesión "ClickCount" a 0 para la próxima interacción                        
+                            Session.Remove("ID_Acabado");
+                            Session.Remove("ClickCount3");
 
                         }
                         else
@@ -6931,6 +6982,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModalEliminarAcabado", script2, true);
 
                         }
+
                     }
 
                 }
@@ -6942,6 +6994,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     string script = @"mostrarModal();";
                     ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script, true);
+
+                    // Llamar a la función JavaScript para enfocar y desplazar la fila
+                    ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
 
                 }
             }
@@ -6982,7 +7037,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     cmd.Parameters.AddWithValue("@IdAcabadoPlano", Session["IdAcabadoElimnar"].ToString());
 
                     connection.Open();
-                  
+
                     SqlDataReader reader = cmd.ExecuteReader();
                     Session.Remove("IdAcabadoElimnar");
                 }
@@ -7513,7 +7568,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
         private int Consultar_Id_Numerico(string objeto, float ancho)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString; 
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             string sSql = "SELECT Id_Numerico FROM tblPanel WHERE Id_Panel = @Id_Panel AND Ancho = @Ancho";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -11817,8 +11872,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         txObsReproceso.Disabled = true;
 
-    
-                        string delayedScript = @" setTimeout(function() {CerrarCargarOK();}, 700);";  
+
+                        string delayedScript = @" setTimeout(function() {CerrarCargarOK();}, 700);";
                         ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", delayedScript, true);
 
                         // Se abre el modal de inmediato
@@ -11849,10 +11904,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         // Consultamos el correo por defecto de la solicitud especial 
                         ConsultarCorreoOT(tbOT.Text, ddlNumbers.SelectedItem.Text);
- 
+
                         string delayedScript1 = @"setTimeout(function() {CerrarCargarOK();}, 700);";  // 700 ms = 0.7 segundos
                         ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", delayedScript1, true);
-                        
+
                         // Se abre el modal de la observacion 
                         ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ObservacionBotonOkDibujo').modal('show');", true);
                         return;
@@ -11995,7 +12050,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             <p><strong>Teléfono: </strong> " + tbTel.Text + @"</p>
                             <p><strong>Celular: </strong> " + tbCel.Text + @"</p>
                             <p><strong>RESUMEN DEL DESPIECE</strong></p>" +
-                             resumenDespice + 
+                             resumenDespice +
                          @"</div>
                     </body>
                     </html>";
@@ -12030,7 +12085,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         // INICIO BOTON OK PARA DIBUJO Y COMPRAS 
 
-      
+
         // Validar Acabados del Asesor y del plano
         public bool ConsultarAcabadosPorAsesor()
         {
@@ -12161,7 +12216,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         string DescObj = row["DescripcionGrupoObjeto"].ToString();
 
 
-                        if (ConsultarAcabadoDefiniIdFamiliaIdInsumo(ID_Familia, ID_Insumo))
+                        if (!ConsultarAcabadoDefiniIdFamiliaIdInsumo(ID_Familia, ID_Insumo))
                         {
                             //SE INSERTA NUEVO ITEM PARA ACABADO
                             InsertarItemAcabado(ID_Familia, DescriFam, ID_Insumo, IdInventario, Descri_Insumo, ApliAcabado, IdGruAcab, DescrpGrup, DescObj);
@@ -12186,7 +12241,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         string ID_Grupo = row["IDGrupoAcabado"].ToString();
                         string DescripGrupo = row["Descripcion_Grupo"].ToString();
 
-                        if (ConsultarAcabadoDefiXIdGrupo(ID_Grupo))
+                        if (!ConsultarAcabadoDefiXIdGrupo(ID_Grupo))
                         {
                             //SE INSERTA NUEVO ITEM PARA ACABADO POR ID GRUPO
 
@@ -12275,7 +12330,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "SELECT TOP 1 1 FROM tblOTAcabadoDefinitivo " +
+                string query = "SELECT * FROM tblOTAcabadoDefinitivo " +
                                "WHERE oadPlano= @plano AND oadID_Familia= @ID_Familia AND oadId_Insumo = @Id_Insumo ";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
@@ -12309,7 +12364,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string sSql = "INSERT INTO tblOTAcabadoDefinitivo (oadPLano,oadID_Familia,oadDescripcion_Familia,oadId_Insumo,oadCodInvOri," +
                               "oadDescripcion_Insumo,oadAplicacionAcabado,oadIDGrupoAcabado,oadDesGrupoAcabado,oadDescripcionGrupoObjeto,oadActivo) " +
                               "VALUES (@plano,@IdFamilia, @DecripcionFamilia, @Id_Insumo, @CodigoInventario, @DescripcionInsumo,@AplicacionAcabado, " +
-                              "ID_GrupoAcabado, DescripcionGruAcabado,@DescriGrupoObjeto, @Activo )";
+                              "@ID_GrupoAcabado, @DescripcionGruAcabado,@DescriGrupoObjeto, @Activo )";
 
                 using (SqlCommand cmd = new SqlCommand(sSql, connection))
                 {
@@ -12341,7 +12396,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sSql = "UPDATE tblOTAcabadoDefinitivo SET oadActivo = 1 " +
-                              "WHERE oadPlano = @plano AND oadID_Familia = @ID_Familia AND oadId_Insumo = ID_Insumo";
+                              "WHERE oadPlano = @plano AND oadID_Familia = @ID_Familia AND oadId_Insumo = @ID_Insumo";
 
                 using (SqlCommand cmd = new SqlCommand(sSql, connection))
                 {
@@ -12406,7 +12461,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "SELECT TOP 1 1 FROM tblOTAcabadoDefinitivo " +
+                string query = "SELECT * FROM tblOTAcabadoDefinitivo " +
                                "WHERE oadPlano= @plano AND oadIDGrupoAcabado= @ID_GrupoAca AND oadAplicacionAcabado = 'G' ";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
@@ -13717,7 +13772,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-       
+
         // Metodo para continuar la acccion despues de Reproceso u Obra Reactivada 
         private void ContinuacionBotonOkDibujo()
         {
@@ -13801,7 +13856,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string CorreoAsesorOT = ConsultarAsesorCorreoOT();
 
                 destinatarios += CorreoAsesorOT + ";" + correosExportarObra;
-;
+                ;
                 string cuerpo = @"
                     <!DOCTYPE html>
                     <html lang='es'>
@@ -13901,7 +13956,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-       
+
         // Notificacion Correo OT Terminada Dibujo 
         public void EnviarCorreoBotonOkdibujo(string destinatarios, string cuerpo)
         {
@@ -18503,6 +18558,338 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+
+        // Definir Acabados del plano 
+        protected void chkTodoAcabados_CheckedChanged(object sender, EventArgs e)
+        {
+
+            // Dependiente del CheckBox Se carga uno u otro DataSource
+            if (chkTodoAcabados.Checked)
+            {
+                DsDefinirAcabado1.SelectParameters["ID_GrupoAcabado"].DefaultValue = Session["IDGruAcaSession"].ToString();
+
+                DataGridDefinirAcabado.DataSourceID = "DsDefinirAcabado1";
+
+
+            }
+            else
+            {
+                DsDefinirAcabado.SelectParameters["ID_GrupoAca"].DefaultValue = Session["IDGruAcaSession"].ToString();
+
+                DataGridDefinirAcabado.DataSourceID = "DsDefinirAcabado";
+
+            }
+
+
+            DataGridDefinirAcabado.DataBind();
+
+            string script1 = @"mostrarModal();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
+
+            string script2 = @"mostrarDefinirAcabado();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
+
+
+        }
+
+        protected void tbBuscarAcaba_TextChanged(object sender, EventArgs e)
+        {
+
+            // Dependiente del CheckBox Se carga uno u otro DataSource
+            if (chkTodoAcabados.Checked)
+            {
+                DsDefinirAcabado1.SelectParameters["ID_GrupoAcabado"].DefaultValue = Session["IDGruAcaSession"].ToString();
+
+                DataGridDefinirAcabado.DataSourceID = "DsDefinirAcabado1";
+
+
+            }
+            else
+            {
+                DsDefinirAcabado.SelectParameters["ID_GrupoAca"].DefaultValue = Session["IDGruAcaSession"].ToString();
+
+                DataGridDefinirAcabado.DataSourceID = "DsDefinirAcabado";
+
+            }
+
+
+            DataGridDefinirAcabado.DataBind();
+
+            string script1 = @"mostrarModal();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
+
+            string script2 = @"mostrarDefinirAcabado();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
+        }
+
+        protected void DataGridDefinirAcabado_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            int rowIndex = Convert.ToInt32(e.CommandArgument);
+            DataGridItem row = DataGridDefinirAcabado.Items[rowIndex];
+            string CodInv = row.Cells[1].Text;
+            string Descripcion = row.Cells[2].Text;
+
+            bool Estado = Convert.ToBoolean(row.Cells[3].Text);
+            bool Linea = Convert.ToBoolean(row.Cells[4].Text);
+            string ID_Acabado = row.Cells[9].Text;
+
+            // Se utiliza para darle el color solo a la fila seleccionada 
+            foreach (DataGridItem item in DataGridDefinirAcabado.Items)
+            {
+                if (item != row)
+                {
+                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                }
+            }
+
+            //se usa Para darle un color a la fila seleccionada  anderson
+            e.Item.CssClass = "fila-seleccionada";
+
+
+
+            if (row.Cells[9].Text == Session["ID_DeF_Acab"]?.ToString())
+            {
+                // Incrementar la variable de sesión "ClickCount" en el servidor
+                int clickCount = Convert.ToInt32(Session["ClickCountDefAcab"]) + 1;
+                Session["ClickCountDefAcab"] = clickCount;
+
+                // se valida si es el segundo click en la misma fila 
+                if (clickCount == 2)
+                {
+                    // Asigar Acabado 
+
+                    string script1 = @"mostrarModal();";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
+
+                }
+            }
+            else
+            {
+                // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
+                Session["ClickCountDefAcab"] = 1;
+                Session["ID_DeF_Acab"] = row.Cells[9].Text;
+
+                tbCodInventario.Text = CodInv;
+                tbDescripAcaba.Text = Descripcion;
+
+                chkAcabadoActivo.Checked = Estado;
+                chkLinea.Checked = Linea;
+
+                btnModificarAcabado.Enabled = true;
+                btnModificarAcabado.CssClass = "icong button-enabled btn btn-sm  shadow-sm ColorAzulActivo";
+
+                btnGrabarRedAcaMod.Visible = true;
+                btnGrabarRedAcabadoNue.Visible = false;
+
+                lb_ID_AcadoMod.Text = ID_Acabado;
+
+                string script1 = @"mostrarModal();";
+                ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
+
+                string script2 = @"mostrarDefinirAcabado();";
+                ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
+
+            }
+
+        }
+
+        protected void btnVerOrigen_Click(object sender, EventArgs e)
+        {
+            if (Session["AplicadoASession"].ToString().ToUpper() == "G")
+            {
+
+                if (DivOrigenAcabado.Visible == true)
+                {
+                    DivOrigenAcabado.Visible = false; // Oculta el div
+                }
+                else
+                {
+                    DivOrigenAcabado.Visible = true; // Muestra el div
+
+                    DSOrigenAca.SelectParameters["Id_Acabado"].DefaultValue = Session["IDGruAcaSession"].ToString();
+                    DSOrigenAca.SelectParameters["AplicadoA"].DefaultValue = Session["AplicadoASession"].ToString();
+
+                    DataGridOrigenAcabado.DataSourceID = "DSOrigenAca";
+
+
+                    DataGridOrigenAcabado.DataBind();
+                }
+
+            }
+            else
+            {
+                if (DivOrigenAcabado.Visible == true)
+                {
+                    DivOrigenAcabado.Visible = false; // Oculta el div
+                }
+                else
+                {
+                    DivOrigenAcabado.Visible = true; // Muestra el div
+
+                    DsOrigenAcab1.SelectParameters["IdGrupoAcab"].DefaultValue = Session["IDGruAcaSession"].ToString();
+                    DsOrigenAcab1.SelectParameters["ID_Insumo"].DefaultValue = Session["IDInsumoASession"].ToString();
+                    DsOrigenAcab1.SelectParameters["IdFamilia"].DefaultValue = Session["IDFamiliarSession"].ToString();
+
+
+                    DataGridOrigenAcabado.DataSourceID = "DsOrigenAcab1";
+
+
+                    DataGridOrigenAcabado.DataBind();
+
+                }
+
+            }
+
+            string script1 = @"mostrarModal();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
+
+            string script2 = @"mostrarDefinirAcabado();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
+        }
+
+        protected void btnBuscarAcab_Click(object sender, EventArgs e)
+        {
+            string script1 = @"mostrarModal();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
+
+            string script2 = @"mostrarDefinirAcabado();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
+        }
+
+        protected void btnAdicionarAcabado_Click(object sender, EventArgs e)
+        {
+
+            // Control de campos 
+            tbCodInventario.Enabled = true;
+            tbCodInventario.Text = "";
+
+            tbDescripAcaba.Enabled = true;
+            tbDescripAcaba.Text = "";
+
+            chkAcabadoActivo.Enabled = true;
+            chkAcabadoActivo.Checked = false;
+
+            chkLinea.Enabled = true;
+            chkLinea.Checked = false;
+
+
+            // Control de botones 
+            btnGrabarRedAcaMod.Enabled = false;
+            btnGrabarRedAcaMod.CssClass = "icong button-disabled btn btn-sm  shadow-sm";
+
+            btnAdicionarAcabado.Enabled = false;
+            btnAdicionarAcabado.CssClass = "icong button-disabled btn btn-sm  shadow-sm ";
+
+            btnModificarAcabado.Enabled = false;
+            btnModificarAcabado.CssClass = "icong button-disabled btn btn-sm  shadow-sm ";
+
+            btnGrabarRedAcabadoNue.Visible = true;
+            btnGrabarRedAcabadoNue.Enabled = true;
+            btnGrabarRedAcabadoNue.CssClass = "icong button-enabled btn btn-sm  shadow-sm ColorAzulActivo";
+
+            btnGrabarRedAcaMod.Visible = false;
+            btnGrabarRedAcaMod.Enabled = false;
+            btnGrabarRedAcaMod.CssClass = "icong button-disabled btn btn-sm  shadow-sm";
+
+
+            string script1 = @"mostrarModal();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
+
+            string script2 = @"mostrarDefinirAcabado();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
+        }
+
+        protected void btnModificarAcabado_Click(object sender, EventArgs e)
+        {
+            // Control de campos 
+            tbCodInventario.Enabled = true;
+            tbDescripAcaba.Enabled = true;
+            chkAcabadoActivo.Enabled = true;
+            chkLinea.Enabled = true;
+
+
+            // Control de botones 
+            btnGrabarRedAcaMod.Enabled = true;
+            btnGrabarRedAcaMod.CssClass = "icong button-enabled btn btn-sm  shadow-sm ColorAzulActivo";
+
+            btnAdicionarAcabado.Enabled = false;
+            btnAdicionarAcabado.CssClass = "icong button-disabled btn btn-sm  shadow-sm ";
+
+            btnModificarAcabado.Enabled = false;
+            btnModificarAcabado.CssClass = "icong button-disabled btn btn-sm  shadow-sm ";
+
+            btnGrabarRedAcabadoNue.Visible = false;
+            btnGrabarRedAcabadoNue.Enabled = false;
+            btnGrabarRedAcabadoNue.CssClass = "icong button-disabled btn btn-sm  shadow-sm";
+
+            string script1 = @"mostrarModal();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
+
+            string script2 = @"mostrarDefinirAcabado();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
+        }
+
+        protected void btnGrabarRedAcabadoNue_Click(object sender, EventArgs e)
+        {
+            if (tbCodInventario.Text.Trim() != "" && tbDescripAcaba.Text.Trim() != "")
+            {
+                if (ValidarExistenciaCodigoInventario(tbCodInventario.Text))
+                {
+                    string scriptNoAcabados1 = $"alert('El código de inventario {tbCodInventario.Text} ya existe');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showNoAgregado", scriptNoAcabados1, true);
+
+                }
+                else
+                {
+                    // Realizar la insercion del acabado
+                    InsertarDefinicionAcabado();
+                    DataGridDefinirAcabado.DataBind();
+                    string scriptNoAcabados2 = "alert('La definición de acabado se insertó correctamente.');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showNoAgregado", scriptNoAcabados2, true);
+                    Refrescar();
+                    return;
+
+                }
+            }
+            else
+            {
+                string scriptNoAcabados2 = "alert('Los campos: código de inventario, descripción de acabado, check de linea y check de activo, son obligatorios.');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showNoAgregado", scriptNoAcabados2, true);
+
+            }
+
+            string script1 = @"mostrarModal();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
+
+            string script2 = @"mostrarDefinirAcabado();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
+        }
+
+        protected void btnGrabarRedAcaMod_Click(object sender, EventArgs e)
+        {
+            if (tbCodInventario.Text.Trim() != "" && tbDescripAcaba.Text.Trim() != "")
+            {
+                ActualizarDefinicionAcabado();
+                DataGridDefinirAcabado.DataBind();
+                string scriptNoAcabados2 = "alert('La definición de acabado se actualizó correctamente.');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showNoAgregado", scriptNoAcabados2, true);
+                Refrescar();
+                return;
+            }
+            else
+            {
+                string scriptNoAcabados2 = "alert('Los campos: código de inventario, descripción de acabado, check de linea y check de activo, son obligatorios.');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showNoAgregado", scriptNoAcabados2, true);
+
+            }
+
+            string script1 = @"mostrarModal();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
+
+            string script2 = @"mostrarDefinirAcabado();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
+        }
+
         protected void DropDownList1_TextChanged(object sender, EventArgs e)
         {
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -18530,6 +18917,142 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 DataGridInsumo.DataSource = dt;
                 DataGridInsumo.DataBind();
                 PanelInsumo.Update();
+
+            }
+        }
+
+        protected void btnRefrescar_Click(object sender, EventArgs e)
+        {
+            Refrescar();
+
+        }
+
+        private void Refrescar()
+        {
+            btnAdicionarAcabado.Enabled = true;
+            btnAdicionarAcabado.CssClass = "icong button-enabled btn btn-sm  shadow-sm ColorAzulActivo";
+
+            btnModificarAcabado.Enabled = false;
+            btnModificarAcabado.CssClass = "icong button-disabled btn btn-sm  shadow-sm ";
+
+            btnGrabarRedAcaMod.Visible = false;
+            btnGrabarRedAcaMod.Enabled = false;
+            btnGrabarRedAcaMod.CssClass = "icong button-disabled btn btn-sm  shadow-sm ";
+
+            btnGrabarRedAcabadoNue.Visible = true;
+            btnGrabarRedAcabadoNue.Enabled = false;
+            btnGrabarRedAcabadoNue.CssClass = "icong button-disabled btn btn-sm  shadow-sm";
+
+
+            // Control de campos 
+            tbCodInventario.Enabled = false;
+            tbCodInventario.Text = "";
+
+            tbDescripAcaba.Enabled = false;
+            tbDescripAcaba.Text = "";
+
+            chkAcabadoActivo.Enabled = false;
+            chkAcabadoActivo.Checked = false;
+
+            chkLinea.Enabled = false;
+            chkLinea.Checked = false;
+
+
+            Session.Remove("ID_DeF_Acab");
+            Session.Remove("ClickCountDefAcab");
+
+
+            string script1 = @"mostrarModal();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
+
+            string script2 = @"mostrarDefinirAcabado();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
+        }
+
+        public bool ValidarExistenciaCodigoInventario(string codInventario)
+        {
+            bool existe = false;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            // La consulta SQL
+            string query = "SELECT COUNT(*) FROM tblacabado WHERE CodInventario = @CodInventario";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Agregar el parámetro
+                    command.Parameters.AddWithValue("@CodInventario", codInventario);
+
+                    try
+                    {
+                        connection.Open();
+                        int count = (int)command.ExecuteScalar();
+
+                        // Si el conteo es mayor que 0, el registro existe
+                        existe = (count > 0);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejo de errores (opcional)
+                        Console.WriteLine("Error: " + ex.Message);
+                    }
+                }
+            }
+
+            return existe;
+        }
+
+        private void InsertarDefinicionAcabado()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "INSERT INTO tblacabado(CodInventario, Descripcion_Acabado, ID_GrupoAcabado, Delinea, Activo,CreadoPor,FechaCreacion," +
+                              "ModificadoPor,FechaModificacion) VALUES (@CodInventario, @DescripcionAcaba, @IdGrupAcab, @Linea, @Estado, @UsuarioLogueado," +
+                              " GETDATE(), @UsuarioLogueado1, GETDATE())";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@CodInventario", tbCodInventario.Text);
+                    cmd.Parameters.AddWithValue("@DescripcionAcaba", tbDescripAcaba.Text);
+                    cmd.Parameters.AddWithValue("@IdGrupAcab", Session["IDGruAcaSession"].ToString());
+                    cmd.Parameters.AddWithValue("@Linea", chkLinea.Checked);
+                    cmd.Parameters.AddWithValue("@Estado", chkAcabadoActivo.Checked);
+                    cmd.Parameters.AddWithValue("@UsuarioLogueado", Session["usuariologueado"].ToString());
+                    cmd.Parameters.AddWithValue("@UsuarioLogueado1", Session["usuariologueado"].ToString());
+
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+        private void ActualizarDefinicionAcabado()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "UPDATE  tblacabado SET  CodInventario = @CodInventario, Descripcion_Acabado = @DescripcionAcaba, Delinea = @Linea, Activo = @Estado,ModificadoPor = @UsuarioLogueado, " +
+                              " FechaModificacion=Getdate() WHERE ID_Acabado = @ID_Acabado  ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@CodInventario", tbCodInventario.Text);
+                    cmd.Parameters.AddWithValue("@DescripcionAcaba", tbDescripAcaba.Text);
+  
+                    cmd.Parameters.AddWithValue("@Linea", chkLinea.Checked);
+                    cmd.Parameters.AddWithValue("@Estado", chkAcabadoActivo.Checked);
+                    cmd.Parameters.AddWithValue("@UsuarioLogueado", Session["usuariologueado"].ToString());
+                    cmd.Parameters.AddWithValue("@ID_Acabado", lb_ID_AcadoMod.Text); // Pendiente poner el ID_Acabado 
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
 
             }
         }
