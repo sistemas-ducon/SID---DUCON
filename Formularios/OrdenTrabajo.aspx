@@ -308,6 +308,10 @@
             $('#modalDefinirAcabado').modal('show');
         }
 
+        function mostrarModalDetalladoObjetos() {
+            $('#modalDetalladoObjetos').modal('show');
+        }
+
     </script>
 
 
@@ -3369,7 +3373,7 @@
                                                             <i class="bi bi-floppy-fill"></i>
                                                         </asp:LinkButton>
 
-                                                           <asp:LinkButton class="icong button-disabled btn btn-sm shadow-sm "  runat="server" ToolTip="Refrescar" ID="btnRefrescar" OnClick="btnRefrescar_Click">                               
+                                                        <asp:LinkButton class="icong button-disabled btn btn-sm shadow-sm "  runat="server" ToolTip="Refrescar" ID="btnRefrescar" OnClick="btnRefrescar_Click">                               
                                                             <i class="bi bi-arrow-clockwise"></i>
                                                         </asp:LinkButton>
 
@@ -3496,7 +3500,7 @@
                                                                         <asp:ControlParameter ControlID="txtPlano" PropertyName="Text" Name="Plano"></asp:ControlParameter>
                                                                         <asp:Parameter Name="ID_Insumo"></asp:Parameter>
                                                                         <asp:Parameter Name="IdGrupoAcab"></asp:Parameter>
-                                                                         <asp:Parameter Name="IdFamilia"></asp:Parameter>
+                                                                        <asp:Parameter Name="IdFamilia"></asp:Parameter>
 
                                                                     </SelectParameters>
                                                                 </asp:SqlDataSource>
@@ -3524,12 +3528,12 @@
 
                                                 <div class="col-md-2">
                                                     <asp:CheckBox ID="chkAcabadoActivo" Enabled="false" ToolTip="Activo" runat="server" />
-                                                    <asp:Label ID="Label14" runat="server" Text="Estado Acabado"></asp:Label>
+                                                    <asp:Label ID="lbEstado" runat="server" Text="Estado Acabado"></asp:Label>
                                                 </div>
 
                                                 <div class="col-md-2">
                                                     <asp:CheckBox ID="chkLinea" Enabled="false" ToolTip="Linea" runat="server" />
-                                                    <asp:Label ID="Label15" runat="server" Text="Linea"></asp:Label>
+                                                    <asp:Label ID="lbLinea" runat="server" Text="Linea"></asp:Label>
                                                 </div>
 
                                             </div>
@@ -4036,203 +4040,506 @@
                                     </div>
                             </nav>
 
-                            <div class="container-fluid">
+                            <div class="container-fluid pt-2">
 
-                                <div class="row p-1 m-1">
+                                <div class="card shadow-sm">
 
-                                    <div class="col-2">
-                                        <div class="form-check">
-                                            <asp:RadioButtonList ID="rbObjeto" runat="server">
-                                                <asp:ListItem Selected="True" Value="Objeto">Por Objeto </asp:ListItem>
-                                                <asp:ListItem Value="Descripcion">Por Descripción</asp:ListItem>
-                                            </asp:RadioButtonList>
-                                        </div>
+                                    <div class="card-header" id="headerDes" runat="server">
+                                        <div class="row p-1 m-1">
 
-                                    </div>
-
-                                    <div class="col-2">
-                                        <div class="input-group-sm">
-                                            <asp:Label class="form-label" Text="Grupo" runat="server" ID="lbGrupo"></asp:Label>
-                                            <asp:DropDownList class="form-control" ID="ddlGrupo" runat="server" DataTextField="Descripcion" DataValueField="Descripcion" DataSourceID="GrupoObjetos" OnDataBound="ddlGrupoObjeto_DataBound"></asp:DropDownList>
-                                            <asp:SqlDataSource runat="server" ID="GrupoObjetos" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="select  ID_GrupoObjeto AS Valor,Descripcion_Grupo AS Descripcion from tblGrupoObjeto  order by Descripcion_Grupo "></asp:SqlDataSource>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="col-3">
-                                        <div class="input-group-sm">
-                                            <asp:Label class="form-label" Text="Criterio" runat="server" ID="lbCriterio"></asp:Label>
-                                            <asp:TextBox ID="tbCriterio" runat="server" CssClass="form-control" onkeydown="handleEnterKeyPress(event)"></asp:TextBox>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-1">
-                                        <div class="input-group-sm">
-                                            <asp:Label class="form-label" Text="Altura" runat="server" ID="lbAltura"></asp:Label>
-                                            <asp:TextBox ID="tbAltura" runat="server" CssClass="form-control" onkeydown="handleEnterKeyPress(event)"></asp:TextBox>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-1">
-                                        <div class="input-group-sm">
-                                            <asp:Label class="form-label" Text="Ancho" runat="server" ID="lbAncho"></asp:Label>
-                                            <asp:TextBox ID="tbAncho" runat="server" CssClass="form-control" onkeydown="handleEnterKeyPress(event)"></asp:TextBox>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-3">
-                                        <div class="input-group-sm">
-                                            <asp:CheckBox ID="chxBloques" runat="server" CssClass="form-check-input" Checked="true" />
-                                            <asp:Label ID="lbBloquesActivos" runat="server" Text="Solo Bloques Activos" CssClass="form-label"></asp:Label>
-                                        </div>
-                                        <asp:Button ID="btnBuscarActivos" runat="server" Text="Buscar Sólo activos" CssClass="btn btn-sm btn-outline-secondary" OnClick="BuscarObjeto" />
-                                    </div>
-
-
-                                </div>
-
-                                <div class="row justify-content-center">
-                                    <div class="border rounded p-1 m-1">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="table-responsive mb-1" style="max-height: 14rem; height: 14rem; overflow-x: auto;">
-
-                                                    <h5 class="datagrid-header text-center">Objeto</h5>
-
-                                                    <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridObjetos" runat="server" DataSourceID="ObtenerDatosObjetos" OnItemCommand=" DataGridObtenerDatosObjetos_LinkButton" OnItemDataBound="DataGridObtenerDatosObjetos_ItemDataBound">
-                                                        <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
-
-                                                        <Columns>
-                                                            <asp:TemplateColumn HeaderText="...">
-                                                                <ItemTemplate>
-                                                                    <asp:LinkButton ID="lnkObjetoDetallado" CssClass="Tam" runat="server" CommandName="VerObjetoDet" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
-                                                                </ItemTemplate>
-                                                            </asp:TemplateColumn>
-
-
-
-                                                            <asp:BoundColumn DataField="Id_Panel" HeaderText="Id Objeto" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Descripcion_Panel" HeaderText="Descripcion" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Ancho" HeaderText="Ancho" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Profundidad" HeaderText="Profundidad" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Precio_Venta" HeaderText="Venta" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Descripcion_Grupo" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Id_Numerico" HeaderText="Ensamble" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="CubicajeM3" HeaderText="Cub(M3)" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Chequeado" HeaderText="Ok" ItemStyle-CssClass="auto-width-column" DataFormatString="{0:Si;No}" />
-                                                            <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="FechaChequeo" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Divisiones" HeaderText="Div" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Holgura" HeaderText="Hol" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="UndxPaquete" HeaderText="UndxPaq" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="PesoKG" HeaderText="KG" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Activo" HeaderText="Activo" ItemStyle-CssClass="auto-width-column" DataFormatString="{0:Si;No}" />
-                                                            <asp:BoundColumn DataField="Escalable" HeaderText="Esc" ItemStyle-CssClass="auto-width-column" />
-
-
-
-                                                        </Columns>
-
-                                                    </asp:DataGrid>
-
-                                                    <asp:SqlDataSource ID="ObtenerDatosObjetos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommandType="StoredProcedure">
-                                                        <SelectParameters>
-                                                            <asp:ControlParameter Name="Altura" ControlID="tbAltura" PropertyName="Text" DefaultValue="%" Type="String" />
-                                                            <asp:ControlParameter Name="Ancho" ControlID="tbAncho" PropertyName="Text" DefaultValue="%" Type="String" />
-                                                            <asp:ControlParameter Name="Grupo" ControlID="ddlGrupo" PropertyName="Text" DefaultValue="%" Type="String" />
-                                                            <asp:ControlParameter ControlID="tbCriterio" PropertyName="Text" DefaultValue="%" Name="Criterio" Type="String"></asp:ControlParameter>
-                                                        </SelectParameters>
-                                                    </asp:SqlDataSource>
-
-
+                                            <div class="col-2">
+                                                <div class="form-check">
+                                                    <asp:RadioButtonList ID="rbObjeto" runat="server">
+                                                        <asp:ListItem Selected="True" Value="Objeto">Por Objeto </asp:ListItem>
+                                                        <asp:ListItem Value="Descripcion">Por Descripción</asp:ListItem>
+                                                    </asp:RadioButtonList>
                                                 </div>
 
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div class="row pt-2 mt-2">
-
-                                    <div class="col-3 ">
-                                        <div class="input-group input-group-sm">
-                                            <asp:Label CssClass="fw-bold fs-6" ID="lbTituloObjeto" class="form-label" Text="Descripcion Objeto" runat="server"></asp:Label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-2 ">
-                                        <div class="input-group input-group-sm justify-content-end">
-                                            <asp:LinkButton ID="btnDespiece" Text="Despiece" runat="server" CssClass="btn btn-sm btn-outline-secondary" OnClick="Reedireccion_ObjetoDespiece">
-
-                                            </asp:LinkButton>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-3 ">
-                                        <div class="input-group input-group-sm gap-4 d-flex ">
-                                            <asp:Label CssClass="fw-bold fs-6" ID="lbDipLa2" class="form-label" Text="Dip. LA" runat="server"></asp:Label>
-                                            <asp:Label CssClass="fw-bold fs-6" ID="ValorlbDipLa2" class="form-label" runat="server">0</asp:Label>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="col-3 ">
-                                        <div class="input-group input-group-sm gap-4 d-flex ">
-                                            <asp:Label CssClass="fw-bold fs-6" ID="lbDipLa3" class="form-label" Text="Dip. LB" runat="server"></asp:Label>
-                                            <asp:Label CssClass="fw-bold fs-6" ID="ValorlbDipLa3" class="form-label" runat="server">0</asp:Label>
-
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="row justify-content-center">
-                                    <div class="border rounded pt-3 mt-3">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="table-responsive mb-1" style="max-height: 9rem; height: 9rem; overflow-x: auto;">
-                                                    <h5 class="datagrid-header text-center">Modulo del Objeto</h5>
-                                                    <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridModuloObjetos" runat="server">
-                                                        <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
-
-                                                        <Columns>
-                                                            <asp:TemplateColumn HeaderText="...">
-                                                                <ItemTemplate>
-                                                                    <asp:LinkButton ID="lnkView2" CssClass="Tam" runat="server" CommandName="VerModulo" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
-                                                                </ItemTemplate>
-                                                            </asp:TemplateColumn>
-                                                            <asp:BoundColumn DataField="Num_Fila" HeaderText="Item" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Id_Modulo" HeaderText="Módulo" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Descripcion_TipoModulo" HeaderText="Tipo Módulo" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Descripcion_Modulo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Chequeado" HeaderText="OK" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Ubicacion_Modulo" HeaderText="Pos" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Lado" HeaderText="Lado" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Descripcion_Familia" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
-
-
-                                                        </Columns>
-
-                                                    </asp:DataGrid>
+                                            <div class="col-2">
+                                                <div class="input-group-sm">
+                                                    <asp:Label class="form-label" Text="Grupo" runat="server" ID="lbGrupo"></asp:Label>
+                                                    <asp:DropDownList class="form-control" ID="ddlGrupo" runat="server" DataTextField="Descripcion" DataValueField="Descripcion" DataSourceID="GrupoObjetos" OnDataBound="ddlGrupoObjeto_DataBound"></asp:DropDownList>
+                                                    <asp:SqlDataSource runat="server" ID="GrupoObjetos" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="select  ID_GrupoObjeto AS Valor,Descripcion_Grupo AS Descripcion from tblGrupoObjeto  order by Descripcion_Grupo "></asp:SqlDataSource>
 
                                                 </div>
+                                            </div>
+
+                                            <div class="col-3">
+                                                <div class="input-group-sm">
+                                                    <asp:Label class="form-label" Text="Criterio" runat="server" ID="lbCriterio"></asp:Label>
+                                                    <asp:TextBox ID="tbCriterio" runat="server" CssClass="form-control"></asp:TextBox>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-1">
+                                                <div class="input-group-sm">
+                                                    <asp:Label class="form-label" Text="Altura" runat="server" ID="lbAltura"></asp:Label>
+                                                    <asp:TextBox ID="tbAltura" runat="server" CssClass="form-control"></asp:TextBox>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-1">
+                                                <div class="input-group-sm">
+                                                    <asp:Label class="form-label" Text="Ancho" runat="server" ID="lbAncho"></asp:Label>
+                                                    <asp:TextBox ID="tbAncho" runat="server" CssClass="form-control"></asp:TextBox>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-3">
+                                                <div class="input-group-sm">
+                                                    <asp:CheckBox ID="chxBloques" runat="server" Checked="true" />
+                                                    <asp:Label ID="lbBloquesActivos" runat="server" Text="Solo Bloques Activos" CssClass="form-label"></asp:Label>
+                                                </div>
+                                                <asp:Button ID="btnBuscarActivos" runat="server" Text="Buscar Sólo activos" CssClass="btn btn-sm btn-outline-secondary" OnClick="BuscarObjeto" />
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body shadow-sm pt-1 pb-1" id="bodyDes" runat="server">
+                                        <div class="row justify-content-center p-1">
+                                            <div class="border rounded p-1 m-1">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="table-responsive mb-1" style="max-height: 14rem; height: 14rem; overflow-x: auto;">
+
+                                                            <h5 class="datagrid-header text-center">Objeto</h5>
+
+                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridObjetos" runat="server" DataSourceID="ObtenerDatosObjetos" OnItemCommand=" DataGridObtenerDatosObjetos_LinkButton" OnItemDataBound="DataGridObtenerDatosObjetos_ItemDataBound">
+                                                                <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+
+                                                                <Columns>
+                                                                    <asp:TemplateColumn HeaderText="...">
+                                                                        <ItemTemplate>
+                                                                            <asp:LinkButton ID="lnkObjetoDetallado" CssClass="Tam" runat="server" CommandName="VerObjetoDet" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
+                                                                        </ItemTemplate>
+                                                                    </asp:TemplateColumn>
 
 
 
+                                                                    <asp:BoundColumn DataField="Id_Panel" HeaderText="Id Objeto" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Descripcion_Panel" HeaderText="Descripcion" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Ancho" HeaderText="Ancho" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Profundidad" HeaderText="Profundidad" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Precio_Venta" HeaderText="Venta" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Descripcion_Grupo" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Id_Numerico" HeaderText="Ensamble" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="CubicajeM3" HeaderText="Cub(M3)" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Chequeado" HeaderText="Ok" ItemStyle-CssClass="auto-width-column" DataFormatString="{0:Si;No}" />
+                                                                    <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="FechaChequeo" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Divisiones" HeaderText="Div" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Holgura" HeaderText="Hol" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="UndxPaquete" HeaderText="UndxPaq" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="PesoKG" HeaderText="KG" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Activo" HeaderText="Activo" ItemStyle-CssClass="auto-width-column" DataFormatString="{0:Si;No}" />
+                                                                    <asp:BoundColumn DataField="Escalable" HeaderText="Esc" ItemStyle-CssClass="auto-width-column" />
 
+
+
+                                                                </Columns>
+
+                                                            </asp:DataGrid>
+
+                                                            <asp:SqlDataSource ID="ObtenerDatosObjetos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommandType="StoredProcedure">
+                                                                <SelectParameters>
+                                                                    <asp:ControlParameter Name="Altura" ControlID="tbAltura" PropertyName="Text" DefaultValue="%" Type="String" />
+                                                                    <asp:ControlParameter Name="Ancho" ControlID="tbAncho" PropertyName="Text" DefaultValue="%" Type="String" />
+                                                                    <asp:ControlParameter Name="Grupo" ControlID="ddlGrupo" PropertyName="Text" DefaultValue="%" Type="String" />
+                                                                    <asp:ControlParameter ControlID="tbCriterio" PropertyName="Text" DefaultValue="%" Name="Criterio" Type="String"></asp:ControlParameter>
+                                                                </SelectParameters>
+                                                            </asp:SqlDataSource>
+
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+
+                                </div>
+
+                                <div class="card mt-3 shadow-sm ">
+
+                                    <div class="card-header" runat="server">
+                                        <div class="row pt-2 mt-2">
+
+                                            <div class="col-3 ">
+                                                <div class="input-group input-group-sm">
+                                                    <asp:Label CssClass="fw-bold fs-6" ID="lbTituloObjeto" class="form-label" Text="Descripcion Objeto" runat="server"></asp:Label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-2 ">
+                                                <div class="input-group input-group-sm justify-content-end">
+                                                    <asp:LinkButton ID="btnDespiece" Text="Despiece" runat="server" CssClass="btn btn-sm btn-outline-secondary" OnClick="Reedireccion_ObjetoDespiece">
+
+                                                    </asp:LinkButton>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-3 ">
+                                                <div class="input-group input-group-sm gap-4 d-flex ">
+                                                    <asp:Label CssClass="fw-bold fs-6" ID="lbDipLa2" class="form-label" Text="Dip. LA" runat="server"></asp:Label>
+                                                    <asp:Label CssClass="fw-bold fs-6" ID="ValorlbDipLa2" class="form-label" runat="server">0</asp:Label>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="col-3 ">
+                                                <div class="input-group input-group-sm gap-4 d-flex ">
+                                                    <asp:Label CssClass="fw-bold fs-6" ID="lbDipLa3" class="form-label" Text="Dip. LB" runat="server"></asp:Label>
+                                                    <asp:Label CssClass="fw-bold fs-6" ID="ValorlbDipLa3" class="form-label" runat="server">0</asp:Label>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body shadow-sm pt-1 pb-1" id="Div2" runat="server">
+                                        <div class="row justify-content-center p-1">
+                                            <div class="border rounded p-1 m-1">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="table-responsive mb-1" style="max-height: 9rem; height: 9rem; overflow-x: auto;">
+                                                            <h5 class="datagrid-header text-center">Modulo del Objeto</h5>
+                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridModuloObjetos" runat="server">
+                                                                <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+
+                                                                <Columns>
+                                                                    <asp:TemplateColumn HeaderText="...">
+                                                                        <ItemTemplate>
+                                                                            <asp:LinkButton ID="lnkView2" CssClass="Tam" runat="server" CommandName="VerModulo" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
+                                                                        </ItemTemplate>
+                                                                    </asp:TemplateColumn>
+                                                                    <asp:BoundColumn DataField="Num_Fila" HeaderText="Item" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Id_Modulo" HeaderText="Módulo" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Descripcion_TipoModulo" HeaderText="Tipo Módulo" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Descripcion_Modulo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Chequeado" HeaderText="OK" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Ubicacion_Modulo" HeaderText="Pos" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Lado" HeaderText="Lado" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Descripcion_Familia" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
+
+
+                                                                </Columns>
+
+                                                            </asp:DataGrid>
+
+                                                        </div>
+
+
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
 
                             </div>
 
                         </div>
+
+                        <!--Modal Detallado Objetos -->
+                        <div class="modal" id="modalDetalladoObjetos" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" style="display: none;">
+                            <div class="modal-dialog modal-xl modal-dialog-centered ">
+                                <div class="modal-content ">
+
+                                    <div class="modal-header pb-2 text-white" style="background: radial-gradient(circle, #afb5b9, #23273be6); height: 1rem;">
+
+                                        <button type="button" class="btn-close btn-close-white" style="color: white!important;" data-bs-dismiss="modal" aria-label="Close" title="Cerrar"></button>
+                                    </div>
+
+                                    <nav class="navbar navbar-light bg-light navbar-custom " style="height: 3.5rem;">
+                                        <div class="container d-flex justify-content-center ">
+                                            <ul class="nav nav-tabs gap-3" id="miPestañas23">
+
+
+                                                <li class="nav-item">
+                                                    <a class="nav-link text-white active" id="InfObjetos-tab" data-bs-toggle="tab" href="#InfObjetos-Content"><i class="bi bi-info-circle"></i> Información Objetos</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link text-white" id="DespiecePrecio-tab" data-bs-toggle="tab" href="#DespiecePrecio-Content"><i class="bi bi-tools"></i> Despiece y Precio del Objeto</a>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                    </nav>
+
+                                    <div class="modal-body border rounded pt-1">
+
+                                        <div class="tab-content">
+
+                                            <div class="tab-pane fade show active" id="InfObjetos-Content">
+                                                <asp:UpdatePanel ID="PanelInfObjetos" runat="server" UpdateMode="Conditional" DefaultButton="btnSubmit">
+                                                    <ContentTemplate>
+
+                                                        <div class="container-fluid m-1 p-1 border rounded shadow-sm ">
+
+                                                            <div class="row p-1 m-1">
+
+                                                                <div class="col-md-5">
+                                                                    <div class="input-group input-group-sm mb-2 gap-2">
+                                                                        <asp:Label class="form-label" Text="Objeto" runat="server" ID="lbObj"></asp:Label>
+                                                                        <asp:TextBox ID="tbObj" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <div class="input-group input-group-sm mb-2 gap-2">
+                                                                        <asp:Label class="form-label" Text="Divisiones" runat="server" ID="lbDiv"></asp:Label>
+                                                                        <asp:TextBox ID="tbDiv" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <div class="input-group input-group-sm mb-2 gap-2">
+                                                                        <asp:Label class="form-label" Text="Línea" runat="server" ID="Label16"></asp:Label>
+                                                                        <asp:TextBox ID="tbLinea" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <div class="input-group-sm gap-1">
+                                                                        <asp:CheckBox ID="chxEsc" runat="server" />
+                                                                        <asp:Label ID="lbEsc" runat="server" Text="Escalable" CssClass="form-label"></asp:Label>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="row p-1 m-1">
+
+                                                                <div class="col-md-3">
+                                                                    <div class="input-group input-group-sm mb-2 gap-2">
+                                                                        <asp:Label class="form-label" Text="Grupo" runat="server" ID="Label17"></asp:Label>
+                                                                        <asp:TextBox ID="tbGrupo" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <div class="input-group input-group-sm mb-2 gap-2">
+                                                                        <asp:Label class="form-label" Text="Ancho" runat="server" ID="Label18"></asp:Label>
+                                                                        <asp:TextBox ID="tbAnchoDetalle" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <div class="input-group input-group-sm mb-2 gap-2">
+                                                                        <asp:Label class="form-label" Text="Altura" runat="server" ID="Label19"></asp:Label>
+                                                                        <asp:TextBox ID="tbAlturaDetalle" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <div class="input-group input-group-sm mb-2 gap-2">
+                                                                        <asp:Label class="form-label" Text="Profundidad" runat="server" ID="lbProfundidad"></asp:Label>
+                                                                        <asp:TextBox ID="tbProfunididad" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <div class="input-group input-group-sm mb-2 gap-2">
+                                                                        <asp:Label class="form-label" Text="Holgura" runat="server" ID="lbHolgura"></asp:Label>
+                                                                        <asp:TextBox ID="tbHolgura" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="row p-1 m-1">
+
+                                                                <div class="col-md-6">
+                                                                    <div class=" mb-2 gap-1">
+                                                                        <asp:Label class="form-label" Text="Descripción Sistema Integral Ducon" runat="server" ID="lbDesSid"></asp:Label>
+                                                                        <asp:TextBox ID="tbDesSid" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <div class="mb-2 gap-1">
+                                                                        <asp:Label class="form-label" Text="Valor" runat="server" ID="lbValor"></asp:Label>
+                                                                        <asp:TextBox ID="tbValor" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="container-fluid ">
+
+                                                            <div class="row justify-content-center">
+
+                                                                <div class="border rounded m-2 p-2 shadow-sm">
+
+                                                                    <div class="row">
+                                                                        <div class="col-12">
+                                                                            <div class="table-responsive mb-1" style="max-height: 10rem; height: 10rem; overflow-x: auto;">
+                                                                                <h5 class="datagrid-header text-center">Módulo </h5>
+                                                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridObjetos1" runat="server">
+                                                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+
+                                                                                    <Columns>
+                                                                                        <asp:BoundColumn DataField="Id_Modulo" HeaderText="Módulo" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Descripcion_Modulo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Descripcion_Familia" HeaderText="Familia" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Descripcion_TipoModulo" HeaderText="Tipo Módulo" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Ubicacion_Modulo" HeaderText="Ubicación" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Ancho" HeaderText="Ancho" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Lado" HeaderText="Lado" ItemStyle-CssClass="auto-width-column" />
+
+                                                                                    </Columns>
+                                                                                </asp:DataGrid>
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="row">
+                                                                        <div class="col-12">
+                                                                            <div class="table-responsive mb-1" style="max-height: 13rem; height: 13rem; overflow-x: auto;">
+                                                                                <h5 class="datagrid-header text-center">Descripción </h5>
+                                                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDespieceModulo" runat="server" OnItemDataBound="DataGridDespieceModulo_ItemDataBound">
+                                                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+
+                                                                                    <Columns>
+
+                                                                                        <asp:BoundColumn DataField="Id_Insumo" HeaderText="Comp" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Pieza" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Abreviado" HeaderText="Und" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Descripcion" HeaderText="T. Insumo" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Valor_Unitario" HeaderText="Vlr. Und" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Acabado" HeaderText="Acabado" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Factor_Ganancia" HeaderText="F. Gan" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Factor_Desperdicio" HeaderText="F. Desp" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="DescuentoAncho" HeaderText="D. Ancho" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="DescuentoAltura" HeaderText="D. Alto" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="ID_Inventario" HeaderText="Cod. Inv" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Cantidad" HeaderText="Cant" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Descripcion_Areas_Concatenadas" HeaderText="Destino" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Sentido" HeaderText="Sentido" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Costear" HeaderText="Costear" ItemStyle-CssClass="auto-width-column" DataFormatString="{0:Si;No}" />
+
+
+
+                                                                                    </Columns>
+                                                                                </asp:DataGrid>
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+
+                                                    </ContentTemplate>
+                                                </asp:UpdatePanel>
+                                            </div>
+
+                                            <div class="tab-pane fade " id="DespiecePrecio-Content">
+                                                <asp:UpdatePanel ID="PanelDespiecePrecio" runat="server" UpdateMode="Conditional" DefaultButton="btnSubmit">
+                                                    <ContentTemplate>
+
+                                                        <div class=" container-fluid">
+
+                                                            <div class="row justify-content-center pt-2 mt-2 pb-2 mb-2">
+                                                                <div class="border rounded  m-2">
+                                                                    <div class="row">
+                                                                        <div class="col-12 pt-2 pb-1">
+                                                                            <div class="table-responsive mb-1" style="max-height: 26rem; height: 26rem; overflow-x: auto;">
+                                                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDespieceAsesor" runat="server" OnItemDataBound="DataGridDespieceAsesor_ItemDataBound">
+                                                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+
+                                                                                    <Columns>
+                                                                                        <asp:BoundColumn DataField="Item" HeaderText="Item" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="ID_Inventario" HeaderText="Cod. PSL" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Pieza" HeaderText="Insumo" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="LongitudInsumo" HeaderText="A/P" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="AlturaInsumo" HeaderText="L/H" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Cantidad" HeaderText="Cant" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Factor_Desperdicio" HeaderText="Desp" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="ValorUndVenta" HeaderText="V. Unit" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Abreviado" HeaderText="Und" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="SubTotal" HeaderText="Sub Total" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Valor_Costo" HeaderText="Costo" ItemStyle-CssClass="auto-width-column" />
+
+
+                                                                                    </Columns>
+                                                                                </asp:DataGrid>
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row ">
+
+                                                                <div class="col-3 pt-4 text-center ">
+                                                                    <asp:Button ID="btnGenerarDespiece" runat="server" Text="Despiece" CssClass="btn btn-outline-secondary" Style="font-size: 1.5rem" />
+                                                                </div>
+
+                                                                <div class="col-1 ">
+                                                                </div>
+
+                                                                <div class="col-3 justify-content-lg-start mb-auto">
+                                                                    <div class=" mb-2 gap-1">
+                                                                        <asp:Label class="form-label" Text="Valor Venta" runat="server" ID="lbValorVenta" Style="font-size: 1.4rem; font-family: cursive"></asp:Label>
+                                                                        <asp:TextBox ID="tbValorVenta" runat="server" CssClass="form-control" Style="font-size: 1.5rem; font-family: cursive"></asp:TextBox>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-1 ">
+                                                                </div>
+
+                                                                <div class="col-3 justify-content-lg-start mb-auto">
+                                                                    <div class=" mb-2 gap-1">
+                                                                        <asp:Label class="form-label" Text="Valor Costo" runat="server" ID="lbValorCosto" Style="font-size: 1.4rem; font-family: cursive"></asp:Label>
+                                                                        <asp:TextBox ID="tbValorCosto" runat="server" CssClass="form-control" Style="font-size: 1.5rem; font-family: cursive"></asp:TextBox>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                    </ContentTemplate>
+                                                </asp:UpdatePanel>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
 
                     </ContentTemplate>
                 </asp:UpdatePanel>
@@ -4356,72 +4663,72 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
   
 
-    <div class="d-flex flex-wrap align-items-center" runat="server" id="contentToToggle" Visible="false">
-        <div class="d-flex align-items-center me-2">
-            <asp:Label ID="LblTipoInsumo" runat="server" CssClass="me-2 col-form-label-sm" Text="Tipo Insumo"></asp:Label>
-             <asp:DropDownList ID="DropDownList1" runat="server" CssClass="form-control form-control-sm" OnTextChanged="DropDownList1_TextChanged" AutoPostBack="true" DataTextField="Descripcion_Insumo" DataValueField="Id_Insumo"/>                                  
-        </div>
+                                    <div class="d-flex flex-wrap align-items-center" runat="server" id="contentToToggle" visible="false">
+                                        <div class="d-flex align-items-center me-2">
+                                            <asp:Label ID="LblTipoInsumo" runat="server" CssClass="me-2 col-form-label-sm" Text="Tipo Insumo"></asp:Label>
+                                            <asp:DropDownList ID="DropDownList1" runat="server" CssClass="form-control form-control-sm" OnTextChanged="DropDownList1_TextChanged" AutoPostBack="true" DataTextField="Descripcion_Insumo" DataValueField="Id_Insumo" />
+                                        </div>
 
-        <div class="d-flex align-items-center me-2">
-            <asp:Label ID="LblCriterio" runat="server" CssClass="me-2 col-form-label-sm" Text="Criterio"></asp:Label>
-            <asp:TextBox ID="TextCriterio" runat="server" CssClass="form-control me-2 form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterio_TextChanged"></asp:TextBox>
-        </div>
+                                        <div class="d-flex align-items-center me-2">
+                                            <asp:Label ID="LblCriterio" runat="server" CssClass="me-2 col-form-label-sm" Text="Criterio"></asp:Label>
+                                            <asp:TextBox ID="TextCriterio" runat="server" CssClass="form-control me-2 form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterio_TextChanged"></asp:TextBox>
+                                        </div>
 
-        <div class="d-flex align-items-center me-2">
-            <asp:Label ID="LblInv" runat="server" CssClass="me-2 col-form-label-sm" Text="Inv"></asp:Label>
-            <asp:TextBox ID="TextInv" runat="server" CssClass="form-control me-2 form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterio_TextChanged"></asp:TextBox>
-        </div>
+                                        <div class="d-flex align-items-center me-2">
+                                            <asp:Label ID="LblInv" runat="server" CssClass="me-2 col-form-label-sm" Text="Inv"></asp:Label>
+                                            <asp:TextBox ID="TextInv" runat="server" CssClass="form-control me-2 form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterio_TextChanged"></asp:TextBox>
+                                        </div>
 
-        <div class="d-flex align-items-center me-2">
-            <asp:Label ID="Label14" runat="server" CssClass="me-2 col-form-label-sm" Text="Nuevo Cod. Inv"></asp:Label>
-            <asp:TextBox ID="TextBox4" runat="server" CssClass="form-control me-2 form-control-sm"></asp:TextBox>
-        </div>
+                                        <div class="d-flex align-items-center me-2">
+                                            <asp:Label ID="Label14" runat="server" CssClass="me-2 col-form-label-sm" Text="Nuevo Cod. Inv"></asp:Label>
+                                            <asp:TextBox ID="TextBox4" runat="server" CssClass="form-control me-2 form-control-sm"></asp:TextBox>
+                                        </div>
 
-        <asp:Button ID="btnAdditional1" runat="server" CssClass="btn linkButtonClicked2 fw-bold RojoEfecto shadow text-white text-dark me-2 form-control-sm" Text="Cambiar Cod Inv" Enabled="false"/>
+                                        <asp:Button ID="btnAdditional1" runat="server" CssClass="btn linkButtonClicked2 fw-bold RojoEfecto shadow text-white text-dark me-2 form-control-sm" Text="Cambiar Cod Inv" Enabled="false" />
 
-        <div class="d-flex align-items-center me-2">
-            <asp:Label ID="Label15" runat="server" CssClass="me-2 col-form-label-sm" Text="Costo"></asp:Label>
-            <asp:TextBox ID="TextNuevoCosto" runat="server" CssClass="form-control me-2 form-control-sm"></asp:TextBox>
-        </div>
+                                        <div class="d-flex align-items-center me-2">
+                                            <asp:Label ID="Label15" runat="server" CssClass="me-2 col-form-label-sm" Text="Costo"></asp:Label>
+                                            <asp:TextBox ID="TextNuevoCosto" runat="server" CssClass="form-control me-2 form-control-sm"></asp:TextBox>
+                                        </div>
 
-        <asp:Button ID="BtnActCos" runat="server" CssClass="btn linkButtonClicked2 fw-bold me-2 RojoEfecto text-white shadow text-dark form-control-sm" Text="Actualizar Costo" Enabled="false"/>
-    </div>
-</div>
+                                        <asp:Button ID="BtnActCos" runat="server" CssClass="btn linkButtonClicked2 fw-bold me-2 RojoEfecto text-white shadow text-dark form-control-sm" Text="Actualizar Costo" Enabled="false" />
+                                    </div>
+                                </div>
 
 
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <div class="table-responsive table-responsive-sm gap-2 border" style="max-height: 45rem; overflow-x: auto;">
-                                    <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGridInsumo" runat="server" AutoGenerateColumns="false" OnItemCommand="DataGridInsumo_ItemCommand">
-                                        <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
-                                        <Columns>
-                                            <asp:TemplateColumn>
-                                                <ItemTemplate>
-                                                    <asp:LinkButton ID="SelectInsumoID" runat="server" CommandName="SelectInsumo" CommandArgument='<%# Container.ItemIndex %>'
-                                                        Text="<i class='bi bi-pencil-square text-dark'></i>" />
-                                                </ItemTemplate>
-                                            </asp:TemplateColumn>
-                                            <asp:BoundColumn DataField="Id_Insumo" HeaderText="Insumo" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                            <asp:BoundColumn DataField="ID_Inventario" HeaderText="Cod.Inv" ItemStyle-CssClass="auto-width-column" />
-                                            <asp:BoundColumn DataField="Descripcion_Insumo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
-                                            <asp:BoundColumn DataField="Descripcion" HeaderText="Tipo Insumo" ItemStyle-CssClass="auto-width-column" />
-                                            <asp:BoundColumn DataField="Valor_Unitario" HeaderText="Valor Unitario" ItemStyle-CssClass="auto-width-column" />
-                                            <asp:BoundColumn DataField="Abreviado" HeaderText="Causa Observación" ItemStyle-CssClass="auto-width-column" />
-                                            <asp:BoundColumn DataField="Factor_Ganancia" HeaderText="F.G" ItemStyle-CssClass="auto-width-column" />
-                                            <asp:BoundColumn DataField="Factor_Desperdicio" HeaderText="F.D" ItemStyle-CssClass="auto-width-column" />
-                                            <asp:BoundColumn DataField="AplicacionAcabado" HeaderText="A.A" ItemStyle-CssClass="auto-width-column" />
-                                            <asp:BoundColumn DataField="FechaCreacion" HeaderText="Creación" ItemStyle-CssClass="auto-width-column" />
-                                            <asp:BoundColumn DataField="FechaActualizacion" HeaderText="U.Actualización" ItemStyle-CssClass="auto-width-column" />
-                                            <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
-                                        </Columns>
-                                    </asp:DataGrid>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <div class="table-responsive table-responsive-sm gap-2 border" style="max-height: 45rem; overflow-x: auto;">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGridInsumo" runat="server" AutoGenerateColumns="false" OnItemCommand="DataGridInsumo_ItemCommand">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                    <Columns>
+                                                        <asp:TemplateColumn>
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="SelectInsumoID" runat="server" CommandName="SelectInsumo" CommandArgument='<%# Container.ItemIndex %>'
+                                                                    Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+                                                        <asp:BoundColumn DataField="Id_Insumo" HeaderText="Insumo" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="ID_Inventario" HeaderText="Cod.Inv" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Descripcion_Insumo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Descripcion" HeaderText="Tipo Insumo" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Valor_Unitario" HeaderText="Valor Unitario" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Abreviado" HeaderText="Causa Observación" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Factor_Ganancia" HeaderText="F.G" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Factor_Desperdicio" HeaderText="F.D" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="AplicacionAcabado" HeaderText="A.A" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="FechaCreacion" HeaderText="Creación" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="FechaActualizacion" HeaderText="U.Actualización" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
+                                                    </Columns>
+                                                </asp:DataGrid>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End Card container -->
+                            <!-- End Card container -->
                         </div>
                     </ContentTemplate>
                 </asp:UpdatePanel>
@@ -4678,7 +4985,7 @@
                         <p><span id="DesPlaOT2"></span></p>
                     </div>
                     <div class="modal-footer border-0 d-flex justify-content-center">
-                        <asp:button type="button" class="btn btn-success text-white fw-bold px-4" id="BtnDesPlaOT" Text="ACEPTAR" runat="server" OnClick="BtnDesPlaOT_Click"></asp:button>
+                        <asp:Button type="button" class="btn btn-success text-white fw-bold px-4" ID="BtnDesPlaOT" Text="ACEPTAR" runat="server" OnClick="BtnDesPlaOT_Click"></asp:Button>
                         <button type="button" class="btn btn-danger text-white fw-bold px-4" id="BtnCancelarDesPlaOT" data-bs-dismiss="modal" aria-label="Close">CANCELAR</button>
                     </div>
                 </div>
@@ -4831,7 +5138,7 @@
         }
     </script>
 
-    
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
