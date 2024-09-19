@@ -2939,7 +2939,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 DateTime fechaVentaAño = DateTime.ParseExact(tbVenta.Text, "yyyy-MM-dd", null);
                 DateTime fechaVenta = DateTime.ParseExact(tbVenta.Text, "yyyy-MM-dd", null);
                 fechaVenta = fechaVenta.AddMonths(1);
-                string rutaBase = @"\\172.16.30.6\Recepcion\Cotizaciones Excel\" + ddlZona.SelectedValue + @"";
+                string rutaBase = @"\\SRVFS\Recepcion\Cotizaciones Excel\" + ddlZona.SelectedValue + @"";
 
                 for (int i = 0; i <= 6; i++)
                 {
@@ -8960,15 +8960,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 bool planoBloqueado = (bool)commandBloqueado.ExecuteScalar();
 
-                if (planoBloqueado || txtDibuja.Text != Session["usuariologueado"].ToString())
+                if (!planoBloqueado || txtDibuja.Text == Session["usuariologueado"].ToString())
                 {
-
-                    string scriptNoPermiso = "alert('El plano se encuentra bloqueado .');";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
-                }
-                else
-                {
-
 
                     string sSqlVinculado = "SELECT ID_OT, Consecutivo_Pedido,AfectaBolsa FROM tblPlano WHERE Plano = @plano";
                     SqlCommand commandVinculado = new SqlCommand(sSqlVinculado, connection);
@@ -9023,6 +9016,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
 
                     reader.Close();
+                }
+                else
+                {
+
+                    string scriptNoPermiso = "alert('El plano se encuentra bloqueado .');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
+
+                  
                 }
 
             }
