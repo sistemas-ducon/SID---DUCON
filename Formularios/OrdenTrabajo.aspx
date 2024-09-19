@@ -3517,7 +3517,7 @@
 
                                             <div class="row pt-3">
                                                 <div class="col-md-2">
-                                                    <asp:TextBox ID="tbCodInventario" Enabled="false" CssClass="form-control form-control-sm" placeHolder="Codigo Inventario" runat="server"></asp:TextBox>
+                                                    <asp:TextBox ID="tbCodInventario" MaxLength="8" Enabled="false" CssClass="form-control form-control-sm" placeHolder="Codigo Inventario" runat="server"></asp:TextBox>
                                                 </div>
 
                                                 <div class="col-md-4">
@@ -3594,7 +3594,7 @@
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Acabados del Plano" ID="BtnAcaPla" OnClick="BtnAcaPla_Click">
-                                                  <i class="bi bi-bar-chart-line"></i>
+                                                 <i class="bi bi-palette"></i>
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Leer Archivo Despiece Acad" ID="BtnLeeArcDesAca" OnClick="BtnLeeArcDesAca_Click">
@@ -3991,31 +3991,31 @@
 
                                             <div class="contenedor-icono">
 
-                                                <asp:LinkButton runat="server" title="Nuevo Objeto" ID="BtnNueObj">
-                                                    <i class="bi bi-file-earmark"></i>
+                                                <asp:LinkButton runat="server" title="Nuevo Objeto" ID="BtnNueObj" OnClick="BtnNueObj_Click">
+                                                   <i class="bi bi-file-earmark-plus-fill"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="..." ID="Btnnnn">
+                                                <asp:LinkButton runat="server" title="..." ID="BtnImprimeObjeto">
                                                   <i class="bi bi-printer"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Modificar Objeto" ID="BtnModObj">
-                                                   <i class="bi bi-wrench"></i>
+                                                <asp:LinkButton runat="server" title="Modificar Objeto" ID="BtnModObj" OnClick="BtnModObj_Click">
+                                                  <i class="bi bi-wrench-adjustable"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Consultar Objeto" ID="BtnConObj">
+                                                <asp:LinkButton runat="server" title="Consultar Objeto" ID="BtnConObj" OnClick="BtnConObj_Click">
                                                   <i class="bi bi-file-earmark-ruled"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Eliminar Objeto" ID="BtnEliObj">
-                                                   <i class="bi bi-database-x"></i>
+                                                <asp:LinkButton runat="server" title="Eliminar Objeto" ID="BtnEliObj" OnClick="BtnEliObj_Click">
+                                                <i class="bi bi-trash3-fill"></i>
                                                 </asp:LinkButton>
 
                                                 <asp:LinkButton runat="server" title="Buscar Objeto" ID="BtnBusObj">
                                                   <i class="bi bi-search"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Copiar Objeto" ID="BtnCopObj">
+                                                <asp:LinkButton runat="server" title="Copiar Objeto" ID="BtnCopObj" OnClick="BtnCopObj_Click">
                                                     <i class="bi bi-files"></i>
                                                 </asp:LinkButton>
 
@@ -4031,8 +4031,8 @@
                                                     <i class="bi bi-disc"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Chequear" ID="BtnChe">
-                                                    <i class="bi bi-check-lg"></i>
+                                                <asp:LinkButton runat="server" title="Chequear" ID="BtnChequearObjeto" OnClick="BtnChequearObjeto_Click">
+                                                    <i class="bi bi-check-circle-fill"></i>
                                                 </asp:LinkButton>
 
 
@@ -4047,7 +4047,7 @@
                                     <div class="card-header" id="headerDes" runat="server">
                                         <div class="row p-1 m-1">
 
-                                            <div class="col-2">
+                                            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
                                                 <div class="form-check">
                                                     <asp:RadioButtonList ID="rbObjeto" runat="server">
                                                         <asp:ListItem Selected="True" Value="Objeto">Por Objeto </asp:ListItem>
@@ -4057,7 +4057,7 @@
 
                                             </div>
 
-                                            <div class="col-2">
+                                            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
                                                 <div class="input-group-sm">
                                                     <asp:Label class="form-label" Text="Grupo" runat="server" ID="lbGrupo"></asp:Label>
                                                     <asp:DropDownList class="form-control" ID="ddlGrupo" runat="server" DataTextField="Descripcion" DataValueField="Descripcion" DataSourceID="GrupoObjetos" OnDataBound="ddlGrupoObjeto_DataBound"></asp:DropDownList>
@@ -4066,28 +4066,28 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-3">
+                                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
                                                 <div class="input-group-sm">
                                                     <asp:Label class="form-label" Text="Criterio" runat="server" ID="lbCriterio"></asp:Label>
                                                     <asp:TextBox ID="tbCriterio" runat="server" CssClass="form-control"></asp:TextBox>
                                                 </div>
                                             </div>
 
-                                            <div class="col-1">
+                                            <div class="col-lg-1 col-md-4 col-sm-4 col-xs-12">
                                                 <div class="input-group-sm">
                                                     <asp:Label class="form-label" Text="Altura" runat="server" ID="lbAltura"></asp:Label>
                                                     <asp:TextBox ID="tbAltura" runat="server" CssClass="form-control"></asp:TextBox>
                                                 </div>
                                             </div>
 
-                                            <div class="col-1">
+                                            <div class="col-lg-1 col-md-4 col-sm-4 col-xs-12">
                                                 <div class="input-group-sm">
                                                     <asp:Label class="form-label" Text="Ancho" runat="server" ID="lbAncho"></asp:Label>
                                                     <asp:TextBox ID="tbAncho" runat="server" CssClass="form-control"></asp:TextBox>
                                                 </div>
                                             </div>
 
-                                            <div class="col-3">
+                                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
                                                 <div class="input-group-sm">
                                                     <asp:CheckBox ID="chxBloques" runat="server" Checked="true" />
                                                     <asp:Label ID="lbBloquesActivos" runat="server" Text="Solo Bloques Activos" CssClass="form-label"></asp:Label>
@@ -4112,7 +4112,7 @@
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                                 <Columns>
-                                                                    <asp:TemplateColumn HeaderText="...">
+                                                                    <asp:TemplateColumn HeaderText=". . .">
                                                                         <ItemTemplate>
                                                                             <asp:LinkButton ID="lnkObjetoDetallado" CssClass="Tam" runat="server" CommandName="VerObjetoDet" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
                                                                         </ItemTemplate>
@@ -4210,7 +4210,7 @@
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <div class="table-responsive mb-1" style="max-height: 9rem; height: 9rem; overflow-x: auto;">
-                                                            <h5 class="datagrid-header text-center">Modulo del Objeto</h5>
+                                                            <h5 class="datagrid-header text-center">Módulos del Objeto</h5>
                                                             <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridModuloObjetos" runat="server">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
@@ -4230,7 +4230,7 @@
                                                                     <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column" />
                                                                     <asp:BoundColumn DataField="Lado" HeaderText="Lado" ItemStyle-CssClass="auto-width-column" />
                                                                     <asp:BoundColumn DataField="Descripcion_Familia" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
-                                                                    <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="PanModResponsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
 
 
                                                                 </Columns>
@@ -4540,6 +4540,33 @@
                             </div>
                         </div>
 
+                        <!--Modal confirmar eliminar Objeto -->
+                        <div id="confirmarEliminarObjeto" class="modal" tabindex="-1" style="display: none;">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger text-white">
+                                        <h6 class="modal-title text-center">Eliminar Objeto</h6>
+
+                                    </div>
+                                    <div class="modal-body border rounded">
+                                        <div class="container-fluid">
+                                            <h6>¿Está seguro de Borrar el Objeto <span runat="server" id="SpanId_ObjetoEliminar"></span>
+                                               de ancho <span runat="server" id="spanAnchoEli"></span> y de profundidad <span runat="server" id="spanProfundidad">?</span><span runat="server" id="spanAlturaEliminar" visible="false"></span>
+                                            </h6>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                            <asp:Button runat="server" ID="btnEliminarObjeto_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm  btn-outline-danger" Style="width: 5rem;" OnClick="btnEliminarObjeto_SI_Click"  />
+                                            <asp:Button runat="server" ID="btnEliminarObjeto_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
 
                     </ContentTemplate>
                 </asp:UpdatePanel>
@@ -4659,9 +4686,9 @@
                                 </div>
                             </nav>
 
-                          <div class="card shadow">
-                <div class="card-header d-flex justify-content-between align-items-center">
-  
+                            <div class="card shadow">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+
 
                                     <div class="d-flex flex-wrap align-items-center" runat="server" id="contentToToggle" visible="false">
                                         <div class="d-flex align-items-center me-2">
@@ -5137,8 +5164,6 @@
             $('#ConfirmarRegresoDelDiseno').modal('hide');
         }
     </script>
-
-
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

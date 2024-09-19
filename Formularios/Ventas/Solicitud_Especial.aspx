@@ -912,7 +912,7 @@
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header bg-primary text-white">
-                                            <h6 class="modal-title text-center">Desarrolo Complejo </h6>
+                                            <h6 class="modal-title text-center">Desarrollo Complejo </h6>
 
                                         </div>
                                         <div class="modal-body border rounded">

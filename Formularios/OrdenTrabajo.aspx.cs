@@ -2845,7 +2845,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 BtnEliObjPla.CssClass = "btn btn-sm shadow button-enabled ColorNaranja";
 
                 BtnAcaPla.Enabled = true;
-                BtnAcaPla.CssClass = "btn btn-sm shadow button-enabled  ";
+                BtnAcaPla.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo ";
 
                 BtnLeeArcDesAca.Enabled = false;
                 BtnLeeArcDesAca.CssClass = "btn btn-sm shadow button-disabled";
@@ -3308,14 +3308,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     {
                         if (leer.Read())
                         {
-
+                            //------------------------------------------------------------------------------------------------------------------
+                            // Validar estas lineas ya que cambian el valor de la variable de session para cargar el contacto de cliente 
                             if (ValidarPermisoInfoContable(leer))
                             {
                                 string IDCLienteConstacto = leer["IDContacto_Cliente"].ToString();
                                 CargarDatosContables(IDCLienteConstacto);
 
-                                Session["IdContactoFactSession"] = IDCLienteConstacto;
+
+                                if (Session["IdContactoFactSession"].ToString() == null)
+                                {
+                                    Session["IdContactoFactSession"] = IDCLienteConstacto;
+                                }
+
                             }
+                            //------------------------------------------------------------------------------------------------------------------
 
                             // Extraer datos y asignarlos a controles
                             AssignDataToControls(leer);
@@ -4278,11 +4285,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
 
-        // Logica Tap de Objetos 
+        // Logica Tap de Objetos *****************************************************************************************************
 
         protected void BuscarObjeto(object sender, EventArgs e)
         {
-           
+
             if (chxBloques.Checked == true)
             {
                 if (rbObjeto.SelectedValue == "Objeto")
@@ -4317,6 +4324,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             }
+
+            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "SISTEMAS" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+            {
+                BtnNueObj.Enabled = true;
+                BtnNueObj.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+            }
+            else
+            {
+                BtnNueObj.Enabled = true;
+                BtnNueObj.CssClass = "btn btn-sm shadow button-disabled";
+            }
+
+            // Reiniciar la variable de sesión "ClickCount" a 0 para la próxima interacción
+            Session.Remove("ClickCount1");
+            Session.Remove("Id_PanelNum_Session1");
+
 
             DataGridModuloObjetos.DataBind();
             lbTituloObjeto.Text = "Descripcion Objeto";
@@ -4382,7 +4405,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string descrip = row.Cells[2].Text;
                 string Altura = row.Cells[4].Text;
 
+                bool chequeado = row.Cells[10].Text.ToUpper() == "SI";
 
+                // Cargamos los datos del modal por si el paso es eliminarcion 
+                SpanId_ObjetoEliminar.InnerText = Id_Objeto;
+                spanAnchoEli.InnerText = row.Cells[3].Text;
+                spanProfundidad.InnerText = row.Cells[5].Text;
+                spanAlturaEliminar.InnerText = Altura;
 
                 LlenarDataGridModuloObjeto(Id_PanelNum);
 
@@ -4413,11 +4442,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         string script2 = @"mostrarModalDetalladoObjetos();";
                         ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModalDetalladoObjetos", script2, true);
 
-
-                        //string url = "FormExtPrin/ObjetoDespiece.aspx";
-                        //string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
-                        //ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
-
                         // Reiniciar la variable de sesión "ClickCount" a 0 para la próxima interacción
                         Session.Remove("ClickCount1");
                         Session.Remove("Id_PanelNum_Session1");
@@ -4431,6 +4455,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     Session["Id_PanelNum_Session1"] = row.Cells[8].Text;
 
 
+                    // Validar los permiso para tener acceso a la consola de administracion de objetos      
+                    ControlBotonesAdministracionObjeto();
+
+                    if (chequeado)
+                    {
+                        BtnChequearObjeto.CssClass = "btn btn-sm shadow button-enabled ColorVerde";
+                        BtnChequearObjeto.ToolTip = "Deschequear";
+                    }
+                    else
+                    {
+                        BtnChequearObjeto.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+                        BtnChequearObjeto.ToolTip = "Chequear";
+                    }
+
 
                     // Llamar a la función JavaScript para enfocar y desplazar la fila
                     ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
@@ -4439,8 +4477,64 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        private void ControlBotonesAdministracionObjeto()
+        {
+            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "SISTEMAS" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+            {
+                BtnModObj.Enabled = true;
+                BtnModObj.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
-        // para cargar la info de los textBox 
+                BtnConObj.Enabled = true;
+                BtnConObj.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+                BtnEliObj.Enabled = true;
+                BtnEliObj.CssClass = "btn btn-sm shadow button-enabled RojoCancelar";
+
+                BtnCopObj.Enabled = true;
+                BtnCopObj.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+                BtnActPre.Enabled = true;
+                BtnActPre.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+                BtnChequearObjeto.Enabled = true;
+                BtnChequearObjeto.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+            }
+            else
+            {
+
+                BtnNueObj.Enabled = false;
+                BtnNueObj.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnImprimeObjeto.Enabled = false;
+                BtnImprimeObjeto.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnModObj.Enabled = false;
+                BtnModObj.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnConObj.Enabled = false;
+                BtnConObj.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnEliObj.Enabled = false;
+                BtnEliObj.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnConObj.Enabled = false;
+                BtnConObj.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnCopObj.Enabled = false;
+                BtnCopObj.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnActPre.Enabled = false;
+                BtnActPre.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnChequearObjeto.Enabled = false;
+                BtnChequearObjeto.CssClass = "btn btn-sm shadow button-disabled";
+
+            }
+
+        }
+
+        // para cargar la info en los textbox del modulo 
         public void Cargar_Informacion_Modulo()
         {
             string IdPanelNum = Session["Id_PanelNum_Session"]?.ToString();
@@ -4477,12 +4571,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     chxEsc.Checked = Convert.ToBoolean(DatosModulo.Rows[0]["Escalable"].ToString());
                 }
 
-               
+
 
                 if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
                 {
 
-                   
+
                 }
                 else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
                 {
@@ -4565,7 +4659,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-        //Este Datagrid esta pendiente por revisar las consultas 
         public void Cargar_Informacion_DespieceModuloAsesor()
         {
 
@@ -4693,9 +4786,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
 
-            // Limpiamos la variable de Session 
-            Session.Remove("Id_PanelNum_Session");
-            Session.Remove("Id_ModuloSession");
+
         }
 
         protected void DataGridDespieceModulo_ItemDataBound(object sender, DataGridItemEventArgs e)
@@ -4731,22 +4822,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-        private void ControlCamposModalObjetoDespiece()
-        {
-            tbObj.Enabled = false;
-            tbDiv.Enabled = false;
-            tbLinea.Enabled = false;
-            tbGrupo.Enabled = false;
-            tbAnchoDetalle.Enabled = false;
-            tbAlturaDetalle.Enabled = false;
-            tbProfunididad.Enabled = false;
-            tbHolgura.Enabled = false;
-            tbDesSid.Enabled = false;
-            tbValor.Enabled = false;
-            chxEsc.Enabled = false;
-            tbValorVenta.Enabled = false;
-            tbValorCosto.Enabled = false;
-        }
 
         protected void DataGridModuloObjeto_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
@@ -4766,10 +4841,516 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void Reedireccion_ObjetoDespiece(object sender, EventArgs e)
         {
-            string url = "FormExtPrin/ObjetoDespiece.aspx";
+
+            Cargar_Informacion_Modulo();
+            Cargar_Informacion_DespieceModulo();
+            Cargar_Informacion_DespieceModuloAsesor();
+            ControlCamposModalObjetoDespiece();
+
+
+            string script2 = @"mostrarModalDetalladoObjetos();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModalDetalladoObjetos", script2, true);
+        }
+
+        private void ControlCamposModalObjetoDespiece()
+        {
+            tbObj.Enabled = false;
+            tbDiv.Enabled = false;
+            tbLinea.Enabled = false;
+            tbGrupo.Enabled = false;
+            tbAnchoDetalle.Enabled = false;
+            tbAlturaDetalle.Enabled = false;
+            tbProfunididad.Enabled = false;
+            tbHolgura.Enabled = false;
+            tbDesSid.Enabled = false;
+            tbValor.Enabled = false;
+            chxEsc.Enabled = false;
+            tbValorVenta.Enabled = false;
+            tbValorCosto.Enabled = false;
+        }
+
+        protected void BtnChequearObjeto_Click(object sender, EventArgs e)
+        {
+
+            if (!ValidarObjetoChequeado())
+            {
+                // Objeto no chequeado (Se intenta chequear)
+
+                if (!ValidarModulosNoChequeado())
+                {
+                    if (ValidarObjetoEscalable())
+                    {
+                        if (ActualizarChequeadoPorID_Panel(1))
+                        {
+
+                            BtnChequearObjeto.CssClass = "btn btn-sm shadow button-enabled ColorVerde";
+                            BtnChequearObjeto.ToolTip = "Deschequear";
+
+                            BuscarObjeto(sender, e);
+
+
+                            Session.Remove("ClickCount1");
+                            Session.Remove("Id_PanelNum_Session1");
+
+                            string scriptChequeado = $"alert('Objeto chequeado.');";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "showNoAgregado", scriptChequeado, true);
+
+                        }
+                    }
+                    else
+                    {
+                        if (ActualizarChequeadoPorID_Numerico(1))
+                        {
+
+                            BtnChequearObjeto.CssClass = "btn btn-sm shadow button-enabled ColorVerde";
+                            BtnChequearObjeto.ToolTip = "Deschequear";
+
+                            BuscarObjeto(sender, e);
+
+
+                            Session.Remove("ClickCount1");
+                            Session.Remove("Id_PanelNum_Session1");
+
+                            // Mensaje Exito
+                            string scriptChequeado = $"alert('Objeto chequeado.');";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "showNoAgregado", scriptChequeado, true);
+                        }
+                    }
+                }
+                else
+                {
+                    //Mensaje Error
+                    string scriptNoChequeaar = $"alert('No se puede chequear(bloquear) el objeto por que tiene al menos un modulo que no esta Chequeado(bloqueado)');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showNoAgregado", scriptNoChequeaar, true);
+
+                }
+            }
+            else
+            {
+                // Objeto Chequeado (Se realiz Acciones para deschequear) 
+
+                // Validar Permiso para chequear Objeto
+                if (ValidarPermisoDeschequearObjeto())
+                {
+                    if (ValidarObjetoEscalable())
+                    {
+                        if (ActualizarChequeadoPorID_Panel(0))
+                        {
+                            // Posible mensaje de actualizacion de chequeado por ID_Panel
+                            BtnChequearObjeto.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+                            BtnChequearObjeto.ToolTip = "Chequear";
+
+                            BuscarObjeto(sender, e);
+
+
+                            Session.Remove("ClickCount1");
+                            Session.Remove("Id_PanelNum_Session1");
+
+                            // Mensaje Exito
+                            string scriptNoChequeaar = $"alert('Objeto deschequeado.');";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "showNoAgregado", scriptNoChequeaar, true);
+                        }
+                    }
+                    else
+                    {
+                        if (ActualizarChequeadoPorID_Numerico(0))
+                        {
+                            BtnChequearObjeto.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+                            BtnChequearObjeto.ToolTip = "Chequear";
+
+                            BuscarObjeto(sender, e);
+
+
+                            Session.Remove("ClickCount1");
+                            Session.Remove("Id_PanelNum_Session1");
+
+                            // Mensaje Exito
+                            string scriptNoChequeaar = $"alert('Objeto deschequeado.');";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "showNoAgregado", scriptNoChequeaar, true);
+                        }
+                    }
+                }
+                else
+                {
+                    // Mensaje Error
+                    string scriptNoChequeaar = $"alert('No tiene el permiso para desbloquear bloque.');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showNoAgregado", scriptNoChequeaar, true);
+                }
+
+            }
+
+
+        }
+
+        public bool ValidarObjetoChequeado()
+        {
+            bool chequeado = false;
+
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            // Consulta SQL
+            string query = "SELECT Chequeado FROM tblPanel WHERE Id_Numerico = @IdNumerico";
+
+            // Usamos un bloque using para asegurarnos de liberar los recursos correctamente
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Agregamos el parámetro a la consulta
+                    command.Parameters.AddWithValue("@IdNumerico", Session["Id_PanelNum_Session"].ToString());
+
+                    try
+                    {
+                        // Abrimos la conexión
+                        connection.Open();
+
+                        // Ejecutamos la consulta y obtenemos el valor
+                        var result = command.ExecuteScalar();
+
+                        // Si el resultado no es nulo, convertimos el valor a booleano
+                        if (result != null)
+                        {
+                            chequeado = Convert.ToBoolean(result);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejo de errores (puedes registrar el error o manejarlo según tus necesidades)
+                        Console.WriteLine("Error al obtener el valor de Chequeado: " + ex.Message);
+                    }
+                }
+            }
+
+            return chequeado;
+        }
+
+        public bool ValidarModulosNoChequeado()
+        {
+            bool existenRegistros = false;
+
+            // Cadena de conexión a la base de datos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            // Consulta SQL
+            string query = @"SELECT tblPanel_Modulo.Id_PanelNum,tblModulo.Chequeado FROM tblPanel_Modulo 
+                            INNER JOIN tblModulo ON tblPanel_Modulo.Id_Modulo = tblModulo.Id_Modulo 
+                            WHERE tblPanel_Modulo.Id_PanelNum = @ID_Numerico 
+                            AND tblModulo.Chequeado = 0";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Añadir el parámetro
+                    command.Parameters.AddWithValue("@ID_Numerico", Session["Id_PanelNum_Session"].ToString());
+
+                    try
+                    {
+                        // Abrimos la conexión
+                        connection.Open();
+
+                        // Ejecutamos la consulta y leemos los resultados con SqlDataReader
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            // Si el lector tiene filas, significa que la consulta trajo registros
+                            if (reader.HasRows)
+                            {
+                                existenRegistros = true;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejo de errores
+                        Console.WriteLine("Error al validar registros: " + ex.Message);
+                    }
+                }
+            }
+
+            return existenRegistros;
+        }
+
+        public bool ValidarObjetoEscalable()
+        {
+            bool chequeado = false;
+
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            // Consulta SQL
+            string query = "SELECT Chequeado FROM tblPanel WHERE Id_Numerico = @IdNumerico";
+
+            // Usamos un bloque using para asegurarnos de liberar los recursos correctamente
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Agregamos el parámetro a la consulta
+                    command.Parameters.AddWithValue("@IdNumerico", Session["Id_PanelNum_Session"].ToString());
+
+                    try
+                    {
+                        // Abrimos la conexión
+                        connection.Open();
+
+                        // Ejecutamos la consulta y obtenemos el valor
+                        var result = command.ExecuteScalar();
+
+                        // Si el resultado no es nulo, convertimos el valor a booleano
+                        if (result != null)
+                        {
+                            chequeado = Convert.ToBoolean(result);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejo de errores (puedes registrar el error o manejarlo según tus necesidades)
+                        Console.WriteLine("Error al obtener el valor de Chequeado: " + ex.Message);
+                    }
+                }
+            }
+
+            return chequeado;
+        }
+
+        public bool ValidarPermisoDeschequearObjeto()
+        {
+            bool existe = false;
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT * FROM tblPermiso_Empleado WHERE ID_Empleado = @CedulaLogueada AND ID_Permiso = '41'";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@CedulaLogueada", Session["CedulaLogeada"]?.ToString());
+
+                    connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            existe = true;
+                        }
+                    }
+                }
+            }
+
+            return existe;
+        }
+
+        private bool ActualizarChequeadoPorID_Panel(int estado)
+        {
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "UPDATE tblPanel SET Chequeado = @estado ,Responsable= @UsuarioLogueado,FechaChequeo= GETDATE() where Id_Panel= @ID_Panel ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@UsuarioLogueado", Session["usuariologueado"].ToString());
+                    cmd.Parameters.AddWithValue("@ID_Panel", Session["Id_ObjetoSession"].ToString());
+                    cmd.Parameters.AddWithValue("@estado", estado);
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+
+
+                    if (CantidadFilasAfectada > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+            }
+        }
+
+        private bool ActualizarChequeadoPorID_Numerico(int estado)
+        {
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "UPDATE tblPanel SET Chequeado = @estado,Responsable = @UsuarioLogueado,FechaChequeo = GETDATE() where Id_Numerico = @ID_Numerico ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@UsuarioLogueado", Session["usuariologueado"].ToString());
+                    cmd.Parameters.AddWithValue("@ID_Numerico", Session["Id_PanelNum_Session"].ToString());
+                    cmd.Parameters.AddWithValue("@estado", estado);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+
+
+                    if (CantidadFilasAfectada > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+            }
+        }
+
+        protected void BtnNueObj_Click(object sender, EventArgs e)
+        {
+            string url = "~/Formularios/DiseñoYDesarrollo/ObjetosDibujo.aspx";
             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
             ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+
+            Session.Remove("Id_numericoDise");
+            Session["CrudObjetosDibujo"] = "Nuevo";
         }
+
+        protected void BtnModObj_Click(object sender, EventArgs e)
+        {
+
+            if (!ValidarObjetoChequeado())
+            {
+                string url = "~/Formularios/DiseñoYDesarrollo/ObjetosDibujo.aspx";
+                string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+
+                Session["Id_numericoDise"] = Session["Id_PanelNum_Session"].ToString();
+                Session["CrudObjetosDibujo"] = "Modificar";
+            }
+            else
+            {
+                string scriptChequeado = $"alert('El objeto se encuentra chequeado(bloqueado), no puede modificarlo.');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showNoAgregado", scriptChequeado, true);
+            }
+
+        }
+
+        protected void BtnConObj_Click(object sender, EventArgs e)
+        {
+            string url = "~/Formularios/DiseñoYDesarrollo/ObjetosDibujo.aspx";
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+
+            Session["Id_numericoDise"] = Session["Id_PanelNum_Session"].ToString();
+            Session["CrudObjetosDibujo"] = "Consultar";
+        }
+
+        protected void BtnCopObj_Click(object sender, EventArgs e)
+        {
+            string url = "~/Formularios/DiseñoYDesarrollo/ObjetosDibujo.aspx";
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+
+            Session["Id_numericoDise"] = Session["Id_PanelNum_Session"].ToString();
+            Session["CrudObjetosDibujo"] = "Copiar";
+        }
+
+        protected void BtnEliObj_Click(object sender, EventArgs e)
+        {
+            if (ValidarObjetoEnOrdenTrabajo())
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El Objeto " + Session["Id_ObjetoSession"].ToString() + " está vinculado a una o más órdenes de trabajo.');", true);
+                return;
+            }
+            else
+            {
+                // Modal confirmar eliminar objeto 
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#confirmarEliminarObjeto').modal('show');", true);
+                return;
+            }
+
+        }
+
+        public bool ValidarObjetoEnOrdenTrabajo()
+        {
+            bool existe = false;
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT 1 FROM tblPlano INNER JOIN tblPlano_Panel ON tblPlano.Plano = tblPlano_Panel.Id_Plano " +
+                               "WHERE (((tblPlano.Id_OT)<>'Nula') AND ((tblPlano_Panel.Id_PanelNum)= @ID_Numerico))";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ID_Numerico", Session["Id_PanelNum_Session"].ToString());
+
+                    connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            existe = true;
+                        }
+                    }
+                }
+            }
+
+            return existe;
+        }
+
+        protected void btnEliminarObjeto_SI_Click(object sender, EventArgs e)
+        {
+            if (EliminarObjeto())
+            {
+                //Eliminado
+                BuscarObjeto(sender, e);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El Objeto se ha eliminado exitosamente.');", true);
+                return;
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El objeto no ha sido eliminado.');", true);
+                return;
+                //No Eliminado
+            }
+        }
+
+        private bool EliminarObjeto()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = "DELETE FROM tblPanel WHERE Id_Panel = @IdObjeto AND Ancho = @Ancho AND Altura = @Altura ";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@IdObjeto", SpanId_ObjetoEliminar.InnerText);
+                        command.Parameters.AddWithValue("@Ancho", spanAnchoEli.InnerText);
+                        command.Parameters.AddWithValue("@Altura", spanAlturaEliminar.InnerText);
+
+
+
+
+                        int filasAfectadas = command.ExecuteNonQuery();
+                        return filasAfectadas > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
+        }
+
+        // Fin Logica Tap Objetos **************************************************************************************************
 
         protected void Redireccion_Nit(object sender, EventArgs e)
         {
@@ -6481,14 +7062,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
 
                 BtnNueObj,
-                Btnnnn,
+                BtnImprimeObjeto,
                 BtnModObj,
                 BtnConObj,
                 BtnEliObj,
                 BtnBusObj,
                 BtnCopObj,
                 BtnActPre,
-                BtnChe,
+                BtnChequearObjeto,
 
             };
 
@@ -6594,7 +7175,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 DropDownList1.DataSource = ds.Tables["TipoInsumo"];
                 DropDownList1.DataTextField = "Descripcion";
                 DropDownList1.DataValueField = "Id_TipoInsumo";
-             
+
                 DropDownList1.DataBind();
                 DropDownList1.Items.Insert(0, new ListItem(" "));
             }
@@ -7204,6 +7785,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string ApliAcabado = row.Cells[6].Text;
             Session["AplicadoASession"] = row.Cells[6].Text;
             Session["IDGruAcaSession"] = row.Cells[8].Text;
+            Session["ID_OtAcabDefSession"] = row.Cells[7].Text;
             Session["IDInsumoASession"] = row.Cells[9].Text;
             Session["IDFamiliarSession"] = row.Cells[10].Text;
 
@@ -7285,6 +7867,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             Session.Remove("ID_Acabado");
                             Session.Remove("ClickCount3");
 
+
+                            //Limpiar las variables de Session de definicion de acabados 
+
+                            Session.Remove("ClickCountDefAcab");
+                            Session.Remove("ID_DeF_Acab");
+
                         }
                         else
                         {
@@ -7297,7 +7885,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             // Reiniciar la variable de sesión "ClickCount" a 0 para la próxima interacción                        
                             Session.Remove("ID_Acabado");
                             Session.Remove("ClickCount3");
-
 
 
                             // mostrar modal de acabado y modal de confirmar eliminar acabado
@@ -18955,8 +19542,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string CodInv = row.Cells[1].Text;
             string Descripcion = row.Cells[2].Text;
 
-            bool Estado = Convert.ToBoolean(row.Cells[3].Text);
-            bool Linea = Convert.ToBoolean(row.Cells[4].Text);
+            bool Linea = Convert.ToBoolean(row.Cells[3].Text);
+            bool Estado = Convert.ToBoolean(row.Cells[4].Text);
             string ID_Acabado = row.Cells[9].Text;
 
             // Se utiliza para darle el color solo a la fila seleccionada 
@@ -18982,10 +19569,36 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // se valida si es el segundo click en la misma fila 
                 if (clickCount == 2)
                 {
-                    // Asigar Acabado 
 
-                    string script1 = @"mostrarModal();";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
+                    if (Estado)
+                    {
+                        // Asigar Acabado
+                        ActualizarDefinicionAcabadoPlano();
+                        DataGridAcabados1.DataBind();
+                        string script1 = @"mostrarModal();";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
+
+                        // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
+
+                        Session.Remove("ClickCountDefAcab");
+                        Session.Remove("ID_DeF_Acab");
+
+                    }
+                    else
+                    {
+                        string scriptNoAcabados1 = $"alert('El acabado {tbDescripAcaba.Text} , se encuentra inactivo. No puede asignarlo');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showNoAgregado", scriptNoAcabados1, true);
+
+                        string script1 = @"mostrarModal();";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
+
+                        string script2 = @"mostrarDefinirAcabado();";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
+
+                        // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
+                        Session["ClickCountDefAcab"] = 1;
+                        Session["ID_DeF_Acab"] = row.Cells[9].Text;
+                    }
 
                 }
             }
@@ -19015,8 +19628,38 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string script2 = @"mostrarDefinirAcabado();";
                 ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
 
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
+                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
+
             }
 
+        }
+
+        private void ActualizarDefinicionAcabadoPlano()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "UPDATE  tblOTAcabadoDefinitivo SET  oadCodInvDes = @CodAcaDes, oadDescripcionAcabado = @DescripcionAcaba " +
+                              " WHERE id_OTAcabadoDefinitivo = @ID_AcabadoDefinitivo ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@CodAcaDes", tbCodInventario.Text);
+                    cmd.Parameters.AddWithValue("@DescripcionAcaba", tbDescripAcaba.Text);
+
+                    cmd.Parameters.AddWithValue("@ID_AcabadoDefinitivo", Session["ID_OtAcabDefSession"].ToString());
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
         }
 
         protected void btnVerOrigen_Click(object sender, EventArgs e)
@@ -19358,7 +20001,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private void ActualizarDefinicionAcabado()
         {
-            // Consulta para verificar si el usuario tiene permisos
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -19370,7 +20012,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     connection.Open();
                     cmd.Parameters.AddWithValue("@CodInventario", tbCodInventario.Text);
                     cmd.Parameters.AddWithValue("@DescripcionAcaba", tbDescripAcaba.Text);
-  
+
                     cmd.Parameters.AddWithValue("@Linea", chkLinea.Checked);
                     cmd.Parameters.AddWithValue("@Estado", chkAcabadoActivo.Checked);
                     cmd.Parameters.AddWithValue("@UsuarioLogueado", Session["usuariologueado"].ToString());
@@ -19385,12 +20027,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void TextCriterio_TextChanged(object sender, EventArgs e)
         {
-            
-                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-                using (SqlConnection con = new SqlConnection(connectionString))
-                {
-                    // Consulta SQL ajustada
-                    string query = @"
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                // Consulta SQL ajustada
+                string query = @"
             SELECT TOP 200 tblInsumo.*, tblTipoInsumo.Descripcion, tblUnidad_Medida.Abreviado
             FROM tblInsumo, tblTipoInsumo, tblUnidad_Medida
             WHERE tblInsumo.Descripcion_Insumo LIKE '%' + @TextCriterio + '%'
@@ -19400,82 +20042,82 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             AND tblTipoInsumo.Descripcion LIKE '%' + @TipoInsumo + '%'
             ORDER BY tblInsumo.Descripcion_Insumo";
 
-                    SqlCommand cmd = new SqlCommand(query, con);
-                    cmd.Parameters.AddWithValue("@TextCriterio", TextCriterio.Text);
-                    cmd.Parameters.AddWithValue("@TextInv", TextInv.Text);
-                    cmd.Parameters.AddWithValue("@TipoInsumo", DropDownList1.SelectedItem.Text);
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@TextCriterio", TextCriterio.Text);
+                cmd.Parameters.AddWithValue("@TextInv", TextInv.Text);
+                cmd.Parameters.AddWithValue("@TipoInsumo", DropDownList1.SelectedItem.Text);
 
-                    SqlDataAdapter sda = new SqlDataAdapter(cmd);
-                    DataTable dt = new DataTable();
-                    sda.Fill(dt);
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                sda.Fill(dt);
 
                 DataGridInsumo.DataSource = dt;
                 DataGridInsumo.DataBind();
-                    PanelInsumo.Update();
-               }
-            
+                PanelInsumo.Update();
+            }
+
         }
 
         protected void DataGridInsumo_ItemCommand(object source, DataGridCommandEventArgs e)
         {
-                if (e.CommandName == "SelectInsumo")
+            if (e.CommandName == "SelectInsumo")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGridInsumo.Items[rowIndex];
+
+                // capturamos los campos de la fila del datagrid 
+                foreach (DataGridItem item in DataGridInsumo.Items)
                 {
-                    int rowIndex = Convert.ToInt32(e.CommandArgument);
-                    DataGridItem row = DataGridInsumo.Items[rowIndex];
-
-                    // capturamos los campos de la fila del datagrid 
-                    foreach (DataGridItem item in DataGridInsumo.Items)
+                    if (item != row)
                     {
-                        if (item != row)
-                        {
-                            item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
-                        }
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
                     }
+                }
 
-                    e.Item.CssClass = "fila-seleccionada1";
+                e.Item.CssClass = "fila-seleccionada1";
 
-                    Session["Id_Insumo"] = row.Cells[1].Text;
+                Session["Id_Insumo"] = row.Cells[1].Text;
 
-                    DateTime? primerClicTime = Session["PrimerClicTime5"] as DateTime?;
-                    if (primerClicTime != null && (DateTime.Now - primerClicTime.Value).TotalSeconds <= 1)
+                DateTime? primerClicTime = Session["PrimerClicTime5"] as DateTime?;
+                if (primerClicTime != null && (DateTime.Now - primerClicTime.Value).TotalSeconds <= 1)
+                {
+                    // Se compara si el click es en la misma fila
+                    if (row.Cells[1].Text == Session["Id_OTdise5"]?.ToString())
                     {
-                        // Se compara si el click es en la misma fila
-                        if (row.Cells[1].Text == Session["Id_OTdise5"]?.ToString())
+                        // Incrementar la variable de sesión "ClickCount" en el servidor
+                        int clickCount = Convert.ToInt32(Session["ClickCount5"]) + 1;
+                        Session["ClickCount5"] = clickCount;
+
+                        e.Item.CssClass = "fila-seleccionada1";
+
+                        // Se valida si es el segundo click en la misma fila 
+                        if (clickCount == 2)
                         {
-                            // Incrementar la variable de sesión "ClickCount" en el servidor
-                            int clickCount = Convert.ToInt32(Session["ClickCount5"]) + 1;
-                            Session["ClickCount5"] = clickCount;
-
-                            e.Item.CssClass = "fila-seleccionada1";
-
-                            // Se valida si es el segundo click en la misma fila 
-                            if (clickCount == 2)
-                            {
                             string url = "DiseñoYDesarrollo/frmInsumos.aspx";
                             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
                             ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
-                            }
                         }
-
-                        // Limpia las variables de sesión
-                        Session.Remove("PrimerClicTime5");
-                    }
-                    else
-                    {
-
-                        e.Item.CssClass = "fila-seleccionada1";
-                        // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
-                        Session["ClickCount5"] = 1;
-                        Session["Id_OTdise5"] = row.Cells[1].Text;
-                        Session["PrimerClicTime5"] = DateTime.Now; // Establecer el tiempo del primer clic
-
-
                     }
 
-               
-                
+                    // Limpia las variables de sesión
+                    Session.Remove("PrimerClicTime5");
+                }
+                else
+                {
+
+                    e.Item.CssClass = "fila-seleccionada1";
+                    // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
+                    Session["ClickCount5"] = 1;
+                    Session["Id_OTdise5"] = row.Cells[1].Text;
+                    Session["PrimerClicTime5"] = DateTime.Now; // Establecer el tiempo del primer clic
+
+
+                }
+
+
+
             }
-        }      
+        }
     }
 }
 
