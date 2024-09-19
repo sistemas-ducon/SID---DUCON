@@ -3316,7 +3316,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 CargarDatosContables(IDCLienteConstacto);
 
 
-                                if (Session["IdContactoFactSession"].ToString() == null)
+                                if (Session["CargarIDContacto"] != null && Session["CargarIDContacto"].ToString() == "ACTIVO")
+                                {
+                                   
+                                }
+                                else
                                 {
                                     Session["IdContactoFactSession"] = IDCLienteConstacto;
                                 }
@@ -5497,6 +5501,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 }
 
                                 Session.Remove("IdClienteFactSession");
+                                Session.Remove("CargarIDContacto");
 
 
                             }

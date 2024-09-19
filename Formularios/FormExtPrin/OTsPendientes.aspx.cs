@@ -231,6 +231,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             Session["Id_OT2"] = idOT;
             Session["pedido2"] = consecutivoPedido;
 
+            // Llama al método para obtener el ID de contacto del cliente
+            string idContactoCliente = ObtenerIdContactoCliente(idOT, consecutivoPedido);
+
+            // Asigna el resultado a la variable de sesión
+            if (!string.IsNullOrEmpty(idContactoCliente))
+            {
+                Session["IdContactoFactSession"] = idContactoCliente;
+                Session["CargarIDContacto"] = "ACTIVO";
+            }
+
             // Deselecciona todas las filas previamente seleccionadas
             foreach (DataGridItem item in DataGrid1.Items)
             {
@@ -385,5 +395,51 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             Response.TransmitFile(filePath);
             Response.End();
         }
+
+        public string ObtenerIdContactoCliente(string idOT, string consecutivoPedido)
+        {
+            // Define la cadena de conexión (asegúrate de que esté bien configurada en tu proyecto)
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            // La consulta SQL
+            string query = "SELECT IDContacto_Cliente FROM tblOT WHERE Id_OT = @IdOT AND Consecutivo_Pedido = @ConsecutivoPedido";
+
+            // Variable para almacenar el resultado
+            string idContactoCliente = null;
+
+            // Usamos un bloque using para asegurarnos de que se liberen los recursos de conexión
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Añadimos los parámetros de la consulta
+                    command.Parameters.AddWithValue("@IdOT", idOT);
+                    command.Parameters.AddWithValue("@ConsecutivoPedido", consecutivoPedido);
+
+                    try
+                    {
+                        // Abrimos la conexión
+                        connection.Open();
+
+                        // Ejecutamos la consulta y obtenemos el resultado
+                        object result = command.ExecuteScalar();
+
+                        // Verificamos si el resultado no es nulo
+                        if (result != null)
+                        {
+                            idContactoCliente = result.ToString();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Maneja el error apropiadamente (logs, alertas, etc.)
+                        throw new Exception("Error al obtener el ID de contacto del cliente.", ex);
+                    }
+                }
+            }
+
+            return idContactoCliente;
+        }
+
     }
 }

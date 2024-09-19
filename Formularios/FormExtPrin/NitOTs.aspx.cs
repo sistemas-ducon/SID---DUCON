@@ -1609,6 +1609,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     string ciudad = row.Cells[8].Text;
 
                     Session["IdContactoFactSession"] = idContacto; // Variable que almacena el IdContactoFact
+                    Session["CargarIDContacto"] = "ACTIVO";
                     tbSede.Text = sede;
                     tbDireccion1.Text = direccion;
                     tbNombreContacto.Text = nombre;
