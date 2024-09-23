@@ -5095,8 +5095,8 @@
         }
     </script>
 
-    <script type="text/javascript">
 
+    <script type="text/javascript">
         // Escuchar el evento keydown en el documento
         document.addEventListener('keydown', function (event) {
             // Verificar si la tecla presionada es "Enter" (código de tecla 13)
@@ -5104,27 +5104,30 @@
                 // Obtener el elemento que tiene el foco actualmente
                 var focusedElement = document.activeElement;
 
-                // Verificar si el elemento enfocado no es un textarea
-                if (focusedElement.tagName !== 'TEXTAREA') {
-                    // Prevenir la acción predeterminada del evento
-                    event.preventDefault();
-
+                // Si el elemento enfocado es un textarea, permitir el salto de línea
+                if (focusedElement.tagName === 'TEXTAREA') {
+                    return; // Salir para permitir el salto de línea
                 }
 
-                if (focusedElement.id === "tbBuscarAcaba" || focusedElement.id === "tbBuscarAcaba" || focusedElement.id === "tbBuscarAcaba") {
-                    event.preventDefault();
-
-                } else if (focusedElement.id === "ddlGrupo" || focusedElement.id === "tbCriterio" || focusedElement.id === "tbAltura" || focusedElement.id === "tbAncho") {
-                    document.getElementById('<%= btnBuscarActivos.ClientID %>').click(); // Hacer clic en el botón de búsqueda
-
-                } else {
-                    event.preventDefault();  // Evitar que se envíe el formulario
-                }
-
-            }
-        });
-
+                // Aquí revisamos los campos específicos
+                if (focusedElement.id === "tbBuscarAcaba" || focusedElement.id === "tbCriterio" || focusedElement.id === "tbAltura" || focusedElement.id === "tbAncho") {
+                    // Hacer clic en el botón de búsqueda
+                    document.getElementById('<%= btnBuscarActivos.ClientID %>').click();
+                event.preventDefault(); // Prevenir el envío del formulario
+            } else if (focusedElement.id === "ddlGrupo") {
+                // Hacer clic en el botón de búsqueda
+                document.getElementById('<%= btnBuscarActivos.ClientID %>').click();
+                   event.preventDefault(); // Prevenir el envío del formulario
+               } else {
+                   event.preventDefault(); // Evitar que se envíe el formulario
+               }
+           }
+       });
     </script>
+
+
+
+
 
     <script>   
         function actualizarValorBotonOk() {
