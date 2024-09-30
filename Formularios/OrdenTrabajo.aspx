@@ -4021,7 +4021,7 @@
                                                     <i class="bi bi-files"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Actualizar Precio" ID="BtnActPre">
+                                                <asp:LinkButton runat="server" title="Actualizar Precio" ID="BtnActPre" OnClick="BtnActPre_Click">
                                                       <i class="bi bi-currency-dollar"></i>
                                                 </asp:LinkButton>
 
@@ -4553,14 +4553,14 @@
                                     <div class="modal-body border rounded">
                                         <div class="container-fluid">
                                             <h6>¿Está seguro de Borrar el Objeto <span runat="server" id="SpanId_ObjetoEliminar"></span>
-                                               de ancho <span runat="server" id="spanAnchoEli"></span> y de profundidad <span runat="server" id="spanProfundidad">?</span><span runat="server" id="spanAlturaEliminar" visible="false"></span>
+                                                de ancho <span runat="server" id="spanAnchoEli"></span> y de profundidad <span runat="server" id="spanProfundidad">?</span><span runat="server" id="spanAlturaEliminar" visible="false"></span>
                                             </h6>
                                         </div>
 
                                     </div>
                                     <div class="modal-footer">
                                         <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                            <asp:Button runat="server" ID="btnEliminarObjeto_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm  btn-outline-danger" Style="width: 5rem;" OnClick="btnEliminarObjeto_SI_Click"  />
+                                            <asp:Button runat="server" ID="btnEliminarObjeto_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm  btn-outline-danger" Style="width: 5rem;" OnClick="btnEliminarObjeto_SI_Click" />
                                             <asp:Button runat="server" ID="btnEliminarObjeto_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
                                         </div>
 
@@ -4569,6 +4569,30 @@
                             </div>
                         </div>
 
+                        <!--Modal confirmar actualizar Precio Venta -->
+                        <div id="confirmarActualizarPrecioVenta" class="modal" tabindex="-1" style="display: none;">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary text-white">
+                                        <h6 class="modal-title text-center">Actualizar Precio Venta</h6>
+
+                                    </div>
+                                    <div class="modal-body border rounded">
+                                        <div class="container-fluid">
+                                            <h6>Está seguro de actualizar el precio venta de los objetos consultados?</h6>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                            <asp:Button runat="server" ID="btnActulizarPrecioVenta_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm  btn-outline-primary" Style="width: 5rem;" />
+                                            <asp:Button runat="server" ID="btnActulizarPrecioVenta_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                     </ContentTemplate>
                 </asp:UpdatePanel>
@@ -5268,35 +5292,39 @@
         }
     </script>
 
-   <script type="text/javascript">
-       // Escuchar el evento keydown en el documento
-       document.addEventListener('keydown', function (event) {
-           // Verificar si la tecla presionada es "Enter" (código de tecla 13)
-           if (event.key === "Enter") {
-               // Obtener el elemento que tiene el foco actualmente
-               var focusedElement = document.activeElement;
 
-               // Si el elemento enfocado es un textarea, permitir el salto de línea
-               if (focusedElement.tagName === 'TEXTAREA') {
-                   return; // Salir para permitir el salto de línea
-               }
+    <script type="text/javascript">
+        // Escuchar el evento keydown en el documento
+        document.addEventListener('keydown', function (event) {
+            // Verificar si la tecla presionada es "Enter" (código de tecla 13)
+            if (event.key === "Enter") {
+                // Obtener el elemento que tiene el foco actualmente
+                var focusedElement = document.activeElement;
 
-               // Aquí revisamos los campos específicos
-               if (focusedElement.id === "tbBuscarAcaba" || focusedElement.id === "tbCriterio" || focusedElement.id === "tbAltura" || focusedElement.id === "tbAncho") {
-                   // Hacer clic en el botón de búsqueda
-                   document.getElementById('<%= btnBuscarActivos.ClientID %>').click();
+                // Si el elemento enfocado es un textarea, permitir el salto de línea
+                if (focusedElement.tagName === 'TEXTAREA') {
+                    return; // Salir para permitir el salto de línea
+                }
+
+                // Aquí revisamos los campos específicos
+                if (focusedElement.id === "tbBuscarAcaba" || focusedElement.id === "tbCriterio" || focusedElement.id === "tbAltura" || focusedElement.id === "tbAncho") {
+                    // Hacer clic en el botón de búsqueda
+                    document.getElementById('<%= btnBuscarActivos.ClientID %>').click();
                 event.preventDefault(); // Prevenir el envío del formulario
-            } 
-            else if (focusedElement.id === "ddlGrupo") {
+            } else if (focusedElement.id === "ddlGrupo") {
                 // Hacer clic en el botón de búsqueda
                 document.getElementById('<%= btnBuscarActivos.ClientID %>').click();
-                event.preventDefault(); // Prevenir el envío del formulario
-            } else {
-                event.preventDefault(); // Evitar que se envíe el formulario
-            }
-        }
-    });
-   </script>
+                   event.preventDefault(); // Prevenir el envío del formulario
+               } else {
+                   event.preventDefault(); // Evitar que se envíe el formulario
+               }
+           }
+       });
+    </script>
+
+
+
+
 
      <script>   
          function actualizarValorBotonOk() {

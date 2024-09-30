@@ -2939,7 +2939,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 DateTime fechaVentaAño = DateTime.ParseExact(tbVenta.Text, "yyyy-MM-dd", null);
                 DateTime fechaVenta = DateTime.ParseExact(tbVenta.Text, "yyyy-MM-dd", null);
                 fechaVenta = fechaVenta.AddMonths(1);
-                string rutaBase = @"\\172.16.30.6\Recepcion\Cotizaciones Excel\" + ddlZona.SelectedValue + @"";
+                string rutaBase = @"\\SRVFS\Recepcion\Cotizaciones Excel\" + ddlZona.SelectedValue + @"";
 
                 for (int i = 0; i <= 6; i++)
                 {
@@ -4538,6 +4538,43 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
+        private void ControlBotonesAdministracionObjeto1()
+        {
+            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "SISTEMAS" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+            {
+              
+                BtnNueObj.Enabled = true;
+                BtnNueObj.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+                BtnImprimeObjeto.Enabled = false;
+                BtnImprimeObjeto.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnModObj.Enabled = false;
+                BtnModObj.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnConObj.Enabled = false;
+                BtnConObj.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnEliObj.Enabled = false;
+                BtnEliObj.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnConObj.Enabled = false;
+                BtnConObj.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnCopObj.Enabled = false;
+                BtnCopObj.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnActPre.Enabled = false;
+                BtnActPre.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnChequearObjeto.Enabled = false;
+                BtnChequearObjeto.CssClass = "btn btn-sm shadow button-disabled";
+
+            }
+         
+
+        }
+
         // para cargar la info en los textbox del modulo 
         public void Cargar_Informacion_Modulo()
         {
@@ -5211,16 +5248,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BtnNueObj_Click(object sender, EventArgs e)
         {
+
+            ControlBotonesAdministracionObjeto1();
+
+            Session.Remove("ClickCount1");
+            Session.Remove("Id_PanelNum_Session1");
+
             string url = "~/Formularios/DiseñoYDesarrollo/ObjetosDibujo.aspx";
             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
             ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
 
             Session.Remove("Id_numericoDise");
             Session["CrudObjetosDibujo"] = "Nuevo";
+         
         }
 
         protected void BtnModObj_Click(object sender, EventArgs e)
         {
+            ControlBotonesAdministracionObjeto1();
+
+            Session.Remove("ClickCount1");
+            Session.Remove("Id_PanelNum_Session1");
 
             if (!ValidarObjetoChequeado())
             {
@@ -5237,26 +5285,42 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ScriptManager.RegisterStartupScript(this, GetType(), "showNoAgregado", scriptChequeado, true);
             }
 
+          
+
         }
 
         protected void BtnConObj_Click(object sender, EventArgs e)
         {
+            ControlBotonesAdministracionObjeto1();
+
+            Session.Remove("ClickCount1");
+            Session.Remove("Id_PanelNum_Session1");
+
             string url = "~/Formularios/DiseñoYDesarrollo/ObjetosDibujo.aspx";
             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
             ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
 
             Session["Id_numericoDise"] = Session["Id_PanelNum_Session"].ToString();
             Session["CrudObjetosDibujo"] = "Consultar";
+            
         }
 
         protected void BtnCopObj_Click(object sender, EventArgs e)
         {
+
+            ControlBotonesAdministracionObjeto1();
+
+            Session.Remove("ClickCount1");
+            Session.Remove("Id_PanelNum_Session1");
+
             string url = "~/Formularios/DiseñoYDesarrollo/ObjetosDibujo.aspx";
             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
             ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
 
             Session["Id_numericoDise"] = Session["Id_PanelNum_Session"].ToString();
             Session["CrudObjetosDibujo"] = "Copiar";
+
+           
         }
 
         protected void BtnEliObj_Click(object sender, EventArgs e)
@@ -5352,6 +5416,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 return false;
             }
+        }
+
+        protected void BtnActPre_Click(object sender, EventArgs e)
+        {
+            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#confirmarActualizarPrecioVenta').modal('show');", true);
+            return;
         }
 
         // Fin Logica Tap Objetos **************************************************************************************************
@@ -8958,15 +9028,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 bool planoBloqueado = (bool)commandBloqueado.ExecuteScalar();
 
-                if (planoBloqueado || txtDibuja.Text != Session["usuariologueado"].ToString())
+                if (!planoBloqueado || txtDibuja.Text == Session["usuariologueado"].ToString())
                 {
-
-                    string scriptNoPermiso = "alert('El plano se encuentra bloqueado .');";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
-                }
-                else
-                {
-
 
                     string sSqlVinculado = "SELECT ID_OT, Consecutivo_Pedido,AfectaBolsa FROM tblPlano WHERE Plano = @plano";
                     SqlCommand commandVinculado = new SqlCommand(sSqlVinculado, connection);
@@ -9021,6 +9084,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
 
                     reader.Close();
+                }
+                else
+                {
+
+                    string scriptNoPermiso = "alert('El plano se encuentra bloqueado .');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
+
+                  
                 }
 
             }
