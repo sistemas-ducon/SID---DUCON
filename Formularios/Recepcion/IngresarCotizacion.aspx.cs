@@ -498,9 +498,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             selectedRow.CssClass = "selected-row";
 
 
+
             llenarCampos();
 
-            if (!string.IsNullOrEmpty(Session["Cotizacion"] as string) && !string.IsNullOrEmpty(Session["Id_OTCot"] as string))
+            if (!string.IsNullOrEmpty(Session["Cotizacion"] as string)
+    && !string.IsNullOrEmpty(Session["Id_OTCot"] as string)
+    && DropDownListEstado.SelectedValue != "2")
             {
                 llenarDatagrid2();
             }
@@ -1370,7 +1373,7 @@ WHERE
             // Consulta para obtener el asesor del cliente
             sSql = "SELECT Asesor FROM tblCliente WHERE Id_Cliente = @IdCliente";
 
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 connection.Open();
 
@@ -1409,7 +1412,7 @@ WHERE
             string sSql;
             string asesor = ddlAsesor.SelectedValue;
 
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
             {
                 connection.Open();
 
@@ -2155,7 +2158,7 @@ WHERE
                 return;
             }
 
-            string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
            
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -2217,7 +2220,7 @@ WHERE
                 commandCliente.Parameters.AddWithValue("@ClienteNombre", clienteNombre);
 
                 // Crear una nueva conexión y DataReader para obtener información del cliente
-                using (SqlConnection clientConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString))
+                using (SqlConnection clientConnection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
                 {
                     clientConnection.Open();
 

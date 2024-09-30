@@ -122,3 +122,8 @@
         color: #f8f9fa; /* Light text on focus */
         outline: none;
     }
+
+
+.AzulOscuroEfecto {
+    background: repeating-linear-gradient(45deg, #08090c, #1d2942 100px);
+}

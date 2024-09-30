@@ -5716,7 +5716,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
         protected void InsertarPlanoPedido()
         {
             string idOT = Session["Id_OT3"].ToString();
@@ -7103,15 +7102,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             List<System.Web.UI.Control> botones = new List<System.Web.UI.Control>
             {
-
-                LinkButton1,
-                LinkButton2,
-                LinkButton3,
-                LinkButton4,
-                LinkButton5,
-                LinkButton6,
-                LinkButton7,
-                LinkButton8
+                BtnGuardarModulo,
+                BtnModificarModulo,
+                BtnConsultarModulo,
+                BtnEliminarModulo,
+                BtnCopiarModuloAtributos,
+                BtnChequear
 
             };
 
@@ -7127,6 +7123,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
+            BtnNuevoModulo.Enabled = true;
+            BtnNuevoModulo.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
 
         }
 
@@ -20122,6 +20120,332 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
             }
+        }
+
+        protected void BtnBuscarModulo_Click(object sender, EventArgs e)
+        {
+            // Obtener los valores de los controles de búsqueda
+            string criterioModulo = TextDescripcionFamilia.Text.Trim();
+            string alturaModulo = TextAlturaModulo.Text.Trim();
+            string familiaModulo = DropDownListGrupo.SelectedItem.Text; // Se asume que 'DropDownListGrupo' es un DropDownList
+            string idModulo = TextCriterioModulo.Text.Trim();  // Asumiendo que el Id_Modulo es el mismo criterio para buscar
+
+            // Consulta base
+            string consulta = @"SELECT tblModulo.*, tblFamiliaModulo.*, tblTipoModulo.Descripcion_TipoModulo, 
+                        tblModulo.Descripcion_Modulo, tblModulo.Altura, 
+                        tblFamiliaModulo.Descripcion_Familia, tblModulo.Id_Modulo 
+                        FROM tblTipoModulo 
+                        INNER JOIN (tblFamiliaModulo 
+                        INNER JOIN tblModulo ON tblFamiliaModulo.ID_Familia = tblModulo.ID_Familia) 
+                        ON tblTipoModulo.Id_TipoModulo = tblModulo.Id_TipoModulo";
+
+            // Lista de condiciones para el WHERE
+            List<string> condiciones = new List<string>();
+
+            // Lista de parámetros para la consulta
+            List<SqlParameter> parametros = new List<SqlParameter>();
+
+            // Si el campo criterio de módulo no está vacío
+            if (!string.IsNullOrEmpty(criterioModulo))
+            {
+                condiciones.Add("tblModulo.Descripcion_Modulo LIKE @criterioModulo");
+                parametros.Add(new SqlParameter("@criterioModulo", "%" + criterioModulo + "%"));
+            }
+
+            // Si el campo altura de módulo no está vacío
+            if (!string.IsNullOrEmpty(alturaModulo))
+            {
+                condiciones.Add("tblModulo.Altura LIKE @alturaModulo");
+                parametros.Add(new SqlParameter("@alturaModulo", alturaModulo + "%"));
+            }
+
+            // Si el campo familia de módulo no está vacío
+            if (!string.IsNullOrEmpty(familiaModulo) && familiaModulo != "")
+            {
+                condiciones.Add("tblFamiliaModulo.Descripcion_Familia LIKE @familiaModulo");
+                parametros.Add(new SqlParameter("@familiaModulo", familiaModulo));
+            }
+
+            // Si el campo ID de módulo no está vacío
+            if (!string.IsNullOrEmpty(idModulo))
+            {
+                condiciones.Add("tblModulo.Id_Modulo LIKE @idModulo");
+                parametros.Add(new SqlParameter("@idModulo", idModulo + "%"));
+            }
+
+            // Agregar condiciones al WHERE
+            if (condiciones.Count > 0)
+            {
+                consulta += " WHERE " + string.Join(" AND ", condiciones);
+            }
+
+            // Agregar ORDER BY
+            consulta += " ORDER BY tblModulo.Descripcion_Modulo ASC, tblModulo.Altura ASC";
+
+            // Conexión a la base de datos
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand(consulta, conn);
+
+                // Agregar los parámetros al comando
+                cmd.Parameters.AddRange(parametros.ToArray());
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+
+                try
+                {
+                    conn.Open();
+                    adapter.Fill(dt);
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        // Llenar el DataGrid con los resultados
+                        DatagridModulo1.DataSource = dt;
+                        DatagridModulo1.DataBind();
+                    }
+                    else
+                    {
+                        // Limpiar el DataGrid si no hay resultados
+                        DatagridModulo1.DataSource = null;
+                        DatagridModulo1.DataBind();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Manejar errores (puedes agregar un log o mostrar un mensaje de error)
+                }
+            }
+        }
+
+        protected void DatagridModulo1_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            if (e.CommandName == "Modulo")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DatagridModulo1.Items[rowIndex];
+
+                // Aplicamos la clase CSS a la fila seleccionada
+                foreach (DataGridItem item in DatagridModulo1.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+                e.Item.CssClass = "fila-seleccionada1";
+
+                // Obtener el control Label dentro del TemplateColumn "OK"
+                // Usa el espacio de nombres completo para especificar que es un Label de WebForms
+                System.Web.UI.WebControls.Label lblChequeado = (System.Web.UI.WebControls.Label)row.FindControl("lblChequeado");
+
+                if (lblChequeado != null)
+                {
+                    string chequeadoValue = lblChequeado.Text.Trim();
+
+                    // Condicional para aplicar la clase CSS según el valor de "Chequeado"
+                    if (chequeadoValue == "SI")
+                    {
+                        BtnChequear.CssClass = "btn btn-sm shadow linkButtonClicked text-success";
+                    }
+                    else if (chequeadoValue == "NO")
+                    {
+                        BtnChequear.CssClass = "btn btn-sm shadow linkButtonClicked2 text-success";
+                    }
+                }
+
+                string moduloID = row.Cells[1].Text;
+                Session["IDModulo"] = moduloID;
+
+                activarBotones();
+                DataGrid3.Attributes["SelectedRowIndex"] = rowIndex.ToString();
+                row.Attributes["id"] = "DataGrid3_row_" + rowIndex;
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DataGrid3_row_" + rowIndex + "');", true);
+
+                LlenarDataGrid3(moduloID);
+            }
+        }
+
+        protected void activarBotones()
+        {
+            BtnModificarModulo.Enabled = true;
+            BtnModificarModulo.CssClass = "btn btn-sm shadow button-enabled";
+
+            BtnConsultarModulo.Enabled = true;
+            BtnConsultarModulo.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+            BtnCopiarModuloAtributos.Enabled = true;
+            BtnCopiarModuloAtributos.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+            
+        }
+
+        private void LlenarDataGrid3(string moduloID)
+        {
+            // Consulta SQL con parámetro
+            string sSql = @"SELECT tblInsumo.*, tblModulo_Insumo.*, tblTipoInsumo.Descripcion, tblUnidad_Medida.Abreviado,
+                            CONCAT([tblInsumo].[Descripcion_Insumo], ' - ', [tblModulo_Insumo].[DescripcionPieza]) AS Pieza, 
+                            tblInsumo.Valor_Unitario * tblInsumo.Factor_Ganancia AS Precio_Venta, 
+                            tblModulo_Insumo.Responsable AS miResponsable
+                    FROM tblUnidad_Medida 
+                    INNER JOIN ((tblTipoInsumo 
+                    INNER JOIN tblInsumo ON tblTipoInsumo.Id_TipoInsumo = tblInsumo.Id_TipoInsumo) 
+                    INNER JOIN tblModulo_Insumo ON tblInsumo.Id_Insumo = tblModulo_Insumo.Id_Insumo) 
+                    ON tblUnidad_Medida.Id_UnidadMedida = tblInsumo.Id_UnidadMedida
+                    WHERE tblModulo_Insumo.Id_Modulo = @moduloID
+                    ORDER BY tblUnidad_Medida.Abreviado, tblInsumo.Descripcion_Insumo, tblModulo_Insumo.Id_ModuloInsumo";
+
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand(sSql, conn);
+                cmd.Parameters.AddWithValue("@moduloID", moduloID);  // Asignar el valor del módulo seleccionado
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+
+                try
+                {
+                    conn.Open();
+                    adapter.Fill(dt);
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        // Llenar el DataGrid3 con los resultados de la consulta
+                        DataGrid3.DataSource = dt;
+                        DataGrid3.DataBind();
+                    }
+                    else
+                    {
+                        // Limpiar el DataGrid3 si no hay resultados
+                        DataGrid3.DataSource = null;
+                        DataGrid3.DataBind();
+                    }
+                }
+                catch (Exception ex)
+                {
+                   
+                }
+            }
+        }
+
+        protected void DataGrid3_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+
+            if (e.CommandName == "ModuloIns")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGrid3.Items[rowIndex];
+
+                // Aplicamos la clase CSS a la fila seleccionada
+                foreach (DataGridItem item in DataGrid3.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+                e.Item.CssClass = "fila-seleccionada1";
+
+                string riId_ModuloInsumo = row.Cells[13].Text;
+
+                // Llenar el DataGrid1 con los datos de la consulta basada en el riId_ModuloInsumo
+                LlenarDataGrid1(riId_ModuloInsumo);
+
+                // Abrir el modal
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ModalRotacionModulo').modal('show');", true);
+
+                // Store the selected row index in the DataGrid attribute
+                DataGrid3.Attributes["SelectedRowIndex"] = rowIndex.ToString();
+
+                // Scroll to the row
+                row.Attributes["id"] = "DataGrid3_row_" + rowIndex;
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DataGrid3_row_" + rowIndex + "');", true);
+
+            }
+        }
+
+        private void LlenarDataGrid1(string riId_ModuloInsumo)
+        {
+            // Consulta SQL con parámetro
+            string sSql = @"SELECT tblAreaProduccion.*, tblRotacionInsumo.*
+                    FROM tblAreaProduccion
+                    INNER JOIN tblRotacionInsumo ON tblAreaProduccion.Id_Area = tblRotacionInsumo.riId_Area
+                    WHERE tblRotacionInsumo.riId_ModuloInsumo = @riId_ModuloInsumo
+                    ORDER BY tblRotacionInsumo.riEstacion";
+
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand(sSql, conn);
+                cmd.Parameters.AddWithValue("@riId_ModuloInsumo", riId_ModuloInsumo);  // Asignar el valor del parámetro
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+
+                try
+                {
+                    conn.Open();
+                    adapter.Fill(dt);
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        // Llenar el DataGrid1 con los resultados de la consulta
+                        DataGrid1.DataSource = dt;
+                        DataGrid1.DataBind();
+                    }
+                    else
+                    {
+                        // Limpiar el DataGrid1 si no hay resultados
+                        DataGrid1.DataSource = null;
+                        DataGrid1.DataBind();
+                    }
+                }
+                catch (Exception ex)
+                {
+                  
+                }
+            }
+        }
+
+        protected void BtnNuevoModulo_Click(object sender, EventArgs e)
+        {
+            Session["Modulo"] = "Nuevo";
+            Response.Redirect("~/Formularios/DiseñoYDesarrollo/Modulo.aspx");
+        }
+
+        protected void BtnModificarModulo_Click(object sender, EventArgs e)
+        {
+            // Recorremos las filas del DataGrid
+            foreach (DataGridItem row in DatagridModulo1.Items)
+            {
+                // Obtenemos la etiqueta "lblChequeado" que contiene el valor "SI" o "NO"
+                System.Web.UI.WebControls.Label lblChequeado = (System.Web.UI.WebControls.Label)row.FindControl("lblChequeado");
+
+                if (lblChequeado != null)
+                {
+                    string chequeadoValue = lblChequeado.Text.Trim();
+
+                    // Condicional para validar el valor de "Chequeado"
+                    if (chequeadoValue == "SI")
+                    {
+                        ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#BloqueBloqueado').modal('show');", true);
+                        return; 
+                    }
+                    else if (chequeadoValue == "NO")
+                    {
+                        Session["Modulo"] = "Modificar";
+                        Response.Redirect("~/Formularios/DiseñoYDesarrollo/Modulo.aspx");
+                    }
+                }
+            }
+        }
+
+
+        protected void BtnCopiarModuloAtributos_Click(object sender, EventArgs e)
+        {
+            Session["Modulo"] = "Copiar";
+            Response.Redirect("~/Formularios/DiseñoYDesarrollo/Modulo.aspx");
         }
     }
 }

@@ -2261,6 +2261,8 @@
                             </div>
                         </div>
 
+               
+
                         <div id="OTingresada" class="modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -4591,43 +4593,214 @@
                                             <div class="contenedor-icono">
 
 
-                                                <asp:LinkButton runat="server" title="" ID="LinkButton1">
-                                                    <i class="bi bi-file-earmark"></i>
+                                                <asp:LinkButton runat="server" title="" ID="BtnNuevoModulo" OnClick="BtnNuevoModulo_Click">
+                                                    <i class="bi bi-file-earmark-fill"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="" ID="LinkButton2">
-                                                  <i class="bi bi-file-earmark"></i>
+                                                <asp:LinkButton runat="server" title="" ID="BtnGuardarModulo">
+                                                  <i class="bi bi-floppy-fill"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="" ID="LinkButton3">
-                                                   <i class="bi bi-file-medical"></i>
+                                                <asp:LinkButton runat="server" title="" ID="BtnModificarModulo" OnClick="BtnModificarModulo_Click">
+                                                   <i class="bi bi-wrench-adjustable"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="" ID="LinkButton4">
-                                                   <i class="bi bi-wrench"></i>
+                                                <asp:LinkButton runat="server" title="" ID="BtnConsultarModulo">
+                                                 <i class="bi bi-search"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="" ID="LinkButton5">
-                                                    <i class="bi bi-file-earmark-ruled"></i>
+                                                    <asp:LinkButton runat="server" title="" ID="BtnEliminarModulo">
+                                               <i class="bi bi-trash-fill"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="" ID="LinkButton6">
-                                                  <i class="bi bi-database-down"></i>
+                                                <asp:LinkButton runat="server" title="" ID="BtnCopiarModuloAtributos" OnClick="BtnCopiarModuloAtributos_Click">
+                                                    <i class="bi bi-stickies-fill"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="" ID="LinkButton7">
-                                                   <i class="bi bi-files"></i>
+                                                <asp:LinkButton runat="server" title="" ID="BtnChequear">
+                                                <i class="bi bi-check-square-fill"></i>
                                                 </asp:LinkButton>
-
-                                                <asp:LinkButton runat="server" title="" ID="LinkButton8">
-                                                  <i class="bi bi-check-lg"></i>
-                                                </asp:LinkButton>
-
                                             </div>
                                     </div>
                             </nav>
 
+                            <div class="card shadow">
+                                <div class="card-header">
+
+                                    <div class="row align-items-center">
+                                        <!-- Grupo -->
+                                        <div class="col-lg-4 col-md-6 mb-1">
+                                            <div class="d-flex align-items-center">
+                                                <asp:Label ID="Label20" runat="server" CssClass="me-2 col-form-label-sm" Text="Grupo"></asp:Label>
+                                                <asp:SqlDataSource
+                                                    ID="DropDownListGrupoSqlDataS"
+                                                    runat="server"
+                                                    ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
+                                                    SelectCommand="SELECT ID_Familia, Descripcion_Familia FROM tblFamiliaModulo ORDER BY Descripcion_Familia"></asp:SqlDataSource>
+
+                                                <asp:DropDownList
+                                                    ID="DropDownListGrupo"
+                                                    runat="server"
+                                                    class="form-control form-control-sm"
+                                                    DataSourceID="DropDownListGrupoSqlDataS"
+                                                    DataTextField="Descripcion_Familia"
+                                                    DataValueField="ID_Familia"
+                                                    AppendDataBoundItems="true">
+                                                    <asp:ListItem Text="" Value="0" />
+                                                </asp:DropDownList>
+
+                                            </div>
+                                        </div>
+
+                                        <!-- Criterio -->
+                                        <div class="col-lg-2 col-md-6 mb-1">
+                                            <div class="d-flex align-items-center">
+                                                <asp:Label ID="Label24" runat="server" CssClass="me-2 col-form-label-sm" Text="Criterio"></asp:Label>
+                                                <asp:TextBox ID="TextCriterioModulo" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                            </div>
+                                        </div>
+
+                                        <!-- Otro campo -->
+                                        <div class="col-lg-3 col-md-6 mb-1">
+                                            <asp:TextBox ID="TextDescripcionFamilia" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                        </div>
+
+                                        <!-- Altura -->
+                                        <div class="col-lg-2 col-md-6 mb-1">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <asp:Label ID="Label26" runat="server" CssClass="me-2 col-form-label-sm" Text="Altura"></asp:Label>
+                                                <asp:TextBox ID="TextAlturaModulo" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                <asp:Label ID="Label25" runat="server" CssClass="me-2 col-form-label-sm" Text="Cms"></asp:Label>
+                                            </div>
+                                        </div>
+
+                                        <!-- Botón Buscar -->
+                                        <div class="col-lg-1 col-md-6 mb-1">
+                                            <asp:Button ID="BtnBuscarModulo" runat="server" CssClass="btn btn-sm AzulOscuroEfecto text-white fw-bold shadow" Text="Buscar" OnClick="BtnBuscarModulo_Click"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <div class="table-responsive table-responsive-sm gap-2 border shadow-sm" style="height: 18.9rem; overflow-x: auto;">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DatagridModulo1" runat="server" AutoGenerateColumns="false" OnItemCommand="DatagridModulo1_ItemCommand">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                    <Columns>
+                                                        <asp:TemplateColumn>
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="SelectInsumoID" runat="server" CommandName="Modulo" CommandArgument='<%# Container.ItemIndex %>'
+                                                                    Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+                                                        <asp:BoundColumn DataField="Id_Modulo" HeaderText="Modulo" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Descripcion_TipoModulo" HeaderText="Tipo Módulo" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Descripcion_Modulo" HeaderText="Modulo" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Descripcion_Familia" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:TemplateColumn HeaderText="OK">
+                                                            <ItemTemplate>
+                                                                <asp:Label ID="lblChequeado" runat="server" Text='<%# Convert.ToBoolean(Eval("Chequeado")) ? "SI" : "NO" %>' />
+                                                            </ItemTemplate>
+                                                            <ItemStyle CssClass="auto-width-column" />
+                                                        </asp:TemplateColumn>
+                                                        <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
+                                                          <asp:BoundColumn DataField="FechaChequeo" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column" />
+                                                    </Columns>
+                                                </asp:DataGrid>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-2">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <div class="table-responsive table-responsive-sm gap-2 border shadow-sm" style="height: 20rem; overflow-x: auto;">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid3" runat="server" AutoGenerateColumns="false" OnItemCommand="DataGrid3_ItemCommand">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                    <Columns>
+                                                        <asp:TemplateColumn>
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="SelectInsumoID" runat="server" CommandName="ModuloIns" CommandArgument='<%# Container.ItemIndex %>'
+                                                                    Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+                                                        <asp:BoundColumn HeaderText="Item" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="ID_Inventario" HeaderText="Cod.Inv" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Pieza" HeaderText="Insumo - Pieza" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Cantidad" HeaderText="Cant" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Abreviado" HeaderText="UND" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="DescuentoAncho" HeaderText="Dcto A" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="DescuentoAltura" HeaderText="Dcto H" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="AltoFijo" HeaderText="A.Fijo" ItemStyle-CssClass="auto-width-column" />  
+                                                        <asp:BoundColumn DataField="Divisiones" HeaderText="Div" ItemStyle-CssClass="auto-width-column" /> 
+                                                        <asp:BoundColumn DataField="Sentido" HeaderText="Sentido" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="miResponsable" HeaderText="Resposable" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="FechaSuceso" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Id_ModuloInsumo" HeaderText="ID" ItemStyle-CssClass="auto-width-column" />
+                                                         <asp:BoundColumn DataField="Id_Insumo" HeaderText="Insumo" ItemStyle-CssClass="auto-width-column" />
+                                                    </Columns>
+                                                </asp:DataGrid>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
+
+                                <div id="BloqueBloqueado" class="modal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header RojoEfecto text-white">
+                        <h5 class="modal-title text-center" runat="server">SID_DUCON</h5>
+
+                    </div>
+                    <div class="modal-body border rounded">
+                        <div class="container-fluid">
+                          <p>El bloque esta bloqueado, no se puede modificar.</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+                                 
+                <div class="modal" id="ModalRotacionModulo" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header AzulOscuroEfecto fw-bold shadow-sm">
+                                <h5 class="modal-title d-flex align-items-center justify-content-center text-dark">Rotación de Insumo</h5>
+                        <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid1" runat="server" AutoGenerateColumns="false">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                    <Columns>
+                                                        <asp:TemplateColumn>
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="SelectInsumoID" runat="server" CommandName="ModuloIns" CommandArgument='<%# Container.ItemIndex %>'
+                                                                    Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+                                                        <asp:BoundColumn DataField="riEstacion" HeaderText="Estación" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Descripcion_Area" HeaderText="Destino" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="riId" HeaderText="Rotación" ItemStyle-CssClass="auto-width-column" />
+                                                    </Columns>
+                                                </asp:DataGrid>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                         
+
                     </ContentTemplate>
                 </asp:UpdatePanel>
 
@@ -4711,14 +4884,14 @@
                                             <asp:TextBox ID="TextBox4" runat="server" CssClass="form-control me-2 form-control-sm"></asp:TextBox>
                                         </div>
 
-                                        <asp:Button ID="btnAdditional1" runat="server" CssClass="btn linkButtonClicked2 fw-bold RojoEfecto shadow text-white text-dark me-2 form-control-sm" Text="Cambiar Cod Inv" Enabled="false" />
+                                        <asp:Button ID="btnAdditional1" runat="server" CssClass="btn linkButtonClicked2 fw-bold RojoEfecto shadow text-white text-dark me-2 btn-sm" Text="Cambiar Cod Inv" Enabled="false" />
 
                                         <div class="d-flex align-items-center me-2">
                                             <asp:Label ID="Label15" runat="server" CssClass="me-2 col-form-label-sm" Text="Costo"></asp:Label>
                                             <asp:TextBox ID="TextNuevoCosto" runat="server" CssClass="form-control me-2 form-control-sm"></asp:TextBox>
                                         </div>
 
-                                        <asp:Button ID="BtnActCos" runat="server" CssClass="btn linkButtonClicked2 fw-bold me-2 RojoEfecto text-white shadow text-dark form-control-sm" Text="Actualizar Costo" Enabled="false" />
+                                        <asp:Button ID="BtnActCos" runat="server" CssClass="btn linkButtonClicked2 fw-bold me-2 RojoEfecto text-white shadow text-dark btn-sm" Text="Actualizar Costo" Enabled="false" />
                                     </div>
                                 </div>
 
@@ -5095,47 +5268,46 @@
         }
     </script>
 
-    <script type="text/javascript">
+   <script type="text/javascript">
+       // Escuchar el evento keydown en el documento
+       document.addEventListener('keydown', function (event) {
+           // Verificar si la tecla presionada es "Enter" (código de tecla 13)
+           if (event.key === "Enter") {
+               // Obtener el elemento que tiene el foco actualmente
+               var focusedElement = document.activeElement;
 
-        // Escuchar el evento keydown en el documento
-        document.addEventListener('keydown', function (event) {
-            // Verificar si la tecla presionada es "Enter" (código de tecla 13)
-            if (event.key === "Enter") {
-                // Obtener el elemento que tiene el foco actualmente
-                var focusedElement = document.activeElement;
+               // Si el elemento enfocado es un textarea, permitir el salto de línea
+               if (focusedElement.tagName === 'TEXTAREA') {
+                   return; // Salir para permitir el salto de línea
+               }
 
-                // Verificar si el elemento enfocado no es un textarea
-                if (focusedElement.tagName !== 'TEXTAREA') {
-                    // Prevenir la acción predeterminada del evento
-                    event.preventDefault();
-
-                }
-
-                if (focusedElement.id === "tbBuscarAcaba" || focusedElement.id === "tbBuscarAcaba" || focusedElement.id === "tbBuscarAcaba") {
-                    event.preventDefault();
-
-                } else if (focusedElement.id === "ddlGrupo" || focusedElement.id === "tbCriterio" || focusedElement.id === "tbAltura" || focusedElement.id === "tbAncho") {
-                    document.getElementById('<%= btnBuscarActivos.ClientID %>').click(); // Hacer clic en el botón de búsqueda
-
-                } else {
-                    event.preventDefault();  // Evitar que se envíe el formulario
-                }
-
+               // Aquí revisamos los campos específicos
+               if (focusedElement.id === "tbBuscarAcaba" || focusedElement.id === "tbCriterio" || focusedElement.id === "tbAltura" || focusedElement.id === "tbAncho") {
+                   // Hacer clic en el botón de búsqueda
+                   document.getElementById('<%= btnBuscarActivos.ClientID %>').click();
+                event.preventDefault(); // Prevenir el envío del formulario
+            } 
+            else if (focusedElement.id === "ddlGrupo") {
+                // Hacer clic en el botón de búsqueda
+                document.getElementById('<%= btnBuscarActivos.ClientID %>').click();
+                event.preventDefault(); // Prevenir el envío del formulario
+            } else {
+                event.preventDefault(); // Evitar que se envíe el formulario
             }
-        });
-
-    </script>
-
-    <script>   
-        function actualizarValorBotonOk() {
-            // Obtener el valor del TextBox
-            var OT = document.getElementById('tbOT').value;
-            var Ped = document.getElementById('ddlNumbers').value;
-            // Actualizar el contenido del span con el valor del TextBox
-            document.getElementById('OTBotonOk').innerText = OT;
-            document.getElementById('PedBotonOk').innerText = Ped;
         }
-    </script>
+    });
+   </script>
+
+     <script>   
+         function actualizarValorBotonOk() {
+             // Obtener el valor del TextBox
+             var OT = document.getElementById('tbOT').value;
+             var Ped = document.getElementById('ddlNumbers').value;
+             // Actualizar el contenido del span con el valor del TextBox
+             document.getElementById('OTBotonOk').innerText = OT;
+             document.getElementById('PedBotonOk').innerText = Ped;
+         }
+     </script>
 
     <script>   
         function actualizarPlanoEliminar() {
@@ -5164,6 +5336,10 @@
             $('#ConfirmarRegresoDelDiseno').modal('hide');
         }
     </script>
+
+
+
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
