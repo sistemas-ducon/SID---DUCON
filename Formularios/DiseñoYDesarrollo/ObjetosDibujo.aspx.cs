@@ -17,6 +17,7 @@ using System.Net.Http;
 using System.Net;
 using System.Runtime.InteropServices;
 using SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin;
+using System.Web.Configuration;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 {
@@ -52,6 +53,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     dt.Rows.Add(dr);
 
                     ViewState["PanelTags"] = dt;
+
+                    btnActuaValComercial.Enabled = true;
+                    btnActuaValComercial.CssClass = "btn btn-sm shadow ColorAzulActivo border";
+
+
+
                 }
                 else
                 {
@@ -125,7 +132,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         private void EstadoGrabarCancelar()
         {
 
-
             // Lista de controles y sus atributos "Tag"
             var controles = new (System.Web.UI.Control control, string tag, Func<string, bool> isChanged, Func<string, bool> isValid)[]
             {
@@ -154,15 +160,29 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             {
                 BtnCancelarObjetosPanel.Enabled = true;
                 BtnGrabarObjetosPanel.Enabled = true;
+
+                string script = @"DesactivarTapConfigurar();";
+                ScriptManager.RegisterStartupScript(this, GetType(), "DesactivarTapConfigurar", script, true);
             }
             else
             {
                 BtnCancelarObjetosPanel.Enabled = false;
                 BtnGrabarObjetosPanel.Enabled = false;
-                if (camposRequeridosLlenos)
-                {
 
+                if (TextObjeto.Text != "" && DropLinea.SelectedItem.Text != "" && DropDivisiones.SelectedItem.Text != "" && TextHolgura.Text != "" &&
+                    TextObjeto.Text != "" && TextDesInt.Text != "" && DropDesGrupo.SelectedItem.Text != "")
+                {
+                    string script = @"ActivarTapConfigurar();";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "DesactivarTapConfigurar", script, true);
                 }
+                else
+                {
+                    string script = @"DesactivarTapConfigurar();";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "DesactivarTapConfigurar", script, true);
+                }
+
+
+
             }
         }
 
@@ -236,11 +256,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 TextIdInsumo.Enabled = false;
                 TextIdInsumo.CssClass = "form-control form-control-sm";
 
-                string script = @"DesactivarTapConfigurar();";
-                ScriptManager.RegisterStartupScript(this, GetType(), "DesactivarTapConfigurar", script, true);
-
 
             }
+
             else if (Session["CrudObjetosDibujo"].ToString() == "Nuevo")
             {
                 CheckActivo.Checked = true;
@@ -249,9 +267,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 lbActivo.ForeColor = System.Drawing.Color.Black;
                 CheckActivo.BackColor = System.Drawing.Color.LightGreen;
 
+                TextIdInsumo.Enabled = false;
+                TextIdInsumo.CssClass = "form-control form-control-sm";
+
 
                 string script = @"DesactivarTapConfigurar();";
                 ScriptManager.RegisterStartupScript(this, GetType(), "DesactivarTapConfigurar", script, true);
+            }
+
+            else if (Session["CrudObjetosDibujo"].ToString() == "Modificar")
+            {
+                TextIdInsumo.Enabled = true;
+                TextIdInsumo.CssClass = "form-control form-control-sm";
+            }
+
+            else if (Session["CrudObjetosDibujo"].ToString() == "Copiar")
+            {
+                TextIdInsumo.Enabled = true;
+                TextIdInsumo.CssClass = "form-control form-control-sm";
             }
 
             TextValorComercial.Enabled = false;
@@ -283,6 +316,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
             BtnCerrarObjetosPanel.Enabled = true;
             BtnCerrarObjetosPanel.CssClass = "form-control";
+
+            Buscar.Enabled = true;
+            Buscar.CssClass = "btn btn-sm shadow ColorAzulActivo";
+
+            btnAdicionarModulo.Enabled = false;
+            btnAdicionarModulo.CssClass = "btn btn-sm button-disabled shadow";
+
+            btnCopiarModulo.Enabled = false;
+            btnCopiarModulo.CssClass = "btn btn-sm button-disabled shadow";
+
+            btnEliminarModuloObjeto.Enabled = false;
+            btnEliminarModuloObjeto.CssClass = "btn btn-sm button-disabled shadow";
 
         }
 
@@ -403,7 +448,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                                     bool Apunta_Cod_PSL = reader["Apunta_Cod_PSL"] != DBNull.Value && Convert.ToBoolean(reader["Apunta_Cod_PSL"]);
                                     CheckApliCodPSLOT.Checked = Apunta_Cod_PSL;
 
-                                    if(isActive == true)
+                                    if (isActive == true)
                                     {
                                         lbActivo.BackColor = System.Drawing.Color.LightGreen;
                                         lbActivo.ForeColor = System.Drawing.Color.Black;
@@ -419,6 +464,77 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                                     // Llenar el DataGrid
                                     LoadDataGridPanel();
+
+                                    float disponibleA = 0;
+                                    float disponibleB = 0;
+
+                                    float holgura = 0;
+
+                                    // Verificar si el valor en TextHolgura no es nulo o vacío y convertirlo a float
+                                    if (!string.IsNullOrEmpty(TextHolgura.Text))
+                                    {
+                                        float.TryParse(TextHolgura.Text, out holgura);
+                                    }
+
+                                    // Verificamos si hay alturas disponibles 
+                                    Alturas_Disponibles(TextIdNum.Text, ref disponibleA, ref disponibleB, holgura);
+
+                                    lbDisLA.Text = "Dis.LA " + disponibleA + "cms";
+                                    lbDisLB.Text = "Dis.LB " + disponibleB + "cms";
+
+                                    // llenamos la Ubicacion 
+                                    LlenarUbicacion(Convert.ToInt32(DropDivisiones.SelectedValue));
+
+                                    if (CalcularUbicacionModulo(TextIdNum.Text) == 0)
+                                    {
+                                        CheckBase.Checked = true;
+                                        CheckBase.Enabled = false;
+
+                                        CheckComplementarios.Checked = false;
+
+
+                                        ddlUbicacion.Enabled = false;
+                                        ddlUbicacion.CssClass = "form-control form-control-sm";
+
+                                        ddlCantidad.Enabled = false;
+                                        ddlCantidad.CssClass = "form-control form-control-sm";
+
+                                        ddlLado.Enabled = false;
+                                        ddlLado.CssClass = "form-control form-control-sm";
+
+
+
+                                    }
+                                    else
+                                    {
+                                        CheckBase.Checked = false;
+                                        CheckBase.Enabled = false;
+
+                                        CheckComplementarios.Checked = true;
+
+                                        ddlUbicacion.Enabled = true;
+                                        ddlUbicacion.CssClass = "form-control form-control-sm";
+
+                                        ddlCantidad.Enabled = true;
+                                        ddlCantidad.CssClass = "form-control form-control-sm";
+
+                                        ddlLado.Enabled = true;
+                                        ddlLado.CssClass = "form-control form-control-sm";
+                                    }
+
+                                    BindDataGrid();
+
+
+                                    if (CheckBase.Checked)
+                                    {
+
+                                    }
+                                    else
+                                    {
+
+                                    }
+
+                                    CargarModulosAsociadosAlObjeto(idNumericoDise);
 
                                 }
                             }
@@ -474,6 +590,202 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 }
             }
         }
+
+        private void CargarModulosAsociadosAlObjeto(string idNumerico)
+        {
+            string idPanelNum = TextIdNum.Text; // Obtener el valor del TextBox 'TextIdNum'
+
+            if (!string.IsNullOrEmpty(idPanelNum))
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = @"           
+                            SELECT 
+                            tblModulo.*,
+                            tblPanel_Modulo.Cantidad,
+                            tblPanel_Modulo.Ubicacion_Modulo,
+                            tblPanel_Modulo.Lado,
+                            tblPanel_Modulo.Observaciones,
+                            tblPanel_Modulo.Id_PanelNum,
+                            tblPanel_Modulo.PanModResponsable,
+                            tblFamiliaModulo.Descripcion_Familia 
+                            FROM (tblFamiliaModulo 
+                            INNER JOIN tblModulo ON tblFamiliaModulo.ID_Familia = tblModulo.ID_Familia) 
+                            INNER JOIN tblPanel_Modulo ON tblModulo.Id_Modulo = tblPanel_Modulo.Id_Modulo 
+                            WHERE (((tblPanel_Modulo.Id_PanelNum)=@IDNumerico))ORDER BY tblPanel_Modulo.Ubicacion_Modulo";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@IDNumerico", idNumerico);
+
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                        {
+                            DataTable dt = new DataTable();
+                            adapter.Fill(dt);
+
+                            DataGridModulosAsociados.DataSource = dt;
+                            DataGridModulosAsociados.DataBind();
+
+                        }
+                    }
+                }
+            }
+        }
+
+        public void Alturas_Disponibles(string IdPanelNum, ref float DisponibleA, ref float DisponibleB, float Holgura)
+        {
+            float AlturaA = 0, AlturaB = 0, AlturaAB = 0;
+
+            string sSql = "SELECT SUM(tblModulo.Altura) AS AlturaLado, tblPanel_Modulo.Lado " +
+                          "FROM tblTipoModulo " +
+                          "INNER JOIN (tblModulo INNER JOIN tblPanel_Modulo ON tblModulo.Id_Modulo = tblPanel_Modulo.Id_Modulo) " +
+                          "ON tblTipoModulo.Id_TipoModulo = tblModulo.Id_TipoModulo " +
+                          "WHERE tblTipoModulo.Id_TipoModulo <> 1 " +
+                          "GROUP BY tblPanel_Modulo.Lado, tblPanel_Modulo.Id_PanelNum " +
+                          "HAVING tblPanel_Modulo.Id_PanelNum = @IdPanelNum";
+
+            string sSqlMarco = "SELECT tblModulo.Altura, tblTipoModulo.Id_TipoModulo " +
+                               "FROM tblTipoModulo " +
+                               "INNER JOIN (tblModulo INNER JOIN tblPanel_Modulo ON tblModulo.Id_Modulo = tblPanel_Modulo.Id_Modulo) " +
+                               "ON tblTipoModulo.Id_TipoModulo = tblModulo.Id_TipoModulo " +
+                               "WHERE tblPanel_Modulo.Id_PanelNum = @IdPanelNum " +
+                               "AND tblTipoModulo.Id_TipoModulo = 1";
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                // Ejecuta la primera consulta
+                using (SqlCommand cmdAlturasDisponibles = new SqlCommand(sSql, connection))
+                {
+                    cmdAlturasDisponibles.Parameters.AddWithValue("@IdPanelNum", IdPanelNum);
+
+                    using (SqlDataReader readerAlturas = cmdAlturasDisponibles.ExecuteReader())
+                    {
+                        while (readerAlturas.Read())
+                        {
+                            string lado = readerAlturas["Lado"].ToString();
+                            float alturaLado = Convert.ToSingle(readerAlturas["AlturaLado"]);
+
+                            switch (lado)
+                            {
+                                case "A":
+                                    AlturaA = alturaLado;
+                                    break;
+                                case "B":
+                                    AlturaB = alturaLado;
+                                    break;
+                                case "AB":
+                                    AlturaAB = alturaLado;
+                                    break;
+                            }
+                        }
+                    }
+                }
+
+                // Ejecuta la segunda consulta
+                using (SqlCommand cmdAlturaMarco = new SqlCommand(sSqlMarco, connection))
+                {
+                    cmdAlturaMarco.Parameters.AddWithValue("@IdPanelNum", IdPanelNum);
+
+                    using (SqlDataReader readerMarco = cmdAlturaMarco.ExecuteReader())
+                    {
+                        if (readerMarco.Read())
+                        {
+                            float alturaMarco = Convert.ToSingle(readerMarco["Altura"]);
+
+                            // Calcula los valores disponibles para A y B
+                            DisponibleA = (float)Math.Round(alturaMarco - (AlturaA + AlturaAB) - Holgura, 2);
+                            DisponibleB = (float)Math.Round(alturaMarco - (AlturaB + AlturaAB) - Holgura, 2);
+                        }
+                        else
+                        {
+                            DisponibleA = 0;
+                            DisponibleB = 0;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void LlenarUbicacion(int numeroMaximo)
+        {
+            // Limpiar el DropDownList en caso de que tenga elementos
+            ddlUbicacion.Items.Clear();
+
+            // Añadir un valor vacío al principio
+            ListItem itemVacio = new ListItem("", "");
+            ddlUbicacion.Items.Add(itemVacio);
+
+            // Llenar el DropDownList con números desde 1 hasta el número máximo
+            for (int i = 1; i <= numeroMaximo; i++)
+            {
+                // Crear un nuevo ListItem con el mismo valor y texto (el número)
+                ListItem item = new ListItem(i.ToString(), i.ToString());
+
+                // Añadir el item al DropDownList
+                ddlUbicacion.Items.Add(item);
+            }
+        }
+
+        public int CalcularUbicacionModulo(string Id_Numerico)
+        {
+            int resultado = 0;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            // SQL para llamar al procedimiento almacenado
+            string sSql = "ctaMaxUbicacionModulo";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(sSql, connection))
+                    {
+                        // Especificar que se trata de un procedimiento almacenado
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Añadir el parámetro necesario (@IDpanelnum)
+                        command.Parameters.AddWithValue("@IDpanelnum", Id_Numerico);
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            // Verificar si hay resultados
+                            if (reader.Read())
+                            {
+                                // Si el segundo campo (índice 1) es mayor que 0, retornar 0, si no, retornar 1
+                                if (Convert.ToInt32(reader[1]) > 0)
+                                {
+                                    resultado = 0;
+                                }
+                                else
+                                {
+                                    resultado = 1;
+                                }
+                            }
+                            else
+                            {
+                                // Si no hay resultados, retornar 0
+                                resultado = 0;
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Manejo de errores
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+            }
+
+            return resultado;
+        }
+
 
         private string GetAnchoByIdNumerico(string idNumerico)
         {
@@ -611,43 +923,97 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         private void BindDataGrid()
         {
             string consultaBase = "";
+            string GrupoElementos = "";
+
+            if (DropDesGrupo.SelectedItem.Text.ToUpper() == "PANELES LINEA 3500")
+            {
+                GrupoElementos = "3500";
+            }
+            else if (DropDesGrupo.SelectedItem.Text.ToUpper() == "PANELES LINEA 7000")
+            {
+                GrupoElementos = "7000";
+            }
+            else
+            {
+                GrupoElementos = "%";
+            }
+
 
             if (CheckBase.Checked)
             {
                 // Consulta para optBases = True
-                consultaBase = "SELECT TOP 200 tblModulo.*, tblTipoModulo.Id_TipoModulo, tblModulo.Descripcion_Modulo, " +
-                       "tblFamiliaModulo.Descripcion_Familia, tblTipoModulo.Descripcion_TipoModulo " +
-                       "FROM tblTipoModulo INNER JOIN (tblFamiliaModulo INNER JOIN tblModulo ON " +
-                       "tblFamiliaModulo.ID_Familia = tblModulo.ID_Familia) ON " +
-                       "tblTipoModulo.Id_TipoModulo = tblModulo.Id_TipoModulo " +
-                       "WHERE (((tblTipoModulo.Id_TipoModulo)=1)";
+                consultaBase = "SELECT TOP 200  tblModulo.*, tblTipoModulo.Id_TipoModulo, tblModulo.Descripcion_Modulo, " +
+                               "tblFamiliaModulo.Descripcion_Familia, tblTipoModulo.Descripcion_TipoModulo " +
+                               "FROM tblTipoModulo " +
+                               "INNER JOIN tblFamiliaModulo " +
+                               "INNER JOIN tblModulo ON tblFamiliaModulo.ID_Familia = tblModulo.ID_Familia " +
+                               "ON tblTipoModulo.Id_TipoModulo = tblModulo.Id_TipoModulo " +
+                               "WHERE tblTipoModulo.Id_TipoModulo = 1 " +
+                               "AND tblModulo.Descripcion_Modulo LIKE '%' + @Criterio + '%' " +
+                               "AND tblModulo.Descripcion_Modulo LIKE '%' + @GrupoElementos + '%' " +
+                               "AND tblModulo.Altura LIKE @Altura + '%' " +
+                               "AND tblFamiliaModulo.Descripcion_Familia LIKE @FamiliaModulo + '%' " +
+                               "ORDER BY tblModulo.Descripcion_Modulo, tblModulo.Altura";
+
+                // Limpiar el ComboBox de Ubicación
+                ddlUbicacion.Items.Clear();
+                ddlUbicacion.Items.Add("0");
+                ddlUbicacion.SelectedIndex = 0; // Establecer el primer elemento como seleccionado
+                ddlUbicacion.Enabled = false; // Deshabilitar el ComboBox de Ubicación
+
+                // Establecer la cantidad
+                ddlCantidad.Items.Clear();
+                ddlCantidad.Items.Add("1");
+                ddlCantidad.SelectedIndex = 0; // Asignar 1 como cantidad
+                ddlCantidad.Enabled = false; // Deshabilitar el ComboBox de Cantidad
+
+                // Limpiar y agregar elementos al ComboBox de Lado
+                ddlLado.Items.Clear();
+                ddlLado.Items.Add("AB");
+                ddlLado.SelectedIndex = 0; // Establecer el primer elemento como seleccionado
+                ddlLado.Enabled = false; // Deshabilitar el ComboBox de Lado
+
+
+
             }
             else
             {
                 // Consulta para optBases = False
                 consultaBase = "SELECT TOP 200 tblModulo.*, tblTipoModulo.Id_TipoModulo, tblModulo.Descripcion_Modulo, " +
-                      "tblFamiliaModulo.Descripcion_Familia, tblTipoModulo.Descripcion_TipoModulo " +
-                      "FROM tblTipoModulo INNER JOIN (tblFamiliaModulo INNER JOIN tblModulo ON " +
-                      "tblFamiliaModulo.ID_Familia = tblModulo.ID_Familia) ON " +
-                      "tblTipoModulo.Id_TipoModulo = tblModulo.Id_TipoModulo " +
-                      "WHERE (((tblTipoModulo.Id_TipoModulo)=2 or (tblTipoModulo.Id_TipoModulo)=3))";
-            }
+                               "tblFamiliaModulo.Descripcion_Familia, tblTipoModulo.Descripcion_TipoModulo " +
+                               "FROM tblTipoModulo " +
+                               "INNER JOIN tblFamiliaModulo " +
+                               "INNER JOIN tblModulo ON tblFamiliaModulo.ID_Familia = tblModulo.ID_Familia " +
+                               "ON tblTipoModulo.Id_TipoModulo = tblModulo.Id_TipoModulo " +
+                               "WHERE (tblTipoModulo.Id_TipoModulo = 2 OR tblTipoModulo.Id_TipoModulo = 3) " +
+                               "AND tblModulo.Descripcion_Modulo LIKE '%' + @Criterio + '%' " +
+                               "AND tblModulo.Descripcion_Modulo LIKE '%' + @GrupoElementos + '%' " +
+                               "AND tblModulo.Altura LIKE @Altura + '%' " +
+                               "AND tblFamiliaModulo.Descripcion_Familia LIKE @FamiliaModulo + '%' " +
+                               "ORDER BY tblModulo.Descripcion_Modulo, tblModulo.Altura";
 
-            // Inicializa la cláusula WHERE
-            string whereClause = "";
 
-            // Agrega la condición de texto de búsqueda si se proporciona
-            if (!string.IsNullOrEmpty(TextCriterio.Text))
-            {
-                whereClause += " AND tblModulo.Descripcion_Modulo LIKE '%" + TextCriterio.Text + "%'";
-            }
-            if (!string.IsNullOrEmpty(TextAlturaConfigurar.Text))
-            {
-                whereClause += " AND tblModulo.Altura LIKE '%" + TextAlturaConfigurar.Text + "%'";
-            }
+                // Invocar el metodo HabilitarAdicionar();
+                ddlCantidad.Items.Clear();
+                ddlCantidad.Items.Add("");
+                ddlCantidad.Items.Add("1");
+                ddlCantidad.Items.Add("2");
 
-            // Combina la consulta base con la cláusula WHERE
-            consultaBase += whereClause;
+                ddlLado.Items.Clear();
+                ddlLado.Items.Add("");
+                ddlLado.Items.Add("A");
+                ddlLado.Items.Add("B");
+                ddlLado.Items.Add("AB");
+
+
+                ddlUbicacion.Enabled = true;
+                ddlCantidad.Enabled = true;
+                ddlLado.Enabled = true;
+
+                // llenamos la Ubicacion 
+                LlenarUbicacion(Convert.ToInt32(DropDivisiones.SelectedValue));
+
+            }
 
 
             // Conexión a la base de datos
@@ -655,9 +1021,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(consultaBase, connection);
+
+                // Agregar parámetros de manera segura
+                command.Parameters.AddWithValue("@Criterio", TextCriterio.Text.Trim());
+                command.Parameters.AddWithValue("@GrupoElementos", GrupoElementos);
+                command.Parameters.AddWithValue("@Altura", TextAlturaConfigurar.Text.Trim());
+                command.Parameters.AddWithValue("@FamiliaModulo", ddlFamiliaModulo.SelectedValue.Trim());
+
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 DataTable dataTable = new DataTable();
-
 
                 connection.Open();
                 adapter.Fill(dataTable);
@@ -665,7 +1037,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 // Asigna los datos al DataGrid
                 DataGridConfigurar.DataSource = dataTable;
                 DataGridConfigurar.DataBind();
-
             }
         }
 
@@ -692,6 +1063,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                 e.Item.CssClass = "fila-seleccionada1";
 
+                // llamar el metodo Habilitar Adicionar 
+
+                tbIdModuloAdicionar.Text = row.Cells[1].Text;
+
+
+                Habilitar_BotonAdicionar();
 
             }
         }
@@ -726,8 +1103,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 {
                     using (SqlCommand cmd = new SqlCommand(sSql, con))
                     {
-                        cmd.Parameters.AddWithValue("@Id_Panel", TextObjetoo.Trim());
-                        cmd.Parameters.AddWithValue("@Descripcion_Panel", TextDesInt.Text);
+                        cmd.Parameters.AddWithValue("@Id_Panel", TextObjetoo.Trim().ToUpper());
+                        cmd.Parameters.AddWithValue("@Descripcion_Panel", TextDesInt.Text.ToUpper());
                         cmd.Parameters.AddWithValue("@Id_GrupoObjeto", DropDesGrupo.SelectedValue);
                         cmd.Parameters.AddWithValue("@Ancho", TextAncho.Text);
                         cmd.Parameters.AddWithValue("@Id_Linea", DropLinea.SelectedValue);
@@ -739,7 +1116,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                         cmd.Parameters.AddWithValue("@Activo", CheckActivo.Checked);
                         cmd.Parameters.AddWithValue("@Responsable", nombreEmpleado);
                         cmd.Parameters.AddWithValue("@FechaChequeo", DateTime.Now.ToString("MM/dd/yyyy HH:mm"));
-                        cmd.Parameters.AddWithValue("@Descripcion_Tecnica", TextAreaDescripTec.Text);
+                        cmd.Parameters.AddWithValue("@Descripcion_Tecnica", TextAreaDescripTec.Text.ToUpper());
                         cmd.Parameters.AddWithValue("@idInsumoReferencia", TextIndReferencia.Text);
                         cmd.Parameters.AddWithValue("@UndxPaquete", TextUndXPaq.Text);
 
@@ -754,7 +1131,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                         cmd.ExecuteNonQuery();
                     }
                 }
-               
+
 
                 string ID_NumericoCreado = ConsultarID_Nuevo_Modificar();
                 Session["Id_numericoDise"] = ID_NumericoCreado;
@@ -782,8 +1159,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                 DataRow dr = dt.Rows[0];
 
-                decimal anchoAnterior = Convert.ToDecimal(dr["AnchoTag"]);
-                decimal alturaAnterior = Convert.ToDecimal(dr["AlturaTag"]);
+                decimal anchoAnterior = Convert.ToDecimal(dr["AnchoTag"].ToString());
+                decimal alturaAnterior = Convert.ToDecimal(dr["AlturaTag"].ToString());
 
 
                 using (SqlConnection con = new SqlConnection(connectionString))
@@ -854,9 +1231,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                     using (SqlCommand updateCmd = new SqlCommand(updateSql, con))
                     {
-                        updateCmd.Parameters.AddWithValue("@Id_Panel", TextObjeto.Text.Trim());
+                        updateCmd.Parameters.AddWithValue("@Id_Panel", TextObjeto.Text.Trim().ToUpper());
                         updateCmd.Parameters.AddWithValue("@UndxPaquete", TextUndXPaq.Text.Trim());
-                        updateCmd.Parameters.AddWithValue("@Descripcion_Panel", TextDesInt.Text.Trim());
+                        updateCmd.Parameters.AddWithValue("@Descripcion_Panel", TextDesInt.Text.Trim().ToUpper());
                         updateCmd.Parameters.AddWithValue("@Id_GrupoObjeto", DropDesGrupo.SelectedValue);
                         updateCmd.Parameters.AddWithValue("@Ancho", TextAncho.Text.Trim());
                         updateCmd.Parameters.AddWithValue("@Altura", TextAltura.Text.Trim());
@@ -870,9 +1247,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                         updateCmd.Parameters.AddWithValue("@chequeado", CheckChequeado.Checked);
                         updateCmd.Parameters.AddWithValue("@Responsable", nombreEmpleado);
                         updateCmd.Parameters.AddWithValue("@FechaChequeo", DateTime.Now.ToString("MM/dd/yyyy HH:mm"));
-                        updateCmd.Parameters.AddWithValue("@Descripcion_Tecnica", TextAreaDescripTec.Text.Trim());
+                        updateCmd.Parameters.AddWithValue("@Descripcion_Tecnica", TextAreaDescripTec.Text.Trim().ToUpper());
                         updateCmd.Parameters.AddWithValue("@idInsumoReferencia", TextIndReferencia.Text.Trim());
-                        updateCmd.Parameters.AddWithValue("@Id_PanelTag", dr["IdPanelTag"]);
+                        updateCmd.Parameters.AddWithValue("@Id_PanelTag", dr["IdPanelTag"].ToString());
                         updateCmd.Parameters.AddWithValue("@AnchoAnterior", anchoAnterior);
                         updateCmd.Parameters.AddWithValue("@AlturaAnterior", alturaAnterior);
 
@@ -887,29 +1264,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     }
 
                     string updateRelatedPanelsSql = @"
-    UPDATE tblPanel SET 
-        Id_Panel = @Id_Panel, 
-        UndxPaquete = @UndxPaquete, 
-        Descripcion_Panel = @Descripcion_Panel, 
-        Id_GrupoObjeto = @Id_GrupoObjeto, 
-        Id_Linea = @Id_Linea, 
-        Divisiones = @Divisiones, 
-        HOLGURA = @HOLGURA, 
-        Precio_Venta = 0, 
-        Profundidad = @Profundidad, 
-        Escalable = @Escalable, 
-        RegistradoSag = 0, 
-        chequeado = @chequeado, 
-        Responsable = @Responsable, 
-        FechaChequeo = @FechaChequeo, 
-        Descripcion_Tecnica = dbo.fn_DescripcionObjeto (@goSPDescripcionObjto, @Id_Numerico, @goDescripcionbASEObjeto)
-    WHERE Id_Panel = @Id_PanelTag";
+                        UPDATE tblPanel SET  Id_Panel = @Id_Panel, UndxPaquete = @UndxPaquete,Descripcion_Panel = @Descripcion_Panel, 
+                        Id_GrupoObjeto = @Id_GrupoObjeto, Id_Linea = @Id_Linea, Divisiones = @Divisiones, HOLGURA = @HOLGURA, 
+                        Precio_Venta = 0, Profundidad = @Profundidad, Escalable = @Escalable, RegistradoSag = 0, chequeado = @chequeado, 
+                        Responsable = @Responsable, FechaChequeo = @FechaChequeo,
+                        Descripcion_Tecnica = dbo.fn_DescripcionObjeto (@goSPDescripcionObjto,tblPanel.Id_Numerico, @goDescripcionbASEObjeto)
+                        WHERE Id_Panel = @Id_PanelTag";
 
                     using (SqlCommand updateRelatedCmd = new SqlCommand(updateRelatedPanelsSql, con))
                     {
-                        updateRelatedCmd.Parameters.AddWithValue("@Id_Panel", TextObjeto.Text.Trim());
+                        updateRelatedCmd.Parameters.AddWithValue("@Id_Panel", TextObjeto.Text.Trim().ToUpper());
                         updateRelatedCmd.Parameters.AddWithValue("@UndxPaquete", TextUndXPaq.Text.Trim());
-                        updateRelatedCmd.Parameters.AddWithValue("@Descripcion_Panel", TextDesInt.Text.Trim());
+                        updateRelatedCmd.Parameters.AddWithValue("@Descripcion_Panel", TextDesInt.Text.Trim().ToUpper());
                         updateRelatedCmd.Parameters.AddWithValue("@Id_GrupoObjeto", DropDesGrupo.SelectedValue);
                         updateRelatedCmd.Parameters.AddWithValue("@Id_Linea", DropLinea.SelectedValue);
                         updateRelatedCmd.Parameters.AddWithValue("@Divisiones", DropDivisiones.Text);
@@ -920,19 +1286,44 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                         updateRelatedCmd.Parameters.AddWithValue("@Responsable", nombreEmpleado);
                         updateRelatedCmd.Parameters.AddWithValue("@FechaChequeo", DateTime.Now.ToString("MM/dd/yyyy HH:mm"));
 
-                        // Se obtiene el valor de @goSPDescripcionObjto, @Id_Numerico, y @goDescripcionbASEObjeto
-                        string goSPDescripcionObjto = "";  // Reemplaza esto con el valor real
-                        string goDescripcionbASEObjeto = "";  // Reemplaza esto con el valor real
-                        string idNumerico = "";  // Reemplaza esto con el valor real
+
+                        DataTable DatoDescriObjeto = ConsultarInformacionObjeto();
+
+                        string goSPDescripcionObjto = "";
+                        string goDescripcionbASEObjeto = "";
+
+
+                        if (DatoDescriObjeto != null && DatoDescriObjeto.Rows.Count > 0)
+                        {
+                            DataRow fila = DatoDescriObjeto.Rows[0];
+                            goSPDescripcionObjto = fila["goSPDescripcionObjto"].ToString(); ;
+                            goDescripcionbASEObjeto = fila["goDescripcionbASEObjeto"].ToString(); ;
+
+                        }
 
                         updateRelatedCmd.Parameters.AddWithValue("@goSPDescripcionObjto", goSPDescripcionObjto);
-                        updateRelatedCmd.Parameters.AddWithValue("@Id_Numerico", idNumerico);
                         updateRelatedCmd.Parameters.AddWithValue("@goDescripcionbASEObjeto", goDescripcionbASEObjeto);
-                        updateRelatedCmd.Parameters.AddWithValue("@Id_PanelTag", dr["IdPanelTag"]);
+                        updateRelatedCmd.Parameters.AddWithValue("@Id_PanelTag", dr["IdPanelTag"].ToString());
 
                         updateRelatedCmd.ExecuteNonQuery();
                     }
 
+                    string update2 = @"
+                        UPDATE tblPanel Set Precio_Venta = 0 
+                        WHERE (Id_Panel IN (
+                        SELECT tblPlano.Plano FROM tblPlano 
+                        INNER JOIN tblPlano_Panel ON tblPlano.Plano = tblPlano_Panel.Id_Plano 
+                        INNER JOIN tblPanel AS tblPanel_1 ON tblPlano_Panel.Id_PanelNum = tblPanel_1.Id_Numerico 
+                        WHERE  (tblPlano.Tipologia = 1) 
+                        AND (tblPanel_1.Id_Panel = @ID_Panel) 
+                        GROUP BY tblPlano.Plano))";
+
+                    using (SqlCommand update2Cmd = new SqlCommand(update2, con))
+                    {
+                        update2Cmd.Parameters.AddWithValue("@Id_Panel", "N" + TextObjeto.Text.Trim());
+
+                        update2Cmd.ExecuteNonQuery();
+                    }
                 }
 
                 string ID_NumericoCreado = ConsultarID_Nuevo_Modificar();
@@ -977,9 +1368,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     if (CheckEstable.Checked == false)
                     {
                         SpanId_Objeto.InnerText = TextObjeto.Text;
-                        ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#confirContinuarNoEsaclable').modal('show');", true);
+                        ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#confirContinuarNoEscalable').modal('show');", true);
                         return;
-                     
+
                     }
                     else
                     {
@@ -1136,7 +1527,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     if (InsertarPanelModulo(ID_NumericoCreado, ID_Modulo, Ubicacion_Modulo, Lado, Cantidad, Observaciones))
                     {
                         // Mensaje de Exito 
-                       
+
                     }
                     else
                     {
@@ -1236,7 +1627,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             }
             return ID;
         }
-
 
         protected string ConsultarID_Nuevo_Modificar()
         {
@@ -1446,7 +1836,646 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             }
         }
 
-        
+        protected void CheckApliCodPSLOT_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CheckApliCodPSLOT.Checked)
+            {
+                TextIdInsumo.Enabled = true;
+                TextIdInsumo.CssClass = "form-control form-control-sm";
+            }
+            else
+            {
+                TextIdInsumo.Enabled = false;
+                TextIdInsumo.CssClass = "form-control form-control-sm";
+
+                TextIdInsumo.Text = "";
+                TextCodPSL.Text = "";
+                TextInRelOtNoOai.Text = "";
+            }
+        }
+
+        protected void btnPosback_Click(object sender, EventArgs e)
+        {
+            // solo para activar el postback para generar el evento de cambio de id de insumo 
+        }
+
+        protected void TextIdInsumo_TextChanged(object sender, EventArgs e)
+        {
+
+            string tipoAccion = Session["CrudObjetosDibujo"] as string;
+
+            if (tipoAccion == "Modificar")
+            {
+                EstadoGrabarCancelar();
+            }
+
+            if (TextIdInsumo.Text == "")
+            {
+                // Mensaje modal de si o no
+                // El campo de id insumo está vacío, debe ingresar el id del insumo asociado.
+                //¿Desea aseociar al objeto algún id de insumo para las OT diferentes a OAI?
+
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#confirmarAsociarInsumo').modal('show');", true);
+                return;
+
+
+            }
+            else
+            {
+
+                // Buscar con el ID_Insumo los valores o mostrar el mensaje si no existe
+                int insumoId;
+                bool esNumero = int.TryParse(TextIdInsumo.Text, out insumoId);
+
+                // Rango de SMALLINT: de -32,768 a 32,767
+                if (esNumero && insumoId >= -32768 && insumoId <= 32767)
+                {
+                    // El valor es un número válido en el rango de SMALLINT
+                    DataTable DatosXIdInsumo = ConsultarDatosXIdInsumo(TextIdInsumo.Text);
+
+                    if (DatosXIdInsumo != null && DatosXIdInsumo.Rows.Count > 0)
+                    {
+                        DataRow fila = DatosXIdInsumo.Rows[0];
+
+                        TextCodPSL.Text = fila["ID_Inventario"].ToString();
+                        TextInRelOtNoOai.Text = fila["Descripcion_Insumo"].ToString();
+                    }
+                    else
+                    {
+                        // No existen datos para el ID proporcionado
+                        TextCodPSL.Text = "";
+                        TextInRelOtNoOai.Text = "";
+                        TextIdInsumo.Text = "";
+                        TextIdInsumo.Focus();
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El insumo no existe, por favor revise el ID ingresado');", true);
+                    }
+                }
+                else
+                {
+                    // El número está fuera del rango de SMALLINT o no es un número válido
+                    TextCodPSL.Text = "";
+                    TextInRelOtNoOai.Text = "";
+                    TextIdInsumo.Text = "";
+                    TextIdInsumo.Focus();
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El insumo no existe, por favor revise el ID ingresado.');", true);
+                }
+
+
+
+
+
+            }
+
+        }
+
+        private DataTable ConsultarDatosXIdInsumo(string ID_Insumo)
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT ID_Inventario, Descripcion_Insumo FROM tblInsumo WHERE Id_Insumo =@ID_Insumo";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@ID_Insumo", ID_Insumo);
+
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+
+        private DataTable ConsultarInformacionObjeto()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT goDescripcionBaseObjeto,goSPDescripcionObjto FROM tblGrupoObjeto " +
+                              "WHERE ID_GrupoObjeto = @ID_Grupo ORDER BY Descripcion_Grupo";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@ID_Grupo", DropDesGrupo.SelectedValue);
+
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+
+        protected void BtnCancelarObjetosPanel_Click(object sender, EventArgs e)
+        {
+            LoadData();
+            DisposicionInicialBotones();
+            EstadoGrabarCancelarInicial();
+            DataGridInicial();
+        }
+
+        protected void btnActuaValComercial_Click(object sender, EventArgs e)
+        {
+
+            if (TextIdNum.Text.Trim() == "")
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('No se ha selecciona ninguna familia.');", true);
+                return;
+            }
+            else
+            {
+                PanelActualizar.InnerText = TextObjeto.Text;
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#confirmarActualizarValorComercial').modal('show');", true);
+                return;
+            }
+
+
+
+        }
+
+        protected void btnActualizarValorComercial_SI_Click(object sender, EventArgs e)
+        {
+            DataTable DatosPanel = ConsultarDatosPanel();
+
+            if (DatosPanel != null && DatosPanel.Rows.Count > 0)
+            {
+                foreach (DataRow row in DatosPanel.Rows)
+                {
+                    string ID_Numerico = row["Id_Numerico"].ToString();
+
+                    EjecutarActualizarPrecioObjeto(ID_Numerico);
+
+                }
+            }
+
+            TextValorComercial.Text = ConsultarPrecioVenta();
+
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Se actualizo correctamente el valor venta de la familia:" + TextObjeto.Text.Trim() + "');", true);
+            return;
+
+        }
+
+        private DataTable ConsultarDatosPanel()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT * FROM tblpanel WHERE Id_Panel= @ID_Panel";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@ID_Panel", TextObjeto.Text);
+
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+
+        // Método para ejecutar el procedimiento almacenado sp_ActualizarPrecioObjeto
+        public void EjecutarActualizarPrecioObjeto(string idPanelNumerico)
+        {
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionStringSID))
+                {
+
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand("sp_ActualizarPrecioObjeto", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.Add(new SqlParameter("@Objeto", SqlDbType.Int)).Value = idPanelNumerico;
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejar errores (puedes registrar el error o lanzar una excepción)
+                Console.WriteLine("Error al ejecutar el procedimiento: " + ex.Message);
+                throw;
+            }
+        }
+
+        protected string ConsultarPrecioVenta()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string PrecioVenta = "";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT Precio_Venta FROM tblPanel WHERE Id_Numerico = @Id_Numerico";
+
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@Id_Numerico", TextIdNum.Text);
+
+
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        PrecioVenta = reader["Precio_Venta"].ToString();
+                    }
+
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejo de errores, por ejemplo, loguear el error
+                // También puedes lanzar una excepción o devolver un mensaje de error
+            }
+            return PrecioVenta;
+        }
+
+        protected void CheckComplementarios_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBase.Checked = false;
+            CheckBase.Enabled = true;
+
+            CheckComplementarios.Checked = true;
+
+            btnCopiarModulo.Enabled = false;
+            btnCopiarModulo.CssClass = "btn btn-sm button-disabled shadow";
+
+            btnAdicionarModulo.Enabled = false;
+            btnAdicionarModulo.CssClass = "btn btn-sm button-disabled shadow";
+
+            btnEliminarModuloObjeto.Enabled = false;
+            btnEliminarModuloObjeto.CssClass = "btn btn-sm button-disabled shadow";
+
+            BindDataGrid();
+        }
+
+        protected void ddlUbicacion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarLadosPanel();
+            Habilitar_BotonAdicionar();
+        }
+
+        protected void ddlCantidad_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarLadosPanel();
+            Habilitar_BotonAdicionar();
+        }
+
+        protected void ddlLado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Habilitar_BotonAdicionar();
+        }
+
+        private void CargarLadosPanel()
+        {
+            // Limpiar los items actuales del DropDownList
+            ddlLado.Items.Clear();
+
+
+            if (ddlCantidad.SelectedItem.Text == "1")
+            {
+                LlenarLado(TextIdNum.Text, ddlUbicacion.SelectedValue);
+            }
+            else if (ddlCantidad.SelectedItem.Text == "2")
+            {
+                // Agregar los elementos para cuando la cantidad es 2
+                ddlLado.Items.Add(new ListItem("AB", "AB"));
+
+            }
+        }
+
+        private void LlenarLado(string panelNum, string ubicacion)
+        {
+            // Limpiar el DropDownList antes de llenarlo
+            ddlLado.Items.Clear();
+
+
+            string ladoExistente = ObtenerLadoExistente(panelNum, ubicacion);
+
+            if (!string.IsNullOrEmpty(ladoExistente))
+            {
+                // Si el procedimiento almacenado retorna "A" o "B", se agrega el lado opuesto
+                switch (ladoExistente)
+                {
+                    case "A":
+                        ddlLado.Items.Add(new ListItem("B", "B"));
+                        break;
+                    case "B":
+                        ddlLado.Items.Add(new ListItem("A", "A"));
+                        break;
+                }
+            }
+            else
+            {
+                // Si no hay lado existente y la ubicación no es 0, se agregan "A" y "B"
+                if (ubicacion != "0")
+                {
+                    ddlLado.Items.Add(new ListItem("A", "A"));
+                    ddlLado.Items.Add(new ListItem("B", "B"));
+                }
+                else
+                {
+                    // Si la ubicación es 0, se agrega "AB"
+                    ddlLado.Items.Add(new ListItem("AB", "AB"));
+                }
+            }
+
+            // Seleccionar el primer elemento de la lista
+            if (ddlLado.Items.Count > 0)
+            {
+                ddlLado.SelectedIndex = 0;
+            }
+        }
+
+        private string ObtenerLadoExistente(string panelNum, string ubicacion)
+        {
+            string ladoExistente = null;
+
+            // Define la conexión a la base de datos (asegúrate de cambiar la cadena de conexión)
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                // Define el comando y el procedimiento almacenado
+                using (SqlCommand cmd = new SqlCommand("ctaLadoExistente", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    // Agregar los parámetros necesarios
+                    cmd.Parameters.AddWithValue("@P", panelNum);
+                    cmd.Parameters.AddWithValue("@U", ubicacion);
+
+                    // Abrir conexión
+                    conn.Open();
+
+                    // Ejecutar la consulta
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Si hay resultados, obtener el valor del lado
+                    if (reader.Read())
+                    {
+                        ladoExistente = reader["Lado"].ToString();
+                    }
+
+                    reader.Close();
+                }
+            }
+
+            return ladoExistente;
+        }
+
+        private void Habilitar_BotonAdicionar()
+        {
+            string tipoAccion = Session["CrudObjetosDibujo"] as string;
+
+            if (tipoAccion.ToUpper() != "CONSULTAR" && tbIdModuloAdicionar.Text.Trim() != "")
+            {
+                btnCopiarModulo.Enabled = true;
+                btnCopiarModulo.CssClass = "btn btn-sm  shadow ColorAzulActivo";
+
+                if (ddlCantidad.SelectedValue.Trim() != "" && ddlLado.SelectedValue.Trim() != "" && ddlUbicacion.SelectedValue.Trim() != "")
+                {
+                    btnAdicionarModulo.Enabled = true;
+                    btnAdicionarModulo.CssClass = "btn btn-sm  shadow ColorAzulActivo";
+
+                    VerificarCantidadModulo(TextIdNum.Text, ddlUbicacion.SelectedItem.Text.Trim());
+                }
+                else
+                {
+                    btnAdicionarModulo.Enabled = false;
+                    btnAdicionarModulo.CssClass = "btn button-disabled btn-sm   shadow ";
+                }
+
+            }
+        }
+
+
+        private void VerificarCantidadModulo(string panelNum, string ubicacion)
+        {
+            string sqlQuery = "ctaCantidadModuloEnUnPanelRespectoUbicacion";
+            int cantidad = 0;
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionStringSID))
+            {
+                using (SqlCommand cmd = new SqlCommand(sqlQuery, conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@P", panelNum.ToString());
+                    cmd.Parameters.AddWithValue("@U", ubicacion.ToString());
+
+                    conn.Open();
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (!reader.HasRows)
+                    {
+                        cantidad = 0;
+
+                        // Si la ubicación no es 0 habilitar adicionar modulo
+                        if (ubicacion != "0")
+                        {
+                            ddlCantidad.Enabled = true;
+                            btnAdicionarModulo.Enabled = true;
+                        }
+                    }
+                    else
+                    {
+                        // Si hay resultados, obtener la cantidad
+                        reader.Read();
+                        cantidad = reader.GetInt32(0);
+
+                        if (cantidad == 2)
+                        {
+                            // Si la cantidad es 2, deshabilitar el botón adicionar modulo
+                            btnAdicionarModulo.Enabled = false;
+                        }
+                        else
+                        {
+                            // De lo contrario, habilitar el boton adicionar modulo
+                            ddlCantidad.SelectedIndex = 0;
+                            ddlCantidad.Enabled = true;
+                            btnAdicionarModulo.Enabled = true;
+                        }
+                    }
+
+                    reader.Close();
+                }
+            }
+        }
+
+        protected void DataGridModulosAsociados_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            if (e.CommandName == "ModuloAsociado")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGridModulosAsociados.Items[rowIndex];
+
+                // capturamos los campos de la fila del datagrid 
+                foreach (DataGridItem item in DataGridModulosAsociados.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+                e.Item.CssClass = "fila-seleccionada1";
+
+                // llamar el metodo Habilitar Adicionar 
+
+                tbIdModuloEliminar.Text = row.Cells[1].Text;
+
+                string tipoAccion = Session["CrudObjetosDibujo"] as string;
+
+                if (tipoAccion.ToUpper() != "CONSULTAR" && tbIdModuloEliminar.Text.Trim() != "")
+                {
+                    btnEliminarModuloObjeto.Enabled = true;
+                    btnEliminarModuloObjeto.CssClass = "btn btn-sm  shadow RojoCancelar";
+                }
+                else
+                {
+                    btnEliminarModuloObjeto.Enabled = false;
+                    btnEliminarModuloObjeto.CssClass = "btn button-disabled btn-sm   shadow ";
+                }
+               
+
+
+            }
+        }
+
+        protected void btnAdicionarModulo_Click(object sender, EventArgs e)
+        {
+
+            bool ValidarExistenciaPanelModulo = ConsultarExistenciaPanelModulo(TextIdNum.Text);
+
+            if (ddlUbicacion.SelectedValue == "0" || !ValidarExistenciaPanelModulo)
+            {
+
+            }
+
+            if (CheckEstable.Checked)
+            {
+
+            }
+            else
+            {
+
+            }
+
+
+        }
+
+
+        private bool ConsultarExistenciaPanelModulo(string IDNumerico)
+        {
+            bool existe = false;
+            string consulta = "SELECT COUNT(*) FROM tblPanel_Modulo WHERE Id_PanelNum = @IDNumerico";
+            string connectionString = WebConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(consulta, connection))
+                {
+                    // Agregar el parámetro para el IDNumerico
+                    command.Parameters.AddWithValue("@IDNumerico", IDNumerico);
+
+                    try
+                    {
+                        connection.Open();
+                        // Ejecutar el COUNT y convertir el resultado a entero
+                        int count = Convert.ToInt32(command.ExecuteScalar());
+
+                        // Si el conteo es mayor que 0, significa que el registro existe
+                        if (count > 0)
+                        {
+                            existe = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejar errores aquí (por ejemplo, registrar el error)
+                        throw new ApplicationException("Error al verificar la existencia del registro", ex);
+                    }
+                }
+            }
+
+            return existe;
+        }
+
+
+        protected void btnCopiarModulo_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnEliminarModuloObjeto_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void CheckBase_CheckedChanged(object sender, EventArgs e)
+        {
+
+            if (CheckBase.Checked)
+            {
+                CheckBase.Checked = true;
+                CheckBase.Enabled = true;
+
+                CheckComplementarios.Checked = false;
+
+                CheckBase.Enabled = false;
+
+                BindDataGrid();
+            }
+            else
+            {
+                CheckBase.Checked = false;
+                CheckBase.Enabled = false;
+
+                CheckComplementarios.Checked = true;
+
+                BindDataGrid();
+            }
+
+
+
+           
+        }
     }
 
 }

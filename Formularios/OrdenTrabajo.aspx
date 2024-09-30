@@ -4019,7 +4019,7 @@
                                                     <i class="bi bi-files"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Actualizar Precio" ID="BtnActPre">
+                                                <asp:LinkButton runat="server" title="Actualizar Precio" ID="BtnActPre" OnClick="BtnActPre_Click">
                                                       <i class="bi bi-currency-dollar"></i>
                                                 </asp:LinkButton>
 
@@ -4551,14 +4551,14 @@
                                     <div class="modal-body border rounded">
                                         <div class="container-fluid">
                                             <h6>¿Está seguro de Borrar el Objeto <span runat="server" id="SpanId_ObjetoEliminar"></span>
-                                               de ancho <span runat="server" id="spanAnchoEli"></span> y de profundidad <span runat="server" id="spanProfundidad">?</span><span runat="server" id="spanAlturaEliminar" visible="false"></span>
+                                                de ancho <span runat="server" id="spanAnchoEli"></span> y de profundidad <span runat="server" id="spanProfundidad">?</span><span runat="server" id="spanAlturaEliminar" visible="false"></span>
                                             </h6>
                                         </div>
 
                                     </div>
                                     <div class="modal-footer">
                                         <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                            <asp:Button runat="server" ID="btnEliminarObjeto_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm  btn-outline-danger" Style="width: 5rem;" OnClick="btnEliminarObjeto_SI_Click"  />
+                                            <asp:Button runat="server" ID="btnEliminarObjeto_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm  btn-outline-danger" Style="width: 5rem;" OnClick="btnEliminarObjeto_SI_Click" />
                                             <asp:Button runat="server" ID="btnEliminarObjeto_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
                                         </div>
 
@@ -4567,6 +4567,30 @@
                             </div>
                         </div>
 
+                        <!--Modal confirmar actualizar Precio Venta -->
+                        <div id="confirmarActualizarPrecioVenta" class="modal" tabindex="-1" style="display: none;">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary text-white">
+                                        <h6 class="modal-title text-center">Actualizar Precio Venta</h6>
+
+                                    </div>
+                                    <div class="modal-body border rounded">
+                                        <div class="container-fluid">
+                                            <h6>Está seguro de actualizar el precio venta de los objetos consultados?</h6>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                            <asp:Button runat="server" ID="btnActulizarPrecioVenta_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm  btn-outline-primary" Style="width: 5rem;" />
+                                            <asp:Button runat="server" ID="btnActulizarPrecioVenta_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                     </ContentTemplate>
                 </asp:UpdatePanel>

@@ -4227,6 +4227,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.Button btnEliminarObjeto_NO;
 
         /// <summary>
+        /// Control btnActulizarPrecioVenta_SI.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnActulizarPrecioVenta_SI;
+
+        /// <summary>
+        /// Control btnActulizarPrecioVenta_NO.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnActulizarPrecioVenta_NO;
+
+        /// <summary>
         /// Control PanelModulo.
         /// </summary>
         /// <remarks>

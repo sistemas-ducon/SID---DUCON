@@ -6,6 +6,13 @@
     text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
     height: 1em;
 }
+.auto-width-column2 {
+    width: auto;
+    max-width: 600px; /* Puedes ajustar este valor según el ancho máximo deseado */
+    white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
+    overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
+    text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
+}
 
 /* Estilo para el encabezado del DataGrid */
 .datagrid-header {
@@ -54,6 +61,15 @@
     border-right: 3px solid #4d5c69; /* Elimina el borde derecho */
 }
 
+.ColorAzulActivo {
+    color: #0863a4;
+}
+
+    .ColorAzulActivo:hover {
+        background: #0863a4;
+        color: white;
+    }
+
 .VerdeEfecto {
     background: repeating-linear-gradient(45deg, #154716, #39633e 80px);
 }
@@ -77,6 +93,20 @@
 .Verde {
     color: #00910c;
 }
+
+.RojoCancelar {
+    color: #b94747
+}
+
+    .RojoCancelar:hover {
+        background: #b94747;
+        color: white;
+    }
+
+.text-uppercase {
+    text-transform: uppercase;
+}
+
 
 /* Estilo para botones habilitados */
 .button-enabled {
