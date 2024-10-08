@@ -3318,7 +3318,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                                 if (Session["CargarIDContacto"] != null && Session["CargarIDContacto"].ToString() == "ACTIVO")
                                 {
-                                   
+
                                 }
                                 else
                                 {
@@ -4291,6 +4291,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         // Logica Tap de Objetos *****************************************************************************************************
 
+        protected void ddlGrupo_TextChanged(object sender, EventArgs e)
+        {
+            BuscarObjeto(sender, e);
+        }
+
+
         protected void BuscarObjeto(object sender, EventArgs e)
         {
 
@@ -4333,6 +4339,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 BtnNueObj.Enabled = true;
                 BtnNueObj.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+                ControlBotonesObjeto();
+
+                SpanId_ObjetoEliminar.InnerText = "";
+                spanAnchoEli.InnerText = "";
+                spanAlturaEliminar.InnerText = "";
+                spanProfundidad.InnerText = "";
+
+                Session.Remove("Id_PanelNum_Session");
             }
             else
             {
@@ -4382,6 +4397,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGridObjetos.Items[rowIndex];
+
+                // Guardar el índice de la fila seleccionada previamente para Objeto anterior 
+                Session["IndiceFilaAnterior"] = Session["IndiceFilaActual"];  // Guarda el índice anterior
+                Session["IndiceFilaActual"] = rowIndex;  // Actualiza con el índice de la nueva fila seleccionada
+
 
                 foreach (DataGridItem item in DataGridObjetos.Items)
                 {
@@ -4503,6 +4523,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 BtnChequearObjeto.Enabled = true;
                 BtnChequearObjeto.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
+                BtnIrObjAnt.Enabled = true;
+                BtnIrObjAnt.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
             }
             else
             {
@@ -4542,7 +4565,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "SISTEMAS" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
             {
-              
+
                 BtnNueObj.Enabled = true;
                 BtnNueObj.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
@@ -4571,11 +4594,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 BtnChequearObjeto.CssClass = "btn btn-sm shadow button-disabled";
 
             }
-         
+
 
         }
 
-        // para cargar la info en los textbox del modulo 
+        // para cargar la info en los textbox del modulo   Falta Cargar el despiece de ambos módulos 
         public void Cargar_Informacion_Modulo()
         {
             string IdPanelNum = Session["Id_PanelNum_Session"]?.ToString();
@@ -5260,7 +5283,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             Session.Remove("Id_numericoDise");
             Session["CrudObjetosDibujo"] = "Nuevo";
-         
+
         }
 
         protected void BtnModObj_Click(object sender, EventArgs e)
@@ -5285,7 +5308,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ScriptManager.RegisterStartupScript(this, GetType(), "showNoAgregado", scriptChequeado, true);
             }
 
-          
+
 
         }
 
@@ -5302,7 +5325,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             Session["Id_numericoDise"] = Session["Id_PanelNum_Session"].ToString();
             Session["CrudObjetosDibujo"] = "Consultar";
-            
+
         }
 
         protected void BtnCopObj_Click(object sender, EventArgs e)
@@ -5320,23 +5343,30 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session["Id_numericoDise"] = Session["Id_PanelNum_Session"].ToString();
             Session["CrudObjetosDibujo"] = "Copiar";
 
-           
+
         }
 
         protected void BtnEliObj_Click(object sender, EventArgs e)
         {
-            if (ValidarObjetoEnOrdenTrabajo())
+            if(SpanId_ObjetoEliminar.InnerText.Trim() != "")
             {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El Objeto " + Session["Id_ObjetoSession"].ToString() + " está vinculado a una o más órdenes de trabajo.');", true);
-                return;
+                if (ValidarObjetoEnOrdenTrabajo())
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El Objeto " + Session["Id_ObjetoSession"].ToString() + " está vinculado a una o más órdenes de trabajo.');", true);
+                    return;
+                }
+                else
+                {
+                    // Modal confirmar eliminar objeto 
+                    ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#confirmarEliminarObjeto').modal('show');", true);
+                    return;
+                }
             }
             else
             {
-                // Modal confirmar eliminar objeto 
-                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#confirmarEliminarObjeto').modal('show');", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Por favor seleccione un objeto a eliminar.');", true);
                 return;
             }
-
         }
 
         public bool ValidarObjetoEnOrdenTrabajo()
@@ -5423,6 +5453,101 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#confirmarActualizarPrecioVenta').modal('show');", true);
             return;
         }
+
+        protected void btnActulizarPrecioVenta_SI_Click(object sender, EventArgs e)
+        {
+
+            if (DataGridObjetos.Items.Count > 0)
+            {
+                // Recorre cada fila en el DataGrid
+                foreach (DataGridItem item in DataGridObjetos.Items)
+                {
+                    string IDNumerico = item.Cells[8].Text;
+                    Calcular_Precio_Venta_Objeto(IDNumerico);
+                }
+
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Se actualizo correctamente el valor venta de la consulta actual');", true);
+                return;
+
+            }
+            else
+            {
+                //No hay objetos seleccionado para actualizar
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('No se ha seleccionado ningun objeto');", true);
+                return;
+            }
+
+
+        }
+
+        public void Calcular_Precio_Venta_Objeto(string IDNumerico)
+        {
+            // Cadena de conexión a la base de datos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Crear un comando para el procedimiento almacenado
+                using (SqlCommand command = new SqlCommand("sp_ActualizarPrecioObjeto", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Añadir el parámetro de entrada
+                    command.Parameters.AddWithValue("@Objeto", IDNumerico);
+
+                    try
+                    {
+                        // Abrir la conexión
+                        connection.Open();
+
+                        // Ejecutar el procedimiento almacenado
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejar excepciones
+                        //Console.WriteLine("Error: " + ex.Message);
+                    }
+                }
+            }
+        }
+
+        protected void ControlBotonesObjeto()
+        {
+            List<System.Web.UI.Control> botones = new List<System.Web.UI.Control>
+            {
+
+                BtnImprimeObjeto,
+                BtnModObj,
+                BtnConObj,
+                BtnEliObj,
+                BtnBusObj,
+                BtnCopObj,
+                BtnActPre,
+                BtnChequearObjeto,
+
+            };
+
+            string cssClass = "btn btn-sm shadow button-disabled";
+
+            foreach (System.Web.UI.Control boton in botones)
+            {
+                if (boton is System.Web.UI.WebControls.LinkButton)
+                {
+                    System.Web.UI.WebControls.LinkButton linkButton = (System.Web.UI.WebControls.LinkButton)boton;
+                    linkButton.Enabled = false;
+                    linkButton.CssClass = cssClass;
+                }
+            }
+
+            BtnGenLisPre.Enabled = true;
+            BtnGenLisPre.CssClass = "btn btn-sm shadow button-enabled";
+
+            BtnIrObjAnt.Enabled = true;
+            BtnIrObjAnt.CssClass = "btn btn-sm shadow button-enabled";
+
+        }
+
 
         // Fin Logica Tap Objetos **************************************************************************************************
 
@@ -9091,7 +9216,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     string scriptNoPermiso = "alert('El plano se encuentra bloqueado .');";
                     ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
 
-                  
+
                 }
 
             }
@@ -20349,7 +20474,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             BtnCopiarModuloAtributos.Enabled = true;
             BtnCopiarModuloAtributos.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
-            
+
         }
 
         private void LlenarDataGrid3(string moduloID)
@@ -20395,7 +20520,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
                 catch (Exception ex)
                 {
-                   
+
                 }
             }
         }
@@ -20474,7 +20599,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
                 catch (Exception ex)
                 {
-                  
+
                 }
             }
         }
@@ -20501,7 +20626,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     if (chequeadoValue == "SI")
                     {
                         ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#BloqueBloqueado').modal('show');", true);
-                        return; 
+                        return;
                     }
                     else if (chequeadoValue == "NO")
                     {
@@ -20512,12 +20637,45 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
         protected void BtnCopiarModuloAtributos_Click(object sender, EventArgs e)
         {
             Session["Modulo"] = "Copiar";
             Response.Redirect("~/Formularios/DiseñoYDesarrollo/Modulo.aspx");
         }
+
+        protected void BtnIrObjAnt_Click(object sender, EventArgs e)
+        {
+            // Verificar si hay una fila anterior guardada
+            if (Session["IndiceFilaAnterior"] != null)
+            {
+                int rowIndexAnterior = Convert.ToInt32(Session["IndiceFilaAnterior"]);
+
+                // Acceder a la fila anterior usando el índice guardado
+                DataGridItem filaAnterior = DataGridObjetos.Items[rowIndexAnterior];
+
+                // Deseleccionar cualquier fila actual
+                foreach (DataGridItem item in DataGridObjetos.Items)
+                {
+                    item.CssClass = "";
+                }
+
+                // Aplicar la clase CSS a la fila anterior para restaurar la selección
+                filaAnterior.CssClass = "fila-seleccionada";
+
+                // Hacer scroll a la fila anterior si es necesario
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndexAnterior + "');", true);
+
+                // Simular el clic en el LinkButton de la fila anterior para ejecutar el evento 'VerObjetoDet'
+                LinkButton lnkObjetoDetallado = (LinkButton)filaAnterior.FindControl("lnkObjetoDetallado");
+                if (lnkObjetoDetallado != null)
+                {
+                    DataGridCommandEventArgs args = new DataGridCommandEventArgs(filaAnterior, lnkObjetoDetallado, new CommandEventArgs("VerObjetoDet", rowIndexAnterior));
+                    DataGridObtenerDatosObjetos_LinkButton(this, args);
+                }
+            }
+        }
+
+        
     }
 }
 

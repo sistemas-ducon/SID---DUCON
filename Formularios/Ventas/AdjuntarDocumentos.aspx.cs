@@ -28,11 +28,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 if (Session["usuariologueado"] != null)
                 {
 
+                    DepartamentoAsesor();
+
+
                     Button bntElimnar = FindControl("bntElimnar") as Button;
                     if (bntElimnar != null)
                     {
                         bntElimnar.Enabled = false;
-                        bntElimnar.CssClass = "btn-sm btn-outline-danger";
+                        bntElimnar.CssClass = "btn btn-sm btn-outline-danger";
 
                     }
 
@@ -49,15 +52,32 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                     TituloSolictud.Text = "Documentacion Solicitud Especial # " + Session["Id_Solicitud"].ToString() + "- Detalle " + Session["Id_Detalle"].ToString();
 
-                    if (!ConsultarTerminado())
+
+                    //Revisar Rol para dibujante para activar los botones 
+
+                    if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
                     {
-                        Button1.Enabled = false;
-                        Button1.CssClass = "btn-sm btn-outline-primary";
+                        if (!ConsultarTerminadoVentas())
+                        {
+                            Button1.Enabled = false;
+                            Button1.CssClass = "btn btn-sm btn-outline-primary";
+                        }
+                    }
+                    else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+                    {
+                        // Consultar terminado dibujo para controlar el boton de Adjuntar y validar el permiso de control de Documentacion OT
+                        if (!ConsultarTerminadoDibujo())
+                        {
+                            Button1.Enabled = false;
+                            Button1.CssClass = "btn btn-sm btn-outline-primary";
+                        }
+                    
                     }
 
 
 
-                }
+
+                    }
                 else
                 {
                     Response.Redirect("~/Formularios/Login.aspx");
@@ -87,7 +107,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 }
 
-                if (!ConsultarTerminado())
+                if (!ConsultarTerminadoVentas())
                 {
                     string mensajePersonalizado = "La solicitud ya ha sido programda para ventas y no puede ser modificada.";
                     string urlRedireccion = "Ventas/AdjuntarDocumentos.aspx";
@@ -196,7 +216,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             }
         }
 
-
         protected void DataGridDocumentosPE_LinkButton(object source, DataGridCommandEventArgs e)
         {
 
@@ -213,11 +232,60 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 Session["NombreArchivo"] = NombreArchivo;
                 Session["NombreCarpeta"] = "PE" + Session["Id_Solicitud"].ToString();
 
-                Button bntElimnar = FindControl("bntElimnar") as Button;
-                if (bntElimnar != null)
+
+
+
+                if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
                 {
-                    bntElimnar.Enabled = true;
-                    bntElimnar.CssClass = "btn-sm btn-outline-danger";
+                    Button bntElimnar = FindControl("bntElimnar") as Button;
+                    if (bntElimnar != null)
+                    {
+                        bntElimnar.Enabled = true;
+                        bntElimnar.CssClass = "btn btn-sm btn-outline-danger";
+                    }
+                }
+                else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+                {
+
+
+                    // Consultar terminado dibujo para controlar el boton de Adjuntar y validar el permiso de control de Documentacion OT
+                    if (!ConsultarTerminadoDibujo())
+                    {
+                        if (VerificarPermiso(Session["CedulaLogeada"]?.ToString(), 28))
+                        {
+
+                            Button bntElimnar = FindControl("bntElimnar") as Button;
+                            if (bntElimnar != null)
+                            {
+                                bntElimnar.Enabled = true;
+                                bntElimnar.CssClass = "btn btn-sm btn-outline-danger";
+                            }
+
+                           
+                        }
+                        else
+                        {
+                            Button1.Enabled = false;
+                            Button1.CssClass = "btn btn-sm btn-outline-primary";
+                        }
+                    }
+                    else
+                    {
+                        Button bntElimnar = FindControl("bntElimnar") as Button;
+                        if (bntElimnar != null)
+                        {
+                            bntElimnar.Enabled = true;
+                            bntElimnar.CssClass = "btn btn-sm btn-outline-danger";
+                        }
+                    }
+                }
+
+                foreach (DataGridItem item in DataGridDocumento.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = "";
+                    }
                 }
 
 
@@ -274,21 +342,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 }
 
 
-
-
-
-
-
-
-
-
             }
 
         }
 
         protected void EliminarDocumento(object sender, EventArgs e)
         {
-            if (!ConsultarTerminado())
+
+            // Validar Area y validar permiso para eliminar Documentacion Solicitud Especial 
+
+
+
+            if (!ConsultarTerminadoVentas())
             {
                 string mensajePersonalizado1 = "La solicitud ya ha sido programda para ventas y no puede ser modificada.";
                 string urlRedireccion1 = "Ventas/AdjuntarDocumentos.aspx";
@@ -334,9 +399,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
         }
 
-        public bool ConsultarTerminado()
+        public bool ConsultarTerminadoVentas()
         {
-            string consultaActual = "select ProgramadoVentas from tblSoliciDiseEspe where ID_Solicitud = @solicitud";
+            string consultaActual = "SELECT  ProgramadoVentas FROM tblSoliciDiseEspe WHERE ID_Solicitud = @solicitud";
 
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
@@ -364,6 +429,87 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 }
             }
         }
+
+        public bool ConsultarTerminadoDibujo()
+        {
+            string consultaActual = "SELECT  Terminado FROM tblSoliciDiseEspe WHERE ID_Solicitud = @solicitud";
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(consultaActual, connection))
+                {
+                    cmd.Parameters.AddWithValue("@solicitud", Session["Id_Solicitud"].ToString());
+                    object result = cmd.ExecuteScalar();
+
+                    // Verificar si el resultado es null o no
+                    if (result != null)
+                    {
+                        bool rowCount = Convert.ToBoolean(result);
+                        // Si rowCount es igual a 1, retornamos true; de lo contrario, retornamos false
+                        return rowCount == false;
+                    }
+                    else
+                    {
+                        // Si no se encontraron filas, retornamos false
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public void DepartamentoAsesor()
+        {
+
+            string consultaActual = "SELECT B.Descripcion FROM tblEmpleado As A INNER join tblDepartamento As B on B.ID_Departamento = A.Dependencia WHERE  Cedula = @Cedula";
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(consultaActual, connection))
+                {
+                    command.Parameters.AddWithValue("@Cedula", Session["CedulaLogeada"].ToString());
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        reader.Close();
+                        // Data arrived.
+                        string Departamento = (string)command.ExecuteScalar();
+                        Session["Departamento"] = Departamento;
+
+                    }
+
+
+                }
+            }
+
+        }
+
+        private bool VerificarPermiso(string cedulaLogueada, int idPermiso)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            // Aquí se debe ajustar la consulta SQL para incluir el parámetro del ID del permiso
+            string query = $"SELECT COUNT(*) FROM tblPermiso_Empleado WHERE ID_Empleado = '{cedulaLogueada}' AND ID_Permiso = @Permiso";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Permiso", idPermiso); // Agregar el parámetro del ID del permiso
+                    connection.Open();
+                    int count = (int)command.ExecuteScalar(); // Ejecutar la consulta y obtener el resultado
+                    return count > 0; // Devolver verdadero si se encuentra algún registro que cumpla la condición
+                }
+            }
+        }
+
 
     }
 }

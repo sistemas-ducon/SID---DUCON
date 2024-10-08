@@ -5,6 +5,7 @@
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -37,9 +38,21 @@
 
 
         }
+
+        function ActivarTapConfigurarControl() {
+
+            $("#InformacionObjeto-tab").removeClass("active");
+            $("#InformacionObjeto-content").removeClass("show active");
+
+            $("#Configurar-tab").addClass("active");
+            $("#Configurar-content").addClass("show active");
+
+        }
+
     </script>
 
 </head>
+
 <body>
     <form id="form1" runat="server">
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
@@ -307,42 +320,42 @@
 
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-                                        <div class="card p-2 m-2">
-                                            <div class="card-header">
-                                                <h6 class="datagrid-header text-start">Módulos</h6>
-                                            </div>
+                                    <div class="card p-2 m-2">
+                                        <div class="card-header">
+                                            <h6 class="datagrid-header text-start">Módulos</h6>
+                                        </div>
 
-                                            <div class="card-body p-0">
-                                                <div class="table-responsive mb-2 gap-2" style="max-height: 13rem; height:13rem; overflow-x: auto;">
+                                        <div class="card-body p-0">
+                                            <div class="table-responsive mb-2 gap-2" style="max-height: 13rem; height:13rem; overflow-x: auto;">
 
-                                                    <asp:DataGrid CssClass="table table-bordered table-hover table-sm form-control-sm" ID="DataGridPanel" runat="server"
-                                                        AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" PageSize="5"
-                                                        AllowSorting="true">
-                                                        <HeaderStyle Font-Bold="true" CssClass="datagrid-header " />
-                                                        <Columns>
+                                                <asp:DataGrid CssClass="table table-bordered table-hover table-sm form-control-sm" ID="DataGridPanel" runat="server"
+                                                    AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" PageSize="5"
+                                                    AllowSorting="true">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header " />
+                                                    <Columns>
 
-                                                            <asp:TemplateColumn ItemStyle-CssClass="auto-width-column">
-                                                                <ItemTemplate>
-                                                                    <asp:LinkButton ID="BtnCargarOT" runat="server" CommandName="Id_OT"
-                                                                        CommandArgument='<%# Container.ItemIndex %>' CssClass="Tam" Text="<i class='bi bi-pencil-square '></i>" />
-                                                                </ItemTemplate>
-                                                            </asp:TemplateColumn>
-                                                            <asp:BoundColumn DataField="Id_Modulo" HeaderText="Mod" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                            <asp:BoundColumn DataField="Descripcion_Modulo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
-                                                            <asp:BoundColumn DataField="Chequeado" HeaderText="OK" ItemStyle-CssClass="auto-width-column2"></asp:BoundColumn>
-                                                            <asp:BoundColumn DataField="Ubicacion_Modulo" HeaderText="Pos" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                            <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                            <asp:BoundColumn DataField="Cantidad" HeaderText="Cant" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                            <asp:BoundColumn DataField="Lado" HeaderText="Lado" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                            <asp:BoundColumn DataField="Descripcion_Familia" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                            <asp:BoundColumn DataField="PanModResponsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                            <asp:BoundColumn DataField="FechaChequeo" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                        </Columns>
-                                                    </asp:DataGrid>
+                                                        <asp:TemplateColumn ItemStyle-CssClass="auto-width-column">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="BtnCargarOT" runat="server" CommandName="Id_OT"
+                                                                    CommandArgument='<%# Container.ItemIndex %>' CssClass="Tam" Text="<i class='bi bi-pencil-square '></i>" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+                                                        <asp:BoundColumn DataField="Id_Modulo" HeaderText="Mod" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Descripcion_Modulo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Chequeado" HeaderText="OK" ItemStyle-CssClass="auto-width-column2"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Ubicacion_Modulo" HeaderText="Pos" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Cantidad" HeaderText="Cant" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Lado" HeaderText="Lado" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="Descripcion_Familia" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="PanModResponsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="FechaChequeo" HeaderText="Fecha Chequeo" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                    </Columns>
+                                                </asp:DataGrid>
 
-                                                </div>
                                             </div>
                                         </div>
+                                    </div>
 
                                 </div>
 
@@ -381,7 +394,7 @@
                                             <h6>El campo de id insumo está vacío, debe ingresar el id del insumo asociado.
                                                 <br />
                                                 <br />
-                                                ¿Desea aseociar al objeto algún id de insumo para las OT diferentes a OAI?
+                                                ¿Desea asociar al objeto algún id de insumo para las OT diferentes a OAI?
                                             </h6>
                                         </div>
 
@@ -402,7 +415,7 @@
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-primary text-white">
-                                        <h6 class="modal-title text-center">Actualizar Valor Comercial</h6>
+                                        <h6 class="modal-title text-center">Actualizar Precio Venta</h6>
 
                                     </div>
                                     <div class="modal-body border rounded">
@@ -431,43 +444,201 @@
                 <asp:UpdatePanel runat="server" ID="UpdatePanel2" UpdateMode="Conditional">
                     <ContentTemplate>
 
-                        <div class="container p-2 mt-2 shadow fondoSuave" style="min-height: 50rem;">
+                        <div class="row" runat="server" id="Oculto" visible="false">
+                            <asp:TextBox ID="tbIdModuloAdicionar" runat="server" Visible="false" ToolTip="ID_Modulo Agregar"></asp:TextBox>
+                            <asp:TextBox ID="tbIdModuloEliminar" runat="server" Visible="false" ToolTip="ID_Modulo Eliminar"></asp:TextBox>
+                            <asp:Label ID="lbNombreModuloAgregar" runat="server" Text="" Visible="false"></asp:Label>
+                            <asp:Label ID="lbNombreModuloEliminar" runat="server" Text="" Visible="false"></asp:Label>
+                        </div>
 
-                            <div class=" row border shadow-sm m-1 p-1 bg-light">
 
-                                <div class="row ">
+                        <div class="card p-2 mt-2 shadow fondoSuave" style="min-height: 50rem; margin-left: 5rem; margin-right: 5rem;">
 
-                                    <div class="col-lg-5 col-md-6 col-sm-12">
-                                        <div class="p-1 m-2">
-                                            <div class="input-group input-group-sm gap-2">
-                                                <asp:Label runat="server" ID="Label17" CssClass="form-label" Text="Grupo"></asp:Label>
-                                                <asp:DropDownList runat="server" ID="ddlFamiliaModulo" CssClass="form-control form-control-sm" DataSourceID="DSGrupo1"
-                                                    DataValueField="ID_GrupoObjeto" DataTextField="Descripcion_Grupo" AppendDataBoundItems="True">
-                                                    <asp:ListItem Text="%" Value="%" />
-                                                </asp:DropDownList>
-                                                <asp:SqlDataSource ID="DSGrupo1" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT ID_GrupoObjeto, Descripcion_Grupo FROM tblGrupoObjeto ORDER BY Descripcion_Grupo"></asp:SqlDataSource>
+                            <div class="card-header ">
+                                <div class=" row ">
+
+                                    <div class="row ">
+
+                                        <div class="col-lg-5 col-md-6 col-sm-12">
+                                            <div class="p-1 m-2">
+                                                <div class="input-group input-group-sm gap-2">
+                                                    <asp:Label runat="server" ID="Label17" CssClass="form-label" Text="Grupo"></asp:Label>
+                                                    <asp:DropDownList runat="server" ID="ddlFamiliaModulo" CssClass="form-control form-control-sm" DataSourceID="DSGrupo1"
+                                                        DataValueField="ID_GrupoObjeto" DataTextField="Descripcion_Grupo" AppendDataBoundItems="True">
+                                                        <asp:ListItem Text="%" Value="%" />
+                                                    </asp:DropDownList>
+                                                    <asp:SqlDataSource ID="DSGrupo1" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT ID_GrupoObjeto, Descripcion_Grupo FROM tblGrupoObjeto ORDER BY Descripcion_Grupo"></asp:SqlDataSource>
+                                                </div>
                                             </div>
                                         </div>
+
+                                        <div class="col-lg-4 col-md-6 col-sm-12">
+                                            <div class="p-1 m-2">
+                                                <div class="input-group input-group-sm gap-2">
+                                                    <asp:Label runat="server" ID="Label18" CssClass="form-label" Text="Criterio: "></asp:Label>
+                                                    <asp:TextBox runat="server" ID="TextCriterio" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                    <asp:LinkButton runat="server" title="Buscar" ID="Buscar" Style="border: solid 1px #938f8fa1; border-radius: 0.2rem;" OnClick="ButtonBuscar_Click">
+                                                   <i class="bi bi-search"></i>
+                                                    </asp:LinkButton>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3 col-md-6 col-sm-12">
+                                            <div class="p-1 m-2">
+                                                <div class="input-group input-group-sm gap-2">
+                                                    <asp:Label runat="server" ID="Label19" CssClass="form-label" Text="Altura Mod"></asp:Label>
+                                                    <asp:TextBox runat="server" ID="TextAlturaConfigurar" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                    <asp:Label runat="server" ID="Label20" CssClass="form-label" Text="cms"></asp:Label>
+                                                </div>
+                                            </div>
+
                                     </div>
 
-                                    <div class="col-lg-4 col-md-6 col-sm-12">
-                                        <div class="p-1 m-2">
-                                            <div class="input-group input-group-sm gap-2">
-                                                <asp:Label runat="server" ID="Label18" CssClass="form-label" Text="Criterio: "></asp:Label>
-                                                <asp:TextBox runat="server" ID="TextCriterio" CssClass="form-control form-control-sm"></asp:TextBox>
-                                                <asp:LinkButton runat="server" title="Buscar" ID="Buscar" OnClick="ButtonBuscar_Click">
-                                                   <i class="bi bi-search"></i>
-                                                </asp:LinkButton>
+                                    <div class="row pt-2 mt-2">
+
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class=" input-group input-group-sm justify-content-start gap-5">
+                                                <asp:Label runat="server" CssClass="form-label fw-bold" ID="lbDisLA" Text=" "></asp:Label>
+                                                <asp:Label runat="server" CssClass="form-label fw-bold" ID="lbDisLB" Text=""></asp:Label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+
+                                            <div class="row">
+
+                                                <div class="col-lg-5 col-md-5 col-sm-5 col-12 ">
+                                                    <div class="input-group input-group-sm gap-1 ">
+                                                        <asp:CheckBox runat="server" ID="CheckBase" class="form-check" OnCheckedChanged="CheckBase_CheckedChanged" AutoPostBack="true" />
+                                                        <asp:Label runat="server" ID="Label21" CssClass="form-label" Text="Bases"></asp:Label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-1"></div>
+
+                                                <div class="col-lg-5 col-md-5 col-sm-5 col-12">
+                                                    <div class="input-group input-group-sm  gap-1">
+                                                          <asp:CheckBox runat="server" ID="CheckComplementarios" class="form-check" OnCheckedChanged="CheckComplementarios_CheckedChanged" AutoPostBack="true" />
+                                                          <asp:Label runat="server" ID="Label22" CssClass="form-label" Text="Complementarios"></asp:Label>
+                                                    </div>
+                                                  
+                                                </div>
+
+                                                <div class="col-1"></div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="row">
+
+                                    <div class="col-lg-9 col-md-6 col-sm-12">
+                                        <div class="p-1 m-1 border shadow-sm bg-light" style="min-height: 23rem; max-height: 23rem;">
+                                            <div class="table-responsive mb-1 gap-2" style="max-height: 22rem; overflow-x: auto;">
+                                                <h6 class="datagrid-header text-start">Módulos</h6>
+                                                <asp:DataGrid Class="table table-bordered table-hover table-sm form-control-sm" ID="DataGridConfigurar" runat="server"
+                                                    AutoGenerateColumns="false" OnItemCommand="DataGridConfigurar_ItemCommand">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                    <Columns>
+                                                        <asp:TemplateColumn HeaderText=". . .">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="lnkCliee" runat="server" CommandName="Id_Modulo"
+                                                                    CommandArgument='<%# Container.ItemIndex %>' CssClass="Tam" Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+                                                        <asp:BoundColumn DataField="Id_Modulo" HeaderText="Modulo" ItemStyle-CssClass="auto-width-column2" />
+                                                        <asp:BoundColumn DataField="Descripcion_Modulo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column2" />
+                                                        <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column2" />
+                                                        <asp:BoundColumn DataField="Descripcion_Familia" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column2" />
+                                                        <asp:BoundColumn DataField="Descripcion_TipoModulo" HeaderText="Tipo Modulo" ItemStyle-CssClass="auto-width-column2" />
+
+                                                    </Columns>
+                                                </asp:DataGrid>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="col-lg-3 col-md-6 col-sm-12">
-                                        <div class="p-1 m-2">
-                                            <div class="input-group input-group-sm gap-2">
-                                                <asp:Label runat="server" ID="Label19" CssClass="form-label" Text="Altura Mod"></asp:Label>
-                                                <asp:TextBox runat="server" ID="TextAlturaConfigurar" CssClass="form-control form-control-sm"></asp:TextBox>
-                                                <asp:Label runat="server" ID="Label20" CssClass="form-label" Text="cms"></asp:Label>
+                                        <div class="p-1 m-2 border shadow-sm bg-light p-3" style="min-height: 23rem; max-height: 23rem;">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-12 p-2">
+                                                    <asp:Label runat="server" ID="Label23" CssClass="form-label col-form-label-sm" Text="Observaciones:"></asp:Label>
+                                                    <textarea id="txObservacion" runat="server" rows="3" class="form-control shadow-sm"></textarea>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="input-group input-group-sm gap-2">
+                                                        <asp:Label runat="server" ID="Label24" CssClass="col-form-label-sm" Text="Ubicación"></asp:Label>
+                                                        <asp:DropDownList runat="server" ID="ddlUbicacion" CssClass="form-control form-control-sm" OnSelectedIndexChanged="ddlUbicacion_SelectedIndexChanged" AutoPostBack="true">
+                                                        </asp:DropDownList>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mt-1">
+
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="input-group input-group-sm gap-3">
+                                                        <asp:Label runat="server" ID="Label25" CssClass="col-form-label-sm" Text="Cantidad"></asp:Label>
+                                                        <asp:DropDownList runat="server" ID="ddlCantidad" CssClass="form-control form-control-sm" OnSelectedIndexChanged="ddlCantidad_SelectedIndexChanged" AutoPostBack="true">
+                                                            <asp:ListItem Text="" Value=""></asp:ListItem>
+                                                            <asp:ListItem Text="1" Value="1"></asp:ListItem>
+                                                            <asp:ListItem Text="2" Value="2"></asp:ListItem>
+                                                        </asp:DropDownList>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row mt-1">
+
+                                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                                    <asp:Label runat="server" ID="Label26" CssClass="col-form-label-sm" Text="Lado"></asp:Label>
+                                                </div>
+
+                                                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                                    <div class="input-group input-group-sm gap-4">
+
+                                                        <asp:DropDownList runat="server" ID="ddlLado" CssClass="form-control form-control-sm" OnSelectedIndexChanged="ddlLado_SelectedIndexChanged" AutoPostBack="true">
+                                                            <asp:ListItem Text="" Value=""></asp:ListItem>
+                                                            <asp:ListItem Text="AB" Value="AB"></asp:ListItem>
+                                                            <asp:ListItem Text="A" Value="A"></asp:ListItem>
+                                                            <asp:ListItem Text="B" Value="B"></asp:ListItem>
+                                                        </asp:DropDownList>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex justify-content-center mt-5">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                                                    <div class="input-group input-group-sm gap-2 justify-content-around">
+
+                                                        <asp:LinkButton runat="server" title="Adicionar Módulo al Objeto" ID="btnAdicionarModulo" Style="border: solid 1px #938f8fa1; border-radius: 0.2rem;" OnClick="btnAdicionarModulo_Click">
+                                                   <i class="bi bi-plus-circle-fill"></i>
+                                                        </asp:LinkButton>
+
+                                                        <asp:LinkButton runat="server" title="Copiar Módulo" ID="btnCopiarModulo" Style="border: solid 1px #938f8fa1; border-radius: 0.2rem;" OnClick="btnCopiarModulo_Click">
+                                                       <i class="bi bi-c-circle-fill"></i>
+                                                        </asp:LinkButton>
+
+                                                        <asp:LinkButton runat="server" title="Eliminar Módulo del  Objeto" ID="btnEliminarModuloObjeto" Style="border: solid 1px #938f8fa1; border-radius: 0.2rem;" OnClick="btnEliminarModuloObjeto_Click">
+                                                        <i class="bi bi-trash3-fill"></i>
+                                                        </asp:LinkButton>
+
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -475,184 +646,100 @@
                                 </div>
 
                                 <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
 
-                                    <div class="col-lg-6 col-md-6 col-sm-12">
-                                        <div class=" input-group input-group-sm justify-content-start pt-3 m-2 gap-5">
-                                            <asp:Label runat="server" CssClass="form-label fw-bold" ID="lbDisLA" Text=" "></asp:Label>
-                                            <asp:Label runat="server" CssClass="form-label fw-bold" ID="lbDisLB" Text=""></asp:Label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6 col-md-6 col-sm-12">
-
-                                        <div class=" input-group input-group-sm justify-content-around pt-3 m-2 ">
-
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-12 ">
-                                                <asp:Label runat="server" ID="Label21" CssClass="form-label" Text="Bases"></asp:Label>
-                                                <asp:CheckBox runat="server" ID="CheckBase" class="form-control-sm mt-1" OnCheckedChanged="CheckBase_CheckedChanged" AutoPostBack="true" />
+                                        <div class="card p-2 m-2">
+                                            <div class="card-header">
+                                                <h6 class=" text-start">Módulos Asociados al Objeto</h6>
                                             </div>
 
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-12">
-                                                <asp:Label runat="server" ID="Label22" CssClass="form-label" Text="Complementarios"></asp:Label>
-                                                <asp:CheckBox runat="server" ID="CheckComplementarios" class="form-control-sm pt-3" OnCheckedChanged="CheckComplementarios_CheckedChanged" AutoPostBack="true" />
-                                            </div>
+                                            <div class="card-body p-0">
+                                                <div class="table-responsive mb-1 gap-2" style="max-height: 13rem; height: 13rem; overflow-x: auto;">
 
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <div class="row">
-
-                                <div class="col-lg-9 col-md-6 col-sm-12">
-                                    <div class="p-1 m-1 border shadow-sm bg-light" style="min-height: 23rem; max-height: 23rem;">
-                                        <div class="table-responsive mb-1 gap-2" style="max-height: 22rem; overflow-x: auto;">
-                                             <h6 class="datagrid-header text-start">Módulos</h6>
-                                            <asp:DataGrid Class="table table-bordered table-hover table-sm form-control-sm" ID="DataGridConfigurar" runat="server"
-                                                AutoGenerateColumns="false" OnItemCommand="DataGridConfigurar_ItemCommand">
-                                                <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
-                                                <Columns>
-                                                    <asp:TemplateColumn HeaderText=". . .">
-                                                        <ItemTemplate>
-                                                            <asp:LinkButton ID="lnkCliee" runat="server" CommandName="Id_Modulo"
-                                                                CommandArgument='<%# Container.ItemIndex %>' CssClass="Tam" Text="<i class='bi bi-pencil-square text-dark'></i>" />
-                                                        </ItemTemplate>
-                                                    </asp:TemplateColumn>
-                                                    <asp:BoundColumn DataField="Id_Modulo" HeaderText="Modulo" ItemStyle-CssClass="auto-width-column2" />
-                                                    <asp:BoundColumn DataField="Descripcion_Modulo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column2" />
-                                                    <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column2" />
-                                                    <asp:BoundColumn DataField="Descripcion_Familia" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column2" />
-                                                    <asp:BoundColumn DataField="Descripcion_TipoModulo" HeaderText="Tipo Modulo" ItemStyle-CssClass="auto-width-column2" />
-                                                </Columns>
-                                            </asp:DataGrid>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-3 col-md-6 col-sm-12">
-                                    <div class="p-1 m-2 border shadow-sm bg-light p-3" style="min-height: 23rem; max-height: 23rem;">
-                                        <div class="row">
-                                            <div class="col-lg-12 col-md-12 col-sm-12 col-12 p-2">
-                                                <asp:Label runat="server" ID="Label23" CssClass="form-label col-form-label-sm" Text="Observaciones:"></asp:Label>
-                                                <textarea id="TextArea2" runat="server" rows="3" class="form-control shadow-sm"></textarea>
-                                                <asp:TextBox ID="tbIdModuloAdicionar" runat="server" Visible="false" ToolTip="ID_Modulo Agregar"></asp:TextBox>
-                                                 <asp:TextBox ID="tbIdModuloEliminar" runat="server" Visible="false" ToolTip="ID_Modulo Eliminar"></asp:TextBox>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-
-                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                <div class="input-group input-group-sm gap-2">
-                                                    <asp:Label runat="server" ID="Label24" CssClass="col-form-label-sm" Text="Ubicación"></asp:Label>
-                                                    <asp:DropDownList runat="server" ID="ddlUbicacion" CssClass="form-control form-control-sm" OnSelectedIndexChanged="ddlUbicacion_SelectedIndexChanged" AutoPostBack="true">
-                                                    </asp:DropDownList>
+                                                    <asp:DataGrid Class="table table-bordered table-hover table-sm form-control-sm" ID="DataGridModulosAsociados" runat="server"
+                                                        AutoGenerateColumns="false" OnItemCommand="DataGridModulosAsociados_ItemCommand">
+                                                        <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                                        <Columns>
+                                                            <asp:TemplateColumn HeaderText=". . .">
+                                                                <ItemTemplate>
+                                                                    <asp:LinkButton ID="lnkCliee" runat="server" CommandName="ModuloAsociado"
+                                                                        CommandArgument='<%# Container.ItemIndex %>' CssClass="Tam" Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                </ItemTemplate>
+                                                            </asp:TemplateColumn>
+                                                            <asp:BoundColumn DataField="Id_Modulo" HeaderText="Mod" ItemStyle-CssClass="auto-width-column2" />
+                                                            <asp:BoundColumn DataField="Descripcion_Modulo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column2" />
+                                                            <asp:BoundColumn DataField="Chequeado" HeaderText="OK" ItemStyle-CssClass="auto-width-column2" />
+                                                            <asp:BoundColumn DataField="Ubicacion_Modulo" HeaderText="Pos" ItemStyle-CssClass="auto-width-column2" />
+                                                            <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column2" />
+                                                            <asp:BoundColumn DataField="Cantidad" HeaderText="Cant" ItemStyle-CssClass="auto-width-column2" />
+                                                            <asp:BoundColumn DataField="Lado" HeaderText="Lado" ItemStyle-CssClass="auto-width-column2" />
+                                                            <asp:BoundColumn DataField="Descripcion_Familia" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column2" />
+                                                            <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column2" />
+                                                            <asp:BoundColumn DataField="FechaChequeo" HeaderText="Fecha Chequeo" ItemStyle-CssClass="auto-width-column2" />
+                                                            <asp:BoundColumn DataField="Id_PanelNum" Visible="false" ItemStyle-CssClass="auto-width-column2" />
+                                                        </Columns>
+                                                    </asp:DataGrid>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="row mt-1">
-
-                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                <div class="input-group input-group-sm gap-3">
-                                                    <asp:Label runat="server" ID="Label25" CssClass="col-form-label-sm" Text="Cantidad"></asp:Label>
-                                                    <asp:DropDownList runat="server" ID="ddlCantidad" CssClass="form-control form-control-sm" OnSelectedIndexChanged="ddlCantidad_SelectedIndexChanged" AutoPostBack="true">
-                                                        <asp:ListItem Text="" Value=""></asp:ListItem>
-                                                        <asp:ListItem Text="1" Value="1"></asp:ListItem>
-                                                        <asp:ListItem Text="2" Value="2"></asp:ListItem>
-                                                    </asp:DropDownList>
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="row mt-1">
-
-                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                                                <asp:Label runat="server" ID="Label26" CssClass="col-form-label-sm" Text="Lado"></asp:Label>
-                                            </div>
-
-                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                                <div class="input-group input-group-sm gap-4">
-
-                                                    <asp:DropDownList runat="server" ID="ddlLado" CssClass="form-control form-control-sm" OnSelectedIndexChanged="ddlLado_SelectedIndexChanged" AutoPostBack="true">
-                                                        <asp:ListItem Text="" Value=""></asp:ListItem>
-                                                        <asp:ListItem Text="AB" Value="AB"></asp:ListItem>
-                                                        <asp:ListItem Text="A" Value="A"></asp:ListItem>
-                                                        <asp:ListItem Text="B" Value="B"></asp:ListItem>
-                                                    </asp:DropDownList>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="d-flex justify-content-center mt-5">
-                                            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
-                                                <div class="input-group input-group-sm gap-2 justify-content-around">
-
-                                                    <asp:LinkButton runat="server" title="Adicionar Módulo al Objeto" ID="btnAdicionarModulo" style="border: solid 1px #938f8fa1; border-radius:0.2rem;" OnClick="btnAdicionarModulo_Click">
-                                                   <i class="bi bi-plus-circle-fill"></i>
-                                                    </asp:LinkButton>
-
-                                                    <asp:LinkButton runat="server" title="Copiar Módulo" ID="btnCopiarModulo" style="border: solid 1px #938f8fa1; border-radius:0.2rem;" OnClick="btnCopiarModulo_Click">
-                                                       <i class="bi bi-c-circle-fill"></i>
-                                                    </asp:LinkButton>
-
-                                                    <asp:LinkButton runat="server" title="Eliminar Módulo del  Objeto" ID="btnEliminarModuloObjeto" style="border: solid 1px #938f8fa1; border-radius:0.2rem;" OnClick="btnEliminarModuloObjeto_Click">
-                                                        <i class="bi bi-trash3-fill"></i>
-                                                    </asp:LinkButton>
-
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
 
                             </div>
+                        </div>
 
-                            <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12">
-                                    
-                                    <div class="card p-2 m-2">
-                                        <div class="card-header">
-                                             <h6 class=" text-start">Módulos Asociados al Objeto</h6>
-                                        </div>
 
-                                        <div class="card-body p-0">
-                                                <div class="table-responsive mb-1 gap-2" style="max-height: 13rem; height:13rem; overflow-x: auto;">
-                                           
-                                            <asp:DataGrid Class="table table-bordered table-hover table-sm form-control-sm" ID="DataGridModulosAsociados" runat="server"
-                                                AutoGenerateColumns="false" OnItemCommand="DataGridModulosAsociados_ItemCommand">
-                                                <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
-                                                <Columns>
-                                                    <asp:TemplateColumn HeaderText=". . .">
-                                                        <ItemTemplate>
-                                                            <asp:LinkButton ID="lnkCliee" runat="server" CommandName="ModuloAsociado"
-                                                                CommandArgument='<%# Container.ItemIndex %>' CssClass="Tam" Text="<i class='bi bi-pencil-square text-dark'></i>" />
-                                                        </ItemTemplate>
-                                                    </asp:TemplateColumn>
-                                                    <asp:BoundColumn DataField="Id_Modulo" HeaderText="Mod" ItemStyle-CssClass="auto-width-column2" />
-                                                    <asp:BoundColumn DataField="Descripcion_Modulo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column2" />
-                                                    <asp:BoundColumn DataField="Chequeado" HeaderText="OK" ItemStyle-CssClass="auto-width-column2" />
-                                                    <asp:BoundColumn DataField="Ubicacion_Modulo" HeaderText="Pos" ItemStyle-CssClass="auto-width-column2" />
-                                                    <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column2" />
-                                                    <asp:BoundColumn DataField="Cantidad" HeaderText="Cant" ItemStyle-CssClass="auto-width-column2" />
-                                                    <asp:BoundColumn DataField="Lado" HeaderText="Lado" ItemStyle-CssClass="auto-width-column2" />
-                                                    <asp:BoundColumn DataField="Descripcion_Familia" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column2" />
-                                                    <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column2" />
-                                                    <asp:BoundColumn DataField="FechaChequeo" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column2" />
+                        <!--Modal confirmar Adicionar Módulo -->
+                        <div id="confirmarAdicionarModulo" class="modal" tabindex="-1" style="display: none;">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary text-white">
+                                        <h6 class="modal-title text-center">Adicionar Módulo</h6>
 
-                                                </Columns>
-                                            </asp:DataGrid>
-                                        </div>
-                                        </div>
                                     </div>
+                                    <div class="modal-body border rounded">
+                                        <div class="container-fluid">
+                                            <h6>Desea adicionar el módulo <span runat="server" id="NombreModulo"></span> al objeto <span runat="server" id="NombreObjeto"></span>?  
+                                            </h6>
+                                        </div>
 
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                            <asp:Button runat="server" ID="btnAdicionarObjeto_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm  btn-outline-primary" Style="width: 5rem;" OnClick="btnAdicionarObjeto_SI_Click" />
+                                            <asp:Button runat="server" ID="btnAdicionarObjeto_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
+                        </div>
 
+                        <!--Modal confirmar quitar Módulo -->
+                        <div id="confirmarQuitarModulo" class="modal" tabindex="-1" style="display: none;">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger text-white">
+                                        <h6 class="modal-title text-center">Quitar  Módulo</h6>
+
+                                    </div>
+                                    <div class="modal-body border rounded">
+                                        <div class="container-fluid">
+                                            <h6>Desea quitar el los módulos seleccionados ?  
+                                            </h6>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                            <asp:Button runat="server" ID="btnQuitarModulo_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm  btn-outline-danger" Style="width: 5rem;" OnClick="btnQuitarModulo_SI_Click" />
+                                            <asp:Button runat="server" ID="btnQuitarModulo_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                     </ContentTemplate>
@@ -723,12 +810,13 @@
 
         function ReflejarTexto() {
             var descriInterna = document.getElementById('<%= TextDesInt.ClientID %>').value;
-            document.getElementById('<%= TextDescripcionPanelCotizacion.ClientID %>').value = descriInterna;
+            document.getElementById('<%= TextDescripcionPanelCotizacion.ClientID %>').value = descriInterna.toUpperCase();
         }
 
-</script>
+    </script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
+
 </html>
