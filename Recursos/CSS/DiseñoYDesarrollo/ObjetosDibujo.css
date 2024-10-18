@@ -61,14 +61,28 @@
     border-right: 3px solid #4d5c69; /* Elimina el borde derecho */
 }
 
+.linkButtonClicked {
+    border-top: 3px solid #949daa; /* Borde en la parte superior */
+    border-left: 3px solid #949daa; /* Borde en el lado izquierdo */
+    border-bottom: none; /* Elimina el borde inferior */
+    border-right: none; /* Elimina el borde derecho */
+}
+
+.linkButtonClicked8 {
+    border-top: 2px solid #ccc; /* Borde en la parte superior */
+    border-left: 2px solid #ccc; /* Borde en el lado izquierdo */
+    border-bottom: none; /* Elimina el borde inferior */
+    border-right: none; /* Elimina el borde derecho */
+
+    background-color: #fff;
+    cursor: pointer;
+}
+
 .ColorAzulActivo {
     color: #0863a4;
 }
 
-    .ColorAzulActivo:hover {
-        background: #0863a4;
-        color: white;
-    }
+
 
 .VerdeEfecto {
     background: repeating-linear-gradient(45deg, #154716, #39633e 80px);
@@ -94,14 +108,18 @@
     color: #00910c;
 }
 
-.RojoCancelar {
-    color: #b94747
+
+
+.Cafe {
+    color: #b96c32;
 }
 
-    .RojoCancelar:hover {
-        background: #b94747;
-        color: white;
-    }
+
+.RojoCancelar {
+    color: #b94747;
+}
+
+
 
 .text-uppercase {
     text-transform: uppercase;
@@ -121,6 +139,24 @@
 .button-disabled {
     background-color: #ededed; /* Color de fondo para botones deshabilitados */
     color: #888; /* Color de texto para botones deshabilitados */
+    cursor: not-allowed; /* Cambia el cursor al estilo "no permitido" */
+    border-bottom: 2px solid #ccc; /* Borde en la parte inferior */
+    border-right: 2px solid #ccc; /* Borde en el lado derecho */
+}
+
+/* Estilo para botones habilitados */
+.button-enabled2 {
+    background-color: #fff; /* Color de fondo para botones habilitados */
+
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    border-bottom: 2px solid #ccc; /* Borde en la parte inferior */
+    border-right: 2px solid #ccc; /* Borde en el lado derecho */
+}
+
+/* Estilo para botones deshabilitados */
+.button-disabled2 {
+    background-color: #ededed; /* Color de fondo para botones deshabilitados */
+  
     cursor: not-allowed; /* Cambia el cursor al estilo "no permitido" */
     border-bottom: 2px solid #ccc; /* Borde en la parte inferior */
     border-right: 2px solid #ccc; /* Borde en el lado derecho */
@@ -156,4 +192,8 @@
 
 .AzulOscuroEfecto {
     background: repeating-linear-gradient(45deg, #08090c, #1d2942 100px);
+}
+
+.modal-pos-custom {
+    transform: translate(-2cm, -3cm); /* Mueve el modal 2cm hacia la izquierda y 3cm hacia arriba */
 }

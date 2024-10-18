@@ -11,39 +11,71 @@ using static SISTEMA_INTEGRAL_DUCON.Formularios.Diseño_Venta;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 {
+
+
     public partial class Modulo : System.Web.UI.Page
     {
+
+
+
         private string CadenaConexionSID = "BD_SIDSQL";
+        private string CadenaConexionISID = "BD_ISIDSQL";
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+            if (Session["usuariologueado"] != null)
             {
-
-                CargarSiempre();
-
-                string tipoAccion = Session["Modulo"] as string;
-                if (tipoAccion == "Nuevo")
+                if (!IsPostBack)
                 {
 
-                }
-                if (tipoAccion == "Modificar")
-                {
-                    if (Session["IDModulo"] != null)
+                    CargarSiempre();
+
+                    string tipoAccion = Session["Modulo"] as string;
+                    if (tipoAccion == "Nuevo")
                     {
+
+                    }
+                    if (tipoAccion == "Modificar")
+                    {
+                        if (Session["IDModulo"] != null)
+                        {
+                            LlenarControles();
+                            ViewState["OriginalFamilia"] = DropDownListGrupo.SelectedItem.Text;
+
+                            BtnModificarConfiguracion.Enabled = false;
+                            BtnModificarConfiguracion.CssClass = "btn btn-sm shadow button-disabled2";
+                        }
+                    }
+                    if (tipoAccion == "Copiar")
+                    {
+                        DeshabilitarElementos();
                         LlenarControles();
-                        ViewState["OriginalFamilia"] = DropDownListGrupo.SelectedItem.Text;
+                    }
+                    if (tipoAccion == "Consultar")
+                    {
+                        BtnAdicionarConfiguracion.Enabled = false;
+                        BtnAdicionarConfiguracion.CssClass = "btn btn-sm shadow button-disabled2";
+
+                        DropDownList2.Enabled = false;
+                        DropDownList2.CssClass = "form-control form-control-sm";
+
+                        TextCriterio.Enabled = false;
+                        TextCriterio.CssClass = "form-control form-control-sm";
+
+                        TextInv.Enabled = false;
+                        TextInv.CssClass = "form-control form-control-sm";
+
+                        LlenarControles();
                     }
                 }
-                if (tipoAccion == "Copiar")
-                {
-                    DeshabilitarElementos();
-                    LlenarControles();
-                }
-
-
-
+            }
+            else
+            {
+                Response.Redirect("Login.aspx");
             }
         }
+
+
+
 
         protected void DeshabilitarElementos()
         {
@@ -65,34 +97,148 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             List<PanelData> paneles = ObtenerDatosPanel(moduloID);
             DataGrid2.DataSource = paneles;
             DataGrid2.DataBind();
+
+            LlenarDataGrid3(moduloID);
         }
 
         protected void CargarSiempre()
         {
+            ViewState.Clear();
+
+            CargarAreaProduccion();
+
+            llenarDatagridFamilia();
+
+            llenarDatagridProcesoProductivo();
+
             textModulo.Enabled = false;
             textModulo.CssClass = "form-control form-control-sm";
 
             BtnGrabarInf.Enabled = false;
             BtnGrabarInf.CssClass = "btn btn-sm shadow button-disabled";
 
-            BtnAgregarConfiguracion.Enabled = false;
-            BtnAgregarConfiguracion.CssClass = "btn btn-sm shadow button-disabled";
+            BtnAdicionarConfiguracion.Enabled = true;
+            BtnAdicionarConfiguracion.CssClass = "btn btn-sm shadow button-enabled2 Verde";
 
-            LinkButton2.Enabled = false;
-            LinkButton2.CssClass = "btn btn-sm shadow button-disabled";
+            BtnModificarConfiguracion.Enabled = false;
+            BtnModificarConfiguracion.CssClass = "btn btn-sm shadow button-disabled2";
 
-            BtnGrabarConfiguracion.Enabled = false;
-            BtnGrabarConfiguracion.CssClass = "btn btn-sm shadow button-disabled";
+            BtnGrabarConfiguracion.Enabled = true;
+            BtnGrabarConfiguracion.CssClass = "btn btn-sm shadow button-enabled2 ColorAzulActivo";
 
             BtnX.Enabled = false;
-            BtnX.CssClass = "btn btn-sm shadow button-disabled";
+            BtnX.CssClass = "btn btn-sm shadow button-disabled2";
 
             BtnCancelarInf.Enabled = false;
             BtnCancelarInf.CssClass = "btn btn-sm shadow button-disabled";
 
+            BtnAdicionarRotacion.Enabled = false;
+            BtnAdicionarRotacion.CssClass = "btn btn-sm shadow button-disabled";
+
+            BtnSubirEstacion.Enabled = false;
+            BtnSubirEstacion.CssClass = "btn btn-sm shadow button-disabled";
+
+            BtnBajarEstacion.Enabled = false;
+            BtnBajarEstacion.CssClass = "btn btn-sm shadow button-disabled";
+
+            BtnX2.Enabled = false;
+            BtnX2.CssClass = "btn btn-sm shadow button-disabled";
+
+
+
             CargarTipoInsumo();
             CargarDropDownListGrupo();
             CargarDropDownListTipoModulo();
+
+
+            // Deshabilitar y limpiar controles
+            TextCantidadCon.Enabled = false;
+            TextCantidadCon.Text = "0";
+            TextCantidadCon.CssClass = "form-control form-control-sm ms-2";
+            TextDctoAltura.Text = "0";
+            TextDctoAltura.Enabled = false;
+            TextDctoAltura.CssClass = "form-control form-control-sm";
+            TextDctoAncho.Text = "0";
+            TextDctoAncho.Enabled = false;
+            TextDctoAncho.CssClass = "form-control form-control-sm";
+            TextAncho.Text = "0";
+            TextAncho.Enabled = false;
+            TextAncho.CssClass = "form-control form-control-sm";
+            TextAlto.Text = "0";
+            TextAlto.Enabled = false;
+            TextAlto.CssClass = "form-control form-control-sm";
+            DropDownList1.Enabled = false;
+
+            txObs1.Disabled = true;
+            txObs1.InnerText = string.Empty;
+
+            BtnSubirEstacion.Enabled = false;
+            BtnSubirEstacion.CssClass = "btn btn-sm shadow button-disabled";
+
+            BtnBajarEstacion.Enabled = false;
+            BtnBajarEstacion.CssClass = "btn btn-sm shadow button-disabled";
+
+            BtnX2.Enabled = false;
+            BtnX2.CssClass = "btn btn-sm shadow button-disabled";
+
+            CheckCostearCon.Enabled = false;
+            CheckPieEsCon.Enabled = false;
+            TextDivisionesCon.Enabled = false;
+            TextDivisionesCon.Text = "1";
+            TextDivisionesCon.Attributes["data-tag"] = "1";
+            TextDivisionesCon.CssClass = "form-control form-control-sm";
+
+            DropDownList1.DataBind();
+
+            ViewState["bordeDerechoVisible"] = false;
+        }
+
+        private void llenarDatagridFamilia()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT * FROM tblFamiliaModulo ORDER BY Descripcion_Familia";
+                SqlDataAdapter adapter = new SqlDataAdapter(query, connection);
+                DataTable dt = new DataTable();
+
+                try
+                {
+                    connection.Open();
+                    adapter.Fill(dt);
+                    IDDatagridFamilia.DataSource = dt;
+                    IDDatagridFamilia.DataBind();
+                }
+                catch (Exception ex)
+                {
+                    // Manejo de errores
+                    Response.Write("Error: " + ex.Message);
+                }
+            }
+        }
+
+        private void llenarDatagridProcesoProductivo()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "select * from tblProcesoProduccion where activo = 1 order by Descripcion_Proceso asc";
+                SqlDataAdapter adapter = new SqlDataAdapter(query, connection);
+                DataTable dt = new DataTable();
+
+                try
+                {
+                    connection.Open();
+                    adapter.Fill(dt);
+                    DatagridProcesoProductivo.DataSource = dt;
+                    DatagridProcesoProductivo.DataBind();
+                }
+                catch (Exception ex)
+                {
+                    // Manejo de errores
+                    Response.Write("Error: " + ex.Message);
+                }
+            }
         }
 
         // Método para cargar el DropDownList Grupo
@@ -254,6 +400,46 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             }
         }
 
+        // Método para llenar DataGrid3 con los resultados del procedimiento almacenado
+        private void LlenarDataGrid3(string moduloID)
+        {
+            // Define la cadena de conexión
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    // Abre la conexión a la base de datos
+                    con.Open();
+
+                    // Configura el comando para llamar al procedimiento almacenado
+                    using (SqlCommand cmd = new SqlCommand("ctaModulo_Insumos", con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@Modulo", moduloID);
+
+                        // Ejecuta el comando y obtiene los resultados
+                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                        {
+                            DataTable dt = new DataTable();
+                            da.Fill(dt);
+
+                            // Asigna los resultados al DataGrid3
+                            DataGrid3.DataSource = dt;
+                            DataGrid3.DataBind();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Maneja cualquier excepción que ocurra
+                    // Puedes registrar el error o mostrar un mensaje de error en la interfaz
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+            }
+        }
+
         public class PanelData
         {
             public string Id_Panel { get; set; }
@@ -275,10 +461,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             // Consulta base
             string consulta = @"SELECT tblInsumo.*, tblTipoInsumo.Descripcion AS TipoInsumoDescripcion, 
                         tblUnidad_Medida.Abreviado 
-                        FROM tblInsumo 
-                        INNER JOIN tblTipoInsumo ON tblInsumo.Id_TipoInsumo = tblTipoInsumo.ID_TipoInsumo
-                        INNER JOIN tblUnidad_Medida ON tblInsumo.Id_unidadMedida = tblUnidad_Medida.Id_unidadMedida
-                        WHERE 1=1";
+                        FROM tblInsumo, tblTipoInsumo, tblUnidad_Medida 
+                        WHERE 1=1"; // Usar '1=1' para facilitar la concatenación de condiciones
 
             // Lista de condiciones para el WHERE
             List<string> condiciones = new List<string>();
@@ -301,11 +485,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             }
 
             // Si el tipo de insumo no está vacío
-            if (!string.IsNullOrEmpty(tipoInsumo) && tipoInsumo != "-- Seleccione --")
+            if (!string.IsNullOrEmpty(tipoInsumo) && tipoInsumo != " ")
             {
                 condiciones.Add("tblTipoInsumo.Descripcion LIKE @tipoInsumo");
                 parametros.Add(new SqlParameter("@tipoInsumo", tipoInsumo + "%"));
             }
+
+            // Condiciones para las relaciones entre las tablas
+            condiciones.Add("tblTipoInsumo.ID_TipoInsumo = tblInsumo.Id_TipoInsumo");
+            condiciones.Add("tblUnidad_Medida.Id_unidadMedida = tblInsumo.Id_unidadMedida");
 
             // Agregar condiciones al WHERE
             if (condiciones.Count > 0)
@@ -314,7 +502,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             }
 
             // Agregar ORDER BY
-            consulta += " ORDER BY tblInsumo.Descripcion_Insumo ASC";
+            consulta += " ORDER BY tblInsumo.Descripcion_Insumo";
 
             // Conexión a la base de datos
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
@@ -350,7 +538,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     // Manejar errores (puedes agregar un log o mostrar un mensaje de error)
                 }
             }
+
+            // Mostrar el bordeDerecho y ocultar PanelContenido
+            bordeDerecho.Attributes["class"] += " d-none"; // Oculta el panel
+            PanelContenido.Attributes["class"] = PanelContenido.Attributes["class"].Replace("d-none", "").Trim();
+
+            // Actualiza el estado del panel en el servidor
+            PanelContenido.Visible = true;
+            bordeDerecho.Visible = false;
         }
+
 
 
         private bool ValoresCambiaron()
@@ -507,12 +704,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         protected void btnConfirmarModificacion_Click(object sender, EventArgs e)
         {
 
-            string nombreUsuario = Session["usuariologueado"].ToString(); 
+            string nombreUsuario = Session["usuariologueado"].ToString();
             string idModulo = textModulo.Text.Trim();
             string descripcionModulo = TextDescripcionModulo.Text.Trim();
             int tipoModulo = Convert.ToInt32(DropDownListTipoModulo.SelectedValue);
-            string altura = TextAlturaModulo.Text; 
-            string idFamilia = DropDownListGrupo.SelectedValue; 
+            string altura = TextAlturaModulo.Text;
+            string idFamilia = DropDownListGrupo.SelectedValue;
 
             // Llamar al método
             ModificarModuloConfirmado(idModulo, descripcionModulo, tipoModulo, altura, idFamilia, nombreUsuario);
@@ -645,7 +842,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                             insertCmd.Parameters.AddWithValue("@DescripcionModulo", TextDescripcionModulo.Text);
                             insertCmd.Parameters.AddWithValue("@IdTipoModulo", DropDownListTipoModulo.SelectedValue);
                             insertCmd.Parameters.AddWithValue("@Altura", TextAlturaModulo.Text);
-                            insertCmd.Parameters.AddWithValue("@IDFamilia", DropDownListGrupo.SelectedValue); 
+                            insertCmd.Parameters.AddWithValue("@IDFamilia", DropDownListGrupo.SelectedValue);
                             insertCmd.Parameters.AddWithValue("@Responsable", nombreUsuario);
                             insertCmd.Parameters.AddWithValue("@FechaChequeo", DateTime.Now);
 
@@ -760,9 +957,1297 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             }
         }
 
-        protected void DataGrid1_CancelCommand(object source, DataGridCommandEventArgs e)
+
+
+        protected void EliminarViewState()
+        {
+            ViewState.Remove("DctoAncho");
+            ViewState.Remove("DctoAltura");
+            ViewState.Remove("Ancho");
+            ViewState.Remove("Alto");
+            ViewState.Remove("Divisiones");
+        }
+
+        protected void deshabilitarElementos()
+        {
+            // Deshabilitar y limpiar controles
+            TextCantidadCon.Enabled = false;
+            TextCantidadCon.Text = "0";
+            TextCantidadCon.CssClass = "form-control form-control-sm ms-2";
+            TextDctoAltura.Text = "0";
+            TextDctoAltura.Enabled = false;
+            TextDctoAltura.CssClass = "form-control form-control-sm";
+            TextDctoAncho.Text = "0";
+            TextDctoAncho.Enabled = false;
+            TextDctoAncho.CssClass = "form-control form-control-sm";
+            TextAncho.Text = "0";
+            TextAncho.Enabled = false;
+            TextAncho.CssClass = "form-control form-control-sm";
+            TextAlto.Text = "0";
+            TextAlto.Enabled = false;
+            TextAlto.CssClass = "form-control form-control-sm";
+            DropDownList1.Enabled = false;
+            if (DropDownList1.SelectedItem != null && !string.IsNullOrEmpty(DropDownList1.SelectedItem.Text))
+            {
+                DropDownList1.Items.Clear();
+            }
+            txObs1.Disabled = true;
+            txObs1.InnerText = string.Empty;
+
+            BtnSubirEstacion.Enabled = false;
+            BtnSubirEstacion.CssClass = "btn btn-sm shadow button-disabled";
+
+            BtnBajarEstacion.Enabled = false;
+            BtnBajarEstacion.CssClass = "btn btn-sm shadow button-disabled";
+
+            BtnX2.Enabled = false;
+            BtnX2.CssClass = "btn btn-sm shadow button-disabled";
+        }
+
+        protected void BtnAdicionarConfiguracion_Click(object sender, EventArgs e)
+        {
+            EliminarViewState();
+
+            deshabilitarElementos();
+
+            CheckCostearCon.Enabled = false;
+            CheckPieEsCon.Enabled = false;
+            TextDivisionesCon.Enabled = false;
+            TextDivisionesCon.Text = "1";
+            TextDivisionesCon.Attributes["data-tag"] = "1";
+            TextDivisionesCon.CssClass = "form-control form-control-sm";
+
+            BtnModificarConfiguracion.Enabled = false;
+            BtnModificarConfiguracion.CssClass = "btn btn-sm shadow button-disabled2";
+
+            TextCantidadCon.Enabled = true;
+            CheckPieEsCon.Enabled = true;
+            txObs1.Disabled = false;
+            DropDownList1.Enabled = true;
+
+
+
+            // Verificar si bordeDerecho está visible
+            bool bordeDerechoVisible = ViewState["bordeDerechoVisible"] != null && (bool)ViewState["bordeDerechoVisible"];
+
+            if (bordeDerechoVisible)
+            {
+                // Limpiar DataGrid4 y asegurarse de que esté vacío
+                DataGrid4.DataSource = null;
+                DataGrid4.DataBind();
+
+
+
+                bordeDerecho.Attributes["class"] += " d-none"; // Oculta el panel
+
+                bordeDerecho.Visible = false;
+
+                ViewState["bordeDerechoVisible"] = false;
+
+                // Deshabilitar la acción de DataGrid3
+                foreach (DataGridItem item in DataGrid3.Items)
+                {
+                    LinkButton linkButton = item.FindControl("SelectInsumoID") as LinkButton;
+                    if (linkButton != null)
+                    {
+                        linkButton.Enabled = true;
+                    }
+                }
+
+                deshabilitarElementos();
+
+                BtnAdicionarConfiguracion.CssClass = "btn btn-sm shadow button-enabled2 Verde";
+                CheckPieEsCon.Checked = false;
+                CheckPieEsCon.Enabled = false;
+                CheckCostearCon.Enabled = false;
+
+            }
+            else
+            {
+
+                bordeDerecho.Attributes["class"] = bordeDerecho.Attributes["class"].Replace("d-none", "").Trim(); // Muestra el bordeDerecho
+
+
+                bordeDerecho.Visible = true;
+
+                ViewState["bordeDerechoVisible"] = true;
+
+                // Deshabilitar la acción de DataGrid3
+                foreach (DataGridItem item in DataGrid3.Items)
+                {
+                    LinkButton linkButton = item.FindControl("SelectInsumoID") as LinkButton;
+                    if (linkButton != null)
+                    {
+                        linkButton.Enabled = false;
+                    }
+                }
+
+                DropDownList3.Enabled = true;
+                DropDownList3.CssClass = "form-control form-control-sm";
+
+
+                BtnAdicionarConfiguracion.CssClass = "btn btn-sm shadow linkButtonClicked8 Verde";
+                CheckPieEsCon.Checked = true;
+                CheckPieEsCon.Enabled = true;
+                CheckCostearCon.Enabled = true;
+            }
+
+            Session["CRUDModuloTabConfiguracion"] = "Nuevo";
+        }
+
+
+
+        protected void DataGrid3_ItemCommand(object source, DataGridCommandEventArgs e)
         {
 
+            if (e.CommandName == "ModuloIns")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGrid3.Items[rowIndex];
+
+                // Aplicamos la clase CSS a la fila seleccionada
+                foreach (DataGridItem item in DataGrid3.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+                e.Item.CssClass = "fila-seleccionada1";
+
+                ViewState["ModificarClickCount"] = null;
+
+                DropDownList1.Items.Clear();
+                string valorAsignado = row.Cells[4].Text;
+                DropDownList1.Items.Add(valorAsignado);
+
+
+                // Agregar elementos a cboSentido basado en el valor de Abreviado (similar a la lógica de VB6)
+                switch (row.Cells[6].Text.ToUpper()) // Suponiendo que la columna 6 es "Abreviado"
+                {
+                    case "UND":
+
+                        DropDownList1.Items.Add("NO APLICA");
+                        DropDownList1.SelectedIndex = 0;
+                        break;
+
+                    case "CML":
+                        // Supongamos que cboTipoModulo.SelectedValue es el equivalente a cboTipoModulo.ItemData(cboTipoModulo.ListIndex)
+                        if (DropDownList2.SelectedValue == "3") // Módulo Complementario de Profundidad
+                        {
+
+                            DropDownList1.Items.Add("PROFUNDIDAD");
+                            DropDownList1.Items.Add("VERTICAL");
+                        }
+                        else
+                        {
+
+                            DropDownList1.Items.Add("HORIZONTAL");
+                            DropDownList1.Items.Add("VERTICAL");
+                        }
+                        break;
+
+                    case "CM2":
+
+                        DropDownList1.Items.Add("NO APLICA");
+                        DropDownList1.SelectedIndex = 0;
+                        break;
+                }
+
+
+
+                string tipoAccion = Session["Modulo"] as string;
+                if (tipoAccion == "Consultar")
+                {
+                    BtnAdicionarConfiguracion.Enabled = false;
+                    BtnAdicionarConfiguracion.CssClass = "btn btn-sm shadow button-disabled2";
+
+                    BtnX.Enabled = false;
+                    BtnX.CssClass = "btn btn-sm shadow button-disabled2";
+
+                    BtnModificarConfiguracion.Enabled = false;
+                    BtnModificarConfiguracion.CssClass = "btn btn-sm shadow button-disabled2";
+                }
+                else
+                {
+                    BtnX.Enabled = true;
+                    BtnX.CssClass = "btn btn-sm shadow button-enabled2 RojoCancelar";
+
+                    BtnModificarConfiguracion.Enabled = true;
+                    BtnModificarConfiguracion.CssClass = "btn btn-sm shadow button-enabled2 Cafe";
+                }
+
+                // Asignar valores de la fila a los controles correspondientes
+                CheckCostearCon.Checked = Convert.ToBoolean(row.Cells[13].Text);
+                TextCantidadCon.Text = row.Cells[5].Text;
+                TextDctoAltura.Text = row.Cells[9].Text;
+                TextDctoAncho.Text = row.Cells[8].Text;
+                txObs1.InnerText = row.Cells[18].Text;
+
+                TextAncho.Text = row.Cells[10].Text;
+                TextAlto.Text = row.Cells[11].Text;
+                CheckPieEsCon.Checked = Convert.ToBoolean(row.Cells[7].Text);
+                TextDivisionesCon.Text = row.Cells[12].Text;
+
+                DropDownList3.Enabled = false;
+                DropDownList3.CssClass = "form-control form-control-sm";
+                CargarAreaProduccion();
+
+
+                // Llenar el DataGrid1 con los datos de la consulta basada en el riId_ModuloInsumo
+                string riId_ModuloInsumo = row.Cells[17].Text;
+                Session["Id_ModuloInsumoDatagrid3"] = riId_ModuloInsumo;
+                LlenarDataGrid1(riId_ModuloInsumo);
+
+                string idInsumo = row.Cells[15].Text;
+                Session["Id_InsumoDatagrid3"] = idInsumo;
+
+                // Store the selected row index in the DataGrid attribute
+                DataGrid3.Attributes["SelectedRowIndex"] = rowIndex.ToString();
+
+                // Scroll to the row
+                row.Attributes["id"] = "DataGrid3_row_" + rowIndex;
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DataGrid3_row_" + rowIndex + "');", true);
+
+
+                // Mostrar el bordeDerecho y ocultar PanelContenido
+                PanelContenido.Attributes["class"] += " d-none"; // Oculta el panel
+                bordeDerecho.Attributes["class"] = bordeDerecho.Attributes["class"].Replace("d-none", "").Trim(); // Muestra el bordeDerecho
+
+                // Actualiza el estado del panel en el servidor
+                PanelContenido.Visible = false;
+                bordeDerecho.Visible = true;
+
+
+                BtnAdicionarRotacion.Enabled = false;
+                BtnAdicionarRotacion.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnSubirEstacion.Enabled = false;
+                BtnSubirEstacion.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnBajarEstacion.Enabled = false;
+                BtnBajarEstacion.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnX2.Enabled = false;
+                BtnX2.CssClass = "btn btn-sm shadow button-disabled";
+
+
+                ViewState["bordeDerechoVisible"] = true;
+
+            }
+        }
+
+        private void LlenarDataGrid1(string riId_ModuloInsumo)
+        {
+            string sSql = @"SELECT tblAreaProduccion.*, tblRotacionInsumo.*
+                    FROM tblAreaProduccion
+                    INNER JOIN tblRotacionInsumo ON tblAreaProduccion.Id_Area = tblRotacionInsumo.riId_Area
+                    WHERE tblRotacionInsumo.riId_ModuloInsumo = @riId_ModuloInsumo
+                    ORDER BY tblRotacionInsumo.riEstacion";
+
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand(sSql, conn);
+                cmd.Parameters.AddWithValue("@riId_ModuloInsumo", riId_ModuloInsumo);
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+
+                try
+                {
+                    conn.Open();
+                    adapter.Fill(dt);
+
+                    if (dt.Rows.Count > 0)
+                    {
+
+                        DataGrid4.DataSource = dt;
+                        DataGrid4.DataBind();
+                    }
+                    else
+                    {
+
+                        DataGrid4.DataSource = null;
+                        DataGrid4.DataBind();
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+        }
+
+        protected void DataGrid4_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            if (e.CommandName == "ModuloRotacion")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGrid4.Items[rowIndex];
+
+                // Aplicamos la clase CSS a la fila seleccionada
+                foreach (DataGridItem item in DataGrid4.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+                row.CssClass = "fila-seleccionada1"; // Cambiado para usar row.CssClass
+
+                Session["riId"] = row.Cells[3].Text;
+
+                // Habilitar botones según la lógica existente
+                if (ViewState["ModificarClickCount"] != null)
+                {
+                    if ((int)ViewState["ModificarClickCount"] == 1)
+                    {
+                        BtnSubirEstacion.Enabled = true;
+                        BtnSubirEstacion.CssClass = "btn btn-sm shadow button-enabled2 Verde";
+
+                        BtnBajarEstacion.Enabled = true;
+                        BtnBajarEstacion.CssClass = "btn btn-sm shadow button-enabled2 Verde";
+
+                        BtnX2.Enabled = true;
+                        BtnX2.CssClass = "btn btn-sm shadow button-enabled2 RojoCancelar";
+                    }
+                    else
+                    {
+                        BtnSubirEstacion.Enabled = false;
+                        BtnSubirEstacion.CssClass = "btn btn-sm shadow button-disabled";
+
+                        BtnBajarEstacion.Enabled = false;
+                        BtnBajarEstacion.CssClass = "btn btn-sm shadow button-disabled";
+
+                        BtnX2.Enabled = false;
+                        BtnX2.CssClass = "btn btn-sm shadow button-disabled";
+                    }
+                }
+            }
+        }
+
+
+        public void CargarAreaProduccion()
+        {
+            // Define la cadena de conexión (ajústala según tu configuración)
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            // Define la consulta SQL
+            string sSql = "SELECT Id_Area, Descripcion_Area FROM tblAreaProduccion ORDER BY Descripcion_Area ASC";
+
+            try
+            {
+                // Conexión a la base de datos
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    // Abre la conexión
+                    conn.Open();
+
+                    // Define el comando SQL
+                    using (SqlCommand cmd = new SqlCommand(sSql, conn))
+                    {
+                        // Ejecuta la consulta y obtiene los resultados
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            // Limpia el DropDownList antes de llenarlo
+                            DropDownList3.Items.Clear();
+
+                            DropDownList3.Items.Add(new ListItem(string.Empty, string.Empty));
+
+                            // Agrega los elementos al DropDownList
+                            while (reader.Read())
+                            {
+                                // Crea un nuevo ListItem con la descripción y el Id como valor
+                                ListItem item = new ListItem(reader["Descripcion_Area"].ToString(), reader["Id_Area"].ToString());
+
+                                // Agrega el ListItem al DropDownList
+                                DropDownList3.Items.Add(item);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejo de errores (puedes ajustar este mensaje según tus necesidades)
+                Console.WriteLine("Error al cargar las áreas de producción: " + ex.Message);
+            }
+
+        }
+
+        protected void CheckPieEsCon_CheckedChanged(object sender, EventArgs e)
+        {
+            // Deshabilitar los elementos inicialmente
+            TextDctoAncho.Enabled = false;
+            TextDctoAltura.Enabled = false;
+            TextAncho.Enabled = false;
+            TextAlto.Enabled = false;
+            TextDivisionesCon.Enabled = false;
+
+            // Aplicar la lógica según el valor del checkbox 'CheckPieEsCon'
+            if (CheckPieEsCon.Checked)
+            {
+                // Caso 1: Checkbox 'CheckPieEsCon' está marcado (habilitar Pieza Escalable)
+                TextDctoAncho.Enabled = true;
+                TextDctoAltura.Enabled = true;
+                TextDivisionesCon.Enabled = true;
+
+                // Restaurar valores desde ViewState, si existen
+                if (ViewState["DctoAncho"] != null)
+                {
+                    TextDctoAncho.Text = ViewState["DctoAncho"].ToString();
+                }
+
+                if (ViewState["DctoAltura"] != null)
+                {
+                    TextDctoAltura.Text = ViewState["DctoAltura"].ToString();
+                }
+
+                if (ViewState["Divisiones"] != null)
+                {
+                    TextDivisionesCon.Text = ViewState["Divisiones"].ToString();
+                }
+
+                // Desactivar valores de la pieza fija
+                TextAncho.Text = "0";
+                TextAlto.Text = "0";
+            }
+            else
+            {
+                // Caso 0: Checkbox 'CheckPieEsCon' no está marcado (habilitar Pieza Fija)
+                TextAncho.Enabled = true;
+                TextAlto.Enabled = true;
+
+                // Restaurar valores desde ViewState, si existen
+                if (ViewState["Ancho"] != null)
+                {
+                    TextAncho.Text = ViewState["Ancho"].ToString();
+                }
+
+                if (ViewState["Alto"] != null)
+                {
+                    TextAlto.Text = ViewState["Alto"].ToString();
+                }
+
+                // Desactivar valores de la pieza escalable
+                TextDctoAncho.Text = "0";
+                TextDctoAltura.Text = "0";
+            }
+
+        }
+
+        protected void BtnModificarConfiguracion_Click(object sender, EventArgs e)
+        {
+            // Guardar los valores en el ViewState
+            ViewState["DctoAncho"] = TextDctoAncho.Text;
+            ViewState["DctoAltura"] = TextDctoAltura.Text;
+            ViewState["Ancho"] = TextAncho.Text;
+            ViewState["Alto"] = TextAlto.Text;
+            ViewState["Divisiones"] = TextDivisionesCon.Text;
+
+            // Deshabilitar todos los controles inicialmente
+            TextCantidadCon.Enabled = false;
+            CheckPieEsCon.Enabled = false;
+            txObs1.Disabled = true; // Deshabilitar el TextArea
+            DropDownList1.Enabled = false; // Asumiendo que este es cboAreaProduccion
+            CheckCostearCon.Enabled = false; // Asumiendo que es chkCostear
+            TextDivisionesCon.Enabled = false; // Asumiendo que es txtDivisiones
+
+            // Comprobar si es la primera vez que se hace clic en el botón
+            if (ViewState["ModificarClickCount"] == null)
+            {
+                // Primera vez
+                ViewState["ModificarClickCount"] = 1; // Inicializa la cuenta
+            }
+            else
+            {
+                // Incrementar el contador
+                ViewState["ModificarClickCount"] = (int)ViewState["ModificarClickCount"] + 1;
+            }
+
+            // Lógica para habilitar controles
+            if ((int)ViewState["ModificarClickCount"] == 1)
+            {
+                // Lógica para el primer clic
+                TextCantidadCon.Enabled = true;
+                CheckPieEsCon.Enabled = true;
+                txObs1.Disabled = false; // Habilitar el TextArea
+                DropDownList1.Enabled = true; // Habilitar cboAreaProduccion
+                CheckCostearCon.Enabled = true;
+                TextDivisionesCon.Enabled = CheckPieEsCon.Checked;
+
+                DropDownList3.Enabled = true;
+                DropDownList3.CssClass = "form-control form-control-sm";
+
+                BtnAdicionarRotacion.Enabled = true;
+                BtnAdicionarRotacion.CssClass = "btn btn-sm shadow button-enabled2 ColorAzulActivo";
+
+                CheckPieEsCon_CheckedChanged(sender, e);
+
+                BtnModificarConfiguracion.CssClass = "btn btn-sm shadow linkButtonClicked8 Cafe";
+            }
+            else
+            {
+                DropDownList3.Enabled = false;
+                DropDownList3.CssClass = "form-control form-control-sm";
+
+                BtnAdicionarRotacion.Enabled = false;
+                BtnAdicionarRotacion.CssClass = "btn btn-sm shadow button-disabled";
+
+                // Deshabilitar y limpiar controles
+                TextCantidadCon.Enabled = false;
+                TextCantidadCon.CssClass = "form-control form-control-sm ms-2";
+
+
+                TextDctoAltura.Enabled = false;
+                TextDctoAltura.CssClass = "form-control form-control-sm";
+
+                TextDctoAncho.Enabled = false;
+                TextDctoAncho.CssClass = "form-control form-control-sm";
+
+                TextAncho.Enabled = false;
+                TextAncho.CssClass = "form-control form-control-sm";
+
+                TextAlto.Enabled = false;
+                TextAlto.CssClass = "form-control form-control-sm";
+
+                DropDownList1.Enabled = false;
+
+                txObs1.Disabled = true;
+
+                BtnSubirEstacion.Enabled = false;
+                BtnSubirEstacion.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnBajarEstacion.Enabled = false;
+                BtnBajarEstacion.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnX2.Enabled = false;
+                BtnX2.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnModificarConfiguracion.CssClass = "btn btn-sm shadow button-enabled2 Cafe";
+
+                ViewState["ModificarClickCount"] = null;
+            }
+
+            Session["CRUDModuloTabConfiguracion"] = "Modificar";
+
+        }
+
+        protected void BtnGrabarConfiguracion_Click(object sender, EventArgs e)
+        {
+
+            string NombreUsuario = Session["usuariologueado"].ToString();
+            string tipoAccion = Session["CRUDModuloTabConfiguracion"] as string;
+            int idInsumo = Convert.ToInt32(Session["Id_InsumoDatagrid3"]);
+            int IDModuloInsumo = Convert.ToInt32(Session["Id_ModuloInsumoDatagrid3"]);
+            string moduloID = textModulo.Text;
+
+            // Obtener la cadena de conexión 
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+
+            if (tipoAccion == "Nuevo")
+            {
+                // Verificar si hay una fila seleccionada en el DataGrid
+                string selectedRowIndexStr = DataGrid1.Attributes["SelectedRowIndex2"];
+                if (string.IsNullOrEmpty(selectedRowIndexStr) || !int.TryParse(selectedRowIndexStr, out int selectedRowIndex))
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Señor usuario, por favor seleccione el Insumo');", true);
+                    return; // Detener la ejecución si no hay fila seleccionada
+                }
+                else
+                {
+
+                }
+                // Validar cantidad
+                if (string.IsNullOrWhiteSpace(TextCantidadCon.Text) || Convert.ToDouble(TextCantidadCon.Text) <= 0)
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Digite una cantidad válida del Insumo en el Módulo');", true);
+                    TextCantidadCon.Focus();
+                    return;
+                }
+
+                // Validar otros campos
+                if (
+                    double.TryParse(TextCantidadCon.Text, out _) &&
+                    double.TryParse(TextDctoAltura.Text, out _) &&
+                    double.TryParse(TextDctoAncho.Text, out _) &&
+                    !string.IsNullOrWhiteSpace(DropDownList1.SelectedItem.Text) &&
+                    !string.IsNullOrWhiteSpace(DropDownList3.SelectedItem.Text) &&
+                    CheckCostearCon.Checked &&
+                    double.TryParse(TextAncho.Text, out _) &&
+                    double.TryParse(TextAlto.Text, out _) &&
+
+                    Convert.ToDouble(TextDivisionesCon.Text) > 0)
+                {
+                    try
+                    {
+                        // Se ingresa el nuevo insumo del módulo
+                        int idModuloInsumo = InsertarModuloInsumo(connectionString, textModulo.Text, idInsumo, NombreUsuario);
+                        if (idModuloInsumo > 0)
+                        {
+                            // Se calcula la estación
+                            int estacion = CalcularEstacion(connectionString, idModuloInsumo);
+
+                            // Se inserta la rotación del insumo
+                            InsertarRotacionInsumo(connectionString, idModuloInsumo, DropDownList3.SelectedValue, estacion);
+
+                            // Se coloca el módulo como no chequeado
+                            ActualizarModuloChequeado(connectionString, textModulo.Text);
+
+                            LlenarDataGrid3(moduloID);
+                        }
+                    }
+                    catch (SqlException ex)
+                    {
+                        // Manejo de excepciones
+                        ScriptManager.RegisterStartupScript(this, GetType(), "alert", $"alert('Error al realizar la operación: {ex.Message}');", true);
+                    }
+                }
+                else
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Los campos en rojo son obligatorios');", true);
+                }
+            }
+
+
+            if (tipoAccion == "Modificar")
+            {
+                if (
+                    double.TryParse(TextCantidadCon.Text, out _) &&
+                    double.TryParse(TextDctoAltura.Text, out _) &&
+                    double.TryParse(TextDctoAncho.Text, out _) &&
+                    CheckCostearCon.Checked &&
+                    !string.IsNullOrWhiteSpace(DropDownList1.SelectedItem.Text))
+                {
+                    bool updateSuccess, unmarkSuccess;
+
+                    ActualizarModuloInsumo(IDModuloInsumo, connectionString, NombreUsuario, out updateSuccess);
+
+                    //Cargar_Panel_Modulos_Insumos(dtgdModulo_Insumos, textModulo.Text);
+                    //chkModificarComposicion.Enabled = false;
+                    //chkModificarComposicion.Checked = false;
+
+                    //rsModulo_Insumos.Find("id_ModuloInsumo='" + IDModuloInsumo + "'");
+                    //dtgdModulo_Insumos.SelBookmarks.Add(rsModulo_Insumos.Bookmark);
+                    //dtgdModulo_Insumos_SelChange(1);
+
+                    //// Se coloca la variable control de despice en verdadero
+                    //swCambiosenelDespiece = true;
+
+                    DesmarcarModulo(connectionString, out unmarkSuccess);
+
+                    if (updateSuccess && unmarkSuccess)
+                    {
+                        // Mostrar modal de éxito
+                        ScriptManager.RegisterStartupScript(this, GetType(), "modalSuccess", "showSuccessModal();", true);
+                    }
+                    else
+                    {
+                        // Mostrar mensaje de error
+                        ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('No se pudo realizar la actualización, por favor intente nuevamente.');", true);
+                    }
+                }
+                else
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Los campos en rojo son obligatorios');", true);
+                }
+            }
+        }
+
+        private int InsertarModuloInsumo(string connectionString, string idModulo, int idInsumo, string NombreUsuario)
+        {
+            string sSql = @"
+        INSERT INTO tblModulo_Insumo 
+        (Id_Modulo, Id_Insumo, Cantidad, DescripcionPieza, Responsable, FechaSuceso, 
+        DescuentoAltura, DescuentoAncho, Sentido, Costear, PiezaEscalable, 
+        AnchoFijo, AltoFijo, Divisiones) 
+        VALUES 
+        (@IdModulo, @IdInsumo, @Cantidad, @DescripcionPieza, @Responsable, 
+        GETDATE(), @DescuentoAltura, @DescuentoAncho, @Sentido, 
+        @Costear, @PiezaEscalable, @AnchoFijo, @AltoFijo, @Divisiones); 
+        SELECT SCOPE_IDENTITY();";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand command = new SqlCommand(sSql, connection))
+            {
+                command.Parameters.AddWithValue("@IdModulo", idModulo);
+                command.Parameters.AddWithValue("@IdInsumo", idInsumo);
+                command.Parameters.AddWithValue("@Cantidad", Convert.ToDouble(TextCantidadCon.Text));
+                command.Parameters.AddWithValue("@DescripcionPieza", txObs1.Value);
+                command.Parameters.AddWithValue("@Responsable", NombreUsuario);
+                command.Parameters.AddWithValue("@DescuentoAltura", Convert.ToDouble(TextDctoAltura.Text));
+                command.Parameters.AddWithValue("@DescuentoAncho", Convert.ToDouble(TextDctoAncho.Text));
+                command.Parameters.AddWithValue("@Sentido", DropDownList1.SelectedItem.Text);
+                command.Parameters.AddWithValue("@Costear", CheckCostearCon.Checked ? 1 : 0);
+                command.Parameters.AddWithValue("@PiezaEscalable", CheckPieEsCon.Checked ? 1 : 0);
+                command.Parameters.AddWithValue("@AnchoFijo", Convert.ToDouble(TextAncho.Text));
+                command.Parameters.AddWithValue("@AltoFijo", Convert.ToDouble(TextAlto.Text));
+                command.Parameters.AddWithValue("@Divisiones", Convert.ToDouble(TextDivisionesCon.Text));
+
+                connection.Open();
+                return Convert.ToInt32(command.ExecuteScalar()); // Devuelve el ID del nuevo módulo insumo
+            }
+        }
+
+        private int CalcularEstacion(string connectionString, int idModuloInsumo)
+        {
+            string sSql = "SELECT COALESCE(MAX(riEstacion), 0) + 1 FROM tblRotacionInsumo WHERE riId_ModuloInsumo=@IdModuloInsumo;";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand command = new SqlCommand(sSql, connection))
+            {
+                command.Parameters.AddWithValue("@IdModuloInsumo", idModuloInsumo);
+                connection.Open();
+                return Convert.ToInt32(command.ExecuteScalar());
+            }
+        }
+
+        private void InsertarRotacionInsumo(string connectionString, int idModuloInsumo, string idArea, int estacion)
+        {
+            string sSql = "INSERT INTO tblRotacionInsumo (riId_ModuloInsumo, riId_Area, riEstacion) VALUES (@IdModuloInsumo, @IdArea, @Estacion);";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand command = new SqlCommand(sSql, connection))
+            {
+                command.Parameters.AddWithValue("@IdModuloInsumo", idModuloInsumo);
+                command.Parameters.AddWithValue("@IdArea", idArea);
+                command.Parameters.AddWithValue("@Estacion", estacion);
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+        }
+
+        private void ActualizarModuloChequeado(string connectionString, string idModulo)
+        {
+            string sSql = "UPDATE tblModulo SET Chequeado = 0 WHERE Id_Modulo = @IdModulo;";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand command = new SqlCommand(sSql, connection))
+            {
+                command.Parameters.AddWithValue("@IdModulo", idModulo);
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public void ActualizarModuloInsumo(int idModuloInsumo, string connectionString, string NombreUsuario, out bool success)
+        {
+            string sSql = @"
+    UPDATE tblModulo_Insumo 
+    SET 
+        Costear = @Costear, 
+        Cantidad = @Cantidad, 
+        DescripcionPieza = @DescripcionPieza, 
+        Responsable = @Responsable, 
+        FechaSuceso = @FechaSuceso, 
+        DescuentoAltura = @DescuentoAltura, 
+        DescuentoAncho = @DescuentoAncho, 
+        Sentido = @Sentido, 
+        PiezaEscalable = @PiezaEscalable, 
+        AnchoFijo = @AnchoFijo, 
+        AltoFijo = @AltoFijo, 
+        Divisiones = @Divisiones 
+    WHERE ID_moduloinsumo = @IDModuloInsumo";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand command = new SqlCommand(sSql, connection))
+            {
+                // Asignar los parámetros de forma segura
+                command.Parameters.AddWithValue("@Costear", CheckCostearCon.Checked ? 1 : 0);
+                command.Parameters.AddWithValue("@Cantidad", Convert.ToDouble(TextCantidadCon.Text));
+                command.Parameters.AddWithValue("@DescripcionPieza", txObs1.Value);
+                command.Parameters.AddWithValue("@Responsable", NombreUsuario);
+                command.Parameters.AddWithValue("@FechaSuceso", DateTime.Now);
+                command.Parameters.AddWithValue("@DescuentoAltura", Convert.ToDouble(TextDctoAltura.Text));
+                command.Parameters.AddWithValue("@DescuentoAncho", Convert.ToDouble(TextDctoAncho.Text));
+                command.Parameters.AddWithValue("@Sentido", DropDownList1.SelectedItem.Text);
+                command.Parameters.AddWithValue("@PiezaEscalable", CheckPieEsCon.Checked ? 1 : 0);
+                command.Parameters.AddWithValue("@AnchoFijo", Convert.ToDouble(TextAncho.Text));
+                command.Parameters.AddWithValue("@AltoFijo", Convert.ToDouble(TextAlto.Text));
+                command.Parameters.AddWithValue("@Divisiones", Convert.ToDouble(TextDivisionesCon.Text));
+                command.Parameters.AddWithValue("@IDModuloInsumo", idModuloInsumo);
+
+                try
+                {
+                    connection.Open();
+                    int rowsAffected = command.ExecuteNonQuery();
+                    success = rowsAffected > 0; // Retorna true si se actualizó al menos una fila
+                }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine($"Error al actualizar el módulo insumo: {ex.Message}");
+                    success = false; // Retorna false si ocurre una excepción
+                }
+            }
+        }
+
+        public void DesmarcarModulo(string connectionString, out bool success)
+        {
+            int idModulo = int.Parse(textModulo.Text);
+
+            string sSql = @"
+    UPDATE tblModulo 
+    SET Chequeado = @Chequeado 
+    WHERE Id_Modulo = @IdModulo";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand command = new SqlCommand(sSql, connection))
+            {
+                command.Parameters.AddWithValue("@Chequeado", 0);
+                command.Parameters.AddWithValue("@IdModulo", idModulo);
+
+                try
+                {
+                    connection.Open();
+                    int rowsAffected = command.ExecuteNonQuery();
+                    success = rowsAffected > 0; // Retorna true si se actualizó al menos una fila
+                }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine($"Error al desmarcar el módulo: {ex.Message}");
+                    success = false; // Retorna false si ocurre una excepción
+                }
+            }
+        }
+
+        protected void DataGrid1_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            if (e.CommandName == "DatagridInsumo")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGrid1.Items[rowIndex];
+
+                // Aplicamos la clase CSS a la fila seleccionada
+                foreach (DataGridItem item in DataGrid1.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+                e.Item.CssClass = "fila-seleccionada1";
+
+                Session["Id_InsumoDatagrid3"] = row.Cells[1].Text;
+
+
+
+
+                // Store the selected row index in the DataGrid attribute
+                DataGrid1.Attributes["SelectedRowIndex2"] = rowIndex.ToString();
+
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "DataGrid2_row_" + rowIndex;
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DataGrid2_row_" + rowIndex + "');", true);
+
+            }
+        }
+
+        protected void BtnX_Click(object sender, EventArgs e)
+        {
+            string idInsumo = Session["Id_InsumoDatagrid3"].ToString();
+            string contenidoModalOT = "Esta seguro que quiere eliminar el insumo: " + idInsumo + " del módulo " + textModulo.Text + " - " + TextDescripcionModulo.Text;
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#EliminarInsumo').modal('show'); $('#EliminarInsumo2').text('" + contenidoModalOT + "');", true);
+        }
+
+        protected void eliminarInsumoModulo_Click(object sender, EventArgs e)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string idModuloInsumo = Session["Id_ModuloInsumoDatagrid3"].ToString();
+            string idModulo = textModulo.Text;
+
+            //// Registrar el movimiento (esto depende de tu implementación de 'Registrar_Movimiento')
+            //string cedula = Session["Cedula"].ToString(); // Suponiendo que la cédula del usuario está en la sesión.
+            //RegistrarMovimiento($"El Usuario Con cédula: {cedula} Elimina Insumo {idInsumo} con el modulo {idModulo}");
+
+            string sSql = $"DELETE FROM tblModulo_Insumo WHERE Id_ModuloInsumo = {idModuloInsumo}";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(sSql, connection);
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+
+            //// Establecer la variable de control de despiece en verdadero
+            //swCambiosenelDespiece = true;
+
+            // Actualizar 'tblModulo' para marcar como no chequeado
+            sSql = $"UPDATE tblModulo SET Chequeado = 0 WHERE Id_Modulo = {idModulo}";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(sSql, connection);
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+
+            // Deshabilitar y limpiar los campos en la interfaz de usuario
+            TextCantidadCon.Enabled = false;
+            TextCantidadCon.Text = "0";
+            CheckPieEsCon.Enabled = false;
+            TextDctoAltura.Text = "0";
+            TextDctoAncho.Text = "0";
+            txObs1.Disabled = true;
+            txObs1.Value = string.Empty;
+            DropDownList3.Enabled = false;
+            DropDownList3.SelectedIndex = -1;
+            DropDownList1.DataBind();
+            CheckCostearCon.Enabled = false;
+            TextAncho.Text = "0";
+            TextAlto.Text = "0";
+            CheckPieEsCon.Checked = false;
+
+            LlenarDataGrid3(idModulo);
+
+            BtnModificarConfiguracion.Enabled = false;
+            BtnX.Enabled = false; // Deshabilitar el botón de eliminación.
+        }
+
+        protected void BtnAdicionarRotacion_Click(object sender, EventArgs e)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            // Validar que se haya seleccionado un valor en el combo de área de producción.
+            if (!string.IsNullOrEmpty(DropDownList3.SelectedValue))
+            {
+                double Estacion = 0;
+                string idModuloInsumo = Session["Id_ModuloInsumoDatagrid3"].ToString();
+                string idArea = DropDownList3.SelectedValue;
+
+                // Verificar si el registro ya existe.
+                string checkSql = $"SELECT COUNT(1) FROM tblRotacionInsumo WHERE riId_ModuloInsumo = {idModuloInsumo} AND riId_Area = {idArea}";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand(checkSql, connection);
+                    connection.Open();
+
+                    // Ejecutar la consulta para verificar la existencia del registro.
+                    int count = (int)command.ExecuteScalar();
+                    if (count > 0)
+                    {
+                        // Si ya existe el registro, mostrar un mensaje de advertencia.
+                        string script = "alert('El registro con el mismo módulo e id de área ya existe.');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showalert", script, true);
+                        return;
+                    }
+                }
+
+                // Si el registro no existe, proceder con la inserción.
+                // Construir la consulta SQL para obtener el máximo de 'riEstacion'.
+                string sSql = $"SELECT ISNULL(MAX(riEstacion), 0) FROM tblRotacionInsumo WHERE riId_ModuloInsumo = {idModuloInsumo}";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand(sSql, connection);
+                    connection.Open();
+
+                    // Ejecutar la consulta y obtener el valor de 'Estacion'.
+                    object result = command.ExecuteScalar();
+                    Estacion = 1 + Convert.ToDouble(result ?? 0);
+                }
+
+                // Construir la consulta SQL para insertar la nueva rotación del insumo.
+                sSql = $"INSERT INTO tblRotacionInsumo (riId_ModuloInsumo, riId_Area, riEstacion) VALUES ({idModuloInsumo}, {idArea}, {Estacion})";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand(sSql, connection);
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+
+                // Llamar al método para recargar los datos en el DataGrid.
+                LlenarDataGrid1(idModuloInsumo);
+            }
+            else
+            {
+                // Mostrar un mensaje de advertencia al usuario si no se ha seleccionado un área de producción.
+                string script = "alert('Seleccionar el destino del insumo');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showalert", script, true);
+            }
+        }
+
+        protected void BtnSubirEstacion_Click(object sender, EventArgs e)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string idModuloInsumo = Session["Id_ModuloInsumoDatagrid3"].ToString();
+            int riId = Convert.ToInt32(Session["riId"]); // Obtén el riId desde la sesión.
+
+            int riEstacion = 0;
+
+            // Abrir la conexión y realizar la consulta para obtener el valor de riEstacion.
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                // Obtener el valor de riEstacion desde la base de datos.
+                string query = "SELECT riEstacion FROM tblRotacionInsumo WHERE riId = @riId";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@riId", riId);
+                    object result = command.ExecuteScalar();
+                    if (result != null)
+                    {
+                        riEstacion = Convert.ToInt32(result);
+                    }
+                }
+
+                // Realizar las actualizaciones si se obtuvo un riEstacion válido.
+                if (riEstacion > 1)
+                {
+                    // Actualizar la estación superior (incrementarla en 1).
+                    string sSql1 = $"UPDATE tblRotacionInsumo SET riEstacion = riEstacion + 1 WHERE riId_ModuloInsumo = @idModuloInsumo AND riEstacion = @riEstacionMenosUno";
+                    using (SqlCommand command1 = new SqlCommand(sSql1, connection))
+                    {
+                        command1.Parameters.AddWithValue("@idModuloInsumo", idModuloInsumo);
+                        command1.Parameters.AddWithValue("@riEstacionMenosUno", riEstacion - 1);
+                        command1.ExecuteNonQuery();
+                    }
+
+                    // Actualizar la estación actual (decrementarla en 1).
+                    string sSql2 = $"UPDATE tblRotacionInsumo SET riEstacion = riEstacion - 1 WHERE riId = @riId";
+                    using (SqlCommand command2 = new SqlCommand(sSql2, connection))
+                    {
+                        command2.Parameters.AddWithValue("@riId", riId);
+                        command2.ExecuteNonQuery();
+                    }
+                }
+                else
+                {
+                    string script = "alert('No se encontró el riEstacion para el riId especificado.');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showalert", script, true);
+                }
+            }
+
+            // Recargar la grilla de rotación de insumos.
+            LlenarDataGrid1(idModuloInsumo);
+        }
+
+        protected void BtnBajarEstacion_Click(object sender, EventArgs e)
+        {
+            // Obtener la cadena de conexión
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            // Obtener el Id_ModuloInsumo desde la sesión (o desde otro lugar adecuado)
+            string idModuloInsumo = Session["Id_ModuloInsumoDatagrid3"].ToString();
+
+            // Obtener el valor de riId desde la sesión (asegúrate de haberlo almacenado al seleccionar la fila)
+            int riId = Convert.ToInt32(Session["riId"]);
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                // Obtener el valor actual de riEstacion para el riId seleccionado
+                int riEstacionActual = 0;
+                string selectQuery = "SELECT riEstacion FROM tblRotacionInsumo WHERE riId = @riId";
+                using (SqlCommand selectCommand = new SqlCommand(selectQuery, connection))
+                {
+                    selectCommand.Parameters.AddWithValue("@riId", riId);
+                    riEstacionActual = Convert.ToInt32(selectCommand.ExecuteScalar());
+                }
+
+                // Verificar si la estación actual es menor que el número total de registros para este módulo de insumo
+                string countQuery = "SELECT COUNT(*) FROM tblRotacionInsumo WHERE riId_ModuloInsumo = @idModuloInsumo";
+                int totalEstaciones = 0;
+                using (SqlCommand countCommand = new SqlCommand(countQuery, connection))
+                {
+                    countCommand.Parameters.AddWithValue("@idModuloInsumo", idModuloInsumo);
+                    totalEstaciones = Convert.ToInt32(countCommand.ExecuteScalar());
+                }
+
+                if (riEstacionActual < totalEstaciones)
+                {
+                    // Disminuir la estación de la fila siguiente (riEstacion+1)
+                    string updateQuery1 = "UPDATE tblRotacionInsumo SET riEstacion = riEstacion - 1 WHERE riId_ModuloInsumo = @idModuloInsumo AND riEstacion = @riEstacion";
+                    using (SqlCommand updateCommand1 = new SqlCommand(updateQuery1, connection))
+                    {
+                        updateCommand1.Parameters.AddWithValue("@idModuloInsumo", idModuloInsumo);
+                        updateCommand1.Parameters.AddWithValue("@riEstacion", riEstacionActual + 1);
+                        updateCommand1.ExecuteNonQuery();
+                    }
+
+                    // Aumentar la estación del registro seleccionado
+                    string updateQuery2 = "UPDATE tblRotacionInsumo SET riEstacion = riEstacion + 1 WHERE riId = @riId";
+                    using (SqlCommand updateCommand2 = new SqlCommand(updateQuery2, connection))
+                    {
+                        updateCommand2.Parameters.AddWithValue("@riId", riId);
+                        updateCommand2.ExecuteNonQuery();
+                    }
+
+                    // Recargar la grilla de rotación de insumos
+                    LlenarDataGrid1(idModuloInsumo);
+                }
+            }
+        }
+
+        protected void BtnX2_Click(object sender, EventArgs e)
+        {
+            // Obtener la cadena de conexión
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            // Obtener el Id_ModuloInsumo desde la sesión (o desde otro lugar adecuado)
+            string idModuloInsumo = Session["Id_ModuloInsumoDatagrid3"].ToString();
+
+            // Obtener el valor de riId desde la sesión (asegúrate de haberlo almacenado al seleccionar la fila)
+            int riId = Convert.ToInt32(Session["riId"]);
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                // Obtener el valor actual de riEstacion para el riId seleccionado
+                int riEstacionActual = 0;
+                string selectQuery = "SELECT riEstacion FROM tblRotacionInsumo WHERE riId = @riId";
+                using (SqlCommand selectCommand = new SqlCommand(selectQuery, connection))
+                {
+                    selectCommand.Parameters.AddWithValue("@riId", riId);
+                    riEstacionActual = Convert.ToInt32(selectCommand.ExecuteScalar());
+                }
+
+                // Verificar la cantidad de registros para este módulo de insumo
+                string countQuery = "SELECT COUNT(*) FROM tblRotacionInsumo WHERE riId_ModuloInsumo = @idModuloInsumo";
+                int totalRegistros = 0;
+                using (SqlCommand countCommand = new SqlCommand(countQuery, connection))
+                {
+                    countCommand.Parameters.AddWithValue("@idModuloInsumo", idModuloInsumo);
+                    totalRegistros = Convert.ToInt32(countCommand.ExecuteScalar());
+                }
+
+                if (totalRegistros > 1)
+                {
+                    // Disminuir la estación de los registros cuya riEstacion sea mayor a la del registro eliminado
+                    string updateQuery = "UPDATE tblRotacionInsumo SET riEstacion = riEstacion - 1 WHERE riId_ModuloInsumo = @idModuloInsumo AND riEstacion > @riEstacion";
+                    using (SqlCommand updateCommand = new SqlCommand(updateQuery, connection))
+                    {
+                        updateCommand.Parameters.AddWithValue("@idModuloInsumo", idModuloInsumo);
+                        updateCommand.Parameters.AddWithValue("@riEstacion", riEstacionActual);
+                        updateCommand.ExecuteNonQuery();
+                    }
+
+                    // Eliminar el registro de rotación de insumo
+                    string deleteQuery = "DELETE FROM tblRotacionInsumo WHERE riId = @riId";
+                    using (SqlCommand deleteCommand = new SqlCommand(deleteQuery, connection))
+                    {
+                        deleteCommand.Parameters.AddWithValue("@riId", riId);
+                        deleteCommand.ExecuteNonQuery();
+                    }
+
+                    // Recargar la grilla de rotación de insumos
+                    LlenarDataGrid1(idModuloInsumo);
+                }
+                else
+                {
+                    // Mostrar un mensaje de advertencia si solo queda un registro y se intenta eliminar
+                    string script = "alert('Como mínimo debe quedar un destino para el Insumo');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showalert", script, true);
+                }
+            }
+        }
+
+        protected void IDDatagridFamilia_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            if (e.CommandName == "DatagridFamilia")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = IDDatagridFamilia.Items[rowIndex];
+
+                // Aplicamos la clase CSS a la fila seleccionada
+                foreach (DataGridItem item in IDDatagridFamilia.Items)
+                {
+                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                }
+                row.CssClass = "fila-seleccionada1";
+
+                BtnModificarFamilia.Enabled = true;
+                BtnModificarFamilia.CssClass = "btn btn-sm shadow button-enabled";
+
+                // Verificar y asignar valores a los TextBox, manejando el caso de &nbsp;
+                TextDescripcion.Text = row.Cells[2].Text != "&nbsp;" ? row.Cells[2].Text : string.Empty;
+                TextDescuentoFinal.Text = row.Cells[3].Text != "&nbsp;" ? row.Cells[3].Text : string.Empty;
+                TextResponsableFamilia.Text = row.Cells[6].Text != "&nbsp;" ? row.Cells[6].Text : string.Empty;
+                TextDescripcionParaObjeto.Text = row.Cells[4].Text != "&nbsp;" ? row.Cells[4].Text : string.Empty;
+
+                // Convertir el valor de la celda 5 a DateTime
+                string fechaTexto = row.Cells[5].Text;
+                if (fechaTexto != "&nbsp;" && DateTime.TryParse(fechaTexto, out DateTime fechaModificacion))
+                {
+                    // Asignar el valor formateado al TextBox como "yyyy-MM-dd"
+                    TextUlAct.Text = fechaModificacion.ToString("yyyy-MM-dd");
+                }
+                else
+                {
+                    // Si la conversión falla o es &nbsp;, dejar el campo vacío
+                    TextUlAct.Text = string.Empty;
+                }
+
+                string idFamilia = row.Cells[1].Text;
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = @"
+            SELECT tblProcesoModulo.*, tblProcesoProduccion.* 
+            FROM tblProcesoModulo 
+            INNER JOIN tblProcesoProduccion ON tblProcesoModulo.Id_Area = tblProcesoProduccion.Id_Area 
+            WHERE tblProcesoModulo.ID_Familia = @ID_Familia";
+
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@ID_Familia", idFamilia);
+
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    DataTable dt = new DataTable();
+
+                    try
+                    {
+                        connection.Open();
+                        adapter.Fill(dt);
+
+                        // Asume que tienes otro DataGrid para mostrar los procesos
+                        DatagridFamiliaModuloPorcesoPro.DataSource = dt;
+                        DatagridFamiliaModuloPorcesoPro.DataBind();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejo de errores
+                        Response.Write("Error: " + ex.Message);
+                    }
+                }
+
+                // Guardar el índice de la fila seleccionada
+                DataGrid3.Attributes["SelectedRowIndexFamilia"] = rowIndex.ToString();
+
+                // Desplazarse a la fila seleccionada
+                row.Attributes["id"] = "IDDatagridFamilia_row_" + rowIndex;
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow",
+                    $"focusAndScrollToRow('IDDatagridFamilia_row_{rowIndex}');", true);
+            }
+        }
+
+
+        protected void DatagridProcesoProductivo_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            if (e.CommandName == "ProcesoProductivo")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DatagridProcesoProductivo.Items[rowIndex];
+
+                // Aplicamos la clase CSS a la fila seleccionada
+                foreach (DataGridItem item in DatagridProcesoProductivo.Items)
+                {
+                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                }
+                row.CssClass = "fila-seleccionada1";
+
+
+                // Guardar el índice de la fila seleccionada
+                DataGrid3.Attributes["SelectedRowIndexProPro"] = rowIndex.ToString();
+
+                // Desplazarse a la fila seleccionada
+                row.Attributes["id"] = "DatagridProcesoProductivo_row_" + rowIndex;
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow",
+                    $"focusAndScrollToRow('DatagridProcesoProductivo_row_{rowIndex}');", true);
+            }
         }
     }
 }

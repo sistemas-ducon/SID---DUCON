@@ -4629,7 +4629,7 @@
                                                    <i class="bi bi-wrench-adjustable"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="" ID="BtnConsultarModulo">
+                                                <asp:LinkButton runat="server" title="" ID="BtnConsultarModulo" OnClick="BtnConsultarModulo_Click">
                                                  <i class="bi bi-search"></i>
                                                 </asp:LinkButton>
 
@@ -4798,7 +4798,7 @@
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header AzulOscuroEfecto fw-bold shadow-sm">
-                                <h5 class="modal-title d-flex align-items-center justify-content-center text-dark">Rotación de Insumo</h5>
+                                <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Rotación de Insumo</h5>
                         <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
@@ -5306,6 +5306,14 @@
                     return; // Salir para permitir el salto de línea
                 }
 
+                // Si el elemento enfocado es el TextBox "tbOT"
+                if (focusedElement.id === '<%= tbOT.ClientID %>') {
+                // Disparar el evento OnTextChanged a través de AutoPostBack
+                __doPostBack('<%= tbOT.UniqueID %>', '');
+
+                // Prevenir la acción predeterminada para que no se envíe el formulario completo
+                event.preventDefault();
+            }
                 // Aquí revisamos los campos específicos
                 if (focusedElement.id === "tbBuscarAcaba" || focusedElement.id === "tbCriterio" || focusedElement.id === "tbAltura" || focusedElement.id === "tbAncho") {
                     // Hacer clic en el botón de búsqueda

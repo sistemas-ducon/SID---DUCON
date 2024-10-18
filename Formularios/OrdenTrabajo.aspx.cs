@@ -792,8 +792,80 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 cbxComisionCompart.Enabled = true;
             }
 
-            cboPedidoBase.DataBind();
-            cboPedidoBase.Items.Insert(0, new ListItem(" "));
+            if (Session["BtnModificarEjecutado"] != null && (bool)Session["BtnModificarEjecutado"] == true)
+            {
+                LlenarCboPedidoBase();
+                ObtenerPedidoBaseYAsignar(estadisticaVenta);
+                if (!estadisticaVenta)
+                {
+
+                    // Establecer el texto del TextBox
+                    txtCotizacion.Text = "NO TIENE";
+                    txtCotizacion.Enabled = false;
+                    txtOrdenCompra.Enabled = false;
+                    txtOrdenCompra.Text = "NA";
+                    cbxComisionCompart.Enabled = false;
+
+                    // Invocar manualmente el evento OnTextChanged
+                    EventArgs args = new EventArgs();
+                    txtCotizacion_TextChanged(txtCotizacion, args);
+                   
+                }
+                else
+                {
+                   
+
+                    txtCotizacion.Enabled = true;
+                    txtOrdenCompra.Enabled = true;
+                    cbxComisionCompart.Enabled = true;
+                }
+            }
+            else
+            {
+                cboPedidoBase.DataBind();
+                cboPedidoBase.Items.Insert(0, new ListItem(" "));
+            }
+              
+        }
+
+        // Método para realizar la consulta y asignar el valor a cboPedidoBase
+        private void ObtenerPedidoBaseYAsignar(bool estadisticaVenta)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string query = "SELECT PedidoBase FROM tblOT WHERE Id_OT = @Id_OT AND Consecutivo_Pedido = @Consecutivo_Pedido";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id_OT", tbOT.Text);
+                    command.Parameters.AddWithValue("@Consecutivo_Pedido", ddlNumbers.SelectedValue);
+
+                    connection.Open();
+                    object result = command.ExecuteScalar();
+
+                    if (result != null)
+                    {
+                        // Convertir el resultado a string si es necesario
+                        string pedidoBase = result.ToString();
+
+                        cboPedidoBase.SelectedValue = pedidoBase;
+                        if (!estadisticaVenta)
+                        {
+                          
+                        }
+                        else
+                        {
+                            cboPedidoBase.Items.Clear();
+                        }
+                    }
+                    else
+                    {
+                        // Manejar el caso en el que no se encuentre ningún resultado
+                        cboPedidoBase.Items.Clear();
+                    }
+                }
+            }
         }
 
 
@@ -20307,8 +20379,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 e.Item.CssClass = "fila-seleccionada1";
 
-                // Obtener el control Label dentro del TemplateColumn "OK"
-                // Usa el espacio de nombres completo para especificar que es un Label de WebForms
+                ViewState["SelectedRowIndex"] = rowIndex;
+
                 System.Web.UI.WebControls.Label lblChequeado = (System.Web.UI.WebControls.Label)row.FindControl("lblChequeado");
 
                 if (lblChequeado != null)
@@ -20487,21 +20559,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BtnModificarModulo_Click(object sender, EventArgs e)
         {
-            // Recorremos las filas del DataGrid
-            foreach (DataGridItem row in DatagridModulo1.Items)
+            // Verificamos si hay un índice de fila seleccionado en ViewState
+            if (ViewState["SelectedRowIndex"] != null)
             {
-                // Obtenemos la etiqueta "lblChequeado" que contiene el valor "SI" o "NO"
+                // Recuperamos el índice de la fila seleccionada
+                int rowIndex = Convert.ToInt32(ViewState["SelectedRowIndex"]);
+
+                // Obtenemos la fila correspondiente
+                DataGridItem row = DatagridModulo1.Items[rowIndex];
+
+                // Obtenemos el control Label dentro de la columna "OK"
                 System.Web.UI.WebControls.Label lblChequeado = (System.Web.UI.WebControls.Label)row.FindControl("lblChequeado");
 
                 if (lblChequeado != null)
                 {
                     string chequeadoValue = lblChequeado.Text.Trim();
 
-                    // Condicional para validar el valor de "Chequeado"
+                    // Validar el valor de "Chequeado"
                     if (chequeadoValue == "SI")
                     {
                         ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#BloqueBloqueado').modal('show');", true);
-                        return; 
+                        return;
                     }
                     else if (chequeadoValue == "NO")
                     {
@@ -20510,12 +20588,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
             }
+            else
+            {
+                // Manejar el caso en que no se haya seleccionado ninguna fila
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "alert('Por favor, seleccione un módulo antes de continuar.');", true);
+            }
         }
 
 
         protected void BtnCopiarModuloAtributos_Click(object sender, EventArgs e)
         {
             Session["Modulo"] = "Copiar";
+            Response.Redirect("~/Formularios/DiseñoYDesarrollo/Modulo.aspx");
+        }
+
+        protected void BtnConsultarModulo_Click(object sender, EventArgs e)
+        {
+            Session["Modulo"] = "Consultar";
             Response.Redirect("~/Formularios/DiseñoYDesarrollo/Modulo.aspx");
         }
     }

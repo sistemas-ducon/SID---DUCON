@@ -503,9 +503,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
             if (!string.IsNullOrEmpty(Session["Cotizacion"] as string)
     && !string.IsNullOrEmpty(Session["Id_OTCot"] as string)
-    && DropDownListEstado.SelectedValue != "2")
+    && DropDownListEstado.SelectedValue == "2")
             {
-                llenarDatagrid2();
+                llenarDatagrid2(); 
             }
             else
             {
