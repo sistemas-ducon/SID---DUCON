@@ -18,6 +18,10 @@ using System.Net;
 using System.Runtime.InteropServices;
 using SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin;
 using System.Web.Configuration;
+using System.Security.Cryptography;
+using Org.BouncyCastle.Utilities;
+using System.Runtime.ConstrainedExecution;
+using static SISTEMA_INTEGRAL_DUCON.Formularios.Diseño_Venta;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 {
@@ -57,6 +61,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     btnActuaValComercial.Enabled = true;
                     btnActuaValComercial.CssClass = "btn btn-sm shadow ColorAzulActivo border";
 
+                   // Manejar  el evento de Anadir un modulo a un Objeto y/o Eliminar 
+
+                    if (Session["ControlTapConfigurar"]?.ToString() == "1")
+                    {
+                        string script = @"ActivarTapConfigurarControl();";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "ActivarTapConfigurarControl", script, true);
+
+                        Session.Remove("ControlTapConfigurar");
+                    }
 
 
                 }
@@ -161,6 +174,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 BtnCancelarObjetosPanel.Enabled = true;
                 BtnGrabarObjetosPanel.Enabled = true;
 
+                BtnCancelarObjetosPanel.CssClass = "form-control ColorAzulActivo";
+                BtnGrabarObjetosPanel.CssClass = "form-control ColorAzulActivo";
+
                 string script = @"DesactivarTapConfigurar();";
                 ScriptManager.RegisterStartupScript(this, GetType(), "DesactivarTapConfigurar", script, true);
             }
@@ -168,6 +184,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             {
                 BtnCancelarObjetosPanel.Enabled = false;
                 BtnGrabarObjetosPanel.Enabled = false;
+
+                BtnCancelarObjetosPanel.CssClass = "form-control ";
+                BtnGrabarObjetosPanel.CssClass = "form-control ";
 
                 if (TextObjeto.Text != "" && DropLinea.SelectedItem.Text != "" && DropDivisiones.SelectedItem.Text != "" && TextHolgura.Text != "" &&
                     TextObjeto.Text != "" && TextDesInt.Text != "" && DropDesGrupo.SelectedItem.Text != "")
@@ -315,7 +334,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             BtnCancelarObjetosPanel.CssClass = "form-control";
 
             BtnCerrarObjetosPanel.Enabled = true;
-            BtnCerrarObjetosPanel.CssClass = "form-control";
+            BtnCerrarObjetosPanel.CssClass = "form-control ColorAzulActivo";
 
             Buscar.Enabled = true;
             Buscar.CssClass = "btn btn-sm shadow ColorAzulActivo";
@@ -786,7 +805,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             return resultado;
         }
 
-
         private string GetAnchoByIdNumerico(string idNumerico)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
@@ -1066,7 +1084,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 // llamar el metodo Habilitar Adicionar 
 
                 tbIdModuloAdicionar.Text = row.Cells[1].Text;
+                lbNombreModuloAgregar.Text = row.Cells[2].Text;
 
+                Session["IDModulo"] = row.Cells[1].Text;
 
                 Habilitar_BotonAdicionar();
 
@@ -1287,7 +1307,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                         updateRelatedCmd.Parameters.AddWithValue("@FechaChequeo", DateTime.Now.ToString("MM/dd/yyyy HH:mm"));
 
 
-                        DataTable DatoDescriObjeto = ConsultarInformacionObjeto();
+                        DataTable DatoDescriObjeto = ConsultarDatosGrupoObjeto();
 
                         string goSPDescripcionObjto = "";
                         string goDescripcionbASEObjeto = "";
@@ -1956,7 +1976,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             return dataTable;
         }
 
-        private DataTable ConsultarInformacionObjeto()
+        private DataTable ConsultarDatosGrupoObjeto()
         {
             DataTable dataTable = new DataTable();
 
@@ -2282,7 +2302,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             }
         }
 
-
         private void VerificarCantidadModulo(string panelNum, string ubicacion)
         {
             string sqlQuery = "ctaCantidadModuloEnUnPanelRespectoUbicacion";
@@ -2323,11 +2342,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                         {
                             // Si la cantidad es 2, deshabilitar el botón adicionar modulo
                             btnAdicionarModulo.Enabled = false;
+                            btnAdicionarModulo.CssClass = "btn btn-sm button-disabled shadow";
                         }
                         else
                         {
-                            // De lo contrario, habilitar el boton adicionar modulo
-                            ddlCantidad.SelectedIndex = 0;
+
+                            string val = ddlCantidad.SelectedValue; 
+
+                            ddlCantidad.Items.Clear();
+                            // De lo contrario, habilitar el boton adicionar modulo           
+                            ddlCantidad.Items.Add(new ListItem("", ""));
+                            ddlCantidad.Items.Add(new ListItem("1", "1"));
+                            ddlCantidad.Items.Add(new ListItem("2", "2"));
+
+                            ddlCantidad.SelectedValue = val;
+
+
                             ddlCantidad.Enabled = true;
                             btnAdicionarModulo.Enabled = true;
                         }
@@ -2345,20 +2375,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGridModulosAsociados.Items[rowIndex];
 
-                // capturamos los campos de la fila del datagrid 
-                foreach (DataGridItem item in DataGridModulosAsociados.Items)
+                if (e.Item.CssClass == "fila-seleccionada1")
                 {
-                    if (item != row)
-                    {
-                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
-                    }
+                    e.Item.CssClass = "";
+                }
+                else
+                {
+                    e.Item.CssClass = "fila-seleccionada1";
                 }
 
-                e.Item.CssClass = "fila-seleccionada1";
+
 
                 // llamar el metodo Habilitar Adicionar 
 
                 tbIdModuloEliminar.Text = row.Cells[1].Text;
+                lbNombreModuloEliminar.Text = row.Cells[2].Text;
 
                 string tipoAccion = Session["CrudObjetosDibujo"] as string;
 
@@ -2372,34 +2403,438 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     btnEliminarModuloObjeto.Enabled = false;
                     btnEliminarModuloObjeto.CssClass = "btn button-disabled btn-sm   shadow ";
                 }
-               
+
 
 
             }
         }
 
+        protected void CheckBase_CheckedChanged(object sender, EventArgs e)
+        {
+
+            if (CheckBase.Checked)
+            {
+                CheckBase.Checked = true;
+                CheckBase.Enabled = true;
+
+                CheckComplementarios.Checked = false;
+
+                CheckBase.Enabled = false;
+
+                BindDataGrid();
+            }
+            else
+            {
+                CheckBase.Checked = false;
+                CheckBase.Enabled = false;
+
+                CheckComplementarios.Checked = true;
+
+                BindDataGrid();
+            }
+
+
+
+
+        }
+
+
+        // Metodos Adicionar modulo al objeto 
         protected void btnAdicionarModulo_Click(object sender, EventArgs e)
         {
 
+            //Agregamos los nombres del módulo y objeto al datagrid 
+            NombreModulo.InnerText = lbNombreModuloAgregar.Text;
+            NombreObjeto.InnerText = TextObjeto.Text;
+
+            // mostrar el modal de  confirmar adicionar modulo
+            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#confirmarAdicionarModulo').modal('show');", true);
+            return;
+
+        }
+
+        protected void btnAdicionarObjeto_SI_Click(object sender, EventArgs e)
+        {
             bool ValidarExistenciaPanelModulo = ConsultarExistenciaPanelModulo(TextIdNum.Text);
+
+            double Altura = ConsultarAlturaModuloAdicionar() + ConsultarIncrementoxGrupoObjeto();
+
+
 
             if (ddlUbicacion.SelectedValue == "0" || !ValidarExistenciaPanelModulo)
             {
-
+                // Actualizar la altura del panel 
+                ActualizarAlturaObjeto(Altura);
             }
 
-            if (CheckEstable.Checked)
+            if (!CheckEstable.Checked)
             {
+
+                if (tbIdModuloAdicionar.Text.Trim() != "")
+                {
+                    //SE AGREGA EL MODULO AL OBJETO
+                    InsertarModuloAlObjeto();
+
+                    //SE MODIFICA CAMPOS VARIOS DEL OBJETO
+                    ActualizarPanel(TextIdNum.Text);
+
+                }
+                else
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('No se ha seleccionado ningun módulo para agregar');", true);
+                    return;
+                }
 
             }
             else
             {
+                // CONSULTAR DATOS OBJETO
+                DataTable DatoObjetoAltura = ConsultarDatosObjetoXAltura();
+
+                if (DatoObjetoAltura != null && DatoObjetoAltura.Rows.Count > 0)
+                {
+
+                    foreach (DataRow row in DatoObjetoAltura.Rows)
+                    {
+
+                        string ID_Numerico = row["Id_Numerico"].ToString();
+
+                        // Se consulta la tabla tblPanel_Modulo
+                        if (!ValidarExisteciaPanel_Modulo())
+                        {
+                            //SE AGREGA EL MODULO A LA FAMILIA DEL OBJETO
+                            if (!InsertarPanelModulo(ID_Numerico, tbIdModuloAdicionar.Text, ddlUbicacion.SelectedValue, ddlLado.SelectedValue, ddlCantidad.SelectedItem.Text, txObservacion.InnerText))
+                            {
+                                // Error al realizar la insercion en la tabla Panel Modulo;
+                            }
+
+                        }
+                    }
+
+                    // SE MODIFICA CAMPOS VARIOS DE LA FAMILIA DEL OBJETO
+                    ActualizarPanel1();
+
+                }
+
 
             }
 
 
+            // SE REGISTRA EL MOVIMIENTO DE CREACION DEL OBJETO ASOCIADO AL USUARIO QUE LO CREÓ 
+            // El Usuario Con cedúla: + NUMEROCEDULA + Adicionó al objeto + NOMBREOBJETO + el modulo + NOMBREMODULO
+
+            Session["ControlTapConfigurar"] = 1;
+
+            string mensajePersonalizado = "El Usuario con cédula: " + Session["CedulaLogeada"].ToString() + " Adicionó al objeto " + TextObjeto.Text + "El módulo " + NombreModulo.InnerText;
+            string urlRedireccion = "DiseñoYDesarrollo/ObjetosDibujo.aspx";
+            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
         }
 
+        public double ConsultarAlturaModuloAdicionar()
+        {
+            double altura = 0;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string query = "SELECT Altura FROM tblModulo WHERE Id_Modulo = @ID_Modulo";
+
+            using (SqlConnection connection = new SqlConnection(connectionStringSID))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ID_Modulo", tbIdModuloAdicionar.Text);
+
+                    try
+                    {
+                        connection.Open();
+                        object result = command.ExecuteScalar(); // Obtener el primer valor de la consulta
+
+                        if (result != null && result != DBNull.Value)
+                        {
+                            altura = Convert.ToDouble(result);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejar cualquier excepción
+                        Console.WriteLine("Error al consultar la altura: " + ex.Message);
+                    }
+                }
+            }
+
+            return altura;
+        }
+
+        private bool ActualizarAlturaObjeto(double altura)
+        {
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "UPDATE tblPanel set Altura =@Altura  WHERE Id_Panel = @Id_Panel AND Altura = @AlturaAnterior ";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+
+                    cmd.Parameters.AddWithValue("@Altura", altura);
+                    cmd.Parameters.AddWithValue("@Id_Panel", TextObjeto.Text);
+                    cmd.Parameters.AddWithValue("@AlturaAnterior", TextAltura.Text);
+
+
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+
+                    if (CantidadFilasAfectada > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public double ConsultarIncrementoxGrupoObjeto()
+        {
+            double altura = 0;
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string query = "SELECT goIncrementarAlto FROM tblGrupoObjeto WHERE ID_GrupoObjeto = @ID_Grupo";
+
+            using (SqlConnection connection = new SqlConnection(connectionStringSID))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ID_Grupo", DropDesGrupo.SelectedValue);
+
+                    try
+                    {
+                        connection.Open();
+                        object result = command.ExecuteScalar(); // Obtener el primer valor de la consulta
+
+                        if (result != null && result != DBNull.Value)
+                        {
+                            altura = Convert.ToDouble(result);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejar cualquier excepción
+                        Console.WriteLine("Error al consultar la altura: " + ex.Message);
+                    }
+                }
+            }
+
+            return altura;
+        }
+
+        private bool InsertarModuloAlObjeto()
+        {
+
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "INSERT INTO tblPanel_Modulo(Id_PanelNum,Id_Modulo,Ubicacion_Modulo,Cantidad,Observaciones,Lado,PanModResponsable,FechaConfiguracion) " +
+                              "VALUES (@Id_PanelNum,@Id_Modulo,@Ubicacion_Modulo,@Cantidad,@Observaciones,@Lado,@PanModResponsable,@FechaConfiguracion)";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@Id_PanelNum", TextIdNum.Text);
+                    cmd.Parameters.AddWithValue("@Id_Modulo", tbIdModuloAdicionar.Text);
+                    cmd.Parameters.AddWithValue("@Ubicacion_Modulo", ddlUbicacion.SelectedItem.Text);
+                    cmd.Parameters.AddWithValue("@Cantidad", ddlCantidad.SelectedItem.Text);
+                    cmd.Parameters.AddWithValue("@Observaciones", txObservacion.InnerText);
+                    cmd.Parameters.AddWithValue("@Lado", ddlLado.SelectedItem.Text);
+                    cmd.Parameters.AddWithValue("@PanModResponsable", Session["usuariologueado"].ToString());
+                    cmd.Parameters.AddWithValue("@FechaConfiguracion", DateTime.Now);
+
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+
+                    if (CantidadFilasAfectada > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+            }
+        }
+
+        private bool ActualizarPanel(string ID_Numerico)
+        {
+            DataTable DatoDescriObjeto = ConsultarDatosGrupoObjeto();
+
+            string goSPDescripcionObjto = "";
+            string goDescripcionbASEObjeto = "";
+
+
+            if (DatoDescriObjeto != null && DatoDescriObjeto.Rows.Count > 0)
+            {
+                DataRow fila = DatoDescriObjeto.Rows[0];
+                goSPDescripcionObjto = fila["goSPDescripcionObjto"].ToString(); ;
+                goDescripcionbASEObjeto = fila["goDescripcionbASEObjeto"].ToString(); ;
+
+            }
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "UPDATE tblPanel SET registradoSag= 0, Precio_venta=0, chequeado=0, Responsable=@Responsable," +
+                          "FechaChequeo = @fechaCheq,Descripcion_Tecnica= dbo.fn_DescripcionObjeto (@goDescObj,tblPanel.Id_Numerico,@goDescripcionbASEObjeto)" +
+                          " WHERE Id_numerico = @ID_Numerico ";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+
+                    cmd.Parameters.AddWithValue("@Responsable", Session["usuariologueado"].ToString());
+                    cmd.Parameters.AddWithValue("@fechaCheq", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@goDescObj", goSPDescripcionObjto);
+                    cmd.Parameters.AddWithValue("@goDescripcionbASEObjeto", goDescripcionbASEObjeto);
+                    cmd.Parameters.AddWithValue("@ID_Numerico", ID_Numerico);
+
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+
+                    if (CantidadFilasAfectada > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        private bool ActualizarPanel2(string ID_Panel)
+        {
+            DataTable DatoDescriObjeto = ConsultarDatosGrupoObjeto();
+
+            string goSPDescripcionObjto = "";
+            string goDescripcionbASEObjeto = "";
+
+
+            if (DatoDescriObjeto != null && DatoDescriObjeto.Rows.Count > 0)
+            {
+                DataRow fila = DatoDescriObjeto.Rows[0];
+                goSPDescripcionObjto = fila["goSPDescripcionObjto"].ToString(); ;
+                goDescripcionbASEObjeto = fila["goDescripcionbASEObjeto"].ToString(); ;
+
+            }
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "UPDATE tblPanel SET registradoSag= 0, Precio_venta=0, chequeado=0, Responsable=@Responsable," +
+                          "FechaChequeo = @fechaCheq,Descripcion_Tecnica= dbo.fn_DescripcionObjeto (@goDescObj,tblPanel.Id_Numerico,@goDescripcionbASEObjeto)" +
+                          " WHERE Id_Panel = @ID_Panel ";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+
+                    cmd.Parameters.AddWithValue("@Responsable", Session["usuariologueado"].ToString());
+                    cmd.Parameters.AddWithValue("@fechaCheq", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@goDescObj", goSPDescripcionObjto);
+                    cmd.Parameters.AddWithValue("@goDescripcionbASEObjeto", goDescripcionbASEObjeto);
+                    cmd.Parameters.AddWithValue("@ID_Panel", ID_Panel);
+
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+
+                    if (CantidadFilasAfectada > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        private bool ActualizarPanel1()
+        {
+            DataTable DatoDescriObjeto = ConsultarDatosGrupoObjeto();
+
+            string goSPDescripcionObjto = "";
+            string goDescripcionbASEObjeto = "";
+
+
+            if (DatoDescriObjeto != null && DatoDescriObjeto.Rows.Count > 0)
+            {
+                DataRow fila = DatoDescriObjeto.Rows[0];
+                goSPDescripcionObjto = fila["goSPDescripcionObjto"].ToString(); ;
+                goDescripcionbASEObjeto = fila["goDescripcionbASEObjeto"].ToString(); ;
+
+            }
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "UPDATE tblPanel SET registradoSag= 0, Precio_venta=0, chequeado=0, Responsable=@Responsable," +
+                          "FechaChequeo = @fechaCheq,Descripcion_Tecnica= dbo.fn_DescripcionObjeto (@goDescObj,tblPanel.Id_Numerico,@goDescripcionbASEObjeto)" +
+                          " WHERE Id_Panel = @Id_Panel AND Altura= @Altura ";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+
+                    cmd.Parameters.AddWithValue("@Responsable", Session["usuariologueado"].ToString());
+                    cmd.Parameters.AddWithValue("@fechaCheq", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@goDescObj", goSPDescripcionObjto);
+                    cmd.Parameters.AddWithValue("@goDescripcionbASEObjeto", goDescripcionbASEObjeto);
+                    cmd.Parameters.AddWithValue("@Id_Panel", TextObjeto.Text);
+                    cmd.Parameters.AddWithValue("@Altura", TextAltura.Text);
+
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+
+                    if (CantidadFilasAfectada > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        private DataTable ConsultarDatosObjetoXAltura()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT * FROM tblpanel WHERE Id_Panel= @ID_Panel  AND Altura = @Altura";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@ID_Panel", TextObjeto.Text);
+                    cmd.Parameters.AddWithValue("@Altura", TextAltura.Text);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
 
         private bool ConsultarExistenciaPanelModulo(string IDNumerico)
         {
@@ -2437,45 +2872,333 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             return existe;
         }
 
-
-        protected void btnCopiarModulo_Click(object sender, EventArgs e)
+        private bool ValidarExisteciaPanel_Modulo()
         {
+            bool existe = false;
+            string consulta = "SELECT COUNT(*) FROM tblPanel_Modulo WHERE Id_PanelNum = @IDNumerico AND Id_Modulo = @ID_Modulo " +
+                              "AND Ubicacion_Modulo = @Ubicacion AND Lado =@lado ";
+            string connectionString = WebConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(consulta, connection))
+                {
+                    // Agregar el parámetro para el IDNumerico
+                    command.Parameters.AddWithValue("@IDNumerico", TextIdNum.Text);
+                    command.Parameters.AddWithValue("@ID_Modulo", tbIdModuloAdicionar.Text);
+                    command.Parameters.AddWithValue("@Ubicacion", ddlUbicacion.SelectedValue);
+                    command.Parameters.AddWithValue("@lado", ddlLado.SelectedValue);
+
+
+                    try
+                    {
+                        connection.Open();
+                        // Ejecutar el COUNT y convertir el resultado a entero
+                        int count = Convert.ToInt32(command.ExecuteScalar());
+
+                        // Si el conteo es mayor que 0, significa que el registro existe
+                        if (count > 0)
+                        {
+                            existe = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejar errores aquí (por ejemplo, registrar el error)
+                        throw new ApplicationException("Error al verificar la existencia del registro", ex);
+                    }
+                }
+            }
+
+            return existe;
         }
 
+
+        // eliminar modulo asociado al objeto 
         protected void btnEliminarModuloObjeto_Click(object sender, EventArgs e)
         {
 
+            // mostrar el modal de  confirmar adicionar modulo
+            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#confirmarQuitarModulo').modal('show');", true);
+            return;
         }
 
-        protected void CheckBase_CheckedChanged(object sender, EventArgs e)
+        protected void btnQuitarModulo_SI_Click(object sender, EventArgs e)
         {
+            List<(string IdModulo, string UbicacionModulo, string ID_Numerico, string Lado)> filasSeleccionadas = new List<(string, string, string, string)>();
 
-            if (CheckBase.Checked)
+            // Iterar sobre cada fila en el DataGrid
+            foreach (DataGridItem item in DataGridModulosAsociados.Items)
             {
-                CheckBase.Checked = true;
-                CheckBase.Enabled = true;
+                // Verificar si la fila tiene la clase de seleccionada
+                if (item.CssClass == "fila-seleccionada1")
+                {
 
-                CheckComplementarios.Checked = false;
+                    string idModulo = item.Cells[1].Text;
+                    string ubicacionModulo = item.Cells[4].Text;
+                    string Lado = item.Cells[7].Text;
+                    string IDNumerico = item.Cells[11].Text;
 
-                CheckBase.Enabled = false;
+                    // Agregar los valores como tupla a la lista
+                    filasSeleccionadas.Add((idModulo, ubicacionModulo, IDNumerico, Lado));
+                }
+            }
 
-                BindDataGrid();
+            // Iterar sobre la lista de filas seleccionadas y eliminar los módulos según la condición
+            foreach (var fila in filasSeleccionadas)
+            {
+                string idModulo = fila.IdModulo;
+                string ubicacionModulo = fila.UbicacionModulo;
+                string IDNumerico = fila.ID_Numerico;
+                string Lado = fila.Lado;
+
+
+                // Si Ubicacion_Modulo es 0
+                if (ubicacionModulo == "0")
+                {
+                    // Solo permitir eliminar si es el único módulo seleccionado
+                    if (filasSeleccionadas.Count == 1)
+                    {
+                        // Permitir eliminar
+                        QuitarModulo(IDNumerico, idModulo, ubicacionModulo, Lado);
+                    }
+
+                }
+                else
+                {
+                    // Eliminar normalmente los módulos que no tienen Ubicacion_Modulo = 0
+                    QuitarModulo(IDNumerico, idModulo, ubicacionModulo, Lado);
+                }
+            }
+
+
+            Session["ControlTapConfigurar"] = 1;
+
+            string mensajePersonalizado = "Los módulos seleccionados se eliminaron correctamente"; 
+            string urlRedireccion = "DiseñoYDesarrollo/ObjetosDibujo.aspx";
+            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+        }
+
+        private void QuitarModulo(string ID_Numerico, string idModulo, string Ubicacion, string Lado)
+        {
+            if (CheckEstable.Checked)
+            {
+                //Eliminar 
+                if (EliminarPanelModulo(ID_Numerico , idModulo, Ubicacion, Lado))
+                {
+                    bool ValidarExistenciaPanelModulo = ConsultarExistenciaPanelModulo(ID_Numerico);
+                    if (Ubicacion == "0" || !ValidarExistenciaPanelModulo)
+                    {
+                        ActualizarAlturaObjeto1(ID_Numerico);
+                    }
+
+                    ActualizarPanel(ID_Numerico);
+
+                   
+                    
+
+                }
+                else
+                {
+
+                    // Error al eliminar 
+                }
+
+                // Aqui va un registrar movimiento 
+
             }
             else
             {
-                CheckBase.Checked = false;
-                CheckBase.Enabled = false;
+                if (EliminarPanelModuloNoEscalable(TextObjeto.Text, idModulo, Ubicacion, Lado, TextAltura.Text))
+                {
+                    bool ValidarExistenciaPanelModulo = ConsultarExistenciaPanelModulo(ID_Numerico);
+                    if (Ubicacion == "0" || !ValidarExistenciaPanelModulo)
+                    {
+                        ActualizarAlturaObjeto2(TextObjeto.Text, TextAltura.Text);
+                    }
 
-                CheckComplementarios.Checked = true;
+                    ActualizarPanel(ID_Numerico);
+                }
+                ActualizarPanel2(TextObjeto.Text);
 
-                BindDataGrid();
+
+                //Se consulta si el objeto hace parte de algun prototipo, en caso afirmativo se busca y se coloca el precio venta de los prototipos en 0(Cero).
+                ActializarObjetoSiPrototipo(TextObjeto.Text);
+
+                // Aqui va un registrar movimiento 
+
+            }
+        }
+
+        private bool EliminarPanelModulo(string idNumerico, string idModulo, string ubicacionModulo, string lado)
+        {
+            bool exito = false;
+            string connectionString = WebConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string query = @"DELETE FROM tblPanel_Modulo WHERE Id_PanelNum = @ID_Numerico AND Id_Modulo = @Id_Modulo 
+                             AND Ubicacion_Modulo = @Ubicacion_Modulo AND Lado = @Lado";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Agregar los parámetros con valores
+                    command.Parameters.AddWithValue("@ID_Numerico", idNumerico);
+                    command.Parameters.AddWithValue("@Id_Modulo", idModulo);
+                    command.Parameters.AddWithValue("@Ubicacion_Modulo", ubicacionModulo);
+                    command.Parameters.AddWithValue("@Lado", lado);
+
+                    try
+                    {
+                        connection.Open();
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            exito = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejo de excepciones
+                        // Console.WriteLine("Error al eliminar el registro de tblPanel_Modulo: " + ex.Message);
+                        exito = false;
+                    }
+                }
             }
 
-
-
-           
+            return exito;
         }
+
+        private void ActualizarAlturaObjeto1(string idNumerico)
+        {
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "UPDATE tblPanel set Altura = 0  WHERE Id_Numerico = @Id_Numerico  ";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+
+                    cmd.Parameters.AddWithValue("@Id_Numerico", idNumerico);
+
+
+
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+
+
+                }
+            }
+        }
+
+        private bool EliminarPanelModuloNoEscalable(string ID_Panel, string idModulo, string ubicacionModulo, string lado, string Altura)
+        {
+            bool exito = false;
+            string connectionString = WebConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string query = @"DELETE FROM tblPanel_Modulo FROM tblPanel_Modulo INNER JOIN tblPanel ON tblPanel_Modulo.Id_PanelNum = tblPanel.Id_Numerico 
+                            WHERE (tblPanel.Id_Panel = @ID_Panel ) AND (tblPanel_Modulo.Ubicacion_Modulo = @Ubicacion_Modulo) 
+                            AND (tblPanel_Modulo.Id_Modulo = @ID_Modulo) AND  (tblPanel_Modulo.Lado = @Lado) AND (tblPanel.Altura = @Altura)";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Agregar los parámetros con valores
+                    command.Parameters.AddWithValue("@ID_Panel", ID_Panel);
+                    command.Parameters.AddWithValue("@Id_Modulo", idModulo);
+                    command.Parameters.AddWithValue("@Ubicacion_Modulo", ubicacionModulo);
+                    command.Parameters.AddWithValue("@Lado", lado);
+                    command.Parameters.AddWithValue("@Altura", Altura);
+
+                    try
+                    {
+                        connection.Open();
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            exito = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejo de excepciones
+                        // Console.WriteLine("Error al eliminar el registro de tblPanel_Modulo: " + ex.Message);
+                        exito = false;
+                    }
+                }
+            }
+
+            return exito;
+        }
+
+        private void ActualizarAlturaObjeto2(string ID_Panel, string Altura)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            string sSql = "UPDATE tblPanel SET Altura = 0  WHERE Id_Panel = @ID_Panel AND Altura = @Altura";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+
+                    cmd.Parameters.AddWithValue("@ID_Panel", ID_Panel);
+                    cmd.Parameters.AddWithValue("@Altura", Altura);
+
+
+
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+
+
+                }
+            }
+        }
+
+        private void ActializarObjetoSiPrototipo(string ID_Panel)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            string sSql = "UPDATE tblPanel Set Precio_Venta = 0 WHERE (Id_Panel IN (SELECT tblPlano.Plano " +
+                          "FROM tblPlano INNER JOIN tblPlano_Panel ON tblPlano.Plano = tblPlano_Panel.Id_Plano " +
+                          "INNER JOIN tblPanel AS tblPanel_1 ON tblPlano_Panel.Id_PanelNum = tblPanel_1.Id_Numerico " +
+                          "WHERE  (tblPlano.Tipologia = 1) AND (tblPanel_1.Id_Panel = @ID_Panel)  GROUP BY tblPlano.Plano))";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+
+                    cmd.Parameters.AddWithValue("@ID_Panel", ID_Panel);
+
+
+
+
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+
+
+                }
+            }
+        }
+
+       
+        // Copiar un modulo
+        protected void btnCopiarModulo_Click(object sender, EventArgs e)
+        {
+            Session["Modulo"] = "Copiar";
+            // Crea el script de JavaScript para abrir la nueva pestaña
+            string url = "/Formularios/DiseñoYDesarrollo/Modulo.aspx";
+            string script = $"window.open('{url}', '_blank');";
+
+            // Registra el script para ejecutarlo en el lado del cliente usando ScriptManager
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "openTab", script, true);
+        }
+
+
     }
 
 }

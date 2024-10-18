@@ -24,7 +24,7 @@
                 <div class="border rounded p-2">
                     <div class="row">
                         <div class="col-12">
-                            <div class="table-responsive mb-2 gap-2" style="max-height: 12rem; height:12rem; overflow-x: auto;">
+                            <div class="table-responsive mb-2 gap-2" style="max-height: 22rem; height:22rem; overflow-x: auto;">
                                 <h6 class="datagrid-header text-start">Documentacion Detalle</h6>
                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGridDocumento" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemDataBound="DataGridDocumento_ItemDataBound" OnItemCommand="DataGridDocumentosPE_LinkButton">
                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
@@ -86,7 +86,7 @@
 
                 <div class="col-6">
 
-                    <div class="input-group input-group-sm ">
+                    <div class="input-group input-group-sm gap-2 ">
                         <asp:FileUpload CssClass="form-control" ID="FileUpload1" runat="server" />
                         <asp:Button ID="Button1" CssClass="btn btn-outline-primary" runat="server" Text="Adjuntar" OnClick="AdjuntarDocumento" />
                         <asp:Button ID="bntElimnar" CssClass="btn btn-outline-danger" runat="server" Text="Elimnar" OnClick="EliminarDocumento" />
