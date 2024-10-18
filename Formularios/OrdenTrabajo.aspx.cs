@@ -86,10 +86,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private double FactorImprevisto;
         private double FactorMod;
         private double TotalSubtotal;
+        private double TotalCosto;
         private double TotaImpr;
         private double TotalMO;
         private double TotalVenta;
 
+        private Dictionary<string, System.Drawing.Color> coloresPorModulo = new Dictionary<string, System.Drawing.Color>();
+        private bool alternarColor = true; // Variable que alterna entre colores
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -4691,65 +4694,109 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (DatosModulo.Rows.Count > 0)
                 {
-                    string Id_Modulo = DatosModulo.Rows[0]["Id_Modulo"].ToString();
-                    Session["Id_ModuloSession"] = Id_Modulo;
+                    // Almacenar múltiples Id_Modulo en una lista
+                    List<string> IdModulos = new List<string>();
 
-                    tbObj.Text = DatosModulo.Rows[0]["Id_Panel"].ToString();
-                    tbDiv.Text = DatosModulo.Rows[0]["Divisiones"].ToString();
-                    tbLinea.Text = DatosModulo.Rows[0]["Descripcion_Linea"].ToString();
-                    tbGrupo.Text = DatosModulo.Rows[0]["Descripcion_Grupo"].ToString(); ;
-                    tbAnchoDetalle.Text = DatosModulo.Rows[0]["Ancho"].ToString() + " Cms";
-                    tbAlturaDetalle.Text = DatosModulo.Rows[0]["Altura"].ToString() + " Cms";
-                    tbProfunididad.Text = DatosModulo.Rows[0]["Profundidad"].ToString();
-                    tbHolgura.Text = DatosModulo.Rows[0]["Holgura"].ToString();
-                    tbDesSid.Text = DatosModulo.Rows[0]["Descripcion_Panel"].ToString();
-                    tbValor.Text = ""; // Este Valor no esta en la consulta 
-                    chxEsc.Checked = Convert.ToBoolean(DatosModulo.Rows[0]["Escalable"].ToString());
+                    foreach (DataRow row in DatosModulo.Rows)
+                    {
+                        string Id_Modulo = row["Id_Modulo"].ToString();
+                        IdModulos.Add(Id_Modulo);
+
+                        // Mostrar información solo del primer módulo para llenar los TextBox
+                        if (IdModulos.Count == 1)
+                        {
+                            tbObj.Text = row["Id_Panel"].ToString();
+                            tbDiv.Text = row["Divisiones"].ToString();
+                            tbLinea.Text = row["Descripcion_Linea"].ToString();
+                            tbGrupo.Text = row["Descripcion_Grupo"].ToString();
+                            tbAnchoDetalle.Text = row["Ancho"].ToString() + " Cms";
+                            tbAlturaDetalle.Text = row["Altura"].ToString() + " Cms";
+                            tbProfunididad.Text = row["Profundidad"].ToString();
+                            tbHolgura.Text = row["Holgura"].ToString();
+                            tbDesSid.Text = row["Descripcion_Panel"].ToString();
+                            tbValor.Text = ""; // Este Valor no está en la consulta
+                            chxEsc.Checked = Convert.ToBoolean(row["Escalable"].ToString());
+                        }
+                    }
+
+                    // Almacenar la lista de Id_Modulo como una cadena separada por comas en la sesión
+                    Session["Id_ModuloSession"] = string.Join(",", IdModulos);
+
+                    // Verificamos el departamento para cargar el DataGrid
+                    if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
+                    {
+                        // Lógica para ventas
+                    }
+                    else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+                    {
+                        DataGridObjetos1.DataSource = DatosModulo;
+                        DataGridObjetos1.DataBind();
+                    }
                 }
-
-
-
-                if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
+                else
                 {
+                    Session.Remove("Id_ModuloSession");
 
 
-                }
-                else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
-                {
-                    DataGridObjetos1.DataSource = DatosModulo;
+                    tbObj.Text = ""; ;
+                    tbDiv.Text = "";
+                    tbLinea.Text = "";
+                    tbGrupo.Text = "";
+                    tbAnchoDetalle.Text = "";
+                    tbAlturaDetalle.Text = "";
+                    tbProfunididad.Text = "";
+                    tbHolgura.Text = "";
+                    tbDesSid.Text = "";
+                    tbValor.Text = "";
+                    chxEsc.Checked = false;
+                    tbValorVenta.Text = "";
+
                     DataGridObjetos1.DataBind();
+                    DataGridDespieceModulo.DataBind();
+                    DataGridDespieceAsesor.DataBind();
+
+
+                    string script5 = @"mostrarModalDetalladoObjetos();";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModalDetalladoObjetos", script5, true);
+                    return;
                 }
-
             }
-
         }
 
         public void Cargar_Informacion_DespieceModulo()
         {
+            // Asumiendo que ahora los Id_Modulo están almacenados como una lista o separados por comas en la sesión
+            string IdModuloSession = Session["Id_ModuloSession"]?.ToString();
 
-            string IdModulo = Session["Id_ModuloSession"]?.ToString();
-
-            if (IdModulo != null)
+            if (IdModuloSession != null)
             {
+                // Si los Id_Modulo están separados por comas
+                string[] IdModulos = IdModuloSession.Split(',');
+
                 string cn = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                 DataTable DatosModulo1 = new DataTable();
 
-                using (SqlConnection connection = new SqlConnection(cn))
+                foreach (string IdModulo in IdModulos)
                 {
-                    SqlCommand command = new SqlCommand("ctaModulo_Insumos", connection);
-                    command.CommandType = CommandType.StoredProcedure;
+                    using (SqlConnection connection = new SqlConnection(cn))
+                    {
+                        SqlCommand command = new SqlCommand("ctaModulo_Insumos", connection);
+                        command.CommandType = CommandType.StoredProcedure;
 
-                    command.Parameters.Add("@Modulo", SqlDbType.VarChar, 100).Value = IdModulo;
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    adapter.Fill(DatosModulo1);
-
-
+                        command.Parameters.Add("@Modulo", SqlDbType.VarChar, 100).Value = IdModulo.Trim();
+                        SqlDataAdapter adapter = new SqlDataAdapter(command);
+                        adapter.Fill(DatosModulo1);
+                    }
                 }
 
                 StringBuilder valorConcatenado = new StringBuilder();
                 string Id_ModuloInsumo = "";
+
                 // Añadimos una columna personalizada para almacenar el concatenado de las descripciones de las áreas
-                DatosModulo1.Columns.Add("Descripcion_Areas_Concatenadas", typeof(string));
+                if (!DatosModulo1.Columns.Contains("Descripcion_Areas_Concatenadas"))
+                {
+                    DatosModulo1.Columns.Add("Descripcion_Areas_Concatenadas", typeof(string));
+                }
 
                 foreach (DataRow row in DatosModulo1.Rows)
                 {
@@ -4757,42 +4804,50 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     using (SqlConnection connection = new SqlConnection(cn))
                     {
-                        SqlCommand command = new SqlCommand("SELECT tblAreaProduccion.*, tblRotacionInsumo.* FROM tblAreaProduccion INNER JOIN tblRotacionInsumo ON tblAreaProduccion.Id_Area = tblRotacionInsumo.riId_Area WHERE (((tblRotacionInsumo.riId_ModuloInsumo)=@Id_Insumo)) order by tblRotacionInsumo.riEstacion", connection);
+                        SqlCommand command = new SqlCommand(
+                            "SELECT tblAreaProduccion.*, tblRotacionInsumo.* FROM tblAreaProduccion " +
+                            "INNER JOIN tblRotacionInsumo ON tblAreaProduccion.Id_Area = tblRotacionInsumo.riId_Area " +
+                            "WHERE tblRotacionInsumo.riId_ModuloInsumo = @Id_Insumo " +
+                            "ORDER BY tblRotacionInsumo.riEstacion",
+                            connection);
+
                         command.CommandType = CommandType.Text;
                         command.Parameters.Add("@Id_Insumo", SqlDbType.VarChar, 30).Value = Id_ModuloInsumo;
                         DataTable DatosDespieceModulo = new DataTable();
                         SqlDataAdapter adapter = new SqlDataAdapter(command);
                         adapter.Fill(DatosDespieceModulo);
 
-
-
                         foreach (DataRow row1 in DatosDespieceModulo.Rows)
                         {
-
                             valorConcatenado.Append(row1["Descripcion_Area"].ToString() + ", ");
                         }
-
                     }
-                    valorConcatenado.Remove(valorConcatenado.Length - 2, 2);
+
+                    if (valorConcatenado.Length > 2)
+                    {
+                        valorConcatenado.Remove(valorConcatenado.Length - 2, 2); // Elimina la última coma y espacio
+                    }
+
                     row["Descripcion_Areas_Concatenadas"] = valorConcatenado.ToString();
-                    valorConcatenado.Clear();
-                }
-
-                if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
-                {
+                    valorConcatenado.Clear(); // Limpia para la próxima iteración
 
 
                 }
-                else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
-                {
 
+
+                // Verificamos el departamento para decidir qué mostrar
+                string departamento = Session["Departamento"].ToString().ToUpper();
+                if (departamento == "VENTAS")
+                {
+                    // Lógica específica para ventas
+                }
+                else if (departamento == "DISEÑO" || departamento == "DESARROLLO DE PRODUCTO")
+                {
                     DataGridDespieceModulo.DataSource = DatosModulo1;
                     DataGridDespieceModulo.DataBind();
+
                 }
-
             }
-
-
         }
 
         public void Cargar_Informacion_DespieceModuloAsesor()
@@ -4852,6 +4907,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 int itemCount = 1;
                 double subtotal;
+                double Costo = 0;
 
                 foreach (DataRow row in DatosModulo1.Rows)
                 {
@@ -4868,7 +4924,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         row["SubTotal"] = (int)Math.Round(subtotal);
                         TotalSubtotal += subtotal;
 
+                        Costo = Convert.ToDouble(row["SubTotalCosto"]);
 
+                        TotalCosto += Costo;
 
                         // Puedes realizar otras operaciones relacionadas con Costear aquí si es necesario
                     }
@@ -4912,8 +4970,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 // Cargamos el valor del Total en el Label 
 
-                tbValorVenta.Text = (Math.Ceiling(TotalVenta / 1000) * 1000).ToString();
+                tbValorVenta.Text = (Math.Ceiling(TotalVenta / 1000) * 1000).ToString("N0");
                 tbValor.Text = tbValorVenta.Text;
+
+                tbValorCosto.Text = TotalCosto.ToString("N0");
+
+                if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
+                {
+                    tbValorCosto.Visible = true;
+                    lbValorCosto.Visible = true;
+                }
+                else
+                {
+                    tbValorCosto.Visible = false;
+                    lbValorCosto.Visible = false;
+                }
 
 
                 DataGridDespieceAsesor.DataSource = DatosModulo1;
@@ -4929,13 +5000,26 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-
+                // Obtiene el valor de "Costear"
                 int Costear = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "Costear"));
 
-                TableCell cell = e.Item.Cells[14];
-                cell.Text = (Costear == 1) ? "Si" : "No";
+                // Obtiene los datos de la fila actual
+                DataRowView rowView = (DataRowView)e.Item.DataItem;
+                string ID_Modulo = rowView["Id_Modulo"].ToString(); // Asegúrate de que el despiece también tenga este campo
 
+                // Si el módulo tiene un color asignado en el primer DataGrid
+                if (coloresPorModulo.ContainsKey(ID_Modulo))
+                {
+                    System.Drawing.Color colorModulo = coloresPorModulo[ID_Modulo];
 
+                    // Aplica el color solo a la columna 1 (índice 0)
+                    TableCell columna1 = e.Item.Cells[0]; // Asegúrate de que el índice sea correcto para la columna deseada
+                    columna1.BackColor = colorModulo;
+                }
+
+                // Actualiza el texto de la celda en la columna 14
+                TableCell cell1 = e.Item.Cells[14];
+                cell1.Text = (Costear == 1) ? "Si" : "No";
             }
         }
 
@@ -5420,11 +5504,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BtnEliObj_Click(object sender, EventArgs e)
         {
-            if(SpanId_ObjetoEliminar.InnerText.Trim() != "")
+            if (SpanId_ObjetoEliminar.InnerText.Trim() != "")
             {
                 if (ValidarObjetoEnOrdenTrabajo())
                 {
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El Objeto " + Session["Id_ObjetoSession"].ToString() + " está vinculado a una o más órdenes de trabajo.');", true);
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El Objeto " + Session["Id_ObjetoSession"].ToString() + " está vinculado a una o más órdenes de trabajo y no se puede eliminar.');", true);
                     return;
                 }
                 else
@@ -5618,6 +5702,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             BtnIrObjAnt.Enabled = true;
             BtnIrObjAnt.CssClass = "btn btn-sm shadow button-enabled";
 
+        }
+
+        protected void DataGridObjetos1_ItemDataBound(object sender, DataGridItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                DataRowView rowView = (DataRowView)e.Item.DataItem;
+                string ID_Modulo = rowView["Id_Modulo"].ToString();
+                string TipoModulo = rowView["Descripcion_TipoModulo"].ToString();
+
+                // Verifica si el tipo no es "MODULO BASE"
+                if (TipoModulo != "MODULO BASE")
+                {
+                    // Determina el color para este módulo
+                    System.Drawing.Color colorModulo = alternarColor ? System.Drawing.Color.PaleGreen : System.Drawing.Color.Khaki;
+                    alternarColor = !alternarColor;
+
+                    // Asigna el color a la columna 1 del DataGrid
+                    TableCell columna1 = e.Item.Cells[0];
+                    columna1.BackColor = colorModulo;
+
+                    // Guarda el color en el diccionario usando el ID del módulo como clave
+                    if (!coloresPorModulo.ContainsKey(ID_Modulo))
+                    {
+                        coloresPorModulo.Add(ID_Modulo, colorModulo);
+                    }
+                }
+            }
         }
 
 
@@ -8092,7 +8204,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     if (clickCount == 2)
                     {
 
-                        if(ApliAcabado != "E")
+                        if (ApliAcabado != "E")
                         {
 
                             // Cambiar el IDGrupoAcabado del DataSource 
@@ -20756,6 +20868,450 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     DataGridObtenerDatosObjetos_LinkButton(this, args);
                 }
             }
+        }
+
+        protected void BtnDesPla_Click(object sender, EventArgs e)
+        {
+
+            if (ExisteOtReorteOT())
+            {
+                // Control de Botones 
+                btnProgramacionObras.Enabled = true;
+                btnProgramacionObras.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo border";
+
+                btnObservacionesReporte.Enabled = true;
+                btnObservacionesReporte.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo border";
+
+                txObservacionRep.Enabled = false;
+                txObservacionRep.CssClass = "form-control form-control-sm";
+
+
+                // Cargamos informacion de la OT 
+                 CargarInformacionOT();
+
+                // Cargamos la medidas para produccion 
+                 CargarInformacionProduccion();
+
+                // Consultar Insumos y valor 
+                 CargarInsumosYValor();
+
+                // Cargar Insumos Compra Inmediata
+                CargarInsumosCompraInmediata();
+
+                string script = @"DesactivarTapConAdmRem();";
+                ScriptManager.RegisterStartupScript(this, GetType(), "DesactivarTapConAdmRem", script, true);
+
+
+                // Se Muestra el Modal 
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalOrdenTrabajoReporte').modal('show');", true);
+            }
+            else
+            {
+                // Acceder directamente a los valores de los TextBox
+                string scriptChequeado = $"alert('La obra {tbOT.Text} con el pedido {ddlNumbers.SelectedValue} no se encuentra registrada en los reportes. Preguntar al departamento de dibujo y despice.');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showNoAgregado", scriptChequeado, true);
+
+            }
+
+
+        }
+
+        public bool ExisteOtReorteOT()
+        {
+            bool existenRegistros = false;
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string query = "SELECT COUNT(*) FROM tblReporteOT WHERE Id_OT = @OT AND Consecutivo_Pedido = @PED";
+
+
+            using (SqlConnection conexion = new SqlConnection(connectionStringSID))
+            {
+                using (SqlCommand comando = new SqlCommand(query, conexion))
+                {
+
+                    comando.Parameters.AddWithValue("@OT", tbOT.Text);
+                    comando.Parameters.AddWithValue("@PED", ddlNumbers.SelectedValue);
+
+                    // Abrir la conexión
+                    conexion.Open();
+
+                    int cantidadRegistros = (int)comando.ExecuteScalar();
+
+                    existenRegistros = cantidadRegistros > 0;
+                }
+            }
+
+            return existenRegistros;
+        }
+
+        // informacion de la OT 
+        private void CargarInformacionOT()
+        {
+            DataTable DatosReporteOT = ConsultarInformacionReporteOT();
+
+
+            if (DatosReporteOT.Rows.Count > 0)
+            {
+                DataRow fila = DatosReporteOT.Rows[0];
+
+                lbOtReporteValor.Text = fila["Id_OT"].ToString();
+                lbPedRepValor.Text = fila["Consecutivo_Pedido"].ToString();
+                lbDireccionReporte.Text = fila["Dirección"].ToString();
+                lbPaisRepValor.Text = fila["País"].ToString();
+                lbDepartamentoRepValor.Text = fila["Región"].ToString();
+                lbCiudadRepValor.Text = fila["Ciudad"].ToString();
+                lbTelefonoRepValor.Text = fila["TelDomicilio"].ToString();
+                lbObraRepValor.Text = fila["Nombre_Obra"].ToString();
+                lbContactoRepValor.Text = fila["Persona_Receptora"].ToString();
+                lbMailRepValor.Text = fila["Mail_Contacto"].ToString();
+                lbTipPedRepValor.Text = fila["Descripcion_TipoPedido"].ToString();
+                lbFecVentaValor.Text = fila["Fecha_Confirmacion_Venta"].ToString();
+                lbFecOKVentaValor.Text = fila["Fecha_Entrega_Dibujo_Despiece"].ToString();
+                lbFecDespRepValor.Text = fila["Fecha_Despacho_Produccion"].ToString();
+                lbFecOkDibValor.Text = fila["Fecha_Entrega_Produccion"].ToString();
+                lbFecRealDesRepValor.Text = fila["Fecha_Real_Despacho_Produccion"].ToString();
+                lbFecInsRepValor.Text = fila["Fecha_Instalacion"].ToString();
+                txObservacionRep.Text = fila["Observacion_Pedido"].ToString();
+                lbClienteReporteValor.Text = fila["RazonSocial"].ToString();
+                lbVendedorValor.Text = fila["NombreAsesor"].ToString();
+
+            }
+
+            //Cargar programacion de la obra 
+            DataTable DatoProgramacion = ConsultarProgramacionObra();
+
+            if (DatoProgramacion != null && DatoProgramacion.Rows.Count > 0)
+            {
+                DataGridProgramacion.DataSource = DatoProgramacion;
+                DataGridProgramacion.DataBind();
+            }
+            else
+            {
+                DataGridProgramacion.DataSource = null;
+                DataGridProgramacion.DataBind();
+            }
+
+            // Se consulta la informacion plano 
+            DataTable DatoPlano = ConsultarInformacionPLano();
+            if (DatoPlano.Rows.Count > 0)
+            {
+                DataRow filaPlano = DatoPlano.Rows[0];
+
+                lbPlanoVinculadoValor.Text = filaPlano["Plano"].ToString();
+                lbDibujaDespiezaValor.Text = filaPlano["Dibujante"].ToString();
+
+                // Enlazar este despiece con el datagrid de el tap de  despiece 
+                DataTable DatoDespicePlano = ConsultarDespiecePLano();
+                if (DatoDespicePlano != null && DatoDespicePlano.Rows.Count > 0)
+                {
+                    DataGridDespieceRep.DataSource = DatoDespicePlano;
+                    DataGridDespieceRep.DataBind();
+                }
+                else
+                {
+                    DataGridDespieceRep.DataSource = null;
+                    DataGridDespieceRep.DataBind();
+                }
+
+
+            }
+        }
+        private DataTable ConsultarInformacionReporteOT()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT ROT.Id_OT,ROT.Consecutivo_Pedido,ROT.Dirección,ROT.País,ROT.Región,ROT.Ciudad,ROT.TelDomicilio," +
+                              "ROT.Nombre_Obra,ROT.Persona_Receptora,ROT.mail_Contacto,TP.Descripcion_TipoPedido,ROT.Fecha_Confirmacion_Venta," +
+                              "ROT.Fecha_Entrega_Dibujo_Despiece,ROT.Fecha_Despacho_Produccion,ROT.Fecha_Entrega_Produccion," +
+                              "ROT.Fecha_Real_Despacho_Produccion,ROT.Fecha_Instalacion, ROT.Observacion_Pedido," +
+                              "AC.Nombre + ' ' + AC.Apellidos As NombreAsesor,CO.RazonSocial " +
+                              "FROM tblReporteOT  AS ROT " +
+                              "LEFT JOIN tblAsesorComercial AC ON AC.Cedula = ROT.Codigo_Asesor " +
+                              "LEFT JOIN tblTipoPedido AS TP ON TP.Id_TipoPedido = ROT.Id_TipoPedido " +
+                              "LEFT JOIN tblClienteObraContacto AS COC ON COC.IdContacto = ROT.IDContacto_Cliente " +
+                              "LEFT JOIN tblClienteObra AS CO ON CO.Nit = COC.cocNIT " +
+                              "WHERE Id_OT =@OT AND Consecutivo_Pedido = @Ped";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@Ped", ddlNumbers.SelectedItem.Text);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+        private DataTable ConsultarProgramacionObra()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT tblProgramacion.*, tblContratista.Apellidos+' '+tblContratista.Nombre AS NombreCompleto " +
+                              "FROM tblContratista " +
+                              "INNER JOIN tblProgramacion ON tblContratista.Cedula = tblProgramacion.Responsable " +
+                              "WHERE (((tblProgramacion.OT)= @OT) AND ((tblProgramacion.Pedido)=@Ped)) ORDER BY Descripcion_Proceso ASC";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@Ped", ddlNumbers.SelectedItem.Text);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+        private DataTable ConsultarInformacionPLano()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT * FROM tblreportePlano WHERE Id_OT = @OT AND COnsecutivo_Pedido = @Ped";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@Ped", ddlNumbers.SelectedItem.Text);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+        private DataTable ConsultarDespiecePLano()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT * FROM tblReporteDespiece WHERE Id_Plano = @Plano";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@Plano", lbPlanoVinculadoValor.Text);
+
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+
+        // produccion
+        private void CargarInformacionProduccion()
+        {
+            DataTable DatoModMedidaFinal = ConsultarModMedidaFinal();
+            if (DatoModMedidaFinal != null && DatoModMedidaFinal.Rows.Count > 0)
+            {
+                DataGridModMedFinal.DataSource = DatoModMedidaFinal;
+                DataGridModMedFinal.DataBind();
+            }
+            else
+            {
+                DataGridModMedFinal.DataSource = null;
+                DataGridModMedFinal.DataBind();
+            }
+
+            DataTable DatoMedidasCorte = ConsultarMedidasCorte();
+            if (DatoMedidasCorte != null && DatoMedidasCorte.Rows.Count > 0)
+            {
+                DataGridMedCorteProduccion.DataSource = DatoMedidasCorte;
+                DataGridMedCorteProduccion.DataBind();
+            }
+            else
+            {
+                DataGridMedCorteProduccion.DataSource = null;
+                DataGridMedCorteProduccion.DataBind();
+            }
+
+
+        }
+        private DataTable ConsultarModMedidaFinal()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT * FROM tblReporteModuloMedidaFinal WHERE Plano = @PLano ORDER BY Orden ASC";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@Plano", lbPlanoVinculadoValor.Text);
+
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+        private DataTable ConsultarMedidasCorte()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT * FROM tblReporteMedidasdeCorte WHERE Reportar = '1' AND Plano = @Plano ORDER BY Orden ASC";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@Plano", lbPlanoVinculadoValor.Text);
+
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+
+        //Insumos 
+        private void CargarInsumosYValor()
+        {
+            DataTable DatosInsumo = ConsultarInsumosYValor();
+
+            if (DatosInsumo != null && DatosInsumo.Rows.Count > 0)
+            {
+                DataGridInsumosRep.DataSource = DatosInsumo;
+                DataGridInsumosRep.DataBind();
+            }
+            else
+            {
+                DataGridInsumosRep.DataSource = null;
+                DataGridInsumosRep.DataBind();
+            }
+
+        }
+        private DataTable ConsultarInsumosYValor()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT Item_Modulo,Descripción,Cant,Und,ValorUnidad, (ValorUnidad * Cant) As Subtotal," +
+                              "Id_Inventario FROM tblReporteConsumoTotalInsumo WHERE Plano = @Plano ORDER BY Orden ASC ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@Plano", lbPlanoVinculadoValor.Text);
+
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
+        }
+
+
+        private void CargarInsumosCompraInmediata()
+        {
+            DataTable DatosInsumoCompraInmediara = ConsultarInsumosCompraInmediata();
+
+            if (DatosInsumoCompraInmediara != null && DatosInsumoCompraInmediara.Rows.Count > 0)
+            {
+                DataGridInsumosCompraInmediata.DataSource = DatosInsumoCompraInmediara;
+                DataGridInsumosCompraInmediata.DataBind();
+            }
+            else
+            {
+                DataGridInsumosCompraInmediata.DataSource = null;
+                DataGridInsumosCompraInmediata.DataBind();
+            }
+
+        }
+
+        private DataTable ConsultarInsumosCompraInmediata()
+        {
+            DataTable dataTable = new DataTable();
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connectionSID = new SqlConnection(connectionStringSID))
+            {
+                connectionSID.Open();
+
+                string sSql = "SELECT * FROM tblReporteMedidasdeCorte WHERE Plano = @Plano AND AreaProduccion LIKE @AreaProduccion ORDER BY Orden ASC";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
+                {
+                    cmd.Parameters.AddWithValue("@Plano", lbPlanoVinculadoValor.Text);
+                    cmd.Parameters.AddWithValue("@AreaProduccion", "%COMPRAS%");
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            // Retorna la DataTable
+            return dataTable;
         }
 
         

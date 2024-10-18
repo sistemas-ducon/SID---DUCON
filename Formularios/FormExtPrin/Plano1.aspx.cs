@@ -23,7 +23,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             {
                 listaTextBoxes = new List<TextBox>
                 {
-                    tbPlano,tbPor,tbFecha,tbCliente,tbArea,tbContacto,tbBolsa
+                    tbPlano,tbPor,tbFecha,tbCliente,tbArea,tbContacto,tbBolsa,tbBuscadorPlano
 
                 };
                 listaDropDownLists = new List<DropDownList>
@@ -95,7 +95,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             };
 
             string cssClass = "btn btn-sm shadow button-disabled";
-            string cssClassEnabled = "btn btn-sm shadow button-enabled";
+            string cssClassEnabled = "btn btn-sm shadow button-enabled ColorAzulActivo";
+            string cssClassEnabledRojo = "btn btn-sm shadow button-enabled RojoCancelar";
 
             foreach (System.Web.UI.Control boton in botones)
             {
@@ -103,10 +104,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 {
                     System.Web.UI.WebControls.LinkButton linkButton = (System.Web.UI.WebControls.LinkButton)boton;
 
-                    if (linkButton.ID == "NuevoPlano" || linkButton.ID == "BuscarPlano" || linkButton.ID == "Cancelar")
+                    if (linkButton.ID == "NuevoPlano" || linkButton.ID == "BuscarPlano")
                     {
                         linkButton.Enabled = true;
                         linkButton.CssClass = cssClassEnabled;
+                    }
+                    else if (linkButton.ID == "Cancelar")
+                    {
+                        linkButton.Enabled = true;
+                        linkButton.CssClass = cssClassEnabledRojo;
                     }
                     else
                     {
@@ -134,7 +140,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             };
 
             string cssClass = "btn btn-sm shadow button-disabled";
-            string cssClassEnabled = "btn btn-sm shadow button-enabled";
+            string cssClassEnabled = "btn btn-sm shadow button-enabled ColorAzulActivo";
+            string cssClassEnabledRojo = "btn btn-sm shadow button-enabled RojoCancelar";
 
             foreach (System.Web.UI.Control boton in botones)
             {
@@ -142,10 +149,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 {
                     System.Web.UI.WebControls.LinkButton linkButton = (System.Web.UI.WebControls.LinkButton)boton;
 
-                    if (linkButton.ID == "GurdarPlano" || linkButton.ID == "BuscarPlano" || linkButton.ID == "Cancelar")
+                    if (linkButton.ID == "GurdarPlano" || linkButton.ID == "BuscarPlano" )
                     {
                         linkButton.Enabled = true;
                         linkButton.CssClass = cssClassEnabled;
+                    }
+                    else if (linkButton.ID == "Cancelar")
+                    {
+                        linkButton.Enabled = true;
+                        linkButton.CssClass = cssClassEnabledRojo;
                     }
                     else
                     {
@@ -173,7 +185,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             };
 
             string cssClass = "btn btn-sm shadow button-disabled";
-            string cssClassEnabled = "btn btn-sm shadow button-enabled";
+            string cssClassEnabled = "btn btn-sm shadow button-enabled ColorAzulActivo";
+            string cssClassEnabledRojo = "btn btn-sm shadow button-enabled RojoCancelar";
 
             foreach (System.Web.UI.Control boton in botones)
             {
@@ -188,8 +201,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     }
                     else
                     {
-                        linkButton.Enabled = true;
-                        linkButton.CssClass = cssClassEnabled;
+                        if(linkButton.ID == "Cancelar" || linkButton.ID == "ELiminarPlano")
+                        {
+                            linkButton.Enabled = true;
+                            linkButton.CssClass = cssClassEnabledRojo;
+                        }
+                        else
+                        {
+                            linkButton.Enabled = true;
+                            linkButton.CssClass = cssClassEnabled;
+                        }
+                       
                     }
 
                 }
@@ -212,7 +234,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             };
 
             string cssClass = "btn btn-sm shadow button-disabled";
-            string cssClassEnabled = "btn btn-sm shadow button-enabled";
+            string cssClassEnabled = "btn btn-sm shadow button-enabled ColorAzulActivo";
+            string cssClassEnabledRojo = "btn btn-sm shadow button-enabled RojoCancelar";
 
             foreach (System.Web.UI.Control boton in botones)
             {
@@ -220,10 +243,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 {
                     System.Web.UI.WebControls.LinkButton linkButton = (System.Web.UI.WebControls.LinkButton)boton;
 
-                    if (linkButton.ID == "GurdarPlano" || linkButton.ID == "Cancelar")
+                    if (linkButton.ID == "GurdarPlano" )
                     {
                         linkButton.Enabled = true;
                         linkButton.CssClass = cssClassEnabled;
+                    }
+                    else if (linkButton.ID == "Cancelar")
+                    {
+                        linkButton.Enabled = true;
+                        linkButton.CssClass = cssClassEnabledRojo;
                     }
                     else
                     {
@@ -329,6 +357,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGridPlano1.Items[rowIndex];
 
+                // Limpiamos la seleccion de la todas las filas 
                 foreach (DataGridItem item in DataGridPlano1.Items)
                 {
                     if (item != row)
@@ -337,7 +366,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     }
                 }
 
+                // Damos color a la fila seleccionada 
                 e.Item.CssClass = "fila-seleccionada";
+
 
                 // Deshabilitamos los campos activos 
                 tbPlano.Enabled = false;
@@ -375,15 +406,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
                 // habilitamos los botones necesarios 
 
-
                 ModificarPlano.Enabled = true;
-                ModificarPlano.CssClass = "btn btn-sm shadow button-enabled";
+                ModificarPlano.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
                 Bloqueado.Enabled = true;
-                Bloqueado.CssClass = "btn btn-sm shadow button-enabled";
+                Bloqueado.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
                 ELiminarPlano.Enabled = true;
-                ELiminarPlano.CssClass = "btn btn-sm shadow button-enabled";
+                ELiminarPlano.CssClass = "btn btn-sm shadow button-enabled RojoCancelar";
 
 
 
@@ -421,7 +451,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             ScriptManager.RegisterStartupScript(this, GetType(), "enviarFormulario", script, false);
 
                             // Reiniciar la variable de sesión "ClickCount" a 0 para la próxima interacción
-                            Session["ClickCount"] = 0;
+                            Session.Remove("ClickCount");
 
                             //Variable para controlar Activar Tap Plano en orden Trabajo 
                             Session["controlTapPlano"] = "1";
@@ -465,29 +495,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected void BuscarPlano_Click(object sender, EventArgs e)
         {
             // Se habilitar el Texbox de busqueda de Plano 
-            tbPlano.Enabled = true;
-            tbPlano.Focus();
+            tbBuscadorPlano.Enabled = true;
+            tbBuscadorPlano.Focus();
 
-        }
-
-        protected void tbPlano_TextChanged(object sender, EventArgs e)
-        {
-            if (Session["DiferenciarOTPlano"]?.ToString() == "2")
-            {
-                DataGridPlano1.DataSourceID = "CargarPlano";
-                DataGridPlano1.DataBind();
-            }
-            else if (Session["DiferenciarOTPlano"]?.ToString() == "1")
-            {
-                // Cambiar la consulta SQL del SqlDataSource
-                SqlDataSource cargarPlanoSource = (SqlDataSource)FindControl("CargarPlano");
-                cargarPlanoSource.SelectCommand = "SELECT TOP 300 * FROM tblPlano WHERE Plano LIKE '%' + @Plano + '%' AND Nombre_Cliente LIKE '%' + @Cliente + '%' AND Id_OT = 'Nula' ORDER BY Plano";
-
-                // Reasignar el SqlDataSource al DataGrid y actualizar los datos
-                DataGridPlano1.DataSourceID = null;  // Esto es importante para que se pueda aplicar el nuevo SelectCommand
-                DataGridPlano1.DataSource = cargarPlanoSource;
-                DataGridPlano1.DataBind();
-            }
         }
 
         private bool UsuarioTienePermiso()
@@ -901,9 +911,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             DeshabilitarTextBoxes(listaTextBoxes);
             DeshabilitarDropDownLists(listaDropDownLists);
             DeshabilitarCheckBoxes();
+
+            // limpiar buscar 
+            Session.Remove("ClickCount");
         }
-
-
 
         protected void EliminarPlano_Click(Object sender, EventArgs e)
         {
@@ -986,6 +997,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             DeshabilitarDropDownLists(listaDropDownLists);
             DeshabilitarCheckBoxes();
             limpiarCampos(listaTextBoxes, listaDropDownLists);
+            tbBuscadorPlano.Text = "";
+            tbBuscadorPlano.Enabled = false;
+            tbBuscadorPlano.CssClass = "form-control form-control-sm mayusculas";
+
+
+            // Limpiar el doble Click
+            Session.Remove("ClickCount");
         }
 
         protected void btnCargarPlano_Click(object sender, EventArgs e)
@@ -1029,5 +1047,28 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             }
         }
 
+        protected void tbBuscadorPlano_TextChanged(object sender, EventArgs e)
+        {
+
+            if (Session["DiferenciarOTPlano"]?.ToString() == "2")
+            {
+                DataGridPlano1.DataSourceID = "CargarPlano";
+                DataGridPlano1.DataBind();
+            }
+            else if (Session["DiferenciarOTPlano"]?.ToString() == "1")
+            {
+                // Cambiar la consulta SQL del SqlDataSource
+                SqlDataSource cargarPlanoSource = (SqlDataSource)FindControl("CargarPlano");
+                cargarPlanoSource.SelectCommand = "SELECT TOP 300 * FROM tblPlano WHERE Plano LIKE '%' + @Plano + '%' AND Nombre_Cliente LIKE '%' + @Cliente + '%' AND Id_OT = 'Nula' ORDER BY Plano";
+
+                // Reasignar el SqlDataSource al DataGrid y actualizar los datos
+                DataGridPlano1.DataSourceID = null;  // Esto es importante para que se pueda aplicar el nuevo SelectCommand
+                DataGridPlano1.DataSource = cargarPlanoSource;
+                DataGridPlano1.DataBind();
+            }
+
+            //Limpiar buscador 
+            Session.Remove("ClickCount");
+        }
     }
 }
