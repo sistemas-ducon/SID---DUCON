@@ -39,8 +39,14 @@
             return result; // Devolver el resultado de la confirmación
         }
 
-
-
+        // Validar que el boton este habilitado
+        function EsBotonHabilitado(boton) {
+            // Verifica si el botón tiene la clase 'button-disabled'
+            if (boton.classList.contains('button-disabled')) {
+                return false; // No ejecuta la función `OnClientClick`
+            }
+            return true; // Ejecuta la función `OnClientClick`
+        }
     </script>
 
 
@@ -69,7 +75,7 @@
                                                      <i class="bi bi-file-earmark-check-fill"></i>
                                     </asp:LinkButton>
 
-                                    <asp:LinkButton runat="server" Text="Guardar Plano" ID="GurdarPlano" title="Guardar Plano" OnClick="GuardarModifcarPlano" OnClientClick=" return validarFormulario();">
+                                    <asp:LinkButton runat="server" Text="Guardar Plano" ID="GurdarPlano" title="Guardar Plano" OnClick="GuardarModifcarPlano" OnClientClick=" return EsBotonHabilitado(this) && validarFormulario();">
                                                <i class="bi bi-floppy-fill"></i>
                                     </asp:LinkButton>
 
@@ -77,11 +83,11 @@
                                                    <i class="bi bi-wrench"></i>
                                     </asp:LinkButton>
 
-                                    <asp:LinkButton runat="server" Text="Bloqueado" ID="Bloqueado" title="Bloquear o Desbloquear Plano" OnClick="Bloqueado_Click" OnClientClick="return confirmarBloquearPlano(event);">
+                                    <asp:LinkButton runat="server" Text="Bloqueado" ID="Bloqueado" title="Bloquear o Desbloquear Plano" OnClick="Bloqueado_Click" OnClientClick="return EsBotonHabilitado(this) && confirmarBloquearPlano(event);">
                                                   <i class="bi bi-lock-fill"></i>
                                     </asp:LinkButton>
 
-                                    <asp:LinkButton runat="server" Text="Anular o Eliminar Plano" ID="ELiminarPlano" title="Eliminar Plano" OnClick="EliminarPlano_Click" OnClientClick="return confirmarEliminarPlano(event);">
+                                    <asp:LinkButton runat="server" Text="Anular o Eliminar Plano" ID="ELiminarPlano" title="Eliminar Plano" OnClick="EliminarPlano_Click" OnClientClick="return EsBotonHabilitado(this) && confirmarEliminarPlano(event);">
                                                 <i class="bi bi-trash3-fill"></i>
                                     </asp:LinkButton>
 

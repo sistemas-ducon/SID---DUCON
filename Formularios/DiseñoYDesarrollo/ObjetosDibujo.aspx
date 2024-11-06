@@ -133,7 +133,7 @@
 
                                             <div class="col-lg-2  col-md-6 col-md-6 col-xs-6 p-2">
                                                 <asp:Label runat="server" ID="Label3" CssClass="form-label col-form-label-sm" Text="H(Cms)"></asp:Label>
-                                                <asp:TextBox runat="server" ID="TextAltura" type="number" min="0" CssClass="form-control form-control-sm text-center"></asp:TextBox>
+                                                <asp:TextBox runat="server" ID="TextAltura" type="number" CssClass="form-control form-control-sm text-center"></asp:TextBox>
                                             </div>
 
                                             <div class="col-lg-2  col-md-6 col-md-6 col-xs-6 p-2">
