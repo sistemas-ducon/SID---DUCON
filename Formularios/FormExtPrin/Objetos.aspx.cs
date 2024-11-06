@@ -208,6 +208,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 Nombre_Objeto_Hid.Value = string.Empty;
                 Ancho_Objeto_Hid.Value = string.Empty;
 
+                Session["Despiece"] = "1";
             }
             else
             {

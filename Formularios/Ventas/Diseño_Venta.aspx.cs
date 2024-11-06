@@ -218,7 +218,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 AccionesAlCargarDiseño();
                 ProcesarNumeroDiseño2(null);
-                scripTabDise();
+               
 
                 if (Session["Despiece"]?.ToString() == "1")
                 {
@@ -248,7 +248,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     // Limpiar la sesión
                     Session.Remove("Despiece");
                 }
-            }
+                else
+                {
+                    scripTabDise();
+                }
+
+               
+                }
 
             DesabilitarTextBox();
 
@@ -4050,15 +4056,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     else
                     {
                         Session.Remove("CrudVentas");
+                            string mensajePersonalizado = "El Diseño ya fue aprobado para Dibujo y Despiece, este departamento lo debe habilitar para ser modificado";
+                            string urlRedireccion = "Ventas/Diseño_Venta.aspx";
+                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
 
-                        string mensajePersonalizado = "El Diseño ya fue aprobado para Dibujo y Despiece, este departamento lo debe habilitar para ser modificado";
-                        string urlRedireccion = "Ventas/Diseño_Venta.aspx";
-                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                     }
                 }
-
-
-
             }
             else
             {
@@ -4311,7 +4314,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 connection.Open();
 
                     // Consulta SQL para verificar el campo ProgramadoVentas
-                    string consulta = "SELECT ProgramadoVentas, TerminadoDibujo FROM tbldiseño WHERE Numero_Diseño = @Numero_Diseño";
+                    string consulta = "SELECT ProgramadoVentas, TerminadoDibujo, SC_Terminado FROM tbldiseño WHERE Numero_Diseño = @Numero_Diseño";
 
                     using (SqlCommand command = new SqlCommand(consulta, connection))
                     {
@@ -4320,7 +4323,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         // Ejecutar la consulta y obtener el valor de ProgramadoVentas
                         bool programadoVentas = false;
-                        bool terminadoDibujo = false;// Suponemos que el valor predeterminado es false
+                        bool terminadoDibujo = false;
+                        bool SC_Terminado = false;
 
                     using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -4328,7 +4332,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             {
                                 programadoVentas = reader.GetBoolean(0);
                                 terminadoDibujo = reader.GetBoolean(1);
-                            }
+                            SC_Terminado = reader.GetBoolean(2);
+                        }
                     }
 
                     string tipoAccion = Session["Diseno"] as string;
@@ -4344,10 +4349,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                     if (tipoAccion == "Diseño")
                     {
-                        if (terminadoDibujo)
+                        if (terminadoDibujo && SC_Terminado)
                         {
-                            // Mostrar el modal y terminar el método
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ErrorModiciarDiseno').modal('show');", true);
+                            string mensajePersonalizado = "No se puede modificar el diseño,ya que este fue terminado";
+                            string urlRedireccion = "Ventas/Diseño_Venta.aspx";
+                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
                             return false;
                         }
                     }
@@ -8899,6 +8905,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void Objetos_Click(object sender, EventArgs e)
         {
+            Session["NumeroDiseño2"] = lblNumDise.Text;
+
             string url = "/Formularios/FormExtPrin/Objetos.aspx";
             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
             ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);

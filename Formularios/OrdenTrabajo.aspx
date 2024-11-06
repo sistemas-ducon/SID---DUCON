@@ -4634,7 +4634,7 @@
                                                  <i class="bi bi-search"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="" ID="BtnEliminarModulo">
+                                                <asp:LinkButton runat="server" title="" ID="BtnEliminarModulo" OnClick="BtnEliminarModulo_Click">
                                                <i class="bi bi-trash-fill"></i>
                                                 </asp:LinkButton>
 
@@ -4642,9 +4642,10 @@
                                                     <i class="bi bi-stickies-fill"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="" ID="BtnChequear">
+                                                <asp:LinkButton runat="server" title="" ID="BtnChequear" OnClick="BtnChequear_Click">
                                                 <i class="bi bi-check-square-fill"></i>
                                                 </asp:LinkButton>
+
                                             </div>
                                     </div>
                             </nav>
@@ -4794,36 +4795,56 @@
                 </div>
             </div>
         </div>
-                                 
-                <div class="modal" id="ModalRotacionModulo" tabindex="-1">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header AzulOscuroEfecto fw-bold shadow-sm">
-                                <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Rotación de Insumo</h5>
-                        <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
-                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid1" runat="server" AutoGenerateColumns="false">
-                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
-                                                    <Columns>
-                                                        <asp:TemplateColumn>
-                                                            <ItemTemplate>
-                                                                <asp:LinkButton ID="SelectInsumoID" runat="server" CommandName="ModuloIns" CommandArgument='<%# Container.ItemIndex %>'
-                                                                    Text="<i class='bi bi-pencil-square text-dark'></i>" />
-                                                            </ItemTemplate>
-                                                        </asp:TemplateColumn>
-                                                        <asp:BoundColumn DataField="riEstacion" HeaderText="Estación" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Descripcion_Area" HeaderText="Destino" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="riId" HeaderText="Rotación" ItemStyle-CssClass="auto-width-column" />
-                                                    </Columns>
-                                                </asp:DataGrid>
-                    </div>
-                    <div class="modal-footer">
-                    </div>
-                </div>
-            </div>
-        </div>
 
+                        <div class="modal" id="ModalRotacionModulo" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header AzulOscuroEfecto fw-bold shadow-sm">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Rotación de Insumo</h5>
+                                        <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid1" runat="server" AutoGenerateColumns="false">
+                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                            <Columns>
+                                                <asp:TemplateColumn>
+                                                    <ItemTemplate>
+                                                        <asp:LinkButton ID="SelectInsumoID" runat="server" CommandName="ModuloIns" CommandArgument='<%# Container.ItemIndex %>'
+                                                            Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                    </ItemTemplate>
+                                                </asp:TemplateColumn>
+                                                <asp:BoundColumn DataField="riEstacion" HeaderText="Estación" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="Descripcion_Area" HeaderText="Destino" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="riId" HeaderText="Rotación" ItemStyle-CssClass="auto-width-column" />
+                                            </Columns>
+                                        </asp:DataGrid>
+                                    </div>
+                                    <div class="modal-footer">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="EliminarModulo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-title d-flex align-items-center justify-content-center text-white p-2 RojoEfecto fw-bold shadow">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID_DUCON</h5>
+                                    </div>
+                                    <div class="modal-body bg-light form-control-sm">
+                                        <div class="row container">
+                                            <div class="col-12">
+                                                <p><span id="EliminarModulo2"></span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center bg-light">
+                                        <asp:Button runat="server" type="button" class="btn btn-sm linkButtonClicked2 shadow-sm text-dark btn-outline-danger fw-bold" data-bs-dismiss="modal" Text="Si" aria-label="Close" OnClick="ConfirmarEliminacion_Click"></asp:Button>
+                                        <asp:Button runat="server" type="button" class="btn btn-sm linkButtonClicked2 shadow-sm text-dark btn-outline-danger fw-bold" data-bs-dismiss="modal" Text="No" aria-label="Close"></asp:Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
                     </ContentTemplate>
@@ -4848,32 +4869,31 @@
 
                                             <div class="contenedor-icono">
 
-                                                <asp:LinkButton runat="server" title="Nuevo Insumo" ID="LinkButton9" CssClass="btn btn-sm shadow button-disabled">
-                                                   <i class="bi bi-file-earmark"></i>
+                                                <asp:LinkButton runat="server" title="Nuevo Insumo" ID="BtnNuevoInsumo" OnClick="BtnNuevoInsumo_Click">
+                                                   <i class="bi bi-file-earmark-fill"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="" ID="LinkButton10" CssClass="btn btn-sm shadow button-disabled">
-                                                  <i class="bi bi-file-earmark-ruled"></i>
+                                                <asp:LinkButton runat="server" title="" ID="BtnGrabarInsumo">
+                                                  <i class="bi bi-floppy-fill"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Modificar Insumo" ID="LinkButton11" CssClass="btn btn-sm shadow button-disabled">
-                                                   <i class="bi bi-wrench"></i>
+                                                <asp:LinkButton runat="server" title="Modificar Insumo" ID="BtnModificarInsumo" OnClick="BtnModificarInsumo_Click">
+                                                 <i class="bi bi-wrench-adjustable"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Eliminar Insumo" ID="LinkButton12" CssClass="btn btn-sm shadow button-disabled">
-                                                   <i class="bi bi-database-x"></i>
+                                                <asp:LinkButton runat="server" title="Eliminar Insumo" ID="BtnEliminarInsumo" OnClick="BtnEliminarInsumo_Click">
+                                                   <i class="bi bi-trash-fill"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Copiar Insumo" ID="LinkButton13" CssClass="btn btn-sm shadow button-disabled">
-                                                    <i class="bi bi-files"></i>
+                                                <asp:LinkButton runat="server" title="Copiar Insumo" ID="BtnCopiarInsumo" OnClick="BtnCopiarInsumo_Click">
+                                                    <i class="bi bi-stickies-fill"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Buscar Insumo" ID="BtnBuscarInsumo" CssClass="btn btn-sm shadow button-enabled" OnClick="BtnBuscarInsumo_Click">
-                                                 <i class="bi bi-search"></i>
+                                                <asp:LinkButton runat="server" title="Buscar Insumo" ID="BtnBuscarInsumo" OnClick="BtnBuscarInsumo_Click">
+                                                <i class="bi bi-search"></i>
                                                 </asp:LinkButton>
 
-
-                                                <asp:LinkButton runat="server" title="Actualizar" ID="LinkButton15" CssClass="btn btn-sm shadow button-enabled">
+                                                <asp:LinkButton runat="server" title="Actualizar" ID="BtnNN">
                                                    <i class="bi bi-disc"></i>
                                                 </asp:LinkButton>
 
@@ -4885,46 +4905,31 @@
                             </nav>
 
                             <div class="card shadow">
-                                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div class="card-header d-flex justify-content-center align-items-center">
+    <div class="d-flex align-items-center" runat="server" id="contentToToggle" visible="false">
 
+        <div class="d-flex align-items-center me-2 col-4">
+            <asp:Label ID="LblTipoInsumo" runat="server" CssClass="me-2 col-form-label-sm" Text="Tipo Insumo"></asp:Label>
+            <asp:DropDownList ID="DropDownList1" runat="server" CssClass="form-control form-control-sm" OnTextChanged="DropDownList1_TextChanged" AutoPostBack="true" DataTextField="Descripcion_Insumo" DataValueField="Id_Insumo" />
+        </div>
 
-                                    <div class="d-flex flex-wrap align-items-center" runat="server" id="contentToToggle" visible="false">
-                                        <div class="d-flex align-items-center me-2">
-                                            <asp:Label ID="LblTipoInsumo" runat="server" CssClass="me-2 col-form-label-sm" Text="Tipo Insumo"></asp:Label>
-                                            <asp:DropDownList ID="DropDownList1" runat="server" CssClass="form-control form-control-sm" OnTextChanged="DropDownList1_TextChanged" AutoPostBack="true" DataTextField="Descripcion_Insumo" DataValueField="Id_Insumo" />
-                                        </div>
+        <div class="d-flex align-items-center me-2 col-5">
+            <asp:Label ID="LblCriterio" runat="server" CssClass="me-2 col-form-label-sm" Text="Criterio"></asp:Label>
+            <asp:TextBox ID="TextCriterio" runat="server" CssClass="form-control form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterio_TextChanged"></asp:TextBox>
+        </div>
 
-                                        <div class="d-flex align-items-center me-2">
-                                            <asp:Label ID="LblCriterio" runat="server" CssClass="me-2 col-form-label-sm" Text="Criterio"></asp:Label>
-                                            <asp:TextBox ID="TextCriterio" runat="server" CssClass="form-control me-2 form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterio_TextChanged"></asp:TextBox>
-                                        </div>
-
-                                        <div class="d-flex align-items-center me-2">
-                                            <asp:Label ID="LblInv" runat="server" CssClass="me-2 col-form-label-sm" Text="Inv"></asp:Label>
-                                            <asp:TextBox ID="TextInv" runat="server" CssClass="form-control me-2 form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterio_TextChanged"></asp:TextBox>
-                                        </div>
-
-                                        <div class="d-flex align-items-center me-2">
-                                            <asp:Label ID="Label14" runat="server" CssClass="me-2 col-form-label-sm" Text="Nuevo Cod. Inv"></asp:Label>
-                                            <asp:TextBox ID="TextBox4" runat="server" CssClass="form-control me-2 form-control-sm"></asp:TextBox>
-                                        </div>
-
-                                        <asp:Button ID="btnAdditional1" runat="server" CssClass="btn linkButtonClicked2 fw-bold RojoEfecto shadow text-white text-dark me-2 btn-sm" Text="Cambiar Cod Inv" Enabled="false" />
-
-                                        <div class="d-flex align-items-center me-2">
-                                            <asp:Label ID="Label15" runat="server" CssClass="me-2 col-form-label-sm" Text="Costo"></asp:Label>
-                                            <asp:TextBox ID="TextNuevoCosto" runat="server" CssClass="form-control me-2 form-control-sm"></asp:TextBox>
-                                        </div>
-
-                                        <asp:Button ID="BtnActCos" runat="server" CssClass="btn linkButtonClicked2 fw-bold me-2 RojoEfecto text-white shadow text-dark btn-sm" Text="Actualizar Costo" Enabled="false" />
-                                    </div>
-                                </div>
+        <div class="d-flex align-items-center col-3">
+            <asp:Label ID="LblInv" runat="server" CssClass="me-2 col-form-label-sm" Text="Inv"></asp:Label>
+            <asp:TextBox ID="TextInv" runat="server" CssClass="form-control form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterio_TextChanged"></asp:TextBox>
+        </div>
+    </div>
+</div>
 
 
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <div class="table-responsive table-responsive-sm gap-2 border" style="max-height: 45rem; overflow-x: auto;">
+                                            <div class="table-responsive table-responsive-sm gap-2 border" style="height: 41rem; overflow-x: auto;">
                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGridInsumo" runat="server" AutoGenerateColumns="false" OnItemCommand="DataGridInsumo_ItemCommand">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                     <Columns>
@@ -4951,7 +4956,28 @@
                                             </div>
                                         </div>
                                     </div>
+                                      <div class="card">
+                                <div class="card-header d-flex justify-content-center align-items-center">
+
+                                        <div class="d-flex flex-wrap align-items-center" runat="server" id="contentToToggle2" visible="false">
+                                        
+                                        <div class="d-flex align-items-center me-2">
+                                            <asp:Label ID="Label14" runat="server" CssClass="me-2 col-form-label-sm" Text="Nuevo Cod. Inv"></asp:Label>
+                                            <asp:TextBox ID="TextBox4" runat="server" CssClass="form-control me-2 form-control-sm"></asp:TextBox>
+                                        </div>
+
+                                        <asp:Button ID="btnAdditional1" runat="server" CssClass="btn linkButtonClicked2 fw-bold RojoEfecto shadow text-white text-dark me-2 btn-sm" Text="Cambiar Cod Inv" Enabled="false" />
+
+                                        <div class="d-flex align-items-center me-2">
+                                            <asp:Label ID="Label15" runat="server" CssClass="me-2 col-form-label-sm" Text="Costo"></asp:Label>
+                                            <asp:TextBox ID="TextNuevoCosto" runat="server" CssClass="form-control me-2 form-control-sm"></asp:TextBox>
+                                        </div>
+
+                                        <asp:Button ID="BtnActCos" runat="server" CssClass="btn linkButtonClicked2 fw-bold me-2 RojoEfecto text-white shadow text-dark btn-sm" Text="Actualizar Costo" Enabled="false" />
+                                    </div>
                                 </div>
+                                          </div>
+                                    </div>
                             </div>
                             <!-- End Card container -->
                         </div>
@@ -4977,6 +5003,48 @@
                 </div>
             </div>
         </div>
+
+           <div class="modal fade" id="InsumoPerteneceAModulos" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-title d-flex align-items-center justify-content-center text-white p-2 RojoEfecto fw-bold shadow">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID_DUCON</h5>
+                                    </div>
+                                    <div class="modal-body bg-light form-control-sm">
+                                        <div class="row container">
+                                            <div class="col-12">
+                                               <p><span id="InsumoPerteneceAModulos2"></span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer border d-flex align-items-center justify-content-center bg-light">
+                                        <asp:Button ID="BtnConfirmarEliminar" runat="server" type="button" class="btn btn-sm linkButtonClicked2 shadow-sm text-dark btn-outline-danger fw-bold" data-bs-dismiss="modal" Text="SI" aria-label="Close" OnClick="BtnConfirmarEliminar_Click"></asp:Button>
+                                         <button runat="server" type="button" class="btn btn-sm linkButtonClicked2 shadow-sm text-dark btn-outline-success fw-bold" data-bs-dismiss="modal" aria-label="Close">NO</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+         <div class="modal fade" id="EliminarInsumo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-title d-flex align-items-center justify-content-center text-white p-2 RojoEfecto fw-bold shadow">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID_DUCON</h5>
+                                    </div>
+                                    <div class="modal-body bg-light form-control-sm">
+                                        <div class="row container">
+                                            <div class="col-12">
+                                            <p><span id="EliminarInsumo2"></span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer border d-flex align-items-center justify-content-center bg-light">
+                                        <asp:Button runat="server" ID="BtnConfirmarEliminarPorDefecto" type="button" class="btn btn-sm linkButtonClicked2 shadow-sm text-dark btn-outline-danger fw-bold" data-bs-dismiss="modal" Text="SI" aria-label="Close" OnClick="BtnConfirmarEliminar_Click"></asp:Button>
+                                         <button runat="server" type="button" class="btn btn-sm linkButtonClicked2 shadow-sm text-dark btn-outline-success fw-bold" data-bs-dismiss="modal" aria-label="Close">NO</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
         <div id="miModallll" class="modal" tabindex="-1" style="display: none;">
             <div class="modal-dialog modal-dialog-centered">

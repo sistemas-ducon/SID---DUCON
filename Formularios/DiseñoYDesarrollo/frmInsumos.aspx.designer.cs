@@ -60,22 +60,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         protected global::System.Web.UI.WebControls.TextBox textInsumo;
 
         /// <summary>
-        /// Control Textbox1.
+        /// Control TextFechaCreacionInsumo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Textbox1;
+        protected global::System.Web.UI.WebControls.TextBox TextFechaCreacionInsumo;
 
         /// <summary>
-        /// Control Textbox2.
+        /// Control TextFechaActualizacion.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Textbox2;
+        protected global::System.Web.UI.WebControls.TextBox TextFechaActualizacion;
 
         /// <summary>
         /// Control Textbox3.
@@ -87,13 +87,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         protected global::System.Web.UI.WebControls.TextBox Textbox3;
 
         /// <summary>
-        /// Control Textbox4.
+        /// Control TextDescripcionInsumo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Textbox4;
+        protected global::System.Web.UI.WebControls.TextBox TextDescripcionInsumo;
 
         /// <summary>
         /// Control dtacboTipoInsumo.
@@ -105,15 +105,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         protected global::System.Web.UI.WebControls.DropDownList dtacboTipoInsumo;
 
         /// <summary>
-        /// Control TipoInsumo.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.SqlDataSource TipoInsumo;
-
-        /// <summary>
         /// Control DropAbreviado.
         /// </summary>
         /// <remarks>
@@ -123,22 +114,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         protected global::System.Web.UI.WebControls.DropDownList DropAbreviado;
 
         /// <summary>
-        /// Control SqlDataSource1.
+        /// Control TextValorInsumo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource1;
-
-        /// <summary>
-        /// Control Textbox6.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Textbox6;
+        protected global::System.Web.UI.WebControls.TextBox TextValorInsumo;
 
         /// <summary>
         /// Control DropAcabadosDesde.
@@ -150,49 +132,49 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         protected global::System.Web.UI.WebControls.DropDownList DropAcabadosDesde;
 
         /// <summary>
-        /// Control Textbox9.
+        /// Control TextCodInvInsumo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Textbox9;
+        protected global::System.Web.UI.WebControls.TextBox TextCodInvInsumo;
 
         /// <summary>
-        /// Control Textbox10.
+        /// Control TextFacGanInsumo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Textbox10;
+        protected global::System.Web.UI.WebControls.TextBox TextFacGanInsumo;
 
         /// <summary>
-        /// Control Textbox11.
+        /// Control TextFacDesInsumo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Textbox11;
+        protected global::System.Web.UI.WebControls.TextBox TextFacDesInsumo;
 
         /// <summary>
-        /// Control Textbox12.
+        /// Control TextPesoInsumo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Textbox12;
+        protected global::System.Web.UI.WebControls.TextBox TextPesoInsumo;
 
         /// <summary>
-        /// Control Textbox13.
+        /// Control TextUndXPaq.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Textbox13;
+        protected global::System.Web.UI.WebControls.TextBox TextUndXPaq;
 
         /// <summary>
         /// Control BtnGrabar.
@@ -222,13 +204,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         protected global::System.Web.UI.WebControls.Button BtnCerrar;
 
         /// <summary>
-        /// Control DataGridSolicitudEspecial.
+        /// Control DatagridInsumo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DataGrid DataGridSolicitudEspecial;
+        protected global::System.Web.UI.WebControls.DataGrid DatagridInsumo;
 
         /// <summary>
         /// Control DataGrid1.

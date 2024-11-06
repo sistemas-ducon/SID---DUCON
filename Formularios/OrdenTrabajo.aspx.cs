@@ -809,11 +809,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     // Invocar manualmente el evento OnTextChanged
                     EventArgs args = new EventArgs();
                     txtCotizacion_TextChanged(txtCotizacion, args);
-                   
+
                 }
                 else
                 {
-                   
+
 
                     txtCotizacion.Enabled = true;
                     txtOrdenCompra.Enabled = true;
@@ -825,7 +825,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 cboPedidoBase.DataBind();
                 cboPedidoBase.Items.Insert(0, new ListItem(" "));
             }
-              
+
         }
 
         // Método para realizar la consulta y asignar el valor a cboPedidoBase
@@ -852,7 +852,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         cboPedidoBase.SelectedValue = pedidoBase;
                         if (!estadisticaVenta)
                         {
-                          
+
                         }
                         else
                         {
@@ -5420,7 +5420,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BtnEliObj_Click(object sender, EventArgs e)
         {
-            if(SpanId_ObjetoEliminar.InnerText.Trim() != "")
+            if (SpanId_ObjetoEliminar.InnerText.Trim() != "")
             {
                 if (ValidarObjetoEnOrdenTrabajo())
                 {
@@ -7401,11 +7401,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             List<System.Web.UI.Control> botones = new List<System.Web.UI.Control>
             {
-                LinkButton9,
-                LinkButton10,
-                LinkButton11,
-                LinkButton12,
-                LinkButton13,
+                BtnNuevoInsumo,
+                BtnGrabarInsumo,
+                BtnModificarInsumo,
+                BtnEliminarInsumo,
+                BtnCopiarInsumo
             };
 
             string cssClass = "btn btn-sm shadow button-disabled";
@@ -7420,6 +7420,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
+            // Validar permisos
+            bool tienePermisoInsumo = Validar_Permiso_Area(26);
+
+            if (tienePermisoInsumo)
+            {
+                // Si tiene permiso, habilitar los botones Nuevo y Copiar
+                BtnNuevoInsumo.Enabled = true;
+                BtnNuevoInsumo.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
+            }
+
+            // Si tiene permiso, habilitar los botones Nuevo y Copiar
+            BtnBuscarInsumo.Enabled = true;
+            BtnBuscarInsumo.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+            BtnNN.Enabled = true;
+            BtnNN.CssClass = "btn btn-sm shadow button-enabled ColorVerde";
 
         }
 
@@ -7427,6 +7442,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             // Alternar la visibilidad del contenido
             contentToToggle.Visible = !contentToToggle.Visible;
+            contentToToggle2.Visible = !contentToToggle2.Visible;
 
             CargarTipoInsumo();
         }
@@ -8092,7 +8108,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     if (clickCount == 2)
                     {
 
-                        if(ApliAcabado != "E")
+                        if (ApliAcabado != "E")
                         {
 
                             // Cambiar el IDGrupoAcabado del DataSource 
@@ -20158,6 +20174,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 DataGridInsumo.DataBind();
                 PanelInsumo.Update();
 
+                BotonesPorDefectoInsumos(sender, e);
+
             }
         }
 
@@ -20325,6 +20343,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 DataGridInsumo.DataSource = dt;
                 DataGridInsumo.DataBind();
                 PanelInsumo.Update();
+
+                BotonesPorDefectoInsumos(sender, e);
             }
 
         }
@@ -20374,7 +20394,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     Session.Remove("PrimerClicTime5");
                 }
                 else
-                {
+                {  // Validar permisos
+                    bool tienePermisoInsumo = Validar_Permiso_Area(26);
+
+                    if (tienePermisoInsumo)
+                    {
+                        BtnModificarInsumo.Enabled = true;
+                        BtnModificarInsumo.CssClass = "btn btn-sm shadow button-enabled";
+
+                        BtnEliminarInsumo.Enabled = true;
+                        BtnEliminarInsumo.CssClass = "btn btn-sm shadow button-enabled RojoCancelar";
+
+                        BtnCopiarInsumo.Enabled = true;
+                        BtnCopiarInsumo.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
+                    }
 
                     e.Item.CssClass = "fila-seleccionada1";
                     // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
@@ -20395,96 +20428,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Obtener los valores de los controles de búsqueda
             string criterioModulo = TextDescripcionFamilia.Text.Trim();
             string alturaModulo = TextAlturaModulo.Text.Trim();
-            string familiaModulo = DropDownListGrupo.SelectedItem.Text; // Se asume que 'DropDownListGrupo' es un DropDownList
-            string idModulo = TextCriterioModulo.Text.Trim();  // Asumiendo que el Id_Modulo es el mismo criterio para buscar
+            string familiaModulo = DropDownListGrupo.SelectedItem.Text;
+            string idModulo = TextCriterioModulo.Text.Trim();
 
-            // Consulta base
-            string consulta = @"SELECT tblModulo.*, tblFamiliaModulo.*, tblTipoModulo.Descripcion_TipoModulo, 
-                        tblModulo.Descripcion_Modulo, tblModulo.Altura, 
-                        tblFamiliaModulo.Descripcion_Familia, tblModulo.Id_Modulo 
-                        FROM tblTipoModulo 
-                        INNER JOIN (tblFamiliaModulo 
-                        INNER JOIN tblModulo ON tblFamiliaModulo.ID_Familia = tblModulo.ID_Familia) 
-                        ON tblTipoModulo.Id_TipoModulo = tblModulo.Id_TipoModulo";
+            // Llamar al método para cargar los módulos
+            CargarModulos(criterioModulo, alturaModulo, familiaModulo, idModulo);
 
-            // Lista de condiciones para el WHERE
-            List<string> condiciones = new List<string>();
-
-            // Lista de parámetros para la consulta
-            List<SqlParameter> parametros = new List<SqlParameter>();
-
-            // Si el campo criterio de módulo no está vacío
-            if (!string.IsNullOrEmpty(criterioModulo))
-            {
-                condiciones.Add("tblModulo.Descripcion_Modulo LIKE @criterioModulo");
-                parametros.Add(new SqlParameter("@criterioModulo", "%" + criterioModulo + "%"));
-            }
-
-            // Si el campo altura de módulo no está vacío
-            if (!string.IsNullOrEmpty(alturaModulo))
-            {
-                condiciones.Add("tblModulo.Altura LIKE @alturaModulo");
-                parametros.Add(new SqlParameter("@alturaModulo", alturaModulo + "%"));
-            }
-
-            // Si el campo familia de módulo no está vacío
-            if (!string.IsNullOrEmpty(familiaModulo) && familiaModulo != "")
-            {
-                condiciones.Add("tblFamiliaModulo.Descripcion_Familia LIKE @familiaModulo");
-                parametros.Add(new SqlParameter("@familiaModulo", familiaModulo));
-            }
-
-            // Si el campo ID de módulo no está vacío
-            if (!string.IsNullOrEmpty(idModulo))
-            {
-                condiciones.Add("tblModulo.Id_Modulo LIKE @idModulo");
-                parametros.Add(new SqlParameter("@idModulo", idModulo + "%"));
-            }
-
-            // Agregar condiciones al WHERE
-            if (condiciones.Count > 0)
-            {
-                consulta += " WHERE " + string.Join(" AND ", condiciones);
-            }
-
-            // Agregar ORDER BY
-            consulta += " ORDER BY tblModulo.Descripcion_Modulo ASC, tblModulo.Altura ASC";
-
-            // Conexión a la base de datos
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
-            {
-                SqlCommand cmd = new SqlCommand(consulta, conn);
-
-                // Agregar los parámetros al comando
-                cmd.Parameters.AddRange(parametros.ToArray());
-
-                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-
-                try
-                {
-                    conn.Open();
-                    adapter.Fill(dt);
-
-                    if (dt.Rows.Count > 0)
-                    {
-                        // Llenar el DataGrid con los resultados
-                        DatagridModulo1.DataSource = dt;
-                        DatagridModulo1.DataBind();
-                    }
-                    else
-                    {
-                        // Limpiar el DataGrid si no hay resultados
-                        DatagridModulo1.DataSource = null;
-                        DatagridModulo1.DataBind();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Manejar errores (puedes agregar un log o mostrar un mensaje de error)
-                }
-            }
+            // Restablecer botones o realizar otras acciones si es necesario
+            BotonesPorDefectoModulos(sender, e);
         }
+
 
         protected void DatagridModulo1_ItemCommand(object source, DataGridCommandEventArgs e)
         {
@@ -20521,6 +20474,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     {
                         BtnChequear.CssClass = "btn btn-sm shadow linkButtonClicked2 text-success";
                     }
+                    BtnChequear.Enabled = true;
                 }
 
                 string moduloID = row.Cells[1].Text;
@@ -20546,6 +20500,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             BtnCopiarModuloAtributos.Enabled = true;
             BtnCopiarModuloAtributos.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
+            BtnEliminarModulo.Enabled = true;
+            BtnEliminarModulo.CssClass = "btn btn-sm shadow button-enabled RojoCancelar";
 
         }
 
@@ -20758,15 +20714,382 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-        
+
 
         protected void BtnConsultarModulo_Click(object sender, EventArgs e)
         {
             Session["Modulo"] = "Consultar";
             Response.Redirect("~/Formularios/DiseñoYDesarrollo/Modulo.aspx");
         }
+
+        private bool Validar_Permiso_Area(int idPermiso)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT COUNT(*) FROM tblPermiso_Empleado WHERE ID_Empleado = @ID_Empleado AND ID_Permiso = @ID_Permiso";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ID_Empleado", Session["CedulaLogeada"].ToString());
+                    command.Parameters.AddWithValue("@ID_Permiso", idPermiso);
+
+                    int count = (int)command.ExecuteScalar();
+                    return count > 0; // Retorna true si el permiso existe, false de lo contrario
+                }
+            }
+        }
+
+        protected void BtnEliminarModulo_Click(object sender, EventArgs e)
+        {
+            string idModulo = Session["IDModulo"]?.ToString();
+
+            // Asegúrate de que has seleccionado un módulo para eliminar
+            if (idModulo == null)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showError", "alert('Por favor, selecciona un módulo para eliminar.');", true);
+                return;
+            }
+
+            // Conexión a la base de datos
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand("SELECT COUNT(Id_Modulo) FROM tblPanel_Modulo WHERE Id_Modulo = @IdModulo", conn);
+                cmd.Parameters.AddWithValue("@IdModulo", idModulo);
+
+                try
+                {
+                    conn.Open();
+                    int count = (int)cmd.ExecuteScalar();
+
+                    // Definir el mensaje
+                    string mensaje = count > 0
+                        ? $"El Módulo {idModulo} hace parte de uno o más Objetos. Se Recomienda no Borrar ¿Deseas borrarlo?"
+                        : $"¿Estás seguro de que quieres eliminar el módulo {idModulo}?";
+
+                    // Pasar el mensaje al modal
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", $"$('#EliminarModulo2').text('{mensaje}'); $('#EliminarModulo').modal('show');", true);
+
+                    // Guardar el Id del módulo en un campo de sesión o hidden field
+                    Session["IDModuloEliminar"] = idModulo;
+                }
+                catch (Exception ex)
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showError", $"alert('Error al eliminar el módulo: {ex.Message}');", true);
+                }
+            }
+        }
+
+        protected void ConfirmarEliminacion_Click(object sender, EventArgs e)
+        {
+            string idModulo = Session["IDModulo"]?.ToString();
+
+            if (idModulo == null)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showError", "alert('No se pudo determinar el módulo a eliminar.');", true);
+                return;
+            }
+
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                SqlCommand deleteCmd = new SqlCommand("DELETE FROM tblModulo WHERE Id_Modulo = @IdModulo", conn);
+                deleteCmd.Parameters.AddWithValue("@IdModulo", idModulo);
+
+                try
+                {
+                    conn.Open();
+                    deleteCmd.ExecuteNonQuery();
+
+                    // Recargar el DataGrid
+                    RecargarModulos();
+                    BotonesPorDefectoModulos(sender, e);
+
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showSuccess", "alert('Módulo eliminado correctamente.');", true);
+                }
+                catch (Exception ex)
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showError", $"alert('Error al eliminar el módulo: {ex.Message}');", true);
+                }
+            }
+
+            // Limpiar la sesión
+            Session.Remove("IDModuloEliminar");
+        }
+
+        protected void RecargarModulos()
+        {
+            // Obtener los valores actuales de los controles de búsqueda
+            string criterioModulo = TextDescripcionFamilia.Text.Trim();
+            string alturaModulo = TextAlturaModulo.Text.Trim();
+            string familiaModulo = DropDownListGrupo.SelectedItem.Text;
+            string idModulo = TextCriterioModulo.Text.Trim();
+
+            // Llamar al método para cargar los módulos
+            CargarModulos(criterioModulo, alturaModulo, familiaModulo, idModulo);
+        }
+
+
+        private void CargarModulos(string criterioModulo, string alturaModulo, string familiaModulo, string idModulo)
+        {
+            // Consulta base
+            string consulta = @"SELECT tblModulo.*, tblFamiliaModulo.*, tblTipoModulo.Descripcion_TipoModulo, 
+                tblModulo.Descripcion_Modulo, tblModulo.Altura, 
+                tblFamiliaModulo.Descripcion_Familia, tblModulo.Id_Modulo 
+                FROM tblTipoModulo 
+                INNER JOIN (tblFamiliaModulo 
+                INNER JOIN tblModulo ON tblFamiliaModulo.ID_Familia = tblModulo.ID_Familia) 
+                ON tblTipoModulo.Id_TipoModulo = tblModulo.Id_TipoModulo";
+
+            // Lista de condiciones para el WHERE
+            List<string> condiciones = new List<string>();
+            List<SqlParameter> parametros = new List<SqlParameter>();
+
+            // Aplicar filtros de búsqueda
+            if (!string.IsNullOrEmpty(criterioModulo))
+            {
+                condiciones.Add("tblModulo.Descripcion_Modulo LIKE @criterioModulo");
+                parametros.Add(new SqlParameter("@criterioModulo", "%" + criterioModulo + "%"));
+            }
+
+            if (!string.IsNullOrEmpty(alturaModulo))
+            {
+                condiciones.Add("tblModulo.Altura LIKE @alturaModulo");
+                parametros.Add(new SqlParameter("@alturaModulo", alturaModulo + "%"));
+            }
+
+            if (!string.IsNullOrEmpty(familiaModulo) && familiaModulo != "Seleccionar familia")
+            {
+                condiciones.Add("tblFamiliaModulo.Descripcion_Familia LIKE @familiaModulo");
+                parametros.Add(new SqlParameter("@familiaModulo", familiaModulo));
+            }
+
+            if (!string.IsNullOrEmpty(idModulo))
+            {
+                condiciones.Add("tblModulo.Id_Modulo LIKE @idModulo");
+                parametros.Add(new SqlParameter("@idModulo", idModulo + "%"));
+            }
+
+            // Agregar condiciones al WHERE
+            if (condiciones.Count > 0)
+            {
+                consulta += " WHERE " + string.Join(" AND ", condiciones);
+            }
+
+            // Agregar ORDER BY
+            consulta += " ORDER BY tblModulo.Descripcion_Modulo ASC, tblModulo.Altura ASC";
+
+            // Conexión a la base de datos
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand(consulta, conn);
+                cmd.Parameters.AddRange(parametros.ToArray());
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+
+                try
+                {
+                    conn.Open();
+                    adapter.Fill(dt);
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        // Llenar el DataGrid con los resultados
+                        DatagridModulo1.DataSource = dt;
+                        DatagridModulo1.DataBind();
+                    }
+                    else
+                    {
+                        // Limpiar el DataGrid si no hay resultados
+                        DatagridModulo1.DataSource = null;
+                        DatagridModulo1.DataBind();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showSuccess", "alert('Ocurrió un error al cargar los módulos.');", true);
+                }
+            }
+        }
+
+        protected void BtnNuevoInsumo_Click(object sender, EventArgs e)
+        {
+            Session["FrmInsumo"] = "Nuevo";
+            Response.Redirect("~/Formularios/DiseñoYDesarrollo/frmInsumos.aspx");
+        }
+
+        protected void BtnModificarInsumo_Click(object sender, EventArgs e)
+        {
+            Session["FrmInsumo"] = "Modificar";
+            Response.Redirect("~/Formularios/DiseñoYDesarrollo/frmInsumos.aspx");
+        }
+
+        protected void BtnCopiarInsumo_Click(object sender, EventArgs e)
+        {
+            Session["FrmInsumo"] = "Copiar";
+            Response.Redirect("~/Formularios/DiseñoYDesarrollo/frmInsumos.aspx");
+        }
+
+        protected void BtnEliminarInsumo_Click(object sender, EventArgs e)
+        {
+            if (Session["Id_Insumo"] != null)
+            {
+                int idInsumo;
+                if (int.TryParse(Session["Id_Insumo"].ToString(), out idInsumo))
+                {
+                    string descripcionInsumo = "";
+
+                    // Consultar la descripción del insumo
+                    string selectDescripcionSql = $"SELECT Descripcion_Insumo FROM tblInsumo WHERE Id_Insumo = @IdInsumo";
+
+                    using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+                    {
+                        connection.Open();
+
+                        // Consultar descripción
+                        using (SqlCommand command = new SqlCommand(selectDescripcionSql, connection))
+                        {
+                            command.Parameters.AddWithValue("@IdInsumo", idInsumo);
+                            object result = command.ExecuteScalar();
+                            if (result != null)
+                            {
+                                descripcionInsumo = result.ToString();
+                            }
+                            else
+                            {
+                                // Manejar el caso donde no se encuentra el insumo
+                                ClientScript.RegisterStartupScript(this.GetType(), "Error", "alert('Insumo no encontrado.');", true);
+                                return;
+                            }
+                        }
+
+                        // Comprobar si el insumo pertenece a algún módulo usando un parámetro
+                        string sSql = "ctaInsumo_Pertenece_A";
+                        using (SqlCommand commandCheck = new SqlCommand(sSql, connection))
+                        {
+                            commandCheck.CommandType = CommandType.StoredProcedure; // Establece el tipo de comando como Stored Procedure
+                            commandCheck.Parameters.AddWithValue("@Ins", idInsumo.ToString()); // Convierte idInsumo a string
+
+                            // Ejecutar el procedimiento y verificar el resultado
+                            if (commandCheck.ExecuteScalar() != null) // Cambia esto según la lógica de tu función
+                            {
+                                string contenidoModalOT = "El insumo " + descripcionInsumo + " Pertenece a módulo(s) que hacen parte de uno o varios Objetos. ";
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#InsumoPerteneceAModulos').modal('show'); $('#InsumoPerteneceAModulos2').text('" + contenidoModalOT + "');", true);
+                                return; // Salimos del método para evitar la continuación de la ejecución
+                            }
+                        }
+
+                        // Pregunta de confirmación general
+                        string contenidoModalOT2 = "¿Quiere eliminar el insumo " + descripcionInsumo + "? ";
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#EliminarInsumo').modal('show'); $('#EliminarInsumo2').text('" + contenidoModalOT2 + "');", true);
+                    }
+                }
+                else
+                {
+                    // Manejar el caso donde la conversión falla
+                    ClientScript.RegisterStartupScript(this.GetType(), "Error", "alert('Id de insumo inválido.');", true);
+                }
+            }
+            else
+            {
+                // Manejar el caso donde la sesión es nula
+                ClientScript.RegisterStartupScript(this.GetType(), "Error", "alert('No se ha encontrado el Id de insumo en la sesión.');", true);
+            }
+        }
+
+
+
+        public void BtnConfirmarEliminar_Click(object sender, EventArgs e)
+        {
+            // Obtener el Id_Insumo de la sesión
+            int idInsumo = (int)Session["Id_Insumo"];
+            string sqlEliminar = "DELETE FROM tblInsumo WHERE Id_Insumo = @IdInsumo";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(sqlEliminar, connection))
+                    {
+                        command.Parameters.AddWithValue("@IdInsumo", idInsumo);
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        // Mensaje de éxito o error
+                        string message = rowsAffected > 0
+                            ? "Insumo eliminado exitosamente."
+                            : "No se encontró el insumo para eliminar.";
+
+                        CargarDatosInsumos();
+                        BotonesPorDefectoInsumos(sender, e);
+
+                        ClientScript.RegisterStartupScript(this.GetType(), "Message", $"alert('{message}');", true);
+
+                        
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Mensaje de error genérico
+                ClientScript.RegisterStartupScript(this.GetType(), "Error", $"alert('Error: {ex.Message}');", true);
+            }
+        }
+
+        protected void BtnChequear_Click(object sender, EventArgs e)
+        {
+            int idModulo = Convert.ToInt32(Session["IDModulo"]); // Obtener el ID del módulo desde la sesión
+            string nombreUsuario = Session["usuariologueado"].ToString(); // Obtener el nombre de usuario desde la sesión
+            bool isChequeado;
+
+            string sSql = "SELECT Chequeado FROM tblModulo WHERE Id_Modulo = @IdModulo";
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                conn.Open();
+
+                // Obtener el estado actual de 'Chequeado' desde la base de datos
+                using (SqlCommand cmd = new SqlCommand(sSql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@IdModulo", idModulo);
+                    isChequeado = Convert.ToBoolean(cmd.ExecuteScalar()); // True si está chequeado, False si no
+                }
+
+                // Invertir el estado actual para la actualización
+                bool nuevoEstadoChequeado = !isChequeado;
+
+                // Verificar el permiso si el usuario intenta desmarcar el módulo
+                if (!nuevoEstadoChequeado && !Validar_Permiso_Area(41))
+                {
+                    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('No tiene el permiso para desbloquear bloque.');", true);
+                    return;
+                }
+
+                // Actualizar el estado de 'Chequeado', Responsable y FechaChequeo en la base de datos
+                sSql = "UPDATE tblModulo SET Chequeado = @Chequeado, Responsable = @Responsable, FechaChequeo = GETDATE() WHERE Id_Modulo = @IdModulo";
+                using (SqlCommand cmdUpdate = new SqlCommand(sSql, conn))
+                {
+                    cmdUpdate.Parameters.AddWithValue("@Chequeado", nuevoEstadoChequeado ? 1 : 0);
+                    cmdUpdate.Parameters.AddWithValue("@Responsable", nombreUsuario);
+                    cmdUpdate.Parameters.AddWithValue("@IdModulo", idModulo);
+
+                    cmdUpdate.ExecuteNonQuery();
+                }
+
+                RecargarModulos();
+            }
+        }
+
+      
+
+      
+
+
     }
 }
+
 
 
 

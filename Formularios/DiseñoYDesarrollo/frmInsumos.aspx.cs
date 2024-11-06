@@ -22,19 +22,25 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             {
                 if (!IsPostBack)
                 {
-                    InicializarBotones();
-                    CargarInsumo();
-                    GuardarVistas();
-                    DeshabilitarControlesExceptoCerrar(this.container);
-                    DropAdiAca.DataBind();
-                    DropAdiAca.Items.Insert(0, new ListItem(""));
-                    desabilitarTextbox();
-
-                    if (Session["CRUDTipoInsumo"]?.ToString() == "3")
+                    cargarSiempre();
+                    string tipoAccion = Session["FrmInsumo"] as string;
+                    if (tipoAccion == "Nuevo")
                     {
-                        // Activar Tab Plano 
-                        string script = "activarPestana('TipoInsumoGrupoAcabados-tab', 'TipoInsumoGrupoAcabados-content');";
-                        ClientScript.RegisterStartupScript(this.GetType(), "activarPestanaScript", script, true);
+                        valoresPorDefecto();
+                        habilitarTextboxNuevo();
+
+                        TextCodInvInsumo.Text = "0000000";
+                        TextFacGanInsumo.Text = "1";
+                        TextFacDesInsumo.Text = "1";
+                    }
+                    if (tipoAccion == "Modificar")
+                    {
+                        habilitarTextboxNuevo();
+                    }
+                    if (tipoAccion == "Copiar")
+                    {
+                        valoresPorDefecto();
+                        habilitarTextboxNuevo();
                     }
                 }
             }
@@ -42,6 +48,138 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             {
                 Response.Redirect("~/Formularios/Login.aspx");
             }
+        }
+
+        protected void cargarSiempre()
+        {
+            TextFechaCreacionInsumo.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            TextFechaActualizacion.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            CargarUnidadMedida();
+            CargarTipoInsumo();
+            InicializarBotones();
+            CargarInsumo();
+            GuardarVistas();
+            DeshabilitarControlesExceptoCerrar(this.container);
+            DropAdiAca.DataBind();
+            DropAdiAca.Items.Insert(0, new ListItem(""));
+            desabilitarTextbox();
+           
+        }
+
+        private void CargarTipoInsumo()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string query = "SELECT * FROM tblTipoInsumo ORDER BY Descripcion ASC";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    dtacboTipoInsumo.Items.Clear(); // Limpiar los items existentes
+
+                    // Agregar una fila vacía
+                    dtacboTipoInsumo.Items.Add(new ListItem(" ", "")); // Primer elemento vacío
+
+                    while (reader.Read())
+                    {
+                        // Agregar los elementos al DropDownList
+                        ListItem item = new ListItem(reader["Descripcion"].ToString(), reader["Id_TipoInsumo"].ToString());
+                        dtacboTipoInsumo.Items.Add(item);
+                    }
+                }
+            }
+        }
+
+        private void CargarUnidadMedida()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string query = "SELECT * FROM tblUnidad_Medida ORDER BY Id_UnidadMedida";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    DropAbreviado.Items.Clear(); // Limpiar los items existentes
+
+                    // Agregar una fila vacía
+                    DropAbreviado.Items.Add(new ListItem(" ", "")); // Primer elemento vacío
+
+                    while (reader.Read())
+                    {
+                        // Agregar los elementos al DropDownList
+                        ListItem item = new ListItem(reader["Abreviado"].ToString(), reader["Id_UnidadMedida"].ToString());
+                        DropAbreviado.Items.Add(item);
+                    }
+                }
+            }
+        }
+
+        protected void valoresPorDefecto()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string query = "SELECT MAX(Id_Insumo) FROM tblInsumo";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+
+                // Ejecutar la consulta y obtener el valor máximo
+                object result = cmd.ExecuteScalar();
+                int newIdInsumo;
+
+                // Si hay un resultado, sumamos 1, de lo contrario, asignamos 1
+                if (result != DBNull.Value)
+                {
+                    newIdInsumo = Convert.ToInt32(result) + 1;
+                }
+                else
+                {
+                    newIdInsumo = 1; // Si no hay registros, comenzamos con 1
+                }
+
+                // Asignar el nuevo ID al TextBox
+                textInsumo.Text = newIdInsumo.ToString(); // Asegúrate de que textInsumo esté referenciado correctamente.
+            }
+        }
+
+        protected void habilitarTextboxNuevo()
+        {
+            TextDescripcionInsumo.Enabled = true;
+            TextDescripcionInsumo.CssClass = "form-control form-control-sm";
+
+            dtacboTipoInsumo.Enabled = true;
+            dtacboTipoInsumo.CssClass = "form-control form-control-sm";
+
+            DropAbreviado.Enabled = true;
+            DropAbreviado.CssClass = "form-control form-control-sm";
+
+            TextValorInsumo.Enabled = true;
+            TextValorInsumo.CssClass = "form-control form-control-sm";
+
+            DropAcabadosDesde.Enabled = true;
+            DropAcabadosDesde.CssClass = "form-control form-control-sm";
+
+            TextCodInvInsumo.Enabled = true;
+            TextCodInvInsumo.CssClass = "form-control form-control-sm";
+
+            TextFacGanInsumo.Enabled = true;
+            TextFacGanInsumo.CssClass = "form-control form-control-sm";
+
+            TextFacDesInsumo.Enabled = true;
+            TextFacDesInsumo.CssClass = "form-control form-control-sm";
+
+            TextPesoInsumo.Enabled = true;
+            TextPesoInsumo.CssClass = "form-control form-control-sm";
+
+            TextUndXPaq.Enabled = true;
+            TextUndXPaq.CssClass = "form-control form-control-sm";
         }
 
         protected void desabilitarTextbox()
@@ -61,14 +199,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         {
             ViewState["TipoInsumo"] = dtacboTipoInsumo.SelectedValue;
             ViewState["UnidadMedida"] = DropAbreviado.SelectedValue;
-            ViewState["DescripcionInsumo"] = Textbox4.Text;
+            ViewState["DescripcionInsumo"] = TextDescripcionInsumo.Text;
             ViewState["AcabadoDesde"] = DropAcabadosDesde.SelectedValue;
-            ViewState["ValorUnitario"] = Textbox6.Text;
-            ViewState["ID_Inventario"] = Textbox9.Text;
-            ViewState["Peso"] = Textbox12.Text;
-            ViewState["UndXPaquete"] = Textbox13.Text;
-            ViewState["FactorGanancia"] = Textbox10.Text;
-            ViewState["FactorDesperdicio"] = Textbox11.Text;
+            ViewState["ValorUnitario"] = TextValorInsumo.Text;
+            ViewState["ID_Inventario"] = TextCodInvInsumo.Text;
+            ViewState["Peso"] = TextPesoInsumo.Text;
+            ViewState["UndXPaquete"] = TextUndXPaq.Text;
+            ViewState["FactorGanancia"] = TextFacGanInsumo.Text;
+            ViewState["FactorDesperdicio"] = TextFacDesInsumo.Text;
         }
 
         // Método para evaluar si habilitar los botones
@@ -78,25 +216,25 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             bool cambiosDetectados =
                
                 
-                (Textbox4.Text != (string)ViewState["DescripcionInsumo"]) ||
+                (TextDescripcionInsumo.Text != (string)ViewState["DescripcionInsumo"]) ||
                 (DropAcabadosDesde.SelectedValue != (string)ViewState["AcabadoDesde"]) ||
-                (Textbox6.Text != (string)ViewState["ValorUnitario"]) ||
-                (Textbox9.Text != (string)ViewState["ID_Inventario"]) ||
-                (Textbox12.Text != (string)ViewState["Peso"]) ||
-                (Textbox13.Text != (string)ViewState["UndXPaquete"]) ||
-                (Textbox10.Text != (string)ViewState["FactorGanancia"]) ||
-                (Textbox11.Text != (string)ViewState["FactorDesperdicio"]);
+                (TextValorInsumo.Text != (string)ViewState["ValorUnitario"]) ||
+                (TextCodInvInsumo.Text != (string)ViewState["ID_Inventario"]) ||
+                (TextPesoInsumo.Text != (string)ViewState["Peso"]) ||
+                (TextUndXPaq.Text != (string)ViewState["UndXPaquete"]) ||
+                (TextFacGanInsumo.Text != (string)ViewState["FactorGanancia"]) ||
+                (TextFacDesInsumo.Text != (string)ViewState["FactorDesperdicio"]);
 
             // Validaciones adicionales
             bool camposValidos =
                 !string.IsNullOrWhiteSpace(dtacboTipoInsumo.SelectedValue) &&
                 !string.IsNullOrWhiteSpace(DropAbreviado.SelectedValue) &&
-                !string.IsNullOrWhiteSpace(Textbox4.Text) &&
+                !string.IsNullOrWhiteSpace(TextDescripcionInsumo.Text) &&
                 !string.IsNullOrWhiteSpace(DropAcabadosDesde.SelectedValue) &&
-                !string.IsNullOrWhiteSpace(Textbox6.Text) &&
-                !string.IsNullOrWhiteSpace(Textbox12.Text) &&
-                decimal.TryParse(Textbox6.Text, out _) &&  // Verificamos si es numérico
-                decimal.TryParse(Textbox12.Text, out _);   // Verificamos si es numérico
+                !string.IsNullOrWhiteSpace(TextValorInsumo.Text) &&
+                !string.IsNullOrWhiteSpace(TextPesoInsumo.Text) &&
+                decimal.TryParse(TextValorInsumo.Text, out _) &&  // Verificamos si es numérico
+                decimal.TryParse(TextPesoInsumo.Text, out _);   // Verificamos si es numérico
 
             // Lógica basada en el departamento
             if (departamento == "Compra")
@@ -108,11 +246,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             else
             {
                 bool camposDepartamentoValidos = camposValidos &&
-                    !string.IsNullOrWhiteSpace(Textbox10.Text) && // FactorGanancia
-                    !string.IsNullOrWhiteSpace(Textbox11.Text) && // FactorDesperdicio
-                    decimal.TryParse(Textbox10.Text, out _) &&
-                    decimal.TryParse(Textbox11.Text, out _) &&
-                    decimal.Parse(Textbox11.Text) >= 1; // Validamos que FactorDesperdicio >= 1
+                    !string.IsNullOrWhiteSpace(TextFacGanInsumo.Text) && // FactorGanancia
+                    !string.IsNullOrWhiteSpace(TextFacDesInsumo.Text) && // FactorDesperdicio
+                    decimal.TryParse(TextFacGanInsumo.Text, out _) &&
+                    decimal.TryParse(TextFacDesInsumo.Text, out _) &&
+                    decimal.TryParse(TextUndXPaq.Text, out _) &&
+                    decimal.Parse(TextFacDesInsumo.Text) >= 1; // Validamos que FactorDesperdicio >= 1
 
                 BtnGrabar.Enabled = cambiosDetectados && camposDepartamentoValidos;
                 BtnCancelar.Enabled = cambiosDetectados;
@@ -122,8 +261,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         // Eventos para detectar cambios en los controles
         protected void Control_Changed(object sender, EventArgs e)
         {
-            string departamento = "Compra"; // Cambia esto según la lógica de tu aplicación
-            EvaluarEstadoBotones(departamento);
+                string departamento = "Diseño";
+                EvaluarEstadoBotones(departamento);
         }
 
         private void InicializarBotones()
@@ -134,7 +273,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             BtnCancelar.CssClass = "btn linkButtonClicked2 shadow-sm text-dark btn-sm";
 
             BtnAdiAca.Enabled = true;
-            BtnAdiAca.CssClass = "btn button-enabled shadow-sm btn-sm mb-2";
+            BtnAdiAca.CssClass = "btn button-enabled text-success shadow-sm btn-sm mb-2";
 
             BtnModAca.Enabled = false;
             BtnModAca.CssClass = "btn button-disabled shadow-sm text-dark btn-sm mb-2";
@@ -143,7 +282,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             BtnGraAca.CssClass = "btn button-disabled shadow-sm text-dark btn-sm mb-2";
 
             BtnAdiAca2.Enabled = true;
-            BtnAdiAca2.CssClass = "btn button-enabled shadow-sm btn-sm";
+            BtnAdiAca2.CssClass = "btn button-enabled text-success shadow-sm btn-sm";
 
             BtnModAca2.Enabled = false;
             BtnModAca2.CssClass = "btn button-disabled shadow-sm text-dark btn-sm";
@@ -152,7 +291,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             BtnGraAca2.CssClass = "btn button-disabled shadow-sm text-dark btn-sm";
 
             BtnAdiAca3.Enabled = true;
-            BtnAdiAca3.CssClass = "btn button-enabled shadow-sm btn-sm";
+            BtnAdiAca3.CssClass = "btn button-enabled text-success shadow-sm btn-sm";
 
             BtnModAca3.Enabled = false;
             BtnModAca3.CssClass = "btn button-disabled shadow-sm text-dark btn-sm";
@@ -264,18 +403,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         private void AsignarDatosAControles(Insumo insumo)
         {
             textInsumo.Text = insumo.Id;
-            Textbox4.Text = insumo.Descripcion;
-            Textbox6.Text = insumo.ValorUnitario.ToString();
+            TextDescripcionInsumo.Text = insumo.Descripcion;
+            TextValorInsumo.Text = insumo.ValorUnitario.ToString();
             dtacboTipoInsumo.SelectedValue = insumo.TipoInsumoId;
             DropAbreviado.SelectedValue = insumo.UnidadMedidaId;
-            Textbox11.Text = insumo.FactorDesperdicio.ToString();
-            Textbox10.Text = insumo.FactorGanancia.ToString();
-            Textbox9.Text = insumo.InventarioId;
+            TextFacDesInsumo.Text = insumo.FactorDesperdicio.ToString();
+            TextFacGanInsumo.Text = insumo.FactorGanancia.ToString();
+            TextCodInvInsumo.Text = insumo.InventarioId;
             DropAcabadosDesde.SelectedValue = insumo.AplicacionAcabado;
-            Textbox13.Text = insumo.UndxPaquete.ToString();
-            Textbox12.Text = insumo.PesoKG.ToString();
-            Textbox1.Text = insumo.FechaCreacion.HasValue ? insumo.FechaCreacion.Value.ToString("yyyy-MM-dd") : string.Empty;
-            Textbox2.Text = insumo.FechaActualizacion.HasValue ? insumo.FechaActualizacion.Value.ToString("yyyy-MM-dd") : string.Empty;
+            TextUndXPaq.Text = insumo.UndxPaquete.ToString();
+            TextPesoInsumo.Text = insumo.PesoKG.ToString();
+            TextFechaCreacionInsumo.Text = insumo.FechaCreacion.HasValue ? insumo.FechaCreacion.Value.ToString("yyyy-MM-dd") : string.Empty;
+            TextFechaActualizacion.Text = insumo.FechaActualizacion.HasValue ? insumo.FechaActualizacion.Value.ToString("yyyy-MM-dd") : string.Empty;
             Textbox3.Text = insumo.Responsable;
         }
 
@@ -299,8 +438,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                         connection.Open();
                         adapter.Fill(dt);
 
-                        DataGridSolicitudEspecial.DataSource = dt;
-                        DataGridSolicitudEspecial.DataBind();
+                        DatagridInsumo.DataSource = dt;
+                        DatagridInsumo.DataBind();
                     }
                 }
             }
@@ -451,9 +590,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 row.Attributes["id"] = "DataGrid2_row_" + rowIndex;
                 ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DataGrid2_row_" + rowIndex + "');", true);
 
-                // Habilitar el botón Modificar
+                BtnAdiAca.Enabled = true;
+                BtnAdiAca.CssClass = "btn button-enabled shadow-sm text-success btn-sm mb-2";
+
                 BtnModAca.Enabled = true;
                 BtnModAca.CssClass = "btn button-enabled shadow-sm text-dark btn-sm mb-2";
+
+                BtnGraAca.Enabled = false;
+                BtnGraAca.CssClass = "btn button-disabled shadow-sm text-dark btn-sm mb-2";
             }
         }
 
@@ -481,8 +625,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                 e.Item.CssClass = "fila-seleccionada1";
 
+                BtnAdiAca2.Enabled = true;
+                BtnAdiAca2.CssClass = "btn button-enabled shadow-sm text-success btn-sm mb-2";
+
                 BtnModAca2.Enabled = true;
-                BtnModAca2.CssClass = "btn button-enabled shadow-sm text-dark btn-sm";
+                BtnModAca2.CssClass = "btn button-enabled shadow-sm text-dark btn-sm mb-2";
+
+                BtnGraAca2.Enabled = false;
+                BtnGraAca2.CssClass = "btn button-disabled shadow-sm text-dark btn-sm mb-2";
+
 
                 // Store the selected row index in the DataGrid attribute
                 DataGrid3.Attributes["SelectedRowIndex"] = rowIndex.ToString();
@@ -528,8 +679,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                 e.Item.CssClass = "fila-seleccionada1";
 
+                BtnAdiAca3.Enabled = true;
+                BtnAdiAca3.CssClass = "btn button-enabled shadow-sm text-success btn-sm mb-2";
+
                 BtnModAca3.Enabled = true;
-                BtnModAca3.CssClass = "btn button-enabled shadow-sm text-dark btn-sm";
+                BtnModAca3.CssClass = "btn button-enabled shadow-sm text-dark btn-sm mb-2";
+
+                BtnGraAca3.Enabled = false;
+                BtnGraAca3.CssClass = "btn button-disabled shadow-sm text-dark btn-sm mb-2";
 
                 // Store the selected row index in the DataGrid attribute
                 DataGrid4.Attributes["SelectedRowIndex"] = rowIndex.ToString();
@@ -556,7 +713,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
             // Habilitar/Deshabilitar botones
             BtnGraAca.Enabled = true;
-            BtnGraAca.CssClass = "btn button-enabled shadow-sm text-dark btn-sm mb-2";
+            BtnGraAca.CssClass = "btn button-enabled2 shadow-sm ColorAzulActivo btn-sm mb-2";
 
             BtnModAca.Enabled = false;
             BtnModAca.CssClass = "btn button-disabled shadow-sm text-dark btn-sm mb-2";
@@ -654,8 +811,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeError').modal('show');", true);
                     }
                 }
-                Session["CRUDTipoInsumo"] = 3;
-                Response.Redirect("frmInsumos.aspx");
+                Cargar_Tipo_Insumo();
+                desabilitarTextbox();
+                InicializarBotones();
             }
         }
 
@@ -676,7 +834,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
             // Habilitar el botón "Grabar" para guardar los cambios
             BtnGraAca.Enabled = true;
-            BtnGraAca.CssClass = "btn button-enabled shadow-sm text-dark btn-sm mb-2";
+            BtnGraAca.CssClass = "btn button-enabled2 shadow-sm ColorAzulActivo btn-sm mb-2";
 
             Session["CRUDTipoInsumo"] = 2;
         }
@@ -687,55 +845,72 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
             if (!string.IsNullOrEmpty(descripcionGrupo))
             {
-                // Conexión a la base de datos
                 using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
                 {
                     conn.Open();
-
-                    string query = string.Empty;
-
-                    if (Session["CRUDGrupoAcabado"]?.ToString() == "1")
+                    using (SqlTransaction transaction = conn.BeginTransaction())
                     {
-                        query = "INSERT INTO tblGrupodeAcabado (Descripcion_Grupo) VALUES (@DescripcionGrupo)";
-                        SqlCommand cmd = new SqlCommand(query, conn);
-                        cmd.Parameters.AddWithValue("@DescripcionGrupo", descripcionGrupo);
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                        if (rowsAffected > 0)
+                        try
                         {
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeExito').modal('show');", true);
+                            string query = string.Empty;
+                            int rowsAffected;
+
+                            if (Session["CRUDGrupoAcabado"]?.ToString() == "1") // Inserción
+                            {
+                                query = "INSERT INTO tblGrupodeAcabado (Descripcion_Grupo) VALUES (@DescripcionGrupo)";
+                                rowsAffected = EjecutarComando(query, conn, transaction, descripcionGrupo);
+
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeExito').modal('show');", true);
+                            }
+                            else if (Session["CRUDGrupoAcabado"]?.ToString() == "2") // Actualización
+                            {
+                                int idGrupoAcabado = Convert.ToInt32(Session["Id_GrupoAcabado"]);
+                                query = "UPDATE tblGrupodeAcabado SET Descripcion_Grupo = @DescripcionGrupo WHERE Id_GrupoAcabado = @IdGrupoAcabado";
+                                rowsAffected = EjecutarComando(query, conn, transaction, descripcionGrupo, idGrupoAcabado);
+
+                                // Actualizar también en tblTipoInsumo
+                                query = "UPDATE tblTipoInsumo SET DesGrupoAcabado = @DescripcionGrupo WHERE IdGrupoAcabado = @IdGrupoAcabado";
+                                EjecutarComando(query, conn, transaction, descripcionGrupo, idGrupoAcabado);
+
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensaMensajeExitoActualizacionjeExito').modal('show');", true);
+                            }
+
+                            transaction.Commit(); // Confirmar transacción
+
+                          
                         }
-                        else
+                        catch (Exception)
                         {
+                            transaction.Rollback(); // Revertir cambios en caso de error
                             ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeError').modal('show');", true);
                         }
                     }
-
-                    if (Session["CRUDGrupoAcabado"]?.ToString() == "2")
-                    {
-                        int idGrupoAcabado = Convert.ToInt32(Session["Id_GrupoAcabado"]);  // Se asume que el Id_GrupoAcabado está en la sesión
-                        query = "UPDATE tblGrupodeAcabado SET Descripcion_Grupo = @DescripcionGrupo WHERE Id_GrupoAcabado = @IdGrupoAcabado";
-                        SqlCommand cmd = new SqlCommand(query, conn);
-                        cmd.Parameters.AddWithValue("@DescripcionGrupo", descripcionGrupo);
-                        cmd.Parameters.AddWithValue("@IdGrupoAcabado", idGrupoAcabado);
-                        cmd.ExecuteNonQuery();
-
-                        // También se actualiza en tblTipoInsumo
-                        query = "UPDATE tblTipoInsumo SET DesGrupoAcabado = @DescripcionGrupo WHERE IdGrupoAcabado = @IdGrupoAcabado";
-                        cmd = new SqlCommand(query, conn);
-                        cmd.Parameters.AddWithValue("@DescripcionGrupo", descripcionGrupo);
-                        cmd.Parameters.AddWithValue("@IdGrupoAcabado", idGrupoAcabado);
-                        cmd.ExecuteNonQuery();
-                    }
-                    Session["CRUDTipoInsumo"] = 3;
-                    Response.Redirect("frmInsumos.aspx");
                 }
+
+                CargarGrupoAcabado();
+                desabilitarTextbox();
+                InicializarBotones();
             }
             else
             {
-                // Mostrar alerta si la descripción está vacía
-                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('El campo: descripción tipo insumo es obligatorio.');", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#FaltanCamposPorDigilenciar').modal('show');", true);
             }
         }
+
+        // Método para ejecutar comandos SQL
+        private int EjecutarComando(string query, SqlConnection conn, SqlTransaction transaction, string descripcionGrupo, int? idGrupoAcabado = null)
+        {
+            using (SqlCommand cmd = new SqlCommand(query, conn, transaction))
+            {
+                cmd.Parameters.AddWithValue("@DescripcionGrupo", descripcionGrupo);
+                if (idGrupoAcabado.HasValue)
+                {
+                    cmd.Parameters.AddWithValue("@IdGrupoAcabado", idGrupoAcabado.Value);
+                }
+                return cmd.ExecuteNonQuery();
+            }
+        }
+
 
         protected void BtnAdiAca2_Click(object sender, EventArgs e)
         {
@@ -749,7 +924,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             BtnModAca2.CssClass = "btn button-disabled shadow-sm text-dark btn-sm";
 
             BtnGraAca2.Enabled = true;
-            BtnGraAca2.CssClass = "btn button-enabled shadow-sm text-dark btn-sm";
+            BtnGraAca2.CssClass = "btn button-enabled2 ColorAzulActivo shadow-sm btn-sm";
 
             TextDescripcion2.Focus();
 
@@ -769,7 +944,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             BtnAdiAca2.CssClass = "btn button-disabled shadow-sm text-dark btn-sm mb-2";
 
             BtnGraAca2.Enabled = true;
-            BtnGraAca2.CssClass = "btn button-enabled shadow-sm text-dark btn-sm mb-2";
+            BtnGraAca2.CssClass = "btn button-enabled2 ColorAzulActivo shadow-sm btn-sm mb-2";
 
             Session["CRUDGrupoAcabado"] = 2;
         }
@@ -791,8 +966,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             TextCodInv.Focus();
 
                 // Habilitar el botón "Grabar"
-                BtnGraAca3.Enabled = true;
-            BtnGraAca3.CssClass = "btn button-enabled shadow-sm text-dark btn-sm";
+            BtnGraAca3.Enabled = true;
+            BtnGraAca3.CssClass = "btn button-enabled2 shadow-sm ColorAzulActivo btn-sm";
 
 
             BtnAdiAca3.Enabled = false;
@@ -823,54 +998,59 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
             // Habilitar el botón "Grabar"
             BtnGraAca3.Enabled = true;
-            BtnGraAca3.CssClass = "btn button-enabled shadow-sm text-dark btn-sm";
+            BtnGraAca3.CssClass = "btn button-enabled2 ColorAzulActivo shadow-sm btn-sm";
 
             Session["CRUDAcabados"] = 2;
         }
 
         protected void BtnGraAca3_Click(object sender, EventArgs e)
         {
-
             // Verificar si los campos requeridos no están vacíos
             if (!string.IsNullOrWhiteSpace(TextCodInv.Text) &&
-                !string.IsNullOrWhiteSpace(TextDescripcionAcabado.Text) &&
-                CheckBoxLinea.Checked && CheckBoxActivo.Checked)
+                !string.IsNullOrWhiteSpace(TextDescripcionAcabado.Text))
             {
                 string sSql = "";
                 using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
                 {
                     conn.Open();
-
-                    if (Session["CRUDAcabados"]?.ToString() == "1")
+                    // Validar que "Id_GrupoAcabado" no sea null ni esté vacío
+                    if (Session["Id_GrupoAcabado"] != null && !string.IsNullOrEmpty(Session["Id_GrupoAcabado"].ToString()))
                     {
                         string idGrupoAcabado = Session["Id_GrupoAcabado"].ToString();
-                        // Insertar nuevo registro en la tabla tblacabado
-                        sSql = "INSERT INTO tblacabado (CodInventario, Descripcion_Acabado, ID_GrupoAcabado, Delinea, Activo) " +
-                               "VALUES (@CodInventario, @DescripcionAcabado, @IDGrupoAcabado, @Delinea, @Activo)";
 
-                        using (SqlCommand cmd = new SqlCommand(sSql, conn))
-                        {
-                            cmd.Parameters.AddWithValue("@CodInventario", TextCodInv.Text);
-                            cmd.Parameters.AddWithValue("@DescripcionAcabado", TextDescripcionAcabado.Text);
-                            cmd.Parameters.AddWithValue("@IDGrupoAcabado", idGrupoAcabado); 
-                            cmd.Parameters.AddWithValue("@Delinea", CheckBoxLinea.Checked ? 1 : 0);
-                            cmd.Parameters.AddWithValue("@Activo", CheckBoxActivo.Checked ? 1 : 0);
+                        if (Session["CRUDAcabados"]?.ToString() == "1")
+                    {
+                       
 
-                            int rowsAffected = cmd.ExecuteNonQuery();
-                            if (rowsAffected > 0)
+                            // Insertar nuevo registro en la tabla tblacabado
+                            sSql = "INSERT INTO tblacabado (CodInventario, Descripcion_Acabado, ID_GrupoAcabado, Delinea, Activo) " +
+                                   "VALUES (@CodInventario, @DescripcionAcabado, @IDGrupoAcabado, @Delinea, @Activo)";
+
+                            using (SqlCommand cmd = new SqlCommand(sSql, conn))
                             {
-                                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeExito').modal('show');", true);
+                                cmd.Parameters.AddWithValue("@CodInventario", TextCodInv.Text);
+                                cmd.Parameters.AddWithValue("@DescripcionAcabado", TextDescripcionAcabado.Text);
+                                cmd.Parameters.AddWithValue("@IDGrupoAcabado", idGrupoAcabado);
+                                cmd.Parameters.AddWithValue("@Delinea", CheckBoxLinea.Checked ? 1 : 0);
+                                cmd.Parameters.AddWithValue("@Activo", CheckBoxActivo.Checked ? 1 : 0);
+
+                                int rowsAffected = cmd.ExecuteNonQuery();
+                                if (rowsAffected > 0)
+                                {
+                                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeExito').modal('show');", true);
+                                }
+                                else
+                                {
+                                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeError').modal('show');", true);
+                                }
                             }
-                            else
-                            {
-                                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeError').modal('show');", true);
-                            }
-                        }
+                      
                     }
 
                     if (Session["CRUDAcabados"]?.ToString() == "2")
                     {
                         string idAcabado = Session["IDAcabado"].ToString();
+
                         // Actualizar registro existente en la tabla tblacabado
                         sSql = "UPDATE tblacabado SET CodInventario = @CodInventario, Descripcion_Acabado = @DescripcionAcabado, " +
                                "Delinea = @Delinea, Activo = @Activo WHERE ID_Acabado = @IDAcabado";
@@ -886,23 +1066,199 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                             int rowsAffected = cmd.ExecuteNonQuery();
                             if (rowsAffected > 0)
                             {
-                                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeExito').modal('show');", true);
-                            }
+                                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensaMensajeExitoActualizacionjeExito').modal('show');", true);
+                                }
                             else
                             {
                                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#MensajeError').modal('show');", true);
                             }
                         }
                     }
+
+                        CargarAcabadosPorGrupo(idGrupoAcabado);
+                        desabilitarTextbox();
+                        InicializarBotones();
+                    }
+                    else
+                    {
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ErrorIdGrupoAcabado').modal('show');", true);
+                        return;
+                    }
                 }
-                Session["CRUDTipoInsumo"] = 3;
-                Response.Redirect("frmInsumos.aspx");
+
             }
             else
             {
-               
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#FaltanCamposPorDigilenciar').modal('show');", true);
             }
         }
+
+
+        protected void BtnGrabar_Click(object sender, EventArgs e)
+        {
+            // Obtener la opción de la variable de sesión
+            string opcionInsumo = Session["FrmInsumo"]?.ToString();
+
+            // Capturar los datos del formulario
+            string idInsumo = textInsumo.Text.Trim();
+            string descripcionInsumo = TextDescripcionInsumo.Text;
+            int unidadMedida = Convert.ToInt32(DropAbreviado.SelectedValue);
+            int tipoInsumo = Convert.ToInt32(dtacboTipoInsumo.SelectedValue);
+            decimal valorUnitario = Convert.ToDecimal(TextValorInsumo.Text);
+            decimal factorGanancia = Convert.ToDecimal(TextFacGanInsumo.Text);
+            decimal factorDesperdicio = Convert.ToDecimal(TextFacDesInsumo.Text);
+            string idInventario = TextCodInvInsumo.Text.Trim();
+            string aplicacionAcabado = DropAcabadosDesde.SelectedItem.Text.Substring(0, 1);
+            int undxPaquete = Convert.ToInt32(TextUndXPaq.Text);
+            decimal pesoKG = Convert.ToDecimal(TextPesoInsumo.Text);
+
+            string nombreUsuario = Session["usuariologueado"]?.ToString();
+            string mensajeUsuario = string.Empty;
+            bool operacionExitosa = false;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+                {
+                    connection.Open();
+                    SqlTransaction transaction = connection.BeginTransaction();
+
+                    try
+                    {
+                        SqlCommand command = connection.CreateCommand();
+                        command.Transaction = transaction;
+
+                        // Consulta SQL según la opción seleccionada
+                        switch (opcionInsumo)
+                        {
+                            case "Copiar":
+                                command.CommandText = @"INSERT INTO tblInsumo (Id_Insumo, Descripcion_Insumo, Id_UnidadMedida, Id_TipoInsumo, 
+                            Valor_Unitario, Factor_Ganancia, Factor_Desperdicio, ID_Inventario, AplicacionAcabado, FechaCreacion, 
+                            FechaActualizacion, Responsable, UndxPaquete, PesoKG)
+                            VALUES (@IdInsumo, @DescripcionInsumo, @UnidadMedida, @TipoInsumo, @ValorUnitario, @FactorGanancia, 
+                            @FactorDesperdicio, @IdInventario, @AplicacionAcabado, GETDATE(), GETDATE(), @NombreUsuario, @UndxPaquete, @PesoKG)";
+                                mensajeUsuario = "El insumo ha sido copiado correctamente.";
+                                break;
+
+                            case "Nuevo":
+                                command.CommandText = @"INSERT INTO tblInsumo (Id_Insumo, Descripcion_Insumo, Id_UnidadMedida, Id_TipoInsumo, 
+                            Valor_Unitario, Factor_Ganancia, Factor_Desperdicio, ID_Inventario, AplicacionAcabado, FechaActualizacion, 
+                            Responsable, reportar, Reportar_Despacho, UndxPaquete, PesoKG)
+                            VALUES (@IdInsumo, @DescripcionInsumo, @UnidadMedida, @TipoInsumo, @ValorUnitario, @FactorGanancia, 
+                            @FactorDesperdicio, @IdInventario, @AplicacionAcabado, GETDATE(), @NombreUsuario, 1, 1, @UndxPaquete, @PesoKG)";
+                                mensajeUsuario = "El insumo ha sido creado correctamente.";
+                                break;
+
+                            case "Modificar":
+                                command.CommandText = @"UPDATE tblInsumo SET Descripcion_Insumo = @DescripcionInsumo, Id_UnidadMedida = @UnidadMedida, 
+                            Id_TipoInsumo = @TipoInsumo, Valor_Unitario = @ValorUnitario, Factor_Ganancia = @FactorGanancia, 
+                            Factor_Desperdicio = @FactorDesperdicio, ID_Inventario = @IdInventario, FechaActualizacion = GETDATE(), 
+                            Responsable = @NombreUsuario, AplicacionAcabado = @AplicacionAcabado, UndxPaquete = @UndxPaquete, PesoKG = @PesoKG 
+                            WHERE Id_Insumo = @IdInsumo";
+                                mensajeUsuario = "El insumo ha sido actualizado correctamente.";
+
+                                // Verificar si hay cambios en los campos que afectan el precio de venta
+                                if (ViewState["ValorUnitario"]?.ToString() != TextValorInsumo.Text ||
+                                    ViewState["UnidadMedida"]?.ToString() != DropAbreviado.SelectedValue ||
+                                    ViewState["FactorGanancia"]?.ToString() != TextFacGanInsumo.Text ||
+                                    ViewState["FactorDesperdicio"]?.ToString() != TextFacDesInsumo.Text)
+                                {
+                                    ActualizarPreciosVenta(idInsumo, command);
+                                }
+                                break;
+
+                            default:
+                                mensajeUsuario = "Opción no válida.";
+                                return;
+                        }
+
+                        // Agregar parámetros para prevenir inyección SQL
+                        AgregarParametros(command, idInsumo, descripcionInsumo, unidadMedida, tipoInsumo, valorUnitario,
+                                          factorGanancia, factorDesperdicio, idInventario, aplicacionAcabado, nombreUsuario, undxPaquete, pesoKG);
+
+                        // Ejecutar la consulta principal
+                        command.ExecuteNonQuery();
+
+                        // Confirmar transacción
+                        transaction.Commit();
+                        operacionExitosa = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Deshacer transacción si ocurre un error
+                        transaction.Rollback();
+                        mensajeUsuario = "Ocurrió un error al realizar la operación: " + ex.Message;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                mensajeUsuario = "Error en la conexión a la base de datos: " + ex.Message;
+            }
+
+            // Mostrar mensaje informativo al usuario
+            MostrarMensaje(mensajeUsuario, operacionExitosa);
+
+            // Si la operación fue exitosa, actualizar la sesión y controles
+            if (operacionExitosa)
+            {
+                Session["FrmInsumo"] = "Modificar";
+                habilitarTextboxNuevo();
+                CargarInsumo();
+            }
+        }
+
+        private void AgregarParametros(SqlCommand command, string idInsumo, string descripcionInsumo, int unidadMedida,
+                                       int tipoInsumo, decimal valorUnitario, decimal factorGanancia, decimal factorDesperdicio,
+                                       string idInventario, string aplicacionAcabado, string nombreUsuario, int undxPaquete, decimal pesoKG)
+        {
+            command.Parameters.AddWithValue("@IdInsumo", idInsumo);
+            command.Parameters.AddWithValue("@DescripcionInsumo", descripcionInsumo);
+            command.Parameters.AddWithValue("@UnidadMedida", unidadMedida);
+            command.Parameters.AddWithValue("@TipoInsumo", tipoInsumo);
+            command.Parameters.AddWithValue("@ValorUnitario", valorUnitario);
+            command.Parameters.AddWithValue("@FactorGanancia", factorGanancia);
+            command.Parameters.AddWithValue("@FactorDesperdicio", factorDesperdicio);
+            command.Parameters.AddWithValue("@IdInventario", idInventario);
+            command.Parameters.AddWithValue("@AplicacionAcabado", aplicacionAcabado);
+            command.Parameters.AddWithValue("@NombreUsuario", nombreUsuario);
+            command.Parameters.AddWithValue("@UndxPaquete", undxPaquete);
+            command.Parameters.AddWithValue("@PesoKG", pesoKG);
+        }
+
+        private void ActualizarPreciosVenta(string idInsumo, SqlCommand command)
+        {
+            // Actualizar el precio de los paneles relacionados
+            command.CommandText = @"UPDATE tblPanel SET Precio_Venta = 0, Precio_Anterior = tblPanel.Precio_Venta 
+                            FROM tblPanel INNER JOIN tblPanel_Modulo ON tblPanel.Id_Numerico = tblPanel_Modulo.Id_PanelNum 
+                            INNER JOIN tblModulo_Insumo ON tblPanel_Modulo.Id_Modulo = tblModulo_Insumo.Id_Modulo 
+                            WHERE tblModulo_Insumo.Id_Insumo = @IdInsumo";
+            command.ExecuteNonQuery();
+
+            // Actualizar el precio de las tipologías relacionadas
+            command.CommandText = @"UPDATE tblPanel SET Precio_Venta = 0 WHERE Id_Panel IN 
+                            (SELECT tblPlano.Plano FROM tblPlano 
+                            INNER JOIN tblPlano_Panel ON tblPlano.Plano = tblPlano_Panel.Id_Plano 
+                            INNER JOIN tblPanel AS tblPanel_1 ON tblPlano_Panel.Id_PanelNum = tblPanel_1.Id_Numerico 
+                            INNER JOIN tblPanel_Modulo ON tblPanel_1.Id_Numerico = tblPanel_Modulo.Id_PanelNum 
+                            INNER JOIN tblModulo_Insumo ON tblPanel_Modulo.Id_Modulo = tblModulo_Insumo.Id_Modulo 
+                            WHERE tblModulo_Insumo.Id_Insumo = @IdInsumo)";
+            command.ExecuteNonQuery();
+        }
+
+        private void MostrarMensaje(string mensaje, bool operacionExitosa)
+        {
+            // Cambiar el color del mensaje dependiendo del éxito o fallo de la operación
+            string colorMensaje = operacionExitosa ? "green" : "red";
+
+            // Construir el script para mostrar el mensaje con una alerta de JavaScript
+            string script = $"alert('{mensaje}');";
+
+            // Registrar el script para que se ejecute en el lado del cliente
+            ScriptManager.RegisterStartupScript(this, GetType(), "alert", script, true);
+        }
+
+
 
     }
 

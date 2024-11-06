@@ -4443,49 +4443,49 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.UpdatePanel PanelInsumo;
 
         /// <summary>
-        /// Control LinkButton9.
+        /// Control BtnNuevoInsumo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton LinkButton9;
+        protected global::System.Web.UI.WebControls.LinkButton BtnNuevoInsumo;
 
         /// <summary>
-        /// Control LinkButton10.
+        /// Control BtnGrabarInsumo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton LinkButton10;
+        protected global::System.Web.UI.WebControls.LinkButton BtnGrabarInsumo;
 
         /// <summary>
-        /// Control LinkButton11.
+        /// Control BtnModificarInsumo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton LinkButton11;
+        protected global::System.Web.UI.WebControls.LinkButton BtnModificarInsumo;
 
         /// <summary>
-        /// Control LinkButton12.
+        /// Control BtnEliminarInsumo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton LinkButton12;
+        protected global::System.Web.UI.WebControls.LinkButton BtnEliminarInsumo;
 
         /// <summary>
-        /// Control LinkButton13.
+        /// Control BtnCopiarInsumo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton LinkButton13;
+        protected global::System.Web.UI.WebControls.LinkButton BtnCopiarInsumo;
 
         /// <summary>
         /// Control BtnBuscarInsumo.
@@ -4497,13 +4497,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.LinkButton BtnBuscarInsumo;
 
         /// <summary>
-        /// Control LinkButton15.
+        /// Control BtnNN.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton LinkButton15;
+        protected global::System.Web.UI.WebControls.LinkButton BtnNN;
 
         /// <summary>
         /// Control contentToToggle.
@@ -4569,6 +4569,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.TextBox TextInv;
 
         /// <summary>
+        /// Control DataGridInsumo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DataGrid DataGridInsumo;
+
+        /// <summary>
+        /// Control contentToToggle2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl contentToToggle2;
+
+        /// <summary>
         /// Control Label14.
         /// </summary>
         /// <remarks>
@@ -4623,13 +4641,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.WebControls.Button BtnActCos;
 
         /// <summary>
-        /// Control DataGridInsumo.
+        /// Control BtnConfirmarEliminar.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DataGrid DataGridInsumo;
+        protected global::System.Web.UI.WebControls.Button BtnConfirmarEliminar;
+
+        /// <summary>
+        /// Control BtnConfirmarEliminarPorDefecto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnConfirmarEliminarPorDefecto;
 
         /// <summary>
         /// Control LeerAcad.

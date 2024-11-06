@@ -26,12 +26,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             {
                 if (!IsPostBack)
                 {
-
+                    Session.Remove("CRUDFAMILIAMODULO"); 
+                    Session.Remove("CRUDModuloTabConfiguracion");
                     CargarSiempre();
 
                     string tipoAccion = Session["Modulo"] as string;
                     if (tipoAccion == "Nuevo")
                     {
+                        string scriptDisableTabs = @"
+        document.getElementById('Configuracion-tab').classList.add('disabled');
+        document.getElementById('Configuracion-Content').classList.add('d-none');";
+
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "disableTabsScript", scriptDisableTabs, true);
+                   
 
                     }
                     if (tipoAccion == "Modificar")
@@ -70,12 +77,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             }
             else
             {
-                Response.Redirect("Login.aspx");
+                Response.Redirect("~/Formularios/Login.aspx");
             }
         }
-
-
-
 
         protected void DeshabilitarElementos()
         {
@@ -110,6 +114,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             llenarDatagridFamilia();
 
             llenarDatagridProcesoProductivo();
+
+            deshabilitarElementosFamiliaModulo();
+
+            BtnCancelar.Enabled = true;
+            BtnCancelar.CssClass = "btn btn-sm shadow button-enabled2 RojoCancelar";
+
+            if (ValidarPermisoArea(33))
+            {
+                BtnNuevoFamilia.Enabled = true;
+                BtnNuevoFamilia.CssClass = "btn btn-sm shadow button-enabled2 AzulClaro";
+            }
+        
 
             textModulo.Enabled = false;
             textModulo.CssClass = "form-control form-control-sm";
@@ -193,6 +209,68 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             ViewState["bordeDerechoVisible"] = false;
         }
 
+        protected void deshabilitarElementosFamiliaModulo()
+        {
+            TextDescripcion.Enabled = false;
+            TextDescripcion.CssClass = "form-control form-control-sm";
+
+            TextDescripcionParaObjeto.Enabled = false;
+            TextDescripcionParaObjeto.CssClass = "form-control form-control-sm";
+
+            TextResponsableFamilia.Enabled = false;
+            TextResponsableFamilia.CssClass = "form-control form-control-sm";
+
+            TextUlAct.Enabled = false;
+            TextUlAct.CssClass = "form-control form-control-sm";
+
+            TextDescuentoFinal.Enabled = false;
+            TextDescuentoFinal.CssClass = "form-control form-control-sm";
+
+            BtnNuevoFamilia.Enabled = false;
+            BtnNuevoFamilia.CssClass = "btn btn-sm shadow button-disabled";
+
+            BtnModificarFamilia.Enabled = false;
+            BtnModificarFamilia.CssClass = "btn btn-sm shadow button-disabled";
+
+            BtnGrabarFamilia.Enabled = false;
+            BtnGrabarFamilia.CssClass = "btn btn-sm shadow button-disabled";
+        }
+
+        private bool ValidarPermisoArea(int IdPermiso)
+        {
+            bool tienePermiso = false;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT * FROM tblPermiso_Empleado WHERE ID_Empleado = @ID_Empleado AND ID_Permiso = @ID_Permiso";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ID_Empleado", Session["CedulaLogeada"].ToString());
+                    command.Parameters.AddWithValue("@ID_Permiso", IdPermiso);
+
+                    try
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            // Si el lector tiene filas, el permiso existe.
+                            tienePermiso = reader.HasRows;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Maneja cualquier error de conexión o consulta aquí
+                        Console.WriteLine(ex.Message);
+                    }
+                }
+            }
+
+            return tienePermiso;
+        }
+
+
         private void llenarDatagridFamilia()
         {
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -214,6 +292,30 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     // Manejo de errores
                     Response.Write("Error: " + ex.Message);
                 }
+            }
+        }
+
+        private void llenarDatagridFamiliaFiltro()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "Select * from tblFamiliaModulo where Descripcion_Familia like @DescripcionFamilia order by Descripcion_Familia";
+                SqlCommand command = new SqlCommand(query, connection);
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                DataTable dt = new DataTable();
+
+                
+                    string descripcionFamilia = "%" + TextBuscarFamiliaModulo.Text.Trim() + "%";
+                    command.Parameters.AddWithValue("@DescripcionFamilia", descripcionFamilia);
+
+                    connection.Open();
+                    adapter.Fill(dt);
+                    IDDatagridFamilia.DataSource = dt;
+                    IDDatagridFamilia.DataBind();
+              
+                  
+                
             }
         }
 
@@ -539,47 +641,81 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 }
             }
 
-            // Mostrar el bordeDerecho y ocultar PanelContenido
-            bordeDerecho.Attributes["class"] += " d-none"; // Oculta el panel
+
             PanelContenido.Attributes["class"] = PanelContenido.Attributes["class"].Replace("d-none", "").Trim();
 
-            // Actualiza el estado del panel en el servidor
             PanelContenido.Visible = true;
-            bordeDerecho.Visible = false;
         }
-
-
 
         private bool ValoresCambiaron()
         {
+            // Verificar si los valores han cambiado respecto al valor original almacenado en ViewState
             bool grupoCambiado = ViewState["Grupo_Original"] != null && DropDownListGrupo.SelectedValue != ViewState["Grupo_Original"].ToString();
             bool descripcionCambiada = ViewState["DescripcionModulo_Original"] != null && TextDescripcionModulo.Text.Trim() != ViewState["DescripcionModulo_Original"].ToString();
             bool tipoModuloCambiado = ViewState["TipoModulo_Original"] != null && DropDownListTipoModulo.SelectedValue != ViewState["TipoModulo_Original"].ToString();
             bool alturaModuloCambiada = ViewState["AlturaModulo_Original"] != null && TextAlturaModulo.Text.Trim() != ViewState["AlturaModulo_Original"].ToString();
 
+            // Retornar true si hubo algún cambio
             return grupoCambiado || descripcionCambiada || tipoModuloCambiado || alturaModuloCambiada;
         }
 
+        private bool CamposSonValidos()
+        {
+            // Validar si los campos no están vacíos
+            bool grupoValido = !string.IsNullOrWhiteSpace(DropDownListGrupo.SelectedValue) && DropDownListGrupo.SelectedValue != "0";
+            bool descripcionValida = !string.IsNullOrWhiteSpace(TextDescripcionModulo.Text.Trim());
+            bool tipoModuloValido = !string.IsNullOrWhiteSpace(DropDownListTipoModulo.SelectedValue) && DropDownListTipoModulo.SelectedValue != "0";
+
+            // Validar que la altura no esté vacía y sea un valor numérico
+            bool alturaValida = !string.IsNullOrWhiteSpace(TextAlturaModulo.Text.Trim()) && double.TryParse(TextAlturaModulo.Text.Trim(), out _);
+
+            // Retornar true si todos los campos son válidos
+            return grupoValido && descripcionValida && tipoModuloValido && alturaValida;
+        }
 
         private void EstadoGrabarCancelar()
         {
-            if (ValoresCambiaron())
+            string tipoAccion = Session["Modulo"] as string;
+            if (tipoAccion == "Nuevo")
             {
-                BtnGrabarInf.Enabled = true;
-                BtnGrabarInf.CssClass = "btn btn-sm shadow button-enabled";
+                if (CamposSonValidos())
+                {
+                    BtnGrabarInf.Enabled = true;
+                    BtnGrabarInf.CssClass = "btn btn-sm shadow button-enabled";
 
-                BtnCancelarInf.Enabled = true;
-                BtnCancelarInf.CssClass = "btn btn-sm shadow button-enabled";
+                    BtnCancelarInf.Enabled = true;
+                    BtnCancelarInf.CssClass = "btn btn-sm shadow button-enabled2 RojoCancelar";
+                }
+                else
+                {
+                    BtnGrabarInf.Enabled = false;
+                    BtnGrabarInf.CssClass = "btn btn-sm shadow button-disabled";
+
+                    BtnCancelarInf.Enabled = false;
+                    BtnCancelarInf.CssClass = "btn btn-sm shadow button-disabled";
+                }
             }
-            else
+            if (tipoAccion == "Modificar")
             {
-                BtnGrabarInf.Enabled = false;
-                BtnGrabarInf.CssClass = "btn btn-sm shadow button-disabled";
+                if (ValoresCambiaron() && CamposSonValidos())
+                {
+                    BtnGrabarInf.Enabled = true;
+                    BtnGrabarInf.CssClass = "btn btn-sm shadow button-enabled";
 
-                BtnCancelarInf.Enabled = false;
-                BtnCancelarInf.CssClass = "btn btn-sm shadow button-disabled";
+                    BtnCancelarInf.Enabled = true;
+                    BtnCancelarInf.CssClass = "btn btn-sm shadow button-enabled2 RojoCancelar";
+                }
+                else
+                {
+                    BtnGrabarInf.Enabled = false;
+                    BtnGrabarInf.CssClass = "btn btn-sm shadow button-disabled";
+
+                    BtnCancelarInf.Enabled = false;
+                    BtnCancelarInf.CssClass = "btn btn-sm shadow button-disabled";
+                }
             }
         }
+
 
 
         protected void CheckForChanges(object sender, EventArgs e)
@@ -618,7 +754,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 connection.Open();
 
                 // Verificar si la opción es "Nuevo"
-                if (opcionModulo == "Nuevo")
+                if (opcionModulo == "NUEVO")
                 {
                     Calcular_IdModulo(); // Método para calcular el Id del módulo
                     string insertQuery = @"INSERT INTO tblModulo(Id_Modulo, Descripcion_Modulo, Id_TipoModulo, Altura, ID_Familia, Responsable, FechaChequeo) 
@@ -626,7 +762,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                     using (SqlCommand cmd = new SqlCommand(insertQuery, connection))
                     {
-                        cmd.Parameters.AddWithValue("@IdModulo", idModulo);
+                        cmd.Parameters.AddWithValue("@IdModulo", textModulo.Text);
                         cmd.Parameters.AddWithValue("@DescripcionModulo", descripcionModulo);
                         cmd.Parameters.AddWithValue("@IdTipoModulo", tipoModulo);
                         cmd.Parameters.AddWithValue("@Altura", altura);
@@ -634,72 +770,97 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                         cmd.Parameters.AddWithValue("@Responsable", nombreUsuario);
                         cmd.Parameters.AddWithValue("@FechaChequeo", DateTime.Now);
 
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-                else
-                {
-                    // Verificar si el módulo tiene al menos un panel asociado
-                    string countQuery = "SELECT COUNT(Id_Modulo) FROM tblPanel_Modulo WHERE Id_Modulo = @IdModulo";
-                    using (SqlCommand countCmd = new SqlCommand(countQuery, connection))
-                    {
-                        countCmd.Parameters.AddWithValue("@IdModulo", idModulo);
-                        int count = Convert.ToInt32(countCmd.ExecuteScalar());
+                        int CantidadFilasAfectada = cmd.ExecuteNonQuery();
 
-                        if (count == 0) // Si no hay paneles asociados, se puede modificar
+
+                        if (CantidadFilasAfectada > 0)
                         {
-                            string updateQuery = @"UPDATE tblModulo 
-                                           SET Descripcion_Modulo = @DescripcionModulo, 
-                                               Id_TipoModulo = @IdTipoModulo, 
-                                               Altura = @Altura, 
-                                               ID_Familia = @IDFamilia, 
-                                               Responsable = @Responsable, 
-                                               FechaChequeo = @FechaChequeo 
-                                           WHERE Id_Modulo = @IdModulo";
-
-                            using (SqlCommand updateCmd = new SqlCommand(updateQuery, connection))
-                            {
-                                updateCmd.Parameters.AddWithValue("@IdModulo", idModulo);
-                                updateCmd.Parameters.AddWithValue("@DescripcionModulo", descripcionModulo);
-                                updateCmd.Parameters.AddWithValue("@IdTipoModulo", tipoModulo);
-                                updateCmd.Parameters.AddWithValue("@Altura", altura);
-                                updateCmd.Parameters.AddWithValue("@IDFamilia", idFamilia);
-                                updateCmd.Parameters.AddWithValue("@Responsable", nombreUsuario);
-                                updateCmd.Parameters.AddWithValue("@FechaChequeo", DateTime.Now);
-
-                                updateCmd.ExecuteNonQuery();
-                            }
-
-                            // Actualizar el sentido en tblModulo_insumo
-                            string updateSentidoQuery = "";
-                            if (tipoModulo == "3")
-                            {
-                                updateSentidoQuery = "UPDATE tblModulo_insumo SET Sentido = 'PROFUNDIDAD' WHERE Id_Modulo = @IdModulo AND Sentido = 'HORIZONTAL'";
-                            }
-                            else
-                            {
-                                updateSentidoQuery = "UPDATE tblModulo_insumo SET Sentido = 'HORIZONTAL' WHERE Id_Modulo = @IdModulo AND Sentido = 'PROFUNDIDAD'";
-                            }
-
-                            using (SqlCommand updateSentidoCmd = new SqlCommand(updateSentidoQuery, connection))
-                            {
-                                updateSentidoCmd.Parameters.AddWithValue("@IdModulo", idModulo);
-                                updateSentidoCmd.ExecuteNonQuery();
-                            }
+                            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#InsercionExitosa').modal('show');", true);
+                            idModulo = textModulo.Text;
+                           
                         }
                         else
                         {
-                            string contenidoModalOT = "El módulo: " + textModulo.Text + " conforma al menos un objeto, Quiere Modificar el módulo?";
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ModalRotacionModulo').modal('show'); $('#ModalRotacionModulo2').text('" + contenidoModalOT + "');", true);
+                            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#Noseinsertaronregistros').modal('show');", true);
                         }
                     }
                 }
+                if (opcionModulo == "MODIFICAR")
+                {
+                    try
+                    {
+                        // Verificar si el módulo tiene al menos un panel asociado
+                        string countQuery = "SELECT COUNT(Id_Modulo) FROM tblPanel_Modulo WHERE Id_Modulo = @IdModulo";
+                        using (SqlCommand countCmd = new SqlCommand(countQuery, connection))
+                        {
+                            countCmd.Parameters.AddWithValue("@IdModulo", idModulo);
+                            int count = Convert.ToInt32(countCmd.ExecuteScalar());
 
-                // Recargar los datos después de la inserción o modificación
-                //Requery_Modulo(idModulo);
+                            if (count == 0) // Si no hay paneles asociados, se puede modificar
+                            {
+                                // Actualización de tblModulo
+                                string updateQuery = @"UPDATE tblModulo 
+                                       SET Descripcion_Modulo = @DescripcionModulo, 
+                                           Id_TipoModulo = @IdTipoModulo, 
+                                           Altura = @Altura, 
+                                           ID_Familia = @IDFamilia, 
+                                           Responsable = @Responsable, 
+                                           FechaChequeo = @FechaChequeo 
+                                       WHERE Id_Modulo = @IdModulo";
+
+                                using (SqlCommand updateCmd = new SqlCommand(updateQuery, connection))
+                                {
+                                    updateCmd.Parameters.AddWithValue("@IdModulo", idModulo);
+                                    updateCmd.Parameters.AddWithValue("@DescripcionModulo", descripcionModulo);
+                                    updateCmd.Parameters.AddWithValue("@IdTipoModulo", tipoModulo);
+                                    updateCmd.Parameters.AddWithValue("@Altura", altura);
+                                    updateCmd.Parameters.AddWithValue("@IDFamilia", idFamilia);
+                                    updateCmd.Parameters.AddWithValue("@Responsable", nombreUsuario);
+                                    updateCmd.Parameters.AddWithValue("@FechaChequeo", DateTime.Now);
+
+                                    updateCmd.ExecuteNonQuery();
+                                }
+
+                                // Actualización de sentido en tblModulo_insumo
+                                string updateSentidoQuery = tipoModulo == "3"
+                                    ? "UPDATE tblModulo_insumo SET Sentido = 'PROFUNDIDAD' WHERE Id_Modulo = @IdModulo AND Sentido = 'HORIZONTAL'"
+                                    : "UPDATE tblModulo_insumo SET Sentido = 'HORIZONTAL' WHERE Id_Modulo = @IdModulo AND Sentido = 'PROFUNDIDAD'";
+
+                                using (SqlCommand updateSentidoCmd = new SqlCommand(updateSentidoQuery, connection))
+                                {
+                                    updateSentidoCmd.Parameters.AddWithValue("@IdModulo", idModulo);
+                                    updateSentidoCmd.ExecuteNonQuery();
+                                }
+
+                                // Si todas las actualizaciones son exitosas, mostrar mensaje de éxito
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "showSuccess", "alert('El módulo ha sido actualizado exitosamente.');", true);
+
+                            }
+                            else
+                            {
+                                // Si el módulo tiene al menos un panel asociado, mostrar modal de confirmación
+                                string contenidoModalOT = "El módulo: " + textModulo.Text + " conforma al menos un objeto. ¿Quiere modificar el módulo?";
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ModalRotacionModulo').modal('show'); $('#ModalRotacionModulo2').text('" + contenidoModalOT + "');", true);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Si ocurre algún error, mostrar mensaje de error
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showError", "alert('Ocurrió un error al intentar actualizar el módulo: " + ex.Message + "');", true);
+                    }
+                }
+
+
+                Session["IDModulo"] = idModulo;
+                LlenarControles();
+                BtnGrabarInf.Enabled = false;
+                BtnGrabarInf.CssClass = "btn btn-sm shadow button-disabled";
+
+                BtnCancelarInf.Enabled = false;
+                BtnCancelarInf.CssClass = "btn btn-sm shadow button-disabled";
             }
         }
-
 
         protected void btnConfirmarModificacion_Click(object sender, EventArgs e)
         {
@@ -714,7 +875,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             // Llamar al método
             ModificarModuloConfirmado(idModulo, descripcionModulo, tipoModulo, altura, idFamilia, nombreUsuario);
         }
-
 
         protected void ModificarModuloConfirmado(string idModulo, string descripcionModulo, int tipoModulo, string altura, string idFamilia, string nombreUsuario)
         {
@@ -802,9 +962,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 }
             }
         }
-
-
-
 
         protected void copiar_Modulo()
         {
@@ -924,7 +1081,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             }
         }
 
-
         protected void Calcular_IdModulo()
         {
             string sSql = "SELECT MAX(Id_Modulo) FROM tblModulo";
@@ -956,9 +1112,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 }
             }
         }
-
-
-
         protected void EliminarViewState()
         {
             ViewState.Remove("DctoAncho");
@@ -989,7 +1142,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             DropDownList1.Enabled = false;
             if (DropDownList1.SelectedItem != null && !string.IsNullOrEmpty(DropDownList1.SelectedItem.Text))
             {
-                DropDownList1.Items.Clear();
+                DropDownList1.DataBind();
             }
             txObs1.Disabled = true;
             txObs1.InnerText = string.Empty;
@@ -1094,8 +1247,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
             Session["CRUDModuloTabConfiguracion"] = "Nuevo";
         }
-
-
 
         protected void DataGrid3_ItemCommand(object source, DataGridCommandEventArgs e)
         {
@@ -1210,13 +1361,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 row.Attributes["id"] = "DataGrid3_row_" + rowIndex;
                 ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DataGrid3_row_" + rowIndex + "');", true);
 
-
-                // Mostrar el bordeDerecho y ocultar PanelContenido
-                PanelContenido.Attributes["class"] += " d-none"; // Oculta el panel
                 bordeDerecho.Attributes["class"] = bordeDerecho.Attributes["class"].Replace("d-none", "").Trim(); // Muestra el bordeDerecho
 
-                // Actualiza el estado del panel en el servidor
-                PanelContenido.Visible = false;
                 bordeDerecho.Visible = true;
 
 
@@ -1598,12 +1744,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                             ActualizarModuloChequeado(connectionString, textModulo.Text);
 
                             LlenarDataGrid3(moduloID);
+
+                            ScriptManager.RegisterStartupScript(this, GetType(), "alert", $"alert('Los registros se insertaron correctamente');", true);
+
+                            bool swCambiosenelDespiece = true;
+
+                            // Si hubo cambios en el despiece, se actualiza la base de datos con la lógica migrada
+                            if (swCambiosenelDespiece)
+                            {
+                                ActualizarDespiece(connectionString, moduloID);
+                            }
+
                         }
                     }
                     catch (SqlException ex)
                     {
                         // Manejo de excepciones
                         ScriptManager.RegisterStartupScript(this, GetType(), "alert", $"alert('Error al realizar la operación: {ex.Message}');", true);
+                        Response.Redirect("DiseñoYDesarrollo/Modulo.aspx");
                     }
                 }
                 else
@@ -1611,7 +1769,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Los campos en rojo son obligatorios');", true);
                 }
             }
-
 
             if (tipoAccion == "Modificar")
             {
@@ -1634,20 +1791,26 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     //dtgdModulo_Insumos.SelBookmarks.Add(rsModulo_Insumos.Bookmark);
                     //dtgdModulo_Insumos_SelChange(1);
 
-                    //// Se coloca la variable control de despice en verdadero
-                    //swCambiosenelDespiece = true;
-
                     DesmarcarModulo(connectionString, out unmarkSuccess);
+                    LlenarDataGrid3(moduloID);
 
                     if (updateSuccess && unmarkSuccess)
                     {
-                        // Mostrar modal de éxito
-                        ScriptManager.RegisterStartupScript(this, GetType(), "modalSuccess", "showSuccessModal();", true);
+                        // Aquí colocamos la variable de control que indica que hubo cambios en el despiece
+                        bool swCambiosenelDespiece = true;
+
+                        // Si hubo cambios en el despiece, se actualiza la base de datos con la lógica migrada
+                        if (swCambiosenelDespiece)
+                        {
+                            ActualizarDespiece(connectionString, moduloID);
+                        }
+
+                        ScriptManager.RegisterStartupScript(this, GetType(), "alert", $"alert('Los registros se actualizaron correctamente');", true);
                     }
                     else
                     {
-                        // Mostrar mensaje de error
                         ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('No se pudo realizar la actualización, por favor intente nuevamente.');", true);
+                        Response.Redirect("DiseñoYDesarrollo/Modulo.aspx");
                     }
                 }
                 else
@@ -1655,7 +1818,45 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Los campos en rojo son obligatorios');", true);
                 }
             }
+
+            Session.Remove("CRUDModuloTabConfiguracion");
+            Session.Remove("Id_InsumoDatagrid3");
+            Session.Remove("Id_ModuloInsumoDatagrid3");
         }
+
+        private void ActualizarDespiece(string connectionString, string moduloID)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                // Primera consulta para actualizar tblPanel
+                string sSql1 = "UPDATE tblPanel SET Chequeado = 0, Precio_Venta = 0 FROM tblPanel INNER JOIN tblPanel_Modulo ON tblPanel.Id_Numerico = tblPanel_Modulo.Id_PanelNum " +
+                               "WHERE tblPanel_Modulo.Id_Modulo = @moduloID";
+
+                using (SqlCommand cmd1 = new SqlCommand(sSql1, conn))
+                {
+                    cmd1.Parameters.AddWithValue("@moduloID", moduloID);
+                    cmd1.ExecuteNonQuery();
+                }
+
+                // Segunda consulta para verificar y actualizar prototipos
+                string sSql2 = "UPDATE tblPanel SET Precio_Venta = 0 WHERE Id_Panel IN " +
+                               "(SELECT tblPlano.Plano FROM tblPanel " +
+                               "INNER JOIN tblPanel_Modulo ON tblPanel.Id_Numerico = tblPanel_Modulo.Id_PanelNum " +
+                               "INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum " +
+                               "INNER JOIN tblPlano ON tblPlano_Panel.Id_Plano = tblPlano.Plano " +
+                               "WHERE tblPanel_Modulo.Id_Modulo = @moduloID AND tblPlano.Tipologia = 1 " +
+                               "GROUP BY tblPlano.Plano)";
+
+                using (SqlCommand cmd2 = new SqlCommand(sSql2, conn))
+                {
+                    cmd2.Parameters.AddWithValue("@moduloID", moduloID);
+                    cmd2.ExecuteNonQuery();
+                }
+            }
+        }
+
 
         private int InsertarModuloInsumo(string connectionString, string idModulo, int idInsumo, string NombreUsuario)
         {
@@ -1868,9 +2069,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 command.ExecuteNonQuery();
             }
 
-            //// Establecer la variable de control de despiece en verdadero
-            //swCambiosenelDespiece = true;
-
             // Actualizar 'tblModulo' para marcar como no chequeado
             sSql = $"UPDATE tblModulo SET Chequeado = 0 WHERE Id_Modulo = {idModulo}";
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -1879,6 +2077,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 connection.Open();
                 command.ExecuteNonQuery();
             }
+
+            ActualizarDespiece(connectionString, idModulo);
 
             // Deshabilitar y limpiar los campos en la interfaz de usuario
             TextCantidadCon.Enabled = false;
@@ -2158,9 +2358,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
                 }
                 row.CssClass = "fila-seleccionada1";
-
-                BtnModificarFamilia.Enabled = true;
-                BtnModificarFamilia.CssClass = "btn btn-sm shadow button-enabled";
+                if (ValidarPermisoArea(33))
+                {
+                    BtnModificarFamilia.Enabled = true;
+                    BtnModificarFamilia.CssClass = "btn btn-sm shadow button-enabled2 Cafe";
+                }
+                else
+                {
+                    BtnModificarFamilia.Enabled = false;
+                    BtnModificarFamilia.CssClass = "btn btn-sm shadow button-disabled";
+                }
+              
 
                 // Verificar y asignar valores a los TextBox, manejando el caso de &nbsp;
                 TextDescripcion.Text = row.Cells[2].Text != "&nbsp;" ? row.Cells[2].Text : string.Empty;
@@ -2182,6 +2390,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 }
 
                 string idFamilia = row.Cells[1].Text;
+                Session["ID_Familia"] = idFamilia;
                 string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -2248,6 +2457,173 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow",
                     $"focusAndScrollToRow('DatagridProcesoProductivo_row_{rowIndex}');", true);
             }
+        }
+
+        protected void BtnNuevoFamilia_Click(object sender, EventArgs e)
+        {
+            habilitarCampos();
+            Session["CRUDFAMILIAMODULO"] = "Nuevo";
+        }
+
+        protected void BtnModificarFamilia_Click(object sender, EventArgs e)
+        {
+            habilitarCampos();
+
+            Session["CRUDFAMILIAMODULO"] = "Modificar";
+        }
+
+        protected void habilitarCampos()
+        {
+            BtnNuevoFamilia.Enabled = false;
+            BtnNuevoFamilia.CssClass = "btn btn-sm shadow button-disabled";
+
+            BtnModificarFamilia.Enabled = false;
+            BtnModificarFamilia.CssClass = "btn btn-sm shadow button-disabled";
+
+            BtnGrabarFamilia.Enabled = true;
+            BtnGrabarFamilia.CssClass = "btn btn-sm shadow button-enabled2 ColorAzulActivo";
+
+            TextDescripcion.Enabled = true;
+            TextDescripcion.CssClass = "form-control form-control-sm";
+            TextDescripcion.Focus();
+
+            TextDescripcionParaObjeto.Enabled = true;
+            TextDescripcionParaObjeto.CssClass = "form-control form-control-sm";
+
+            TextDescuentoFinal.Enabled = true;
+            TextDescuentoFinal.CssClass = "form-control form-control-sm";
+        }
+
+        protected void BtnGrabarFamilia_Click(object sender, EventArgs e)
+        { 
+            if (string.IsNullOrWhiteSpace(TextDescripcion.Text) ||
+                string.IsNullOrWhiteSpace(TextDescuentoFinal.Text) ||
+                string.IsNullOrWhiteSpace(TextDescripcionParaObjeto.Text))
+            {
+              
+                Response.Write("<script>alert('Por favor, complete todos los campos requeridos.');</script>");
+                return; 
+            }
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string crudAction = Session["CRUDFAMILIAMODULO"]?.ToString(); // Obtiene la acción (Nuevo o Modificar) desde la sesión
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                SqlTransaction transaction = connection.BeginTransaction();
+                command.Connection = connection;
+                command.Transaction = transaction;
+
+                try
+                {
+                    if (crudAction == "Nuevo")
+                    {
+                        // Obtener el nuevo ID_Familia
+                        command.CommandText = "SELECT MAX(ID_Familia) FROM tblFamiliaModulo";
+                        int nuevoIdFamilia = Convert.ToInt32(command.ExecuteScalar()) + 1;
+
+                        // Insertar nueva familia
+                        command.CommandText = @"
+                INSERT INTO tblFamiliaModulo 
+                (ID_Familia, Descripcion_Familia, Descuento, Descripcion_paraObj, FechaModificacion, Responsable)
+                VALUES 
+                (@ID_Familia, @Descripcion, @Descuento, @DescripcionParaObj, @FechaModificacion, @Responsable)";
+                        command.Parameters.AddWithValue("@ID_Familia", nuevoIdFamilia);
+                        command.Parameters.AddWithValue("@Descripcion", TextDescripcion.Text);
+                        command.Parameters.AddWithValue("@Descuento", TextDescuentoFinal.Text);
+                        command.Parameters.AddWithValue("@DescripcionParaObj", TextDescripcionParaObjeto.Text);
+                        command.Parameters.AddWithValue("@FechaModificacion", DateTime.Now);
+                        command.Parameters.AddWithValue("@Responsable", Session["usuariologueado"].ToString());
+
+                        command.ExecuteNonQuery();
+
+                        ScriptManager.RegisterStartupScript(this, GetType(), "alert", $"alert('Los registros se insertaron correctamente');", true);
+
+                        // Actualizar el combo con la nueva descripción (simulado)
+                        // dtacboFamiliaModulo.Text = TextDescripcion.Text; // Esto sería el control de combo en la interfaz
+                    }
+                    else if (crudAction == "Modificar")
+                    {
+                        // Asegúrate de tener el ID de la familia a modificar almacenado en el ViewState
+                        if (Session["ID_Familia"] != null)
+                        {
+                            int idFamilia = Convert.ToInt32(Session["ID_Familia"]);
+
+                            // Actualizar la familia existente
+                            command.CommandText = @"
+                    UPDATE tblFamiliaModulo 
+                    SET Descripcion_Familia = @Descripcion, 
+                        Descuento = @Descuento, 
+                        Descripcion_paraObj = @DescripcionParaObj, 
+                        FechaModificacion = @FechaModificacion, 
+                        Responsable = @Responsable
+                    WHERE ID_Familia = @ID_Familia";
+
+                            command.Parameters.AddWithValue("@ID_Familia", idFamilia);
+                            command.Parameters.AddWithValue("@Descripcion", TextDescripcion.Text);
+                            command.Parameters.AddWithValue("@Descuento", TextDescuentoFinal.Text);
+                            command.Parameters.AddWithValue("@DescripcionParaObj", TextDescripcionParaObjeto.Text);
+                            command.Parameters.AddWithValue("@FechaModificacion", DateTime.Now);
+                            command.Parameters.AddWithValue("@Responsable", Session["usuariologueado"].ToString());
+
+                            command.ExecuteNonQuery();
+
+                            // Actualizar la descripción técnica de los objetos
+                            command.CommandText = @"
+                    UPDATE tblPanel 
+                    SET Descripcion_Tecnica = dbo.fn_DescripcionObjeto(tblGrupoObjeto.goSPDescripcionObjto, tblPanel.Id_Numerico, tblGrupoObjeto.goDescripcionBaseObjeto)
+                    FROM tblPanel
+                    INNER JOIN tblGrupoObjeto ON tblPanel.Id_GrupoObjeto = tblGrupoObjeto.ID_GrupoObjeto
+                    INNER JOIN tblPanel_Modulo ON tblPanel.Id_Numerico = tblPanel_Modulo.Id_PanelNum
+                    INNER JOIN tblModulo ON tblPanel_Modulo.Id_Modulo = tblModulo.Id_Modulo
+                    INNER JOIN tblFamiliaModulo ON tblModulo.ID_Familia = tblFamiliaModulo.ID_Familia
+                    WHERE tblGrupoObjeto.goDescripcionBaseObjeto IS NOT NULL 
+                        AND tblGrupoObjeto.goSPDescripcionObjto IS NOT NULL 
+                        AND tblFamiliaModulo.ID_Familia = @ID_Familia";
+
+                            command.ExecuteNonQuery();
+
+                            ScriptManager.RegisterStartupScript(this, GetType(), "alert", $"alert('Los registros se Actualizaron correctamente');", true);
+                        }
+                    }
+
+                    // Commit the transaction
+                    transaction.Commit();
+
+                    llenarDatagridFamiliaFiltro();
+
+                    // Deshabilitar los campos después de guardar
+                    TextDescripcion.Enabled = false;
+                    TextDescuentoFinal.Enabled = false;
+                    TextDescripcionParaObjeto.Enabled = false;
+
+                    // Habilitar los botones
+                    BtnNuevoFamilia.Enabled = true;
+                    BtnNuevoFamilia.CssClass = "btn btn-sm shadow button-enabled2 AzulClaro";
+
+                    BtnModificarFamilia.Enabled = true;
+                    BtnModificarFamilia.CssClass = "btn btn-sm shadow button-enabled2 Cafe";
+
+                    BtnGrabarFamilia.Enabled = false;
+                    BtnGrabarFamilia.CssClass = "btn btn-sm shadow button-disabled";
+                }
+                catch (Exception ex)
+                {
+                    // Rollback the transaction if something failed
+                    transaction.Rollback();
+                    Console.WriteLine(ex.Message);
+                    ScriptManager.RegisterStartupScript(this, GetType(), "alert", $"alert('Ocurrio un error intentalo nuevamente por favor');", true);
+                }
+            }
+
+            // Limpia la acción después de grabar para evitar repeticiones innecesarias
+            Session["CRUDFAMILIAMODULO"] = null;
+        }
+
+        protected void TextBuscarFamiliaModulo_TextChanged(object sender, EventArgs e)
+        {
+            llenarDatagridFamiliaFiltro();
         }
     }
 }

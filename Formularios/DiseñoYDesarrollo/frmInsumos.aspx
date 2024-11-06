@@ -18,7 +18,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
 
     <link type="text/css" href="../../Recursos/CSS/DiseñoYDesarrollo/ObjetosDibujo.css" rel="stylesheet" />
-    <title>Insumos - Consultar</title>
+    <title>Insumos</title>
           <script>
               function focusAndScrollToRow(rowId) {
                   var row = document.getElementById(rowId);
@@ -97,13 +97,13 @@
                                             <div class="col-12 col-sm-6 col-md-2">
                                                 <div class="input-group input-group-sm d-flex gap-2">
                                                     <asp:Label runat="server" class="col-form-label-sm">Creacion</asp:Label>
-                                                    <asp:TextBox runat="server" type="date" ID="Textbox1" class="form-control form-control-sm" />
+                                                    <asp:TextBox runat="server" type="date" ID="TextFechaCreacionInsumo" class="form-control form-control-sm" />
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-6 col-md-2">
                                                 <div class="input-group input-group-sm d-flex gap-2">
                                                     <asp:Label runat="server" class="col-form-label-sm">Act</asp:Label>
-                                                    <asp:TextBox runat="server" type="date" ID="Textbox2" class="form-control form-control-sm" />
+                                                    <asp:TextBox runat="server" type="date" ID="TextFechaActualizacion" class="form-control form-control-sm" />
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-6 col-md-6 d-flex justify-content-end">
@@ -118,15 +118,14 @@
                                             <div class="col-12 col-sm-6 col-md-6">
                                                 <div class="input-group input-group-sm d-flex gap-4">
                                                     <asp:Label runat="server" class="col-form-label-sm">Descripción</asp:Label>
-                                                    <asp:TextBox runat="server" type="text" ID="Textbox4" class="form-control form-control-sm" OnTextChanged="Control_Changed" AutoPostBack="true"/>
+                                                    <asp:TextBox runat="server" type="text" ID="TextDescripcionInsumo" class="form-control form-control-sm" OnTextChanged="Control_Changed" AutoPostBack="true"/>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-6 col-md-6 d-flex justify-content-end">
                                                 <div class="input-group input-group-sm d-flex custom-gap-7">
                                                     <asp:Label runat="server" class="col-form-label-sm">Tipo</asp:Label>
-                                                    <asp:DropDownList ID="dtacboTipoInsumo" runat="server" class="form-control form-control-sm" DataSourceID="TipoInsumo" DataTextField="Descripcion" DataValueField="Id_TipoInsumo" SelectedIndexChanged="Control_Changed" AutoPostBack="true">
+                                                    <asp:DropDownList ID="dtacboTipoInsumo" runat="server" class="form-control form-control-sm" SelectedIndexChanged="Control_Changed" AutoPostBack="true">
                                                     </asp:DropDownList>
-                                                    <asp:SqlDataSource ID="TipoInsumo" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="Select * from tbltipoInsumo ORDER BY Descripcion asc"></asp:SqlDataSource>
                                                 </div>
                                             </div>
                                         </div>
@@ -135,21 +134,21 @@
                                             <div class="col-12 col-sm-6 col-md-3">
                                                 <div class="input-group input-group-sm d-flex custom-gap-6">
                                                     <asp:Label runat="server" class="col-form-label-sm">Und</asp:Label>
-                                                    <asp:DropDownList ID="DropAbreviado" runat="server" class="form-control form-control-sm" DataSourceID="SqlDataSource1" DataTextField="Abreviado" DataValueField="Id_UnidadMedida" SelectedIndexChanged="Control_Changed" AutoPostBack="true">
+                                                    <asp:DropDownList ID="DropAbreviado" runat="server" class="form-control form-control-sm" SelectedIndexChanged="Control_Changed" AutoPostBack="true">
                                                     </asp:DropDownList>
-                                                    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand=" select * from tblUnidad_Medida order by Id_UnidadMedida"></asp:SqlDataSource>
+                                                   
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-6 col-md-3">
                                                 <div class="input-group input-group-sm d-flex gap-2">
                                                     <asp:Label runat="server" class="col-form-label-sm">Valor</asp:Label>
-                                                    <asp:TextBox runat="server" type="text" ID="Textbox6" class="form-control form-control-sm" OnTextChanged="Control_Changed" AutoPostBack="true"/>
+                                                    <asp:TextBox runat="server" type="text" ID="TextValorInsumo" class="form-control form-control-sm" OnTextChanged="Control_Changed" AutoPostBack="true"/>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 d-flex justify-content-end">
                                                 <div class="input-group input-group-sm d-flex gap-2">
                                                     <asp:Label runat="server" class="col-form-label-sm">Acabado desde</asp:Label>
-                                                    <asp:DropDownList class="form-control" ID="DropAcabadosDesde" runat="server">
+                                                    <asp:DropDownList class="form-control" ID="DropAcabadosDesde" runat="server" OnTextChanged="Control_Changed" AutoPostBack="true">
                                                         <asp:ListItem Value=""></asp:ListItem>
                                                         <asp:ListItem Value="G">G</asp:ListItem>
                                                         <asp:ListItem Value="M">M</asp:ListItem>
@@ -162,37 +161,37 @@
                                             <div class="col-12 col-sm-6 col-md-2">
                                                 <div class="input-group input-group-sm d-flex custom-gap-in">
                                                     <asp:Label runat="server" class="col-form-label-sm">Cod.Inv</asp:Label>
-                                                    <asp:TextBox runat="server" type="text" ID="Textbox9" class="form-control form-control-sm" />
+                                                    <asp:TextBox runat="server" type="text" ID="TextCodInvInsumo" class="form-control form-control-sm" OnTextChanged="Control_Changed" AutoPostBack="true"/>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-6 col-md-2">
                                                 <div class="input-group input-group-sm d-flex gap-2">
                                                     <asp:Label runat="server" class="col-form-label-sm">F.Ganancia</asp:Label>
-                                                    <asp:TextBox runat="server" type="text" ID="Textbox10" class="form-control form-control-sm" />
+                                                    <asp:TextBox runat="server" type="text" ID="TextFacGanInsumo" class="form-control form-control-sm" OnTextChanged="Control_Changed" AutoPostBack="true"/>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-6 col-md-2">
                                                 <div class="input-group input-group-sm d-flex gap-2">
                                                     <asp:Label runat="server" class="col-form-label-sm">F.Desperdicio</asp:Label>
-                                                    <asp:TextBox runat="server" type="text" ID="Textbox11" class="form-control form-control-sm" />
+                                                    <asp:TextBox runat="server" type="text" ID="TextFacDesInsumo" class="form-control form-control-sm" OnTextChanged="Control_Changed" AutoPostBack="true"/>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-6 col-md-3">
                                                 <div class="input-group input-group-sm d-flex custom-gap-in">
                                                     <asp:Label runat="server" class="col-form-label-sm">Peso(Kg)</asp:Label>
-                                                    <asp:TextBox runat="server" type="text" ID="Textbox12" class="form-control form-control-sm" OnTextChanged="Control_Changed" AutoPostBack="true"/>
+                                                    <asp:TextBox runat="server" type="text" ID="TextPesoInsumo" class="form-control form-control-sm" OnTextChanged="Control_Changed" AutoPostBack="true"/>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-6 col-md-3">
                                                 <div class="input-group input-group-sm d-flex gap-2">
                                                     <asp:Label runat="server" class="col-form-label-sm">Und x paq</asp:Label>
-                                                    <asp:TextBox runat="server" type="text" ID="Textbox13" class="form-control form-control-sm" />
+                                                    <asp:TextBox runat="server" type="text" ID="TextUndXPaq" class="form-control form-control-sm" OnTextChanged="Control_Changed" AutoPostBack="true"/>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="card-footer d-flex justify-content-end gap-3 bg-white">
-                                        <asp:Button runat="server" ID="BtnGrabar" class="btn linkButtonClicked2  shadow-sm text-dark btn-sm" Text="GRABAR" />
+                                        <asp:Button runat="server" ID="BtnGrabar" class="btn linkButtonClicked2  shadow-sm text-dark btn-sm" Text="GRABAR" OnClick="BtnGrabar_Click"/>
                                         <asp:Button runat="server" ID="BtnCancelar" class="btn linkButtonClicked2 shadow-sm text-dark btn-sm" Text="CANCELAR" />
                                         <asp:Button runat="server" ID="BtnCerrar" class="btn linkButtonClicked2 shadow-sm text-dark btn-sm" Text="CERRAR" />
                                     </div>
@@ -208,7 +207,7 @@
                                             </div>
                                             <div class="card-body p-1" style="max-height: 11.4rem; max-width: auto; overflow-x: auto;">
                                                 <asp:DataGrid CssClass="table table-bordered table-responsive table-sm table-hover form-control-sm bg-white shadow-sm"
-                                                    ID="DataGridSolicitudEspecial" runat="server" AutoGenerateColumns="false">
+                                                    ID="DatagridInsumo" runat="server" AutoGenerateColumns="false">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm" />
                                                     <Columns>
                                                         <asp:TemplateColumn HeaderText=". . .">
@@ -505,6 +504,38 @@
                     </div>
                     <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
                         <p>Porfavor intentelo de nuevo, y si el error persiste comuniquese con el departamento de sistemas</span></p>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                           <div class="modal" id="FaltanCamposPorDigilenciar" tabindex="-1" style="display: none;">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header RojoEfecto fw-bold shadow">
+                                <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID_DUCON</h5>
+                        <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                        <p>Por favor digilenciar todos los campos</span></p>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                         <div class="modal" id="ErrorIdGrupoAcabado" tabindex="-1" style="display: none;">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header RojoEfecto fw-bold shadow">
+                                <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID_DUCON</h5>
+                        <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                        <p>El grupo de acabado no está asignado correctamente, Porfavor intentelo de nuevo.</span></p>
                     </div>
                     <div class="modal-footer">
                     </div>

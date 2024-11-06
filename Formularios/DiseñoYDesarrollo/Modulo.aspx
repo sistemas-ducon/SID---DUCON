@@ -208,6 +208,46 @@
                                 </div>
                             </div>
                         </div>
+
+                             <div class="modal fade" id="InsercionExitosa" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-title d-flex align-items-center justify-content-center text-white p-2 AzulOscuroEfecto fw-bold shadow">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID_DUCON</h5>
+                                    </div>
+                                    <div class="modal-body bg-light form-control-sm">
+                                        <div class="row container">
+                                            <div class="col-12">
+                                                <p>Los registros se insertaron exitosamente</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center bg-light">
+                                        <asp:Button runat="server" type="button" class="btn btn-sm linkButtonClicked2 shadow-sm text-dark btn-outline-success fw-bold" data-bs-dismiss="modal" Text="Aceptar" aria-label="Close"></asp:Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                            <div class="modal fade" id="Noseinsertaronregistros" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-title d-flex align-items-center justify-content-center text-white p-2 VerdeEfecto fw-bold shadow">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">SID_DUCON</h5>
+                                    </div>
+                                    <div class="modal-body bg-light form-control-sm">
+                                        <div class="row container">
+                                            <div class="col-12">
+                                                <p class="text-center">No se insertaron los registros exitosamente</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center bg-light">
+                                        <asp:Button runat="server" type="button" class="btn btn-sm linkButtonClicked2 shadow-sm text-dark btn-outline-danger fw-bold" data-bs-dismiss="modal" Text="Aceptar" aria-label="Close"></asp:Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </ContentTemplate>
                </asp:UpdatePanel>
             </div>
@@ -523,16 +563,16 @@
             <div class="container border mt-2 shadow fondoSuave" style="min-height: 50rem;">
                 <div class="navbar mb-3">
                     <div class="input-group input-group-sm justify-content-center gap-2">
-   <asp:LinkButton runat="server" title="Grabar" ID="LinkButton1" CssClass="btn btn-sm shadow button-disabled">
-                            <i class="bi bi-file-earmark-fill"></i>
-                        </asp:LinkButton>
-                        <asp:LinkButton runat="server" title="Ajustar" ID="BtnModificarFamilia" CssClass="btn btn-sm shadow button-disabled">
+                            <asp:LinkButton runat="server" title="Nuevo" ID="BtnNuevoFamilia" OnClick="BtnNuevoFamilia_Click">
+                                <i class="bi bi-file-earmark-fill"></i>
+                            </asp:LinkButton>
+                        <asp:LinkButton runat="server" title="Ajustar" ID="BtnModificarFamilia" OnClick="BtnModificarFamilia_Click">
                             <i class="bi bi-wrench-adjustable"></i>
                         </asp:LinkButton>
-                        <asp:LinkButton runat="server" title="Guardar" ID="LinkButton3" CssClass="btn btn-sm shadow button-disabled">
+                        <asp:LinkButton runat="server" title="Guardar" ID="BtnGrabarFamilia" OnClick="BtnGrabarFamilia_Click">
                             <i class="bi bi-floppy-fill"></i>
                         </asp:LinkButton>
-                        <asp:LinkButton runat="server" title="Cancelar" ID="LinkButton4" CssClass="btn btn-sm shadow button-disabled">
+                        <asp:LinkButton runat="server" title="Cancelar" ID="BtnCancelar">
                             <i class="bi bi-ban"></i>
                         </asp:LinkButton>
 
@@ -581,7 +621,7 @@
                         <div class="col-md-5">
                             <div class="input-group input-group-sm gap-5">
                                 <asp:Label runat="server" ID="Label8" CssClass="col-form-label-sm" Text="Buscar"></asp:Label>
-                                <asp:TextBox runat="server" ID="TextBox5" CssClass="form-control form-control-sm"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="TextBuscarFamiliaModulo" CssClass="form-control form-control-sm" OnTextChanged="TextBuscarFamiliaModulo_TextChanged" AutoPostBack="true"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -663,16 +703,16 @@
                         <div class="col-lg-1 text-center col-md-12 col-sm-12 col-xs-12">
                              <div class="navbar navbar-toggler-icon shadow-sm mb-3">
                         <div class="input-group input-group-sm justify-content-center gap-2">
-                        <asp:LinkButton runat="server" title="Grabar" ID="LinkButton5" CssClass="btn btn-sm shadow button-disabled">
+                        <asp:LinkButton runat="server" title="Grabar" ID="LinkButton5" CssClass="btn btn-sm shadow button-enabled2 Verde">
                            <i class="bi bi-plus-square-fill"></i>
                         </asp:LinkButton>
-                        <asp:LinkButton runat="server" title="Ajustar" ID="LinkButton6" CssClass="btn btn-sm shadow button-disabled">
-                        <i class="bi bi-plus-square-fill"></i>
+                        <asp:LinkButton runat="server" title="Ajustar" ID="LinkButton6" CssClass="btn btn-sm shadow button-enabled2 RojoCancelar">
+                     <i class="bi bi-dash-square-fill"></i>
                         </asp:LinkButton>
-                        <asp:LinkButton runat="server" title="Guardar" ID="LinkButton7" CssClass="btn btn-sm shadow button-disabled">
+                        <asp:LinkButton runat="server" title="Guardar" ID="LinkButton7" CssClass="btn btn-sm shadow button-enabled2 Verde">
                             <i class="bi bi-arrow-up-circle-fill"></i>
                         </asp:LinkButton>
-                        <asp:LinkButton runat="server" title="Cancelar" ID="LinkButton8" CssClass="btn btn-sm shadow button-disabled">
+                        <asp:LinkButton runat="server" title="Cancelar" ID="LinkButton8" CssClass="btn btn-sm shadow button-enabled2 Verde">
                               <i class="bi bi-arrow-down-circle-fill"></i>
                         </asp:LinkButton>
 
