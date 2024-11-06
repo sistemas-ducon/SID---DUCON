@@ -528,3 +528,12 @@
 .AzulOscuroEfecto {
     background: repeating-linear-gradient(45deg, #08090c, #1d2942 100px);
 }
+
+.custom-icon {
+    display: inline-block;
+    width: 1.2rem;
+    height: 1.1rem;
+    background-color: transparent; /* No necesitas fondo si usas una imagen de fondo */
+    background-image: url('https://i.ibb.co/86fR8JK/icons8-microsoft-excel-2019-48.png'); /* Ruta de la imagen */
+    background-size: 1.150rem; /* Ajusta el tamaño de la imagen */
+}

@@ -36,6 +36,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     Adicionar.Enabled = false;
                     Adicionar.CssClass = "bi bf btn btn-lg btn-outline-secondary";
 
+                    BtnNuePan.Enabled = true;
+                    BtnNuePan.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
                 }
             }
             else
@@ -103,7 +106,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         protected void BuscarObjeto(object sender, EventArgs e)
         {
 
-
             if (rbObjeto.SelectedValue == "Objeto")
             {
                 ObtenerDatosObjetos.SelectCommand = "sp_ObtenerDatosObjetoActivo";
@@ -117,6 +119,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 ObtenerDatosObjetos.DataBind();
                 DataGridObjetos.DataBind();
             }
+
+            BotonesIniciales();
+
+            BtnNuePan.Enabled = true;
+            BtnNuePan.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+            Session.Remove("Id_PanelNum_Session");
+            SpanId_ObjetoEliminar.InnerText = "";
+            SpanId_NombreObjetoEliminar.InnerText = "";
+            spanAnchoEliminar.InnerText = "";
+            spanAlturaEliminar.InnerText = "";
 
         }
 
@@ -143,9 +156,29 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 Id_Objeto_Hid.Value = row.Cells[7].Text;
                 tbPrecioVenta.Text = row.Cells[8].Text;
 
+                //Se carga el Id_Numerico para cargar objetos  objeto oculto 
+                Session["Id_PanelNum_Session"] = row.Cells[7].Text;
+                SpanId_ObjetoEliminar.InnerText = row.Cells[7].Text;
+
+                // Nombre eliminar en el modal 
+                SpanId_NombreObjetoEliminar.InnerText = row.Cells[1].Text;
+
+                // Ancho Eliminar en el modal 
+                spanAnchoEliminar.InnerText = row.Cells[3].Text;
+
+                // Altura Eliminar modal 
+                spanAlturaEliminar.InnerText = row.Cells[4].Text;
+               
+                
+                
+                
                 // Asignar ID único a la fila
                 row.Attributes["id"] = "row_" + rowIndex;
 
+                ControlBotonesCrudObjetos();
+
+
+                // Controlar la activacion  de los botones del crud 
 
                 // Llamar a la función JavaScript para enfocar y desplazar la fila
                 ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
@@ -153,6 +186,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
 
             }
+        }
+
+        private void ControlBotonesCrudObjetos()
+        {
+            BtnNuePan.Enabled = false;
+            BtnNuePan.CssClass = "btn btn-sm shadow button-disabled";
+
+            Grabar.Enabled = false;
+            Grabar.CssClass = "btn btn-sm shadow button-disabled";
+
+            BtnModPan.Enabled = true;
+            BtnModPan.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+            BtnEliPan.Enabled = true;
+            BtnEliPan.CssClass = "btn btn-sm shadow button-enabled RojoCancelar";
+
+            BtnBuscas.Enabled = false;
+            BtnBuscas.CssClass = "btn btn-sm shadow button-disabled";
+
+            CopiarPanel.Enabled = true;
+            CopiarPanel.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
         }
 
         protected void Adicionar_Click(object sender, EventArgs e)
@@ -349,7 +403,189 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             HttpContext.Current.Session["controlTapPlano"] = "1";
         }
 
-        // Pendiente los Botones de la barra principal (Definir Funcionalidades y Autorizacion)
+        protected void BtnModPan_Click(object sender, EventArgs e)
+        {
+            if (!ValidarObjetoChequeado())
+            {
+                string url = "~/Formularios/DiseñoYDesarrollo/ObjetosDibujo.aspx";
+                string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
 
+                Session["Id_numericoDise"] = Session["Id_PanelNum_Session"].ToString();
+                Session["CrudObjetosDibujo"] = "Modificar";
+            }
+            else
+            {
+                string scriptChequeado = $"alert('El objeto se encuentra chequeado(bloqueado), no puede modificarlo.');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showNoAgregado", scriptChequeado, true);
+            }
+        }
+
+        protected void CopiarPanel_Click(object sender, EventArgs e)
+        {
+            string url = "~/Formularios/DiseñoYDesarrollo/ObjetosDibujo.aspx";
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+
+            Session["Id_numericoDise"] = Session["Id_PanelNum_Session"].ToString();
+            Session["CrudObjetosDibujo"] = "Copiar";
+        }
+
+        public bool ValidarObjetoChequeado()
+        {
+            bool chequeado = false;
+
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            // Consulta SQL
+            string query = "SELECT Chequeado FROM tblPanel WHERE Id_Numerico = @IdNumerico";
+
+            // Usamos un bloque using para asegurarnos de liberar los recursos correctamente
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Agregamos el parámetro a la consulta
+                    command.Parameters.AddWithValue("@IdNumerico", Session["Id_PanelNum_Session"].ToString());
+
+                    try
+                    {
+                        // Abrimos la conexión
+                        connection.Open();
+
+                        // Ejecutamos la consulta y obtenemos el valor
+                        var result = command.ExecuteScalar();
+
+                        // Si el resultado no es nulo, convertimos el valor a booleano
+                        if (result != null)
+                        {
+                            chequeado = Convert.ToBoolean(result);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejo de errores (puedes registrar el error o manejarlo según tus necesidades)
+                        Console.WriteLine("Error al obtener el valor de Chequeado: " + ex.Message);
+                    }
+                }
+            }
+
+            return chequeado;
+        }
+
+        protected void BtnNuePan_Click(object sender, EventArgs e)
+        {
+
+            string url = "~/Formularios/DiseñoYDesarrollo/ObjetosDibujo.aspx";
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+
+            Session.Remove("Id_numericoDise");
+            Session["CrudObjetosDibujo"] = "Nuevo";
+        }
+
+        protected void BtnEliPan_Click(object sender, EventArgs e)
+        {
+            if (SpanId_NombreObjetoEliminar.InnerText.Trim() != "")
+            {
+                if (ValidarObjetoEnOrdenTrabajo())
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El Objeto " + SpanId_NombreObjetoEliminar.InnerText + " está vinculado a una o más órdenes de trabajo y no se puede eliminar.');", true);
+                    return;
+                }
+                else
+                {
+
+                    // Modal confirmar eliminar objeto 
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "MostrarModalConfirmarEliminar", "MostrarModalConfirmarEliminar();", true);
+                    return;
+                }
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Por favor seleccione un objeto a eliminar.');", true);
+                return;
+            }
+        }
+
+        public bool ValidarObjetoEnOrdenTrabajo()
+        {
+            bool existe = false;
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT 1 FROM tblPlano INNER JOIN tblPlano_Panel ON tblPlano.Plano = tblPlano_Panel.Id_Plano " +
+                               "WHERE (((tblPlano.Id_OT)<>'Nula') AND ((tblPlano_Panel.Id_PanelNum)= @ID_Numerico))";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ID_Numerico", Session["Id_PanelNum_Session"].ToString());
+
+                    connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            existe = true;
+                        }
+                    }
+                }
+            }
+
+            return existe;
+        }
+
+        protected void btnEliminarObjeto_SI_Click(object sender, EventArgs e)
+        {
+            if (EliminarObjeto())
+            {
+                //Eliminado
+                BuscarObjeto(sender, e);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El Objeto se ha eliminado exitosamente.');", true);
+                return;
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El objeto no ha sido eliminado.');", true);
+                return;
+                //No Eliminado
+            }
+        }
+
+        private bool EliminarObjeto()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = "DELETE FROM tblPanel WHERE Id_Panel = @IdObjeto AND Ancho = @Ancho AND Altura = @Altura ";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@IdObjeto", SpanId_NombreObjetoEliminar.InnerText);
+                        command.Parameters.AddWithValue("@Ancho", spanAnchoEliminar.InnerText);
+                        command.Parameters.AddWithValue("@Altura", spanAlturaEliminar.InnerText);
+
+
+
+
+                        int filasAfectadas = command.ExecuteNonQuery();
+                        return filasAfectadas > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
+        }
     }
 }

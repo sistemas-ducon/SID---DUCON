@@ -2914,7 +2914,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         }
 
 
-        // eliminar modulo asociado al objeto 
+        // Eliminar modulo asociado al objeto 
         protected void btnEliminarModuloObjeto_Click(object sender, EventArgs e)
         {
 

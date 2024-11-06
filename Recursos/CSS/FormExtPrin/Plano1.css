@@ -44,9 +44,8 @@
     background-color: #a5a5a9; /* Ajusta el color de fondo del encabezado según tus preferencias */
     color:white;
 }
-
-.fila-seleccionada{
-    background-color: black !important; /*Se Cambia el color de la fila Seleccionada  */
+.fila-seleccionada {
+    background: radial-gradient(circle, #afb5b9, #23273be6); /* Radial gradient */
     color: white !important;
 }
 
@@ -55,4 +54,13 @@
     display: block;
     width: 100%;
     height: 100%;
+}
+
+
+.ColorAzulActivo {
+    color: #0863a4;
+}
+
+.RojoCancelar {
+    color: #b94747
 }

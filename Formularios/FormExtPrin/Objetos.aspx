@@ -14,6 +14,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link type="text/css" href="../../Recursos/CSS/FormExtPrin/Objetos.css" rel="stylesheet" />
+
+    <script>
+        //  confirmacion eliminar Objeto
+        function MostrarModalConfirmarEliminar() {
+            $('#confirmarEliminarObjeto').modal('show');
+        }
+    </script>
+
+
 </head>
 <body translate="no">
     <form id="form1" runat="server">
@@ -24,6 +33,10 @@
             <ContentTemplate>
 
                 <div class="container-fluid p-1 m-1 ">
+
+                    <div class="row" runat="server" visible="false">
+                        <span id="SpanId_ObjetoEliminar" runat="server"></span>
+                    </div>
 
                     <nav class="navbar navbar-expand-sm navbar-light bg-light p-1 ">
                         <div class="container-fluid">
@@ -37,28 +50,25 @@
 
                                     <div class="contenedor-icono">
 
-                                        <asp:LinkButton runat="server" title="Nuevo Panel" ID="BtnNuePan">
-                                                    <i class="bi bi-file-earmark"></i>
+                                        <asp:LinkButton runat="server" title="Nuevo Panel" ID="BtnNuePan" OnClick="BtnNuePan_Click">
+                                                   <i class="bi bi-file-earmark-plus-fill"></i>
                                         </asp:LinkButton>
 
-                                        <asp:LinkButton runat="server" title="Grabar" ID="Grabar">
-                                                 <%-- <i class="bi bi-save2"></i>--%>
-                                            <i class="bi bi-sd-card-fill"></i> <%--Icono Guardar--%>
-                                        </asp:LinkButton>
+                                        <%--   EL boton grabar no tiene codigo en el sistema viejo --%>
+                                        <asp:LinkButton runat="server" title="Grabar" ID="Grabar"><i class="bi bi-floppy-fill"></i></asp:LinkButton>
 
-                                        <asp:LinkButton runat="server" title="Modificar Panel" ID="BtnModPan">
+                                        <asp:LinkButton runat="server" title="Modificar Panel" ID="BtnModPan" OnClick="BtnModPan_Click">
                                                    <i class="bi bi-wrench"></i>
                                         </asp:LinkButton>
 
-                                        <asp:LinkButton runat="server" title="Eliminar Panel" ID="BtnEliPan">
-                                                   <i class="bi bi-database-x"></i>
+                                        <asp:LinkButton runat="server" title="Eliminar Panel" ID="BtnEliPan" OnClick="BtnEliPan_Click">
+                                                   <i class="bi bi-trash3-fill"></i>
                                         </asp:LinkButton>
 
-                                        <asp:LinkButton runat="server" title="Buscar Panel por Descripcion" ID="BtnBuscas">
-                                                  <i class="bi bi-file-earmark-ruled"></i>
-                                        </asp:LinkButton>
+                                        <%--   EL boton Buscar no tiene codigo en el sistema viejo --%>
+                                        <asp:LinkButton runat="server" title="Buscar Panel por Descripcion" ID="BtnBuscas"><i class="bi bi-search"></i></asp:LinkButton>
 
-                                        <asp:LinkButton runat="server" title="Copiar Panel" ID="CopiarPanel">
+                                        <asp:LinkButton runat="server" title="Copiar Panel" ID="CopiarPanel" OnClick="CopiarPanel_Click">
                                                    <i class="bi bi-files"></i>
                                         </asp:LinkButton>
 
@@ -69,7 +79,7 @@
 
                     <div class="row p-2 m-2 pt-2 pb-2 mb-2 border shadow-sm rounded">
 
-                        <div class="col-sm-2">
+                        <div class="col-lg-2 col-sm-4 col-sm-4 col-xs-6">
                             <div class="form-check">
                                 <asp:RadioButtonList ID="rbObjeto" runat="server">
                                     <asp:ListItem Selected="True" Value="Objeto">Por Objeto </asp:ListItem>
@@ -79,7 +89,7 @@
 
                         </div>
 
-                        <div class="col-sm-2">
+                        <div class="col-lg-2 col-sm-4 col-sm-4 col-xs-6">
                             <div class="input-group-sm">
                                 <asp:Label class="form-label" Text="Grupo" runat="server" ID="lbGrupo"></asp:Label>
                                 <asp:DropDownList class="form-control" ID="ddlGrupo" runat="server" DataTextField="Descripcion" DataValueField="Descripcion" OnDataBound="ddlGrupoObjeto_DataBound" DataSourceID="GrupoObjetos" AutoPostBack="true"></asp:DropDownList>
@@ -88,28 +98,28 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-3">
+                        <div class="col-lg-3 col-sm-4 col-sm-4 col-xs-6">
                             <div class="input-group-sm">
                                 <asp:Label class="form-label" Text="Criterio" runat="server" ID="lbCriterio"></asp:Label>
                                 <asp:TextBox ID="tbCriterio" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
                         </div>
 
-                        <div class="col-sm-1">
+                        <div class="col-lg-1 col-sm-4 col-sm-4 col-xs-6">
                             <div class="input-group-sm">
                                 <asp:Label class="form-label" Text="Altura." runat="server" ID="lbAltura"></asp:Label>
                                 <asp:TextBox ID="tbAltura" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
                         </div>
 
-                        <div class="col-sm-1">
+                        <div class="col-lg-1 col-sm-4 col-sm-4 col-xs-6">
                             <div class="input-group-sm">
                                 <asp:Label class="form-label" Text="Ancho" runat="server" ID="lbAncho"></asp:Label>
                                 <asp:TextBox ID="tbAncho" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
                         </div>
 
-                        <div class="col-sm-3 pt-4 pb-2">
+                        <div class="col-lg-3 col-sm-4 col-sm-4 col-xs-6 pt-4 pb-2">
                             <div class="input-group-sm">
                                 <asp:Button ID="btnBuscar" runat="server" Text="Buscar" CssClass="btn btn-sm btn-outline-secondary" OnClick="BuscarObjeto" />
                                 <asp:HiddenField ID="Id_Objeto_Hid" runat="server" />
@@ -122,50 +132,55 @@
 
                     </div>
 
-                    <div class="row d-flex p-1 m-1 pt-3 justify-content-between">
+                    <div class="row m-2 mt-0  g-4 ">
 
-                        <div class="col-8 border rounded shadow-sm">
-                            <div class="row justify-content-center p-2" style="height: 31rem">
-                                <div class="border rounded">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="table-responsive mb-1" style="max-height: 30rem; height: 31rem; overflow-x: auto;">
-                                                <h5 class="datagrid-header-title text-center">Paneles</h5>
-                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" ID="DataGridObjetos" AutoGenerateColumns="false" runat="server" DataSourceID="ObtenerDatosObjetos" OnItemCommand="DataGridObtenerDatosObjetos_LinkButton">
-                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                        <div class="col-lg-8 col-md-7 col-sm-12 col-xs-12 ">
+                            <div class="card " style="height: 35rem">
 
-                                                    <Columns>
-                                                        <asp:TemplateColumn HeaderText="...">
-                                                            <ItemTemplate>
-                                                                <asp:LinkButton ID="lnkObjetoDetallado" runat="server" CommandName="VerObjetoDet" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
-                                                            </ItemTemplate>
-                                                        </asp:TemplateColumn>
-                                                        <asp:BoundColumn DataField="Id_Panel" HeaderText="Id Objeto" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Descripcion_Panel" HeaderText="Descripcion" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Ancho" HeaderText="Ancho" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Descripcion_Linea" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Descripcion_Grupo" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Id_Numerico" Visible="false" />
-                                                        <asp:BoundColumn DataField="Precio_Venta" Visible="false" />
-                                                    </Columns>
-                                                </asp:DataGrid>
-                                                <asp:SqlDataSource ID="ObtenerDatosObjetos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="sp_ObtenerDatosObjetoActivo" SelectCommandType="StoredProcedure">
-                                                    <SelectParameters>
-                                                        <asp:ControlParameter ControlID="tbCriterio" PropertyName="Text" DefaultValue="%" Name="Criterio" Type="String"></asp:ControlParameter>
-                                                        <asp:ControlParameter ControlID="tbAltura" PropertyName="Text" DefaultValue="%" Name="Altura" Type="String"></asp:ControlParameter>
-                                                        <asp:ControlParameter ControlID="tbAncho" PropertyName="Text" DefaultValue="%" Name="Ancho" Type="String"></asp:ControlParameter>
-                                                        <asp:ControlParameter ControlID="ddlGrupo" PropertyName="SelectedValue" DefaultValue="%" Name="Grupo" Type="String"></asp:ControlParameter>
-                                                    </SelectParameters>
-                                                </asp:SqlDataSource>
-                                            </div>
-                                        </div>
+                                <div class="card-header">
+                                        <h5 class="datagrid-header-title text-center">Paneles</h5>
+                                </div>
+
+                                <div class="card-body p-0">
+                                    <div class="table-responsive" style="max-height: 31.5rem; height: 31.5rem; overflow-x: auto;">
+                                    
+                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" ID="DataGridObjetos" AutoGenerateColumns="false" runat="server" DataSourceID="ObtenerDatosObjetos" OnItemCommand="DataGridObtenerDatosObjetos_LinkButton">
+                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+
+                                            <Columns>
+                                                <asp:TemplateColumn HeaderText="...">
+                                                    <ItemTemplate>
+                                                        <asp:LinkButton ID="lnkObjetoDetallado" runat="server" CommandName="VerObjetoDet" CssClass="Tam" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>" />
+                                                    </ItemTemplate>
+                                                </asp:TemplateColumn>
+                                                <asp:BoundColumn DataField="Id_Panel" HeaderText="Id Objeto" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="Descripcion_Panel" HeaderText="Descripcion" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="Ancho" HeaderText="Ancho" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="Descripcion_Linea" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="Descripcion_Grupo" HeaderText="Grupo" ItemStyle-CssClass="auto-width-column" />
+                                                <asp:BoundColumn DataField="Id_Numerico" Visible="false" />
+                                                <asp:BoundColumn DataField="Precio_Venta" Visible="false" />
+                                            </Columns>
+                                        </asp:DataGrid>
+                                        <asp:SqlDataSource ID="ObtenerDatosObjetos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="sp_ObtenerDatosObjetoActivo" SelectCommandType="StoredProcedure">
+                                            <SelectParameters>
+                                                <asp:ControlParameter ControlID="tbCriterio" PropertyName="Text" DefaultValue="%" Name="Criterio" Type="String"></asp:ControlParameter>
+                                                <asp:ControlParameter ControlID="tbAltura" PropertyName="Text" DefaultValue="%" Name="Altura" Type="String"></asp:ControlParameter>
+                                                <asp:ControlParameter ControlID="tbAncho" PropertyName="Text" DefaultValue="%" Name="Ancho" Type="String"></asp:ControlParameter>
+                                                <asp:ControlParameter ControlID="ddlGrupo" PropertyName="SelectedValue" DefaultValue="%" Name="Grupo" Type="String"></asp:ControlParameter>
+                                            </SelectParameters>
+                                        </asp:SqlDataSource>
                                     </div>
                                 </div>
+
+
+
                             </div>
                         </div>
 
-                        <div class="col-4 border rounded shadow-sm ml-3">
+                        <div class="col-lg-4 col-md-5 col-sm-12 col-xs-12 border rounded shadow-sm ml-3">
+
                             <div class="row">
                                 <div class="col-1 p-0 m-0"></div>
                                 <div class="col-10">
@@ -234,7 +249,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-5">
+                                <div class="col-5 pb-2">
                                     <div class="input-group input-group-sm">
                                         <asp:Button ID="Cerrar" runat="server" Text="Cerrar" class="bi bf btn btn-outline-secondary" OnClientClick="enviarFormulario();" Style="width: 5.5rem;" />
                                     </div>
@@ -242,12 +257,40 @@
 
                                 <div class="col-2"></div>
                             </div>
+
                         </div>
 
                     </div>
 
-
                 </div>
+
+                <!--Modal confirmar eliminar Objeto -->
+                <div id="confirmarEliminarObjeto" class="modal" tabindex="-1" style="display: none;">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header bg-danger text-white">
+                                <h6 class="modal-title text-center">Eliminar Objeto</h6>
+
+                            </div>
+                            <div class="modal-body border rounded">
+                                <div class="container-fluid">
+                                    <h6>¿Está seguro de Borrar el Objeto <span runat="server" id="SpanId_NombreObjetoEliminar"></span>
+                                        de ancho <span runat="server" id="spanAnchoEliminar"></span> y de altura <span runat="server" id="spanAlturaEliminar">?</span>
+                                    </h6>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                    <asp:Button runat="server" ID="btnEliminarObjeto_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm  btn-outline-danger" Style="width: 5rem;" OnClick="btnEliminarObjeto_SI_Click" />
+                                    <asp:Button runat="server" ID="btnEliminarObjeto_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
             </ContentTemplate>
         </asp:UpdatePanel>
@@ -314,6 +357,7 @@
 
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
 
 </body>

@@ -51,6 +51,12 @@
 
     </script>
 
+    <script type="text/javascript">
+        function CerrarVentana() {
+            window.close();
+        }
+    </script>
+
 </head>
 
 <body>
@@ -117,22 +123,22 @@
 
                                             <div class="col-lg-2 col-md-6 col-md-6 col-xs-6 p-2">
                                                 <asp:Label runat="server" ID="Label1" CssClass="form-label col-form-label-sm" Text="A(Cms)"></asp:Label>
-                                                <asp:TextBox runat="server" ID="TextAncho" CssClass="form-control form-control-sm text-center" OnTextChanged="TextAncho_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                                <asp:TextBox runat="server" ID="TextAncho" CssClass="form-control form-control-sm text-center" type="number" min="0" OnTextChanged="TextAncho_TextChanged" AutoPostBack="true"></asp:TextBox>
                                             </div>
 
                                             <div class="col-lg-2  col-md-6 col-md-6 col-xs-6 p-2">
                                                 <asp:Label runat="server" ID="Label2" CssClass="form-label col-form-label-sm" Text="P(Cms)"></asp:Label>
-                                                <asp:TextBox runat="server" ID="TextProfundidad" CssClass="form-control form-control-sm text-center" OnTextChanged="TextProfundidad_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                                <asp:TextBox runat="server" ID="TextProfundidad" CssClass="form-control form-control-sm text-center" type="number" min="0" OnTextChanged="TextProfundidad_TextChanged" AutoPostBack="true"></asp:TextBox>
                                             </div>
 
                                             <div class="col-lg-2  col-md-6 col-md-6 col-xs-6 p-2">
                                                 <asp:Label runat="server" ID="Label3" CssClass="form-label col-form-label-sm" Text="H(Cms)"></asp:Label>
-                                                <asp:TextBox runat="server" ID="TextAltura" CssClass="form-control form-control-sm text-center"></asp:TextBox>
+                                                <asp:TextBox runat="server" ID="TextAltura" type="number" CssClass="form-control form-control-sm text-center"></asp:TextBox>
                                             </div>
 
                                             <div class="col-lg-2  col-md-6 col-md-6 col-xs-6 p-2">
                                                 <asp:Label runat="server" ID="Label4" CssClass="form-label col-form-label-sm" Text="M3"></asp:Label>
-                                                <asp:TextBox runat="server" ID="TextCubicaje" CssClass="form-control form-control-sm text-center" OnTextChanged="TextCubicaje_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                                <asp:TextBox runat="server" ID="TextCubicaje" type="number" CssClass="form-control form-control-sm text-center" OnTextChanged="TextCubicaje_TextChanged" AutoPostBack="true"></asp:TextBox>
                                             </div>
 
                                         </div>
@@ -158,12 +164,12 @@
 
                                                 <div class="col-lg-1 col-md-6 col-sm-6 col-xs-6 p-2">
                                                     <asp:Label runat="server" ID="Label6" CssClass="form-label col-form-label-sm" Text="Holgura"></asp:Label>
-                                                    <asp:TextBox runat="server" ID="TextHolgura" CssClass="form-control form-control-sm text-center" OnTextChanged="TextHolgura_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                                    <asp:TextBox runat="server" ID="TextHolgura" CssClass="form-control form-control-sm text-center" type="number" min="0" OnTextChanged="TextHolgura_TextChanged" AutoPostBack="true"></asp:TextBox>
                                                 </div>
 
                                                 <div class="col-lg-2 col-md-6 col-sm-6 col-xs-6 p-2">
                                                     <asp:Label runat="server" ID="Label7" CssClass="form-label col-form-label-sm" Text="Und X Paq"></asp:Label>
-                                                    <asp:TextBox runat="server" ID="TextUndXPaq" CssClass="form-control form-control-sm text-center" OnTextChanged="TextUndXPaq_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                                    <asp:TextBox runat="server" ID="TextUndXPaq" CssClass="form-control form-control-sm text-center" type="number" min="0" OnTextChanged="TextUndXPaq_TextChanged" AutoPostBack="true"></asp:TextBox>
                                                 </div>
 
                                                 <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 p-2">
@@ -188,7 +194,7 @@
 
                                                 <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12 p-2">
                                                     <asp:Label runat="server" ID="Label11" CssClass="form-label col-form-label-sm" Text="I.Referencia"></asp:Label>
-                                                    <asp:TextBox runat="server" ID="TextIndReferencia" CssClass="form-control form-control-sm text-center" OnTextChanged="TextIndReferencia_TextChanged"></asp:TextBox>
+                                                    <asp:TextBox runat="server" ID="TextIndReferencia" CssClass="form-control form-control-sm text-center" type="number" min="0" OnTextChanged="TextIndReferencia_TextChanged"></asp:TextBox>
                                                 </div>
 
                                             </div>
@@ -267,14 +273,14 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 p-1">
-                                                            <asp:Button runat="server" ID="BtnGrabarObjetosPanel" CssClass="form-control" Text="Grabar" OnClick="GrabarObjetosDibujo_Click"/>
+                                                            <asp:Button runat="server" ID="BtnGrabarObjetosPanel" CssClass="form-control" Text="Grabar" OnClick="GrabarObjetosDibujo_Click" />
                                                         </div>
                                                         <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 p-1">
                                                             <asp:Button runat="server" ID="BtnCancelarObjetosPanel" CssClass="form-control" Text="Cancelar" OnClick="BtnCancelarObjetosPanel_Click" />
 
                                                         </div>
                                                         <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 p-1">
-                                                            <asp:Button runat="server" ID="BtnCerrarObjetosPanel" CssClass="form-control" Text="Cerrar" />
+                                                            <asp:Button runat="server" ID="BtnCerrarObjetosPanel" CssClass="form-control" Text="Cerrar" OnClientClick="CerrarVentana(); return false;" />
                                                         </div>
                                                     </div>
 
@@ -326,7 +332,7 @@
                                         </div>
 
                                         <div class="card-body p-0">
-                                            <div class="table-responsive mb-2 gap-2" style="max-height: 13rem; height:13rem; overflow-x: auto;">
+                                            <div class="table-responsive mb-2 gap-2" style="max-height: 13rem; height: 13rem; overflow-x: auto;">
 
                                                 <asp:DataGrid CssClass="table table-bordered table-hover table-sm form-control-sm" ID="DataGridPanel" runat="server"
                                                     AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" PageSize="5"
@@ -451,81 +457,79 @@
                             <asp:Label ID="lbNombreModuloEliminar" runat="server" Text="" Visible="false"></asp:Label>
                         </div>
 
-
                         <div class="card p-2 mt-2 shadow fondoSuave" style="min-height: 50rem; margin-left: 5rem; margin-right: 5rem;">
 
-                            <div class="card-header ">
-                                <div class=" row ">
+                            <div class="card-header bg-light m-2">
 
-                                    <div class="row ">
+                                <div class="row ">
 
-                                        <div class="col-lg-5 col-md-6 col-sm-12">
-                                            <div class="p-1 m-2">
-                                                <div class="input-group input-group-sm gap-2">
-                                                    <asp:Label runat="server" ID="Label17" CssClass="form-label" Text="Grupo"></asp:Label>
-                                                    <asp:DropDownList runat="server" ID="ddlFamiliaModulo" CssClass="form-control form-control-sm" DataSourceID="DSGrupo1"
-                                                        DataValueField="ID_GrupoObjeto" DataTextField="Descripcion_Grupo" AppendDataBoundItems="True">
-                                                        <asp:ListItem Text="%" Value="%" />
-                                                    </asp:DropDownList>
-                                                    <asp:SqlDataSource ID="DSGrupo1" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT ID_GrupoObjeto, Descripcion_Grupo FROM tblGrupoObjeto ORDER BY Descripcion_Grupo"></asp:SqlDataSource>
-                                                </div>
+                                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                                        <div class="p-1 m-2">
+                                            <div class="input-group input-group-sm gap-2">
+                                                <asp:Label runat="server" ID="Label17" CssClass="form-label" Text="Grupo"></asp:Label>
+                                                <asp:DropDownList runat="server" ID="ddlFamiliaModulo" CssClass="form-control form-control-sm" DataSourceID="DSGrupo1"
+                                                    DataValueField="ID_GrupoObjeto" DataTextField="Descripcion_Grupo" AppendDataBoundItems="True">
+                                                    <asp:ListItem Text="%" Value="%" />
+                                                </asp:DropDownList>
+                                                <asp:SqlDataSource ID="DSGrupo1" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT ID_GrupoObjeto, Descripcion_Grupo FROM tblGrupoObjeto ORDER BY Descripcion_Grupo"></asp:SqlDataSource>
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <div class="col-lg-4 col-md-6 col-sm-12">
-                                            <div class="p-1 m-2">
-                                                <div class="input-group input-group-sm gap-2">
-                                                    <asp:Label runat="server" ID="Label18" CssClass="form-label" Text="Criterio: "></asp:Label>
-                                                    <asp:TextBox runat="server" ID="TextCriterio" CssClass="form-control form-control-sm"></asp:TextBox>
-                                                    <asp:LinkButton runat="server" title="Buscar" ID="Buscar" Style="border: solid 1px #938f8fa1; border-radius: 0.2rem;" OnClick="ButtonBuscar_Click">
+                                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                                        <div class="p-1 m-2">
+                                            <div class="input-group input-group-sm gap-2">
+                                                <asp:Label runat="server" ID="Label18" CssClass="form-label" Text="Criterio: "></asp:Label>
+                                                <asp:TextBox runat="server" ID="TextCriterio" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                <asp:LinkButton runat="server" title="Buscar" ID="Buscar" Style="border: solid 1px #938f8fa1; border-radius: 0.2rem;" OnClick="ButtonBuscar_Click">
                                                    <i class="bi bi-search"></i>
-                                                    </asp:LinkButton>
-                                                </div>
+                                                </asp:LinkButton>
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <div class="col-lg-3 col-md-6 col-sm-12">
-                                            <div class="p-1 m-2">
-                                                <div class="input-group input-group-sm gap-2">
-                                                    <asp:Label runat="server" ID="Label19" CssClass="form-label" Text="Altura Mod"></asp:Label>
-                                                    <asp:TextBox runat="server" ID="TextAlturaConfigurar" CssClass="form-control form-control-sm"></asp:TextBox>
-                                                    <asp:Label runat="server" ID="Label20" CssClass="form-label" Text="cms"></asp:Label>
-                                                </div>
+                                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                                        <div class="p-1 m-2">
+                                            <div class="input-group input-group-sm gap-2">
+                                                <asp:Label runat="server" ID="Label19" CssClass="form-label" Text="Altura Mod"></asp:Label>
+                                                <asp:TextBox runat="server" ID="TextAlturaConfigurar" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                <asp:Label runat="server" ID="Label20" CssClass="form-label" Text="cms"></asp:Label>
                                             </div>
+                                        </div>
 
                                     </div>
 
                                     <div class="row pt-2 mt-2">
 
-                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                             <div class=" input-group input-group-sm justify-content-start gap-5">
                                                 <asp:Label runat="server" CssClass="form-label fw-bold" ID="lbDisLA" Text=" "></asp:Label>
                                                 <asp:Label runat="server" CssClass="form-label fw-bold" ID="lbDisLB" Text=""></asp:Label>
                                             </div>
                                         </div>
 
-                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 
                                             <div class="row">
 
-                                                <div class="col-lg-5 col-md-5 col-sm-5 col-12 ">
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
                                                     <div class="input-group input-group-sm gap-1 ">
                                                         <asp:CheckBox runat="server" ID="CheckBase" class="form-check" OnCheckedChanged="CheckBase_CheckedChanged" AutoPostBack="true" />
                                                         <asp:Label runat="server" ID="Label21" CssClass="form-label" Text="Bases"></asp:Label>
                                                     </div>
                                                 </div>
 
-                                                <div class="col-1"></div>
 
-                                                <div class="col-lg-5 col-md-5 col-sm-5 col-12">
+
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <div class="input-group input-group-sm  gap-1">
-                                                          <asp:CheckBox runat="server" ID="CheckComplementarios" class="form-check" OnCheckedChanged="CheckComplementarios_CheckedChanged" AutoPostBack="true" />
-                                                          <asp:Label runat="server" ID="Label22" CssClass="form-label" Text="Complementarios"></asp:Label>
+                                                        <asp:CheckBox runat="server" ID="CheckComplementarios" class="form-check" OnCheckedChanged="CheckComplementarios_CheckedChanged" AutoPostBack="true" />
+                                                        <asp:Label runat="server" ID="Label22" CssClass="form-label" Text="Complementarios"></asp:Label>
                                                     </div>
-                                                  
+
                                                 </div>
 
-                                                <div class="col-1"></div>
+
 
                                             </div>
 
@@ -534,13 +538,14 @@
                                     </div>
 
                                 </div>
+
                             </div>
 
                             <div class="card-body">
 
                                 <div class="row">
 
-                                    <div class="col-lg-9 col-md-6 col-sm-12">
+                                    <div class="col-lg-8 col-md-6 col-sm-12">
                                         <div class="p-1 m-1 border shadow-sm bg-light" style="min-height: 23rem; max-height: 23rem;">
                                             <div class="table-responsive mb-1 gap-2" style="max-height: 22rem; overflow-x: auto;">
                                                 <h6 class="datagrid-header text-start">Módulos</h6>
@@ -566,7 +571,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-3 col-md-6 col-sm-12">
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
                                         <div class="p-1 m-2 border shadow-sm bg-light p-3" style="min-height: 23rem; max-height: 23rem;">
                                             <div class="row">
                                                 <div class="col-lg-12 col-md-12 col-sm-12 col-12 p-2">
@@ -649,6 +654,7 @@
                                     <div class="col-lg-12 col-md-12 col-sm-12">
 
                                         <div class="card p-2 m-2">
+
                                             <div class="card-header">
                                                 <h6 class=" text-start">Módulos Asociados al Objeto</h6>
                                             </div>
@@ -681,65 +687,66 @@
                                                     </asp:DataGrid>
                                                 </div>
                                             </div>
+
                                         </div>
 
                                     </div>
                                 </div>
 
                             </div>
-                        </div>
 
+                            <!--Modal confirmar Adicionar Módulo -->
+                            <div id="confirmarAdicionarModulo" class="modal" tabindex="-1" style="display: none;">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-primary text-white">
+                                            <h6 class="modal-title text-center">Adicionar Módulo</h6>
 
-                        <!--Modal confirmar Adicionar Módulo -->
-                        <div id="confirmarAdicionarModulo" class="modal" tabindex="-1" style="display: none;">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-primary text-white">
-                                        <h6 class="modal-title text-center">Adicionar Módulo</h6>
-
-                                    </div>
-                                    <div class="modal-body border rounded">
-                                        <div class="container-fluid">
-                                            <h6>Desea adicionar el módulo <span runat="server" id="NombreModulo"></span> al objeto <span runat="server" id="NombreObjeto"></span>?  
-                                            </h6>
                                         </div>
+                                        <div class="modal-body border rounded">
+                                            <div class="container-fluid">
+                                                <h6>Desea adicionar el módulo <span runat="server" id="NombreModulo"></span>al objeto <span runat="server" id="NombreObjeto"></span>?  
+                                                </h6>
+                                            </div>
 
-                                    </div>
-                                    <div class="modal-footer">
-                                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                            <asp:Button runat="server" ID="btnAdicionarObjeto_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm  btn-outline-primary" Style="width: 5rem;" OnClick="btnAdicionarObjeto_SI_Click" />
-                                            <asp:Button runat="server" ID="btnAdicionarObjeto_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
                                         </div>
+                                        <div class="modal-footer">
+                                            <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                                <asp:Button runat="server" ID="btnAdicionarObjeto_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm  btn-outline-primary" Style="width: 5rem;" OnClick="btnAdicionarObjeto_SI_Click" />
+                                                <asp:Button runat="server" ID="btnAdicionarObjeto_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
+                                            </div>
 
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!--Modal confirmar quitar Módulo -->
-                        <div id="confirmarQuitarModulo" class="modal" tabindex="-1" style="display: none;">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-danger text-white">
-                                        <h6 class="modal-title text-center">Quitar  Módulo</h6>
+                            <!--Modal confirmar quitar Módulo -->
+                            <div id="confirmarQuitarModulo" class="modal" tabindex="-1" style="display: none;">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-danger text-white">
+                                            <h6 class="modal-title text-center">Quitar  Módulo</h6>
 
-                                    </div>
-                                    <div class="modal-body border rounded">
-                                        <div class="container-fluid">
-                                            <h6>Desea quitar el los módulos seleccionados ?  
-                                            </h6>
                                         </div>
+                                        <div class="modal-body border rounded">
+                                            <div class="container-fluid">
+                                                <h6>Desea quitar el los módulos seleccionados ?  
+                                                </h6>
+                                            </div>
 
-                                    </div>
-                                    <div class="modal-footer">
-                                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                            <asp:Button runat="server" ID="btnQuitarModulo_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm  btn-outline-danger" Style="width: 5rem;" OnClick="btnQuitarModulo_SI_Click" />
-                                            <asp:Button runat="server" ID="btnQuitarModulo_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
                                         </div>
+                                        <div class="modal-footer">
+                                            <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                                <asp:Button runat="server" ID="btnQuitarModulo_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm  btn-outline-danger" Style="width: 5rem;" OnClick="btnQuitarModulo_SI_Click" />
+                                                <asp:Button runat="server" ID="btnQuitarModulo_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
+                                            </div>
 
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
 
                     </ContentTemplate>
