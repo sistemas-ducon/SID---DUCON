@@ -7604,6 +7604,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             BtnNN.CssClass = "btn btn-sm shadow button-enabled ColorVerde";
 
         }
+        private bool Validar_Permiso_Area(int idPermiso)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT COUNT(*) FROM tblPermiso_Empleado WHERE ID_Empleado = @ID_Empleado AND ID_Permiso = @ID_Permiso";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ID_Empleado", Session["CedulaLogeada"].ToString());
+                    command.Parameters.AddWithValue("@ID_Permiso", idPermiso);
+                    int count = (int)command.ExecuteScalar();
+                    return count > 0; // Retorna true si el permiso existe, false de lo contrario
+                }
+            }
+        }
+
 
         protected void BtnBuscarInsumo_Click(object sender, EventArgs e)
         {
@@ -22332,8 +22349,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-    }
-}
+    
+
 
         protected void BtnEliminarModulo_Click(object sender, EventArgs e)
         {
