@@ -20612,6 +20612,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     // Limpia las variables de sesión
                     Session.Remove("PrimerClicTime5");
+
+                    // Store the selected row index in the DataGrid attribute
+                    DataGridInsumo.Attributes["SelectedRowIndex7"] = rowIndex.ToString();
+
+                    // Asignar ID único a la fila
+                    row.Attributes["id"] = "DataGridInsumo_row_" + rowIndex;
+                    ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DataGridInsumo_row_" + rowIndex + "');", true);
                 }
                 else
                 {  // Validar permisos
@@ -20635,6 +20642,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     Session["Id_OTdise5"] = row.Cells[1].Text;
                     Session["PrimerClicTime5"] = DateTime.Now; // Establecer el tiempo del primer clic
 
+                    // Store the selected row index in the DataGrid attribute
+                    DataGridInsumo.Attributes["SelectedRowIndex7"] = rowIndex.ToString();
+
+                    // Asignar ID único a la fila
+                    row.Attributes["id"] = "DataGridInsumo_row_" + rowIndex;
+                    ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DataGridInsumo_row_" + rowIndex + "');", true);
 
                 }
 
