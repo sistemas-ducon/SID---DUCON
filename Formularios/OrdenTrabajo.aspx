@@ -5548,34 +5548,7 @@
                             </div>
                         </div>
 
-                        <div class="modal" id="ModalRotacionModulo" tabindex="-1">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header AzulOscuroEfecto fw-bold shadow-sm">
-                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Rotación de Insumo</h5>
-                                        <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
-                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid1" runat="server" AutoGenerateColumns="false">
-                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
-                                            <Columns>
-                                                <asp:TemplateColumn>
-                                                    <ItemTemplate>
-                                                        <asp:LinkButton ID="SelectInsumoID" runat="server" CommandName="ModuloIns" CommandArgument='<%# Container.ItemIndex %>'
-                                                            Text="<i class='bi bi-pencil-square text-dark'></i>" />
-                                                    </ItemTemplate>
-                                                </asp:TemplateColumn>
-                                                <asp:BoundColumn DataField="riEstacion" HeaderText="Estación" ItemStyle-CssClass="auto-width-column" />
-                                                <asp:BoundColumn DataField="Descripcion_Area" HeaderText="Destino" ItemStyle-CssClass="auto-width-column" />
-                                                <asp:BoundColumn DataField="riId" HeaderText="Rotación" ItemStyle-CssClass="auto-width-column" />
-                                            </Columns>
-                                        </asp:DataGrid>
-                                    </div>
-                                    <div class="modal-footer">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                       
                     </div>
                 </div>
             </div>
