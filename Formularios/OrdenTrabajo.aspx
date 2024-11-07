@@ -2221,6 +2221,7 @@
                             </div>
 
                         </div>
+                        
 
                         <!--Modal Confirmacion Boton OK-->
                         <div id="BotonOk" class="modal" tabindex="-1" style="display: none;">
@@ -3040,10 +3041,9 @@
 
                             </div>
                         </div>
+                        
 
-
-                    </ContentTemplate>
-
+                    </ContentTemplate>     
                     <Triggers>
                         <asp:PostBackTrigger ControlID="btnCotizacion" />
                     </Triggers>
@@ -5547,13 +5547,7 @@
                                 </div>
                             </div>
                         </div>
-
-                       
-                    </div>
-                </div>
-            </div>
-        </div>
-
+                        
                         <div class="modal" id="ModalRotacionModulo" tabindex="-1">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
