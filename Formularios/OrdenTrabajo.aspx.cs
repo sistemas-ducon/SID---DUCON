@@ -12846,6 +12846,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
             {
 
+                Session["Id_OT2"] = tbOT.Text;
+                Session["pedido2"] = ddlNumbers.SelectedItem.Text;
+
                 // SE CONSULTA SI EL PEDIDO TIENE ACABADOS DEFINIDOS POR EL ASESOR 
                 if (ConsultarAcabadosPorAsesor())
                 {
@@ -12938,8 +12941,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ScriptManager.RegisterStartupScript(this, GetType(), "actualizarValorBotonOk", "actualizarValorBotonOk();", true);
                 ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#BotonOk').modal('show');", true);
 
-                Session["Id_OT2"] = tbOT.Text;
-                Session["pedido2"] = ddlNumbers.SelectedItem.Text;
 
             }
             else if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
