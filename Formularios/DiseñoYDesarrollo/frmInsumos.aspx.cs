@@ -28,6 +28,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     {
                         valoresPorDefecto();
                         habilitarTextboxNuevo();
+                        Cargar_Tipo_Insumo();
+                        CargarGrupoAcabado();
 
                         TextCodInvInsumo.Text = "0000000";
                         TextFacGanInsumo.Text = "1";
@@ -35,10 +37,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     }
                     if (tipoAccion == "Modificar")
                     {
+                        CargarInsumo();
                         habilitarTextboxNuevo();
                     }
                     if (tipoAccion == "Copiar")
                     {
+                        CargarInsumo();
                         valoresPorDefecto();
                         habilitarTextboxNuevo();
                     }
@@ -57,7 +61,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             CargarUnidadMedida();
             CargarTipoInsumo();
             InicializarBotones();
-            CargarInsumo();
             GuardarVistas();
             DeshabilitarControlesExceptoCerrar(this.container);
             DropAdiAca.DataBind();

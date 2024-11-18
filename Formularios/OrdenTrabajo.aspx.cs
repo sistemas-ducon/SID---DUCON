@@ -7951,9 +7951,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
-
-
         //*****ELIMINAR TODOS LOS OBJETOS DEL PLANO  *****
 
         protected void EliminarObjetos_Click(object sender, EventArgs e)
@@ -13502,7 +13499,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-
         // INICIO BOTON OK PARA DIBUJO Y COMPRAS 
 
 
@@ -13604,7 +13600,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             return existe;
         }
-
 
         // Metodos  Cargar Acabado Plano Dibujo 
         private void Cargar_AcabadosPlanoDibujo()
@@ -14723,9 +14718,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
-
-
         // Actualizar Realizado por en el plano 
         private void ActulizarDibujantePlano()
         {
@@ -14750,7 +14742,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
         }
-
 
         //Registro Cierre contable 
         public bool ValidarResgistroOtGeneral()
@@ -14808,7 +14799,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
         }
-
 
         // Reporte medidas corte produccion
         private void Reporte_Medidas_Corte_Produccion()
@@ -22363,9 +22353,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-    
-
-
         protected void BtnEliminarModulo_Click(object sender, EventArgs e)
         {
             string idModulo = Session["IDModulo"]?.ToString();
@@ -22453,7 +22440,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Llamar al método para cargar los módulos
             CargarModulos(criterioModulo, alturaModulo, familiaModulo, idModulo);
         }
-
 
         private void CargarModulos(string criterioModulo, string alturaModulo, string familiaModulo, string idModulo)
         {
@@ -22623,8 +22609,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
-
         public void BtnConfirmarEliminar_Click(object sender, EventArgs e)
         {
             // Obtener el Id_Insumo de la sesión
@@ -22705,11 +22689,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 RecargarModulos();
             }
         }
-
-      
-
-      
-
 
     }
 }

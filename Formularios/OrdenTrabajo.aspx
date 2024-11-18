@@ -6130,6 +6130,11 @@
                 // Disparar el evento OnTextChanged a través de AutoPostBack
                 __doPostBack('<%= tbOT.UniqueID %>', '');
 
+                    // Si el elemento enfocado es el TextBox "tbOT"
+                    if (focusedElement.id === '<%= TextCriterio.ClientID %>') {
+ // Disparar el evento OnTextChanged a través de AutoPostBack
+     __doPostBack('<%= TextCriterio.UniqueID %>', '');
+
                 // Prevenir la acción predeterminada para que no se envíe el formulario completo
                 event.preventDefault();
             }
