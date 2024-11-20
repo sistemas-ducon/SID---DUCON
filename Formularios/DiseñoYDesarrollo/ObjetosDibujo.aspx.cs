@@ -22,6 +22,7 @@ using System.Security.Cryptography;
 using Org.BouncyCastle.Utilities;
 using System.Runtime.ConstrainedExecution;
 using static SISTEMA_INTEGRAL_DUCON.Formularios.Diseño_Venta;
+using DocumentFormat.OpenXml.Office.Word;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 {
@@ -61,7 +62,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     btnActuaValComercial.Enabled = true;
                     btnActuaValComercial.CssClass = "btn btn-sm shadow ColorAzulActivo border";
 
-                   // Manejar  el evento de Anadir un modulo a un Objeto y/o Eliminar 
+
+                    btnEliminarInsumo.Enabled = false;
+                    btnEliminarInsumo.CssClass = "btn btn-sm btn-outline-secondary";
+
+                    // Manejar  el evento de Anadir un modulo a un Objeto y/o Eliminar 
 
                     if (Session["ControlTapConfigurar"]?.ToString() == "1")
                     {
@@ -114,7 +119,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             (TextUndXPaq, TextUndXPaq.Text.Trim()),
             (TextIndReferencia, TextIndReferencia.Text.Trim()),
             (TextIdInsumo, TextIdInsumo.Text),
-            (CheckApliCodPSLOT, CheckApliCodPSLOT.Checked.ToString())
+
         };
 
             foreach (var (control, tag) in controles)
@@ -163,7 +168,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         (TextUndXPaq, TextUndXPaq.Attributes["Tag"], val => TextUndXPaq.Text.Trim() != val, val => IsNumeric(val)),
         (TextIndReferencia, TextIndReferencia.Attributes["Tag"], val => TextIndReferencia.Text.Trim() != val, val => !string.IsNullOrEmpty(val)),
         (TextIdInsumo, TextIdInsumo.Attributes["Tag"], val => TextIdInsumo.Text != val, val => true),
-        (CheckApliCodPSLOT, CheckApliCodPSLOT.Attributes["Tag"], val => CheckApliCodPSLOT.Checked != Convert.ToBoolean(val), val => true)
+
             };
 
             bool valoresCambiados = controles.Any(c => c.isChanged(c.tag));
@@ -455,9 +460,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                                     TextValorComercial.Text = reader["Precio_Venta"].ToString();
                                     string descripcionPanelCotizacion = reader["Descripcion_Panel"].ToString();
                                     TextDescripcionPanelCotizacion.Text = ReplaceNomenclatura(descripcionPanelCotizacion);
-                                    TextIdInsumo.Text = reader["Id_Insumo"].ToString();
-                                    TextCodPSL.Text = reader["ID_Inventario"].ToString();
-                                    TextInRelOtNoOai.Text = reader["Descripcion_Insumo"].ToString();
                                     bool isActive = reader["Activo"] != DBNull.Value && Convert.ToBoolean(reader["Activo"]);
                                     CheckActivo.Checked = isActive;
                                     bool Escalable = reader["Escalable"] != DBNull.Value && Convert.ToBoolean(reader["Escalable"]);
@@ -1088,6 +1090,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                 Session["IDModulo"] = row.Cells[1].Text;
 
+
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
+                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
+
                 Habilitar_BotonAdicionar();
 
             }
@@ -1108,16 +1117,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
                 string sSql = "";
-                if (!CheckApliCodPSLOTT)  // Si CheckApliCodPSLOT está desmarcado
-                {
-                    sSql = "INSERT INTO tblPanel(Id_Panel, Descripcion_Panel, Id_GrupoObjeto, Ancho, Altura, Id_Linea, Divisiones, HOLGURA, Profundidad, Escalable, cubicajem3, Activo, chequeado, Responsable, FechaChequeo, Descripcion_Tecnica, idInsumoReferencia, UndxPaquete, Apunta_Cod_PSL, ID_Inventario, Id_Insumo, Descripcion_Insumo) " +
-                           "VALUES(@Id_Panel, @Descripcion_Panel, @Id_GrupoObjeto, @Ancho, 0, @Id_Linea, @Divisiones, @HOLGURA, @Profundidad, @Escalable, @cubicajem3, @Activo, 0, @Responsable, @FechaChequeo, @Descripcion_Tecnica, @idInsumoReferencia, @UndxPaquete, 0, NULL, NULL, NULL)";
-                }
-                else  // Si CheckApliCodPSLOT está marcado
-                {
-                    sSql = "INSERT INTO tblPanel(Id_Panel, Descripcion_Panel, Id_GrupoObjeto, Ancho, Altura, Id_Linea, Divisiones, HOLGURA, Profundidad, Escalable, cubicajem3, Activo, chequeado, Responsable, FechaChequeo, Descripcion_Tecnica, idInsumoReferencia, UndxPaquete, Apunta_Cod_PSL, ID_Inventario, Id_Insumo, Descripcion_Insumo) " +
-                           "VALUES(@Id_Panel, @Descripcion_Panel, @Id_GrupoObjeto, @Ancho, 0, @Id_Linea, @Divisiones, @HOLGURA, @Profundidad, @Escalable, @cubicajem3, @Activo, 0, @Responsable, @FechaChequeo, @Descripcion_Tecnica, @idInsumoReferencia, @UndxPaquete, 1, @CodPSL, @IdInsumo, @Descripcion_Insumo)";
-                }
+
+                sSql = "INSERT INTO tblPanel(Id_Panel, Descripcion_Panel, Id_GrupoObjeto, Ancho, Altura, Id_Linea, Divisiones, HOLGURA, Profundidad, Escalable, cubicajem3, Activo, chequeado, Responsable, FechaChequeo, Descripcion_Tecnica, idInsumoReferencia, UndxPaquete, ID_Inventario, Id_Insumo, Descripcion_Insumo) " +
+                            "VALUES(@Id_Panel, @Descripcion_Panel, @Id_GrupoObjeto, @Ancho, 0, @Id_Linea, @Divisiones, @HOLGURA, @Profundidad, @Escalable, @cubicajem3, @Activo, 0, @Responsable, @FechaChequeo, @Descripcion_Tecnica, @idInsumoReferencia, @UndxPaquete,'' ,'' ,'' )";
+
 
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
@@ -1139,13 +1142,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                         cmd.Parameters.AddWithValue("@Descripcion_Tecnica", TextAreaDescripTec.Text.ToUpper());
                         cmd.Parameters.AddWithValue("@idInsumoReferencia", TextIndReferencia.Text);
                         cmd.Parameters.AddWithValue("@UndxPaquete", TextUndXPaq.Text);
-
-                        if (CheckApliCodPSLOTT)
-                        {
-                            cmd.Parameters.AddWithValue("@CodPSL", TextCodPSL.Text);
-                            cmd.Parameters.AddWithValue("@IdInsumo", TextIdInsumo.Text);
-                            cmd.Parameters.AddWithValue("@Descripcion_Insumo", TextInRelOtNoOai.Text);
-                        }
 
                         con.Open();
                         cmd.ExecuteNonQuery();
@@ -1228,26 +1224,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                     // Update the panel
                     string updateSql = "";
-                    if (!CheckApliCodPSLOTT) // If CheckApliCodPSLOT is unchecked
-                    {
-                        updateSql = "UPDATE tblPanel SET Id_Panel = @Id_Panel, UndxPaquete = @UndxPaquete, Descripcion_Panel = @Descripcion_Panel, " +
-                                    "Id_GrupoObjeto = @Id_GrupoObjeto, Ancho = @Ancho, Altura = @Altura, Id_Linea = @Id_Linea, Divisiones = @Divisiones, " +
-                                    "HOLGURA = @HOLGURA, Precio_Venta = 0, Profundidad = @Profundidad, Escalable = @Escalable, CubicajeM3 = @CubicajeM3, " +
-                                    "Activo = @Activo, RegistradoSag = 0, chequeado = @chequeado, Responsable = @Responsable, FechaChequeo = @FechaChequeo, " +
-                                    "Descripcion_Tecnica = @Descripcion_Tecnica, idInsumoReferencia = @idInsumoReferencia, Apunta_Cod_PSL = 0, " +
-                                    "ID_Inventario = NULL, Id_Insumo = NULL, Descripcion_Insumo = NULL " +
-                                    "WHERE Id_Panel = @Id_PanelTag AND Ancho = @AnchoAnterior AND Altura = @AlturaAnterior";
-                    }
-                    else // If CheckApliCodPSLOT is checked
-                    {
-                        updateSql = "UPDATE tblPanel SET Id_Panel = @Id_Panel, UndxPaquete = @UndxPaquete, Descripcion_Panel = @Descripcion_Panel, " +
-                                    "Id_GrupoObjeto = @Id_GrupoObjeto, Ancho = @Ancho, Altura = @Altura, Id_Linea = @Id_Linea, Divisiones = @Divisiones, " +
-                                    "HOLGURA = @HOLGURA, Precio_Venta = 0, Profundidad = @Profundidad, Escalable = @Escalable, CubicajeM3 = @CubicajeM3, " +
-                                    "Activo = @Activo, RegistradoSag = 0, chequeado = @chequeado, Responsable = @Responsable, FechaChequeo = @FechaChequeo, " +
-                                    "Descripcion_Tecnica = @Descripcion_Tecnica, idInsumoReferencia = @idInsumoReferencia, Apunta_Cod_PSL = 1, " +
-                                    "ID_Inventario = @CodPSL, Id_Insumo = @IdInsumo, Descripcion_Insumo = @Descripcion_Insumo " +
-                                    "WHERE Id_Panel = @Id_PanelTag AND Ancho = @AnchoAnterior AND Altura = @AlturaAnterior";
-                    }
+
+                    updateSql = "UPDATE tblPanel SET Id_Panel = @Id_Panel, UndxPaquete = @UndxPaquete, Descripcion_Panel = @Descripcion_Panel, " +
+                                "Id_GrupoObjeto = @Id_GrupoObjeto, Ancho = @Ancho, Altura = @Altura, Id_Linea = @Id_Linea, Divisiones = @Divisiones, " +
+                                "HOLGURA = @HOLGURA, Precio_Venta = 0, Profundidad = @Profundidad, Escalable = @Escalable, CubicajeM3 = @CubicajeM3, " +
+                                "Activo = @Activo, RegistradoSag = 0, chequeado = @chequeado, Responsable = @Responsable, FechaChequeo = @FechaChequeo, " +
+                                "Descripcion_Tecnica = @Descripcion_Tecnica, idInsumoReferencia = @idInsumoReferencia, " +
+                                "ID_Inventario = '', Id_Insumo = '', Descripcion_Insumo = '' " +
+                                "WHERE Id_Panel = @Id_PanelTag AND Ancho = @AnchoAnterior AND Altura = @AlturaAnterior";
+
 
                     using (SqlCommand updateCmd = new SqlCommand(updateSql, con))
                     {
@@ -1273,12 +1258,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                         updateCmd.Parameters.AddWithValue("@AnchoAnterior", anchoAnterior);
                         updateCmd.Parameters.AddWithValue("@AlturaAnterior", alturaAnterior);
 
-                        if (CheckApliCodPSLOTT)
-                        {
-                            updateCmd.Parameters.AddWithValue("@CodPSL", TextCodPSL.Text.Trim());
-                            updateCmd.Parameters.AddWithValue("@IdInsumo", TextIdInsumo.Text.Trim());
-                            updateCmd.Parameters.AddWithValue("@Descripcion_Insumo", TextInRelOtNoOai.Text.Trim());
-                        }
+
 
                         updateCmd.ExecuteNonQuery();
                     }
@@ -1881,13 +1861,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
         protected void TextIdInsumo_TextChanged(object sender, EventArgs e)
         {
+            btnEliminarInsumo.Enabled = false;
+            btnEliminarInsumo.CssClass = "btn btn-sm btn-outline-secondary";
 
-            string tipoAccion = Session["CrudObjetosDibujo"] as string;
-
-            if (tipoAccion == "Modificar")
-            {
-                EstadoGrabarCancelar();
-            }
 
             if (TextIdInsumo.Text == "")
             {
@@ -1895,10 +1871,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 // El campo de id insumo está vacío, debe ingresar el id del insumo asociado.
                 //¿Desea aseociar al objeto algún id de insumo para las OT diferentes a OAI?
 
-                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#confirmarAsociarInsumo').modal('show');", true);
+                TextCodPSL.Text = "";
+                TextInRelOtNoOai.Text = "";
+                TextIdInsumo.Text = "";
+                TextIdInsumo.Focus();
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El ID de insumo no puede estar vacio.');", true);
                 return;
-
-
             }
             else
             {
@@ -1939,9 +1917,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     TextIdInsumo.Focus();
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El insumo no existe, por favor revise el ID ingresado.');", true);
                 }
-
-
-
 
 
             }
@@ -2347,7 +2322,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                         else
                         {
 
-                            string val = ddlCantidad.SelectedValue; 
+                            string val = ddlCantidad.SelectedValue;
 
                             ddlCantidad.Items.Clear();
                             // De lo contrario, habilitar el boton adicionar modulo           
@@ -2384,6 +2359,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     e.Item.CssClass = "fila-seleccionada1";
                 }
 
+
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
+                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
 
 
                 // llamar el metodo Habilitar Adicionar 
@@ -2974,7 +2955,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
             Session["ControlTapConfigurar"] = 1;
 
-            string mensajePersonalizado = "Los módulos seleccionados se eliminaron correctamente"; 
+            string mensajePersonalizado = "Los módulos seleccionados se eliminaron correctamente";
             string urlRedireccion = "DiseñoYDesarrollo/ObjetosDibujo.aspx";
             Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
 
@@ -2985,7 +2966,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             if (CheckEstable.Checked)
             {
                 //Eliminar 
-                if (EliminarPanelModulo(ID_Numerico , idModulo, Ubicacion, Lado))
+                if (EliminarPanelModulo(ID_Numerico, idModulo, Ubicacion, Lado))
                 {
                     bool ValidarExistenciaPanelModulo = ConsultarExistenciaPanelModulo(ID_Numerico);
                     if (Ubicacion == "0" || !ValidarExistenciaPanelModulo)
@@ -2995,8 +2976,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                     ActualizarPanel(ID_Numerico);
 
-                   
-                    
+
+
 
                 }
                 else
@@ -3185,7 +3166,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             }
         }
 
-       
+
         // Copiar un modulo
         protected void btnCopiarModulo_Click(object sender, EventArgs e)
         {
@@ -3198,7 +3179,275 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             ScriptManager.RegisterStartupScript(this, this.GetType(), "openTab", script, true);
         }
 
+        protected void btnAgregarInsumo_Click(object sender, EventArgs e)
+        {
+            // Validar que haya un insumo seleccionado 
+            if (TextIdInsumo.Text.Trim() != "")
+            {
+                if (!ValidarExistenciaInsumoObjeto())
+                {
+                    // Realizar la insercion en la tabla tblPanelInsumo 
+                    if (AsociarInsumoObjeto())
+                    {
+                        // Se actualiza el campo en Apunta a PSL en la tabla panel 
+                        ActualizarCampoAplicaPSl(1);
 
+                        // Mostrar Mensjae de exito al Agregar  
+                        span_mensaje_Exito.InnerText = "El Insumo ha sido agregado correctamente";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalInsumoAsociadoExito').modal('show');", true);
+                    }
+                    else
+                    {
+                        // No se pudo asociar el insumo 
+                    }
+                }
+                else
+                {
+                    // Mensaje de no se ha seleccionado ningun insumo 
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El insumo seleccionado ya se encuentra asociado');", true);
+                    return;
+                }
+ 
+            }
+            else
+            {
+                // Mensaje de no se ha seleccionado ningun insumo 
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('No se ha seleccionado ningún insumo para asociar');", true);
+                TextIdInsumo.Focus();
+                return;
+            }
+
+        }
+
+        protected void btnEliminarInsumo_Click(object sender, EventArgs e)
+        {
+            // Validar que un elemento se haya seleccionado   
+            if (TextIdInsumo.Text.Trim() != "")
+            {
+                // Realizar la insercion en la tabla tblPanelInsumo 
+                if (EliminarInsumoAsociado())
+                {
+                    if (ValidarExistenciaInsumoObjeto1())
+                    {
+                        ActualizarCampoAplicaPSl(1);
+                    }
+                    else
+                    {
+                        ActualizarCampoAplicaPSl(0);
+                    }
+
+                    // Mostrar Mensjae de exito al eliminar insumo
+                    span_mensaje_Exito.InnerText = "El Insumo ha sido eliminado correctamente";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalInsumoAsociadoExito').modal('show');", true);
+                }
+                else
+                {
+                    // No se pudo eliminar el insumo 
+                }
+            }
+            else
+            {
+                // Mensaje de no se ha seleccionado ningun insumo 
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('No se ha seleccionado ningún insumo para eliminar');", true);
+            }
+
+
+            // Realizar el delete en la tabla tblPanelInsumo con ID_Numerico y Id_Insumo 
+
+
+            // Mostrar Mensaje de exito al eliminar 
+
+        }
+
+        private bool AsociarInsumoObjeto()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "INSERT INTO tblPanelInsumo (IdPanel,IdInsumo) " +
+                              "VALUES (@IdPanel,@IdInsumo)";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@IdPanel", TextIdNum.Text);
+                    cmd.Parameters.AddWithValue("@IdInsumo", TextIdInsumo.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+
+                    if (CantidadFilasAfectada > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+            }
+        }
+
+        private bool EliminarInsumoAsociado()
+        {
+            bool exito = false;
+            string connectionString = WebConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string query = @"DELETE FROM tblPanelInsumo WHERE IdPanel = @ID_Numerico AND IdInsumo = @Id_Insumo";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Agregar los parámetros con valores
+                    command.Parameters.AddWithValue("@ID_Numerico", TextIdNum.Text);
+                    command.Parameters.AddWithValue("@Id_Insumo", TextIdInsumo.Text);
+                    try
+                    {
+                        connection.Open();
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            exito = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejo de excepciones
+                        // Console.WriteLine("Error al eliminar el registro de tblPanel_Modulo: " + ex.Message);
+                        exito = false;
+                    }
+                }
+            }
+
+            return exito;
+        }
+
+        private bool ValidarExistenciaInsumoObjeto()
+        {
+            bool existe = false;
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT 1 FROM tblPanelInsumo WHERE IdPanel = @ID_Numerico AND IdInsumo = @Id_Insumo";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ID_Numerico", TextIdNum.Text);
+                    command.Parameters.AddWithValue("@Id_Insumo", TextIdInsumo.Text);
+
+                    connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            existe = true;
+                        }
+                    }
+                }
+            }
+
+            return existe;
+        }
+
+        private bool ValidarExistenciaInsumoObjeto1()
+        {
+            bool existe = false;
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT 1 FROM tblPanelInsumo WHERE IdPanel = @ID_Numerico ";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ID_Numerico", TextIdNum.Text);
+
+                    connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            existe = true;
+                        }
+                    }
+                }
+            }
+
+            return existe;
+        }
+
+        private void ActualizarCampoAplicaPSl(int ApuntaPSL)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "UPDATE tblPanel set Apunta_Cod_PSL = @ApuntaPSl  WHERE Id_Numerico = @Id_Numerico";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+
+                    cmd.Parameters.AddWithValue("@Id_Numerico", TextIdNum.Text);
+                    cmd.Parameters.AddWithValue("@ApuntaPSl", ApuntaPSL);
+
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+
+                    
+                }
+            }
+        }
+
+        protected void DataGridInsumosObeto_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            if (e.CommandName == "InsumoAsociado")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGridInsumosObeto.Items[rowIndex];
+
+                // capturamos los campos de la fila del datagrid 
+                foreach (DataGridItem item in DataGridInsumosObeto.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+                e.Item.CssClass = "fila-seleccionada1";
+
+
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
+                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
+
+
+                TextIdInsumo.Text = row.Cells[1].Text;
+                TextInRelOtNoOai.Text = row.Cells[2].Text;
+                TextCodPSL.Text = row.Cells[3].Text;
+
+
+                btnEliminarInsumo.Enabled = true;
+                btnEliminarInsumo.CssClass = "btn btn-sm btn-outline-danger";
+
+
+            }
+        }
+
+        protected void btnAceptartProcesoExitoso_Click(object sender, EventArgs e)
+        {
+            LoadData();
+            DataGridInsumosObeto.DataBind();
+            string script = @"ActivarTapInsumosAsociados();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "ActivarTapInsumosAsociados", script, true);
+        }
     }
 
 }

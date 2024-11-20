@@ -49,12 +49,35 @@
 
         }
 
+        function ActivarTapInsumosAsociados() {
+
+            $("#InformacionObjeto-tab").removeClass("disabled");
+            $("#Configurar-tab").removeClass("disabled");
+
+            $("#InsumosAsociados-tab").addClass("active");
+            $("#InsumosAsociados-tab").addClass("show active");
+
+
+        }
+
     </script>
 
     <script type="text/javascript">
         function CerrarVentana() {
             window.close();
         }
+
+        function focusAndScrollToRow(rowId) {
+            var row = document.getElementById(rowId);
+            if (row) {
+                row.setAttribute('tabindex', '-1'); // Make it focusable
+                row.focus();
+                row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+
+            }
+        }
+
     </script>
 
 </head>
@@ -72,6 +95,10 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" id="Configurar-tab" data-bs-toggle="tab" href="#Configurar-content"><i class="bi bi-wrench-adjustable"></i> Configurar</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white" id="InsumosAsociados-tab" data-bs-toggle="tab" href="#InsumosAsociados-content"><i class="bi bi-clipboard2-plus-fill"></i> Insumos Asociados</a>
                     </li>
 
                 </ul>
@@ -234,34 +261,6 @@
 
                                         </div>
 
-                                        <div class="row mt-2">
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                                <div class="d-flex flex-wrap">
-                                                    <div class="col-6 p-1">
-                                                        <div class="input-group input-group-sm gap-1">
-                                                            <asp:CheckBox runat="server" ID="CheckApliCodPSLOT" OnCheckedChanged="CheckApliCodPSLOT_CheckedChanged" AutoPostBack="true" class="form-control-sm pt-2" />
-                                                            <asp:Label runat="server" CssClass="form-label col-form-label-sm" Text="Aplica código PSL para OT"></asp:Label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col p-1">
-                                                        <asp:Label runat="server" ID="Label15" CssClass="form-label col-form-label-sm" Text="Id. Insumo"></asp:Label>
-                                                        <asp:TextBox runat="server" ID="TextIdInsumo" CssClass="form-control form-control-sm text-center" MaxLength="5" OnTextChanged="TextIdInsumo_TextChanged" AutoPostBack="true"></asp:TextBox>
-                                                        <asp:Button ID="btnPosback" runat="server" Text="" Visible="false" OnClick="btnPosback_Click" />
-                                                    </div>
-                                                    <div class="col p-1">
-                                                        <asp:Label runat="server" ID="Label16" CssClass="form-label col-form-label-sm" Text="Cod. PSL"></asp:Label>
-                                                        <asp:TextBox runat="server" ID="TextCodPSL" CssClass="form-control form-control-sm text-center"></asp:TextBox>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                                <div class="col p-1">
-                                                    <asp:Label runat="server" ID="Label14" CssClass="form-label col-form-label-sm" Text="Insumo relacionado para OT que no sea OAI"></asp:Label>
-                                                    <asp:TextBox runat="server" ID="TextInRelOtNoOai" CssClass="form-control form-control-sm"></asp:TextBox>
-                                                </div>
-                                            </div>
-                                        </div>
-
                                         <div class="row">
                                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                 <div class="row">
@@ -382,35 +381,6 @@
                                     </div>
                                     <div class="modal-footer  d-flex align-items-center justify-content-center">
                                         <asp:Button runat="server" type="button" class="btn btn-sm btn-outline-dark" data-bs-dismiss="modal" Text="Aceptar" aria-label="Close"></asp:Button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!--Modal confirmar ID Insumo vacio -->
-                        <div id="confirmarAsociarInsumo" class="modal" tabindex="-1" style="display: none;">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-primary text-white">
-                                        <h6 class="modal-title text-center">Id de insumo vacío</h6>
-
-                                    </div>
-                                    <div class="modal-body border rounded">
-                                        <div class="container-fluid">
-                                            <h6>El campo de id insumo está vacío, debe ingresar el id del insumo asociado.
-                                                <br />
-                                                <br />
-                                                ¿Desea asociar al objeto algún id de insumo para las OT diferentes a OAI?
-                                            </h6>
-                                        </div>
-
-                                    </div>
-                                    <div class="modal-footer">
-                                        <div class="container-fluid d-flex justify-content-center gap-5 p-0">
-                                            <asp:Button runat="server" ID="btnComfirmarAsociarInsumo_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm  btn-outline-primary" Style="width: 5rem;" />
-                                            <asp:Button runat="server" ID="btnComfirmarAsociarInsumo_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
-                                        </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -752,8 +722,127 @@
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </div>
-        </div>
 
+            <div class="tab-pane fade" id="InsumosAsociados-content">
+                <asp:UpdatePanel runat="server" ID="PanelConfigurarInsumos" UpdateMode="Conditional">
+                    <ContentTemplate>
+
+                        <div class="container pt-3">
+
+                            <div class="card">
+
+                                <div class="card-header">
+
+                                    <div class="row mt-2">
+
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+
+                                            <div class="d-flex flex-wrap">
+
+                                                <div class="col-lg-5 col-md-5 col-sm-12 p-1">
+                                                    <div class="input-group input-group-sm gap-1">
+                                                        <asp:CheckBox runat="server" ID="CheckApliCodPSLOT" Enabled="false" OnCheckedChanged="CheckApliCodPSLOT_CheckedChanged" AutoPostBack="true" class="form-control-sm pt-2" />
+                                                        <asp:Label runat="server" CssClass="form-label col-form-label-sm" Text="Aplica código PSL para OT"></asp:Label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-3 col-md-3 col-sm-6  p-1">
+                                                    <asp:Label runat="server" ID="Label15" CssClass="form-label col-form-label-sm" Text="Id. Insumo"></asp:Label>
+                                                    <asp:TextBox runat="server" ID="TextIdInsumo" CssClass="form-control form-control-sm text-center" MaxLength="5" OnTextChanged="TextIdInsumo_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                                    <asp:Button ID="btnPosback" runat="server" Text="" Visible="false" OnClick="btnPosback_Click" />
+                                                </div>
+
+                                                <div class="col-lg-3 col-md-3 col-sm-6 p-1">
+                                                    <asp:Label runat="server" ID="Label16" CssClass="form-label col-form-label-sm" Text="Cod. PSL"></asp:Label>
+                                                    <asp:TextBox runat="server" ID="TextCodPSL" CssClass="form-control form-control-sm text-center"></asp:TextBox>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6">
+                                            <div class="col p-1">
+                                                <asp:Label runat="server" ID="Label14" CssClass="form-label col-form-label-sm" Text="Insumo relacionado para OT que no sea OAI"></asp:Label>
+                                                <asp:TextBox runat="server" ID="TextInRelOtNoOai" CssClass="form-control form-control-sm"></asp:TextBox>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3 col-md-6 col-sm-6 pt-4">
+                                            <div class="input-group input-group-sm justify-content-around">
+                                                <asp:Button ID="btnAgregarInsumo" CssClass="btn btn-sm btn-outline-primary" runat="server" Text="Agregar" OnClick="btnAgregarInsumo_Click" />
+                                                <asp:Button ID="btnEliminarInsumo" CssClass="btn btn-sm btn-outline-danger btn-outline-secondary" runat="server" Text="Eliminar" OnClick="btnEliminarInsumo_Click" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="card-body">
+
+                                    <div class="table-responsive mb-1 gap-2" style="max-height: 25rem; height: 25rem; overflow-x: auto;">
+
+                                        <asp:DataGrid Class="table table-bordered table-hover table-sm form-control-sm" ID="DataGridInsumosObeto" runat="server"
+                                            AutoGenerateColumns="false" DataSourceID="DSInusmosObjetos" OnItemCommand="DataGridInsumosObeto_ItemCommand">
+                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
+                                            <Columns>
+                                                <asp:TemplateColumn HeaderText=". . .">
+                                                    <ItemTemplate>
+                                                        <asp:LinkButton ID="lnkInsumoCliente" runat="server" CommandName="InsumoAsociado"
+                                                            CommandArgument='<%# Container.ItemIndex %>' CssClass="Tam" Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                    </ItemTemplate>
+                                                </asp:TemplateColumn>
+                                                <asp:BoundColumn DataField="IdInsumo" HeaderText="ID Insumo" ItemStyle-CssClass="auto-width-column2" />
+                                                <asp:BoundColumn DataField="Descripcion_Insumo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column2" />
+                                                <asp:BoundColumn DataField="ID_Inventario" HeaderText="ID Inventario" ItemStyle-CssClass="auto-width-column2" />
+
+
+                                            </Columns>
+                                        </asp:DataGrid>
+                                        <asp:SqlDataSource
+                                            ID="DSInusmosObjetos"
+                                            runat="server"
+                                            ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
+                                            SelectCommand="SELECT PAI.IdInsumo, I.Descripcion_Insumo, I.ID_Inventario 
+                                                 FROM tblPanelInsumo AS PAI
+                                                 INNER JOIN tblInsumo AS I ON I.Id_Insumo = PAI.IdInsumo
+                                                 WHERE PAI.IdPanel = @ID_Numerico">
+                                            <SelectParameters>
+                                                <asp:ControlParameter Name="ID_Numerico" ControlID="TextIdNum" PropertyName="Text" />
+                                            </SelectParameters>
+                                        </asp:SqlDataSource>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!--Modal de exito para crud insumos asociados  -->
+                        <div class="modal fade" id="modalInsumoAsociadoExito" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary">
+                                        <h5 class="modal-title d-flex align-items-center justify-content-center text-white">Proceso Exitoso</h5>
+
+                                    </div>
+                                    <div class="modal-body d-flex align-items-center form-control-sm justify-content-center">
+                                        <p><span id="span_mensaje_Exito" runat="server"></span></p>
+                                    </div>
+                                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                                        <asp:Button runat="server" type="button" class="btn btn-sm btn-outline-dark" data-bs-dismiss="modal" Text="Aceptar" aria-label="Close" ID="btnAceptartProcesoExitoso" OnClick="btnAceptartProcesoExitoso_Click"></asp:Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+            </div>
+
+        </div>
 
 
         <!--Modal confirmar continuar objeto no escalable -->

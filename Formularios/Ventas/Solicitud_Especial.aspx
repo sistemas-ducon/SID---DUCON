@@ -873,7 +873,7 @@
                                         </nav>
 
                                         <div class=" input-group input-group-sm  mt-2 gap-2 justify-content-center">
-                                            <asp:Button class=" btn btn-warning  " ID="btnProgramarSolicitud" runat="server" Text="Programar" OnClick="ProgramarSolicitud" OnClientClick="return confirmProgramarSolicitud(event);" />
+                                            <asp:Button class=" btn btn-secondary  " ID="btnProgramarSolicitud" runat="server" Text="Programar" OnClick="ProgramarSolicitud" OnClientClick="return confirmProgramarSolicitud(event);" />
                                         </div>
                                     </div>
 

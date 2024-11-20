@@ -12871,7 +12871,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     return;
                 }
 
-                if (tbValorPedido.Text == "0" && ddlNumbers.SelectedItem.Text != "OAI")
+                if (tbValorPedido.Text == "0" && dtacboTipoPedido.SelectedItem.Text != "OAI")
                 {
                     if (ValidarCantidadElementosDespiece() > 2)
                     {
@@ -12911,7 +12911,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
 
-                if (tbValorPedido.Text == "0" && ddlNumbers.SelectedItem.Text != "OAI")
+                if (tbValorPedido.Text == "0" && dtacboTipoPedido.SelectedItem.Text != "OAI")
                 {
                     if (ValidarCantidadElementosDespiece() < 2)
                     {
@@ -13352,7 +13352,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     EliminarReportePlano();
                     InsertarReportePLano();
 
-                    if (ValidarCantidadElementosDespiece() > 2)
+                    if (ValidarCantidadElementosDespiece() > 0)
                     {
                         EliminarPlanoPanelCot();
                         InsertarPLanoPanelCot();
@@ -14809,7 +14809,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 // Nombre del procedimiento almacenado
-                string storedProcedureName = "sp_GenerarRegistrosParaReportesPlano ";
+                string storedProcedureName = "sp_GenerarRegistrosParaReportesPlanoDOS ";
 
                 using (SqlCommand cmd = new SqlCommand(storedProcedureName, connection))
                 {
@@ -16280,11 +16280,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 DataTable ReportePlanoSID = ConsultarReportePlanoSID();
                 string plano = ReportePlanoSID.Rows[0]["Plano"].ToString();
 
-                //Se consulta reporte plano en el ISID
-                DataTable ReportePlanoISID = ConsultarReportePlanoISID(plano);
-
                 //Se elimina el reporte plano en el ISID
                 EliminarReportePlanoISID(plano);
+
+                //Se consulta reporte plano en el ISID
+                DataTable ReportePlanoISID = ConsultarReportePlanoISID(plano);
 
                 if (ReportePlanoISID.Rows.Count <= 0)
                 {
@@ -18355,7 +18355,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     string query = @"INSERT INTO tblReporteMedidasdeCorte (OT,Pedido,Plano,Item_Modulo,Descripción,Ancho,Altura,Cant,UND,Reportar,AreaProduccion,Reportar_Despacho,
                                    Reporte,Orden,Id_Inventario,ValorUND,Factor_Desperdicio,CantidadMaterial,DescripcionPieza,TipoInsumo,ID_FamiliaModulo,PesoKg) 
-                                   VALUES (@OT, @Pedido, @Plano, @Item_Modulo, Descripción, @Ancho, @Altura, @Cant, @UND, @Reportar, @AreaProduccion, @Reportar_Despacho,Reporte, 
+                                   VALUES (@OT, @Pedido, @Plano, @Item_Modulo, @Descripción, @Ancho, @Altura, @Cant, @UND, @Reportar, @AreaProduccion, @Reportar_Despacho,@Reporte, 
                                    @Orden, @Id_Inventario, @ValorUND, @Factor_Desperdicio, @CantidadMaterial, @DescripcionPieza, @TipoInsumo, @ID_FamiliaModulo, @PesoKG)";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
@@ -22609,6 +22609,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+
         public void BtnConfirmarEliminar_Click(object sender, EventArgs e)
         {
             // Obtener el Id_Insumo de la sesión
@@ -22690,6 +22691,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+      
     }
 }
 

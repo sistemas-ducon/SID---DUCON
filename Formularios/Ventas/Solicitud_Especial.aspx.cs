@@ -93,7 +93,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             if (btnProgramarRender != null)
                             {
                                 btnProgramarRender.Enabled = false;
-                                btnProgramarRender.CssClass = "btn btn-sm btn-warning";
+                                btnProgramarRender.CssClass = "btn btn-sm btn-secondary";
 
                             }
                         }
@@ -145,7 +145,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             if (btnProgramarRender != null)
                             {
                                 btnProgramarRender.Enabled = false;
-                                btnProgramarRender.CssClass = "btn  btn-sm btn-warning";
+                                btnProgramarRender.CssClass = "btn  btn-sm btn-secondary";
 
                             }
                         }
@@ -1283,7 +1283,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         Session["ProVenSolicitud"] = termiVenta;
 
                         btnProgramarSolicitud.Enabled = false;
-                        btnProgramarSolicitud.CssClass = "btn btn btn-warning";
+                        btnProgramarSolicitud.CssClass = "btn btn btn-secondary";
 
                         string script = "<script>HabilitarEnlaces4();</script>";
                         ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces4", script, false);
@@ -1373,7 +1373,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         Session["ProDiSolicitud"] = TermiDiseño;
 
                         btnProgramarSolicitud.Enabled = false;
-                        btnProgramarSolicitud.CssClass = "btn btn-sm btn-warning";
+                        btnProgramarSolicitud.CssClass = "btn btn-sm btn-secondary";
 
 
                         ConfirmarComplejo.Enabled = false;
@@ -1573,7 +1573,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         Session["ProVenSolicitud"] = termiVenta;
 
                         btnProgramarSolicitud.Enabled = false;
-                        btnProgramarSolicitud.CssClass = "btn btn btn-warning";
+                        btnProgramarSolicitud.CssClass = "btn btn btn-secondary";
 
                         string script = "<script>HabilitarEnlaces4();</script>";
                         ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces4", script, false);
@@ -1667,7 +1667,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         Session["ProDiSolicitud"] = TermiDiseño;
 
                         btnProgramarSolicitud.Enabled = false;
-                        btnProgramarSolicitud.CssClass = "btn btn-sm btn-warning";
+                        btnProgramarSolicitud.CssClass = "btn btn-sm btn-secondary";
 
 
                         ConfirmarComplejo.Enabled = false;
@@ -1863,7 +1863,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         Session["ProVenSolicitud"] = termiVenta;
 
                         btnProgramarSolicitud.Enabled = false;
-                        btnProgramarSolicitud.CssClass = "btn btn btn-warning";
+                        btnProgramarSolicitud.CssClass = "btn btn btn-secondary";
 
                         string script = "<script>HabilitarEnlaces4();</script>";
                         ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces4", script, false);
@@ -1943,7 +1943,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         Session["ProDiSolicitud"] = TermiDiseño;
 
                         btnProgramarSolicitud.Enabled = false;
-                        btnProgramarSolicitud.CssClass = "btn btn-sm btn-warning";
+                        btnProgramarSolicitud.CssClass = "btn btn-sm btn-secondary";
 
 
                         ConfirmarComplejo.Enabled = false;
@@ -5930,7 +5930,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         Session["ProVenSolicitud"] = termiVenta;
 
                         btnProgramarSolicitud.Enabled = false;
-                        btnProgramarSolicitud.CssClass = "btn btn btn-warning";
+                        btnProgramarSolicitud.CssClass = "btn btn btn-secondary";
 
                         string script = "<script>setTimeout(function() { HabilitarEnlaces4(); }, 100);</script>";
                         ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarEnlaces4", script, false);
@@ -5972,7 +5972,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         Session["ProDiSolicitud"] = TermiDiseño;
 
                         btnProgramarSolicitud.Enabled = false;
-                        btnProgramarSolicitud.CssClass = "btn btn-sm btn-warning";
+                        btnProgramarSolicitud.CssClass = "btn btn-sm btn-secondary";
 
                         ConfirmarComplejo.Enabled = false;
                         ConfirmarComplejo.CssClass = "btn btn-sm btn-outline-secondary";
