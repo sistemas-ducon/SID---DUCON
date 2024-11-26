@@ -6127,17 +6127,19 @@
 
                 // Si el elemento enfocado es el TextBox "tbOT"
                 if (focusedElement.id === '<%= tbOT.ClientID %>') {
-                // Disparar el evento OnTextChanged a través de AutoPostBack
-                __doPostBack('<%= tbOT.UniqueID %>', '');
+                    // Disparar el evento OnTextChanged a través de AutoPostBack
+                    __doPostBack('<%= tbOT.UniqueID %>', '');
+                }
 
                     // Si el elemento enfocado es el TextBox "tbOT"
-                    if (focusedElement.id === '<%= TextCriterio.ClientID %>') {
- // Disparar el evento OnTextChanged a través de AutoPostBack
-     __doPostBack('<%= TextCriterio.UniqueID %>', '');
+                if (focusedElement.id === '<%= TextCriterio.ClientID %>') {
+                    // Disparar el evento OnTextChanged a través de AutoPostBack
+                    __doPostBack('<%= TextCriterio.UniqueID %>', '');
+                }
 
                 // Prevenir la acción predeterminada para que no se envíe el formulario completo
                 event.preventDefault();
-            }
+            
                 // Aquí revisamos los campos específicos
                 if (focusedElement.id === "tbBuscarAcaba" || focusedElement.id === "tbCriterio" || focusedElement.id === "tbAltura" || focusedElement.id === "tbAncho") {
                     // Hacer clic en el botón de búsqueda
