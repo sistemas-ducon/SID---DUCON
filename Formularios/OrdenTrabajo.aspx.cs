@@ -14808,8 +14808,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                // Nombre del procedimiento almacenado
-                string storedProcedureName = "sp_GenerarRegistrosParaReportesPlanoDOS ";
+                // Nombre del procedimiento almacenado mofificado 
+                //string storedProcedureName = "sp_GenerarRegistrosParaReportesPlanoDOS ";
+                string storedProcedureName = "sp_GenerarRegistrosParaReportesPlano";
 
                 using (SqlCommand cmd = new SqlCommand(storedProcedureName, connection))
                 {

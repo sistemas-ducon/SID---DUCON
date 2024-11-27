@@ -49,6 +49,7 @@
 
         }
 
+        // Activar Insumos Asociados 
         function ActivarTapInsumosAsociados() {
 
             $("#InformacionObjeto-tab").removeClass("disabled");
@@ -97,6 +98,7 @@
                         <a class="nav-link text-white" id="Configurar-tab" data-bs-toggle="tab" href="#Configurar-content"><i class="bi bi-wrench-adjustable"></i> Configurar</a>
                     </li>
 
+                    <!-- Insumos Asociados  -->
                     <li class="nav-item">
                         <a class="nav-link text-white" id="InsumosAsociados-tab" data-bs-toggle="tab" href="#InsumosAsociados-content"><i class="bi bi-clipboard2-plus-fill"></i> Insumos Asociados</a>
                     </li>
@@ -150,7 +152,7 @@
 
                                             <div class="col-lg-2 col-md-6 col-md-6 col-xs-6 p-2">
                                                 <asp:Label runat="server" ID="Label1" CssClass="form-label col-form-label-sm" Text="A(Cms)"></asp:Label>
-                                                <asp:TextBox runat="server" ID="TextAncho" CssClass="form-control form-control-sm text-center" type="number" min="0" OnTextChanged="TextAncho_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                                <asp:TextBox runat="server" ID="TextAncho" CssClass="form-control form-control-sm text-center" type="text" OnTextChanged="TextAncho_TextChanged" AutoPostBack="true"></asp:TextBox>
                                             </div>
 
                                             <div class="col-lg-2  col-md-6 col-md-6 col-xs-6 p-2">
@@ -259,6 +261,37 @@
                                                 </div>
                                             </div>
 
+                                        </div>
+
+                                        <div class="row mt-2">
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                <div class="d-flex flex-wrap">
+                                                    <div class="col-6 p-1">
+                                                        <div class="input-group input-group-sm gap-1">
+                                                            <asp:CheckBox runat="server" ID="CheckApliCodPSLOT" OnCheckedChanged="CheckApliCodPSLOT_CheckedChanged" AutoPostBack="true" class="form-control-sm pt-2" />
+                                                            <asp:Label runat="server" CssClass="form-label col-form-label-sm" Text="Aplica código PSL para OT"></asp:Label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col p-1">
+                                                        <asp:Label runat="server" ID="Label27" CssClass="form-label col-form-label-sm" Text="Id. Insumo"></asp:Label>
+                                                        <asp:TextBox runat="server" ID="TextIdInsumo" CssClass="form-control form-control-sm text-center" MaxLength="5" OnTextChanged="TextIdInsumo_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                                        <asp:Button ID="btnPosback" runat="server" Text="" Visible="false" OnClick="btnPosback_Click" />
+                                                    </div>
+
+                                                    <div class="col p-1">
+                                                        <asp:Label runat="server" ID="Label28" CssClass="form-label col-form-label-sm" Text="Cod. PSL"></asp:Label>
+                                                        <asp:TextBox runat="server" ID="TextCodPSL" CssClass="form-control form-control-sm text-center"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                <div class="col p-1">
+                                                    <asp:Label runat="server" ID="Label29" CssClass="form-label col-form-label-sm" Text="Insumo relacionado para OT que no sea OAI"></asp:Label>
+                                                    <asp:TextBox runat="server" ID="TextInRelOtNoOai" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <div class="row">
@@ -741,20 +774,20 @@
 
                                                 <div class="col-lg-5 col-md-5 col-sm-12 p-1">
                                                     <div class="input-group input-group-sm gap-1">
-                                                        <asp:CheckBox runat="server" ID="CheckApliCodPSLOT" Enabled="false" OnCheckedChanged="CheckApliCodPSLOT_CheckedChanged" AutoPostBack="true" class="form-control-sm pt-2" />
+                                                        <asp:CheckBox runat="server" ID="CheckApliCodPSLOTPRueba" Enabled="false" class="form-control-sm pt-2" />
                                                         <asp:Label runat="server" CssClass="form-label col-form-label-sm" Text="Aplica código PSL para OT"></asp:Label>
                                                     </div>
                                                 </div>
 
                                                 <div class="col-lg-3 col-md-3 col-sm-6  p-1">
                                                     <asp:Label runat="server" ID="Label15" CssClass="form-label col-form-label-sm" Text="Id. Insumo"></asp:Label>
-                                                    <asp:TextBox runat="server" ID="TextIdInsumo" CssClass="form-control form-control-sm text-center" MaxLength="5" OnTextChanged="TextIdInsumo_TextChanged" AutoPostBack="true"></asp:TextBox>
-                                                    <asp:Button ID="btnPosback" runat="server" Text="" Visible="false" OnClick="btnPosback_Click" />
+                                                    <asp:TextBox runat="server" ID="TextIdInsumoPrueba" CssClass="form-control form-control-sm text-center" Enabled="false" MaxLength="5"></asp:TextBox>
+                                                    <asp:Button ID="btnPosbackPrueba" runat="server" Text="" Visible="false"  />
                                                 </div>
 
                                                 <div class="col-lg-3 col-md-3 col-sm-6 p-1">
                                                     <asp:Label runat="server" ID="Label16" CssClass="form-label col-form-label-sm" Text="Cod. PSL"></asp:Label>
-                                                    <asp:TextBox runat="server" ID="TextCodPSL" CssClass="form-control form-control-sm text-center"></asp:TextBox>
+                                                    <asp:TextBox runat="server" ID="TextCodPSLPrueba" CssClass="form-control form-control-sm text-center" Enabled="false"></asp:TextBox>
                                                 </div>
 
                                             </div>
@@ -764,7 +797,7 @@
                                         <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6">
                                             <div class="col p-1">
                                                 <asp:Label runat="server" ID="Label14" CssClass="form-label col-form-label-sm" Text="Insumo relacionado para OT que no sea OAI"></asp:Label>
-                                                <asp:TextBox runat="server" ID="TextInRelOtNoOai" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                <asp:TextBox runat="server" ID="TextInRelOtNoOaiPrueba" Enabled="false" CssClass="form-control form-control-sm"></asp:TextBox>
                                             </div>
                                         </div>
 
