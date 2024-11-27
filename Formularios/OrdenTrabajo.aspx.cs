@@ -16090,7 +16090,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             //SE CONSULTA SI EL PEDIDO BASE DEL PEDIDO INGRESADO ESTA DETENIDO YA SEA POR PRODUCCION O POR DESPACHO, EL PEDIDO NUEVO ENTRARA CON LAS MISMAS CONDICIONES
 
             DataTable PedDetProduDesp = ObtenerPedDetProduDespISID(InfoPedidoSID);
-            if (PedDetProduDesp.Rows.Count < 0)
+            if (PedDetProduDesp.Rows.Count > 0)
             {
                 PararProduccion = Convert.ToBoolean(PedDetProduDesp.Rows[0]["PararProduccion"].ToString());
                 PararDespacho = Convert.ToBoolean(PedDetProduDesp.Rows[0]["PararDespacho"].ToString());
