@@ -357,78 +357,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         protected global::System.Web.UI.WebControls.TextBox TextAreaDescripTec;
 
         /// <summary>
-        /// Control CheckApliCodPSLOT.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox CheckApliCodPSLOT;
-
-        /// <summary>
-        /// Control Label27.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label27;
-
-        /// <summary>
-        /// Control TextIdInsumo.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextIdInsumo;
-
-        /// <summary>
-        /// Control btnPosback.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnPosback;
-
-        /// <summary>
-        /// Control Label28.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label28;
-
-        /// <summary>
-        /// Control TextCodPSL.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextCodPSL;
-
-        /// <summary>
-        /// Control Label29.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label29;
-
-        /// <summary>
-        /// Control TextInRelOtNoOai.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextInRelOtNoOai;
-
-        /// <summary>
         /// Control CheckChequeado.
         /// </summary>
         /// <remarks>
@@ -915,13 +843,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         protected global::System.Web.UI.UpdatePanel PanelConfigurarInsumos;
 
         /// <summary>
-        /// Control CheckApliCodPSLOTPRueba.
+        /// Control CheckApliCodPSLOT.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox CheckApliCodPSLOTPRueba;
+        protected global::System.Web.UI.WebControls.CheckBox CheckApliCodPSLOT;
 
         /// <summary>
         /// Control Label15.
@@ -933,22 +861,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         protected global::System.Web.UI.WebControls.Label Label15;
 
         /// <summary>
-        /// Control TextIdInsumoPrueba.
+        /// Control TextIdInsumo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextIdInsumoPrueba;
+        protected global::System.Web.UI.WebControls.TextBox TextIdInsumo;
 
         /// <summary>
-        /// Control btnPosbackPrueba.
+        /// Control btnPosback.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnPosbackPrueba;
+        protected global::System.Web.UI.WebControls.Button btnPosback;
 
         /// <summary>
         /// Control Label16.
@@ -960,13 +888,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         protected global::System.Web.UI.WebControls.Label Label16;
 
         /// <summary>
-        /// Control TextCodPSLPrueba.
+        /// Control TextCodPSL.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextCodPSLPrueba;
+        protected global::System.Web.UI.WebControls.TextBox TextCodPSL;
 
         /// <summary>
         /// Control Label14.
@@ -978,13 +906,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         protected global::System.Web.UI.WebControls.Label Label14;
 
         /// <summary>
-        /// Control TextInRelOtNoOaiPrueba.
+        /// Control TextInRelOtNoOai.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextInRelOtNoOaiPrueba;
+        protected global::System.Web.UI.WebControls.TextBox TextInRelOtNoOai;
 
         /// <summary>
         /// Control btnAgregarInsumo.

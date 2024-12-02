@@ -11649,7 +11649,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
-
+            
         // DESCARGAR LA COTIZACION EN EL TAP DE PLANO 
         protected void BtnVisGenCot_Click(object sender, EventArgs e)
         {
@@ -14808,9 +14808,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                // Nombre del procedimiento almacenado mofificado 
-                //string storedProcedureName = "sp_GenerarRegistrosParaReportesPlanoDOS ";
-                string storedProcedureName = "sp_GenerarRegistrosParaReportesPlano";
+                //  procedimiento almacenado original
+                //string storedProcedureName = "sp_GenerarRegistrosParaReportesPlano";
+
+
+                // Nombre del procedimiento almacenado mofificado Anderson  
+                string storedProcedureName = "sp_GenerarRegistrosParaReportesPlanoDOS ";
 
                 using (SqlCommand cmd = new SqlCommand(storedProcedureName, connection))
                 {
@@ -22692,7 +22695,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-      
+        protected void ObtenerDatosObjetos_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
+        {
+            // Configura el tiempo de espera para el comando
+            e.Command.CommandTimeout = 120; // Tiempo en segundos
+        }
     }
 }
 

@@ -4891,7 +4891,7 @@
 
                                                             </asp:DataGrid>
 
-                                                            <asp:SqlDataSource ID="ObtenerDatosObjetos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommandType="StoredProcedure">
+                                                            <asp:SqlDataSource ID="ObtenerDatosObjetos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommandType="StoredProcedure" OnSelecting="ObtenerDatosObjetos_Selecting">
                                                                 <SelectParameters>
                                                                     <asp:ControlParameter Name="Altura" ControlID="tbAltura" PropertyName="Text" DefaultValue="%" Type="String" />
                                                                     <asp:ControlParameter Name="Ancho" ControlID="tbAncho" PropertyName="Text" DefaultValue="%" Type="String" />
