@@ -6136,6 +6136,10 @@
                     // Disparar el evento OnTextChanged a través de AutoPostBack
                     __doPostBack('<%= TextCriterio.UniqueID %>', '');
                 }
+                if (focusedElement.id === '<%= TextInv.ClientID %>') {
+             // Disparar el evento OnTextChanged a través de AutoPostBack
+                      __doPostBack('<%= TextInv.UniqueID %>', '');
+                  }
 
                 // Prevenir la acción predeterminada para que no se envíe el formulario completo
                 event.preventDefault();

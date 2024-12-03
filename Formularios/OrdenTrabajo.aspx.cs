@@ -7647,7 +7647,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 DropDownList1.DataValueField = "Id_TipoInsumo";
 
                 DropDownList1.DataBind();
-                DropDownList1.Items.Insert(0, new ListItem(" "));
+                DropDownList1.Items.Insert(0, new ListItem("%"));
             }
         }
 
