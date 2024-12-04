@@ -915,6 +915,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         protected global::System.Web.UI.WebControls.TextBox TextInRelOtNoOai;
 
         /// <summary>
+        /// Control lbCantidad.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbCantidad;
+
+        /// <summary>
+        /// Control tbCantidadInsumo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbCantidadInsumo;
+
+        /// <summary>
         /// Control btnAgregarInsumo.
         /// </summary>
         /// <remarks>

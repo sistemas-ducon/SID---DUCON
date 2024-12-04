@@ -98,7 +98,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link text-white" id="Configurar-tab" data-bs-toggle="tab" href="#Configurar-content"><i class="bi bi-wrench-adjustable"></i> Configurar</a>
+                        <a class="nav-link text-white" id="Configurar-tab" data-bs-toggle="tab" href="#Configurar-content"><i class="bi bi-wrench-adjustable"></i>Configurar</a>
                     </li>
 
                     <!-- Insumos Asociados  -->
@@ -779,13 +779,24 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-lg-3 col-md-6 col-sm-6 pt-4">
-                                            <div class="input-group input-group-sm justify-content-around">
-                                                <asp:Button ID="btnAgregarInsumo" CssClass="btn btn-sm btn-outline-primary" runat="server" Text="Agregar" OnClick="btnAgregarInsumo_Click" />
-                                                <asp:Button ID="btnEliminarInsumo" CssClass="btn btn-sm btn-outline-danger btn-outline-secondary" runat="server" Text="Eliminar" OnClick="btnEliminarInsumo_Click" />
+                                        <div class="col-lg-2 col-md-6 col-sm-6">
+                                            <div class="input-group-sm justify-content-around">
+                                                <asp:Label runat="server" ID="lbCantidad" CssClass="form-label col-form-label-sm" Text="Cantidad"></asp:Label>
+                                                <asp:TextBox runat="server" ID="tbCantidadInsumo" CssClass="form-control form-control-sm"></asp:TextBox>
                                             </div>
                                         </div>
 
+                                    </div>
+
+
+                                    <div class="row pt-2">
+                                        <div class="col-9"></div>
+                                        <div class="col-3">
+                                            <div class="input-group input-group-sm justify-content-around">
+                                                <asp:Button ID="btnAgregarInsumo" CssClass="btn btn-sm btn-outline-primary" runat="server" Text="Agregar" OnClick="btnAgregarInsumo_Click" />
+                                                <asp:Button ID="btnEliminarInsumo" CssClass="btn btn-sm  btn-outline-secondary" runat="server" Text="Eliminar" OnClick="btnEliminarInsumo_Click" />
+                                            </div>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -807,7 +818,7 @@
                                                 <asp:BoundColumn DataField="IdInsumo" HeaderText="ID Insumo" ItemStyle-CssClass="auto-width-column2" />
                                                 <asp:BoundColumn DataField="Descripcion_Insumo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column2" />
                                                 <asp:BoundColumn DataField="ID_Inventario" HeaderText="ID Inventario" ItemStyle-CssClass="auto-width-column2" />
-
+                                                 <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column2" />
 
                                             </Columns>
                                         </asp:DataGrid>
@@ -815,7 +826,7 @@
                                             ID="DSInusmosObjetos"
                                             runat="server"
                                             ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
-                                            SelectCommand="SELECT PAI.IdInsumo, I.Descripcion_Insumo, I.ID_Inventario 
+                                            SelectCommand="SELECT PAI.IdInsumo, I.Descripcion_Insumo, I.ID_Inventario,Cantidad 
                                                  FROM tblPanelInsumo AS PAI
                                                  INNER JOIN tblInsumo AS I ON I.Id_Insumo = PAI.IdInsumo
                                                  WHERE PAI.IdPanel = @ID_Numerico">
