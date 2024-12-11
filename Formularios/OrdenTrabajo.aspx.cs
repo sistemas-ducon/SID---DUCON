@@ -2242,7 +2242,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         colCotizacion.Attributes["class"] = "col-6";
                         colControlDibujo.Attributes["class"] = "col-6";
 
-                        btnCotizacion.Style["font-size"] = "0.7rem"; // Cambia el tamaño de letra a 1rem
+                        btnCotizacion.Style["font-size"] = "0.5rem"; // Cambia el tamaño de letra a 1rem
+                        btnCotizacion.Text = "Descargar Cot";
+                        
 
 
 
@@ -2259,7 +2261,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         btnVerArchivoControl.Visible = false;
 
                         btnCotizacion.Style["font-size"] = "0.9rem"; // Cambia el tamaño de letra a 1rem
-
+                        btnCotizacion.Text = "Descargar Cotización";
                     }
                 }
                 else
@@ -2274,7 +2276,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     btnVerArchivoControl.Visible = false;
 
                     btnCotizacion.Style["font-size"] = "0.9rem"; // Cambia el tamaño de letra a 1rem
-
+                    btnCotizacion.Text = "Descargar Cotización";
                 }
 
             }
@@ -2290,10 +2292,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 btnVerArchivoControl.Visible = false;
 
                 btnCotizacion.Style["font-size"] = "0.9rem"; // Cambia el tamaño de letra a 1rem
-
+                btnCotizacion.Text = "Descargar Cotización";
             }
 
-
+            
 
             calcularDescuento();
             calcularGranTotal();
@@ -3134,7 +3136,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     int año = fechaMes.Year;
 
                     // Si estamos en diciembre, retroceder al año anterior
-                    if (mes == 12 && i > 0)
+                    if (mes == 12 && i > 1)
                     {
                         int año1 = fechaVentaAño.Year;
                         año1--;
@@ -12943,7 +12945,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (tbValorPedido.Text == "0" && dtacboTipoPedido.SelectedItem.Text != "OAI")
                 {
-                    if (ValidarCantidadElementosDespiece() > 2)
+                    if (ValidarCantidadElementosDespiece() > 0)
                     {
                         string script = @"CerrarCargarOK();";
                         ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", script, true);
@@ -12983,7 +12985,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (tbValorPedido.Text == "0" && dtacboTipoPedido.SelectedItem.Text != "OAI")
                 {
-                    if (ValidarCantidadElementosDespiece() < 2)
+                    if (ValidarCantidadElementosDespiece() > 0)
                     {
                         string script = @"CerrarCargarOK();";
                         ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", script, true);
@@ -15097,7 +15099,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     command.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
                                     command.Parameters.AddWithValue("@Plano", txtPlano.Text);
                                     string objeto = "D-PartNo." + sheet.GetRow(filaexcel).GetCell(0).ToString() + " - " + sheet.GetRow(filaexcel).GetCell(1).ToString();
-                                    command.Parameters.AddWithValue("@Objeto", objeto);
+                                    command.Parameters.AddWithValue("@Objeto", objeto != null && objeto.Length > 100 ? objeto.Substring(0, 100) : objeto);
                                     command.Parameters.AddWithValue("@DescripcionObjeto", objeto);
                                     command.Parameters.AddWithValue("@CantidadSolicitada", Convert.ToInt32(sheet.GetRow(filaexcel).GetCell(2).ToString()));
 
@@ -15281,7 +15283,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             EliminarReportePlano();
             InsertarReportePLano();
 
-            if (ValidarCantidadElementosDespiece() > 2)
+            if (ValidarCantidadElementosDespiece() > 0)
             {
                 EliminarPlanoPanelCot();
                 InsertarPLanoPanelCot();
@@ -22778,6 +22780,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (!string.IsNullOrWhiteSpace(url))
             {
                 tbUrlArchivo.Text = url;
+            }
+            else
+            {
+                tbUrlArchivo.Text = "";
             }
             
             string script2 = @"mostrarModalControlDibujo();";

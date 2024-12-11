@@ -1998,7 +1998,7 @@
                                             <div class="row">
 
                                                 <div class="col-12" style="padding-right: 0rem;" runat="server" id="colCotizacion">
-                                                    <asp:Button ID="btnCotizacion" runat="server" Text="Ver cotización" class="btn btn-sm btn-outline-secondary " OnClick="btnCotizacion_Click" OnClientClick="return validarCotizacion();" />
+                                                    <asp:Button ID="btnCotizacion" runat="server" Text="Descargar Cotización" class="btn btn-sm btn-outline-secondary " OnClick="btnCotizacion_Click" OnClientClick="return validarCotizacion();" />
                                                 </div>
 
                                                 <div class="col-6" runat="server" id="colControlDibujo">
