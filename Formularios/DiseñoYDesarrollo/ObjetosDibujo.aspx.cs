@@ -1933,7 +1933,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             {
                 connectionSID.Open();
 
-                string sSql = "SELECT ID_Inventario, Descripcion_Insumo FROM tblInsumo WHERE Id_Insumo =@ID_Insumo";
+                string sSql = "SELECT ID_Inventario, Descripcion_Insumo FROM tblInsumo WHERE Id_Insumo = @ID_Insumo AND Id_UnidadMedida = 1";
 
                 using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
                 {
@@ -3186,20 +3186,59 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             {
                 if (!ValidarExistenciaInsumoObjeto())
                 {
-                    // Realizar la insercion en la tabla tblPanelInsumo 
-                    if (AsociarInsumoObjeto())
+                    if(tbCantidadInsumo.Text != "")
                     {
-                        // Se actualiza el campo en Apunta a PSL en la tabla panel 
-                        ActualizarCampoAplicaPSl(1);
 
-                        // Mostrar Mensjae de exito al Agregar  
-                        span_mensaje_Exito.InnerText = "El Insumo ha sido agregado correctamente";
-                        ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalInsumoAsociadoExito').modal('show');", true);
+
+                        string textoCantidad = tbCantidadInsumo.Text.Trim();
+
+                        // Validar si el texto es un número entero
+                        int cantidad;
+                        if (int.TryParse(textoCantidad, out cantidad))
+                        {
+                            if (cantidad > 0)
+                            {
+
+                                // Realizar la insercion en la tabla tblPanelInsumo 
+                                if (AsociarInsumoObjeto())
+                                {
+                                    // Se actualiza el campo en Apunta a PSL en la tabla panel 
+                                    ActualizarCampoAplicaPSl(1);
+
+                                    // Mostrar Mensjae de exito al Agregar  
+                                    span_mensaje_Exito.InnerText = "El Insumo ha sido agregado correctamente";
+                                    ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalInsumoAsociadoExito').modal('show');", true);
+                                }
+                            }
+                            else
+                            {
+                                // Número válido pero no positivo
+                                // Mensaje de no se ha seleccionado ningun insumo 
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Por favor ingrese un numero positivo');", true);
+                                tbCantidadInsumo.Focus();
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            // El texto no es un número entero válido
+                            // Mensaje de no se ha seleccionado ningun insumo 
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Por favor, ingrese un número válido sin incluir puntos ni comas.');", true);
+                            tbCantidadInsumo.Focus();
+                            return;
+                        }
+
+
                     }
                     else
                     {
-                        // No se pudo asociar el insumo 
+                        // Mensaje de no se ha seleccionado ningun insumo 
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Por favor ingrese la cantidad');", true);
+                        tbCantidadInsumo.Focus();
+                        return;
                     }
+
+
                 }
                 else
                 {
@@ -3207,7 +3246,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El insumo seleccionado ya se encuentra asociado');", true);
                     return;
                 }
- 
+
             }
             else
             {
@@ -3235,6 +3274,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     {
                         ActualizarCampoAplicaPSl(0);
                     }
+
+                    btnEliminarInsumo.Enabled = false;
+                    btnEliminarInsumo.CssClass = "btn btn-sm  btn-outline-secondary";
 
                     // Mostrar Mensjae de exito al eliminar insumo
                     span_mensaje_Exito.InnerText = "El Insumo ha sido eliminado correctamente";
@@ -3265,14 +3307,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sSql = "INSERT INTO tblPanelInsumo (IdPanel,IdInsumo) " +
-                              "VALUES (@IdPanel,@IdInsumo)";
+                string sSql = "INSERT INTO tblPanelInsumo (IdPanel,IdInsumo,Cantidad) " +
+                              "VALUES (@IdPanel,@IdInsumo,@cantidad)";
 
                 using (SqlCommand cmd = new SqlCommand(sSql, connection))
                 {
                     connection.Open();
                     cmd.Parameters.AddWithValue("@IdPanel", TextIdNum.Text);
                     cmd.Parameters.AddWithValue("@IdInsumo", TextIdInsumo.Text);
+                    cmd.Parameters.AddWithValue("@cantidad", tbCantidadInsumo.Text);
 
                     // Variable para validar en depuracion si se afecto alguna linea con este query 
                     int CantidadFilasAfectada = cmd.ExecuteNonQuery();
@@ -3398,7 +3441,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                     int CantidadFilasAfectada = cmd.ExecuteNonQuery();
 
-                    
+
                 }
             }
         }
@@ -3451,7 +3494,3 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
     }
 
 }
-
-
-
-

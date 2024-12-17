@@ -2224,6 +2224,78 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             btnCotizacion.Enabled = true;
 
 
+            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+            {
+
+                // Validar si la ot y el pedido tienen cotizacion  y si tienen link
+
+                if(txtCotizacion.Text.ToUpper().Trim() != "NO TIENE" || txtCotizacion.Text.ToUpper().Trim() != "")
+                {
+                    if (ValidarExistenciaCotizacion(txtCotizacion.Text))
+                    {
+                        btnControlDibujo.Enabled = true;
+                        btnControlDibujo.Visible = true;
+
+                        btnVerArchivoControl.Enabled = true;
+                        btnVerArchivoControl.Visible = true;
+
+                        colCotizacion.Attributes["class"] = "col-6";
+                        colControlDibujo.Attributes["class"] = "col-6";
+
+                        btnCotizacion.Style["font-size"] = "0.5rem"; // Cambia el tamaño de letra a 1rem
+                        btnCotizacion.Text = "Descargar Cot";
+                        
+
+
+
+                    }
+                    else
+                    {
+                        colCotizacion.Attributes["class"] = "col-11";
+                        colControlDibujo.Attributes["class"] = "col-1";
+
+                        btnControlDibujo.Enabled = false;
+                        btnControlDibujo.Visible = false;
+
+                        btnVerArchivoControl.Enabled = false;
+                        btnVerArchivoControl.Visible = false;
+
+                        btnCotizacion.Style["font-size"] = "0.9rem"; // Cambia el tamaño de letra a 1rem
+                        btnCotizacion.Text = "Descargar Cotización";
+                    }
+                }
+                else
+                {
+                    colCotizacion.Attributes["class"] = "col-11";
+                    colControlDibujo.Attributes["class"] = "col-1";
+
+                    btnControlDibujo.Enabled = false;
+                    btnControlDibujo.Visible = false;
+
+                    btnVerArchivoControl.Enabled = false;
+                    btnVerArchivoControl.Visible = false;
+
+                    btnCotizacion.Style["font-size"] = "0.9rem"; // Cambia el tamaño de letra a 1rem
+                    btnCotizacion.Text = "Descargar Cotización";
+                }
+
+            }
+            else if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
+            {
+                colCotizacion.Attributes["class"] = "col-11"; 
+                colControlDibujo.Attributes["class"] = "col-1";
+
+                btnControlDibujo.Enabled = false;
+                btnControlDibujo.Visible = false;
+
+                btnVerArchivoControl.Enabled = false;
+                btnVerArchivoControl.Visible = false;
+
+                btnCotizacion.Style["font-size"] = "0.9rem"; // Cambia el tamaño de letra a 1rem
+                btnCotizacion.Text = "Descargar Cotización";
+            }
+
+            
 
             calcularDescuento();
             calcularGranTotal();
@@ -3064,7 +3136,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     int año = fechaMes.Year;
 
                     // Si estamos en diciembre, retroceder al año anterior
-                    if (mes == 12 && i > 0)
+                    if (mes == 12 && i > 1)
                     {
                         int año1 = fechaVentaAño.Year;
                         año1--;
@@ -11649,7 +11721,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
-
+            
         // DESCARGAR LA COTIZACION EN EL TAP DE PLANO 
         protected void BtnVisGenCot_Click(object sender, EventArgs e)
         {
@@ -12873,7 +12945,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (tbValorPedido.Text == "0" && dtacboTipoPedido.SelectedItem.Text != "OAI")
                 {
-                    if (ValidarCantidadElementosDespiece() > 2)
+                    if (ValidarCantidadElementosDespiece() > 0)
                     {
                         string script = @"CerrarCargarOK();";
                         ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", script, true);
@@ -12913,7 +12985,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (tbValorPedido.Text == "0" && dtacboTipoPedido.SelectedItem.Text != "OAI")
                 {
-                    if (ValidarCantidadElementosDespiece() < 2)
+                    if (ValidarCantidadElementosDespiece() > 0)
                     {
                         string script = @"CerrarCargarOK();";
                         ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", script, true);
@@ -14808,7 +14880,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                // Nombre del procedimiento almacenado
+                //  procedimiento almacenado original
+                //string storedProcedureName = "sp_GenerarRegistrosParaReportesPlano";
+
+
+                // Nombre del procedimiento almacenado mofificado Anderson  
                 string storedProcedureName = "sp_GenerarRegistrosParaReportesPlanoDOS ";
 
                 using (SqlCommand cmd = new SqlCommand(storedProcedureName, connection))
@@ -15023,7 +15099,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     command.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
                                     command.Parameters.AddWithValue("@Plano", txtPlano.Text);
                                     string objeto = "D-PartNo." + sheet.GetRow(filaexcel).GetCell(0).ToString() + " - " + sheet.GetRow(filaexcel).GetCell(1).ToString();
-                                    command.Parameters.AddWithValue("@Objeto", objeto);
+                                    command.Parameters.AddWithValue("@Objeto", objeto != null && objeto.Length > 100 ? objeto.Substring(0, 100) : objeto);
                                     command.Parameters.AddWithValue("@DescripcionObjeto", objeto);
                                     command.Parameters.AddWithValue("@CantidadSolicitada", Convert.ToInt32(sheet.GetRow(filaexcel).GetCell(2).ToString()));
 
@@ -15207,7 +15283,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             EliminarReportePlano();
             InsertarReportePLano();
 
-            if (ValidarCantidadElementosDespiece() > 2)
+            if (ValidarCantidadElementosDespiece() > 0)
             {
                 EliminarPlanoPanelCot();
                 InsertarPLanoPanelCot();
@@ -16090,7 +16166,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             //SE CONSULTA SI EL PEDIDO BASE DEL PEDIDO INGRESADO ESTA DETENIDO YA SEA POR PRODUCCION O POR DESPACHO, EL PEDIDO NUEVO ENTRARA CON LAS MISMAS CONDICIONES
 
             DataTable PedDetProduDesp = ObtenerPedDetProduDespISID(InfoPedidoSID);
-            if (PedDetProduDesp.Rows.Count < 0)
+            if (PedDetProduDesp.Rows.Count > 0)
             {
                 PararProduccion = Convert.ToBoolean(PedDetProduDesp.Rows[0]["PararProduccion"].ToString());
                 PararDespacho = Convert.ToBoolean(PedDetProduDesp.Rows[0]["PararDespacho"].ToString());
@@ -22691,6 +22767,211 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        protected void ObtenerDatosObjetos_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
+        {
+            // Configura el tiempo de espera para el comando
+            e.Command.CommandTimeout = 120; // Tiempo en segundos
+        }
+
+        protected void btnControlDibujo_Click(object sender, EventArgs e)
+        {
+
+            string url = ConsultarLinkArchivo();
+            if (!string.IsNullOrWhiteSpace(url))
+            {
+                tbUrlArchivo.Text = url;
+            }
+            else
+            {
+                tbUrlArchivo.Text = "";
+            }
+            
+            string script2 = @"mostrarModalControlDibujo();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModalControlDibujo", script2, true);
+        }
+
+        protected void btnVerArchivoControl_Click(object sender, EventArgs e)
+        {
+            // Consultar el link del archivo en OneDrive
+            string url = ConsultarLinkArchivo();
+
+            if (!string.IsNullOrWhiteSpace(url))
+            {
+                Session["Id_OT2"] = tbOT.Text;
+                Session["pedido2"] = ddlNumbers.SelectedItem.Text;
+
+                // Script para abrir una nueva ventana y refrescar la página actual
+                string script = $@"
+            window.open('{url}', '_blank'); // Abrir en nueva pestaña
+            setTimeout(function() {{ location.reload(); }}, 500); // Refrescar después de 1 segundo
+        ";
+
+                ScriptManager.RegisterStartupScript(this, GetType(), "OpenAndRefresh", script, true);
+            }
+            else
+            {
+                string script = "alert('Por favor veirifique el enlace del archivo.');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "Alert", script, true);
+            }
+        }
+
+
+        protected void btnGuardarLinkArchivoControl_Click(object sender, EventArgs e)
+        {
+            // Actulizar el link con ID_OT y Pedido
+            if (ValidarExisteRegistroArchivo())
+            {
+                // Realizar Actualizacion Link
+                ActualizarUrlArchivo();
+
+                // Mensaje de Actualizado con exito 
+            }
+            else
+            {
+                // Realizar Insercion Link
+                InsertarUrlArchivo();
+                // Mensaje de Insertad  con exito 
+            }
+      
+            Session["Id_OT2"] = tbOT.Text;
+            Session["pedido2"] = ddlNumbers.SelectedItem.Text;
+
+            string mensajePersonalizado = "La url del archivo se guardó correctamente";
+            string urlRedireccion = "OrdenTrabajo.aspx";
+            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+        }
+
+        public string ConsultarLinkArchivo()
+        {
+            string link = string.Empty;
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string query = "SELECT UrlArchivo FROM tblControlDibujo WHERE Id_Ot = @OT AND Pedido = @PED";
+
+            using (SqlConnection connection = new SqlConnection(connectionStringSID))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+
+                    command.Parameters.AddWithValue("@OT", tbOT.Text);
+                    command.Parameters.AddWithValue("@PED", ddlNumbers.SelectedItem.Text);
+                    connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+
+                            link = reader.GetString(reader.GetOrdinal("UrlArchivo"));
+                        }
+                    }
+                }
+            }
+            return link;
+        }
+
+        public bool ValidarExisteRegistroArchivo()
+        {
+            bool existenRegistro = false;
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string query = "SELECT COUNT(*) FROM tblControlDibujo WHERE Id_Ot = @OT AND Pedido = @PED";
+
+
+            using (SqlConnection conexion = new SqlConnection(connectionStringSID))
+            {
+                using (SqlCommand comando = new SqlCommand(query, conexion))
+                {
+
+                    comando.Parameters.AddWithValue("@OT", tbOT.Text);
+                    comando.Parameters.AddWithValue("@PED", ddlNumbers.SelectedValue);
+
+                    // Abrir la conexión
+                    conexion.Open();
+
+                    int cantidadRegistros = (int)comando.ExecuteScalar();
+
+                    existenRegistro = cantidadRegistros > 0;
+                }
+            }
+
+            return existenRegistro;
+        }
+
+        private void InsertarUrlArchivo()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "INSERT INTO tblControlDibujo (Id_OT,Pedido,UrlArchivo) " +
+                    " VALUES (@OT,@PED,@Url)";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@PED", ddlNumbers.SelectedItem.Text);
+                    cmd.Parameters.AddWithValue("@Url", tbUrlArchivo.Text);
+            
+
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+        private void ActualizarUrlArchivo()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "UPDATE  tblControlDibujo SET  UrlArchivo = @Url WHERE Id_OT = @OT AND Pedido = @PED  ";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+
+                    cmd.Parameters.AddWithValue("@OT", tbOT.Text);
+                    cmd.Parameters.AddWithValue("@PED", ddlNumbers.SelectedItem.Text);
+                    cmd.Parameters.AddWithValue("@Url", tbUrlArchivo.Text);
+
+                    // Variable para validar en depuracion si se afecto alguna linea con este query 
+                    int CantidadFilasAfectada = cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+        public bool ValidarExistenciaCotizacion(string COT)
+        {
+            bool existenRegistro = false;
+
+            string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string query = "SELECT COUNT(*) FROM tblCotización WHERE Cotización = @Cot";
+
+
+            using (SqlConnection conexion = new SqlConnection(connectionStringSID))
+            {
+                using (SqlCommand comando = new SqlCommand(query, conexion))
+                {
+
+                    comando.Parameters.AddWithValue("@Cot", COT);
+                    // Abrir la conexión
+                    conexion.Open();
+
+                    int cantidadRegistros = (int)comando.ExecuteScalar();
+
+                    existenRegistro = cantidadRegistros > 0;
+                }
+            }
+
+            return existenRegistro;
+        }
+
+    }
+}
         protected void TextCriterioModulo_TextChanged(object sender, EventArgs e)
         { // Obtener los valores de los controles de búsqueda
             string criterioModulo = TextDescripcionFamilia.Text.Trim();

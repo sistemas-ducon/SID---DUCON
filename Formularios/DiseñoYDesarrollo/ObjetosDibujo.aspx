@@ -49,6 +49,7 @@
 
         }
 
+        // Activar Insumos Asociados 
         function ActivarTapInsumosAsociados() {
 
             $("#InformacionObjeto-tab").removeClass("disabled");
@@ -87,22 +88,28 @@
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
 
         <nav class="navbar navbar-light bg-light navbar-custom">
+
             <div class="container d-flex justify-content-center">
+
                 <ul class="nav nav-tabs" id="myTabs">
 
                     <li class="nav-item">
                         <a class="nav-link text-white active" id="InformacionObjeto-tab" data-bs-toggle="tab" href="#InformacionObjeto-content"><i class="bi bi-info-circle"></i> Información Objeto</a>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link text-white" id="Configurar-tab" data-bs-toggle="tab" href="#Configurar-content"><i class="bi bi-wrench-adjustable"></i> Configurar</a>
+                        <a class="nav-link text-white" id="Configurar-tab" data-bs-toggle="tab" href="#Configurar-content"><i class="bi bi-wrench-adjustable"></i>Configurar</a>
                     </li>
 
+                    <!-- Insumos Asociados  -->
                     <li class="nav-item">
                         <a class="nav-link text-white" id="InsumosAsociados-tab" data-bs-toggle="tab" href="#InsumosAsociados-content"><i class="bi bi-clipboard2-plus-fill"></i> Insumos Asociados</a>
                     </li>
 
                 </ul>
+
             </div>
+
         </nav>
 
         <div class="tab-content" id="myTabContent">
@@ -150,7 +157,7 @@
 
                                             <div class="col-lg-2 col-md-6 col-md-6 col-xs-6 p-2">
                                                 <asp:Label runat="server" ID="Label1" CssClass="form-label col-form-label-sm" Text="A(Cms)"></asp:Label>
-                                                <asp:TextBox runat="server" ID="TextAncho" CssClass="form-control form-control-sm text-center" type="number" min="0" OnTextChanged="TextAncho_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                                <asp:TextBox runat="server" ID="TextAncho" CssClass="form-control form-control-sm text-center" type="text"  OnTextChanged="TextAncho_TextChanged" AutoPostBack="true"></asp:TextBox>
                                             </div>
 
                                             <div class="col-lg-2  col-md-6 col-md-6 col-xs-6 p-2">
@@ -179,9 +186,11 @@
                             <div class="row">
 
                                 <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+
                                     <div class="p-2 m-1 border shadow-sm bg-light">
 
                                         <div class="container">
+
                                             <div class="row">
 
                                                 <div class="col-lg-1 col-md-6 col-sm-6 col-xs-6 p-2">
@@ -225,6 +234,7 @@
                                                 </div>
 
                                             </div>
+
                                         </div>
 
                                         <div class="row">
@@ -288,6 +298,7 @@
                                         </div>
 
                                     </div>
+
                                 </div>
 
                                 <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
@@ -768,13 +779,24 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-lg-3 col-md-6 col-sm-6 pt-4">
-                                            <div class="input-group input-group-sm justify-content-around">
-                                                <asp:Button ID="btnAgregarInsumo" CssClass="btn btn-sm btn-outline-primary" runat="server" Text="Agregar" OnClick="btnAgregarInsumo_Click" />
-                                                <asp:Button ID="btnEliminarInsumo" CssClass="btn btn-sm btn-outline-danger btn-outline-secondary" runat="server" Text="Eliminar" OnClick="btnEliminarInsumo_Click" />
+                                        <div class="col-lg-2 col-md-6 col-sm-6">
+                                            <div class="input-group-sm justify-content-around">
+                                                <asp:Label runat="server" ID="lbCantidad" CssClass="form-label col-form-label-sm" Text="Cantidad"></asp:Label>
+                                                <asp:TextBox runat="server" ID="tbCantidadInsumo" CssClass="form-control form-control-sm"></asp:TextBox>
                                             </div>
                                         </div>
 
+                                    </div>
+
+
+                                    <div class="row pt-2">
+                                        <div class="col-9"></div>
+                                        <div class="col-3">
+                                            <div class="input-group input-group-sm justify-content-around">
+                                                <asp:Button ID="btnAgregarInsumo" CssClass="btn btn-sm btn-outline-primary" runat="server" Text="Agregar" OnClick="btnAgregarInsumo_Click" />
+                                                <asp:Button ID="btnEliminarInsumo" CssClass="btn btn-sm  btn-outline-secondary" runat="server" Text="Eliminar" OnClick="btnEliminarInsumo_Click" />
+                                            </div>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -796,7 +818,7 @@
                                                 <asp:BoundColumn DataField="IdInsumo" HeaderText="ID Insumo" ItemStyle-CssClass="auto-width-column2" />
                                                 <asp:BoundColumn DataField="Descripcion_Insumo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column2" />
                                                 <asp:BoundColumn DataField="ID_Inventario" HeaderText="ID Inventario" ItemStyle-CssClass="auto-width-column2" />
-
+                                                 <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column2" />
 
                                             </Columns>
                                         </asp:DataGrid>
@@ -804,7 +826,7 @@
                                             ID="DSInusmosObjetos"
                                             runat="server"
                                             ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
-                                            SelectCommand="SELECT PAI.IdInsumo, I.Descripcion_Insumo, I.ID_Inventario 
+                                            SelectCommand="SELECT PAI.IdInsumo, I.Descripcion_Insumo, I.ID_Inventario,Cantidad 
                                                  FROM tblPanelInsumo AS PAI
                                                  INNER JOIN tblInsumo AS I ON I.Id_Insumo = PAI.IdInsumo
                                                  WHERE PAI.IdPanel = @ID_Numerico">
