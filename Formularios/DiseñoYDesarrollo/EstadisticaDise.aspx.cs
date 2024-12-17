@@ -96,6 +96,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             llenarDatagridEstadisticaResumen();
             LlenarDataGridDetalleEstadistica();
             CargarEstadisticaPorDibujante();
+
+            ClientScript.RegisterStartupScript(this.GetType(), "CerrarModal", "ocultarModalProgreso();", true);
         }
 
         protected void llenarDatagridEstadisticaResumen()

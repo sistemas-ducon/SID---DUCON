@@ -17,6 +17,75 @@
 
  <link type="text/css" href="../../Recursos/CSS/DiseñoYDesarrollo/ObjetosDibujo.css" rel="stylesheet" />
     <title>Estadisticas Diseño</title>
+
+    <style>
+  .progress-bar {
+      font-weight: bold;
+      font-size: 1rem;
+      transition: width 0.3s ease-in-out;
+  }
+
+  .modal-content {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+  }
+
+  .modal-header {
+      border-bottom: none;
+  }
+
+  .modal-body {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #333;
+  }
+</style>
+
+
+ <script>
+     let progressInterval; // Variable global para manejar el intervalo
+
+     // Función para mostrar el modal con barra progresiva
+     function mostrarModalProgreso() {
+         // Asegúrate de limpiar intervalos anteriores si existen
+         clearInterval(progressInterval);
+
+         // Reiniciar la barra de progreso
+         $("#progressBar").css("width", "0%");
+         $("#progressBar").attr("aria-valuenow", 0);
+         $("#progressBar").text("0%");
+
+         // Mostrar el modal instantáneamente
+         $('#progressModal').modal('show');
+
+         // Simular el progreso animado
+         let progreso = 0;
+         progressInterval = setInterval(function () {
+             progreso += 10; // Incremento progresivo
+             if (progreso <= 100) {
+                 $("#progressBar").css("width", progreso + "%");
+                 $("#progressBar").attr("aria-valuenow", progreso);
+                 $("#progressBar").text(progreso + "%");
+             }
+             if (progreso >= 100) {
+                 clearInterval(progressInterval); // Detener la simulación
+             }
+         }, 500);
+
+         // Garantizar cierre automático después de 5 segundos
+         setTimeout(function () {
+             ocultarModalProgreso();
+         }, 5000);
+     }
+
+     // Función para ocultar el modal de progreso
+     function ocultarModalProgreso() {
+         clearInterval(progressInterval); // Limpiar intervalos
+         $('#progressModal').modal('hide'); // Ocultar el modal
+     }
+ </script>
+
+
 </head>
 <body>
       <form id="form1" runat="server">
@@ -91,11 +160,15 @@
                                           </div>
                                           <div class="col-md-1 col-sm-6">
                                               <div class="col text-start">
-                                                  <asp:Button
-                                                      ID="btnBuscar"
-                                                      runat="server"
-                                                      Text="..."
-                                                      CssClass="btn btn-primary btn-sm me-2 shadow-sm" Style="width" OnClick="btnBuscar_Click" />
+                                                <asp:Button
+    ID="btnBuscar"
+    runat="server"
+    Text="Buscar"
+    CssClass="btn btn-primary btn-sm me-2 shadow-sm"
+    OnClick="btnBuscar_Click"
+    OnClientClick="mostrarModalProgreso();" />
+
+
                                               </div>
                                           </div>
                                           <div class="col-md-1 col-sm-6">
@@ -263,9 +336,28 @@
                               </div>
 
                           </div>
+
                       </ContentTemplate>
                   </asp:UpdatePanel>
               </div>
+
+              <div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="progressModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="progressModalLabel">Procesando...</h5>
+      </div>
+      <div class="modal-body">
+        <p class="text-center mb-3">Por favor, espere mientras procesamos su solicitud.</p>
+        <div class="progress" style="height: 25px;">
+          <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+               role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
               <div class="tab-pane fade" id="CumplimientoRenders-content">
                   <asp:UpdatePanel runat="server" ID="UpdatePanel2" UpdateMode="Conditional">

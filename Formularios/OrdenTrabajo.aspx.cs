@@ -22971,7 +22971,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
         protected void TextCriterioModulo_TextChanged(object sender, EventArgs e)
-        { // Obtener los valores de los controles de búsqueda
+        { // Obtener los valores de los controles de búsquedahide
             string criterioModulo = TextDescripcionFamilia.Text.Trim();
             string alturaModulo = TextAlturaModulo.Text.Trim();
             string familiaModulo = DropDownListGrupo.SelectedItem.Text;
