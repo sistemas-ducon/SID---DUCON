@@ -137,6 +137,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
                     Session["Diseno"] = "Diseño";
                     pageURL = "OrdenTrabajo.aspx";
                     break;
+                case "EstadisicaDiseño":
+                    Session["Diseno"] = "Diseño";
+                    pageURL = "DiseñoYDesarrollo/EstadisticaDise.aspx";
+                    break;
 
             }
 

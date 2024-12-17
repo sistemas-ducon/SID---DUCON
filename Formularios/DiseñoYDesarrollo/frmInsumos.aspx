@@ -229,40 +229,40 @@
 
 
                                     </div>
+                                </div>
                             </div>
-                        </div>
-                          <div class="d-flex">
-    <div class="col-12">
-        <div class="m-2 shadow-sm bg-light">
-            <div class="card p-1">
-                <div class="card-header p-1 text-center">
-                    <h6>Histórico actualización de insumo</h6>
-                </div>
-                <div class="card-body p-1" style="max-height: 15rem; overflow-x: auto;">
-                    <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm bg-white shadow-sm" 
-                                  ID="DataGrid1" runat="server" AutoGenerateColumns="false">
-                        <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm" />
-                        <Columns>
-                            <asp:TemplateColumn HeaderText=". . .">
-                                <ItemTemplate>
-                                    <asp:LinkButton ID="lnkView" runat="server" CommandName="VerDocumento4" 
-                                                    CommandArgument='<%# Container.ItemIndex %>' 
-                                                    Text="<i class='bi bi-pencil-square text-dark'></i>" />
-                                </ItemTemplate>
-                            </asp:TemplateColumn>
-                            <asp:BoundColumn DataField="Fecha_Actualizacion" HeaderText="Fecha actualización" 
-                                             ItemStyle-CssClass="auto-width-column" />
-                            <asp:BoundColumn DataField="Valor" HeaderText="Valor Unitario" 
-                                             ItemStyle-CssClass="auto-width-column" />
-                            <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" 
-                                             ItemStyle-CssClass="auto-width-column" />
-                        </Columns>
-                    </asp:DataGrid>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                            <div class="d-flex">
+                                <div class="col-12">
+                                    <div class="m-2 shadow-sm bg-light">
+                                        <div class="card p-1">
+                                            <div class="card-header p-1 text-center">
+                                                <h6>Histórico actualización de insumo</h6>
+                                            </div>
+                                            <div class="card-body p-1" style="max-height: 15rem; overflow-x: auto;">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm bg-white shadow-sm"
+                                                    ID="DataGrid1" runat="server" AutoGenerateColumns="false">
+                                                    <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm" />
+                                                    <Columns>
+                                                        <asp:TemplateColumn HeaderText=". . .">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="lnkView" runat="server" CommandName="VerDocumento4"
+                                                                    CommandArgument='<%# Container.ItemIndex %>'
+                                                                    Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+                                                        <asp:BoundColumn DataField="Fecha_Actualizacion" HeaderText="Fecha actualización"
+                                                            ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Valor" HeaderText="Valor Unitario"
+                                                            ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Responsable" HeaderText="Responsable"
+                                                            ItemStyle-CssClass="auto-width-column" />
+                                                    </Columns>
+                                                </asp:DataGrid>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
 
@@ -315,14 +315,13 @@
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group input-group-sm">
-                                               <asp:DropDownList ID="DropAdiAca" runat="server" class="form-control form-control-sm" 
-    DataSourceID="SqlDataSource2" DataTextField="Descripcion_Grupo" DataValueField="ID_GrupoAcabado">
-</asp:DropDownList>
-<asp:SqlDataSource ID="SqlDataSource2" runat="server" 
-    ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" 
-    SelectCommand="SELECT ID_GrupoAcabado, Descripcion_Grupo FROM tblGrupodeAcabado ORDER BY Descripcion_Grupo ASC">
-</asp:SqlDataSource>
-            </div>
+                                                    <asp:DropDownList ID="DropAdiAca" runat="server" class="form-control form-control-sm"
+                                                        DataSourceID="SqlDataSource2" DataTextField="Descripcion_Grupo" DataValueField="ID_GrupoAcabado">
+                                                    </asp:DropDownList>
+                                                    <asp:SqlDataSource ID="SqlDataSource2" runat="server"
+                                                        ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>"
+                                                        SelectCommand="SELECT ID_GrupoAcabado, Descripcion_Grupo FROM tblGrupodeAcabado ORDER BY Descripcion_Grupo ASC"></asp:SqlDataSource>
+                                                </div>
                                             </div>
                                         </div>
 

@@ -1722,7 +1722,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     double.TryParse(TextDctoAncho.Text, out _) &&
                     !string.IsNullOrWhiteSpace(DropDownList1.SelectedItem.Text) &&
                     !string.IsNullOrWhiteSpace(DropDownList3.SelectedItem.Text) &&
-                    CheckCostearCon.Checked &&
                     double.TryParse(TextAncho.Text, out _) &&
                     double.TryParse(TextAlto.Text, out _) &&
 
@@ -1776,7 +1775,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     double.TryParse(TextCantidadCon.Text, out _) &&
                     double.TryParse(TextDctoAltura.Text, out _) &&
                     double.TryParse(TextDctoAncho.Text, out _) &&
-                    CheckCostearCon.Checked &&
                     !string.IsNullOrWhiteSpace(DropDownList1.SelectedItem.Text))
                 {
                     bool updateSuccess, unmarkSuccess;

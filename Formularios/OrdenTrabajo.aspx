@@ -5434,20 +5434,20 @@
                                         <div class="col-lg-2 col-md-6 mb-1">
                                             <div class="d-flex align-items-center">
                                                 <asp:Label ID="Label24" runat="server" CssClass="me-2 col-form-label-sm" Text="Criterio"></asp:Label>
-                                                <asp:TextBox ID="TextCriterioModulo" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                <asp:TextBox ID="TextCriterioModulo" runat="server" CssClass="form-control form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterioModulo_TextChanged"></asp:TextBox>
                                             </div>
                                         </div>
 
                                         <!-- Otro campo -->
                                         <div class="col-lg-3 col-md-6 mb-1">
-                                            <asp:TextBox ID="TextDescripcionFamilia" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                            <asp:TextBox ID="TextDescripcionFamilia" runat="server" CssClass="form-control form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterioModulo_TextChanged"></asp:TextBox>
                                         </div>
 
                                         <!-- Altura -->
                                         <div class="col-lg-2 col-md-6 mb-1">
                                             <div class="d-flex align-items-center gap-2">
                                                 <asp:Label ID="Label26" runat="server" CssClass="me-2 col-form-label-sm" Text="Altura"></asp:Label>
-                                                <asp:TextBox ID="TextAlturaModulo" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                <asp:TextBox ID="TextAlturaModulo" runat="server" CssClass="form-control form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterioModulo_TextChanged"></asp:TextBox>
                                                 <asp:Label ID="Label25" runat="server" CssClass="me-2 col-form-label-sm" Text="Cms"></asp:Label>
                                             </div>
                                         </div>
@@ -6127,31 +6127,44 @@
 
                 // Si el elemento enfocado es el TextBox "tbOT"
                 if (focusedElement.id === '<%= tbOT.ClientID %>') {
-                // Disparar el evento OnTextChanged a través de AutoPostBack
-                __doPostBack('<%= tbOT.UniqueID %>', '');
+                    // Disparar el evento OnTextChanged a través de AutoPostBack
+                    __doPostBack('<%= tbOT.UniqueID %>', '');
 
                     // Si el elemento enfocado es el TextBox "tbOT"
                     if (focusedElement.id === '<%= TextCriterio.ClientID %>') {
- // Disparar el evento OnTextChanged a través de AutoPostBack
-     __doPostBack('<%= TextCriterio.UniqueID %>', '');
+                        // Disparar el evento OnTextChanged a través de AutoPostBack
+                        __doPostBack('<%= TextCriterio.UniqueID %>', '');
 
-                // Prevenir la acción predeterminada para que no se envíe el formulario completo
-                event.preventDefault();
-            }
-                // Aquí revisamos los campos específicos
-                if (focusedElement.id === "tbBuscarAcaba" || focusedElement.id === "tbCriterio" || focusedElement.id === "tbAltura" || focusedElement.id === "tbAncho") {
-                    // Hacer clic en el botón de búsqueda
-                    document.getElementById('<%= btnBuscarActivos.ClientID %>').click();
-                    event.preventDefault(); // Prevenir el envío del formulario
-                } else if (focusedElement.id === "ddlGrupo") {
-                    // Hacer clic en el botón de búsqueda
-                    document.getElementById('<%= btnBuscarActivos.ClientID %>').click();
-                    event.preventDefault(); // Prevenir el envío del formulario
-                } else {
-                    event.preventDefault(); // Evitar que se envíe el formulario
-                }
-            }
-        });
+                        if (focusedElement.id === '<%= TextInv.ClientID %>') {
+                            // Disparar el evento OnTextChanged a través de AutoPostBack
+                            __doPostBack('<%= TextInv.UniqueID %>', '');
+
+                            if (focusedElement.id === '<%= TextCriterioModulo.ClientID %>') {
+                                __doPostBack('<%= TextCriterioModulo.UniqueID %>', '');
+
+                                if (focusedElement.id === '<%= TextDescripcionFamilia.ClientID %>') {
+                                    __doPostBack('<%= TextDescripcionFamilia.UniqueID %>', '');
+
+                                    if (focusedElement.id === '<%= TextAlturaModulo.ClientID %>') {
+                                           __doPostBack('<%= TextAlturaModulo.UniqueID %>', ''); 
+
+            // Prevenir la acción predeterminada para que no se envíe el formulario completo
+            event.preventDefault();
+        }
+        // Aquí revisamos los campos específicos
+        if (focusedElement.id === "tbBuscarAcaba" || focusedElement.id === "tbCriterio" || focusedElement.id === "tbAltura" || focusedElement.id === "tbAncho") {
+            // Hacer clic en el botón de búsqueda
+            document.getElementById('<%= btnBuscarActivos.ClientID %>').click();
+                                        event.preventDefault(); // Prevenir el envío del formulario
+                                    } else if (focusedElement.id === "ddlGrupo") {
+                                        // Hacer clic en el botón de búsqueda
+                                        document.getElementById('<%= btnBuscarActivos.ClientID %>').click();
+            event.preventDefault(); // Prevenir el envío del formulario
+        } else {
+            event.preventDefault(); // Evitar que se envíe el formulario
+        }
+                                }
+                            });
     </script>
 
     <script>   
