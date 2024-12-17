@@ -22970,8 +22970,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return existenRegistro;
         }
 
-    }
-}
         protected void TextCriterioModulo_TextChanged(object sender, EventArgs e)
         { // Obtener los valores de los controles de búsqueda
             string criterioModulo = TextDescripcionFamilia.Text.Trim();
@@ -22983,10 +22981,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             CargarModulos(criterioModulo, alturaModulo, familiaModulo, idModulo);
 
             BotonesPorDefectoModulos(sender, e);
-            }
-
         }
+
+
     }
+
+
+}
+      
+
 
 
 
