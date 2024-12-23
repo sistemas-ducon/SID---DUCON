@@ -570,7 +570,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
 
                 // Enviar correo
-                //EnviarCorreo(receptormail, asuntoMail, descripcionMail, nombreUsuario);
+                EnviarCorreo(receptormail, asuntoMail, descripcionMail, nombreUsuario);
             }
             lblStatus.Text = insumosSeleccionados.Count > 1 ? "Insumos creados satisfatoriamente" : "Insumo creado satisfatoriamente";
 
@@ -647,9 +647,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 listaCorreos.Insert(0, mailUsuario);
             }
 
-            //return string.Join(";", listaCorreos);
+            return string.Join(";", listaCorreos);
 
-            return "escuderocristian65@gmail.com;harleyvidal@ducon.com.co";
         }
 
         private void EnviarCorreo(string receptores, string asunto, string descripcion, string usuario)

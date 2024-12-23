@@ -197,7 +197,7 @@
                                                 <asp:Button CssClass="btn btn-sm btn-outline-secondary btn-light w-100" ID="Button1" runat="server" Text="Crear insumos seleccionados" OnClick="BtnCrearNuevoInsumos"/>
                                             </div>
 
-                                            <div style="text-align:center; font-weight:600; font-size:small; margin-top:10px;">
+                                            <div style="text-align:center; font-weight:700; font-size:large; margin-top:10px;">
                                                 <%--Label status--%>
                                                 <asp:Label ID="lblStatus" Text="" runat="server"/>
                                             </div>
