@@ -218,6 +218,7 @@
     <Content Include="Formularios\Consultas\Reproceso.aspx" />
     <Content Include="Formularios\DiseñoYDesarrollo\EstadisticaDise.aspx" />
     <Content Include="Formularios\DiseñoYDesarrollo\frmInsumos.aspx" />
+    <Content Include="Formularios\DiseñoYDesarrollo\GenerarCodigoInventario.aspx" />
     <Content Include="Formularios\DiseñoYDesarrollo\Modulo.aspx" />
     <Content Include="Formularios\DiseñoYDesarrollo\ObjetosDibujo.aspx" />
     <Content Include="Formularios\FormExtPrin\AcabadosOT.aspx" />
@@ -358,6 +359,13 @@
     </Compile>
     <Compile Include="Formularios\DiseñoYDesarrollo\frmInsumos.aspx.designer.cs">
       <DependentUpon>frmInsumos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\DiseñoYDesarrollo\GenerarCodigoInventario.aspx.cs">
+      <DependentUpon>GenerarCodigoInventario.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\DiseñoYDesarrollo\GenerarCodigoInventario.aspx.designer.cs">
+      <DependentUpon>GenerarCodigoInventario.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\DiseñoYDesarrollo\Modulo.aspx.cs">
       <DependentUpon>Modulo.aspx</DependentUpon>

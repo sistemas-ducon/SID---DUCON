@@ -131,7 +131,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
                     break;
 
                 case "GenerarCodigoInventario":
-                    pageURL = "Compras/GenerarCodigoInventario.aspx";
+                    pageURL = "DiseñoYDesarrollo/GenerarCodigoInventario.aspx";
                     break;
                 case "OrdenTrabajo":
                     Session["Diseno"] = "Diseño";
