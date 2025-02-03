@@ -294,9 +294,44 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 adapter.Fill(dataTable);
             }
+
+            // Agregar nueva columna para la Fecha de Entrega
+            if (!dataTable.Columns.Contains("Fecha_Entrega"))
+                dataTable.Columns.Add("Fecha_Entrega", typeof(string));
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                DateTime fechaIngreso = Convert.ToDateTime(row["Fecha_Entrega_Dibujo_Despiece"]);
+                DateTime fechaEntrega = CalcularFechaEntrega(fechaIngreso, 3);
+                row["Fecha_Entrega"] = fechaEntrega.ToString("dd/MM/yyyy hh:mm:ss tt");
+            }
+
             DataGrid1.DataSource = dataTable;
             DataGrid1.DataBind();
         }
+
+
+        private DateTime CalcularFechaEntrega(DateTime fechaIngreso, int plazoEntrega)
+        {
+            DateTime fechaActivacion = AjustarHoraInicio(fechaIngreso);
+            return ObtenerProximaFechaHabil(fechaActivacion, plazoEntrega);
+        }
+
+        private DateTime AjustarHoraInicio(DateTime fecha)
+        {
+            int hora = fecha.Hour;
+
+            // Si la hora es antes de las 7 AM, ajustar a las 7 AM
+            if (hora < 7)
+                fecha = fecha.Date.AddHours(7);
+
+            // Si la hora es después de las 5 PM, mover al siguiente día hábil a las 7 AM
+            if (hora >= 17)
+                fecha = ObtenerProximaFechaHabil(fecha.AddDays(1), 0).Date.AddHours(7);
+
+            return fecha;
+        }
+
 
         protected void DataGridDiseD()
         {
@@ -5588,49 +5623,41 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 e.Item.Attributes["id"] = "DataGrid1_row_" + e.Item.ItemIndex;
                 e.Item.Attributes["data-datagridid"] = "DataGrid1";
-                DateTime fechaEntrega = Convert.ToDateTime(DataBinder.Eval(e.Item.DataItem, "Fecha_Entrega_Dibujo_Despiece"));
+
+                // Obtener la fecha de ingreso desde el DataItem
+                DateTime fechaIngreso = Convert.ToDateTime(DataBinder.Eval(e.Item.DataItem, "Fecha_Entrega_Dibujo_Despiece"));
+
+                // Definir el plazo de entrega según la lógica de VB6 (ajustar si es necesario)
+                int plazoEntrega = 2; // Puedes cambiar esto si el plazo depende de algún otro campo
+
+                // Calcular la fecha de entrega usando el método existente
+                DateTime fechaEntrega = CalcularFechaEntrega(fechaIngreso, plazoEntrega);
+
+                // Obtener el control Label dentro de la columna de fecha de entrega
+                System.Web.UI.WebControls.Label labelFechaEntrega = (System.Web.UI.WebControls.Label)e.Item.FindControl("Label1");
+
+                if (labelFechaEntrega != null)
+                {
+                    // Asignar la fecha de entrega formateada
+                    labelFechaEntrega.Text = fechaEntrega.ToString("dd/MM/yyyy hh:mm:ss tt");
+                }
+
+                // Definir el color de la fila en base a la fecha de entrega
                 DateTime fechaActualMenos2Dias = DateTime.Now.AddDays(-2);
 
-                // Verificar si la fecha de entrega es sábado o domingo
-                if (fechaEntrega.DayOfWeek == DayOfWeek.Saturday)
-                {
-                    // Cambiar la fecha de entrega al próximo lunes
-                    fechaEntrega = fechaEntrega.AddDays(2);
-                }
-                else if (fechaEntrega.DayOfWeek == DayOfWeek.Sunday)
-                {
-                    // Cambiar la fecha de entrega al próximo martes
-                    fechaEntrega = fechaEntrega.AddDays(1);
-                }
-
-                // Verificar si la nueva fecha de entrega es menos de 5 días antes de la fecha actual
                 if (fechaEntrega < fechaActualMenos2Dias)
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868"); /*rojo*/
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868"); // Rojo
                     e.Item.ForeColor = System.Drawing.Color.White;
                 }
                 else
                 {
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#efdd79"); /*Amarillo*/
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#efdd79"); // Amarillo
                     e.Item.ForeColor = System.Drawing.Color.Black;
-                }
-
-                // Acceder a la celda correspondiente y asignarle el valor de fechaEntrega
-                TableCell cellFechaEntrega = e.Item.Cells[6]; // Cambia el índice si la columna no está en la sexta posición
-                cellFechaEntrega.Text = fechaEntrega.ToString("dd/MM/yyyy hh:mm:ss tt");
-
-                // Obtener la referencia al control Label dentro de la columna de la fecha de entrega
-                System.Web.UI.WebControls.Label labelFechaEntrega = (System.Web.UI.WebControls.Label)e.Item.FindControl("Label1");
-
-                // Verificar si se encontró el control Label
-                if (labelFechaEntrega != null)
-                {
-                    // Calcular la fecha de entrega para el control Label y asignarla como texto
-                    DateTime nuevaFechaEntrega = fechaEntrega.AddDays(2);
-                    labelFechaEntrega.Text = nuevaFechaEntrega.ToString("dd/MM/yyyy hh:mm:ss tt");
                 }
             }
         }
+
 
         protected void CheckBox22_CheckedChanged(object sender, EventArgs e)
         {

@@ -2106,11 +2106,11 @@
                                                                     <asp:BoundColumn DataField="Nombre_Obra" HeaderText="Nombre de la Obra" ItemStyle-CssClass="auto-width-column2"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Nombre_Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                     <asp:BoundColumn DataField="Fecha_Entrega_Dibujo_Despiece" HeaderText="F.Ingreso" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                                    <asp:TemplateColumn HeaderText="F.Entrega" ItemStyle-CssClass="auto-width-column">
-                                                                        <ItemTemplate>
-                                                                            <asp:Label ID="Label1" runat="server" Text='<%# Convert.ToDateTime(Eval("Fecha_Entrega_Dibujo_Despiece")).AddDays(2).ToString("dd/MM/yyyy hh:mm:ss tt") %>'></asp:Label>
-                                                                        </ItemTemplate>
-                                                                    </asp:TemplateColumn>
+                                                                   <asp:TemplateColumn HeaderText="F.Entrega" ItemStyle-CssClass="auto-width-column">
+    <ItemTemplate>
+        <asp:Label ID="Label1" runat="server"></asp:Label>
+    </ItemTemplate>
+</asp:TemplateColumn>
                                                                     <asp:TemplateColumn HeaderText="Dibujante" ItemStyle-CssClass="auto-width-column">
                                                                         <ItemTemplate>
                                                                             <asp:Label ID="lbDibujante" runat="server" Text='<%# Eval("RealizadoPor") %>'></asp:Label>
