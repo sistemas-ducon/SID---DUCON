@@ -51,6 +51,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.WebControls.SqlDataSource Documentos;
 
         /// <summary>
+        /// Control mensaje.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label mensaje;
+
+        /// <summary>
         /// Control lbTipoDoc.
         /// </summary>
         /// <remarks>
@@ -78,6 +87,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected global::System.Web.UI.WebControls.FileUpload FileUpload1;
 
         /// <summary>
+        /// Control ValidarEspecial.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button ValidarEspecial;
+
+        /// <summary>
         /// Control Button1.
         /// </summary>
         /// <remarks>
@@ -94,14 +112,5 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button bntElimnar;
-
-        /// <summary>
-        /// Control mensaje.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl mensaje;
     }
 }

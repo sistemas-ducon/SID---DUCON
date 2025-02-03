@@ -1,4 +1,7 @@
 ﻿//using NuGet.Protocol.Plugins;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using System;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -29,6 +32,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 {
 
                     DepartamentoAsesor();
+                    CargarTiposDeDocumento();
 
 
                     Button bntElimnar = FindControl("bntElimnar") as Button;
@@ -57,27 +61,57 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                     if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
                     {
+
+                        ValidarEspecial.Visible = false;
                         if (!ConsultarTerminadoVentas())
                         {
                             Button1.Enabled = false;
                             Button1.CssClass = "btn btn-sm btn-outline-primary";
                         }
+
+
                     }
                     else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
                     {
+
+                        ValidarEspecial.Visible = true;
+
                         // Consultar terminado dibujo para controlar el boton de Adjuntar y validar el permiso de control de Documentacion OT
                         if (!ConsultarTerminadoDibujo())
                         {
                             Button1.Enabled = false;
                             Button1.CssClass = "btn btn-sm btn-outline-primary";
+
+                            ValidarEspecial.Enabled = false;
+                            Button1.CssClass = "btn btn-sm btn-outline-primary";
+
                         }
-                    
+
+                        if (Session["ControlEspecialDes"]?.ToString() == "Especial")
+                        {
+                            ListItem newItem = new ListItem("DLLO.ESPECIAL");
+                            ddlTipoDoc.Items.Add(newItem);
+                            ddlTipoDoc.ClearSelection();
+                            newItem.Selected = true;
+                            ddlTipoDoc.Enabled = false;
+                            ddlTipoDoc.CssClass = "form-control form-control-sm";
+
+
+
+
+                            ValidarEspecial.Visible = false;
+
+
+
+                            mensaje.Visible = true;
+                            mensaje.Text = "Por favor cargue nuevamente el mismo  archivo y presione adjuntar";
+
+                            Session.Remove("ControlEspecialDes");
+
+                        }
+
                     }
-
-
-
-
-                    }
+                }
                 else
                 {
                     Response.Redirect("~/Formularios/Login.aspx");
@@ -107,12 +141,26 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 }
 
-                if (!ConsultarTerminadoVentas())
+                if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
                 {
-                    string mensajePersonalizado = "La solicitud ya ha sido programda para ventas y no puede ser modificada.";
-                    string urlRedireccion = "Ventas/AdjuntarDocumentos.aspx";
-                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    if (!ConsultarTerminadoVentas())
+                    {
+                        string mensajePersonalizado = "La solicitud ya ha sido programda para ventas y no puede ser modificada.";
+                        string urlRedireccion = "Ventas/AdjuntarDocumentos.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    }
                 }
+                else if(Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+                {
+                    if (!ConsultarTerminadoDibujo())
+                    {
+                        string mensajePersonalizado = "La solicitud ya ha sido programda  y no puede ser modificada.";
+                        string urlRedireccion = "Ventas/AdjuntarDocumentos.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    }
+                }
+
+                
 
 
 
@@ -132,7 +180,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     }
                     catch (Exception ex)
                     {
-                        mensaje.InnerText = "Se ha producido un error al intentar crear la carpeta. " + ex.Message;
+                        mensaje.Text = "Se ha producido un error al intentar crear la carpeta. " + ex.Message;
                         return;
                     }
                 }
@@ -187,13 +235,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                 catch (Exception ex)
                 {
-                    mensaje.InnerText = "Se ha producido un error al intentar guardar el archivo. " + ex.Message;
+                    mensaje.Text = "Se ha producido un error al intentar guardar el archivo. " + ex.Message;
                 }
 
             }
             else
             {
-                mensaje.InnerText = "Error: No has seleccionado ningún archivo.";
+                string mensajePersonalizado = "Por favor seleccione un documento";
+                string urlRedireccion = "Ventas/AdjuntarDocumentos.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
             }
 
 
@@ -261,7 +311,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                                 bntElimnar.CssClass = "btn btn-sm btn-outline-danger";
                             }
 
-                           
+
                         }
                         else
                         {
@@ -349,15 +399,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         protected void EliminarDocumento(object sender, EventArgs e)
         {
 
-            // Validar Area y validar permiso para eliminar Documentacion Solicitud Especial 
-
-
-
-            if (!ConsultarTerminadoVentas())
+            if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
             {
-                string mensajePersonalizado1 = "La solicitud ya ha sido programda para ventas y no puede ser modificada.";
-                string urlRedireccion1 = "Ventas/AdjuntarDocumentos.aspx";
-                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado1)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion1)}");
+                if (!ConsultarTerminadoVentas())
+                {
+                    string mensajePersonalizado1 = "La solicitud ya ha sido programda para ventas y no puede ser modificada.";
+                    string urlRedireccion1 = "Ventas/AdjuntarDocumentos.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado1)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion1)}");
+                }
+            }
+            else if (Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+            {
+                if (!ConsultarTerminadoDibujo())
+                {
+                    string mensajePersonalizado1 = "La solicitud ya ha sido programda  y no puede ser modificada.";
+                    string urlRedireccion1 = "Ventas/AdjuntarDocumentos.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado1)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion1)}");
+                }
             }
 
 
@@ -511,5 +569,102 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         }
 
 
+        //Adiciones o cambio 
+
+        private void CargarTiposDeDocumento()
+        {
+            if (Session["Departamento"] != null)
+            {
+                string departamento = Session["Departamento"].ToString().ToUpper();
+
+                // Limpiar el DropDownList antes de llenarlo
+                ddlTipoDoc.Items.Clear();
+
+                // Agregar opción por defecto
+                ddlTipoDoc.Items.Add(new ListItem("-- Seleccione --", " "));
+
+                // Llenar el DropDownList según el departamento
+                if (departamento == "VENTAS")
+                {
+                    ddlTipoDoc.Items.Add(new ListItem("BOSQUEJO", "BOSQUEJO"));
+                    ddlTipoDoc.Items.Add(new ListItem("CONTABLE", "CONTABLE"));
+                }
+                else if (departamento == "DISEÑO" || departamento == "DESARROLLO DE PRODUCTO")
+                {
+                    ddlTipoDoc.Items.Add(new ListItem("COMPRAS", "COMPRAS"));
+                    ddlTipoDoc.Items.Add(new ListItem("PRODUCTIVO", "PRODUCTIVO"));
+                }
+            }
+        }
+
+        protected void ValidarEspecial_Click(object sender, EventArgs e)
+        {
+            if (FileUpload1.HasFile)
+            {
+                HttpPostedFile file = FileUpload1.PostedFile;
+                string extension = Path.GetExtension(FileUpload1.FileName);
+
+                // Crear una copia temporal del archivo en la carpeta temporal del sistema
+                string archivoTemporal = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + extension);
+                FileUpload1.SaveAs(archivoTemporal);
+
+                // Leer el contenido del archivo Excel
+                using (FileStream fs = new FileStream(archivoTemporal, FileMode.Open, FileAccess.Read))
+                {
+                    IWorkbook workbook = null;
+
+                    // Determinar el tipo de archivo Excel (XLS o XLSX)
+                    if (extension.Equals(".xls"))
+                    {
+                        // Para archivos .xls (Excel 97-2003)
+                        workbook = new HSSFWorkbook(fs);
+                    }
+                    else if (extension.Equals(".xlsx"))
+                    {
+                        // Para archivos .xlsx (Excel 2007 y posteriores)
+                        workbook = new XSSFWorkbook(fs);
+                    }
+
+                    // Obtener el primer worksheet
+                    ISheet sheet = workbook.GetSheetAt(0);
+
+                    // Leer el texto de las celdas necesarias
+                    string CeldaA1 = sheet.GetRow(0)?.GetCell(0)?.ToString();
+                    string CeldaA2 = sheet.GetRow(1)?.GetCell(0)?.ToString();
+                    string CeldaB2 = sheet.GetRow(1)?.GetCell(1)?.ToString();
+                    string CeldaC2 = sheet.GetRow(1)?.GetCell(2)?.ToString();
+                    string CeldaD2 = sheet.GetRow(1)?.GetCell(3)?.ToString();
+                    string CeldaE2 = sheet.GetRow(1)?.GetCell(4)?.ToString();
+                    string CeldaA4 = sheet.GetRow(0)?.GetCell(4)?.ToString();
+
+                    // Verificar si el contenido es el esperado
+                    if (CeldaA1 == "DESPIECE PRODUCTO ESPECIAL" && CeldaA2 == "N.º" && CeldaB2 == "PARTE" && CeldaC2 == "CANT." && CeldaD2 == "COD. INV." && CeldaE2 == "AREA")
+                    {
+
+                        Session["ControlEspecialDes"] = "Especial";
+
+                        string mensajePersonalizado = "Archivo de Excel Validado";
+                        string urlRedireccion = "Ventas/AdjuntarDocumentos.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    }
+                    else
+                    {
+
+                        string mensajePersonalizado = "El archivo ha sido modificado. o no es un desarrollo especial.";
+                        string urlRedireccion = "Ventas/AdjuntarDocumentos.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+                    }
+
+                }
+
+            }
+            else
+            {
+                string mensajePersonalizado = "Por favor seleccione un documento";
+                string urlRedireccion = "Ventas/AdjuntarDocumentos.aspx";
+                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            }
+        }
     }
 }

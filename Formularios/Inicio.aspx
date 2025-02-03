@@ -221,7 +221,7 @@
                                                 <li>
                                                     <asp:linkbutton ID="LinkSeguimientoCotizacion" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="SeguimientoCotizacion"><i class="bi bi-eye-fill"></i> Seguimiento Cotizaciones</asp:linkbutton></li>
                                                 <li>
-                                                    <asp:linkbutton ID="LinkSolicitudProductoEspecial" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="SolicitudProductoEspecial"><i class="bi bi-window-plus"></i>Solicitud Producto Especial</asp:linkbutton></li>
+                                                    <asp:linkbutton ID="LinkSolicitudProductoEspecial" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="SolicitudProductoEspecial"><i class="bi bi-window-plus"></i> Solicitud Producto Especial</asp:linkbutton></li>
                                                 <li>
                                                     <asp:linkbutton ID="LinkVisitaAsesores" runat="server" CssClass="dropdown-item form-control-sm" OnClick="ValidarPermiso_Ventas" CommandName="VisitaAsesores"><i class="bi bi-people-fill"></i> Visita Asesores</asp:linkbutton></li>
                                             </ul>
