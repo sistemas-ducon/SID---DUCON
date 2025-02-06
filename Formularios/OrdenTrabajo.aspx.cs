@@ -14884,11 +14884,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 //  procedimiento almacenado original
-                //string storedProcedureName = "sp_GenerarRegistrosParaReportesPlano";
+                string storedProcedureName = "sp_GenerarRegistrosParaReportesPlano";
 
 
                 // Nombre del procedimiento almacenado mofificado Anderson  
-                string storedProcedureName = "sp_GenerarRegistrosParaReportesPlanoDOS ";
+                // string storedProcedureName = "sp_GenerarRegistrosParaReportesPlanoDOS ";
 
                 using (SqlCommand cmd = new SqlCommand(storedProcedureName, connection))
                 {

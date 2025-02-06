@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
@@ -23,6 +22,7 @@ using Org.BouncyCastle.Utilities;
 using System.Runtime.ConstrainedExecution;
 using static SISTEMA_INTEGRAL_DUCON.Formularios.Diseño_Venta;
 using DocumentFormat.OpenXml.Office.Word;
+using System;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 {
@@ -65,6 +65,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                     btnEliminarInsumo.Enabled = false;
                     btnEliminarInsumo.CssClass = "btn btn-sm btn-outline-secondary";
+
+                    btnAgregarInsumo.Enabled = false;
+                    btnAgregarInsumo.CssClass = "btn btn-sm btn-outline-secondary";
 
                     // Manejar  el evento de Anadir un modulo a un Objeto y/o Eliminar 
 
@@ -119,6 +122,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             (TextUndXPaq, TextUndXPaq.Text.Trim()),
             (TextIndReferencia, TextIndReferencia.Text.Trim()),
             (TextIdInsumo, TextIdInsumo.Text),
+            (CheckApliCodPSLOT, CheckApliCodPSLOT.Checked.ToString())
 
         };
 
@@ -168,6 +172,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         (TextUndXPaq, TextUndXPaq.Attributes["Tag"], val => TextUndXPaq.Text.Trim() != val, val => IsNumeric(val)),
         (TextIndReferencia, TextIndReferencia.Attributes["Tag"], val => TextIndReferencia.Text.Trim() != val, val => !string.IsNullOrEmpty(val)),
         (TextIdInsumo, TextIdInsumo.Attributes["Tag"], val => TextIdInsumo.Text != val, val => true),
+        (CheckApliCodPSLOT, CheckApliCodPSLOT.Attributes["Tag"], val => CheckApliCodPSLOT.Checked != Convert.ToBoolean(val), val => true)
 
             };
 
@@ -460,6 +465,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                                     TextValorComercial.Text = reader["Precio_Venta"].ToString();
                                     string descripcionPanelCotizacion = reader["Descripcion_Panel"].ToString();
                                     TextDescripcionPanelCotizacion.Text = ReplaceNomenclatura(descripcionPanelCotizacion);
+
+                                    // Funcionalidad Agregar Insumos al objeto 
+                                    TextIdInsumo.Text = reader["Id_Insumo"].ToString();
+                                    TextCodPSL.Text = reader["ID_Inventario"].ToString();
+                                    TextInRelOtNoOai.Text = reader["Descripcion_Insumo"].ToString();
+
                                     bool isActive = reader["Activo"] != DBNull.Value && Convert.ToBoolean(reader["Activo"]);
                                     CheckActivo.Checked = isActive;
                                     bool Escalable = reader["Escalable"] != DBNull.Value && Convert.ToBoolean(reader["Escalable"]);
@@ -468,6 +479,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                                     CheckChequeado.Checked = Chequeado;
                                     bool Apunta_Cod_PSL = reader["Apunta_Cod_PSL"] != DBNull.Value && Convert.ToBoolean(reader["Apunta_Cod_PSL"]);
                                     CheckApliCodPSLOT.Checked = Apunta_Cod_PSL;
+
 
                                     if (isActive == true)
                                     {
@@ -1118,8 +1130,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                 string sSql = "";
 
-                sSql = "INSERT INTO tblPanel(Id_Panel, Descripcion_Panel, Id_GrupoObjeto, Ancho, Altura, Id_Linea, Divisiones, HOLGURA, Profundidad, Escalable, cubicajem3, Activo, chequeado, Responsable, FechaChequeo, Descripcion_Tecnica, idInsumoReferencia, UndxPaquete, ID_Inventario, Id_Insumo, Descripcion_Insumo) " +
-                            "VALUES(@Id_Panel, @Descripcion_Panel, @Id_GrupoObjeto, @Ancho, 0, @Id_Linea, @Divisiones, @HOLGURA, @Profundidad, @Escalable, @cubicajem3, @Activo, 0, @Responsable, @FechaChequeo, @Descripcion_Tecnica, @idInsumoReferencia, @UndxPaquete,'' ,'' ,'' )";
+                // Funcionalidad Agregar Insumo al objeto
+
+                if (!CheckApliCodPSLOTT)  // Si CheckApliCodPSLOT está desmarcado
+                {
+                    sSql = "INSERT INTO tblPanel(Id_Panel, Descripcion_Panel, Id_GrupoObjeto, Ancho, Altura, Id_Linea, Divisiones, HOLGURA, Profundidad, Escalable, cubicajem3, Activo, chequeado, Responsable, FechaChequeo, Descripcion_Tecnica, idInsumoReferencia, UndxPaquete, Apunta_Cod_PSL, ID_Inventario, Id_Insumo, Descripcion_Insumo) " +
+                           "VALUES(@Id_Panel, @Descripcion_Panel, @Id_GrupoObjeto, @Ancho, 0, @Id_Linea, @Divisiones, @HOLGURA, @Profundidad, @Escalable, @cubicajem3, @Activo, 0, @Responsable, @FechaChequeo, @Descripcion_Tecnica, @idInsumoReferencia, @UndxPaquete, 0, NULL, NULL, NULL)";
+                }
+                else  // Si CheckApliCodPSLOT está marcado
+                {
+                    sSql = "INSERT INTO tblPanel(Id_Panel, Descripcion_Panel, Id_GrupoObjeto, Ancho, Altura, Id_Linea, Divisiones, HOLGURA, Profundidad, Escalable, cubicajem3, Activo, chequeado, Responsable, FechaChequeo, Descripcion_Tecnica, idInsumoReferencia, UndxPaquete, Apunta_Cod_PSL, ID_Inventario, Id_Insumo, Descripcion_Insumo) " +
+                           "VALUES(@Id_Panel, @Descripcion_Panel, @Id_GrupoObjeto, @Ancho, 0, @Id_Linea, @Divisiones, @HOLGURA, @Profundidad, @Escalable, @cubicajem3, @Activo, 0, @Responsable, @FechaChequeo, @Descripcion_Tecnica, @idInsumoReferencia, @UndxPaquete, 1, @CodPSL, @IdInsumo, @Descripcion_Insumo)";
+                }
 
 
                 using (SqlConnection con = new SqlConnection(connectionString))
@@ -1142,6 +1164,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                         cmd.Parameters.AddWithValue("@Descripcion_Tecnica", TextAreaDescripTec.Text.ToUpper());
                         cmd.Parameters.AddWithValue("@idInsumoReferencia", TextIndReferencia.Text);
                         cmd.Parameters.AddWithValue("@UndxPaquete", TextUndXPaq.Text);
+
+                        if (CheckApliCodPSLOTT)
+                        {
+                            cmd.Parameters.AddWithValue("@CodPSL", TextCodPSL.Text);
+                            cmd.Parameters.AddWithValue("@IdInsumo", TextIdInsumo.Text);
+                            cmd.Parameters.AddWithValue("@Descripcion_Insumo", TextInRelOtNoOai.Text);
+                        }
 
                         con.Open();
                         cmd.ExecuteNonQuery();
@@ -1225,13 +1254,28 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     // Update the panel
                     string updateSql = "";
 
-                    updateSql = "UPDATE tblPanel SET Id_Panel = @Id_Panel, UndxPaquete = @UndxPaquete, Descripcion_Panel = @Descripcion_Panel, " +
-                                "Id_GrupoObjeto = @Id_GrupoObjeto, Ancho = @Ancho, Altura = @Altura, Id_Linea = @Id_Linea, Divisiones = @Divisiones, " +
-                                "HOLGURA = @HOLGURA, Precio_Venta = 0, Profundidad = @Profundidad, Escalable = @Escalable, CubicajeM3 = @CubicajeM3, " +
-                                "Activo = @Activo, RegistradoSag = 0, chequeado = @chequeado, Responsable = @Responsable, FechaChequeo = @FechaChequeo, " +
-                                "Descripcion_Tecnica = @Descripcion_Tecnica, idInsumoReferencia = @idInsumoReferencia, " +
-                                "ID_Inventario = '', Id_Insumo = '', Descripcion_Insumo = '' " +
-                                "WHERE Id_Panel = @Id_PanelTag AND Ancho = @AnchoAnterior AND Altura = @AlturaAnterior";
+                    // Funcionalidad Agregar Insumo al objeto
+
+                    if (!CheckApliCodPSLOTT) // If CheckApliCodPSLOT is unchecked
+                    {
+                        updateSql = "UPDATE tblPanel SET Id_Panel = @Id_Panel, UndxPaquete = @UndxPaquete, Descripcion_Panel = @Descripcion_Panel, " +
+                                    "Id_GrupoObjeto = @Id_GrupoObjeto, Ancho = @Ancho, Altura = @Altura, Id_Linea = @Id_Linea, Divisiones = @Divisiones, " +
+                                    "HOLGURA = @HOLGURA, Precio_Venta = 0, Profundidad = @Profundidad, Escalable = @Escalable, CubicajeM3 = @CubicajeM3, " +
+                                    "Activo = @Activo, RegistradoSag = 0, chequeado = @chequeado, Responsable = @Responsable, FechaChequeo = @FechaChequeo, " +
+                                    "Descripcion_Tecnica = @Descripcion_Tecnica, idInsumoReferencia = @idInsumoReferencia, Apunta_Cod_PSL = 0, " +
+                                    "ID_Inventario = NULL, Id_Insumo = NULL, Descripcion_Insumo = NULL " +
+                                    "WHERE Id_Panel = @Id_PanelTag AND Ancho = @AnchoAnterior AND Altura = @AlturaAnterior";
+                    }
+                    else // If CheckApliCodPSLOT is checked
+                    {
+                        updateSql = "UPDATE tblPanel SET Id_Panel = @Id_Panel, UndxPaquete = @UndxPaquete, Descripcion_Panel = @Descripcion_Panel, " +
+                                    "Id_GrupoObjeto = @Id_GrupoObjeto, Ancho = @Ancho, Altura = @Altura, Id_Linea = @Id_Linea, Divisiones = @Divisiones, " +
+                                    "HOLGURA = @HOLGURA, Precio_Venta = 0, Profundidad = @Profundidad, Escalable = @Escalable, CubicajeM3 = @CubicajeM3, " +
+                                    "Activo = @Activo, RegistradoSag = 0, chequeado = @chequeado, Responsable = @Responsable, FechaChequeo = @FechaChequeo, " +
+                                    "Descripcion_Tecnica = @Descripcion_Tecnica, idInsumoReferencia = @idInsumoReferencia, Apunta_Cod_PSL = 1, " +
+                                    "ID_Inventario = @CodPSL, Id_Insumo = @IdInsumo, Descripcion_Insumo = @Descripcion_Insumo " +
+                                    "WHERE Id_Panel = @Id_PanelTag AND Ancho = @AnchoAnterior AND Altura = @AlturaAnterior";
+                    }
 
 
                     using (SqlCommand updateCmd = new SqlCommand(updateSql, con))
@@ -1257,6 +1301,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                         updateCmd.Parameters.AddWithValue("@Id_PanelTag", dr["IdPanelTag"].ToString());
                         updateCmd.Parameters.AddWithValue("@AnchoAnterior", anchoAnterior);
                         updateCmd.Parameters.AddWithValue("@AlturaAnterior", alturaAnterior);
+
+                        if (CheckApliCodPSLOTT)
+                        {
+                            updateCmd.Parameters.AddWithValue("@CodPSL", TextCodPSL.Text.Trim());
+                            updateCmd.Parameters.AddWithValue("@IdInsumo", TextIdInsumo.Text.Trim());
+                            updateCmd.Parameters.AddWithValue("@Descripcion_Insumo", TextInRelOtNoOai.Text.Trim());
+                        }
 
 
 
@@ -1838,6 +1889,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
         protected void CheckApliCodPSLOT_CheckedChanged(object sender, EventArgs e)
         {
+            EstadoGrabarCancelar();
+
             if (CheckApliCodPSLOT.Checked)
             {
                 TextIdInsumo.Enabled = true;
@@ -1876,6 +1929,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 TextIdInsumo.Text = "";
                 TextIdInsumo.Focus();
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El ID de insumo no puede estar vacio.');", true);
+                EstadoGrabarCancelar();
+                CheckApliCodPSLOT.Checked = false;
                 return;
             }
             else
@@ -1897,6 +1952,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                         TextCodPSL.Text = fila["ID_Inventario"].ToString();
                         TextInRelOtNoOai.Text = fila["Descripcion_Insumo"].ToString();
+                        CheckApliCodPSLOT.Checked = true;
                     }
                     else
                     {
@@ -1905,6 +1961,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                         TextInRelOtNoOai.Text = "";
                         TextIdInsumo.Text = "";
                         TextIdInsumo.Focus();
+                        CheckApliCodPSLOT.Checked = false;
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El insumo no existe, por favor revise el ID ingresado');", true);
                     }
                 }
@@ -1915,9 +1972,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     TextInRelOtNoOai.Text = "";
                     TextIdInsumo.Text = "";
                     TextIdInsumo.Focus();
+                    CheckApliCodPSLOT.Checked = false;
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El insumo no existe, por favor revise el ID ingresado.');", true);
                 }
 
+                EstadoGrabarCancelar();
 
             }
 
@@ -1933,7 +1992,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             {
                 connectionSID.Open();
 
-                string sSql = "SELECT ID_Inventario, Descripcion_Insumo FROM tblInsumo WHERE Id_Insumo = @ID_Insumo AND Id_UnidadMedida = 1";
+                string sSql = "SELECT ID_Inventario, Descripcion_Insumo FROM tblInsumo WHERE Id_Insumo =@ID_Insumo";
 
                 using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
                 {
@@ -3179,6 +3238,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             ScriptManager.RegisterStartupScript(this, this.GetType(), "openTab", script, true);
         }
 
+
+        // ----------------------   Empieza metodos asociados  --------------------------------------------------
+
+        // para objetos asociados 
         protected void btnAgregarInsumo_Click(object sender, EventArgs e)
         {
             // Validar que haya un insumo seleccionado 
@@ -3186,59 +3249,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             {
                 if (!ValidarExistenciaInsumoObjeto())
                 {
-                    if(tbCantidadInsumo.Text != "")
+                    // Realizar la insercion en la tabla tblPanelInsumo 
+                    if (AsociarInsumoObjeto())
                     {
+                        // Se actualiza el campo en Apunta a PSL en la tabla panel 
+                        ActualizarCampoAplicaPSl(1);
 
-
-                        string textoCantidad = tbCantidadInsumo.Text.Trim();
-
-                        // Validar si el texto es un número entero
-                        int cantidad;
-                        if (int.TryParse(textoCantidad, out cantidad))
-                        {
-                            if (cantidad > 0)
-                            {
-
-                                // Realizar la insercion en la tabla tblPanelInsumo 
-                                if (AsociarInsumoObjeto())
-                                {
-                                    // Se actualiza el campo en Apunta a PSL en la tabla panel 
-                                    ActualizarCampoAplicaPSl(1);
-
-                                    // Mostrar Mensjae de exito al Agregar  
-                                    span_mensaje_Exito.InnerText = "El Insumo ha sido agregado correctamente";
-                                    ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalInsumoAsociadoExito').modal('show');", true);
-                                }
-                            }
-                            else
-                            {
-                                // Número válido pero no positivo
-                                // Mensaje de no se ha seleccionado ningun insumo 
-                                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Por favor ingrese un numero positivo');", true);
-                                tbCantidadInsumo.Focus();
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            // El texto no es un número entero válido
-                            // Mensaje de no se ha seleccionado ningun insumo 
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Por favor, ingrese un número válido sin incluir puntos ni comas.');", true);
-                            tbCantidadInsumo.Focus();
-                            return;
-                        }
-
-
+                        // Mostrar Mensjae de exito al Agregar  
+                        span_mensaje_Exito.InnerText = "El Insumo ha sido agregado correctamente";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#modalInsumoAsociadoExito').modal('show');", true);
                     }
                     else
                     {
-                        // Mensaje de no se ha seleccionado ningun insumo 
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Por favor ingrese la cantidad');", true);
-                        tbCantidadInsumo.Focus();
-                        return;
+                        // No se pudo asociar el insumo 
                     }
-
-
                 }
                 else
                 {
@@ -3258,6 +3282,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
         }
 
+        // para objetos asociados 
         protected void btnEliminarInsumo_Click(object sender, EventArgs e)
         {
             // Validar que un elemento se haya seleccionado   
@@ -3274,9 +3299,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     {
                         ActualizarCampoAplicaPSl(0);
                     }
-
-                    btnEliminarInsumo.Enabled = false;
-                    btnEliminarInsumo.CssClass = "btn btn-sm  btn-outline-secondary";
 
                     // Mostrar Mensjae de exito al eliminar insumo
                     span_mensaje_Exito.InnerText = "El Insumo ha sido eliminado correctamente";
@@ -3300,22 +3322,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             // Mostrar Mensaje de exito al eliminar 
 
         }
-
+        
+        // para objetos asociados 
         private bool AsociarInsumoObjeto()
         {
             // Consulta para verificar si el usuario tiene permisos
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sSql = "INSERT INTO tblPanelInsumo (IdPanel,IdInsumo,Cantidad) " +
-                              "VALUES (@IdPanel,@IdInsumo,@cantidad)";
+                string sSql = "INSERT INTO tblPanelInsumo (IdPanel,IdInsumo) " +
+                              "VALUES (@IdPanel,@IdInsumo)";
 
                 using (SqlCommand cmd = new SqlCommand(sSql, connection))
                 {
                     connection.Open();
                     cmd.Parameters.AddWithValue("@IdPanel", TextIdNum.Text);
                     cmd.Parameters.AddWithValue("@IdInsumo", TextIdInsumo.Text);
-                    cmd.Parameters.AddWithValue("@cantidad", tbCantidadInsumo.Text);
 
                     // Variable para validar en depuracion si se afecto alguna linea con este query 
                     int CantidadFilasAfectada = cmd.ExecuteNonQuery();
@@ -3333,6 +3355,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             }
         }
 
+        // para objetos asociados 
         private bool EliminarInsumoAsociado()
         {
             bool exito = false;
@@ -3368,6 +3391,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             return exito;
         }
 
+        // para objetos asociados 
         private bool ValidarExistenciaInsumoObjeto()
         {
             bool existe = false;
@@ -3397,6 +3421,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             return existe;
         }
 
+        // para objetos asociados 
         private bool ValidarExistenciaInsumoObjeto1()
         {
             bool existe = false;
@@ -3425,6 +3450,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             return existe;
         }
 
+        // para objetos asociados 
         private void ActualizarCampoAplicaPSl(int ApuntaPSL)
         {
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -3446,6 +3472,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             }
         }
 
+        // para objetos asociados 
         protected void DataGridInsumosObeto_ItemCommand(object source, DataGridCommandEventArgs e)
         {
             if (e.CommandName == "InsumoAsociado")
@@ -3472,18 +3499,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
 
 
-                TextIdInsumo.Text = row.Cells[1].Text;
-                TextInRelOtNoOai.Text = row.Cells[2].Text;
-                TextCodPSL.Text = row.Cells[3].Text;
+                TextIdInsumoPrueba.Text = row.Cells[1].Text;
+                TextInRelOtNoOaiPrueba.Text = row.Cells[2].Text;
+                TextCodPSLPrueba.Text = row.Cells[3].Text;
 
 
-                btnEliminarInsumo.Enabled = true;
-                btnEliminarInsumo.CssClass = "btn btn-sm btn-outline-danger";
+                btnEliminarInsumo.Enabled = false;
+                btnEliminarInsumo.CssClass = "btn btn-sm btn-outline-secondary";
 
 
             }
         }
 
+        // para objetos asociados 
         protected void btnAceptartProcesoExitoso_Click(object sender, EventArgs e)
         {
             LoadData();
