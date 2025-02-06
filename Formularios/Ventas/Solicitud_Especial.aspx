@@ -541,11 +541,15 @@
                                     </div>
 
                                     <div class="row">
+                                        
                                         <div class="col-12-sm">
                                             <div class="input-group input-group-sm  mb-2 gap-2">
                                                 <asp:Label ID="lbMedidas" class="col-form-label-sm" Text="Medidas(Cms)" runat="server"></asp:Label>
+                                                <span style="padding-top:0.5rem;">A</span>
                                                 <asp:TextBox ID="tbAncho" type="text" class="form-control form-control-sm " runat="server" placeholder="Ancho" title="Ancho" disabled="disabled"></asp:TextBox>
+                                                <span style="padding-top:0.5rem;">H</span>
                                                 <asp:TextBox ID="tbAltura" type="text" class="form-control form-control-sm " runat="server" placeholder="Altura" title="Alto" disabled="disabled"></asp:TextBox>
+                                                <span style="padding-top:0.5rem;">P</span>
                                                 <asp:TextBox ID="tbProfundidad" type="text" class="form-control form-control-sm " runat="server" placeholder="profundidad" title="Profundidad" disabled="disabled"></asp:TextBox>
                                             </div>
                                         </div>
@@ -1448,12 +1452,15 @@
                                                         <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid1" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" DataSourceID="CargarDesarrollos" OnItemDataBound="DataGridDesarrollo_ItemDataBound" OnItemCommand="DataGridSolicitudPE_LinkButton">
                                                             <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                             <Columns>
+
                                                                 <asp:TemplateColumn HeaderText=". . .">
                                                                     <ItemTemplate>
                                                                         <asp:LinkButton ID="lnkView" runat="server" CommandName="VerDesarrollo" CssClass="Tam link-button" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square'></i>"
                                                                             OnClientClick='<%# "return function() { return activarTab(\"BitacoraDesarrollo-content\", \"" + Eval("ID_Solicitud") + "\"); }();" %>' />
                                                                     </ItemTemplate>
                                                                 </asp:TemplateColumn>
+
+                                                                 <asp:BoundColumn DataField="Turno"  HeaderText="Tur" ItemStyle-CssClass="auto-width-column" />
 
                                                                 <asp:BoundColumn DataField="ID_Solicitud" HeaderText="ID" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Proyecto" HeaderText="Proyecto" ItemStyle-CssClass="auto-width-column" />
@@ -1492,14 +1499,14 @@
                                                             </SelectParameters>
                                                         </asp:SqlDataSource>
 
-                                                        <asp:SqlDataSource ID="CargarDesarrollos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="   SELECT *
+                                                        <asp:SqlDataSource ID="CargarDesarrollos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="   SELECT  ROW_NUMBER() OVER (ORDER BY Fecha_Ingreso) AS Turno, *
                                                         FROM tblSoliciDiseEspe  WHERE Terminado = 0  AND TipoSolicitud ='DESARROLLO' AND Asesor =@Asesor ORDER BY Fecha_Ingreso ASC;">
                                                             <SelectParameters>
                                                                 <asp:ControlParameter ControlID="tbNombreAsesor" PropertyName="Text" Name="Asesor"></asp:ControlParameter>
                                                             </SelectParameters>
                                                         </asp:SqlDataSource>
 
-                                                        <asp:SqlDataSource ID="SolUnica" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT * FROM tblSoliciDiseEspe
+                                                        <asp:SqlDataSource ID="SolUnica" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT  ROW_NUMBER() OVER (ORDER BY Fecha_Ingreso) AS Turno, * FROM tblSoliciDiseEspe
                                                       WHERE Terminado = 0  AND Dirigidoa='DESARROLLO DE PRODUCTO'  AND  ProgramadoVentas = 1  
                                                        AND TipoSolicitud ='DESARROLLO' And ID_Solicitud = @IdSolcicitud ORDER BY Fecha_Ingreso ASC ">
                                                             <SelectParameters>
@@ -1593,6 +1600,8 @@
                                                                     </ItemTemplate>
                                                                 </asp:TemplateColumn>
 
+                                                                 <asp:BoundColumn DataField="Turno"  HeaderText="Tur" ItemStyle-CssClass="auto-width-column" />
+
 
                                                                 <asp:BoundColumn DataField="ID_Solicitud" HeaderText="ID" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Proyecto" HeaderText="Proyecto" ItemStyle-CssClass="auto-width-column" />
@@ -1630,14 +1639,14 @@
                                                             </SelectParameters>
                                                         </asp:SqlDataSource>
 
-                                                        <asp:SqlDataSource ID="CargarCotizaciones" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="   SELECT *
+                                                        <asp:SqlDataSource ID="CargarCotizaciones" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="   SELECT ROW_NUMBER() OVER (ORDER BY Fecha_Ingreso) AS Turno, *
                                                         FROM tblSoliciDiseEspe  WHERE Terminado = 0  AND TipoSolicitud ='COTIZACIÓN' AND Asesor =@Asesor ORDER BY Fecha_Ingreso ASC;">
                                                             <SelectParameters>
                                                                 <asp:ControlParameter ControlID="tbNombreAsesor" PropertyName="Text" Name="Asesor"></asp:ControlParameter>
                                                             </SelectParameters>
                                                         </asp:SqlDataSource>
 
-                                                        <asp:SqlDataSource ID="CotUnica" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT * FROM tblSoliciDiseEspe
+                                                        <asp:SqlDataSource ID="CotUnica" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="SELECT ROW_NUMBER() OVER (ORDER BY Fecha_Ingreso) AS Turno, * FROM tblSoliciDiseEspe
                                                       WHERE Terminado = 0  AND Dirigidoa='DESARROLLO DE PRODUCTO'  AND  ProgramadoVentas = 1  
                                                        AND TipoSolicitud ='COTIZACIÓN' And ID_Solicitud = @IdSolcicitud ORDER BY Fecha_Ingreso ASC ">
                                                             <SelectParameters>

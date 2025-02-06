@@ -1,30 +1,16 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Office.Word;
-using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
-using MathNet.Numerics;
-using Microsoft.Office.Interop.Excel;
-using Newtonsoft.Json;
-using NPOI.SS.Formula.Functions;
+﻿using OfficeOpenXml;
 using OfficeOpenXml.Style;
-using OfficeOpenXml;
-using SISTEMA_INTEGRAL_DUCON.Formularios.Ventas;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics.Contracts;
+using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using static SISTEMA_INTEGRAL_DUCON.Formularios.Ventas.Clientes;
 using Button = System.Web.UI.WebControls.Button;
 using CheckBox = System.Web.UI.WebControls.CheckBox;
 using Control = System.Web.UI.Control;
@@ -32,7 +18,6 @@ using DataTable = System.Data.DataTable;
 using Label = System.Web.UI.WebControls.Label;
 using ListItem = System.Web.UI.WebControls.ListItem;
 using TextBox = System.Web.UI.WebControls.TextBox;
-using System.Drawing;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
@@ -695,12 +680,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void DataGridDesarrollo_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
+            
 
 
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-
-
                 // Obtener los valores de las columnas ocultas
                 int programadoVentas = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "ProgramadoVentas"));
                 object pausadoObj = DataBinder.Eval(e.Item.DataItem, "Pausado");
@@ -808,7 +792,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     // Cargar Desarrollos
 
-                    CargarDesarrollos.SelectCommand = " SELECT * FROM tblSoliciDiseEspe  " +
+                    CargarDesarrollos.SelectCommand = " SELECT ROW_NUMBER() OVER (ORDER BY Fecha_Ingreso) AS Turno, * FROM tblSoliciDiseEspe  " +
                                                                    " WHERE Terminado = 0 AND Dirigidoa='DESARROLLO DE PRODUCTO'AND  ProgramadoVentas = 1  " +
                                                                    " AND TipoSolicitud ='DESARROLLO' ORDER BY Fecha_Ingreso ASC ";
 
@@ -1129,36 +1113,36 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
 
-                string IdSolicitud = row.Cells[1].Text;
+                string IdSolicitud = row.Cells[2].Text;
                 Session["Id_Solicitud"] = IdSolicitud;
                 ID_Sol_Dib.Text = IdSolicitud;
-                string NombreProyecto = row.Cells[2].Text;
-                string Asesor = row.Cells[3].Text;
-                string FechaIngreso = row.Cells[4].Text;
+                string NombreProyecto = row.Cells[3].Text;
+                string Asesor = row.Cells[4].Text;
+                string FechaIngreso = row.Cells[5].Text;
                 DateTime FechaIngresoForm = DateTime.Parse(FechaIngreso);
-                string Dirigidoa = row.Cells[5].Text;
-                string Tipo = row.Cells[6].Text;
-                string RealizadoPor = row.Cells[7].Text;
-                string termiVenta = row.Cells[8].Text;
-                string pausado = row.Cells[9].Text;
-                string TermiDiseño = row.Cells[10].Text;
-                string FechaEntrega = row.Cells[11].Text;
+                string Dirigidoa = row.Cells[6].Text;
+                string Tipo = row.Cells[7].Text;
+                string RealizadoPor = row.Cells[8].Text;
+                string termiVenta = row.Cells[9].Text;
+                string pausado = row.Cells[10].Text;
+                string TermiDiseño = row.Cells[11].Text;
+                string FechaEntrega = row.Cells[12].Text;
                 DateTime FechaEntregaForm = DateTime.Parse(FechaEntrega);
-                string FechaRespuesta = row.Cells[12].Text;
+                string FechaRespuesta = row.Cells[13].Text;
                 DateTime FechaRespuestaForm = DateTime.Parse(FechaRespuesta);
-                string SoliOrigen = row.Cells[13].Text;
-                string Ciudad = row.Cells[14].Text;
-                string Viatico = row.Cells[15].Text;
-                string Cotizacion = row.Cells[16].Text;
-                string Cliente = row.Cells[17].Text;
-                string Contacto = row.Cells[18].Text;
-                string Telefono = row.Cells[19].Text;
-                string Celular = row.Cells[20].Text;
-                string Mail = row.Cells[21].Text;
-                string Direccion = row.Cells[22].Text;
-                string SegPausa = row.Cells[23].Text;
-                string DesComplejo = row.Cells[24].Text;
-                string Urgente = row.Cells[25].Text;
+                string SoliOrigen = row.Cells[14].Text;
+                string Ciudad = row.Cells[15].Text;
+                string Viatico = row.Cells[16].Text;
+                string Cotizacion = row.Cells[17].Text;
+                string Cliente = row.Cells[18].Text;
+                string Contacto = row.Cells[19].Text;
+                string Telefono = row.Cells[20].Text;
+                string Celular = row.Cells[21].Text;
+                string Mail = row.Cells[22].Text;
+                string Direccion = row.Cells[23].Text;
+                string SegPausa = row.Cells[24].Text;
+                string DesComplejo = row.Cells[25].Text;
+                string Urgente = row.Cells[26].Text;
 
                 lbNumeroSolicitud.Text = IdSolicitud;
                 tbProyecto.Text = NombreProyecto;
@@ -1416,36 +1400,36 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 //se usa Para darle un color a la fila seleccionada  anderson
                 e.Item.CssClass = "fila-seleccionada1";
 
-                string IdSolicitud = row.Cells[1].Text;
+                string IdSolicitud = row.Cells[2].Text;
                 Session["Id_Solicitud"] = IdSolicitud;
                 ID_Cot_Dib.Text = IdSolicitud;
-                string NombreProyecto = row.Cells[2].Text;
-                string Asesor = row.Cells[3].Text;
-                string FechaIngreso = row.Cells[4].Text;
+                string NombreProyecto = row.Cells[3].Text;
+                string Asesor = row.Cells[4].Text;
+                string FechaIngreso = row.Cells[5].Text;
                 DateTime FechaIngresoForm = DateTime.Parse(FechaIngreso);
-                string Dirigidoa = row.Cells[5].Text;
-                string Tipo = row.Cells[6].Text;
-                string RealizadoPor = row.Cells[7].Text;
-                string termiVenta = row.Cells[8].Text;
-                string pausado = row.Cells[9].Text;
-                string TermiDiseño = row.Cells[10].Text;
-                string FechaEntrega = row.Cells[11].Text;
+                string Dirigidoa = row.Cells[6].Text;
+                string Tipo = row.Cells[7].Text;
+                string RealizadoPor = row.Cells[8].Text;
+                string termiVenta = row.Cells[9].Text;
+                string pausado = row.Cells[10].Text;
+                string TermiDiseño = row.Cells[11].Text;
+                string FechaEntrega = row.Cells[12].Text;
                 DateTime FechaEntregaForm = DateTime.Parse(FechaEntrega);
-                string FechaRespuesta = row.Cells[12].Text;
+                string FechaRespuesta = row.Cells[13].Text;
                 DateTime FechaRespuestaForm = DateTime.Parse(FechaRespuesta);
-                string SoliOrigen = row.Cells[13].Text;
-                string Ciudad = row.Cells[14].Text;
-                string Viatico = row.Cells[15].Text;
-                string Cotizacion = row.Cells[16].Text;
-                string Cliente = row.Cells[17].Text;
-                string Contacto = row.Cells[18].Text;
-                string Telefono = row.Cells[19].Text;
-                string Celular = row.Cells[20].Text;
-                string Mail = row.Cells[21].Text;
-                string Direccion = row.Cells[22].Text;
-                string SegPausa = row.Cells[23].Text;
-                string DesComplejo = row.Cells[24].Text;
-                string Urgente = row.Cells[25].Text;
+                string SoliOrigen = row.Cells[14].Text;
+                string Ciudad = row.Cells[15].Text;
+                string Viatico = row.Cells[16].Text;
+                string Cotizacion = row.Cells[17].Text;
+                string Cliente = row.Cells[18].Text;
+                string Contacto = row.Cells[19].Text;
+                string Telefono = row.Cells[20].Text;
+                string Celular = row.Cells[21].Text;
+                string Mail = row.Cells[22].Text;
+                string Direccion = row.Cells[23].Text;
+                string SegPausa = row.Cells[24].Text;
+                string DesComplejo = row.Cells[25].Text;
+                string Urgente = row.Cells[26].Text;
 
                 lbNumeroSolicitud.Text = IdSolicitud;
                 tbProyecto.Text = NombreProyecto;
@@ -4504,7 +4488,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             // Cargar Desarrollos 
 
-            CargarDesarrollos.SelectCommand = " SELECT * FROM tblSoliciDiseEspe  " +
+            CargarDesarrollos.SelectCommand = " SELECT ROW_NUMBER() OVER (ORDER BY Fecha_Ingreso) AS Turno,  * FROM tblSoliciDiseEspe  " +
                                                            " WHERE Terminado = 0 AND Dirigidoa='DESARROLLO DE PRODUCTO'AND  ProgramadoVentas = 1  " +
                                                            " AND TipoSolicitud ='DESARROLLO' ORDER BY Fecha_Ingreso ASC ";
 
@@ -4515,7 +4499,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Cargar Cotizaciones 
 
-            CargarCotizaciones.SelectCommand = "SELECT * FROM tblSoliciDiseEspe " +
+            CargarCotizaciones.SelectCommand = "SELECT ROW_NUMBER() OVER (ORDER BY Fecha_Ingreso) AS Turno, * FROM tblSoliciDiseEspe " +
                                                "WHERE Terminado = 0 AND TipoSolicitud ='COTIZACIÓN' AND Dirigidoa = 'DESARROLLO DE PRODUCTO' " +
                                                "AND ProgramadoVentas = 1 ORDER BY Fecha_Ingreso ASC;";
 
@@ -4531,7 +4515,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             // Cargar Desarrollos 
 
-            CargarDesarrollos.SelectCommand = " SELECT * FROM tblSoliciDiseEspe  " +
+            CargarDesarrollos.SelectCommand = " SELECT ROW_NUMBER() OVER (ORDER BY Fecha_Ingreso) AS Turno, * FROM tblSoliciDiseEspe  " +
                                                            " WHERE Terminado = 0 AND Dirigidoa='DESARROLLO DE PRODUCTO'AND  ProgramadoVentas = 1  " +
                                                            " AND TipoSolicitud ='DESARROLLO' ORDER BY Fecha_Ingreso ASC ";
 
@@ -4547,7 +4531,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Cargar Cotizaciones 
 
-            CargarCotizaciones.SelectCommand = "SELECT * FROM tblSoliciDiseEspe " +
+            CargarCotizaciones.SelectCommand = "SELECT ROW_NUMBER() OVER (ORDER BY Fecha_Ingreso) AS Turno, * FROM tblSoliciDiseEspe " +
                                                "WHERE Terminado = 0 AND TipoSolicitud ='COTIZACIÓN' AND Dirigidoa = 'DESARROLLO DE PRODUCTO' " +
                                                "AND ProgramadoVentas = 1 ORDER BY Fecha_Ingreso ASC;";
 
@@ -5789,7 +5773,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 connectionSID.Open();
 
-                string sSql = "SELECT * FROM tblSoliciDiseEspe WHERE ID_Solicitud = @IdSolcitud ORDER BY Fecha_Ingreso ASC";
+                string sSql = "SELECT ROW_NUMBER() OVER (ORDER BY Fecha_Ingreso) AS Turno, * FROM tblSoliciDiseEspe WHERE ID_Solicitud = @IdSolcitud ORDER BY Fecha_Ingreso ASC";
 
                 using (SqlCommand cmd = new SqlCommand(sSql, connectionSID))
                 {
