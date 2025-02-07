@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../../Recursos/CSS/Ventas/AdjuntarDocumento.css" />
     <link rel="icon" href="https://neufert-cdn.archdaily.net/uploads/account_logo/logo/736/large_ADCO__Logo__Ducon.png" type="image/x-icon" />
     <title>Documentos Solicitud Especial</title>
+
 </head>
 <body translate="no">
     <form id="form1" runat="server">
@@ -19,10 +20,11 @@
 
             <div class="row">
                 <div class="col-md-12">
-                     <h4 class="text-center p-1 mt-2"><asp:Literal runat="server" ID="TituloSolictud"></asp:Literal></h4>
+                    <h4 class="text-center p-1 mt-2">
+                        <asp:Literal runat="server" ID="TituloSolictud"></asp:Literal></h4>
                 </div>
             </div>
-           
+
             <div class="row justify-content-center p-2 m-2">
                 <div class="border rounded p-2">
                     <div class="row">
@@ -99,8 +101,8 @@
                     <div class="input-group input-group-sm gap-2 ">
                         <asp:FileUpload CssClass="form-control" ID="FileUpload1" runat="server" />
                         <asp:Button ID="ValidarEspecial" CssClass="btn btn-outline-success" runat="server" Text="ValidarEspecial" OnClick="ValidarEspecial_Click" />
-                        <asp:Button ID="Button1" CssClass="btn btn-outline-primary" runat="server" Text="Adjuntar" OnClick="AdjuntarDocumento" />
-                        <asp:Button ID="bntElimnar" CssClass="btn btn-outline-danger" runat="server" Text="Elimnar" OnClick="EliminarDocumento" />
+                        <asp:Button ID="Button1" CssClass="btn btn-outline-primary" runat="server" Text="Adjuntar" OnClick="AdjuntarDocumento" OnClientClick="return validarDocumento();" />
+                        <asp:Button ID="bntElimnar" CssClass="btn btn-outline-danger" runat="server" Text="Elimnar" OnClick="EliminarDocumento" OnClientClick="return ValidarEliminacion(event);" />
                     </div>
 
 
@@ -134,29 +136,31 @@
                 </div>
             </div>
 
+          
+
         </div>
 
         <script type="text/javascript">
 
-             //funcion para cambio de documento y ocultar Validar Especial si no es necesario 
-             function ddlTipoDocChanged() {
+            //funcion para cambio de documento y ocultar Validar Especial si no es necesario 
+            function ddlTipoDocChanged() {
 
-                 var ddlTipoDoc = document.getElementById('<%= ddlTipoDoc.ClientID %>');
+                var ddlTipoDoc = document.getElementById('<%= ddlTipoDoc.ClientID %>');
                  var validarEspecial = document.getElementById('<%= ValidarEspecial.ClientID %>');
 
-                 if (ddlTipoDoc.value !== '') {
-                     validarEspecial.style.display = 'none';
+                if (ddlTipoDoc.value !== '') {
+                    validarEspecial.style.display = 'none';
 
-                 } else {
-                     validarEspecial.style.display = 'block';
+                } else {
+                    validarEspecial.style.display = 'block';
 
-                 }
-             }
-         </script>
+                }
+            }
+        </script>
 
         <script>
 
-        
+
             // Mostrar y Ocultar  acabados plano
             function mostrarModal() {
                 $('#ModalInfoEspecial').modal('show');
@@ -173,6 +177,33 @@
 
             });
         </script>
+
+        <script type="text/javascript">
+            function validarDocumento() {
+                var tipoDocumento = document.getElementById('<%= ddlTipoDoc.ClientID %>').value; // Asegúrate de reemplazar "ddlTipoDocumento" con el ID correcto de tu dropdown o input
+
+                if (tipoDocumento === " " || tipoDocumento === "--Seleccione--") {
+                    alert("Debe seleccionar un tipo de documento antes de adjuntar.");
+                    ddlTipoDoc.focus();
+                    return false; // Evita que se ejecute el evento OnClick del servidor
+                }
+                return true; // Permite que se ejecute el evento OnClick del servidor
+            }
+
+            // funcion para validar confirmar eliminacion 
+            function ValidarEliminacion(event) {
+                var mensaje = "Está seguro que desea eliminar el archivo seleccionado ? ";
+
+                var result = confirm(mensaje);
+                if (result) {
+
+                    $(event.target).removeAttr('onclick');
+                    $(event.target).click();
+                }
+                return false;
+            }
+        </script>
+
 
     </form>
 

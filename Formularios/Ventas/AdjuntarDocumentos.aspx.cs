@@ -160,7 +160,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     }
                 }
 
-                
 
 
 
@@ -375,7 +374,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     Response.AppendHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
 
                     // Escribir el archivo al flujo de respuesta
-                    Response.WriteFile(rutaArchivo);
+                    Response.WriteFile(rutaArchivo);   //Agregar Mensaje salida si el archivo esta en uso 
 
                     // Enviar todos los encabezados al cliente antes de finalizar la respuesta
                     Response.Flush();
@@ -665,6 +664,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 string urlRedireccion = "Ventas/AdjuntarDocumentos.aspx";
                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
             }
-        }
+        } 
     }
 }
