@@ -51,6 +51,7 @@ using NPOI.XSSF.UserModel;
 using DocumentFormat.OpenXml.Drawing;
 using Path = System.IO.Path;
 using TableCell = System.Web.UI.WebControls.TableCell;
+using System.Windows.Input;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
@@ -16073,8 +16074,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                               "SELECT tblPlano.Id_OT, tblPlano.COnsecutivo_Pedido, tblPlano.Plano, tblPanel.Id_Panel, tblPanel.Ancho," +
                               "tblPanel.Descripcion_Panel, tblPlano_Panel.Cantidad, tblGrupoObjeto.Descripcion_Grupo, tblPanel.Id_Numerico," +
                               "tblPanel.Altura, tblPanel.Profundidad, tblLinea.Descripcion_Linea, tblPanel.Precio_Venta, tblGrupoObjeto.Cotizar " +
-                              "FROM tblPlano INNER JOIN ((tblLinea INNER JOIN (tblGrupoObjeto INNER JOIN tblPanel ON tblGrupoObjeto.ID_GrupoObjeto = tblPanel.Id_GrupoObjeto)" +
-                              "ON tblLinea.Id_Linea = tblPanel.Id_Linea) INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum)" +
+                              "FROM tblPlano INNER JOIN ((tblLinea INNER JOIN (tblGrupoObjeto INNER JOIN tblPanel ON tblGrupoObjeto.ID_GrupoObjeto = tblPanel.Id_GrupoObjeto) " +
+                              "ON tblLinea.Id_Linea = tblPanel.Id_Linea) INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum) " +
                               "ON tblPlano.Plano = tblPlano_Panel.Id_Plano WHERE (((tblPlano.Plano)= @plano )) ";
 
                 using (SqlCommand cmd = new SqlCommand(sSql, connection))
@@ -18352,7 +18353,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 string Id_Acabado = row["Id_Acabado"].ToString();
                 string GruposSag = row["GruposSag"].ToString();
-                string idPanel = row["ColorGrupoSag"].ToString();
+                string ColorGrupoSag = row["ColorGrupoSag"].ToString();
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -18365,6 +18366,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
                         command.Parameters.AddWithValue("@Id_Acabado", Id_Acabado);
                         command.Parameters.AddWithValue("@GruposSag", GruposSag);
+                        command.Parameters.AddWithValue("@ColorGrupoSag", ColorGrupoSag);
 
                         try
                         {
@@ -18610,7 +18612,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     string query = @"INSERT INTO tblReporteModuloMedidaFinal (OT,Pedido,Plano,Item_Modulo,Descripción,Ancho, 
                                    Altura,Cant,Familia_Modulo,UND , ValorUnidad, AreaProduccion, SubTotal, Reporte,Orden,ID_FamiliaModulo)
-                                   VALUES (@OT, @Pedido, @Plano, @Item_Modulo, Descripción, @Ancho, @Altura, @Cant, @Familia_Modulo, @UND, @ValorUnidad, @AreaProduccion, @SubTotal,Reporte, 
+                                   VALUES (@OT, @Pedido, @Plano, @Item_Modulo, @Descripción, @Ancho, @Altura, @Cant, @Familia_Modulo, @UND, @ValorUnidad, @AreaProduccion, @SubTotal,@Reporte, 
                                    @Orden, @ID_FamiliaModulo)";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
