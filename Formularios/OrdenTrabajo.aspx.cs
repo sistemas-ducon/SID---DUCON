@@ -51,6 +51,7 @@ using NPOI.XSSF.UserModel;
 using DocumentFormat.OpenXml.Drawing;
 using Path = System.IO.Path;
 using TableCell = System.Web.UI.WebControls.TableCell;
+using System.Windows.Input;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
@@ -2244,7 +2245,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         btnCotizacion.Style["font-size"] = "0.5rem"; // Cambia el tamaño de letra a 1rem
                         btnCotizacion.Text = "Descargar Cot";
-                        
+
 
 
 
@@ -2282,7 +2283,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
             {
-                colCotizacion.Attributes["class"] = "col-11"; 
+                colCotizacion.Attributes["class"] = "col-11";
                 colControlDibujo.Attributes["class"] = "col-1";
 
                 btnControlDibujo.Enabled = false;
@@ -2295,7 +2296,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 btnCotizacion.Text = "Descargar Cotización";
             }
 
-            
+
 
             calcularDescuento();
             calcularGranTotal();
@@ -3090,7 +3091,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         public bool ValidarAfectaBolsa()
         {
-            bool afectaBolsa = false; 
+            bool afectaBolsa = false;
             string query = "SELECT AfectaBolsa FROM tblPlano WHERE Plano = @Plano";
 
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -4726,7 +4727,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 BtnIrObjAnt.Enabled = true;
                 BtnIrObjAnt.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
-  
+
 
             }
             else
@@ -11721,7 +11722,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
-            
+
         // DESCARGAR LA COTIZACION EN EL TAP DE PLANO 
         protected void BtnVisGenCot_Click(object sender, EventArgs e)
         {
@@ -13480,9 +13481,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Correo Asesor de la OT 
                         string CorreoAsesorOT = ConsultarAsesorCorreoOT();
 
+                        // Correo Asesor de la OT 
+                        string CorreoDibujanteOT = ConsultarDibujanteCorreoOT();
+
                         // Validar si el dibujante debe recibir un correo ???? 
 
-                        destinatarios += CorreoAsesorOT + ";" + correosExportarObra;
+                        destinatarios += CorreoDibujanteOT + ";" +  CorreoAsesorOT + ";" + correosExportarObra;
 
                         // Se consulta el consolidado del despice para mostrar en el correo 
                         string resumenDespice = ObtenerResumenDespice(txtPlano.Text);
@@ -14881,11 +14885,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 //  procedimiento almacenado original
-                //string storedProcedureName = "sp_GenerarRegistrosParaReportesPlano";
+                string storedProcedureName = "sp_GenerarRegistrosParaReportesPlano";
 
 
                 // Nombre del procedimiento almacenado mofificado Anderson  
-                string storedProcedureName = "sp_GenerarRegistrosParaReportesPlanoDOS ";
+                // string storedProcedureName = "sp_GenerarRegistrosParaReportesPlanoDOS ";
 
                 using (SqlCommand cmd = new SqlCommand(storedProcedureName, connection))
                 {
@@ -15456,7 +15460,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     command.CommandType = CommandType.StoredProcedure;
 
                     // Definir los parámetros del procedimiento almacenado
-                    command.Parameters.AddWithValue("@Destinatarios", destinatarios);
+                    command.Parameters.AddWithValue("@Destinatarios", destinatarios.Replace(";;",";"));
                     command.Parameters.AddWithValue("@asunto", "Producir Pedido: " + dtacboTipoPedido.SelectedItem.Text + "  " + tbOT.Text + "-" + tbPed1.Text + tbObra.Text);
                     command.Parameters.AddWithValue("@cuerpo", cuerpo);
                     command.Parameters.AddWithValue("@adjuntos", "");
@@ -15511,10 +15515,37 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = " SELECT * FROM tblAsesorComercial WHERE CodigoAsesor = @CodigoAse ";
+                string query = " SELECT Mail FROM tblAsesorComercial WHERE Cedula = @CodigoAse ";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Mail", txtAsesor.Text);
+                    command.Parameters.AddWithValue("@CodigoAse", txtAsesor.Text);
+                    try
+                    {
+                        connection.Open();
+                        correo = Convert.ToString(command.ExecuteScalar());
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejar la excepción 
+                        //Console.WriteLine("Error al ejecutar la consulta: " + ex.Message);
+                    }
+                }
+            }
+
+            return correo;
+        }
+
+        public string ConsultarDibujanteCorreoOT()
+        {
+            string correo = "";
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = " SELECT Mail FROM tblEmpleado WHERE Cedula = @cedula ";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@cedula", Session["CedulaLogeada"].ToString());
                     try
                     {
                         connection.Open();
@@ -16043,8 +16074,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                               "SELECT tblPlano.Id_OT, tblPlano.COnsecutivo_Pedido, tblPlano.Plano, tblPanel.Id_Panel, tblPanel.Ancho," +
                               "tblPanel.Descripcion_Panel, tblPlano_Panel.Cantidad, tblGrupoObjeto.Descripcion_Grupo, tblPanel.Id_Numerico," +
                               "tblPanel.Altura, tblPanel.Profundidad, tblLinea.Descripcion_Linea, tblPanel.Precio_Venta, tblGrupoObjeto.Cotizar " +
-                              "FROM tblPlano INNER JOIN ((tblLinea INNER JOIN (tblGrupoObjeto INNER JOIN tblPanel ON tblGrupoObjeto.ID_GrupoObjeto = tblPanel.Id_GrupoObjeto)" +
-                              "ON tblLinea.Id_Linea = tblPanel.Id_Linea) INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum)" +
+                              "FROM tblPlano INNER JOIN ((tblLinea INNER JOIN (tblGrupoObjeto INNER JOIN tblPanel ON tblGrupoObjeto.ID_GrupoObjeto = tblPanel.Id_GrupoObjeto) " +
+                              "ON tblLinea.Id_Linea = tblPanel.Id_Linea) INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum) " +
                               "ON tblPlano.Plano = tblPlano_Panel.Id_Plano WHERE (((tblPlano.Plano)= @plano )) ";
 
                 using (SqlCommand cmd = new SqlCommand(sSql, connection))
@@ -18322,7 +18353,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 string Id_Acabado = row["Id_Acabado"].ToString();
                 string GruposSag = row["GruposSag"].ToString();
-                string idPanel = row["ColorGrupoSag"].ToString();
+                string ColorGrupoSag = row["ColorGrupoSag"].ToString();
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -18335,6 +18366,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
                         command.Parameters.AddWithValue("@Id_Acabado", Id_Acabado);
                         command.Parameters.AddWithValue("@GruposSag", GruposSag);
+                        command.Parameters.AddWithValue("@ColorGrupoSag", ColorGrupoSag);
 
                         try
                         {
@@ -18580,7 +18612,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     string query = @"INSERT INTO tblReporteModuloMedidaFinal (OT,Pedido,Plano,Item_Modulo,Descripción,Ancho, 
                                    Altura,Cant,Familia_Modulo,UND , ValorUnidad, AreaProduccion, SubTotal, Reporte,Orden,ID_FamiliaModulo)
-                                   VALUES (@OT, @Pedido, @Plano, @Item_Modulo, Descripción, @Ancho, @Altura, @Cant, @Familia_Modulo, @UND, @ValorUnidad, @AreaProduccion, @SubTotal,Reporte, 
+                                   VALUES (@OT, @Pedido, @Plano, @Item_Modulo, @Descripción, @Ancho, @Altura, @Cant, @Familia_Modulo, @UND, @ValorUnidad, @AreaProduccion, @SubTotal,@Reporte, 
                                    @Orden, @ID_FamiliaModulo)";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
@@ -22227,7 +22259,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private void ActualizarOtBolsa1(string PlanoBolsa, string ID_Grupo, string Cantidad, string Subtotal)
         {
-          
+
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -22257,7 +22289,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (OT != "Nula" && btnOk.Enabled == false /*falta el parametro modificar bolse*/)
             {
-               
+
                 string mensajeExito = "No se puede Modificar Ningún Objeto, ya que el plano:  " + txtPlano.Text.Trim() + " esta vinculado a un pedido aprobado para producción o esta afectando a alguna bolsa.";
                 string scriptExito = "alert('" + mensajeExito + "');";
                 ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
@@ -22279,12 +22311,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     //Realizamos el update afectaBolsa = 0
                     ActualizarAfectaBolsa(txtPlano.Text, false);
                     Operacion = "-";
+                    BtnAdiRemEleBol.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo ";
+                    BtnAdiRemEleBol.ToolTip = "Adicionar elementos de la Bolsa ";
                 }
                 else
                 {
                     //Realizamos el update afectaBolsa = 1
                     ActualizarAfectaBolsa(txtPlano.Text, true);
                     Operacion = "+";
+                    BtnAdiRemEleBol.CssClass = "btn btn-sm shadow button-enabled ColorNaranja ";
+                    BtnAdiRemEleBol.ToolTip = "Remover elementos de la Bolsa ";
                 }
 
                 CrearModificarBolsa(txtBolsa.Text,txtPlano.Text, Operacion);
@@ -22295,12 +22331,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         public void ActualizarAfectaBolsa(string plano, bool afectaBolsa)
         {
-          
+
             string query = "UPDATE tblPlano SET AfectaBolsa = @AfectaBolsa WHERE Plano = @Plano";
-             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
- 
+
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@AfectaBolsa", afectaBolsa);
                 command.Parameters.AddWithValue("@Plano", plano);
@@ -22310,7 +22346,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     connection.Open();
                     int rowsAffected = command.ExecuteNonQuery();
- 
+
                 }
                 catch (Exception ex)
                 {
@@ -22318,7 +22354,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     //Console.WriteLine("Error al actualizar AfectaBolsa: " + ex.Message);
                 }
             }
-     
+
         }
 
         private void CrearModificarBolsa(string planoBolsa, string PlanoTXT,string operacion)
@@ -22400,13 +22436,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
 
             }
-            else
-            {
-                string mensajeExito = "El plano no es una bolsa , y no tiene bolsa";
-                string scriptExito = "alert('" + mensajeExito + "');";
-                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
-                return;
-            }
+            //else
+            //{
+            //    string mensajeExito = "El plano no es una bolsa , y no tiene bolsa";
+            //    string scriptExito = "alert('" + mensajeExito + "');";
+            //    ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
+            //    return;
+            //}
 
         }
 
@@ -22720,7 +22756,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         ClientScript.RegisterStartupScript(this.GetType(), "Message", $"alert('{message}');", true);
 
-                        
+
                     }
                 }
             }
@@ -22792,7 +22828,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 tbUrlArchivo.Text = "";
             }
-            
+
             string script2 = @"mostrarModalControlDibujo();";
             ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModalControlDibujo", script2, true);
         }
@@ -22839,7 +22875,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 InsertarUrlArchivo();
                 // Mensaje de Insertad  con exito 
             }
-      
+
             Session["Id_OT2"] = tbOT.Text;
             Session["pedido2"] = ddlNumbers.SelectedItem.Text;
 
@@ -22919,7 +22955,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     cmd.Parameters.AddWithValue("@OT", tbOT.Text);
                     cmd.Parameters.AddWithValue("@PED", ddlNumbers.SelectedItem.Text);
                     cmd.Parameters.AddWithValue("@Url", tbUrlArchivo.Text);
-            
+
 
 
                     // Variable para validar en depuracion si se afecto alguna linea con este query 
@@ -22995,7 +23031,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
 }
-      
+
 
 
 
