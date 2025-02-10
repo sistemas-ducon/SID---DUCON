@@ -19892,22 +19892,29 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                            $"FROM tblGrupoObjeto INNER JOIN (tblPanel INNER JOIN tblPlano_Panel ON tblPanel.Id_Numerico = tblPlano_Panel.Id_PanelNum) ON tblGrupoObjeto.ID_GrupoObjeto = tblPanel.Id_GrupoObjeto " +
                            $"GROUP BY tblPlano_Panel.Id_Plano, tblGrupoObjeto.ID_GrupoObjeto, tblGrupoObjeto.Descripcion_Grupo, tblGrupoObjeto.GOBloqueaPedido " +
                            $"HAVING (tblPlano_Panel.Id_Plano='{plano}') ORDER BY tblGrupoObjeto.ID_GrupoObjeto ASC";
+
+                    List<(string ID_GrupoObjeto, int Cantidad)> datos = new List<(string, int)>();
+
                     using (SqlCommand cmdResumenPedido = new SqlCommand(sSql, conSID))
                     {
                         using (SqlDataReader rsResumenPedido = cmdResumenPedido.ExecuteReader())
                         {
-                            if (rsResumenPedido.HasRows)
+                            while (rsResumenPedido.Read())
                             {
-                                while (rsResumenPedido.Read())
-                                {
-                                    string updateSql = $"UPDATE tblOtBolsa SET otbolCantidadPedida = otbolCantidadPedida - {rsResumenPedido["Cantidad"]} " +
-                                                       $"WHERE otbolBolsa = '{bolsa}' AND otbolIDGrupoObjeto = {rsResumenPedido["ID_GrupoObjeto"]}";
-                                    EjecutarConsulta(updateSql, conSID);
-                                }
+                                datos.Add((rsResumenPedido["ID_GrupoObjeto"].ToString(), Convert.ToInt32(rsResumenPedido["Cantidad"])));
                             }
-                        }
+                        } //  Cierre del reader ANTES de ejecutar las consultas
+                    }
+
+                    //  Se ejecuta las consultas sin el DataReader abierto
+                    foreach (var dato in datos)
+                    {
+                        string updateSql = $"UPDATE tblOtBolsa SET otbolCantidadPedida = otbolCantidadPedida - {dato.Cantidad} " +
+                                           $"WHERE otbolBolsa = '{bolsa}' AND otbolIDGrupoObjeto = {dato.ID_GrupoObjeto}";
+                        EjecutarConsulta(updateSql, conSID);
                     }
                 }
+
 
                 // Mensaje de aviso
                 MessageBox.Show($"Favor AVISAR a PRODUCCIÓN que la Orden de Trabajo : {idOT} con el Pedido: {consecutivo} se le realizarán CAMBIOS", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
