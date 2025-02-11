@@ -9539,8 +9539,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             object result = findCommand.ExecuteScalar();
                             if (result != null && decimal.TryParse(result.ToString(), out decimal anchoDecimal))
                             {
-                                // Convertir el ancho dividiendo por 100 para obtener el valor final en centímetros
-                                ancho = anchoDecimal * 100; // Cambiar la lógica para que ancho sea 12 en lugar de 0.12
+                                
+                                    ancho = anchoDecimal; // Ya está en cm
+                                
                             }
                             else
                             {
