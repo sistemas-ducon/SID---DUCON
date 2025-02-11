@@ -2196,8 +2196,10 @@
         const primerDiaMes = new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1);
         const primerDiaMesFormateado = primerDiaMes.toISOString().slice(0, 10); // Formato: YYYY-MM-DD
 
-        // Formatear la fecha actual en formato "YYYY-MM-DD"
-        const fechaFormateada = fechaActual.toISOString().slice(0, 10);
+        // Sumar un día a la fecha actual
+        const fechaMasUnDia = new Date(fechaActual);
+        fechaMasUnDia.setDate(fechaMasUnDia.getDate() + 1);
+        const fechaFormateada = fechaMasUnDia.toISOString().slice(0, 10);
 
         // Asignar las fechas a los campos  visitas entre y fecha 
         document.getElementById("tbFechaIni").value = primerDiaMesFormateado;
