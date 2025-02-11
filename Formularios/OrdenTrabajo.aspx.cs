@@ -19853,19 +19853,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string nombreUsuario = Session["usuariologueado"].ToString();
             string mailUsuario = ObtenerMailUsuario(cedula);
             string afectaBolsa = "0";
+            string mensajePersonalizado = "";
 
-            // Cadena de conexión a las bases de datos
             string connectionStringISID = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
             string connectionStringSID = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
-            // Usar `using` para asegurar la correcta disposición de los recursos
             using (SqlConnection conISID = new SqlConnection(connectionStringISID))
             using (SqlConnection conSID = new SqlConnection(connectionStringSID))
             {
                 conISID.Open();
                 conSID.Open();
 
-                // Obtener la descripción del tipo de pedido y AfectaBolsa
                 string consultaTipoPedido = "SELECT Descripcion_TipoPedido, AfectaBolsa FROM tblTipoPedido WHERE ORIENTACION='COMERCIAL' ORDER BY Descripcion_TipoPedido ASC";
                 using (SqlCommand cmdTipoPedido = new SqlCommand(consultaTipoPedido, conISID))
                 {
@@ -19879,7 +19877,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
 
-                // Verificar si se puede detener el pedido
                 string sSql = $"SELECT * FROM tblDespacho WHERE OT='{idOT}' AND Pedido={consecutivo}";
                 using (SqlCommand cmd = new SqlCommand(sSql, conISID))
                 {
@@ -19887,28 +19884,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     {
                         if (!reader.HasRows)
                         {
-                            // Cerrar el DataReader antes de realizar otras operaciones
                             reader.Close();
+                            EjecutarConsulta($"UPDATE tblReporteOT SET Terminado_Diseño=0, ValorPedido=0, Terminada_Produccion=0 WHERE Id_OT='{idOT}' AND Consecutivo_Pedido={consecutivo}", conISID);
+                            EjecutarConsulta($"UPDATE tblOT SET Terminado_Diseño=0, Importacion=0, Terminada_Almacen=0, Terminada_Compras=0, Terminada_Produccion=0, Terminada_Despacho=0, Terminada_Instalacion=0, Terminada_Facturacion=0, Reactivada=1 WHERE Id_OT='{idOT}' AND Consecutivo_Pedido={consecutivo}", conSID);
 
-                            // Actualizar tblReporteOT
-                            sSql = $"UPDATE tblReporteOT SET Terminado_Diseño=0, ValorPedido=0, Terminada_Produccion=0 WHERE Id_OT='{idOT}' AND Consecutivo_Pedido={consecutivo}";
-                            EjecutarConsulta(sSql, conISID);
-
-                            // Actualizar tblOT
-                            sSql = $"UPDATE tblOT SET Terminado_Diseño=0, Importacion=0, Terminada_Almacen=0, Terminada_Compras=0, Terminada_Produccion=0, Terminada_Despacho=0, Terminada_Instalacion=0, Terminada_Facturacion=0, Reactivada=1 WHERE Id_OT='{idOT}' AND Consecutivo_Pedido={consecutivo}";
-                            EjecutarConsulta(sSql, conSID);
-
-                            MessageBox.Show($"Se ha parado satisfactoriamente el pedido: {idOT} - {consecutivo}. Se enviará correo electrónico de notificación", "Parar pedido", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         else
                         {
-                            MessageBox.Show($"Al pedido: {idOT} - {consecutivo}. Se le ha habilitado para despacho al menos un paquete. No se puede parar.", "Parar Pedido", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            mensajePersonalizado = $"El pedido {idOT} - {consecutivo} tiene paquetes habilitados para despacho. No se puede parar.";
+                            RedirigirConMensaje(mensajePersonalizado, "OrdenTrabajo.aspx");
                             return;
                         }
                     }
                 }
 
-                // Eliminar de la base de datos los reportes relacionados
+                // Código de eliminación de registros
                 EjecutarConsulta($"DELETE FROM tblReporteDespiece WHERE id_Plano='{plano}'", conSID);
                 EjecutarConsulta($"DELETE FROM tblReporteMedidasdeCorte WHERE OT='{idOT}' AND Pedido={consecutivo}", conSID);
                 EjecutarConsulta($"DELETE FROM tblEmpaque WHERE Id_OT='{idOT}' AND Pedido={consecutivo}", conSID);
@@ -19948,11 +19938,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
 
 
-                // Mensaje de aviso
-                MessageBox.Show($"Favor AVISAR a PRODUCCIÓN que la Orden de Trabajo : {idOT} con el Pedido: {consecutivo} se le realizarán CAMBIOS", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                RegistrarMovimiento($"El Usuario Con cédula: {cedula} Para la Orden de Trabajo: {idOT} con el Pedido: {consecutivo} Para Producción");
+               
 
-                // Enviar notificación por correo
                 string consultaUsosVarios = "SELECT mail FROM tblUsosVarios WHERE ObjetivoMail = 'mailparapararpedido'";
                 string enviadoA = string.Empty;
                 using (SqlCommand cmdUsosVarios = new SqlCommand(consultaUsosVarios, conSID))
@@ -19966,24 +19953,30 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
 
-                MessageBox.Show($"Se enviará una notificación de PARAR EL PEDIDO por mail a: {enviadoA}. Favor NO cerrar Microsoft Outlook para el envío inmediato del mismo", "Mail Notificación de Pedido", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 string asuntoMail = $"PARAR PRODUCCIÓN PEDIDO: {idOT}-{consecutivo}  {nombreObra}";
                 string descripcionMail = $"Fecha: {DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}<br>" +
-                                         $"Señores<br>{0}<br>Departamento de Producción<br><br>" +
-                                         $"El Usuario: {nombreUsuario}, informa PARAR LA PRODUCCIÓN del pedido {idOT}-{consecutivo} Bajo el nombre de: {nombreObra}.<br><br>" +
-                                         "PostData. Cuando se reactive el Pedido, el sistema le enviará un mail con los últimos ajustes.<br>";
+                                          $"Señores<br>{0}<br>Departamento de Producción<br><br>" +
+                                          $"El Usuario: {nombreUsuario}, informa PARAR LA PRODUCCIÓN del pedido {idOT}-{consecutivo} Bajo el nombre de: {nombreObra}.<br><br>" +
+                                          "PostData. Cuando se reactive el Pedido, el sistema le enviará un mail con los últimos ajustes.<br>";
 
-                // Receptores de correo
                 string receptorMail = ProcesarCorreos(enviadoA, mailUsuario);
                 sSql = $"EXEC duc_sp_correo '{receptorMail}', '{asuntoMail}', '{descripcionMail}', '', '{nombreUsuario}'";
                 EjecutarConsulta(sSql, conSID);
 
-                Response.Redirect("OrdenTrabajo.aspx");
-
-
+                mensajePersonalizado = $"Se enviará una notificación de PARAR EL PEDIDO por mail a: {enviadoA}. Favor NO cerrar Microsoft Outlook para el envío inmediato del mismo.";
+                RedirigirConMensaje(mensajePersonalizado, "OrdenTrabajo.aspx");
             }
         }
+
+
+
+        private void RedirigirConMensaje(string mensaje, string urlRedireccion)
+        {
+            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensaje)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+        }
+
+
 
         // Método para ejecutar consultas reutilizando la conexión abierta
         private void EjecutarConsulta(string query, SqlConnection connection)
