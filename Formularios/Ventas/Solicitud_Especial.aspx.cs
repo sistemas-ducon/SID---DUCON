@@ -6615,7 +6615,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             <p><strong> Realizado por : </strong> <strong> " + Session["usuariologueado"].ToString() + @"</strong></p>
                             <p><strong>solicitud </strong> " + lbNumeroSolicitud.Text + "_" + lbIdDetalle.Text + @"</p>
                             <p>Ver documentación asignada a COMPRAS </p>
-                            <p><strong>Prueba de sistemas SID nuevo Anderson, hacer caso omiso </strong> </p>
+                           
                            
                         </div>
                     </body>

@@ -62,11 +62,35 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
                     {
 
-                        ValidarEspecial.Visible = false;
+                      
                         if (!ConsultarTerminadoVentas())
                         {
                             Button1.Enabled = false;
                             Button1.CssClass = "btn btn-sm btn-outline-primary";
+                        }
+
+
+                        if (Session["ControlEspecialDes"]?.ToString() == "Especial")
+                        {
+                            ListItem newItem = new ListItem("DLLO.ESPECIAL");
+                            ddlTipoDoc.Items.Add(newItem);
+                            ddlTipoDoc.ClearSelection();
+                            newItem.Selected = true;
+                            ddlTipoDoc.Enabled = false;
+                            ddlTipoDoc.CssClass = "form-control form-control-sm";
+
+
+
+
+                            ValidarEspecial.Visible = false;
+
+
+
+                            mensaje.Visible = true;
+                            mensaje.Text = "Por favor cargue nuevamente el mismo  archivo y presione adjuntar";
+
+                            Session.Remove("ControlEspecialDes");
+
                         }
 
 
@@ -160,6 +184,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     }
                 }
 
+
+                // Validar si el archivo ya existe en la solicitud 
+                string NombreCompletoArchivo = "PE" + Session["Id_Solicitud"].ToString() + "-"+ Session["Id_Detalle"].ToString() +" "+ FileUpload1.FileName;
+
+                if (ValidarExistenciaArchivo(NombreCompletoArchivo))
+                {
+                    string mensajePersonalizado = "El archivo " + FileUpload1.FileName + ", ya pertenece a la solicitud, no se puede adicionar";
+                    string urlRedireccion = "Ventas/AdjuntarDocumentos.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    return;
+                }
 
 
 
@@ -580,7 +615,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 ddlTipoDoc.Items.Clear();
 
                 // Agregar opción por defecto
-                ddlTipoDoc.Items.Add(new ListItem("-- Seleccione --", " "));
+                ddlTipoDoc.Items.Add(new ListItem("-- Seleccione --", ""));
 
                 // Llenar el DropDownList según el departamento
                 if (departamento == "VENTAS")
@@ -623,6 +658,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                         // Para archivos .xlsx (Excel 2007 y posteriores)
                         workbook = new XSSFWorkbook(fs);
                     }
+                    else
+                    {
+                        string mensajePersonalizado = "El archivo cargado no corresponde al formato";
+                        string urlRedireccion = "Ventas/AdjuntarDocumentos.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    }
 
                     // Obtener el primer worksheet
                     ISheet sheet = workbook.GetSheetAt(0);
@@ -664,6 +705,26 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 string urlRedireccion = "Ventas/AdjuntarDocumentos.aspx";
                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
             }
-        } 
+        }
+
+        private bool ValidarExistenciaArchivo(string NombreArchivo)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            // Aquí se debe ajustar la consulta SQL para incluir el parámetro del ID del permiso
+            string query = $"SELECT COUNT(*) FROM tblDocumentacion WHERE Archivo = @NombreArchivo";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@NombreArchivo", NombreArchivo); // Agregar el parámetro del ID del permiso
+                    connection.Open();
+                    int count = (int)command.ExecuteScalar(); // Ejecutar la consulta y obtener el resultado
+                    return count > 0; // Devolver verdadero si se encuentra algún registro que cumpla la condición
+                }
+            }
+        }
+
     }
 }
