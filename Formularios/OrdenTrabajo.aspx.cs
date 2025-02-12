@@ -19964,6 +19964,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 sSql = $"EXEC duc_sp_correo '{receptorMail}', '{asuntoMail}', '{descripcionMail}', '', '{nombreUsuario}'";
                 EjecutarConsulta(sSql, conSID);
 
+                Session["Id_OT2"] = idOT;
+                Session["pedido2"] = consecutivo;
                 mensajePersonalizado = $"Se enviará una notificación de PARAR EL PEDIDO por mail a: {enviadoA}. Favor NO cerrar Microsoft Outlook para el envío inmediato del mismo.";
                 RedirigirConMensaje(mensajePersonalizado, "OrdenTrabajo.aspx");
             }
