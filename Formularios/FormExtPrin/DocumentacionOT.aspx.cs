@@ -44,20 +44,43 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     tbCategoria.Enabled = false;
                     tbCategoria.CssClass = "form-control ";
 
-                    bool estado = ValidarOTCerrada();
+                    DepartamentoAsesor();
 
-
-                    if (estado)
+                    if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
                     {
-                        btnAdjuntar.Enabled = false;
-                        btnAdjuntar.CssClass = "btn btn-outline-primary";
+                        bool estado = ValidarOTCerrada();
+
+
+                        if (estado)
+                        {
+                            btnAdjuntar.Enabled = false;
+                            btnAdjuntar.CssClass = "btn btn-outline-primary";
+                        }
+                        else
+                        {
+                            btnAdjuntar.Enabled = true;
+                        }
                     }
-                    else
+                    else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
                     {
-                        btnAdjuntar.Enabled = true;
+                        bool estado = ValidarOTCerradaDibujo();
+
+
+                        if (estado)
+                        {
+                            btnAdjuntar.Enabled = false;
+                            btnAdjuntar.CssClass = "btn btn-outline-primary";
+                        }
+                        else
+                        {
+                            btnAdjuntar.Enabled = true;
+                        }
+
                     }
 
-                    bntElimnar.Enabled = false;
+
+
+                        bntElimnar.Enabled = false;
                     bntElimnar.CssClass = "btn btn-outline-danger";
 
                     btnSubirAdjuntar.Enabled = false;
@@ -109,6 +132,39 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             // Realizar la consulta para verificar los permisos
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             string query = "select Terminado_Ventas from tblOT where Id_OT = @idOt and Consecutivo_Pedido = @pedido";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecer parámetros para evitar SQL Injection
+                    command.Parameters.AddWithValue("@idOt", Session["Id_OT2"]?.ToString());
+                    command.Parameters.AddWithValue("@pedido", Session["pedido2"]?.ToString());
+
+                    connection.Open();
+                    object result = command.ExecuteScalar();
+
+                    int estado = Convert.ToInt32(result);
+
+                    if (estado > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+
+            }
+        }
+
+        private bool ValidarOTCerradaDibujo()
+        {
+            // Realizar la consulta para verificar los permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string query = "select Terminado_Diseño from tblOT where Id_OT = @idOt and Consecutivo_Pedido = @pedido";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -504,16 +560,43 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 Session["NombreArchivoOT"] = NombreArchivo;
                 Session["NombreCarpetaOT"] = Id_OT;
 
-                if (!ValidarOTCerrada())
-                {
-                    Button bntElimnar = FindControl("bntElimnar") as Button;
-                    if (bntElimnar != null)
-                    {
-                        bntElimnar.Enabled = true;
-                        bntElimnar.CssClass = "btn-sm btn-outline-danger";
-                    }
 
+
+                if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
+                {
+
+                    if (!ValidarOTCerrada())
+                    {
+                        Button bntElimnar = FindControl("bntElimnar") as Button;
+                        if (bntElimnar != null)
+                        {
+                            bntElimnar.Enabled = true;
+                            bntElimnar.CssClass = "btn-sm btn-outline-danger";
+                        }
+
+                    }
                 }
+                else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+                {
+
+
+                    if (!ValidarOTCerradaDibujo())
+                    {
+                        Button bntElimnar = FindControl("bntElimnar") as Button;
+                        if (bntElimnar != null)
+                        {
+                            bntElimnar.Enabled = true;
+                            bntElimnar.CssClass = "btn-sm btn-outline-danger";
+                        }
+
+                    }
+                }
+
+
+
+
+
+
 
 
                 foreach (DataGridItem item in DataGridDoc.Items)
@@ -616,19 +699,41 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 }
                 e.Item.CssClass = "fila-seleccionada";
 
-
-                //Validar si la OT esta cerrada para no no habilitar el boton cargar 
-                if (!ValidarOTCerrada())
+                if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
                 {
-                    btnSubirAdjuntar.Enabled = true;
-                    btnAdjuntar.Enabled = false;
-                    ValidarEspecial.Visible = false;
-                    bntElimnar.Visible = false;
-                    btnAdjuntar.CssClass = "btn btn-outline-primary";
-                    btnAdjuntar.Visible = false;
 
-                    DoctOT.Enabled = false;
+                    //Validar si la OT esta cerrada para no no habilitar el boton cargar 
+                    if (!ValidarOTCerrada())
+                    {
+                        btnSubirAdjuntar.Enabled = true;
+                        btnAdjuntar.Enabled = false;
+                        ValidarEspecial.Visible = false;
+                        bntElimnar.Visible = false;
+                        btnAdjuntar.CssClass = "btn btn-outline-primary";
+                        btnAdjuntar.Visible = false;
+
+                        DoctOT.Enabled = false;
+                    }
                 }
+                else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
+                {
+
+                    //Validar si la OT esta cerrada para no no habilitar el boton cargar 
+                    if (!ValidarOTCerradaDibujo())
+                    {
+                        btnSubirAdjuntar.Enabled = true;
+                        btnAdjuntar.Enabled = false;
+                        ValidarEspecial.Visible = false;
+                        bntElimnar.Visible = false;
+                        btnAdjuntar.CssClass = "btn btn-outline-primary";
+                        btnAdjuntar.Visible = false;
+
+                        DoctOT.Enabled = false;
+                    }
+
+                }
+
+
 
 
                 string nombreArchvio = row.Cells[1].Text;
@@ -883,6 +988,36 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 e.Item.Cells[1].ToolTip = archivo;
 
             }
+        }
+
+        public void DepartamentoAsesor()
+        {
+
+            string consultaActual = "SELECT B.Descripcion FROM tblEmpleado As A INNER join tblDepartamento As B on B.ID_Departamento = A.Dependencia WHERE  Cedula = @Cedula";
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(consultaActual, connection))
+                {
+                    command.Parameters.AddWithValue("@Cedula", Session["CedulaLogeada"].ToString());
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        reader.Close();
+                        // Data arrived.
+                        string Departamento = (string)command.ExecuteScalar();
+                        Session["Departamento"] = Departamento;
+
+                    }
+
+
+                }
+            }
+
         }
     }
 }
