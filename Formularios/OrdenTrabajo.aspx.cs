@@ -2997,7 +2997,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void HabilitarBotonesPlano()
         {
 
-            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
+            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
             {
                 BtnAdiObjPla.Enabled = true;
                 BtnAdiObjPla.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
@@ -3813,7 +3813,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 lblSaldoOT.BackColor = System.Drawing.Color.Lime;
             }
 
-            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "COMPRAS")
+            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "COMPRAS" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
             {
                 lblSaldoOT.Visible = true;
                 lbsaldo.Visible = true;
@@ -5103,7 +5103,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 tbValorCosto.Text = TotalCosto.ToString("N0");
 
-                if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
+                if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
                 {
                     tbValorCosto.Visible = true;
                     lbValorCosto.Visible = true;
@@ -7771,7 +7771,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             terminado = ConsultarTerminadoVenta(idOT, consecutivoPedido);
                         }
-                        else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
+                        else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
                         {
                             terminado = ConsultarTerminadoDibujo(idOT, consecutivoPedido);
                         }
@@ -7859,7 +7859,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             terminado = ConsultarTerminadoVenta(idOT, consecutivoPedido);
                         }
-                        else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
+                        else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
                         {
                             terminado = ConsultarTerminadoDibujo(idOT, consecutivoPedido);
                         }
@@ -8069,7 +8069,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             terminado = ConsultarTerminadoVenta(idOT, consecutivoPedido);
                         }
-                        else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
+                        else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
                         {
                             terminado = ConsultarTerminadoDibujo(idOT, consecutivoPedido);
                         }
@@ -8359,7 +8359,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Asignar ID único a la fila
             row.Attributes["id"] = "row_" + rowIndex;
 
-            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
+            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
             {
 
                 // Validar que la OT no este cerrada para dibujo para permitir el doble click  
@@ -8582,7 +8582,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             terminado = ConsultarTerminadoVenta(idOT, consecutivoPedido);
                         }
-                        else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
+                        else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
                         {
                             terminado = ConsultarTerminadoDibujo(idOT, consecutivoPedido);
                         }
@@ -9550,7 +9550,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             terminado = ConsultarTerminadoVenta(idOT, consecutivoPedido);
                         }
-                        else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
+                        else if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
                         {
                             terminado = ConsultarTerminadoDibujo(idOT, consecutivoPedido);
                         }
@@ -12913,7 +12913,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         // INICIO LOGICA DEL BOTON OK 
         protected void Boton_Ok1(object sender, EventArgs e)
         {
-            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
+
+            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO") 
             {
 
                 Session["Id_OT2"] = tbOT.Text;
@@ -13025,7 +13026,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void btnContinuarOk_SI_Click(object sender, EventArgs e)
         {
-            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO")
+            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
             {
                 // SE VERIFICA SI LA FECHA DE EMPAQUE CUMPLE CON LOS TIEMPO MINIMOS
                 if (!ValidarFechaEmpaque())
@@ -13319,6 +13320,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 case "DISEÑO":
                 case "COMPRAS":
+                case "DESARROLLO DE PRODUCTO":
 
                     DataTable InfoOT1 = ConsultarInformacionPedidoSaldo();
                     bool afectaBolsa1 = ConsultaAfectaBolsa();
@@ -13682,7 +13684,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             bool TerminadoDibujo = btnOk.Enabled;
 
-            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "VENTAS" && tbOT.Text != "" && !TerminadoDibujo)
+            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "VENTAS" && tbOT.Text != "" && !TerminadoDibujo || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
             {
                 //PARA BORRAR ACABADOS
                 //SE COLOCAN TODOS LOS ACABADOS DEL PLANO COMO  INACTIVOS, SE ACTIVAN LOS QUE VAN Y DESPUES SE BORRAN LOS QUE QUEDARON INACTIVOS
