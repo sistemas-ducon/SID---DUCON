@@ -418,47 +418,57 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string connectionString = ConfigurationManager.ConnectionStrings["BD_SIDSQL"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = @"SELECT D.RealizadoPor, 
-                       COALESCE(O.CantidadOt, 0) AS CantidadOt, 
-                       COALESCE(C.CantidadRepeticiones, 0) AS CantidadRepeticiones,
-                       COALESCE(O.CantidadOt, 0) + COALESCE(C.CantidadRepeticiones, 0) AS Total
-                FROM (SELECT DISTINCT RealizadoPor FROM tblDiseño) D
-                LEFT JOIN
-                (SELECT ot.RealizadoPor, COUNT(*) AS CantidadOt
-                    FROM tblOT ot
-                    INNER JOIN tblAsesorComercial ac ON ot.Codigo_Asesor = ac.Cedula
-                    WHERE ot.Terminado_Diseño = '0' 
-                      AND ot.Terminado_Ventas = '1' 
-                      AND ot.Anulada = '0'
-                     AND OT.Zona = @Zona
-                    GROUP BY ot.RealizadoPor) O
-                ON D.RealizadoPor = O.RealizadoPor
-                LEFT JOIN
-                (SELECT A.RealizadoPor, COUNT(*) AS CantidadRepeticiones
-                    FROM [tblDiseño] AS A
-                    INNER JOIN tblAsesorComercial AS B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor
-                    WHERE ProgramadoVentas = '1' and TerminadoDibujo = '0' AND A.Zona LIKE @Zona
-                    GROUP BY A.RealizadoPor) C
-                ON D.RealizadoPor = C.RealizadoPor
-                ORDER BY Total DESC;";
+                string queryBase = @"
+            SELECT D.RealizadoPor, 
+                   COALESCE(O.CantidadOt, 0) AS CantidadOt, 
+                   COALESCE(C.CantidadRepeticiones, 0) AS CantidadRepeticiones,
+                   COALESCE(O.CantidadOt, 0) + COALESCE(C.CantidadRepeticiones, 0) AS Total
+            FROM (SELECT DISTINCT RealizadoPor FROM tblDiseño) D
+            LEFT JOIN
+            (SELECT ot.RealizadoPor, COUNT(*) AS CantidadOt
+             FROM tblOT ot
+             INNER JOIN tblAsesorComercial ac ON ot.Codigo_Asesor = ac.Cedula
+             WHERE ot.Terminado_Diseño = '0' 
+               AND ot.Terminado_Ventas = '1' 
+               AND ot.Anulada = '0' {0}
+             GROUP BY ot.RealizadoPor) O
+            ON D.RealizadoPor = O.RealizadoPor
+            LEFT JOIN
+            (SELECT A.RealizadoPor, COUNT(*) AS CantidadRepeticiones
+             FROM [tblDiseño] AS A
+             INNER JOIN tblAsesorComercial AS B ON (B.Nombre + ' ' + B.Apellidos) = A.Asesor
+             WHERE ProgramadoVentas = '1' 
+               AND TerminadoDibujo = '0' {1}
+             GROUP BY A.RealizadoPor) C
+            ON D.RealizadoPor = C.RealizadoPor
+            WHERE COALESCE(O.CantidadOt, 0) + COALESCE(C.CantidadRepeticiones, 0) > 0
+            ORDER BY CantidadOt DESC;";
 
-                SqlCommand command = new SqlCommand(query, connection);
-
-                // Agregar parámetro de zona si es necesario
                 string selectedValue = DropDownListOptions.SelectedValue;
+                string conditionOT = "";
+                string conditionA = "";
+
+                // Si se selecciona una zona específica, agregamos la condición a la consulta
                 if (!string.IsNullOrEmpty(selectedValue) && selectedValue != "%")
                 {
-                    command.Parameters.AddWithValue("@Zona", selectedValue);
-                }
-                else
-                {
-                    // En caso de que no se seleccione ninguna zona específica, se usa '%' para que coincida con todas las zonas
-                    command.Parameters.AddWithValue("@Zona", "%");
+                    conditionOT = "AND OT.Zona = @Zona";
+                    conditionA = "AND A.Zona LIKE @Zona";
                 }
 
-                SqlDataAdapter adapter = new SqlDataAdapter(command);
-                adapter.Fill(dataTable);
+                string finalQuery = string.Format(queryBase, conditionOT, conditionA);
+
+                using (SqlCommand command = new SqlCommand(finalQuery, connection))
+                {
+                    if (!string.IsNullOrEmpty(selectedValue) && selectedValue != "%")
+                    {
+                        command.Parameters.AddWithValue("@Zona", selectedValue);
+                    }
+
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    adapter.Fill(dataTable);
+                }
             }
+
             DataGrid3.DataSource = dataTable;
             DataGrid3.DataBind();
         }
