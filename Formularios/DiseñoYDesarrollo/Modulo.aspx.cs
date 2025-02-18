@@ -714,6 +714,25 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     BtnCancelarInf.CssClass = "btn btn-sm shadow button-disabled";
                 }
             }
+            if (tipoAccion == "Copiar")
+            {
+                if (ValoresCambiaron() && CamposSonValidos())
+                {
+                    BtnGrabarInf.Enabled = true;
+                    BtnGrabarInf.CssClass = "btn btn-sm shadow button-enabled";
+
+                    BtnCancelarInf.Enabled = true;
+                    BtnCancelarInf.CssClass = "btn btn-sm shadow button-enabled2 RojoCancelar";
+                }
+                else
+                {
+                    BtnGrabarInf.Enabled = false;
+                    BtnGrabarInf.CssClass = "btn btn-sm shadow button-disabled";
+
+                    BtnCancelarInf.Enabled = false;
+                    BtnCancelarInf.CssClass = "btn btn-sm shadow button-disabled";
+                }
+            }
         }
 
 

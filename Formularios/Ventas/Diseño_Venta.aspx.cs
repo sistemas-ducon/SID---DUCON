@@ -10136,8 +10136,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             using (SqlCommand command = new SqlCommand(procedimientoAlmacenado, connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.AddWithValue("@Id_PanelNumerico", idNumerico);
-
+                command.Parameters.AddWithValue("@Objeto", idNumerico);
                 command.ExecuteNonQuery();
             }
 
@@ -10150,8 +10149,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     if (reader.Read())
                     {
-                        precioVenta = reader.GetDecimal(reader.GetOrdinal("Precio_Venta"));
-                        peso = reader.GetDecimal(reader.GetOrdinal("PesoKG"));
+                        precioVenta = Convert.ToDecimal(reader["Precio_Venta"]); // Convertir int a decimal
+                        peso = Convert.ToDecimal(reader["PesoKG"]); // Convertir real a decimal
                     }
                 }
             }
