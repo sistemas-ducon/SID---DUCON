@@ -20706,6 +20706,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Se valida si es el segundo click en la misma fila 
                         if (clickCount == 2)
                         {
+                            Session["FrmInsumo"] = "Consultar";
                             string url = "DiseñoYDesarrollo/frmInsumos.aspx";
                             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
                             ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);

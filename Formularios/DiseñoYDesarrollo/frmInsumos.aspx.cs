@@ -46,6 +46,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                         valoresPorDefecto();
                         habilitarTextboxNuevo();
                     }
+                    if (tipoAccion == "Consultar")
+                    {
+                        CargarInsumo();
+                    }
                 }
             }
             else
