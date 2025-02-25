@@ -125,8 +125,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             BtnPlano.Enabled = false;
             BtnPlano.CssClass = "btn btn-sm button-disabled";
 
-            LinkButton4.Enabled = false;
-            LinkButton4.CssClass = "btn btn-sm button-disabled";
+            BtnEliminarPlanoDise.Enabled = false;
+            BtnEliminarPlanoDise.CssClass = "btn btn-sm button-disabled";
 
             BtnVisCotPreAct.Enabled = false;
             BtnVisCotPreAct.CssClass = "btn btn-sm button-disabled";
@@ -8529,12 +8529,108 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BtnDespiece_Click(object sender, EventArgs e)
         {
-            BindDataGrid(); // Llamar al método para llenar el DataGrid
+            // Verificar el estado de la pestaña desde la sesión
+            bool tabAbierto = Session["TabDespieceEstado"] != null && (bool)Session["TabDespieceEstado"];
 
+            if (!tabAbierto)
+            {
+                // Si la pestaña está cerrada, la abrimos y llenamos el DataGrid
+                BindDataGrid();
+                Session["TabDespieceEstado"] = true; // Marcar como abierto
+            }
+            else
+            {
+                // Si la pestaña está abierta, ejecutamos las actualizaciones SQL
+                ActualizarSubTotalZona();
+                Datagrid5.DataBind();
+                UpdateDiseñoBitacora.Update();
+
+                Session["TabDespieceEstado"] = false; // Marcar como cerrado
+            }
+
+            // Ejecutamos el script para mostrar/ocultar el tab
             ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarTabDespieceScript", "mostrarTabDespiece();", true);
-
-
         }
+
+
+
+        private void ActualizarSubTotalZona()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                con.Open();
+
+                // Obtener valores desde la sesión
+                string numeroPlano = Session["Numero_Plano"] != null ? Session["Numero_Plano"].ToString() : string.Empty;
+                string opcionDiseDes = Session["OpcionDiseDes"] != null ? Session["OpcionDiseDes"].ToString() : string.Empty;
+
+                if (string.IsNullOrEmpty(numeroPlano) || string.IsNullOrEmpty(opcionDiseDes))
+                {
+                    // Si los valores de sesión no existen, salir de la función
+                    return;
+                }
+
+                // Obtener SubTotalZona
+                string querySubTotal = @"
+            SELECT ISNULL(SUM(tblPlano_Panel.Precio_Venta * tblPlano_Panel.Cantidad), 0) AS SubTotalZona
+            FROM tblDiseño
+            INNER JOIN tblPlanoDiseño ON tblDiseño.Numero_Diseño = tblPlanoDiseño.Numero_Diseño
+            INNER JOIN tblPlano_Panel ON tblPlanoDiseño.Plano = tblPlano_Panel.Id_Plano
+            INNER JOIN tblPanel ON tblPlano_Panel.Id_PanelNum = tblPanel.Id_Numerico
+            INNER JOIN tblGrupoObjeto ON tblPanel.Id_GrupoObjeto = tblGrupoObjeto.ID_GrupoObjeto
+            WHERE tblGrupoObjeto.Cotizar = 1
+            GROUP BY tblDiseño.Numero_Diseño, tblDiseño.Nombre_Diseño, tblDiseño.Asesor, 
+                     tblPlanoDiseño.Plano, tblPlanoDiseño.Opcion
+            HAVING tblDiseño.Numero_Diseño = @NumeroDiseño 
+                AND tblPlanoDiseño.Plano = @Plano 
+                AND tblPlanoDiseño.Opcion = @Opcion";
+
+                decimal totalDespiece = 0;
+                using (SqlCommand cmd = new SqlCommand(querySubTotal, con))
+                {
+                    cmd.Parameters.AddWithValue("@NumeroDiseño", lblNumDise.Text);
+                    cmd.Parameters.AddWithValue("@Plano", numeroPlano);
+                    cmd.Parameters.AddWithValue("@Opcion", opcionDiseDes);
+
+                    object result = cmd.ExecuteScalar();
+                    if (result != null)
+                        totalDespiece = Convert.ToDecimal(result);
+                }
+
+                // Actualizar tblPlanoDiseño
+                string queryUpdatePlanoDiseño = @"
+            UPDATE tblPlanoDiseño 
+            SET SubTotalZona = @TotalDespiece, 
+                Composicion = dbo.fn_Composicion_Plano(tblPlanoDiseño.Plano), 
+                FechalecturaDespiece = GETDATE() 
+            WHERE Numero_Diseño = @NumeroDiseño 
+                AND Plano = @Plano";
+
+                using (SqlCommand cmd = new SqlCommand(queryUpdatePlanoDiseño, con))
+                {
+                    cmd.Parameters.AddWithValue("@TotalDespiece", totalDespiece);
+                    cmd.Parameters.AddWithValue("@NumeroDiseño", lblNumDise.Text);
+                    cmd.Parameters.AddWithValue("@Plano", numeroPlano);
+
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Actualizar tblPlano
+                string queryUpdatePlano = @"
+            UPDATE tblPlano 
+            SET PlaFechalecturaDespiece = GETDATE() 
+            WHERE Plano = @Plano";
+
+                using (SqlCommand cmd = new SqlCommand(queryUpdatePlano, con))
+                {
+                    cmd.Parameters.AddWithValue("@Plano", numeroPlano);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
 
         private void BindDataGrid()
         {
@@ -8739,7 +8835,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     PlanoDiseArea.Text = "<b>" + "Despiece: " + planoDise + " - " + planoDiseAreaV + "</b>";
 
-                    BtnDespiece.Enabled = true;
+                    string tipoAccionCrud = Session["CrudVentas"] as string;
+                    if (tipoAccionCrud == "Actualizar")
+                    {
+                        BtnEliminarPlanoDise.Enabled = true;
+                        BtnEliminarPlanoDise.CssClass = "btn btn-sm button-enabled";
+                    }
+
+                        BtnDespiece.Enabled = true;
                     BtnDespiece.CssClass = "btn btn-sm button-enabled";
 
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "OcultarTabDespieceScript", "cerrarTab();", true);
@@ -11321,5 +11424,54 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ClientScript.RegisterStartupScript(this.GetType(), "cerrarModalesYActivarPestanaScript", script, true);
         }
 
+        protected void BtnEliminarPlanoDise_Click(object sender, EventArgs e)
+        {
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "$('#modalConfirmarEliminar').modal('show');", true);
+
+        }
+
+        protected void btnConfirmarEliminar_Click(object sender, EventArgs e)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            string numeroPlano = Session["Numero_Plano"] != null ? Session["Numero_Plano"].ToString() : string.Empty;
+            string opcionDiseDes = Session["OpcionDiseDes"] != null ? Session["OpcionDiseDes"].ToString() : string.Empty;
+
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                string query = "DELETE FROM tblPlanoDiseño WHERE Plano = @Plano AND Numero_Diseño = @NumeroDiseño AND Opcion = @Opcion";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Plano", numeroPlano);
+                    cmd.Parameters.AddWithValue("@NumeroDiseño", lblNumDise.Text);
+                    cmd.Parameters.AddWithValue("@Opcion", opcionDiseDes);
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        BtnEliminarPlanoDise.Enabled = false;
+                        BtnEliminarPlanoDise.CssClass = "btn btn-sm button-disabled";
+
+                        string mensajeExito = "El plano ha sido eliminado correctamente.";
+                        string scriptExito = "alert('" + mensajeExito + "');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptExito, true);
+
+                    }
+                    else
+                    {
+                        string mensajeError = "No se encontró el registro a eliminar.";
+                        string scriptError = "alert('" + mensajeError + "');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptError, true);
+
+                    }
+                    Datagrid5.DataBind();
+                    UpdateDiseñoBitacora.Update();
+                }
+            }
+        }
     }
 }

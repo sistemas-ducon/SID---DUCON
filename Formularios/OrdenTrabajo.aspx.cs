@@ -20971,7 +20971,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void BtnNuevoModulo_Click(object sender, EventArgs e)
         {
             Session["Modulo"] = "Nuevo";
-            Response.Redirect("~/Formularios/DiseñoYDesarrollo/Modulo.aspx");
+
+            string url = "~/Formularios/DiseñoYDesarrollo/Modulo.aspx";
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+
         }
 
         protected void BtnModificarModulo_Click(object sender, EventArgs e)
@@ -21001,7 +21005,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     else if (chequeadoValue == "NO")
                     {
                         Session["Modulo"] = "Modificar";
-                        Response.Redirect("~/Formularios/DiseñoYDesarrollo/Modulo.aspx");
+
+                        string url = "~/Formularios/DiseñoYDesarrollo/Modulo.aspx";
+                        string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+
                     }
                 }
             }
@@ -21015,7 +21023,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void BtnCopiarModuloAtributos_Click(object sender, EventArgs e)
         {
             Session["Modulo"] = "Copiar";
-            Response.Redirect("~/Formularios/DiseñoYDesarrollo/Modulo.aspx");
+            string url = "~/Formularios/DiseñoYDesarrollo/Modulo.aspx";
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+
         }
 
         protected void BtnIrObjAnt_Click(object sender, EventArgs e)
@@ -21612,7 +21623,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void BtnConsultarModulo_Click(object sender, EventArgs e)
         {
             Session["Modulo"] = "Consultar";
-            Response.Redirect("~/Formularios/DiseñoYDesarrollo/Modulo.aspx");
+            string url = "~/Formularios/DiseñoYDesarrollo/Modulo.aspx";
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
+
         }
 
         //Despiece del Plano 

@@ -193,7 +193,7 @@
 
                                                 <div class="col-lg-1 col-md-6 col-sm-6 col-xs-6 p-2">
                                                     <asp:Label runat="server" ID="Label6" CssClass="form-label col-form-label-sm" Text="Holgura"></asp:Label>
-                                                    <asp:TextBox runat="server" ID="TextHolgura" CssClass="form-control form-control-sm text-center" type="number" min="0" OnTextChanged="TextHolgura_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                                    <asp:TextBox runat="server" ID="TextHolgura" CssClass="form-control form-control-sm text-center" min="0" OnTextChanged="TextHolgura_TextChanged" AutoPostBack="true"></asp:TextBox>
                                                 </div>
 
                                                 <div class="col-lg-2 col-md-6 col-sm-6 col-xs-6 p-2">

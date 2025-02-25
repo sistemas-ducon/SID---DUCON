@@ -1780,7 +1780,7 @@
                                         <asp:LinkButton runat="server" ID="BtnPlano" CssClass="btn btn-sm" OnClick="BtnPlano_Click"> 
                                                 <img src="https://i.ibb.co/BCtb1QS/icons8-archivo-dxf-autocad-windows-11-color-310.png" alt="Plano" style="width: 23px; height: 23px;" />
                                         </asp:LinkButton>
-                                        <asp:LinkButton runat="server" ID="LinkButton4" CssClass="btn btn-sm"> 
+                                        <asp:LinkButton runat="server" ID="BtnEliminarPlanoDise" CssClass="btn btn-sm" OnClick="BtnEliminarPlanoDise_Click"> 
                                                  <i class="bi bi-menu-app"></i>
                                         </asp:LinkButton>
                                         <asp:LinkButton runat="server" ID="BtnVisCotPreAct" CssClass="btn btn-sm" Style="background-color: #00ff21" OnClick="VisualizarCotPrecioActual_Click">  
@@ -1793,6 +1793,26 @@
                         
 
                         </div>
+
+                        <!-- Modal de Confirmación -->
+<div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Confirmar Eliminación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p>¿Está seguro de que desea eliminar este plano?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
+        <asp:Button ID="btnConfirmarEliminar" runat="server" CssClass="btn btn-danger" data-bs-dismiss="modal" aria-label="Close" Text="Eliminar" OnClick="btnConfirmarEliminar_Click"/>
+      </div>
+    </div>
+  </div>
+</div>
+
 
                         <div id="FechaSC" class="modal" tabindex="-1">
                             <div class="modal-dialog modal-dialog-centered">
