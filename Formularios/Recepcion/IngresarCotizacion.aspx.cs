@@ -960,9 +960,10 @@ WHERE
                     }
                     // Intentamos convertir los textos de los TextBox a números double
                     double valorTextBox7, valorTextBox8, valorTextBox9, valorTextBox10;
-                    bool isParsed7 = double.TryParse(TextBox7.Text, out valorTextBox7);
-                    bool isParsed8 = double.TryParse(TextBox8.Text, out valorTextBox8);
-                    bool isParsed9 = double.TryParse(TextBox9.Text, out valorTextBox9);
+
+                    bool isParsed7 = double.TryParse(TextBox7.Text.Replace("$", "").Trim(), out valorTextBox7);
+                    bool isParsed8 = double.TryParse(TextBox8.Text.Replace("$", "").Trim(), out valorTextBox8);
+                    bool isParsed9 = double.TryParse(TextBox9.Text.Replace("$", "").Trim(), out valorTextBox9);
 
                     // Formateamos los valores si la conversión fue exitosa, de lo contrario, asignamos "0"
                     TextBox7.Text = isParsed7 ? valorTextBox7.ToString("#,##0.##") : "0";
