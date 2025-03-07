@@ -4141,6 +4141,26 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void DataGridDespiecePlano_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
+            if (e.Item.ItemType == ListItemType.Header)
+            {
+                for (int i = 0; i < e.Item.Cells.Count; i++)
+                {
+                    if(i != 0)
+                    {
+                        if (i == 3) // Suponiendo que la columna "Descripción" es la tercera columna (índice 2)
+                        {
+                            e.Item.Cells[i].CssClass = "descripcion-header";
+                        }
+                        else
+                        {
+                            e.Item.Cells[i].CssClass = "resizable-header";
+                        }
+                    }
+                   
+                }
+            }
+
+
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
                 DatosFiltrados datos = (DatosFiltrados)e.Item.DataItem;
@@ -4200,6 +4220,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     e.Item.Cells[8].Font.Bold = true;
                     e.Item.Cells[8].Font.Size = 11;
                 }
+
+                // Mantener el enfoque en la fila seleccionada
+                if (Session["SelectedRowIndex"] != null && e.Item.ItemIndex == Convert.ToInt32(Session["SelectedRowIndex"]))
+                {  
+                    e.Item.Attributes["id"] = "row_" + e.Item.ItemIndex;
+                    Session.Remove("SelectedRowIndex");
+                }
+
+
             }
         }
 
@@ -4225,15 +4254,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string ID = row.Cells[2].Text;
                 string Descri = row.Cells[3].Text;
                 string Ancho = row.Cells[5].Text;
+                string cantidad = row.Cells[6].Text;
                 string revisado = row.Cells[10].Text;
                 string Id_Panel = row.Cells[9].Text;
                 LlenarDataGridObjeto(ID);
 
 
+                Session["SelectedRowIndex"] = rowIndex;
+
 
 
                 // Se envia la descripcion como parametro de busqueda al tap objetos  y se refresca el panel deobjetos 
-                txtCantidad.Text = Ancho;
+                txtCantidad.Text = cantidad;
                 tbCriterio.Text = Id_Panel;
                 PanelObjeto.Update();
 
@@ -4284,11 +4316,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                             Cargar_Despiece_Plano();
 
-                            // Asignar ID único a la fila
-                            row.Attributes["id"] = "row_" + rowIndex;
-
-                            // Llamar a la función JavaScript para enfocar y desplazar la fila
-                            ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
+                            int selectedRowIndex = Convert.ToInt32(Session["SelectedRowIndex"]);
+                            ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", $"focusAndScrollToRow('row_{selectedRowIndex}');", true);
                         }
 
 
@@ -8332,7 +8361,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         } // Campo se podria Cargar en el login
-
+         
+        //REVISAR PARA PASAR A UN FORMULARIO NUEVO 
         protected void DataGridAcabados1_ItemCommand(object source, DataGridCommandEventArgs e)
         {
             int rowIndex = Convert.ToInt32(e.CommandArgument);
@@ -8496,6 +8526,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
+        //REVISAR PARA PASAR A UN FORMULARIO NUEVO 
         protected void btnCerrarAcabadosPlano_Click(object sender, EventArgs e)
         {
             Response.Redirect("OrdenTrabajo.aspx");
@@ -10651,7 +10682,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return dataTable;
         }
         private bool CreacionObjPersonalizado_X(string objeto, double ancho, DataTable panel)
-        {
+         {
             double altura = Convert.ToDouble(panel.Rows[0]["Altura"].ToString());
             double profundidad = Convert.ToDouble(panel.Rows[0]["profundidad"].ToString());
             double Cubicaje = Math.Round((ancho * altura * profundidad) / 1000000, 5);
@@ -10698,34 +10729,38 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             string sSql = "SELECT Id_Numerico FROM tblPanel WHERE Id_Panel = @Id_Panel AND Ancho = @Ancho";
 
+            // Redondear el ancho a un decimal y almacenar en una variable
+            double anchoRedondeado = Math.Round(ancho, 1);
+           
+
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 using (SqlCommand cmd = new SqlCommand(sSql, connection))
                 {
                     connection.Open();
 
-                    cmd.Parameters.AddWithValue("@Id_Panel", objeto);
-                    cmd.Parameters.AddWithValue("@Ancho", ancho);
+                    cmd.Parameters.AddWithValue("@Id_Panel", objeto.TrimEnd());
+                    cmd.Parameters.AddWithValue("@Ancho", anchoRedondeado.ToString());
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
                         {
                             reader.Read();
-                            //Este es el id del objeto que acabamos de agregar 
                             int idPanel = reader.GetInt32(0);
-                            // Se consulta los datos de los modulos  con ese idPanel
                             ConsultarDatosModuloPanel1(idPanel, objeto);
                             return idPanel;
                         }
                         else
                         {
-                            return 0; // No hay datos, puedes manejar esto de acuerdo a tus necesidades
+                            return 0;
                         }
                     }
                 }
             }
         }
+
+
         private void ConsultarDatosModuloPanel1(int IdNumerico, string objeto)
         {
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -20151,8 +20186,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string CodInv = row.Cells[1].Text;
             string Descripcion = row.Cells[2].Text;
 
-            bool Linea = Convert.ToBoolean(row.Cells[3].Text);
-            bool Estado = Convert.ToBoolean(row.Cells[4].Text);
+            bool Linea = Convert.ToBoolean(row.Cells[3].Text.Replace("Si","true").Replace("No","false"));
+            bool Estado = Convert.ToBoolean(row.Cells[4].Text.Replace("Si", "true").Replace("No", "false"));
             string ID_Acabado = row.Cells[9].Text;
 
             // Se utiliza para darle el color solo a la fila seleccionada 
@@ -20245,6 +20280,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
 
+        }
+
+        protected void DataGridDefinirAcabado_ItemDataBound(object sender, DataGridItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+
+                int linea = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "DeLinea"));
+                int Activo = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "Activo"));
+                
+
+                TableCell cell = e.Item.Cells[3];
+                cell.Text = (linea == 1) ? "Si" : "No";
+
+                TableCell cell1 = e.Item.Cells[4];
+                cell1.Text = (Activo == 1) ? "Si" : "No";
+
+            }
         }
 
         private void ActualizarDefinicionAcabadoPlano()
@@ -23038,7 +23091,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             BotonesPorDefectoModulos(sender, e);
         }
 
+        // Cambiar Cantidad en el tap plano 
+        protected void btnCambiar_Click(object sender, EventArgs e)
+        {
+            // Validar si el plano se encuentra bloqueado 
 
+
+            // validar si el plano esta vinvulado a una ot que ya de dieron boton por parte de dibujo 
+
+
+            // se actualiza la cantidad 
+
+
+            // se valida si es una topologia  y si es se actualiza el precio de venta 
+        }
     }
 
 

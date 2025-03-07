@@ -221,6 +221,7 @@
     <Content Include="Formularios\DiseñoYDesarrollo\Modulo.aspx" />
     <Content Include="Formularios\DiseñoYDesarrollo\ObjetosDibujo.aspx" />
     <Content Include="Formularios\FormExtPrin\AcabadosOT.aspx" />
+    <Content Include="Formularios\FormExtPrin\AcabadosOtDibujante.aspx" />
     <Content Include="Formularios\FormExtPrin\DocumentacionOT.aspx" />
     <Content Include="Formularios\FormExtPrin\NitOTs.aspx" />
     <Content Include="Formularios\FormExtPrin\ObjetoDespiece.aspx" />
@@ -379,6 +380,13 @@
     </Compile>
     <Compile Include="Formularios\FormExtPrin\AcabadosOT.aspx.designer.cs">
       <DependentUpon>AcabadosOT.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\FormExtPrin\AcabadosOtDibujante.aspx.cs">
+      <DependentUpon>AcabadosOtDibujante.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Formularios\FormExtPrin\AcabadosOtDibujante.aspx.designer.cs">
+      <DependentUpon>AcabadosOtDibujante.aspx</DependentUpon>
     </Compile>
     <Compile Include="Formularios\FormExtPrin\DocumentacionOT.aspx.cs">
       <DependentUpon>DocumentacionOT.aspx</DependentUpon>

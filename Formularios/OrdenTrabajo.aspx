@@ -14,7 +14,7 @@
 
 
     <script>
-        // Mostrar y Ocultar  acabados plano
+        // Mostrar y Ocultar  acabados plano REVISAR PARA PASAR A UN FORMULARIO NUEVO ACABADOS
         function mostrarModal() {
             $('#ModalAcabados').modal('show');
         }
@@ -3110,7 +3110,7 @@
 
                         <div class="container-fluid">
 
-                            <!--Modal para Acabados Tap Plano-->
+                            <!--Modal para Acabados Tap Plano  REVISAR PARA PASAR A UN FORMULARIO NUEVO-->
                             <div id="ModalAcabados" class="modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" style="display: none;">
                                 <div class="modal-dialog modal-fullscreen ">
                                     <div class="modal-content ">
@@ -3401,7 +3401,7 @@
                                 </div>
                             </div>
 
-                            <!--Modal Definir Acabado -->
+                            <!--Modal Definir Acabado    REVISAR PARA PASAR A UN FORMULARIO NUEVO -->
                             <div class="modal" id="modalDefinirAcabado" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" style="display: none;">
                                 <div class="modal-dialog modal-xl modal-dialog-centered ">
                                     <div class="modal-content">
@@ -3477,7 +3477,7 @@
                                                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                                             <div class="table-responsive mb-1 gap-2" style="max-height: 20rem; height: 20rem; overflow-x: auto;">
                                                                 <h6 class="datagrid-header text-start">Acabados</h6>
-                                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridDefinirAcabado" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemCommand="DataGridDefinirAcabado_ItemCommand">
+                                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridDefinirAcabado" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemCommand="DataGridDefinirAcabado_ItemCommand" OnItemDataBound="DataGridDefinirAcabado_ItemDataBound">
                                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                     <Columns>
 
@@ -3626,7 +3626,7 @@
                                 </div>
                             </div>
 
-                            <!--Modal Eliminar Acabado Plano -->
+                            <!--Modal Eliminar Acabado Plano  REVISAR PARA PASAR A UN FORMULARIO NUEVO -->
                             <div id="confirmarEliminarAcabado" class="modal" tabindex="-1" style="display: none;">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
@@ -4630,33 +4630,33 @@
                                                 <div class="col-12">
                                                     <div class="table-responsive mb-1" style="max-height: 30rem; height: 32rem; overflow-x: auto;">
                                                         <h5 class="datagrid-header text-center">Despiece</h5>
-                                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDespiecePlano" runat="server" OnItemDataBound="DataGridDespiecePlano_ItemDataBound" OnItemCommand="DataGridDespiecePlano_LinkButton">
+                                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true"  AutoGenerateColumns="false" ID="DataGridDespiecePlano" runat="server" OnItemDataBound="DataGridDespiecePlano_ItemDataBound" OnItemCommand="DataGridDespiecePlano_LinkButton">
                                                             <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                             <Columns>
-                                                                <asp:TemplateColumn HeaderText="...">
+                                                                <asp:TemplateColumn HeaderText="..." ItemStyle-Width="20px" >
                                                                     <ItemTemplate>
                                                                         <asp:LinkButton ID="lnkView" runat="server" CssClass="Tam" CommandName="VerPlano" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>"
                                                                             Visible='<%# !string.IsNullOrEmpty(Eval("ID")?.ToString()) %>' />
                                                                     </ItemTemplate>
                                                                 </asp:TemplateColumn>
 
-                                                                <asp:TemplateColumn ItemStyle-Width="250px" ItemStyle-CssClass="auto-width-column">
+                                                                <asp:TemplateColumn ItemStyle-Width="30px"  ItemStyle-CssClass="auto-width-column10 ampliarcolumna">
                                                                     <HeaderTemplate>
-                                                                        <asp:Label ID="lblHeader" runat="server" Visible="true">Grupo </asp:Label>
+                                                                        <asp:Label ID="lblHeader"  runat="server" Visible="true">Grupo </asp:Label>
                                                                     </HeaderTemplate>
-                                                                    <ItemTemplate>
-                                                                        <asp:Label ID="lblTitulo" runat="server" Text='<%# Eval("Titulo") %>'></asp:Label>
+                                                                    <ItemTemplate >
+                                                                        <asp:Label ID="lblTitulo" style="font-size:0.7rem !important;"  runat="server"      title='<%# Eval("Titulo") != null ? Eval("Titulo").ToString().Replace("<b>", "") : "" %>'      Text='<%# Eval("Titulo") %>'></asp:Label>
                                                                     </ItemTemplate>
                                                                 </asp:TemplateColumn>
 
-                                                                <asp:BoundColumn DataField="ID" HeaderText="ID" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn DataField="Descripcion" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn DataField="Ancho" HeaderText="Ancho" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn DataField="ValorUnd" HeaderText="Valor Und" ItemStyle-CssClass="auto-width-column" />
-                                                                <asp:BoundColumn DataField="SubTotal" HeaderText="Sub Total" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="ID" HeaderText="ID" ItemStyle-CssClass="auto-width-column ampliarcolumna" />
+                                                                <asp:BoundColumn DataField="Descripcion" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column ampliarcolumna1" />
+                                                                <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column ampliarcolumna" />
+                                                                <asp:BoundColumn DataField="Ancho" HeaderText="Ancho" ItemStyle-CssClass="auto-width-column ampliarcolumna" />
+                                                                <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column ampliarcolumna" />
+                                                                <asp:BoundColumn DataField="ValorUnd" HeaderText="Valor Und" ItemStyle-CssClass="auto-width-column ampliarcolumna" />
+                                                                <asp:BoundColumn DataField="SubTotal" HeaderText="Sub Total" ItemStyle-CssClass="auto-width-column ampliarcolumna" />
                                                                 <asp:BoundColumn DataField="Id_Panel" HeaderText="" Visible="false" />
                                                                 <asp:BoundColumn DataField="RevisadoDibujo" HeaderText="" Visible="false" />
 
@@ -4723,7 +4723,7 @@
                                         <div class="input-group input-group-sm gap-2 ">
                                             <asp:Label ID="lblCantidad" class="form-label" Text="Cantidad" runat="server"></asp:Label>
                                             <asp:TextBox ID="txtCantidad" type="text" class=" form-control form-control-sm" runat="server"></asp:TextBox>
-                                            <asp:Button ID="btnCambiar" type="button" class="btn btn-outline-secondary disabled" Text="Cambiar" runat="server"></asp:Button>
+                                            <asp:Button ID="btnCambiar" type="button" class="btn btn-outline-secondary disabled" Text="Cambiar" runat="server" OnClick="btnCambiar_Click"></asp:Button>
                                         </div>
                                     </div>
 
@@ -6169,7 +6169,7 @@
     <script type="text/javascript">
         // Escuchar el evento keydown en el documento
         document.addEventListener('keydown', function (event) {
-            // Verificar si la tecla presionada es "Enter" (código de tecla 13)
+            // Verificar si la tecla presionada es "Enter"
             if (event.key === "Enter") {
                 // Obtener el elemento que tiene el foco actualmente
                 var focusedElement = document.activeElement;
@@ -6179,46 +6179,35 @@
                     return; // Salir para permitir el salto de línea
                 }
 
-                // Si el elemento enfocado es el TextBox "tbOT"
+                // Disparar el evento OnTextChanged a través de AutoPostBack según el ID del elemento enfocado
                 if (focusedElement.id === '<%= tbOT.ClientID %>') {
-                    // Disparar el evento OnTextChanged a través de AutoPostBack
                     __doPostBack('<%= tbOT.UniqueID %>', '');
+                } else if (focusedElement.id === '<%= TextCriterio.ClientID %>') {
+                    __doPostBack('<%= TextCriterio.UniqueID %>', '');
+                } else if (focusedElement.id === '<%= TextInv.ClientID %>') {
+                    __doPostBack('<%= TextInv.UniqueID %>', '');
+                } else if (focusedElement.id === '<%= TextCriterioModulo.ClientID %>') {
+                    __doPostBack('<%= TextCriterioModulo.UniqueID %>', '');
+                } else if (focusedElement.id === '<%= TextDescripcionFamilia.ClientID %>') {
+                    __doPostBack('<%= TextDescripcionFamilia.UniqueID %>', '');
+                } else if (focusedElement.id === '<%= TextAlturaModulo.ClientID %>') {
+                    __doPostBack('<%= TextAlturaModulo.UniqueID %>', '');
+                } 
 
-                    // Si el elemento enfocado es el TextBox "tbOT"
-                    if (focusedElement.id === '<%= TextCriterio.ClientID %>') {
-                        // Disparar el evento OnTextChanged a través de AutoPostBack
-                        __doPostBack('<%= TextCriterio.UniqueID %>', '');
-
-                        if (focusedElement.id === '<%= TextInv.ClientID %>') {
-                            // Disparar el evento OnTextChanged a través de AutoPostBack
-                            __doPostBack('<%= TextInv.UniqueID %>', '');
-
-                            if (focusedElement.id === '<%= TextCriterioModulo.ClientID %>') {
-                                __doPostBack('<%= TextCriterioModulo.UniqueID %>', '');
-
-                                if (focusedElement.id === '<%= TextDescripcionFamilia.ClientID %>') {
-                                    __doPostBack('<%= TextDescripcionFamilia.UniqueID %>', '');
-
-                                    if (focusedElement.id === '<%= TextAlturaModulo.ClientID %>') {
-                                           __doPostBack('<%= TextAlturaModulo.UniqueID %>', ''); 
-
-            // Prevenir la acción predeterminada para que no se envíe el formulario completo
-            event.preventDefault();
-        }
-        // Aquí revisamos los campos específicos
-        if (focusedElement.id === "tbBuscarAcaba" || focusedElement.id === "tbCriterio" || focusedElement.id === "tbAltura" || focusedElement.id === "tbAncho") {
-            // Hacer clic en el botón de búsqueda
-            document.getElementById('<%= btnBuscarActivos.ClientID %>').click();
-                                        event.preventDefault(); // Prevenir el envío del formulario
-                                    } else if (focusedElement.id === "ddlGrupo") {
-                                        // Hacer clic en el botón de búsqueda
-                                        document.getElementById('<%= btnBuscarActivos.ClientID %>').click();
-            event.preventDefault(); // Prevenir el envío del formulario
-        } else {
-            event.preventDefault(); // Evitar que se envíe el formulario
-        }
-                                }
-                            });
+                // Revisar campos específicos para hacer clic en el botón de búsqueda
+                if (focusedElement.id === "tbBuscarAcaba" ||  focusedElement.id === "tbCriterio" ||  focusedElement.id === "tbAltura" ||  focusedElement.id === "tbAncho")
+                {
+                
+                    document.getElementById('<%= btnBuscarActivos.ClientID %>').click();
+                    event.preventDefault(); // Prevenir el envío del formulario
+                } else if (focusedElement.id === "ddlGrupo") {
+                    document.getElementById('<%= btnBuscarActivos.ClientID %>').click();
+                    event.preventDefault(); // Prevenir el envío del formulario
+                } else {
+                    event.preventDefault(); // Evitar que se envíe el formulario completo
+                }
+            }
+        });
     </script>
 
     <script>   
@@ -6264,4 +6253,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
 </body>
+
 </html>
