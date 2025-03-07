@@ -355,19 +355,19 @@
 
 
                     <li class="nav-item">
-                        <a class="nav-link text-white active" id="OTs-tab" data-bs-toggle="tab" href="#OTs-Content"><i class="bi bi-person-fill-gear"></i> Ordenes Trabajo</a>
+                        <a class="nav-link text-white active" id="OTs-tab" data-bs-toggle="tab" href="#OTs-Content"><i class="bi bi-person-fill-gear"></i>Ordenes Trabajo</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" id="Plano-tab" data-bs-toggle="tab" href="#Plano-Content"><i class="bi bi-file-image-fill"></i> Plano</a>
+                        <a class="nav-link text-white" id="Plano-tab" data-bs-toggle="tab" href="#Plano-Content"><i class="bi bi-file-image-fill"></i>Plano</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-whiite " id="Objeto-tab" data-bs-toggle="tab" href="#Objeto-Content"><i class="bi bi-box-fill"></i> Objetos</a>
+                        <a class="nav-link text-whiite " id="Objeto-tab" data-bs-toggle="tab" href="#Objeto-Content"><i class="bi bi-box-fill"></i>Objetos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" id="Modulo-tab" data-bs-toggle="tab" href="#Modulo-Content"><i class="bi bi-inboxes-fill"></i> Modulos</a>
+                        <a class="nav-link text-white" id="Modulo-tab" data-bs-toggle="tab" href="#Modulo-Content"><i class="bi bi-inboxes-fill"></i>Modulos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white " id="Insumo-tab" data-bs-toggle="tab" href="#Insumo-Content"><i class="bi bi-grid-3x3-gap-fill"></i> Insumos</a>
+                        <a class="nav-link text-white " id="Insumo-tab" data-bs-toggle="tab" href="#Insumo-Content"><i class="bi bi-grid-3x3-gap-fill"></i>Insumos</a>
                     </li>
                 </ul>
             </div>
@@ -1696,9 +1696,10 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 d-flex gap-3">
+                                            <!-- Label OT Cerrada -->
+                                            <asp:Label ID="LabelOTCerrada" ClientIDMode="Static" runat="server" Text="OT cerrada" class="rounded p-2" BackColor="#DD0000" style="height:2rem; width:15rem;" ForeColor="white" Visible="false"></asp:Label>
 
-                                            <asp:Label ID="LabelOTCerrada" ClientIDMode="Static" runat="server" Text="OT cerrada" BackColor="#DD0000" ForeColor="white" Font-Size="X-Large" Width="14.9em" Visible="false" CssClass="rounded-label"></asp:Label>
 
                                         </div>
 
@@ -1803,9 +1804,9 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-6">
-                                        <!-- Esta Coluna se Puede ultilzar-->
-
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 d-flex">
+                                        <!-- Label Parar Cartera -->
+                                        <asp:Label ID="lblPararCartera" runat="server" Text="OT parada por cartera" class="rounded p-2" BackColor="#DD0000" style="height:2rem; width:12rem;" ForeColor="white" Visible="false"></asp:Label>
                                     </div>
 
                                 </div>
@@ -2005,9 +2006,9 @@
                                                     <asp:LinkButton runat="server" CssClass="btn btn-sm shadow-sm border ColorAzulActivo pb-1" title="Control dibujo " ID="btnControlDibujo" OnClick="btnControlDibujo_Click" Visible="false">
                                                         <i class="bi bi-card-checklist"></i>
                                                     </asp:LinkButton>
-                                                    <asp:LinkButton runat="server" CssClass="btn btn-sm shadow-sm border ColorAzulActivo"  aria-label="Close" title="Ver Archivo Web" ID="btnVerArchivoControl"  OnClick="btnVerArchivoControl_Click" Visible="false">
+                                                    <asp:LinkButton runat="server" CssClass="btn btn-sm shadow-sm border ColorAzulActivo" aria-label="Close" title="Ver Archivo Web" ID="btnVerArchivoControl" OnClick="btnVerArchivoControl_Click" Visible="false">
                                                    <i class="bi bi-eye"></i>
-                                                   </asp:LinkButton>
+                                                    </asp:LinkButton>
                                                 </div>
 
 
@@ -3080,10 +3081,10 @@
                                                 <div class="input-group gap-2">
                                                     <asp:Label class="form-label" Text="Link" runat="server" ID="lbLink"></asp:Label>
                                                     <asp:TextBox ID="tbUrlArchivo" runat="server" CssClass="form-control form-control-sm"></asp:TextBox>
-                                                      <asp:LinkButton runat="server" CssClass="btn btn-sm shadow-sm border"  aria-label="Close" title="Control dibujo " ID="btnGuardarLinkArchivoControl" OnClick="btnGuardarLinkArchivoControl_Click">
+                                                    <asp:LinkButton runat="server" CssClass="btn btn-sm shadow-sm border" aria-label="Close" title="Control dibujo " ID="btnGuardarLinkArchivoControl" OnClick="btnGuardarLinkArchivoControl_Click">
                                                        <i class="bi bi-floppy-fill"></i>
-                                                     </asp:LinkButton>
-            
+                                                    </asp:LinkButton>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -3662,53 +3663,53 @@
                                                 <ul class="nav nav-tabs gap-3" id="miPestañas24">
                                                     <li class="nav-item">
                                                         <a class="nav-link text-white active" id="InfOT-tab" data-bs-toggle="tab" href="#InfOT-Content">
-                                                            <i class="bi bi-info-circle"></i> Inf. OT
+                                                            <i class="bi bi-info-circle"></i>Inf. OT
                                                         </a>
                                                     </li>
                                                     <li class="nav-item">
                                                         <a class="nav-link text-white" id="Produccion-tab" data-bs-toggle="tab" href="#Produccion-Content">
-                                                            <i class="bi bi-tools"></i> Producción
+                                                            <i class="bi bi-tools"></i>Producción
                                                         </a>
                                                     </li>
                                                     <li class="nav-item">
                                                         <a class="nav-link text-white" id="Insumos-tab" data-bs-toggle="tab" href="#Insumos-Content">
-                                                            <i class="bi bi-box-seam"></i> Insumos
+                                                            <i class="bi bi-box-seam"></i>Insumos
                                                         </a>
                                                     </li>
 
                                                     <li class="nav-item">
                                                         <a class="nav-link text-white" id="RXProceso-tab" data-bs-toggle="tab" href="#RXProceso-Content">
-                                                            <i class="bi bi-gear"></i> R. XProceso
+                                                            <i class="bi bi-gear"></i>R. XProceso
                                                         </a>
                                                     </li>
 
                                                     <li class="nav-item">
                                                         <a class="nav-link text-white" id="MO-tab" data-bs-toggle="tab" href="#MO-Content">
-                                                            <i class="bi bi-motherboard"></i> MO
+                                                            <i class="bi bi-motherboard"></i>MO
                                                         </a>
                                                     </li>
 
                                                     <li class="nav-item">
                                                         <a class="nav-link text-white" id="Despiece-tab" data-bs-toggle="tab" href="#Despiece-Content">
-                                                            <i class="bi bi-grid-3x3-gap"></i> Despiece
+                                                            <i class="bi bi-grid-3x3-gap"></i>Despiece
                                                         </a>
                                                     </li>
 
                                                     <li class="nav-item">
                                                         <a class="nav-link text-white" id="Consultas-tab" data-bs-toggle="tab" href="#Consultas-Content">
-                                                            <i class="bi bi-search"></i> Consultas
+                                                            <i class="bi bi-search"></i>Consultas
                                                         </a>
                                                     </li>
 
                                                     <li class="nav-item">
                                                         <a class="nav-link text-white" id="Admon-tab" data-bs-toggle="tab" href="#Admon-Content">
-                                                            <i class="bi bi-person-badge"></i> Admon
+                                                            <i class="bi bi-person-badge"></i>Admon
                                                         </a>
                                                     </li>
 
                                                     <li class="nav-item">
                                                         <a class="nav-link text-white" id="Rem-tab" data-bs-toggle="tab" href="#Rem-Content">
-                                                            <i class="bi bi-grid"></i> Rem x Mod
+                                                            <i class="bi bi-grid"></i>Rem x Mod
                                                         </a>
                                                     </li>
 
@@ -3729,7 +3730,7 @@
                                                     <asp:UpdatePanel ID="PanelInfOT" runat="server" UpdateMode="Conditional" DefaultButton="btnSubmit">
                                                         <ContentTemplate>
 
-                                                            <div class="container-fluid border rounded shadow" style="padding:1.5rem;">
+                                                            <div class="container-fluid border rounded shadow" style="padding: 1.5rem;">
 
                                                                 <div class="card">
 
@@ -4630,23 +4631,23 @@
                                                 <div class="col-12">
                                                     <div class="table-responsive mb-1" style="max-height: 30rem; height: 32rem; overflow-x: auto;">
                                                         <h5 class="datagrid-header text-center">Despiece</h5>
-                                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true"  AutoGenerateColumns="false" ID="DataGridDespiecePlano" runat="server" OnItemDataBound="DataGridDespiecePlano_ItemDataBound" OnItemCommand="DataGridDespiecePlano_LinkButton">
+                                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridDespiecePlano" runat="server" OnItemDataBound="DataGridDespiecePlano_ItemDataBound" OnItemCommand="DataGridDespiecePlano_LinkButton">
                                                             <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                             <Columns>
-                                                                <asp:TemplateColumn HeaderText="..." ItemStyle-Width="20px" >
+                                                                <asp:TemplateColumn HeaderText="..." ItemStyle-Width="20px">
                                                                     <ItemTemplate>
                                                                         <asp:LinkButton ID="lnkView" runat="server" CssClass="Tam" CommandName="VerPlano" CommandArgument='<%# Container.ItemIndex %>' Text="<i class='bi bi-pencil-square bi-4x'></i>"
                                                                             Visible='<%# !string.IsNullOrEmpty(Eval("ID")?.ToString()) %>' />
                                                                     </ItemTemplate>
                                                                 </asp:TemplateColumn>
 
-                                                                <asp:TemplateColumn ItemStyle-Width="30px"  ItemStyle-CssClass="auto-width-column10 ampliarcolumna">
+                                                                <asp:TemplateColumn ItemStyle-Width="30px" ItemStyle-CssClass="auto-width-column10 ampliarcolumna">
                                                                     <HeaderTemplate>
-                                                                        <asp:Label ID="lblHeader"  runat="server" Visible="true">Grupo </asp:Label>
+                                                                        <asp:Label ID="lblHeader" runat="server" Visible="true">Grupo </asp:Label>
                                                                     </HeaderTemplate>
-                                                                    <ItemTemplate >
-                                                                        <asp:Label ID="lblTitulo" style="font-size:0.7rem !important;"  runat="server"      title='<%# Eval("Titulo") != null ? Eval("Titulo").ToString().Replace("<b>", "") : "" %>'      Text='<%# Eval("Titulo") %>'></asp:Label>
+                                                                    <ItemTemplate>
+                                                                        <asp:Label ID="lblTitulo" Style="font-size: 0.7rem !important;" runat="server" title='<%# Eval("Titulo") != null ? Eval("Titulo").ToString().Replace("<b>", "") : "" %>' Text='<%# Eval("Titulo") %>'></asp:Label>
                                                                     </ItemTemplate>
                                                                 </asp:TemplateColumn>
 
@@ -5064,12 +5065,12 @@
                                             <ul class="nav nav-tabs gap-3" id="miPestañas23">
                                                 <li class="nav-item">
                                                     <a class="nav-link text-white active" id="InfObjetos-tab" data-bs-toggle="tab" href="#InfObjetos-Content">
-                                                        <i class="bi bi-info-circle"></i> Información Objetos
+                                                        <i class="bi bi-info-circle"></i>Información Objetos
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
                                                     <a class="nav-link text-white" id="DespiecePrecio-tab" data-bs-toggle="tab" href="#DespiecePrecio-Content">
-                                                        <i class="bi bi-tools"></i> Despiece y Precio del Objeto
+                                                        <i class="bi bi-tools"></i>Despiece y Precio del Objeto
                                                     </a>
                                                 </li>
                                             </ul>
@@ -6192,12 +6193,11 @@
                     __doPostBack('<%= TextDescripcionFamilia.UniqueID %>', '');
                 } else if (focusedElement.id === '<%= TextAlturaModulo.ClientID %>') {
                     __doPostBack('<%= TextAlturaModulo.UniqueID %>', '');
-                } 
+                }
 
                 // Revisar campos específicos para hacer clic en el botón de búsqueda
-                if (focusedElement.id === "tbBuscarAcaba" ||  focusedElement.id === "tbCriterio" ||  focusedElement.id === "tbAltura" ||  focusedElement.id === "tbAncho")
-                {
-                
+                if (focusedElement.id === "tbBuscarAcaba" || focusedElement.id === "tbCriterio" || focusedElement.id === "tbAltura" || focusedElement.id === "tbAncho") {
+
                     document.getElementById('<%= btnBuscarActivos.ClientID %>').click();
                     event.preventDefault(); // Prevenir el envío del formulario
                 } else if (focusedElement.id === "ddlGrupo") {

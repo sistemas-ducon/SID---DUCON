@@ -2097,6 +2097,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
+            if (EsParadaPorCartera(id, pedido))
+            {
+                lblPararCartera.Text = "OT parada por cartera";
+                lblPararCartera.CssClass = "rounded p-2";
+
+                lblPararCartera.Visible = true;
+            }
+            else
+            {
+                lblPararCartera.Visible = false;
+            }
 
 
             Cargar_Plano(id, pedido);
@@ -2115,6 +2126,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session["ValorDeObra"] = valorTextBox;
 
             Session["CargarOTsEjecutada"] = true;
+        }
+
+        private bool EsParadaPorCartera(string idOT, string consecutivoPedido)
+        {
+            bool parada = false;
+
+            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString))
+            {
+                sqlconectar.Open();
+                string query = "SELECT 1 FROM tblReporteOT WHERE Id_OT = @IdOT AND Consecutivo_Pedido = @Pedido AND PararDespacho = 1";
+
+                using (SqlCommand cmd = new SqlCommand(query, sqlconectar))
+                {
+                    cmd.Parameters.AddWithValue("@IdOT", idOT);
+                    cmd.Parameters.AddWithValue("@Pedido", consecutivoPedido);
+
+                    object result = cmd.ExecuteScalar();
+                    parada = result != null;
+                }
+            }
+            return parada;
         }
 
         private bool TryExecuteOTQuery(string id, string pedido, SqlConnection connection, out SqlDataReader leer)
@@ -2150,7 +2182,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     DateTime fechaCierre = (DateTime)leer["Fecha_Cierre"];
                     LabelOTCerrada.Visible = true;
-                    LabelOTCerrada.Text = "OT cerrada el día " + fechaCierre.ToString("dd/MM/yyyy");
+                    LabelOTCerrada.Text = "OT cerrada el dia  " + fechaCierre.ToString("dd/MM/yyyy");
                     LiteralFechaCierre.Text = fechaCierre.ToString("dd/MM/yyyy");
                     // Esperar 1 segundo antes de abrir el modal
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "setTimeout(function() { openModal(); }, 1000);", true);
@@ -3536,6 +3568,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             catch (Exception ex)
             {
 
+            }
+
+            if (EsParadaPorCartera(id, pedido))
+            {
+                lblPararCartera.Text = "OT parada por cartera";
+                lblPararCartera.CssClass = "rounded p-2";
+
+                lblPararCartera.Visible = true;
+            }
+            else
+            {
+                lblPararCartera.Visible = false;
             }
 
             Cargar_Plano(id, pedido);
