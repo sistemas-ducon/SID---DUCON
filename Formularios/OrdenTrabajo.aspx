@@ -14,7 +14,7 @@
 
 
     <script>
-        // Mostrar y Ocultar  acabados plano REVISAR PARA PASAR A UN FORMULARIO NUEVO ACABADOS
+        // Mostrar y Ocultar  acabados plano  DE CAMBIO A UN FORMUULARIO PENDIENTE ELIMINAR  mostrarModal(), ocultarModal(), mostrarModalEliminarAcabado()
         function mostrarModal() {
             $('#ModalAcabados').modal('show');
         }
@@ -26,12 +26,18 @@
             $('#confirmarEliminarAcabado').modal('show');
         }
 
+
+        //ACTIVOS 
         function mostrarModalControlDibujo() {
             $('#modalControlDibujo').modal('show');
         }
 
         function CerrarModalControlDibujo() {
             $('#modalControlDibujo').modal('hide');
+        }
+
+        function mostrarModalCambiarCantidad() {
+            $('#confirmarCambiarCantidad').modal('show');
         }
 
     </script>
@@ -355,19 +361,19 @@
 
 
                     <li class="nav-item">
-                        <a class="nav-link text-white active" id="OTs-tab" data-bs-toggle="tab" href="#OTs-Content"><i class="bi bi-person-fill-gear"></i>Ordenes Trabajo</a>
+                        <a class="nav-link text-white active" id="OTs-tab" data-bs-toggle="tab" href="#OTs-Content"><i class="bi bi-person-fill-gear"></i> Ordenes Trabajo</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" id="Plano-tab" data-bs-toggle="tab" href="#Plano-Content"><i class="bi bi-file-image-fill"></i>Plano</a>
+                        <a class="nav-link text-white" id="Plano-tab" data-bs-toggle="tab" href="#Plano-Content"><i class="bi bi-file-image-fill"></i> Plano</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-whiite " id="Objeto-tab" data-bs-toggle="tab" href="#Objeto-Content"><i class="bi bi-box-fill"></i>Objetos</a>
+                        <a class="nav-link text-whiite " id="Objeto-tab" data-bs-toggle="tab" href="#Objeto-Content"><i class="bi bi-box-fill"></i> Objetos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" id="Modulo-tab" data-bs-toggle="tab" href="#Modulo-Content"><i class="bi bi-inboxes-fill"></i>Modulos</a>
+                        <a class="nav-link text-white" id="Modulo-tab" data-bs-toggle="tab" href="#Modulo-Content"><i class="bi bi-inboxes-fill"></i> Modulos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white " id="Insumo-tab" data-bs-toggle="tab" href="#Insumo-Content"><i class="bi bi-grid-3x3-gap-fill"></i>Insumos</a>
+                        <a class="nav-link text-white " id="Insumo-tab" data-bs-toggle="tab" href="#Insumo-Content"><i class="bi bi-grid-3x3-gap-fill"></i> Insumos</a>
                     </li>
                 </ul>
             </div>
@@ -1698,7 +1704,7 @@
 
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 d-flex gap-3">
                                             <!-- Label OT Cerrada -->
-                                            <asp:Label ID="LabelOTCerrada" ClientIDMode="Static" runat="server" Text="OT cerrada" class="rounded p-2" BackColor="#DD0000" style="height:2rem; width:15rem;" ForeColor="white" Visible="false"></asp:Label>
+                                            <asp:Label ID="LabelOTCerrada" ClientIDMode="Static" runat="server" Text="OT cerrada" class="rounded p-2" BackColor="#DD0000" Style="height: 2rem; width: 15rem;" ForeColor="white" Visible="false"></asp:Label>
 
 
                                         </div>
@@ -1806,7 +1812,7 @@
 
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 d-flex">
                                         <!-- Label Parar Cartera -->
-                                        <asp:Label ID="lblPararCartera" runat="server" Text="OT parada por cartera" class="rounded p-2" BackColor="#DD0000" style="height:2rem; width:12rem;" ForeColor="white" Visible="false"></asp:Label>
+                                        <asp:Label ID="lblPararCartera" runat="server" Text="OT parada por cartera" class="rounded p-2" BackColor="#DD0000" Style="height: 2rem; width: 12rem;" ForeColor="white" Visible="false"></asp:Label>
                                     </div>
 
                                 </div>
@@ -3111,7 +3117,7 @@
 
                         <div class="container-fluid">
 
-                            <!--Modal para Acabados Tap Plano  REVISAR PARA PASAR A UN FORMULARIO NUEVO-->
+                            <!--Modal para Acabados Tap Plano  MODAL REEMPLAZADO POR NUEVO FORMUALARIO TAB PENDIENTE POR ELIMINAR -->
                             <div id="ModalAcabados" class="modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" style="display: none;">
                                 <div class="modal-dialog modal-fullscreen ">
                                     <div class="modal-content ">
@@ -3402,14 +3408,14 @@
                                 </div>
                             </div>
 
-                            <!--Modal Definir Acabado    REVISAR PARA PASAR A UN FORMULARIO NUEVO -->
+                            <!--Modal Definir Acabado   MODAL REEMPLAZADO POR NUEVO FORMUALARIO TAB PENDIENTE POR ELIMINAR  -->
                             <div class="modal" id="modalDefinirAcabado" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" style="display: none;">
                                 <div class="modal-dialog modal-xl modal-dialog-centered ">
                                     <div class="modal-content">
 
                                         <div class="modal-header pb-2 text-white" style="background: radial-gradient(circle, #afb5b9, #23273be6)">
                                             <h6 class="text-white m-0">Definir Acabado</h6>
-                                            <asp:Label ID="lb_ID_AcadoMod" runat="server" Text="Label" Visible="true"></asp:Label>
+                                            <asp:Label ID="lb_ID_AcadoMod" runat="server" Text="" Visible="true"></asp:Label>
                                             <button type="button" class="btn-close btn-close-white" style="color: white!important;" data-bs-dismiss="modal" aria-label="Close" title="Cerrar y volver a OT"></button>
                                         </div>
 
@@ -3627,7 +3633,7 @@
                                 </div>
                             </div>
 
-                            <!--Modal Eliminar Acabado Plano  REVISAR PARA PASAR A UN FORMULARIO NUEVO -->
+                            <!--Modal Eliminar Acabado Plano  POR NUEVO FORMUALARIO TAB PENDIENTE POR ELIMINAR  -->
                             <div id="confirmarEliminarAcabado" class="modal" tabindex="-1" style="display: none;">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
@@ -4363,6 +4369,31 @@
                                             <div class="container-fluid d-flex justify-content-center gap-5 p-0">
                                                 <asp:Button runat="server" ID="btnRedefinirBolsa_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-primary" Style="width: 5rem;" OnClick="btnRedefinirBolsa_SI_Click" />
                                                 <asp:Button runat="server" ID="btnRedefinirBolsa_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass=" btn btn-sm btn-outline-secondary" Style="width: 5rem;" />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Modal confirmar cambiar cantidad  -->
+                            <div id="confirmarCambiarCantidad" class="modal" tabindex="-1" style="display: none;">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-primary text-white">
+                                            <h5 class="modal-title text-center">Cambiar Cantidad</h5>
+
+                                        </div>
+                                        <div class="modal-body border rounded">
+                                            <div class="container-fluid">
+                                                <h6>¿Esta seguro de cambiar la cantidad del objeto <span runat="server" id="spanObjeto"></span> con ancho <span runat="server" id="spanAncho"></span>  </h6>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="container-fluid d-flex justify-content-center gap-5 p-0">
+                                                <asp:Button runat="server" ID="btnCambiarCantidad_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-primary" Style="width: 5rem;" OnClick="btnCambiarCantidad_SI_Click" />
+                                                <asp:Button runat="server" ID="btnCambiarCantidad_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-secondary" Style="width: 5rem;"  OnClick="btnCambiarCantidad_NO_Click" />
                                             </div>
 
                                         </div>
