@@ -8560,13 +8560,28 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void BtnDespiece_Click(object sender, EventArgs e)
         {
+            bool diseñoTerminado = VerificarDiseñoTerminado(lblNumDise.Text);
+
+            // Deshabilitar o habilitar botones según el estado del diseño
+            BtnCambiarCantidad.Enabled = !diseñoTerminado;
+            LinkButton10.Enabled = !diseñoTerminado;
+            BtnNueObjDes.Enabled = !diseñoTerminado;
+            BtnAdiModDes.Enabled = !diseñoTerminado;
+            BtnConObjDes.Enabled = !diseñoTerminado;
+            BtnCambiarCantidad.CssClass = diseñoTerminado ? "btn btn-sm shadow button-disabled" : "btn btn-sm shadow button-enabled";
+            LinkButton10.CssClass = diseñoTerminado ? "btn btn-sm shadow button-disabled" : "btn btn-sm shadow button-enabled";
+            BtnNueObjDes.CssClass = diseñoTerminado ? "btn btn-sm shadow button-disabled" : "btn btn-sm shadow button-enabled";
+            BtnAdiModDes.CssClass = diseñoTerminado ? "btn btn-sm shadow button-disabled" : "btn btn-sm shadow button-enabled";
+            BtnConObjDes.CssClass = diseñoTerminado ? "btn btn-sm shadow button-disabled" : "btn btn-sm shadow button-enabled";
+
+
             // Verificar el estado de la pestaña desde la sesión
             bool tabAbierto = Session["TabDespieceEstado"] != null && (bool)Session["TabDespieceEstado"];
 
             if (!tabAbierto)
             {
                 // Si la pestaña está cerrada, la abrimos y llenamos el DataGrid
-                BindDataGrid();
+              
                 Session["TabDespieceEstado"] = true; // Marcar como abierto
             }
             else
@@ -8579,10 +8594,31 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 Session["TabDespieceEstado"] = false; // Marcar como cerrado
             }
 
+            BindDataGrid();
+
             // Ejecutamos el script para mostrar/ocultar el tab
             ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarTabDespieceScript", "mostrarTabDespiece();", true);
         }
 
+        private bool VerificarDiseñoTerminado(string numeroDiseño)
+        {
+            bool terminado = false;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "SELECT COUNT(*) FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseño AND TerminadoDibujo = 1";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@NumeroDiseño", numeroDiseño);
+                    conn.Open();
+                    int count = Convert.ToInt32(cmd.ExecuteScalar());
+                    terminado = (count > 0);
+                }
+            }
+
+            return terminado;
+        }
 
 
         private void ActualizarSubTotalZona()
@@ -8878,6 +8914,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "OcultarTabDespieceScript", "cerrarTab();", true);
 
+                    // Store the selected row index in the DataGrid attribute
+                    Datagrid5.Attributes["SelectedRowIndex"] = rowIndex.ToString();
+
+                    // Scroll to the row
+                    row.Attributes["id"] = "Datagrid5_row_" + rowIndex;
+                    ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('Datagrid5_row_" + rowIndex + "');", true);
+
 
                 }
             }
@@ -9126,6 +9169,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     e.Item.BackColor = System.Drawing.Color.Red;
                     e.Item.ForeColor = System.Drawing.Color.White; // Opcional: cambiar el color del texto a blanco para mejorar la legibilidad
                 }
+
+                if (Session["SelectedRowIndexDesPla"] != null && e.Item.ItemIndex == Convert.ToInt32(Session["SelectedRowIndexDesPla"]))
+                {
+                    e.Item.CssClass = "fila-seleccionada1"; // Aplicar la clase a la fila seleccionada
+                    e.Item.Attributes["id"] = "row_" + e.Item.ItemIndex;
+                }
             }
         }
 
@@ -9149,6 +9198,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 Session["Id_NumericoDise"] = row.Cells[1].Text;
 
+                Session["SelectedRowIndex"] = rowIndex;
+
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
+                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
+
                 DateTime? primerClicTime = Session["PrimerClicTime5"] as DateTime?;
                 if (primerClicTime != null && (DateTime.Now - primerClicTime.Value).TotalSeconds <= 1)
                 {
@@ -9171,6 +9228,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     // Limpia las variables de sesión
                     Session.Remove("PrimerClicTime5");
+
+                      int selectedRowIndex = Convert.ToInt32(Session["SelectedRowIndexDesPla"]);
+                            ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", $"focusAndScrollToRow('row_{selectedRowIndex}');", true);
                 }
                 else
                 {
