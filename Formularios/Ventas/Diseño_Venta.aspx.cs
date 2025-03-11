@@ -978,7 +978,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void EnviarCorreosDeNotificacion(string NombreUsuario, string rutaArchivo)
         {
             string cedulaLogeada = Session["CedulaLogeada"].ToString();
-            string correoAsesor = DropDownList1.SelectedValue;
+            string correoAsesor = ObtenerCodigoAsesorPorNumeroDiseño(lblNumDise.Text);
             string EnviadoA = ObtenerCorreoAsesorComercial(correoAsesor);
 
             EnviadoA += ObtenerCorreos("mailTerminadoDiseñoDibujo" + TextZona.SelectedItem.Text);
@@ -1049,6 +1049,37 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
+
+        private string ObtenerCodigoAsesorPorNumeroDiseño(string numeroDiseño)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string codigoAsesor = string.Empty;
+
+            string consulta = @"
+        SELECT ac.CodigoAsesor 
+        FROM tblDiseño d
+        INNER JOIN tblAsesorComercial ac 
+            ON d.Asesor = (ac.Nombre + ' ' + ac.Apellidos) -- Concatenamos Nombre y Apellidos
+        WHERE d.Numero_Diseño = @NumeroDiseño";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(consulta, conn))
+                {
+                    cmd.Parameters.AddWithValue("@NumeroDiseño", numeroDiseño);
+                    conn.Open();
+                    object resultado = cmd.ExecuteScalar();
+
+                    if (resultado != null)
+                    {
+                        codigoAsesor = resultado.ToString().Trim();
+                    }
+                }
+            }
+
+            return codigoAsesor;
+        }
+
 
         protected void AdjuntarOtroArchivo_Click(object sender, EventArgs e)
         {
@@ -8902,6 +8933,26 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                     conn.Close();
                 }
+
+                // Cálculo de la columna "Sub Total"
+                decimal valor = 0;
+                decimal cantidad = 0;
+
+                // Verificar si los valores son válidos antes de convertir
+                object valorObj = DataBinder.Eval(e.Item.DataItem, "SubTotalZona");
+                object cantidadObj = DataBinder.Eval(e.Item.DataItem, "Cantidad");
+
+                if (valorObj != DBNull.Value)
+                    valor = Convert.ToDecimal(valorObj);
+
+                if (cantidadObj != DBNull.Value)
+                    cantidad = Convert.ToDecimal(cantidadObj);
+
+                // Multiplicación para obtener el SubTotal
+                decimal subTotal = valor * cantidad;
+
+                // Asigna el resultado a la celda correspondiente (Asegúrate de que el índice sea correcto)
+                e.Item.Cells[6].Text = subTotal.ToString("N2"); // Formato con 2 decimales
             }
         }
 
