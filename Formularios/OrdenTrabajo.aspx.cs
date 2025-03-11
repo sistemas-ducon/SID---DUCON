@@ -8232,24 +8232,33 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             Session["Id_OT2"] = tbOT.Text;
             Session["pedido2"] = ddlNumbers.SelectedItem.Text;
+            Session["planoAcabado"] = txtPlano.Text;
+            Session["estadoBotonOk"] = btnOk.Enabled;
 
 
-            if ((Session["Departamento"].ToString() == "Diseño" || Session["Departamento"].ToString() == "Ventas") && ((tbOT.Text != "" && btnOk.Enabled == true) || tbOT.Text == ""))
-            {
-                Cargar_AcabadosPlanoDibujo();
-                DataGridAcabados1.DataBind();
-            }
 
-            // limpiar variables de session 
+            //if ((Session["Departamento"].ToString() == "Diseño" || Session["Departamento"].ToString() == "Ventas") && ((tbOT.Text != "" && btnOk.Enabled == true) || tbOT.Text == ""))
+            //{
+            //    Cargar_AcabadosPlanoDibujo();
+            //    DataGridAcabados1.DataBind();
+            //}
+
+            // limpiar variables de session  (cuando dan click en alguna fila de los acabados
             Session.Remove("DescripAcabadoSession");
             Session.Remove("DescripGrupoSession");
             Session.Remove("DetalleAdicionalSession");
 
 
-            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ModalAcabados').modal('show');", true);
+            // Abre modal de acabado 
+            //ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal", "$('#ModalAcabados').modal('show');", true);
+
+
+            //Redirecciona a la pagina de Acabados 
+            Response.Redirect("FormExtprin/AcabadosOtDibujante.aspx");
 
         }
 
+        //12 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR 
         protected void DataGridAcabadoVentas_ItemCommand(object source, DataGridCommandEventArgs e)
         {
             int rowIndex = Convert.ToInt32(e.CommandArgument);
@@ -8283,6 +8292,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
+        //13 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR 
         protected void btnAgregarAcabado_Click(object sender, EventArgs e)
         {
             // valida que se haya seleccionado un acabado 
@@ -8331,6 +8341,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
+        //14 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR 
         public bool AgregarAcabado()
         {
             // Consulta SQL para insertar un nuevo registro
@@ -8375,7 +8386,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
-        }
+        } 
+
         public void DepartamentoAsesor()
         {
 
@@ -8406,7 +8418,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         } // Campo se podria Cargar en el login
          
-        //REVISAR PARA PASAR A UN FORMULARIO NUEVO 
+        // 1 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR  --------------------------------------------------
         protected void DataGridAcabados1_ItemCommand(object source, DataGridCommandEventArgs e)
         {
             int rowIndex = Convert.ToInt32(e.CommandArgument);
@@ -8570,12 +8582,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-        //REVISAR PARA PASAR A UN FORMULARIO NUEVO 
+        //2 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR 
         protected void btnCerrarAcabadosPlano_Click(object sender, EventArgs e)
         {
             Response.Redirect("OrdenTrabajo.aspx");
         }
 
+        //9 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR 
         protected void btnEliminarAcabado_SI_Click(object sender, EventArgs e)
         {
 
@@ -8588,6 +8601,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModal", script1, true);
         }
 
+        //10 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR 
         private void EliminarAcabaDefinitivo()
         {
             // Consulta para verificar si el usuario tiene permisos
@@ -8607,6 +8621,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        //11 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR 
         protected void btneliminarAcabado_NO_Click(object sender, EventArgs e)
         {
             string script1 = @"mostrarModal();";
@@ -8615,6 +8630,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session.Remove("IdAcabadoElimnar");
 
         }
+
+        //---------------------------------------------------------------------------------------------------------
 
 
         //*****  Incio Boton Leer Autocad Pendiente Implementacion ******
@@ -13758,7 +13775,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return existe;
         }
 
-        // Metodos  Cargar Acabado Plano Dibujo 
+        // Metodos  Cargar Acabado Plano Dibujo ------------------------------------------------------------------------------
+        //15
         private void Cargar_AcabadosPlanoDibujo()
         {
             bool TerminadoDibujo = btnOk.Enabled;
@@ -13832,6 +13850,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        //16
         private void ActualizarAcabadosDefinitivo()
         {
             // Consulta para verificar si el usuario tiene permisos
@@ -13852,6 +13871,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        //17
         private DataTable ConsultarAcabadoDesdeModInsumo()
         {
             DataTable dataTable = new DataTable();
@@ -13894,6 +13914,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return dataTable;
         }
 
+        //18
         public bool ConsultarAcabadoDefiniIdFamiliaIdInsumo(string ID_Familia, string ID_Insumo)
         {
             bool existe = false;
@@ -13927,6 +13948,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return existe;
         }
 
+        //19
         private void InsertarItemAcabado(string ID_Familia, string DescriFam, string ID_Insumo, string IdInventario, string Descri_Insumo, string ApliAcabado, string IdGruAcab, string DescrpGrup, string DescObj)
         {
             // Consulta para verificar si el usuario tiene permisos
@@ -13961,6 +13983,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        //20
         private void AcualizarAcabadoInactivo(string ID_Familia, string ID_Insumo)
         {
             // Consulta para verificar si el usuario tiene permisos
@@ -13985,6 +14008,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        //21
         private DataTable ConsultarAcabadoGrupoInsumo()
         {
             DataTable dataTable = new DataTable();
@@ -14025,6 +14049,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return dataTable;
         }
 
+        //22
         public bool ConsultarAcabadoDefiXIdGrupo(string ID_Grupo)
         {
             bool existe = false;
@@ -14056,6 +14081,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return existe;
         }
 
+        //23
         private void InsertarItemAcabadoIdGrupo(string ID_Grupo, string DescripGrupo)
         {
             // Consulta para verificar si el usuario tiene permisos
@@ -14082,6 +14108,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        //24
         private void AcualizarAcabadoInactivoIdGrupo(string ID_Grupo)
         {
             // Consulta para verificar si el usuario tiene permisos
@@ -14106,6 +14133,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        //25
         private void EliminarAcabaDefinitivoInactivo()
         {
             // Consulta para verificar si el usuario tiene permisos
@@ -14126,6 +14154,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
         }
+        //------------------------------------------------------------------------------------------------------------
 
         // Conteo Cantidad elementos en el plano 
         public int ValidarCantidadElementosDespiece()
@@ -20160,7 +20189,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
 
-        // Definir Acabados del plano 
+        // Definir Acabados del plano  // LOS METODOS DE ESTA SECCION SE CAMBIARON PARA OTRO FORMULARIO ------------------------------------------
+
+        //5  SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR
         protected void chkTodoAcabados_CheckedChanged(object sender, EventArgs e)
         {
 
@@ -20193,6 +20224,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
+        //3  SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR
         protected void tbBuscarAcaba_TextChanged(object sender, EventArgs e)
         {
 
@@ -20223,6 +20255,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
         }
 
+        //7  SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR
         protected void DataGridDefinirAcabado_ItemCommand(object source, DataGridCommandEventArgs e)
         {
             int rowIndex = Convert.ToInt32(e.CommandArgument);
@@ -20326,6 +20359,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
+        //6 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR
         protected void DataGridDefinirAcabado_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
@@ -20344,6 +20378,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        //8 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR
         private void ActualizarDefinicionAcabadoPlano()
         {
             // Consulta para verificar si el usuario tiene permisos
@@ -20368,6 +20403,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        //26 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR
         protected void btnVerOrigen_Click(object sender, EventArgs e)
         {
             if (Session["AplicadoASession"].ToString().ToUpper() == "G")
@@ -20422,6 +20458,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
         }
 
+        //4 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR
         protected void btnBuscarAcab_Click(object sender, EventArgs e)
         {
             string script1 = @"mostrarModal();";
@@ -20431,6 +20468,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
         }
 
+        //27 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR
         protected void btnAdicionarAcabado_Click(object sender, EventArgs e)
         {
 
@@ -20474,6 +20512,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
         }
 
+        //28 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR
         protected void btnModificarAcabado_Click(object sender, EventArgs e)
         {
             // Control de campos 
@@ -20504,6 +20543,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
         }
 
+        //29 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR
         protected void btnGrabarRedAcabadoNue_Click(object sender, EventArgs e)
         {
             if (tbCodInventario.Text.Trim() != "" && tbDescripAcaba.Text.Trim() != "")
@@ -20540,6 +20580,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
         }
 
+        //33 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR
         protected void btnGrabarRedAcaMod_Click(object sender, EventArgs e)
         {
             if (tbCodInventario.Text.Trim() != "" && tbDescripAcaba.Text.Trim() != "")
@@ -20565,6 +20606,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
         }
 
+       
         protected void DropDownList1_TextChanged(object sender, EventArgs e)
         {
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -20598,12 +20640,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        //35 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR
         protected void btnRefrescar_Click(object sender, EventArgs e)
         {
             Refrescar();
 
         }
 
+        //32 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR
         private void Refrescar()
         {
             btnAdicionarAcabado.Enabled = true;
@@ -20646,6 +20690,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
         }
 
+        //30 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR
         public bool ValidarExistenciaCodigoInventario(string codInventario)
         {
             bool existe = false;
@@ -20679,6 +20724,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return existe;
         }
 
+        //31 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR
         private void InsertarDefinicionAcabado()
         {
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -20707,6 +20753,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        //34 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR
         private void ActualizarDefinicionAcabado()
         {
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -23138,17 +23185,189 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         // Cambiar Cantidad en el tap plano 
         protected void btnCambiar_Click(object sender, EventArgs e)
         {
+
+            // Validar que el campo cantidad sea un número entero positivo
+            if (!int.TryParse(txtCantidad.Text, out int cantidad) || cantidad <= 0)
+            {
+                string scriptCantidadInvalida = "alert('Error: La cantidad debe ser un número entero positivo.');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "cantidadInvalida", scriptCantidadInvalida, true);
+                return; // Detener la ejecución si la validación falla
+            }
+
             // Validar si el plano se encuentra bloqueado 
+            if (ValidarPlanoBloqueado())
+            {
+                // El plano está bloqueado y no se puede eliminar
+                string scriptNoPermiso = "alert('El plano se encuentra bloqueado.');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
+            }
+            else
+            {
+                // validar si el plano esta vinvulado a una ot que ya de dieron boton por parte de dibujo
+                if (ValidarPlanoVinculado() && btnOk.Enabled == false)
+                {
+                    // No se puuede cambiar la cantidad OT terminada 
+                    string scriptNoPermiso = $"alert('No se puede Modificar Ningún Objeto, ya que el plano {txtPlano.Text} está vinculado a la Orden de Trabajo {tbOT.Text} con el pedido {ddlNumbers.SelectedItem.Text}.');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
+                }
+                else
+                {
+                    spanObjeto.InnerText = ObjetoEliminar.InnerText;
+                    spanAncho.InnerText = anchoEliminar.InnerText;
 
+                    string script2 = @"mostrarModalCambiarCantidad();";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModalCambiarCantidad", script2, true);
+                }
 
-            // validar si el plano esta vinvulado a una ot que ya de dieron boton por parte de dibujo 
+            }
 
+        }
 
+        private bool ValidarPlanoBloqueado()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "SELECT Bloqueado FROM tblPlano WHERE Plano = @plano";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
+                    connection.Open();
+
+                    object result = cmd.ExecuteScalar(); // Obtener un solo valor
+
+                    // Verificar si el resultado es NULL o si el valor es false
+                    return result != null && Convert.ToBoolean(result);
+                }
+            }
+        }
+
+        private bool ValidarPlanoVinculado()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "Select ID_OT, Consecutivo_Pedido from tblPlano where Plano= @plano";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+
+                    cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.HasRows)
+                    {
+
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+
+                    }
+
+                }
+
+            }
+        }
+
+        protected void btnCambiarCantidad_SI_Click(object sender, EventArgs e)
+        {
             // se actualiza la cantidad 
+            if (ActualizarCantidadObjeto())
+            {
+                if (ValidarTipologia())
+                {
+                    Calcular_Precio_Venta_Objeto(Session["IdObjetoEliminarSession"].ToString());
+                }
 
+                Session.Remove("ID_Item");
+                Session.Remove("ClickCount3");
 
+                Cargar_Despiece_Plano();
+
+                btnCambiar.Enabled = false;
+            }
+            else
+            {
+                // Error al actualizar la cantidad 
+                string scriptNoPermiso = "alert('No se pudo cambiar la cantidad, por favor intentelo nuevamente.');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
+            }
             // se valida si es una topologia  y si es se actualiza el precio de venta 
         }
+
+        protected void btnCambiarCantidad_NO_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+
+        public bool ActualizarCantidadObjeto()
+        {
+            string query = @"UPDATE tblPlano_Panel  SET Cantidad = @cantidad WHERE ID_Plano = @Plano AND Id_PanelNum = @Idnumerico";
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+               
+                command.Parameters.AddWithValue("@cantidad", txtCantidad.Text);
+                command.Parameters.AddWithValue("@Plano", txtPlano.Text);
+                command.Parameters.AddWithValue("@Idnumerico", Session["IdObjetoEliminarSession"].ToString());
+
+                try
+                {
+                    connection.Open();
+                    return command.ExecuteNonQuery() > 0; // Retorna true si hay filas afectadas
+                }
+                catch (Exception ex)
+                {
+                    // Logueo del error (puedes usar un sistema de logs en lugar de Console.WriteLine)
+                    Console.WriteLine("Error al actualizar Cantidad: " + ex.Message);
+                    return false;
+                }
+            }
+        }
+
+        private bool ValidarTipologia()
+        {
+            // Consulta para verificar si el usuario tiene permisos
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sSql = "Select * from tblPanel where id_Panel = @plano";
+
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+
+                    cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.HasRows)
+                    {
+
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+
+                    }
+
+                }
+
+            }
+        }
+
     }
 
 

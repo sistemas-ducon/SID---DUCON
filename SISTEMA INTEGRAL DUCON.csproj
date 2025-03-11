@@ -259,6 +259,7 @@
     <Content Include="Recursos\CSS\Consultas\Reproceso.css" />
     <Content Include="Recursos\CSS\DiseñoYDesarrollo\ObjetosDibujo.css" />
     <Content Include="Recursos\CSS\FormExtPrin\AcabadosOT.css" />
+    <Content Include="Recursos\CSS\FormExtPrin\AcabadosOtDibujante.css" />
     <Content Include="Recursos\CSS\FormExtPrin\NitOts.css" />
     <Content Include="Recursos\CSS\FormExtPrin\ObjetoDespiece.css" />
     <Content Include="Recursos\CSS\FormExtPrin\Objetos.css" />
