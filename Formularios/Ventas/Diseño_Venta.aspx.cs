@@ -9154,29 +9154,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string revisadoDibujo = DataBinder.Eval(e.Item.DataItem, "RevisadoDibujo").ToString();
                 string idGrupoObjeto = DataBinder.Eval(e.Item.DataItem, "ID_GrupoObjeto").ToString();
 
-                // Verificar si RevisadoDibujo es "True"
+                // Si el registro está revisado en dibujo, lo pintamos de verde sin importar ID_GrupoObjeto
                 if (revisadoDibujo == "True")
                 {
-                    // Cambiar el color de fondo de la fila a verde
-                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#1a7c3c"); /*Verde*/
+                    e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#1a7c3c"); // Verde
                     e.Item.ForeColor = System.Drawing.Color.White;
                 }
-
-                // Verificar si ID_GrupoObjeto es igual a '6'
-                if (idGrupoObjeto == "6")
+                // Si no está revisado en dibujo y el ID_GrupoObjeto es 6, lo pintamos de rojo
+                else if (idGrupoObjeto == "6")
                 {
-                    // Cambiar el color de fondo de la fila a rojo
                     e.Item.BackColor = System.Drawing.Color.Red;
-                    e.Item.ForeColor = System.Drawing.Color.White; // Opcional: cambiar el color del texto a blanco para mejorar la legibilidad
+                    e.Item.ForeColor = System.Drawing.Color.White; // Para mejorar la legibilidad
                 }
 
                 if (Session["SelectedRowIndexDesPla"] != null && e.Item.ItemIndex == Convert.ToInt32(Session["SelectedRowIndexDesPla"]))
                 {
-                    e.Item.CssClass = "fila-seleccionada1"; // Aplicar la clase a la fila seleccionada
                     e.Item.Attributes["id"] = "row_" + e.Item.ItemIndex;
+                    Session.Remove("SelectedRowIndex");
                 }
             }
         }
+
 
         protected void DataGridDespiece_ItemCommand(object source, DataGridCommandEventArgs e)
         {
@@ -9198,7 +9196,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 Session["Id_NumericoDise"] = row.Cells[1].Text;
 
-                Session["SelectedRowIndex"] = rowIndex;
+                Session["SelectedRowIndexDesPla"] = rowIndex;
 
                 // Asignar ID único a la fila
                 row.Attributes["id"] = "row_" + rowIndex;
@@ -9223,14 +9221,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             ValidarYActualizarDibujo(row);
                             BindDataGrid();
+
+                            int selectedRowIndex = Convert.ToInt32(Session["SelectedRowIndexDesPla"]);
+                            ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", $"focusAndScrollToRow('row_{selectedRowIndex}');", true);
                         }
                     }
 
                     // Limpia las variables de sesión
                     Session.Remove("PrimerClicTime5");
 
-                      int selectedRowIndex = Convert.ToInt32(Session["SelectedRowIndexDesPla"]);
-                            ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", $"focusAndScrollToRow('row_{selectedRowIndex}');", true);
+                    
                 }
                 else
                 {
