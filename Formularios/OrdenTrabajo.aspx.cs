@@ -1594,6 +1594,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             public string ajusteCub { get; set; }
             public bool Cotizar { get; set; }
 
+            public string ID_GrupoObjeto { get; set; }
+
 
 
         }
@@ -4127,8 +4129,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             SubTotal = (Convert.ToDecimal(r["Cantidad"]) * Convert.ToDecimal(r["Precio_Venta"])).ToString(),
                             Id_Panel = r["Id_Panel"].ToString(),
                             RevisadoDibujo = Convert.ToBoolean(r["RevisadoDibujo"].ToString()),
-                            Cotizar = Convert.ToBoolean(r["cotizar"])
-
+                            Cotizar = Convert.ToBoolean(r["cotizar"]),
+                            ID_GrupoObjeto = r["ID_GrupoObjeto"].ToString()
 
 
                         });
@@ -4215,23 +4217,39 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
                 else if (!string.IsNullOrEmpty(datos.ID))
                 {
+                    // Verificar si ID_GrupoObjeto es igual a '6'
+                    if (datos.ID_GrupoObjeto == "6")
+                    {
+                        // Cambiar el color de fondo solo de una columna específica (por ejemplo, la columna 2)
+                        e.Item.Cells[5].BackColor = System.Drawing.ColorTranslator.FromHtml("#FC0026");
+                        e.Item.Cells[5].ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
+                    }
+
+                    if (datos.ValorUnd == "0")
+                    {
+                        for (int i = 4; i <= 8; i++) // Pinta las celdas de la 4 a la 8 (índices 3 a 7)
+                        {
+                            e.Item.Cells[i].BackColor = System.Drawing.ColorTranslator.FromHtml("#FC0026");
+                            e.Item.Cells[i].ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
+                        }
+
+                        Session["ValorUnd"] = "1";
+                    }
+
                     if (datos.RevisadoDibujo == true)
                     {
                         e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#47ca4b");
                         e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#000000");
+                        e.Item.Cells[4].BackColor = System.Drawing.ColorTranslator.FromHtml("#47ca4b");
+                        e.Item.Cells[5].BackColor = System.Drawing.ColorTranslator.FromHtml("#47ca4b");
+                        e.Item.Cells[6].BackColor = System.Drawing.ColorTranslator.FromHtml("#47ca4b");
+                        e.Item.Cells[7].BackColor = System.Drawing.ColorTranslator.FromHtml("#47ca4b");
+                        e.Item.Cells[8].BackColor = System.Drawing.ColorTranslator.FromHtml("#47ca4b");
+                        e.Item.Cells[9].BackColor = System.Drawing.ColorTranslator.FromHtml("#47ca4b");
                     }
                 }
 
-                if (datos.ValorUnd == "0")
-                {
-                    for (int i = 4; i <= 8; i++) // Pinta las celdas de la 4 a la 8 (índices 3 a 7)
-                    {
-                        e.Item.Cells[i].BackColor = System.Drawing.ColorTranslator.FromHtml("#FC0026");
-                        e.Item.Cells[i].ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
-                    }
-
-                    Session["ValorUnd"] = "1";
-                }
+               
 
                 //Alienar celdas el centro               
                 e.Item.Cells[4].HorizontalAlign = HorizontalAlign.Center;
@@ -4273,6 +4291,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
 
 
+               
+
+
+
             }
         }
 
@@ -4295,12 +4317,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 //se usa Para darle un color a la fila seleccionada  
                 e.Item.CssClass = "fila-seleccionada";
-                string ID = row.Cells[2].Text;
-                string Descri = row.Cells[3].Text;
-                string Ancho = row.Cells[5].Text;
-                string cantidad = row.Cells[6].Text;
-                string revisado = row.Cells[10].Text;
-                string Id_Panel = row.Cells[9].Text;
+                string ID = row.Cells[2].Text.Trim().Replace("&nbsp;","");
+                string Descri = row.Cells[3].Text.Trim().Replace("&nbsp;", ""); ;
+                string Ancho = row.Cells[5].Text.Trim().Replace("&nbsp;", "");
+                string cantidad = row.Cells[6].Text.Trim().Replace("&nbsp;", "");
+                string revisado = row.Cells[10].Text.Trim().Replace("&nbsp;", "");
+                string Id_Panel = row.Cells[9].Text.Trim().Replace("&nbsp;", "");
                 LlenarDataGridObjeto(ID);
 
 
@@ -5822,6 +5844,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     string IDNumerico = item.Cells[8].Text;
                     Calcular_Precio_Venta_Objeto(IDNumerico);
                 }
+
+                BuscarObjeto(sender, e);
 
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Se actualizo correctamente el valor venta de la consulta actual');", true);
                 return;

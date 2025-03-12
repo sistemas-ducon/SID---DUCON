@@ -1149,7 +1149,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     using (SqlCommand cmd = new SqlCommand(sSql, con))
                     {
                         cmd.Parameters.AddWithValue("@Id_Panel", TextObjetoo.Trim().ToUpper());
-                        cmd.Parameters.AddWithValue("@Descripcion_Panel", TextDesInt.Text.ToUpper());
+                        cmd.Parameters.AddWithValue("@Descripcion_Panel", TextDesInt.Text.Trim().ToUpper());
                         cmd.Parameters.AddWithValue("@Id_GrupoObjeto", DropDesGrupo.SelectedValue);
                         cmd.Parameters.AddWithValue("@Ancho", TextAncho.Text);
                         cmd.Parameters.AddWithValue("@Id_Linea", DropLinea.SelectedValue);
@@ -1161,7 +1161,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                         cmd.Parameters.AddWithValue("@Activo", CheckActivo.Checked);
                         cmd.Parameters.AddWithValue("@Responsable", nombreEmpleado);
                         cmd.Parameters.AddWithValue("@FechaChequeo", DateTime.Now.ToString("MM/dd/yyyy HH:mm"));
-                        cmd.Parameters.AddWithValue("@Descripcion_Tecnica", TextAreaDescripTec.Text.ToUpper());
+                        cmd.Parameters.AddWithValue("@Descripcion_Tecnica", TextAreaDescripTec.Text.Trim().ToUpper());
                         cmd.Parameters.AddWithValue("@idInsumoReferencia", TextIndReferencia.Text);
                         cmd.Parameters.AddWithValue("@UndxPaquete", TextUndXPaq.Text);
 
@@ -1169,7 +1169,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                         {
                             cmd.Parameters.AddWithValue("@CodPSL", TextCodPSL.Text);
                             cmd.Parameters.AddWithValue("@IdInsumo", TextIdInsumo.Text);
-                            cmd.Parameters.AddWithValue("@Descripcion_Insumo", TextInRelOtNoOai.Text);
+                            cmd.Parameters.AddWithValue("@Descripcion_Insumo", TextInRelOtNoOai.Text.Trim());
                         }
 
                         con.Open();
@@ -1213,12 +1213,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     con.Open();
 
                     // Check if Id_Panel has changed
-                    if (TextObjeto.Text.Trim() != dr["IdPanelTag"].ToString())
+                    if (TextObjeto.Text.Trim().ToUpper() != dr["IdPanelTag"].ToString())
                     {
                         string checkPanelSql = "SELECT * FROM tblPanel WHERE Id_Panel = @Id_Panel";
                         using (SqlCommand checkCmd = new SqlCommand(checkPanelSql, con))
                         {
-                            checkCmd.Parameters.AddWithValue("@Id_Panel", TextObjeto.Text.Trim());
+                            checkCmd.Parameters.AddWithValue("@Id_Panel", TextObjeto.Text.Trim().ToUpper());
                             using (SqlDataReader reader = checkCmd.ExecuteReader())
                             {
                                 if (reader.HasRows)
@@ -1236,7 +1236,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                             string checkPanelAnchoSql = "SELECT * FROM tblPanel WHERE Id_Panel = @Id_Panel AND Ancho = @Ancho AND Altura = @Altura";
                             using (SqlCommand checkAnchoCmd = new SqlCommand(checkPanelAnchoSql, con))
                             {
-                                checkAnchoCmd.Parameters.AddWithValue("@Id_Panel", TextObjeto.Text.Trim());
+                                checkAnchoCmd.Parameters.AddWithValue("@Id_Panel", TextObjeto.Text.Trim().ToUpper());
                                 checkAnchoCmd.Parameters.AddWithValue("@Ancho", TextAncho.Text.Trim());
                                 checkAnchoCmd.Parameters.AddWithValue("@Altura", TextAltura.Text.Trim());
                                 using (SqlDataReader reader = checkAnchoCmd.ExecuteReader())
@@ -1371,7 +1371,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                     using (SqlCommand update2Cmd = new SqlCommand(update2, con))
                     {
-                        update2Cmd.Parameters.AddWithValue("@Id_Panel", "N" + TextObjeto.Text.Trim());
+                        update2Cmd.Parameters.AddWithValue("@Id_Panel", "N" + TextObjeto.Text.Trim().ToUpper());
 
                         update2Cmd.ExecuteNonQuery();
                     }
@@ -1401,7 +1401,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 DataRow dr = dt.Rows[0];
                 string ObjetoNoModi = dr["IdPanelTag"].ToString();
 
-                if (ObjetoNoModi != TextObjeto.Text)
+                if (ObjetoNoModi != TextObjeto.Text.Trim().ToUpper())
                 {
                     if (!ValidarFamiliaExistente())
                     {
@@ -1492,7 +1492,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@ID_Panel", TextObjeto.Text);
+                    command.Parameters.AddWithValue("@ID_Panel", TextObjeto.Text.Trim().ToUpper());
                     command.Parameters.AddWithValue("@Ancho", TextAncho.Text);
                     command.Parameters.AddWithValue("@Altura", TextAltura.Text);
 
@@ -1512,6 +1512,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
         protected void btnContinuarProceso_SI_Click(object sender, EventArgs e)
         {
+
+            if (ValidarExistenciaObjetoAnchoAltura())
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El Objeto " + TextObjeto.Text.Trim() + " con ancho" + TextAncho.Text + " ya existe. ');", true);
+                return;
+            }
+
             string CedulaLogeada = Session["CedulaLogeada"].ToString();
 
             if (ProcesoInsertarObjetoPanel())
@@ -1611,8 +1618,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 using (SqlCommand cmd = new SqlCommand(sSql, connection))
                 {
                     connection.Open();
-                    cmd.Parameters.AddWithValue("@Id_Panel", TextObjeto.Text);
-                    cmd.Parameters.AddWithValue("@Descripcion_Panel", TextDesInt.Text);
+                    cmd.Parameters.AddWithValue("@Id_Panel", TextObjeto.Text.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@Descripcion_Panel", TextDesInt.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@Id_GrupoObjeto", DropDesGrupo.SelectedValue);
                     cmd.Parameters.AddWithValue("@Ancho", TextAncho.Text);
                     cmd.Parameters.AddWithValue("@Altura", TextAltura.Text);
@@ -1626,7 +1633,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     cmd.Parameters.AddWithValue("@chequeado", CheckChequeado.Checked);
                     cmd.Parameters.AddWithValue("@Responsable", Session["usuariologueado"].ToString());
                     cmd.Parameters.AddWithValue("@FechaChequeo", DateTime.Now);
-                    cmd.Parameters.AddWithValue("@Descripcion_Tecnica", TextAreaDescripTec.Text);
+                    cmd.Parameters.AddWithValue("@Descripcion_Tecnica", TextAreaDescripTec.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@UndxPaquete", TextUndXPaq.Text);
 
                     // Variable para validar en depuracion si se afecto alguna linea con este query 
@@ -1658,7 +1665,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     string query = "SELECT id_Numerico FROM tblpanel WHERE Id_Panel = @ID_Panel AND Ancho = @Ancho AND  Altura = @Altura";
 
                     SqlCommand command = new SqlCommand(query, connection);
-                    command.Parameters.AddWithValue("@ID_Panel", TextObjeto.Text);
+                    command.Parameters.AddWithValue("@ID_Panel", TextObjeto.Text.Trim().ToUpper());
                     command.Parameters.AddWithValue("@Ancho", TextAncho.Text);
                     command.Parameters.AddWithValue("@Altura", TextAltura.Text);
 
@@ -1692,7 +1699,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     string query = "SELECT id_Numerico FROM tblpanel WHERE Id_Panel = @ID_Panel AND Ancho = @Ancho";
 
                     SqlCommand command = new SqlCommand(query, connection);
-                    command.Parameters.AddWithValue("@ID_Panel", TextObjeto.Text);
+                    command.Parameters.AddWithValue("@ID_Panel", TextObjeto.Text.Trim().ToUpper());
                     command.Parameters.AddWithValue("@Ancho", TextAncho.Text);
 
 

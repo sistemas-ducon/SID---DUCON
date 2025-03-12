@@ -3297,7 +3297,7 @@
                                         </div>
                                         <div class="modal-body border rounded">
                                             <div class="container-fluid">
-                                                <h6>Esta seguro que desea eliminar el objetos  <span runat="server" id="ObjetoEliminar"></span>de ancho <span runat="server" id="anchoEliminar"></span>del plano ? </h6>
+                                                <h6>Esta seguro que desea eliminar el objeto  <span runat="server" id="ObjetoEliminar"></span> de ancho <span runat="server" id="anchoEliminar"></span> del plano ? </h6>
                                             </div>
 
                                         </div>
@@ -4691,6 +4691,7 @@
                                                                 <asp:BoundColumn DataField="SubTotal" HeaderText="Sub Total" ItemStyle-CssClass="auto-width-column ampliarcolumna" />
                                                                 <asp:BoundColumn DataField="Id_Panel" HeaderText="" Visible="false" />
                                                                 <asp:BoundColumn DataField="RevisadoDibujo" HeaderText="" Visible="false" />
+                                                                <asp:BoundColumn DataField="ID_GrupoObjeto" HeaderText="" Visible="false" />
 
 
                                                             </Columns>
