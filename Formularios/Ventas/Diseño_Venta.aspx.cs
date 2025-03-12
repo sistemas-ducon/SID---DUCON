@@ -9205,7 +9205,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
 
                 DateTime? primerClicTime = Session["PrimerClicTime5"] as DateTime?;
-                if (primerClicTime != null && (DateTime.Now - primerClicTime.Value).TotalSeconds <= 1)
+                if (primerClicTime != null && (DateTime.Now - primerClicTime.Value).TotalSeconds <= 60)
                 {
                     // Se compara si el click es en la misma fila
                     if (row.Cells[1].Text == Session["Id_OTdise5"]?.ToString())
@@ -10030,6 +10030,43 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
             }
+            else
+            {
+                decimal anchoCalculado = Ancho * 10;
+                string anchoInt = (anchoCalculado % 10 == 0) ?
+    Math.Floor(anchoCalculado / 10).ToString("0") :
+    (anchoCalculado / 10).ToString("0.0");
+
+                var objetosNoExistentes = Session["ObjetosNoExistentes"] as List<ObjetoNoExistente> ?? new List<ObjetoNoExistente>();
+                bool objetoExistenteActualizado = false;
+                decimal anchoDecimal = Convert.ToDecimal(anchoInt, CultureInfo.InvariantCulture);
+                for (int i = 0; i < objetosNoExistentes.Count; i++)
+                {
+
+                    if (objetosNoExistentes[i].Id_Objeto == objeto && objetosNoExistentes[i].Ancho == anchoDecimal)
+                    {
+                        objetosNoExistentes[i].Cantidad += 1;
+                        objetoExistenteActualizado = true;
+                        break;
+                    }
+                }
+                if (!objetoExistenteActualizado)
+                {
+                    if (objeto.StartsWith("EX", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (Existentes)
+                        {
+                            objetosNoExistentes.Add(new ObjetoNoExistente { Item = objetosNoExistentes.Count + 1, Id_Objeto = objeto, Ancho = anchoDecimal, Cantidad = 1 });
+                        }
+                    }
+                    else
+                    {
+                        objetosNoExistentes.Add(new ObjetoNoExistente { Item = objetosNoExistentes.Count + 1, Id_Objeto = objeto, Ancho = anchoDecimal, Cantidad = 1, Observacion = "No Existe" });
+                    }
+                }
+                Session["ObjetosNoExistentes"] = objetosNoExistentes;
+            }
+
 
             return false; // Retorna false si no hubo reinstalación
         }
@@ -10492,9 +10529,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             objetosNoExistentes.Clear();
             Session["ObjetosNoExistentes"] = objetosNoExistentes;
 
-            string mensajePersonalizado = "";
-            string urlRedireccion = "Ventas/Diseño_Venta.aspx";
-            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+            Response.Redirect($"~/Formularios/Ventas/Diseño_Venta.aspx");
+
             return;
         }
 
