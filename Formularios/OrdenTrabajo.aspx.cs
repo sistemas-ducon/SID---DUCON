@@ -2238,7 +2238,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             dtpFechaEntregaDibujoDespiece.Text = Dato9.ToString("yyyy-MM-dd");
             dtpFechaEntregaProduccion.Text = Dato2.ToString("yyyy-MM-dd");
             dtpEmpaque.Text = Dato3.ToString("yyyy-MM-dd");
-            dtpRealEmpaque.Text = Dato4.ToString("yyyy-MM-dd");
+            if (validarTerminadoVentas(leer["Id_OT"].ToString(), leer["Consecutivo_Pedido"].ToString()))
+            {
+                // Consultar la fecha de la base de datos
+                DateTime? fechaDespacho = ConsultarFechaDespachoProduccion(leer["Id_OT"].ToString(), leer["Consecutivo_Pedido"].ToString());
+
+                // Si fechaDespacho tiene valor, formatearlo; si es null, usar un valor por defecto
+                dtpRealEmpaque.Text = fechaDespacho?.ToString("yyyy-MM-dd") ?? "";
+            }
+            else
+            {
+                dtpRealEmpaque.Text = Dato4.ToString("yyyy-MM-dd");
+            }
             tbSupervisor.Text = leer["Supervisor"].ToString();
             ddlFabrica1.Text = leer["FabricadoPor"].ToString();
             ddlInstala.Text = leer["InstaladaPor"].ToString();
@@ -2904,6 +2915,61 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             return estaAbierta;
         }
+
+        public bool validarTerminadoVentas(string Ot, string Pedido)
+        {
+            string consultaActual = "SELECT Terminado_Ventas FROM tblOT WHERE Id_OT = @OT AND Consecutivo_Pedido = @Ped";
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(consultaActual, connection))
+                {
+                    cmd.Parameters.AddWithValue("@OT", Ot);
+                    cmd.Parameters.AddWithValue("@Ped", Pedido);
+
+                    object result = cmd.ExecuteScalar();
+
+                    // Si el resultado es NULL o vacío, retornamos false
+                    if (result == DBNull.Value || result == null)
+                        return false;
+
+                    // Convertimos el resultado a booleano
+                    return Convert.ToBoolean(result);
+                }
+            }
+        }
+
+        public DateTime? ConsultarFechaDespachoProduccion(string Ot, string Pedido)
+        {
+            string consultaActual = "SELECT Fecha_Empaque FROM tblReporteOT WHERE Id_OT = @OT AND Consecutivo_Pedido = @Ped";
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(consultaActual, connection))
+                {
+                    cmd.Parameters.AddWithValue("@OT", Ot);
+                    cmd.Parameters.AddWithValue("@Ped", Pedido);
+
+                    object result = cmd.ExecuteScalar();
+
+                    // Si el resultado es NULL, retornamos null
+                    if (result == DBNull.Value || result == null)
+                        return null;
+
+                    // Convertimos el resultado a DateTime
+                    return Convert.ToDateTime(result);
+                }
+            }
+        }
+
 
         //FIN MODIFICACION
         protected void ValidarAsesor()
