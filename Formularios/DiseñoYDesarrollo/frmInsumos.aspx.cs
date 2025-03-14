@@ -1103,110 +1103,68 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
         protected void BtnGrabar_Click(object sender, EventArgs e)
         {
-            // Obtener la opción de la variable de sesión
             string opcionInsumo = Session["FrmInsumo"]?.ToString();
 
-            // Capturar los datos del formulario
-            string idInsumo = textInsumo.Text.Trim();
-            string descripcionInsumo = TextDescripcionInsumo.Text;
-            int unidadMedida = Convert.ToInt32(DropAbreviado.SelectedValue);
-            int tipoInsumo = Convert.ToInt32(dtacboTipoInsumo.SelectedValue);
-            decimal valorUnitario = Convert.ToDecimal(TextValorInsumo.Text);
-            decimal factorGanancia = Convert.ToDecimal(TextFacGanInsumo.Text);
-            decimal factorDesperdicio = Convert.ToDecimal(TextFacDesInsumo.Text);
-            string idInventario = TextCodInvInsumo.Text.Trim();
-            string aplicacionAcabado = DropAcabadosDesde.SelectedItem.Text.Substring(0, 1);
-            int undxPaquete = Convert.ToInt32(TextUndXPaq.Text);
-            decimal pesoKG = Convert.ToDecimal(TextPesoInsumo.Text);
+            // Captura de datos del formulario
+            var insumo = new
+            {
+                IdInsumo = textInsumo.Text.Trim(),
+                Descripcion = TextDescripcionInsumo.Text,
+                UnidadMedida = Convert.ToInt32(DropAbreviado.SelectedValue),
+                TipoInsumo = Convert.ToInt32(dtacboTipoInsumo.SelectedValue),
+                ValorUnitario = Convert.ToDecimal(TextValorInsumo.Text),
+                FactorGanancia = Convert.ToDecimal(TextFacGanInsumo.Text),
+                FactorDesperdicio = Convert.ToDecimal(TextFacDesInsumo.Text),
+                IdInventario = TextCodInvInsumo.Text.Trim(),
+                AplicacionAcabado = DropAcabadosDesde.SelectedItem.Text.Substring(0, 1),
+                UndxPaquete = Convert.ToInt32(TextUndXPaq.Text),
+                PesoKG = Convert.ToDecimal(TextPesoInsumo.Text),
+                NombreUsuario = Session["usuariologueado"]?.ToString()
+            };
 
-            string nombreUsuario = Session["usuariologueado"]?.ToString();
             string mensajeUsuario = string.Empty;
             bool operacionExitosa = false;
 
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
-                {
-                    connection.Open();
-                    SqlTransaction transaction = connection.BeginTransaction();
+            string query = ObtenerQuery(opcionInsumo, ref mensajeUsuario);
 
+            if (string.IsNullOrEmpty(query))
+            {
+                MostrarMensaje("Opción no válida.", false);
+                return;
+            }
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
                     try
                     {
-                        SqlCommand command = connection.CreateCommand();
-                        command.Transaction = transaction;
-
-                        // Consulta SQL según la opción seleccionada
-                        switch (opcionInsumo)
+                        using (SqlCommand command = new SqlCommand(query, connection, transaction))
                         {
-                            case "Copiar":
-                                command.CommandText = @"INSERT INTO tblInsumo (Id_Insumo, Descripcion_Insumo, Id_UnidadMedida, Id_TipoInsumo, 
-                            Valor_Unitario, Factor_Ganancia, Factor_Desperdicio, ID_Inventario, AplicacionAcabado, FechaCreacion, 
-                            FechaActualizacion, Responsable, UndxPaquete, PesoKG)
-                            VALUES (@IdInsumo, @DescripcionInsumo, @UnidadMedida, @TipoInsumo, @ValorUnitario, @FactorGanancia, 
-                            @FactorDesperdicio, @IdInventario, @AplicacionAcabado, GETDATE(), GETDATE(), @NombreUsuario, @UndxPaquete, @PesoKG)";
-                                mensajeUsuario = "El insumo ha sido copiado correctamente.";
-                                break;
+                            AgregarParametros(command, insumo);
+                            command.ExecuteNonQuery();
 
-                            case "Nuevo":
-                                command.CommandText = @"INSERT INTO tblInsumo (Id_Insumo, Descripcion_Insumo, Id_UnidadMedida, Id_TipoInsumo, 
-                            Valor_Unitario, Factor_Ganancia, Factor_Desperdicio, ID_Inventario, AplicacionAcabado, FechaActualizacion, 
-                            Responsable, reportar, Reportar_Despacho, UndxPaquete, PesoKG)
-                            VALUES (@IdInsumo, @DescripcionInsumo, @UnidadMedida, @TipoInsumo, @ValorUnitario, @FactorGanancia, 
-                            @FactorDesperdicio, @IdInventario, @AplicacionAcabado, GETDATE(), @NombreUsuario, 1, 1, @UndxPaquete, @PesoKG)";
-                                mensajeUsuario = "El insumo ha sido creado correctamente.";
-                                break;
-
-                            case "Modificar":
-                                command.CommandText = @"UPDATE tblInsumo SET Descripcion_Insumo = @DescripcionInsumo, Id_UnidadMedida = @UnidadMedida, 
-                            Id_TipoInsumo = @TipoInsumo, Valor_Unitario = @ValorUnitario, Factor_Ganancia = @FactorGanancia, 
-                            Factor_Desperdicio = @FactorDesperdicio, ID_Inventario = @IdInventario, FechaActualizacion = GETDATE(), 
-                            Responsable = @NombreUsuario, AplicacionAcabado = @AplicacionAcabado, UndxPaquete = @UndxPaquete, PesoKG = @PesoKG 
-                            WHERE Id_Insumo = @IdInsumo";
-                                mensajeUsuario = "El insumo ha sido actualizado correctamente.";
-
-                                // Verificar si hay cambios en los campos que afectan el precio de venta
-                                if (ViewState["ValorUnitario"]?.ToString() != TextValorInsumo.Text ||
-                                    ViewState["UnidadMedida"]?.ToString() != DropAbreviado.SelectedValue ||
-                                    ViewState["FactorGanancia"]?.ToString() != TextFacGanInsumo.Text ||
-                                    ViewState["FactorDesperdicio"]?.ToString() != TextFacDesInsumo.Text)
-                                {
-                                    ActualizarPreciosVenta(idInsumo, command);
-                                }
-                                break;
-
-                            default:
-                                mensajeUsuario = "Opción no válida.";
-                                return;
+                            // Validar si es necesario actualizar precios de venta
+                            if (opcionInsumo == "Modificar" && HayCambiosEnPrecios())
+                            {
+                                ActualizarPreciosVenta(insumo.IdInsumo, connection, transaction);
+                            }
                         }
 
-                        // Agregar parámetros para prevenir inyección SQL
-                        AgregarParametros(command, idInsumo, descripcionInsumo, unidadMedida, tipoInsumo, valorUnitario,
-                                          factorGanancia, factorDesperdicio, idInventario, aplicacionAcabado, nombreUsuario, undxPaquete, pesoKG);
-
-                        // Ejecutar la consulta principal
-                        command.ExecuteNonQuery();
-
-                        // Confirmar transacción
                         transaction.Commit();
                         operacionExitosa = true;
                     }
                     catch (Exception ex)
                     {
-                        // Deshacer transacción si ocurre un error
                         transaction.Rollback();
-                        mensajeUsuario = "Ocurrió un error al realizar la operación: " + ex.Message;
+                        mensajeUsuario = $"Error: {ex.Message}";
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                mensajeUsuario = "Error en la conexión a la base de datos: " + ex.Message;
-            }
 
-            // Mostrar mensaje informativo al usuario
             MostrarMensaje(mensajeUsuario, operacionExitosa);
 
-            // Si la operación fue exitosa, actualizar la sesión y controles
             if (operacionExitosa)
             {
                 Session["FrmInsumo"] = "Modificar";
@@ -1215,43 +1173,124 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             }
         }
 
+        private string ObtenerQuery(string opcion, ref string mensaje)
+        {
+            switch (opcion)
+            {
+                case "Copiar":
+                    mensaje = "El insumo ha sido copiado correctamente.";
+                    return @"INSERT INTO tblInsumo (Id_Insumo, Descripcion_Insumo, Id_UnidadMedida, Id_TipoInsumo, 
+                      Valor_Unitario, Factor_Ganancia, Factor_Desperdicio, ID_Inventario, AplicacionAcabado, FechaCreacion, 
+                      FechaActualizacion, Responsable, UndxPaquete, PesoKG)
+                      VALUES (@IdInsumo, @DescripcionInsumo, @UnidadMedida, @TipoInsumo, @ValorUnitario, @FactorGanancia, 
+                      @FactorDesperdicio, @IdInventario, @AplicacionAcabado, GETDATE(), GETDATE(), @NombreUsuario, @UndxPaquete, @PesoKG)";
+
+                case "Nuevo":
+                    mensaje = "El insumo ha sido creado correctamente.";
+                    return @"INSERT INTO tblInsumo (Id_Insumo, Descripcion_Insumo, Id_UnidadMedida, Id_TipoInsumo, 
+                      Valor_Unitario, Factor_Ganancia, Factor_Desperdicio, ID_Inventario, AplicacionAcabado, FechaActualizacion, 
+                      Responsable, reportar, Reportar_Despacho, UndxPaquete, PesoKG)
+                      VALUES (@IdInsumo, @DescripcionInsumo, @UnidadMedida, @TipoInsumo, @ValorUnitario, @FactorGanancia, 
+                      @FactorDesperdicio, @IdInventario, @AplicacionAcabado, GETDATE(), @NombreUsuario, 1, 1, @UndxPaquete, @PesoKG)";
+
+                case "Modificar":
+                    mensaje = "El insumo ha sido actualizado correctamente.";
+                    return @"UPDATE tblInsumo SET Descripcion_Insumo = @DescripcionInsumo, Id_UnidadMedida = @UnidadMedida, 
+                      Id_TipoInsumo = @TipoInsumo, Valor_Unitario = @ValorUnitario, Factor_Ganancia = @FactorGanancia, 
+                      Factor_Desperdicio = @FactorDesperdicio, ID_Inventario = @IdInventario, FechaActualizacion = GETDATE(), 
+                      Responsable = @NombreUsuario, AplicacionAcabado = @AplicacionAcabado, UndxPaquete = @UndxPaquete, PesoKG = @PesoKG 
+                      WHERE Id_Insumo = @IdInsumo";
+
+                default:
+                    return string.Empty;
+            }
+        }
+
+        private void AgregarParametros(SqlCommand command, dynamic insumo)
+        {
+            command.Parameters.AddWithValue("@IdInsumo", insumo.IdInsumo);
+            command.Parameters.AddWithValue("@DescripcionInsumo", insumo.Descripcion);
+            command.Parameters.AddWithValue("@UnidadMedida", insumo.UnidadMedida);
+            command.Parameters.AddWithValue("@TipoInsumo", insumo.TipoInsumo);
+            command.Parameters.AddWithValue("@ValorUnitario", insumo.ValorUnitario);
+            command.Parameters.AddWithValue("@FactorGanancia", insumo.FactorGanancia);
+            command.Parameters.AddWithValue("@FactorDesperdicio", insumo.FactorDesperdicio);
+            command.Parameters.AddWithValue("@IdInventario", insumo.IdInventario);
+            command.Parameters.AddWithValue("@AplicacionAcabado", insumo.AplicacionAcabado);
+            command.Parameters.AddWithValue("@NombreUsuario", insumo.NombreUsuario);
+            command.Parameters.AddWithValue("@UndxPaquete", insumo.UndxPaquete);
+            command.Parameters.AddWithValue("@PesoKG", insumo.PesoKG);
+        }
+
+        private bool HayCambiosEnPrecios()
+        {
+            return ViewState["ValorUnitario"]?.ToString() != TextValorInsumo.Text ||
+                   ViewState["UnidadMedida"]?.ToString() != DropAbreviado.SelectedValue ||
+                   ViewState["FactorGanancia"]?.ToString() != TextFacGanInsumo.Text ||
+                   ViewState["FactorDesperdicio"]?.ToString() != TextFacDesInsumo.Text;
+        }
+
+
         private void AgregarParametros(SqlCommand command, string idInsumo, string descripcionInsumo, int unidadMedida,
-                                       int tipoInsumo, decimal valorUnitario, decimal factorGanancia, decimal factorDesperdicio,
-                                       string idInventario, string aplicacionAcabado, string nombreUsuario, int undxPaquete, decimal pesoKG)
+                                    int tipoInsumo, decimal valorUnitario, decimal factorGanancia, decimal factorDesperdicio,
+                                    string idInventario, string aplicacionAcabado, string nombreUsuario, int undxPaquete, decimal pesoKG)
         {
-            command.Parameters.AddWithValue("@IdInsumo", idInsumo);
-            command.Parameters.AddWithValue("@DescripcionInsumo", descripcionInsumo);
-            command.Parameters.AddWithValue("@UnidadMedida", unidadMedida);
-            command.Parameters.AddWithValue("@TipoInsumo", tipoInsumo);
-            command.Parameters.AddWithValue("@ValorUnitario", valorUnitario);
-            command.Parameters.AddWithValue("@FactorGanancia", factorGanancia);
-            command.Parameters.AddWithValue("@FactorDesperdicio", factorDesperdicio);
-            command.Parameters.AddWithValue("@IdInventario", idInventario);
-            command.Parameters.AddWithValue("@AplicacionAcabado", aplicacionAcabado);
-            command.Parameters.AddWithValue("@NombreUsuario", nombreUsuario);
-            command.Parameters.AddWithValue("@UndxPaquete", undxPaquete);
-            command.Parameters.AddWithValue("@PesoKG", pesoKG);
+            try
+            {
+                command.Parameters.AddWithValue("@IdInsumo", idInsumo ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@DescripcionInsumo", descripcionInsumo ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@UnidadMedida", unidadMedida);
+                command.Parameters.AddWithValue("@TipoInsumo", tipoInsumo);
+                command.Parameters.AddWithValue("@ValorUnitario", valorUnitario);
+                command.Parameters.AddWithValue("@FactorGanancia", factorGanancia);
+                command.Parameters.AddWithValue("@FactorDesperdicio", factorDesperdicio);
+                command.Parameters.AddWithValue("@IdInventario", idInventario ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@AplicacionAcabado", aplicacionAcabado ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@NombreUsuario", nombreUsuario ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@UndxPaquete", undxPaquete);
+                command.Parameters.AddWithValue("@PesoKG", pesoKG);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al agregar parámetros: " + ex.Message);
+            }
         }
 
-        private void ActualizarPreciosVenta(string idInsumo, SqlCommand command)
-        {
-            // Actualizar el precio de los paneles relacionados
-            command.CommandText = @"UPDATE tblPanel SET Precio_Venta = 0, Precio_Anterior = tblPanel.Precio_Venta 
-                            FROM tblPanel INNER JOIN tblPanel_Modulo ON tblPanel.Id_Numerico = tblPanel_Modulo.Id_PanelNum 
-                            INNER JOIN tblModulo_Insumo ON tblPanel_Modulo.Id_Modulo = tblModulo_Insumo.Id_Modulo 
-                            WHERE tblModulo_Insumo.Id_Insumo = @IdInsumo";
-            command.ExecuteNonQuery();
 
-            // Actualizar el precio de las tipologías relacionadas
-            command.CommandText = @"UPDATE tblPanel SET Precio_Venta = 0 WHERE Id_Panel IN 
-                            (SELECT tblPlano.Plano FROM tblPlano 
-                            INNER JOIN tblPlano_Panel ON tblPlano.Plano = tblPlano_Panel.Id_Plano 
-                            INNER JOIN tblPanel AS tblPanel_1 ON tblPlano_Panel.Id_PanelNum = tblPanel_1.Id_Numerico 
-                            INNER JOIN tblPanel_Modulo ON tblPanel_1.Id_Numerico = tblPanel_Modulo.Id_PanelNum 
-                            INNER JOIN tblModulo_Insumo ON tblPanel_Modulo.Id_Modulo = tblModulo_Insumo.Id_Modulo 
-                            WHERE tblModulo_Insumo.Id_Insumo = @IdInsumo)";
-            command.ExecuteNonQuery();
+        private void ActualizarPreciosVenta(string idInsumo, SqlConnection connection, SqlTransaction transaction)
+        {
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                command.Transaction = transaction; // Asociar la transacción
+                command.Parameters.Clear();
+                command.Parameters.AddWithValue("@IdInsumo", idInsumo);
+
+                // Primer UPDATE
+                command.CommandText = @"UPDATE tblPanel SET Precio_Venta = 0, Precio_Anterior = tblPanel.Precio_Venta 
+                                FROM tblPanel 
+                                INNER JOIN tblPanel_Modulo ON tblPanel.Id_Numerico = tblPanel_Modulo.Id_PanelNum 
+                                INNER JOIN tblModulo_Insumo ON tblPanel_Modulo.Id_Modulo = tblModulo_Insumo.Id_Modulo 
+                                WHERE tblModulo_Insumo.Id_Insumo = @IdInsumo";
+                command.ExecuteNonQuery();
+
+                // Limpiar parámetros
+                command.Parameters.Clear();
+                command.Parameters.AddWithValue("@IdInsumo", idInsumo);
+
+                // Segundo UPDATE
+                command.CommandText = @"UPDATE tblPanel SET Precio_Venta = 0 
+                                WHERE Id_Panel IN 
+                                (SELECT tblPlano.Plano FROM tblPlano 
+                                INNER JOIN tblPlano_Panel ON tblPlano.Plano = tblPlano_Panel.Id_Plano 
+                                INNER JOIN tblPanel AS tblPanel_1 ON tblPlano_Panel.Id_PanelNum = tblPanel_1.Id_Numerico 
+                                INNER JOIN tblPanel_Modulo ON tblPanel_1.Id_Numerico = tblPanel_Modulo.Id_PanelNum 
+                                INNER JOIN tblModulo_Insumo ON tblPanel_Modulo.Id_Modulo = tblModulo_Insumo.Id_Modulo 
+                                WHERE tblModulo_Insumo.Id_Insumo = @IdInsumo)";
+                command.ExecuteNonQuery();
+            }
         }
+
+
 
         private void MostrarMensaje(string mensaje, bool operacionExitosa)
         {
