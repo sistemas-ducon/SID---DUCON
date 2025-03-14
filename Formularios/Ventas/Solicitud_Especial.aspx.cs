@@ -856,7 +856,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     // Cargar Cotizaciones 
 
-                    CargarCotizaciones.SelectCommand = "SELECT * FROM tblSoliciDiseEspe " +
+                    CargarCotizaciones.SelectCommand = "SELECT ROW_NUMBER() OVER (ORDER BY Fecha_Ingreso) AS Turno, * FROM tblSoliciDiseEspe " +
                                                        "WHERE Terminado = 0 AND TipoSolicitud ='COTIZACIÓN' AND Dirigidoa = 'DESARROLLO DE PRODUCTO' " +
                                                        "AND ProgramadoVentas = 1 ORDER BY Fecha_Ingreso ASC;";
 
