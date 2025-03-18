@@ -10056,7 +10056,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                             {
                                                 //Se ha creado al menos un Objeto
                                                 EscalableObj = Convert.ToBoolean(Paneles.Rows[0]["Escalable"].ToString());
-                                                Ancho *= 100;
+                                                Ancho = Math.Round(Ancho * 100, 2);
+                                               
 
                                                 DataRow[] PanelAncho = Paneles.Select("Ancho = '" + Ancho + "'"); //Se busca el ancho requerido
 
@@ -10290,9 +10291,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                             if (Paneles.Rows.Count > 0)
                                             {
                                                 EscalableObj = Convert.ToBoolean(Paneles.Rows[0]["Escalable"].ToString());
-                                                Ancho *= 100;
-                                                Altura *= 100;
-                                                DataRow[] PanelAltura = Paneles.Select("altura = '" + Altura + "'"); //Se busca la altura requerida
+                                                Ancho = Math.Round(Ancho * 100, 2);
+                                                Altura = Math.Round(Altura * 100, 2);
+
+                                                DataRow[] PanelAltura = Paneles.Select("Altura = '" + Altura + "'"); //Se busca la altura requerida
 
                                                 if (PanelAltura.Length <= 0)
                                                 {
@@ -10822,6 +10824,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     // Agregar el parámetro Id
                     command.Parameters.AddWithValue("@id", objeto);
+                    
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            return dataTable;
+        }
+
+        private DataTable ConsultarObjeto2(string objeto, double altura)
+        {
+            DataTable dataTable = new DataTable();
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = "SELECT * FROM tblPanel WHERE Id_Panel = @id AND Altura = @altura  Order by Id_Numerico Asc";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Agregar el parámetro Id
+                    command.Parameters.AddWithValue("@id", objeto);
+                    command.Parameters.AddWithValue("@altura", altura);
 
                     using (SqlDataAdapter adapter = new SqlDataAdapter(command))
                     {
@@ -10911,7 +10941,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
         private void ConsultarDatosModuloPanel1(int IdNumerico, string objeto)
         {
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -10952,6 +10981,48 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
+        private void ConsultarDatosModuloPanel2(int IdNumerico, string objeto,double altura)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "Select * from tblPanel_Modulo where Id_PanelNum = @Id_Numerico";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@Id_Numerico", IdNumerico);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            // Si hay Datos es por que el objeto ya estaba en un modulo 
+
+                        }
+                        else
+                        {
+                            // si no hay datos consultamos los valores con el IdPanel   
+                            DataTable obj = ConsultarObjeto2(objeto,altura);
+
+                            //Tomamos el primer registro 
+                            object primerDato = obj.Rows[0][0];
+
+                            // Seleecionamos el id de ese registro  
+                            string id = primerDato.ToString();
+                            // con ese id se consultan los datos del modulo 
+                            DataTable Panel_modulo = ConsultarPanelmodulo1(id);
+
+                            //Con los datos del modulo y el IdNumerico del elemento a agregar realizamos la insercion 
+                            AgregarModuloPanel1(IdNumerico, Panel_modulo);
+
+                        }
+                    }
+
+                }
+            }
+        }
+
+       
         private DataTable ConsultarPanelmodulo1(string id)
         {
             DataTable dataTable = new DataTable();
@@ -11549,7 +11620,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             //Este es el id del objeto que acabamos de agregar 
                             int idPanel = reader.GetInt32(0);
                             // Se consulta los datos de los modulos  con ese idPanel
-                            ConsultarDatosModuloPanel1(idPanel, objeto);
+                            ConsultarDatosModuloPanel2(idPanel, objeto, Altura);
                             return idPanel;
                         }
                         else
