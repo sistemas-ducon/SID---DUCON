@@ -6468,7 +6468,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string Aplicacion = ConsultarAreaAplicacion();
 
                 //Enviar la notificacion por Correo 
-                string destinatarios = "andersonbetancur@ducon.com.co"; //(tbReceptorCorreo.Text + ";" + tbRecepTipoObs.Text).Trim(';').Trim(' ');
+                string destinatarios = (tbReceptorCorreo.Text + ";" + tbRecepTipoObs.Text).Trim(';').Trim(' ');
                 string cuerpo = @"
                     <!DOCTYPE html>
                     <html lang='es'>
