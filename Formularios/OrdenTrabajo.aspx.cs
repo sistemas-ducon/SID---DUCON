@@ -10851,7 +10851,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     // Agregar el parámetro Id
                     command.Parameters.AddWithValue("@id", objeto);
-                    command.Parameters.AddWithValue("@altura", altura);
+                    command.Parameters.AddWithValue("@altura", altura.ToString());
 
                     using (SqlDataAdapter adapter = new SqlDataAdapter(command))
                     {
