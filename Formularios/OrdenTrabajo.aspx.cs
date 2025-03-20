@@ -2662,17 +2662,39 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
-                btnOk.Enabled = false;
-                btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
 
-                ModificarOt.Enabled = false;
-                ModificarOt.CssClass = "btn btn-sm shadow button-disabled";
+                string tipoAccion = Session["Diseno"] as string;
+                if (tipoAccion == "Diseño" || tipoAccion == "DESARROLLO DE PRODUCTO")
+                {
+                    btnOk.Enabled = true;
+                    btnOk.CssClass = "btn btn-sm shadow button-enabled rojo fw-bold";
 
-                AnularPedido.Enabled = false;
-                AnularPedido.CssClass = "btn btn-sm shadow button-disabled ";
+                    ModificarOt.Enabled = true;
+                    ModificarOt.CssClass = "btn btn-sm shadow button-enabled";
 
-                ReimprimirOt.Enabled = true;
-                ReimprimirOt.CssClass = "btn btn-sm shadow button-enabled";
+                    AnularPedido.Enabled = true;
+                    AnularPedido.CssClass = "btn btn-sm shadow button-enabled ";
+
+                    ReimprimirOt.Enabled = false;
+                    ReimprimirOt.CssClass = "btn btn-sm shadow button-disabled";
+                }
+                else if (tipoAccion == "Ventas")
+                {
+                    btnOk.Enabled = false;
+                    btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
+
+                    ModificarOt.Enabled = false;
+                    ModificarOt.CssClass = "btn btn-sm shadow button-disabled";
+
+                    AnularPedido.Enabled = false;
+                    AnularPedido.CssClass = "btn btn-sm shadow button-disabled ";
+
+                    ReimprimirOt.Enabled = true;
+                    ReimprimirOt.CssClass = "btn btn-sm shadow button-enabled";
+                }
+
+
+              
             }
 
 
@@ -6544,7 +6566,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             Session["Id_OT3"] = idOTn;
                             Session["pedido3"] = nuevoConsecutivo;
 
-
+                            string tipoAccion = Session["Diseno"] as string;
+                            if (tipoAccion == "Diseño" || tipoAccion == "DESARROLLO DE PRODUCTO")
+                            {
+                                //actualizarTerminadoVentas 
+                                ActualizarTerminadoVentas(idOTn, nuevoConsecutivo.ToString());
+                            }
 
                         }
                         else
@@ -6769,6 +6796,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 {
                                     Session["Id_OT2"] = nuevoIdOTConcatenado;
                                     Session["Pedido2"] = 1;
+                                    
+                                    
+                                    string tipoAccion = Session["Diseno"] as string;
+                                    if (tipoAccion == "Diseño" || tipoAccion == "DESARROLLO DE PRODUCTO")
+                                    {
+                                        // validar si es de  diseño y desarrolo paraa actualizar terminado ventas 
+                                        ActualizarTerminadoVentas(nuevoIdOTConcatenado, "1");
+                                    }
                                 }
                                 else
                                 {
@@ -23526,6 +23561,32 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 }
 
+            }
+        }
+
+        public void ActualizarTerminadoVentas(string OT,string Ped)
+        {
+            string query = @"UPDATE tblOT  SET Terminado_Ventas = 1 WHERE Id_OT = @IdOT AND Consecutivo_Pedido = @Consecutivo";
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+
+               
+                command.Parameters.AddWithValue("@IdOT", OT);
+                command.Parameters.AddWithValue("@Consecutivo",Ped);
+
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery(); // Retorna true si hay filas afectadas
+                }
+                catch (Exception ex)
+                {
+                   //
+                }
             }
         }
 

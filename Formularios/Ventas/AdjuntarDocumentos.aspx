@@ -182,7 +182,7 @@
             function validarDocumento() {
                 var tipoDocumento = document.getElementById('<%= ddlTipoDoc.ClientID %>').value; // Asegúrate de reemplazar "ddlTipoDocumento" con el ID correcto de tu dropdown o input
 
-                if (tipoDocumento === " " || tipoDocumento === "--Seleccione--") {
+                if (tipoDocumento === "" || tipoDocumento === "--Seleccione--") {
                     alert("Debe seleccionar un tipo de documento antes de adjuntar.");
                     ddlTipoDoc.focus();
                     return false; // Evita que se ejecute el evento OnClick del servidor
