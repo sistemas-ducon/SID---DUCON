@@ -52,6 +52,7 @@ using DocumentFormat.OpenXml.Drawing;
 using Path = System.IO.Path;
 using TableCell = System.Web.UI.WebControls.TableCell;
 using System.Windows.Input;
+using System.Web.Services.Description;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
@@ -1990,6 +1991,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
+            if (EsAnulada(id, pedido))
+            {
+                string mensaje = ObtenerMensajeAnulacion(id, pedido);
+                lblAnulacion.Text = mensaje;
+                divAnulacion.Visible = true;
+            }
+            else
+            {
+                divAnulacion.Visible = false;
+            }
+
 
 
             Cargar_Plano(id, pedido);
@@ -2111,6 +2123,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 lblPararCartera.Visible = false;
             }
 
+            if (EsAnulada(id, pedido))
+            {
+                string mensaje = ObtenerMensajeAnulacion(id, pedido);
+                lblAnulacion.Text = mensaje;
+                divAnulacion.Visible = true;
+            }
+            else
+            {
+                divAnulacion.Visible = false;
+            }
+
+
 
             Cargar_Plano(id, pedido);
             Cargar_Despiece_Plano();
@@ -2150,6 +2174,56 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             return parada;
         }
+
+        private bool EsAnulada(string idOT, string pedido)
+        {
+            bool parada = false;
+            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString))
+            {
+                sqlconectar.Open();
+                string query = "SELECT 1 FROM tblReporteOT WHERE Id_OT = @IdOT AND Consecutivo_Pedido = @Pedido AND Anulada = 1";
+
+                using (SqlCommand cmd = new SqlCommand(query, sqlconectar))
+                {
+                    cmd.Parameters.AddWithValue("@IdOT", idOT);
+                    cmd.Parameters.AddWithValue("@Pedido", pedido);
+
+                    object result = cmd.ExecuteScalar();
+                    parada = result != null;
+
+                }
+            }
+            return parada;
+        }
+
+
+        private string ObtenerMensajeAnulacion(string idOT, string pedido)
+        {
+            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString))
+            {
+                sqlconectar.Open();
+                string query = "SELECT Fecha_Anulada, RealizadoPor FROM tblReporteOT WHERE Id_OT = @IdOT AND Consecutivo_Pedido = @Pedido";
+
+                using (SqlCommand cmd = new SqlCommand(query, sqlconectar))
+                {
+                    cmd.Parameters.AddWithValue("@IdOT", idOT);
+                    cmd.Parameters.AddWithValue("@Pedido", pedido);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            DateTime fechaAnulada = reader.GetDateTime(0);
+                            string realizadoPor = reader.GetString(1);
+                            return $"ANULADO EL {fechaAnulada:dd/MM/yyyy} por: {realizadoPor}, NO TIENE RETROCESO\"";
+                        }
+                    }
+                }
+            }
+            return string.Empty;
+        }
+
+
 
         private bool TryExecuteOTQuery(string id, string pedido, SqlConnection connection, out SqlDataReader leer)
         {
@@ -3650,6 +3724,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 lblPararCartera.Visible = false;
             }
 
+            if (EsAnulada(id, pedido))
+            {
+                string mensaje = ObtenerMensajeAnulacion(id, pedido);
+                lblAnulacion.Text = mensaje;
+                divAnulacion.Visible = true;
+            }
+            else
+            {
+                divAnulacion.Visible = false;
+            }
+
+
+
             Cargar_Plano(id, pedido);
             Cargar_Despiece_Plano();
 
@@ -3724,6 +3811,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
 
             }
+
+            if (EsAnulada(id, pedido))
+            {
+                string mensaje = ObtenerMensajeAnulacion(id, pedido);
+                lblAnulacion.Text = mensaje;
+                divAnulacion.Visible = true;
+            }
+            else
+            {
+                divAnulacion.Visible = false;
+            }
+
 
             Cargar_Plano(id, pedido);
             Cargar_Despiece_Plano();
@@ -7643,6 +7742,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 // Manejo de excepciones
             }
+
 
             Cargar_Plano(id, pedido);
             Cargar_Despiece_Plano();

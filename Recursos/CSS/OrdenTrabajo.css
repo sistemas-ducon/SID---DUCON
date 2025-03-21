@@ -571,3 +571,23 @@
     background-image: url('https://i.ibb.co/86fR8JK/icons8-microsoft-excel-2019-48.png'); /* Ruta de la imagen */
     background-size: 1.150rem; /* Ajusta el tamaño de la imagen */
 }
+
+.overlay-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #e78787;
+    color: #090909;
+    padding: 4px 2px;
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 10px;
+    z-index: 1000;
+    transition: transform 0.5s ease-in-out; /* Transición más suave */
+}
+
+    .overlay-label:hover {
+        transform: translate(-50%, -200%); /* Baja más para ver lo que hay detrás */
+    }

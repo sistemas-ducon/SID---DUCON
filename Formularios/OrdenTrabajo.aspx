@@ -347,6 +347,27 @@
 
     </script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let overlay = document.querySelector(".overlay-label");
+
+        if (overlay) { // Verifica si el div existe antes de agregar eventos
+            let timeout;
+
+            overlay.addEventListener("mouseenter", function () {
+                clearTimeout(timeout);
+                overlay.style.transform = "translate(-50%, -200%)"; // Se mueve más abajo
+            });
+
+            overlay.addEventListener("mouseleave", function () {
+                timeout = setTimeout(function () {
+                    overlay.style.transform = "translate(-50%, 50%)"; // Se mueve más arriba
+                }, 300);
+            });
+        }
+    });
+</script>
+
 
 </head>
 
@@ -384,6 +405,11 @@
             <div class="tab-pane fade show active" id="OTs-Content">
                 <asp:UpdatePanel ID="PanelOt" runat="server" UpdateMode="Conditional" DefaultButton="btnSubmit">
                     <ContentTemplate>
+    <div id="divAnulacion" runat="server" class="overlay-label" visible="false">
+    <asp:Label ID="lblAnulacion" runat="server"></asp:Label>
+</div>
+
+
 
                         <div class="container-fluid">
 
