@@ -435,13 +435,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 FROM tblLinea 
                 INNER JOIN (tblGrupoObjeto INNER JOIN tblPanel ON tblGrupoObjeto.ID_GrupoObjeto = tblPanel.Id_GrupoObjeto) 
                 ON tblLinea.Id_Linea = tblPanel.Id_Linea 
-                WHERE tblPanel.Id_Panel = @Id_Panel AND tblPanel.Ancho = @Ancho 
+                WHERE tblPanel.Id_Panel = @Id_Panel AND tblPanel.Ancho = @Ancho AND tblPanel.Id_Numerico = @Id_Num
                 ORDER BY tblGrupoObjeto.Descripcion_Grupo, tblPanel.Descripcion_Panel, tblPanel.Id_Panel, tblPanel.Ancho";
 
                         using (SqlCommand command = new SqlCommand(query, connection))
                         {
                             command.Parameters.AddWithValue("@Id_Panel", idPanel);
                             command.Parameters.AddWithValue("@Ancho", ancho);
+                            command.Parameters.AddWithValue("@Id_Num", idNumericoDise);
 
                             using (SqlDataReader reader = command.ExecuteReader())
                             {

@@ -4040,9 +4040,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     DataRow row = DatosSol.Rows[0];
 
                     // Obtén los valores de las columnas
-                    bool terminado = Convert.ToBoolean(row["Terminado"]);
-                    bool programadoVentas = Convert.ToBoolean(row["ProgramadoVentas"]);
-                    bool pausado = Convert.ToBoolean(row["Pausado"]);
+                    bool? terminado = row["Terminado"] != DBNull.Value ? (bool?)row["Terminado"] : null;
+                    bool? programadoVentas = row["ProgramadoVentas"] != DBNull.Value ? (bool?)row["ProgramadoVentas"] : null;
+                    bool? pausado = row["Pausado"] != DBNull.Value ? (bool?)row["Pausado"] : null;
+
 
                     // VARIABLES EVALUACION Y CONTROL DIBUJANTE 
 
@@ -6468,7 +6469,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string Aplicacion = ConsultarAreaAplicacion();
 
                 //Enviar la notificacion por Correo 
-                string destinatarios = "andersonbetancur@ducon.com.co"; //(tbReceptorCorreo.Text + ";" + tbRecepTipoObs.Text).Trim(';').Trim(' ');
+                string destinatarios = (tbReceptorCorreo.Text + ";" + tbRecepTipoObs.Text).Trim(';').Trim(' ');
                 string cuerpo = @"
                     <!DOCTYPE html>
                     <html lang='es'>

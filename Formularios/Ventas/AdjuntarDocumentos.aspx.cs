@@ -615,7 +615,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 ddlTipoDoc.Items.Clear();
 
                 // Agregar opción por defecto
-                ddlTipoDoc.Items.Add(new ListItem("-- Seleccione --", ""));
+                ddlTipoDoc.Items.Add(new ListItem("--Seleccione--", ""));
 
                 // Llenar el DropDownList según el departamento
                 if (departamento == "VENTAS")

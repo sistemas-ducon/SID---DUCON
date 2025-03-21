@@ -2736,17 +2736,39 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
-                btnOk.Enabled = false;
-                btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
 
-                ModificarOt.Enabled = false;
-                ModificarOt.CssClass = "btn btn-sm shadow button-disabled";
+                string tipoAccion = Session["Diseno"] as string;
+                if (tipoAccion == "Diseño" || tipoAccion == "DESARROLLO DE PRODUCTO")
+                {
+                    btnOk.Enabled = true;
+                    btnOk.CssClass = "btn btn-sm shadow button-enabled rojo fw-bold";
 
-                AnularPedido.Enabled = false;
-                AnularPedido.CssClass = "btn btn-sm shadow button-disabled ";
+                    ModificarOt.Enabled = true;
+                    ModificarOt.CssClass = "btn btn-sm shadow button-enabled";
 
-                ReimprimirOt.Enabled = true;
-                ReimprimirOt.CssClass = "btn btn-sm shadow button-enabled";
+                    AnularPedido.Enabled = true;
+                    AnularPedido.CssClass = "btn btn-sm shadow button-enabled ";
+
+                    ReimprimirOt.Enabled = false;
+                    ReimprimirOt.CssClass = "btn btn-sm shadow button-disabled";
+                }
+                else if (tipoAccion == "Ventas")
+                {
+                    btnOk.Enabled = false;
+                    btnOk.CssClass = "btn btn-sm shadow button-disabled fw-bold";
+
+                    ModificarOt.Enabled = false;
+                    ModificarOt.CssClass = "btn btn-sm shadow button-disabled";
+
+                    AnularPedido.Enabled = false;
+                    AnularPedido.CssClass = "btn btn-sm shadow button-disabled ";
+
+                    ReimprimirOt.Enabled = true;
+                    ReimprimirOt.CssClass = "btn btn-sm shadow button-enabled";
+                }
+
+
+              
             }
 
 
@@ -6643,7 +6665,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             Session["Id_OT3"] = idOTn;
                             Session["pedido3"] = nuevoConsecutivo;
 
-
+                            string tipoAccion = Session["Diseno"] as string;
+                            if (tipoAccion == "Diseño" || tipoAccion == "DESARROLLO DE PRODUCTO")
+                            {
+                                //actualizarTerminadoVentas 
+                                ActualizarTerminadoVentas(idOTn, nuevoConsecutivo.ToString());
+                            }
 
                         }
                         else
@@ -6868,6 +6895,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 {
                                     Session["Id_OT2"] = nuevoIdOTConcatenado;
                                     Session["Pedido2"] = 1;
+                                    
+                                    
+                                    string tipoAccion = Session["Diseno"] as string;
+                                    if (tipoAccion == "Diseño" || tipoAccion == "DESARROLLO DE PRODUCTO")
+                                    {
+                                        // validar si es de  diseño y desarrolo paraa actualizar terminado ventas 
+                                        ActualizarTerminadoVentas(nuevoIdOTConcatenado, "1");
+                                    }
                                 }
                                 else
                                 {
@@ -10156,7 +10191,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                             {
                                                 //Se ha creado al menos un Objeto
                                                 EscalableObj = Convert.ToBoolean(Paneles.Rows[0]["Escalable"].ToString());
-                                                Ancho *= 100;
+                                                Ancho = Math.Round(Ancho * 100, 2);
+                                               
 
                                                 DataRow[] PanelAncho = Paneles.Select("Ancho = '" + Ancho + "'"); //Se busca el ancho requerido
 
@@ -10390,9 +10426,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                             if (Paneles.Rows.Count > 0)
                                             {
                                                 EscalableObj = Convert.ToBoolean(Paneles.Rows[0]["Escalable"].ToString());
-                                                Ancho *= 100;
-                                                Altura *= 100;
-                                                DataRow[] PanelAltura = Paneles.Select("altura = '" + Altura + "'"); //Se busca la altura requerida
+                                                Ancho = Math.Round(Ancho * 100, 2);
+                                                Altura = Math.Round(Altura * 100, 2);
+
+                                                DataRow[] PanelAltura = Paneles.Select("Altura = '" + Altura + "'"); //Se busca la altura requerida
 
                                                 if (PanelAltura.Length <= 0)
                                                 {
@@ -10922,6 +10959,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     // Agregar el parámetro Id
                     command.Parameters.AddWithValue("@id", objeto);
+                    
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    {
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            return dataTable;
+        }
+
+        private DataTable ConsultarObjeto2(string objeto, double altura)
+        {
+            DataTable dataTable = new DataTable();
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = "SELECT * FROM tblPanel WHERE Id_Panel = @id AND Altura = @altura  Order by Id_Numerico Asc";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Agregar el parámetro Id
+                    command.Parameters.AddWithValue("@id", objeto);
+                    command.Parameters.AddWithValue("@altura", altura.ToString());
 
                     using (SqlDataAdapter adapter = new SqlDataAdapter(command))
                     {
@@ -11011,7 +11076,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-
         private void ConsultarDatosModuloPanel1(int IdNumerico, string objeto)
         {
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -11052,6 +11116,48 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
+        private void ConsultarDatosModuloPanel2(int IdNumerico, string objeto,double altura)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            string sSql = "Select * from tblPanel_Modulo where Id_PanelNum = @Id_Numerico";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                {
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@Id_Numerico", IdNumerico);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            // Si hay Datos es por que el objeto ya estaba en un modulo 
+
+                        }
+                        else
+                        {
+                            // si no hay datos consultamos los valores con el IdPanel   
+                            DataTable obj = ConsultarObjeto2(objeto,altura);
+
+                            //Tomamos el primer registro 
+                            object primerDato = obj.Rows[0][0];
+
+                            // Seleecionamos el id de ese registro  
+                            string id = primerDato.ToString();
+                            // con ese id se consultan los datos del modulo 
+                            DataTable Panel_modulo = ConsultarPanelmodulo1(id);
+
+                            //Con los datos del modulo y el IdNumerico del elemento a agregar realizamos la insercion 
+                            AgregarModuloPanel1(IdNumerico, Panel_modulo);
+
+                        }
+                    }
+
+                }
+            }
+        }
+
+       
         private DataTable ConsultarPanelmodulo1(string id)
         {
             DataTable dataTable = new DataTable();
@@ -11649,7 +11755,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             //Este es el id del objeto que acabamos de agregar 
                             int idPanel = reader.GetInt32(0);
                             // Se consulta los datos de los modulos  con ese idPanel
-                            ConsultarDatosModuloPanel1(idPanel, objeto);
+                            ConsultarDatosModuloPanel2(idPanel, objeto, Altura);
                             return idPanel;
                         }
                         else
@@ -23555,6 +23661,32 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 }
 
+            }
+        }
+
+        public void ActualizarTerminadoVentas(string OT,string Ped)
+        {
+            string query = @"UPDATE tblOT  SET Terminado_Ventas = 1 WHERE Id_OT = @IdOT AND Consecutivo_Pedido = @Consecutivo";
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+
+               
+                command.Parameters.AddWithValue("@IdOT", OT);
+                command.Parameters.AddWithValue("@Consecutivo",Ped);
+
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery(); // Retorna true si hay filas afectadas
+                }
+                catch (Exception ex)
+                {
+                   //
+                }
             }
         }
 
