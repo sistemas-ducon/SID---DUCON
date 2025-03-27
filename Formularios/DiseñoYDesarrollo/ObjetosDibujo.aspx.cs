@@ -2513,6 +2513,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             {
                 // Actualizar la altura del panel 
                 ActualizarAlturaObjeto(Altura);
+                TextAltura.Text = Altura.ToString();
+
             }
 
             if (!CheckEstable.Checked)
@@ -2548,7 +2550,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                         string ID_Numerico = row["Id_Numerico"].ToString();
 
                         // Se consulta la tabla tblPanel_Modulo
-                        if (!ValidarExisteciaPanel_Modulo())
+                        if (!ValidarExisteciaPanel_Modulo(ID_Numerico))
                         {
                             //SE AGREGA EL MODULO A LA FAMILIA DEL OBJETO
                             if (!InsertarPanelModulo(ID_Numerico, tbIdModuloAdicionar.Text, ddlUbicacion.SelectedValue, ddlLado.SelectedValue, ddlCantidad.SelectedItem.Text, txObservacion.InnerText))
@@ -2920,7 +2922,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             return existe;
         }
 
-        private bool ValidarExisteciaPanel_Modulo()
+        private bool ValidarExisteciaPanel_Modulo(string ID_Numerico)
         {
             bool existe = false;
             string consulta = "SELECT COUNT(*) FROM tblPanel_Modulo WHERE Id_PanelNum = @IDNumerico AND Id_Modulo = @ID_Modulo " +
@@ -2932,7 +2934,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 using (SqlCommand command = new SqlCommand(consulta, connection))
                 {
                     // Agregar el parámetro para el IDNumerico
-                    command.Parameters.AddWithValue("@IDNumerico", TextIdNum.Text);
+                    command.Parameters.AddWithValue("@IDNumerico", ID_Numerico);
                     command.Parameters.AddWithValue("@ID_Modulo", tbIdModuloAdicionar.Text);
                     command.Parameters.AddWithValue("@Ubicacion", ddlUbicacion.SelectedValue);
                     command.Parameters.AddWithValue("@lado", ddlLado.SelectedValue);

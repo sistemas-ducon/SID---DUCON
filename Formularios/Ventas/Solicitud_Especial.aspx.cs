@@ -2015,7 +2015,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             cmd.Parameters.AddWithValue("@Zona", Session["ZonaAsesor"].ToString());
                             cmd.Parameters.AddWithValue("@Asesor", ddlAsesor.SelectedItem.Text);
 
-                            cmd.Parameters.AddWithValue("@Proyecto", tbProyecto.Text);
+                            cmd.Parameters.AddWithValue("@Proyecto", tbProyecto.Text.Trim());
                             cmd.Parameters.AddWithValue("@Cliente", tbClienteServidor.Text);
                             cmd.Parameters.AddWithValue("@Contacto", tbContactoServidor.Text);
                             cmd.Parameters.AddWithValue("@Telefono", tbTelefonoServidor.Text);
