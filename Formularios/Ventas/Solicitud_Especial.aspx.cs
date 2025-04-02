@@ -3678,6 +3678,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             if (OkCompras.ToUpper() == "SI")
                             {
+                                string script = "<script>HabilitarBotDetalleD();</script>";
+                                ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarBotDetalleD", script, false);
+                            }
+                            else
+                            {
                                 string script = "<script>HabilitarEnlaces3();</script>";
                                 ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarBotDetalleD", script, false);
                             }
@@ -6626,7 +6631,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (EnviarCorreRediCompras(destinatarios, cuerpo))
             {
-                string mensajePersonalizado = "La solicitud a sido redirigida a compras y notificada por correo electronico";
+                string mensajePersonalizado = "La solicitud ha sido redirigida a compras y notificada por correo electronico";
                 string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
             }
@@ -6636,9 +6641,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
             }
-
-
-
 
         }
         private void ActualizarSolicitudRediCompras()
