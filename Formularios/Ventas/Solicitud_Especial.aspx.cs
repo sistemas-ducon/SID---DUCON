@@ -3306,7 +3306,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     foreach (DataRow row in InformacionDetalleSol.Rows)
                     {
-                        worksheet.Cells[currentRow, 1].Value = row["ID_Solicitud"];
+                        worksheet.Cells[currentRow, 1].Value = row["Id_SolicitudDetalle"];
                         worksheet.Cells[currentRow, 2].Value = row["Producto"];
                         worksheet.Cells[currentRow, 3].Value = row["Ancho"] + "X" + row["Alto"] + "X" + row["Profundidad"];
                         worksheet.Cells[currentRow, 4].Value = row["Material"];

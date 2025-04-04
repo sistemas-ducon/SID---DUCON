@@ -4235,6 +4235,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 txtAsesorPlano.Text = string.Empty;
             }
 
+
+            if (ValidarPlanoBloqueado())
+            {
+                BtnPlaBlo.ToolTip = "Desbloquear Plano";
+            }
+            else
+            {
+                BtnPlaBlo.ToolTip = "Bloquear Plano";
+            }
+
         }
 
         public void Cargar_Plano2(string plano)
@@ -4263,6 +4273,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     // Se carga el despiece
                     Cargar_Despiece_Plano();
+                }
+
+
+                if (ValidarPlanoBloqueado())
+                {
+                    BtnPlaBlo.ToolTip = "Desbloquear Plano";
+                }
+                else
+                {
+                    BtnPlaBlo.ToolTip = "Bloquear Plano";
                 }
 
                 dr.Close();
@@ -12031,7 +12051,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             // Cambiar en campo bloqueado en la base de datos a 0
                             ActualizarEstadoBloqueado(0);
-                            Cargar_OTs();
+                            if(tbOT.Text.Trim() != "")
+                            {
+                                Cargar_OTs();
+                            }
+                            else
+                            {
+                                if (ValidarPlanoBloqueado())
+                                {
+                                    BtnPlaBlo.ToolTip = "Desbloquear Plano";
+                                }
+                                else
+                                {
+                                    BtnPlaBlo.ToolTip = "Bloquear Plano";
+                                }
+                            }
+                           
+
                             string scriptNoPermiso = "alert('El plano ha sido desbloqueado');";
                             ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
                         }
@@ -12053,7 +12089,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             // Cambiar en campo bloqueado en la base de datos a 1
                             ActualizarEstadoBloqueado(1);
-                            Cargar_OTs();
+
+                            if (tbOT.Text.Trim() != "")
+                            {
+                                Cargar_OTs();
+                            }
+                            else
+                            {
+                                if (ValidarPlanoBloqueado())
+                                {
+                                    BtnPlaBlo.ToolTip = "Desbloquear Plano";
+                                }
+                                else
+                                {
+                                    BtnPlaBlo.ToolTip = "Bloquear Plano";
+                                }
+                            }
+
                             string scriptNoPermiso = "alert('El plano ha sido bloqueado');";
                             ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
                         }
@@ -15730,7 +15782,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 foreach (DataRow row in AcaadosDefinitivos.Rows)
                 {
-                    acabados += row["OadDescripcionGrupoObjeto"].ToString() + " - " + row["oadDescripcion_Familia"].ToString() + " - " + row["oadDescripcionAcabado"].ToString() + " - " + row["oadCodInvDes"].ToString();
+                    acabados +=   row["OadDescripcionGrupoObjeto"].ToString() + " - " + row["oadDescripcion_Familia"].ToString() + " - " + row["oadDescripcionAcabado"].ToString() + " - " + row["oadCodInvDes"].ToString() + "\n";
+
                 }
 
             }
@@ -23514,12 +23567,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
-                // validar si el plano esta vinvulado a una ot que ya de dieron boton por parte de dibujo
-                if (ValidarPlanoVinculado() && btnOk.Enabled == false)
+                if(tbOT.Text.Trim() != "")
                 {
-                    // No se puuede cambiar la cantidad OT terminada 
-                    string scriptNoPermiso = $"alert('No se puede Modificar Ningún Objeto, ya que el plano {txtPlano.Text} está vinculado a la Orden de Trabajo {tbOT.Text} con el pedido {ddlNumbers.SelectedItem.Text}.');";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
+                    // validar si el plano esta vinvulado a una ot que ya de dieron boton por parte de dibujo Revisar 
+                    if (ValidarPlanoVinculado() && btnOk.Enabled == false)
+                    {
+                        // No se puuede cambiar la cantidad OT terminada 
+                        string scriptNoPermiso = $"alert('No se puede Modificar Ningún Objeto, ya que el plano {txtPlano.Text} está vinculado a la Orden de Trabajo {tbOT.Text} con el pedido {ddlNumbers.SelectedItem.Text}.');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
+                    }
+                    else
+                    {
+                        spanObjeto.InnerText = ObjetoEliminar.InnerText;
+                        spanAncho.InnerText = anchoEliminar.InnerText;
+
+                        string script2 = @"mostrarModalCambiarCantidad();";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModalCambiarCantidad", script2, true);
+                    }
                 }
                 else
                 {
@@ -23544,16 +23608,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 using (SqlCommand cmd = new SqlCommand(sSql, connection))
                 {
-                    cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
+                    cmd.Parameters.Add("@plano", SqlDbType.VarChar).Value = txtPlano.Text.Trim();
+
                     connection.Open();
+                    object result = cmd.ExecuteScalar();
 
-                    object result = cmd.ExecuteScalar(); // Obtener un solo valor
-
-                    // Verificar si el resultado es NULL o si el valor es false
-                    return result != null && Convert.ToBoolean(result);
+                    // Si es NULL, retorna false; si no, convierte el valor
+                    return result != DBNull.Value && result != null && Convert.ToBoolean(result);
                 }
             }
         }
+
 
         private bool ValidarPlanoVinculado()
         {
