@@ -303,7 +303,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 DateTime fechaIngreso = Convert.ToDateTime(row["Fecha_Entrega_Dibujo_Despiece"]);
                 DateTime fechaEntrega = CalcularFechaEntrega(fechaIngreso, 3);
-                row["Fecha_Entrega"] = fechaEntrega.ToString("dd/MM/yyyy hh:mm:ss tt");
+                row["Fecha_Entrega"] = fechaEntrega.ToString("dd/MM/yyyy HH:mm:ss ");
             }
 
             DataGrid1.DataSource = dataTable;
@@ -4620,6 +4620,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     {
                         descripcionCell.Text = $"{cliente} - {nombreDiseño}";
                     }
+
+                    DateTime valorFecha;
+
+                    // UltimaActivacion
+                    if (DateTime.TryParse(DataBinder.Eval(e.Item.DataItem, "UltimaActivacion").ToString(), out valorFecha))
+                        e.Item.Cells[5].Text = valorFecha.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+
+                    // Fecha_Programada_Entrega
+                    if (DateTime.TryParse(FechaEntrega, out valorFecha))
+                        e.Item.Cells[6].Text = valorFecha.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+
+                    // PactodeEntrega
+                    if (DateTime.TryParse(DataBinder.Eval(e.Item.DataItem, "PactodeEntrega").ToString(), out valorFecha))
+                        e.Item.Cells[9].Text = valorFecha.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
                 }
             }
         }
@@ -5665,11 +5679,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 e.Item.Attributes["id"] = "DataGrid1_row_" + e.Item.ItemIndex;
                 e.Item.Attributes["data-datagridid"] = "DataGrid1";
 
-                // Obtener la fecha de ingreso desde el DataItem
-                DateTime fechaIngreso = Convert.ToDateTime(DataBinder.Eval(e.Item.DataItem, "Fecha_Entrega_Dibujo_Despiece"));
+                TableCell celdaFechaIngreso = e.Item.Cells[6]; // Índice de la columna "Fecha_Entrega_Dibujo_Despiece"
+                DateTime fechaIngreso;
 
-                // Definir el plazo de entrega según la lógica de VB6 (ajustar si es necesario)
-                int plazoEntrega = 2; // Puedes cambiar esto si el plazo depende de algún otro campo
+                if (DateTime.TryParse(celdaFechaIngreso.Text, out fechaIngreso))
+                {
+                    celdaFechaIngreso.Text = fechaIngreso.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                }
+
+                int plazoEntrega = 2; 
 
                 // Calcular la fecha de entrega usando el método existente
                 DateTime fechaEntrega = CalcularFechaEntrega(fechaIngreso, plazoEntrega);
@@ -5680,7 +5698,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 if (labelFechaEntrega != null)
                 {
                     // Asignar la fecha de entrega formateada
-                    labelFechaEntrega.Text = fechaEntrega.ToString("dd/MM/yyyy hh:mm:ss tt");
+                    labelFechaEntrega.Text = fechaEntrega.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
                 }
 
                 // Definir el color de la fila en base a la fecha de entrega
