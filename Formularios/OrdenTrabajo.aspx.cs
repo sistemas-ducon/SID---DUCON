@@ -53,6 +53,7 @@ using Path = System.IO.Path;
 using TableCell = System.Web.UI.WebControls.TableCell;
 using System.Windows.Input;
 using System.Web.Services.Description;
+using System.Globalization;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
@@ -4234,6 +4235,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 txtAsesorPlano.Text = string.Empty;
             }
 
+
+            if (ValidarPlanoBloqueado())
+            {
+                BtnPlaBlo.ToolTip = "Desbloquear Plano";
+            }
+            else
+            {
+                BtnPlaBlo.ToolTip = "Bloquear Plano";
+            }
+
         }
 
         public void Cargar_Plano2(string plano)
@@ -4262,6 +4273,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     // Se carga el despiece
                     Cargar_Despiece_Plano();
+                }
+
+
+                if (ValidarPlanoBloqueado())
+                {
+                    BtnPlaBlo.ToolTip = "Desbloquear Plano";
+                }
+                else
+                {
+                    BtnPlaBlo.ToolTip = "Bloquear Plano";
                 }
 
                 dr.Close();
@@ -4846,8 +4867,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             DataGridModuloObjetos.DataBind();
             lbTituloObjeto.Text = "Descripcion Objeto";
-            ValorlbDipLa2.Text = "0 Cms";
-            ValorlbDipLa3.Text = "0 Cms";
+            ValorlbDipLa2.Text = " Cms";
+            ValorlbDipLa3.Text = " Cms";
 
         }
 
@@ -4912,6 +4933,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 string descrip = row.Cells[2].Text;
                 string Altura = row.Cells[4].Text;
+                string holgura = row.Cells[14].Text;
 
                 bool chequeado = row.Cells[10].Text.ToUpper() == "SI";
 
@@ -4924,8 +4946,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 LlenarDataGridModuloObjeto(Id_PanelNum);
 
                 lbTituloObjeto.Text = descrip;
-                ValorlbDipLa2.Text = Altura + " Cms";
-                ValorlbDipLa3.Text = Altura + " Cms";
+
+
+                // Alturas disponibles del objeto 
+
+
+                // Método mini utilitario
+                string NormalizeDecimal(string value) => value.Replace(',', '.');
+
+                // Conversiones seguras
+                if (double.TryParse(NormalizeDecimal(Id_PanelNum), NumberStyles.Any, CultureInfo.InvariantCulture, out double IdPanelNumerico) &&
+                    float.TryParse(NormalizeDecimal(holgura), NumberStyles.Any, CultureInfo.InvariantCulture, out float HolguraNum))
+                {
+                    Alturas_Disponibles(IdPanelNumerico, HolguraNum);
+                }
+
 
                 // Asignar ID único a la fila
                 row.Attributes["id"] = "row_" + rowIndex;
@@ -12016,7 +12051,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             // Cambiar en campo bloqueado en la base de datos a 0
                             ActualizarEstadoBloqueado(0);
-                            Cargar_OTs();
+                            if(tbOT.Text.Trim() != "")
+                            {
+                                Cargar_OTs();
+                            }
+                            else
+                            {
+                                if (ValidarPlanoBloqueado())
+                                {
+                                    BtnPlaBlo.ToolTip = "Desbloquear Plano";
+                                }
+                                else
+                                {
+                                    BtnPlaBlo.ToolTip = "Bloquear Plano";
+                                }
+                            }
+                           
+
                             string scriptNoPermiso = "alert('El plano ha sido desbloqueado');";
                             ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
                         }
@@ -12038,7 +12089,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             // Cambiar en campo bloqueado en la base de datos a 1
                             ActualizarEstadoBloqueado(1);
-                            Cargar_OTs();
+
+                            if (tbOT.Text.Trim() != "")
+                            {
+                                Cargar_OTs();
+                            }
+                            else
+                            {
+                                if (ValidarPlanoBloqueado())
+                                {
+                                    BtnPlaBlo.ToolTip = "Desbloquear Plano";
+                                }
+                                else
+                                {
+                                    BtnPlaBlo.ToolTip = "Bloquear Plano";
+                                }
+                            }
+
                             string scriptNoPermiso = "alert('El plano ha sido bloqueado');";
                             ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
                         }
@@ -15715,7 +15782,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 foreach (DataRow row in AcaadosDefinitivos.Rows)
                 {
-                    acabados += row["OadDescripcionGrupoObjeto"].ToString() + " - " + row["oadDescripcion_Familia"].ToString() + " - " + row["oadDescripcionAcabado"].ToString() + " - " + row["oadCodInvDes"].ToString();
+                    acabados +=   row["OadDescripcionGrupoObjeto"].ToString() + " - " + row["oadDescripcion_Familia"].ToString() + " - " + row["oadDescripcionAcabado"].ToString() + " - " + row["oadCodInvDes"].ToString() + "\n";
+
                 }
 
             }
@@ -23499,12 +23567,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
-                // validar si el plano esta vinvulado a una ot que ya de dieron boton por parte de dibujo
-                if (ValidarPlanoVinculado() && btnOk.Enabled == false)
+                if(tbOT.Text.Trim() != "")
                 {
-                    // No se puuede cambiar la cantidad OT terminada 
-                    string scriptNoPermiso = $"alert('No se puede Modificar Ningún Objeto, ya que el plano {txtPlano.Text} está vinculado a la Orden de Trabajo {tbOT.Text} con el pedido {ddlNumbers.SelectedItem.Text}.');";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
+                    // validar si el plano esta vinvulado a una ot que ya de dieron boton por parte de dibujo Revisar 
+                    if (ValidarPlanoVinculado() && btnOk.Enabled == false)
+                    {
+                        // No se puuede cambiar la cantidad OT terminada 
+                        string scriptNoPermiso = $"alert('No se puede Modificar Ningún Objeto, ya que el plano {txtPlano.Text} está vinculado a la Orden de Trabajo {tbOT.Text} con el pedido {ddlNumbers.SelectedItem.Text}.');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
+                    }
+                    else
+                    {
+                        spanObjeto.InnerText = ObjetoEliminar.InnerText;
+                        spanAncho.InnerText = anchoEliminar.InnerText;
+
+                        string script2 = @"mostrarModalCambiarCantidad();";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "mostrarModalCambiarCantidad", script2, true);
+                    }
                 }
                 else
                 {
@@ -23529,16 +23608,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 using (SqlCommand cmd = new SqlCommand(sSql, connection))
                 {
-                    cmd.Parameters.AddWithValue("@plano", txtPlano.Text);
+                    cmd.Parameters.Add("@plano", SqlDbType.VarChar).Value = txtPlano.Text.Trim();
+
                     connection.Open();
+                    object result = cmd.ExecuteScalar();
 
-                    object result = cmd.ExecuteScalar(); // Obtener un solo valor
-
-                    // Verificar si el resultado es NULL o si el valor es false
-                    return result != null && Convert.ToBoolean(result);
+                    // Si es NULL, retorna false; si no, convierte el valor
+                    return result != DBNull.Value && result != null && Convert.ToBoolean(result);
                 }
             }
         }
+
 
         private bool ValidarPlanoVinculado()
         {
@@ -23689,6 +23769,110 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
+
+        public void Alturas_Disponibles(double IdPanelNum, float Holgura)
+        {
+            DataTable dtAlturas_Disponibles = ConsultarAlturaDisponible(IdPanelNum);
+            DataTable dtAlturaMarco = ConsultaralturaMarco(IdPanelNum);
+
+            float AlturaA = 0, AlturaB = 0, AlturaAB = 0;
+            float DisponibleA = 0, DisponibleB = 0;
+
+            if (dtAlturaMarco.Rows.Count > 0)
+            {
+                foreach (DataRow row in dtAlturas_Disponibles.Rows)
+                {
+                    string lado = row["Lado"].ToString();
+                    float alturaLado = Convert.ToSingle(row["AlturaLado"]);
+
+                    switch (lado)
+                    {
+                        case "A":
+                            AlturaA = alturaLado;
+                            break;
+                        case "B":
+                            AlturaB = alturaLado;
+                            break;
+                        case "AB":
+                            AlturaAB = alturaLado;
+                            break;
+                    }
+                }
+
+                float alturaMarco = Convert.ToSingle(dtAlturaMarco.Rows[0]["Altura"]);
+                DisponibleA = (float)Math.Round(alturaMarco - (AlturaA + AlturaAB) - Holgura, 2);
+                DisponibleB = (float)Math.Round(alturaMarco - (AlturaB + AlturaAB) - Holgura, 2);
+
+
+
+                ValorlbDipLa2.Text = DisponibleA.ToString() + " Cms";
+                ValorlbDipLa3.Text = DisponibleB.ToString() + " Cms";
+
+            }
+            else
+            {
+                ValorlbDipLa2.Text =  "0 Cms";
+                ValorlbDipLa3.Text =  "0 Cms";
+            }
+
+
+
+
+        }
+
+        public DataTable ConsultarAlturaDisponible(double IdPanelNum)
+        {
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            string sql = @"SELECT SUM(tblModulo.Altura) AS AlturaLado, tblPanel_Modulo.Lado
+                   FROM tblTipoModulo 
+                   INNER JOIN (tblModulo INNER JOIN tblPanel_Modulo 
+                   ON tblModulo.Id_Modulo = tblPanel_Modulo.Id_Modulo) 
+                   ON tblTipoModulo.Id_TipoModulo = tblModulo.Id_TipoModulo 
+                   WHERE tblTipoModulo.Id_TipoModulo <> 1 
+                   AND tblPanel_Modulo.Id_PanelNum = @IdPanelNum
+                   GROUP BY tblPanel_Modulo.Lado, tblPanel_Modulo.Id_PanelNum";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(sql, connection))
+            {
+                cmd.Parameters.AddWithValue("@IdPanelNum", IdPanelNum);
+                using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                {
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    return dt;
+                }
+            }
+        }
+
+        public DataTable ConsultaralturaMarco(double IdPanelNum)
+        {
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            string sql = @"SELECT tblModulo.Altura, tblTipoModulo.Id_TipoModulo
+                   FROM tblTipoModulo 
+                   INNER JOIN (tblModulo INNER JOIN tblPanel_Modulo 
+                   ON tblModulo.Id_Modulo = tblPanel_Modulo.Id_Modulo) 
+                   ON tblTipoModulo.Id_TipoModulo = tblModulo.Id_TipoModulo 
+                   WHERE tblPanel_Modulo.Id_PanelNum = @IdPanelNum 
+                   AND tblTipoModulo.Id_TipoModulo = 1";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(sql, connection))
+            {
+                cmd.Parameters.AddWithValue("@IdPanelNum", IdPanelNum);
+                using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                {
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    return dt;
+                }
+            }
+        }
+
 
     }
 

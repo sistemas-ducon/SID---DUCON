@@ -347,26 +347,26 @@
 
     </script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        let overlay = document.querySelector(".overlay-label");
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let overlay = document.querySelector(".overlay-label");
 
-        if (overlay) { // Verifica si el div existe antes de agregar eventos
-            let timeout;
+            if (overlay) { // Verifica si el div existe antes de agregar eventos
+                let timeout;
 
-            overlay.addEventListener("mouseenter", function () {
-                clearTimeout(timeout);
-                overlay.style.transform = "translate(-50%, -200%)"; // Se mueve más abajo
-            });
+                overlay.addEventListener("mouseenter", function () {
+                    clearTimeout(timeout);
+                    overlay.style.transform = "translate(-50%, -200%)"; // Se mueve más abajo
+                });
 
-            overlay.addEventListener("mouseleave", function () {
-                timeout = setTimeout(function () {
-                    overlay.style.transform = "translate(-50%, 50%)"; // Se mueve más arriba
-                }, 300);
-            });
-        }
-    });
-</script>
+                overlay.addEventListener("mouseleave", function () {
+                    timeout = setTimeout(function () {
+                        overlay.style.transform = "translate(-50%, 50%)"; // Se mueve más arriba
+                    }, 300);
+                });
+            }
+        });
+    </script>
 
 
 </head>
@@ -405,9 +405,9 @@
             <div class="tab-pane fade show active" id="OTs-Content">
                 <asp:UpdatePanel ID="PanelOt" runat="server" UpdateMode="Conditional" DefaultButton="btnSubmit">
                     <ContentTemplate>
-    <div id="divAnulacion" runat="server" class="overlay-label" visible="false">
-    <asp:Label ID="lblAnulacion" runat="server"></asp:Label>
-</div>
+                        <div id="divAnulacion" runat="server" class="overlay-label" visible="false">
+                            <asp:Label ID="lblAnulacion" runat="server"></asp:Label>
+                        </div>
 
 
 
@@ -3323,7 +3323,7 @@
                                         </div>
                                         <div class="modal-body border rounded">
                                             <div class="container-fluid">
-                                                <h6>Esta seguro que desea eliminar el objeto  <span runat="server" id="ObjetoEliminar"></span> de ancho <span runat="server" id="anchoEliminar"></span> del plano ? </h6>
+                                                <h6>Esta seguro que desea eliminar el objeto  <span runat="server" id="ObjetoEliminar"></span>de ancho <span runat="server" id="anchoEliminar"></span>del plano ? </h6>
                                             </div>
 
                                         </div>
@@ -4412,14 +4412,14 @@
                                         </div>
                                         <div class="modal-body border rounded">
                                             <div class="container-fluid">
-                                                <h6>¿Esta seguro de cambiar la cantidad del objeto <span runat="server" id="spanObjeto"></span> con ancho <span runat="server" id="spanAncho"></span>  </h6>
+                                                <h6>¿Esta seguro de cambiar la cantidad del objeto <span runat="server" id="spanObjeto"></span>con ancho <span runat="server" id="spanAncho"></span></h6>
                                             </div>
 
                                         </div>
                                         <div class="modal-footer">
                                             <div class="container-fluid d-flex justify-content-center gap-5 p-0">
                                                 <asp:Button runat="server" ID="btnCambiarCantidad_SI" Text="Si" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-primary" Style="width: 5rem;" OnClick="btnCambiarCantidad_SI_Click" />
-                                                <asp:Button runat="server" ID="btnCambiarCantidad_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-secondary" Style="width: 5rem;"  OnClick="btnCambiarCantidad_NO_Click" />
+                                                <asp:Button runat="server" ID="btnCambiarCantidad_NO" Text="No" data-bs-dismiss="modal" aria-label="Close" CssClass="btn btn-sm btn-outline-secondary" Style="width: 5rem;" OnClick="btnCambiarCantidad_NO_Click" />
                                             </div>
 
                                         </div>

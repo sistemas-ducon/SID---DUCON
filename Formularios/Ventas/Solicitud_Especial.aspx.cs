@@ -2015,7 +2015,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             cmd.Parameters.AddWithValue("@Zona", Session["ZonaAsesor"].ToString());
                             cmd.Parameters.AddWithValue("@Asesor", ddlAsesor.SelectedItem.Text);
 
-                            cmd.Parameters.AddWithValue("@Proyecto", tbProyecto.Text);
+                            cmd.Parameters.AddWithValue("@Proyecto", tbProyecto.Text.Trim());
                             cmd.Parameters.AddWithValue("@Cliente", tbClienteServidor.Text);
                             cmd.Parameters.AddWithValue("@Contacto", tbContactoServidor.Text);
                             cmd.Parameters.AddWithValue("@Telefono", tbTelefonoServidor.Text);
@@ -3306,7 +3306,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     foreach (DataRow row in InformacionDetalleSol.Rows)
                     {
-                        worksheet.Cells[currentRow, 1].Value = row["ID_Solicitud"];
+                        worksheet.Cells[currentRow, 1].Value = row["Id_SolicitudDetalle"];
                         worksheet.Cells[currentRow, 2].Value = row["Producto"];
                         worksheet.Cells[currentRow, 3].Value = row["Ancho"] + "X" + row["Alto"] + "X" + row["Profundidad"];
                         worksheet.Cells[currentRow, 4].Value = row["Material"];
@@ -3677,6 +3677,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         else
                         {
                             if (OkCompras.ToUpper() == "SI")
+                            {
+                                string script = "<script>HabilitarBotDetalleD();</script>";
+                                ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarBotDetalleD", script, false);
+                            }
+                            else
                             {
                                 string script = "<script>HabilitarEnlaces3();</script>";
                                 ScriptManager.RegisterStartupScript(this, GetType(), "HabilitarBotDetalleD", script, false);
@@ -6626,7 +6631,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (EnviarCorreRediCompras(destinatarios, cuerpo))
             {
-                string mensajePersonalizado = "La solicitud a sido redirigida a compras y notificada por correo electronico";
+                string mensajePersonalizado = "La solicitud ha sido redirigida a compras y notificada por correo electronico";
                 string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
             }
@@ -6636,9 +6641,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string urlRedireccion = "Ventas/Solicitud_Especial.aspx";
                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
             }
-
-
-
 
         }
         private void ActualizarSolicitudRediCompras()
