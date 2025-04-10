@@ -13908,7 +13908,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     {
                         foreach (DataRow row in AcaadosDefinitivos.Rows)
                         {
-                            acabados += row["OadDescripcionGrupoObjeto"].ToString() + " - " + row["oadDescripcion_Familia"].ToString() + " - " + row["oadDescripcionAcabado"].ToString() + " - " + row["oadCodInvDes"].ToString();
+                            acabados += row["OadDescripcionGrupoObjeto"].ToString() + " - " + row["oadDescripcion_Familia"].ToString() + " - " + row["oadDescripcionAcabado"].ToString() + " - " + row["oadCodInvDes"].ToString() + "\n\n";
                         }
 
                     }
@@ -15782,7 +15782,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 foreach (DataRow row in AcaadosDefinitivos.Rows)
                 {
-                    acabados +=   row["OadDescripcionGrupoObjeto"].ToString() + " - " + row["oadDescripcion_Familia"].ToString() + " - " + row["oadDescripcionAcabado"].ToString() + " - " + row["oadCodInvDes"].ToString() + "\n";
+                    acabados +=   row["OadDescripcionGrupoObjeto"].ToString() + " - " + row["oadDescripcion_Familia"].ToString() + " - " + row["oadDescripcionAcabado"].ToString() + " - " + row["oadCodInvDes"].ToString() + "\n\n";
 
                 }
 
