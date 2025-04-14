@@ -2788,6 +2788,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
 
+            ChecUrgent.Enabled = false;
             TextObsVen.Disabled = true;
             CheckEsyMat.Enabled = false;
         }
@@ -3560,6 +3561,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 BtnPlano.CssClass = "btn btn-sm button-enabled";
 
                 TextObsDibDes.Attributes.Remove("readonly");
+
+                ChecUrgent.Enabled = true;
             }
         }
 
