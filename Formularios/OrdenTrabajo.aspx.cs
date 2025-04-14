@@ -2008,7 +2008,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Cargar_Plano(id, pedido);
             Cargar_Despiece_Plano();
 
-            CarteraVencida();
+            if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
+            {
+
+                CarteraVencida();
+            }
 
             // Validar Si afeacta o no Bolsa Para controlar el Icono o el color y el ToolTip
             if (ValidarAfectaBolsa())
@@ -2140,7 +2144,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Cargar_Plano(id, pedido);
             Cargar_Despiece_Plano();
 
-            CarteraVencida();
+            if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
+            {
+
+                CarteraVencida();
+            }
+
 
             ddlNumbers.Enabled = true;
 
@@ -13797,7 +13806,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             string mensajeError = "Aprobando el pedido el saldo de la bolsa quedaria en un: " + Math.Abs(Convert.ToDouble(valorBolsa)) + " % EN CONTRA. No se puede pasar el pedido";
                             string scriptError = "alert('" + mensajeError + "');";
                             ScriptManager.RegisterStartupScript(this, GetType(), "showError", scriptError, true);
+
+                            string delayedScript = @" setTimeout(function() {CerrarCargarOK();}, 700);";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", delayedScript, true);
                             return;
+
+                          
                         }
                     }
 
@@ -13908,7 +13922,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     {
                         foreach (DataRow row in AcaadosDefinitivos.Rows)
                         {
-                            acabados += row["OadDescripcionGrupoObjeto"].ToString() + " - " + row["oadDescripcion_Familia"].ToString() + " - " + row["oadDescripcionAcabado"].ToString() + " - " + row["oadCodInvDes"].ToString();
+                            acabados += row["OadDescripcionGrupoObjeto"].ToString() + " - " + row["oadDescripcion_Familia"].ToString() + " - " + row["oadDescripcionAcabado"].ToString() + " - " + row["oadCodInvDes"].ToString() + "\n\n";
                         }
 
                     }
@@ -15782,7 +15796,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 foreach (DataRow row in AcaadosDefinitivos.Rows)
                 {
-                    acabados +=   row["OadDescripcionGrupoObjeto"].ToString() + " - " + row["oadDescripcion_Familia"].ToString() + " - " + row["oadDescripcionAcabado"].ToString() + " - " + row["oadCodInvDes"].ToString() + "\n";
+                    acabados +=   row["OadDescripcionGrupoObjeto"].ToString() + " - " + row["oadDescripcion_Familia"].ToString() + " - " + row["oadDescripcionAcabado"].ToString() + " - " + row["oadCodInvDes"].ToString() + "\n\n";
 
                 }
 

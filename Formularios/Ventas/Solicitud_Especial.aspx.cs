@@ -680,7 +680,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void DataGridDesarrollo_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
-            
+
 
 
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
@@ -3322,7 +3322,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         for (int col = 1; col <= 11; col++) // Ajusta el número de columnas según tus datos
                         {
                             worksheet.Cells[currentRow, col].Style.WrapText = true;
-                     
+
                         }
 
                         currentRow++;
@@ -3435,6 +3435,23 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             DateTime UltimaActivacionSolicitud = FechaIngreso;
             DateTime FechaEntrega = DateTime.Now;
 
+            // 👉 Validar si se ingresó después de las 5:00 PM
+            if (UltimaActivacionSolicitud.TimeOfDay > new TimeSpan(17, 0, 0))
+            {
+                UltimaActivacionSolicitud = UltimaActivacionSolicitud.AddDays(1).Date.AddHours(7); // siguiente día a las 7:00 AM
+            }
+            else
+            {
+                UltimaActivacionSolicitud = new DateTime(
+                 UltimaActivacionSolicitud.Year,
+                 UltimaActivacionSolicitud.Month,
+                 UltimaActivacionSolicitud.Day,
+                 UltimaActivacionSolicitud.Hour,
+                 UltimaActivacionSolicitud.Minute,
+                 0 // Puedes dejar el segundo exacto si lo prefieres
+                );
+            }
+
             //Se valida  si ingresan la solicitud un dia sabado o domingo 
             while (UltimaActivacionSolicitud.DayOfWeek == DayOfWeek.Saturday || UltimaActivacionSolicitud.DayOfWeek == DayOfWeek.Sunday)
             {
@@ -3443,15 +3460,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
             // Coltrol de tres dias para la cotizacion y 5 dias para desarrollos 
-            if(ddlTipo.SelectedItem.Text .ToUpper() == "DESARROLLO")
+            if(ddlTipo.SelectedItem.Text.ToUpper() == "DESARROLLO")
             {
-                 FechaEntrega = SumarDiaLaboral(UltimaActivacionSolicitud, 5);
+                FechaEntrega = SumarDiaLaboral(UltimaActivacionSolicitud, 5);
             }
             else if(ddlTipo.SelectedItem.Text.ToUpper() == "COTIZACIÓN")
             {
-                 FechaEntrega = SumarDiaLaboral(UltimaActivacionSolicitud, 3);
+                FechaEntrega = SumarDiaLaboral(UltimaActivacionSolicitud, 3);
             }
-           
+
 
             return FechaEntrega;
         }
@@ -4971,7 +4988,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (ComplejoDB == chkComplejo)
                 {
-                  
+
                     string mensajeExito = "La solicitud ya está marcada como No Desarrollo Complejo.";
                     string scriptNoSeleccionado = "alert('" + mensajeExito + "');";
                     ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess", scriptNoSeleccionado, true);
@@ -5006,7 +5023,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             DateTime FechaIngresoActual = Convert.ToDateTime(tbFechaIngreso.Text);
             DateTime FechaEntregaActualizda20Dias = CalcularFechaEntregaComplejo(FechaIngresoActual);
-           
+
             // el calculo de la fecha esta Ok solo falta hacer el update 
 
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -5087,7 +5104,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         public DateTime CalcularFechaEntregaComplejo(DateTime FechaIngreso)
         {
             DateTime UltimaActivacionSolicitud = FechaIngreso;
-            
+
 
             //Se valida  si ingresan la solicitud un dia sabado o domingo 
             while (UltimaActivacionSolicitud.DayOfWeek == DayOfWeek.Saturday || UltimaActivacionSolicitud.DayOfWeek == DayOfWeek.Sunday)
@@ -5096,8 +5113,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 UltimaActivacionSolicitud = new DateTime(UltimaActivacionSolicitud.Year, UltimaActivacionSolicitud.Month, UltimaActivacionSolicitud.Day, 8, 0, 0);
             }
 
-             DateTime  FechaEntrega = SumarDiaLaboral(UltimaActivacionSolicitud, 20);
-            
+            DateTime  FechaEntrega = SumarDiaLaboral(UltimaActivacionSolicitud, 20);
+
             return FechaEntrega;
         }
 
@@ -6275,7 +6292,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     ID_Cot_Dib.Text = lbNumeroSolicitud.Text;
                     BuscarCot_Click(sender, e);
 
-                   
+
                     DataGridCommandEventArgs args = new DataGridCommandEventArgs(
                         DataGrid2.Items[0],
                         DataGrid2,
@@ -6288,7 +6305,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     ID_Sol_Dib.Text = lbNumeroSolicitud.Text;
                     BuscarSol_Click(sender, e);
 
-                    
+
                     DataGridCommandEventArgs args = new DataGridCommandEventArgs(
                         DataGrid1.Items[0],
                         DataGrid1,
@@ -6297,7 +6314,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     DataGridSolicitudPE_LinkButton(DataGrid1, args);
                 }
 
-               
+
 
 
                 // Se actualizo correctamente
