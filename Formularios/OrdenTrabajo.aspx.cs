@@ -15574,7 +15574,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         int filaexcel = 1; // Inicia en la fila 2 
 
                         // Iterar sobre las filas hasta que la celda en la primera columna esté vacía
-                        while (sheet.GetRow(filaexcel) != null && sheet.GetRow(filaexcel).GetCell(0) != null)
+                        while (sheet.GetRow(filaexcel) != null && sheet.GetRow(filaexcel).GetCell(0) != null && !string.IsNullOrWhiteSpace(sheet.GetRow(filaexcel).GetCell(0).ToString()))
                         {
                             // Convertir el contenido de la columna 5 (E) a mayúsculas y buscar "INSTA"
                             string columnaE = sheet.GetRow(filaexcel).GetCell(4).ToString().ToUpper();
