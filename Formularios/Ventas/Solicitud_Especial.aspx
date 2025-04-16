@@ -3208,7 +3208,7 @@
         }
 
         function validarFormularioSolicitud() {
-            var proyecto = document.getElementById("tbProyecto").value.Trim();
+            var proyecto = document.getElementById("tbProyecto").value.trim();
             var dirigido = document.getElementById("ddlDirigido").value;
             var Tipo = document.getElementById("ddlTipo").value;
             var CotEsp = document.getElementById("tbCotizacionEsp").value;
