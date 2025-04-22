@@ -97,6 +97,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private Dictionary<string, System.Drawing.Color> coloresPorModulo = new Dictionary<string, System.Drawing.Color>();
         private bool alternarColor = true; // Variable que alterna entre colores
 
+        // Campo estático para alternancia
+        private static bool alternar = false;
+
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -1537,7 +1540,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 btnAgregarAcabado,
                 btnModificarAcabado,
                 btnGrabarRedAcabadoNue,
-                btnGrabarRedAcaMod
+                btnGrabarRedAcaMod,
+                btnActalizarObjetos
 
             };
 
@@ -2359,7 +2363,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 // Validar si la ot y el pedido tienen cotizacion  y si tienen link
 
-                if(txtCotizacion.Text.ToUpper().Trim() != "NO TIENE" || txtCotizacion.Text.ToUpper().Trim() != "")
+                if (txtCotizacion.Text.ToUpper().Trim() != "NO TIENE" || txtCotizacion.Text.ToUpper().Trim() != "")
                 {
                     if (ValidarExistenciaCotizacion(txtCotizacion.Text))
                     {
@@ -2778,7 +2782,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
 
 
-              
+
             }
 
 
@@ -3264,6 +3268,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 BtnGenForCerOrd.Enabled = true;
                 BtnGenForCerOrd.CssClass = "btn btn-sm shadow button-enabled";
 
+                btnActalizarObjetos.Enabled = true;
+                btnActalizarObjetos.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+
+
+
 
             }
             else if (Session["Departamento"].ToString().ToUpper() == "VENTAS")
@@ -3289,6 +3298,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 BtnObjNoExi.Enabled = true;
                 BtnObjNoExi.CssClass = "btn btn-sm shadow button-enabled";
+
+                btnActalizarObjetos.Enabled = true;
+                btnActalizarObjetos.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
 
             }
 
@@ -4408,7 +4420,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 for (int i = 0; i < e.Item.Cells.Count; i++)
                 {
-                    if(i != 0)
+                    if (i != 0)
                     {
                         if (i == 3) // Suponiendo que la columna "Descripción" es la tercera columna (índice 2)
                         {
@@ -4419,7 +4431,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             e.Item.Cells[i].CssClass = "resizable-header";
                         }
                     }
-                   
+
                 }
             }
 
@@ -4466,7 +4478,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
                 }
 
-               
+
 
                 //Alienar celdas el centro               
                 e.Item.Cells[4].HorizontalAlign = HorizontalAlign.Center;
@@ -4502,13 +4514,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 // Mantener el enfoque en la fila seleccionada
                 if (Session["SelectedRowIndex"] != null && e.Item.ItemIndex == Convert.ToInt32(Session["SelectedRowIndex"]))
-                {  
+                {
                     e.Item.Attributes["id"] = "row_" + e.Item.ItemIndex;
                     Session.Remove("SelectedRowIndex");
                 }
 
 
-               
+
 
 
 
@@ -4534,7 +4546,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 //se usa Para darle un color a la fila seleccionada  
                 e.Item.CssClass = "fila-seleccionada";
-                string ID = row.Cells[2].Text.Trim().Replace("&nbsp;","");
+                string ID = row.Cells[2].Text.Trim().Replace("&nbsp;", "");
                 string Descri = row.Cells[3].Text.Trim().Replace("&nbsp;", ""); ;
                 string Ancho = row.Cells[5].Text.Trim().Replace("&nbsp;", "");
                 string cantidad = row.Cells[6].Text.Trim().Replace("&nbsp;", "");
@@ -6939,8 +6951,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 {
                                     Session["Id_OT2"] = nuevoIdOTConcatenado;
                                     Session["Pedido2"] = 1;
-                                    
-                                    
+
+
                                     string tipoAccion = Session["Diseno"] as string;
                                     if (tipoAccion == "Diseño" || tipoAccion == "DESARROLLO DE PRODUCTO")
                                     {
@@ -7892,6 +7904,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 BtnImpPlaActBlo,
                 BtnActPrePro,
                 BtnGenForCerOrd,
+                btnActalizarObjetos
 
             };
 
@@ -8655,7 +8668,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
-        } 
+        }
 
         public void DepartamentoAsesor()
         {
@@ -8686,7 +8699,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
 
         } // Campo se podria Cargar en el login
-         
+
         // 1 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR  --------------------------------------------------
         protected void DataGridAcabados1_ItemCommand(object source, DataGridCommandEventArgs e)
         {
@@ -10236,7 +10249,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                                 //Se ha creado al menos un Objeto
                                                 EscalableObj = Convert.ToBoolean(Paneles.Rows[0]["Escalable"].ToString());
                                                 Ancho = Math.Round(Ancho * 100, 2);
-                                               
+
 
                                                 DataRow[] PanelAncho = Paneles.Select("Ancho = '" + Ancho + "'"); //Se busca el ancho requerido
 
@@ -11003,7 +11016,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     // Agregar el parámetro Id
                     command.Parameters.AddWithValue("@id", objeto);
-                    
+
 
                     using (SqlDataAdapter adapter = new SqlDataAdapter(command))
                     {
@@ -11042,7 +11055,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return dataTable;
         }
         private bool CreacionObjPersonalizado_X(string objeto, double ancho, DataTable panel)
-         {
+        {
             double altura = Convert.ToDouble(panel.Rows[0]["Altura"].ToString());
             double profundidad = Convert.ToDouble(panel.Rows[0]["profundidad"].ToString());
             double Cubicaje = Math.Round((ancho * altura * profundidad) / 1000000, 5);
@@ -11091,7 +11104,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Redondear el ancho a un decimal y almacenar en una variable
             double anchoRedondeado = Math.Round(ancho, 1);
-           
+
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -11160,7 +11173,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
-        private void ConsultarDatosModuloPanel2(int IdNumerico, string objeto,double altura)
+        private void ConsultarDatosModuloPanel2(int IdNumerico, string objeto, double altura)
         {
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             string sSql = "Select * from tblPanel_Modulo where Id_PanelNum = @Id_Numerico";
@@ -11181,7 +11194,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         else
                         {
                             // si no hay datos consultamos los valores con el IdPanel   
-                            DataTable obj = ConsultarObjeto2(objeto,altura);
+                            DataTable obj = ConsultarObjeto2(objeto, altura);
 
                             //Tomamos el primer registro 
                             object primerDato = obj.Rows[0][0];
@@ -11201,7 +11214,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-       
+
         private DataTable ConsultarPanelmodulo1(string id)
         {
             DataTable dataTable = new DataTable();
@@ -12060,7 +12073,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             // Cambiar en campo bloqueado en la base de datos a 0
                             ActualizarEstadoBloqueado(0);
-                            if(tbOT.Text.Trim() != "")
+                            if (tbOT.Text.Trim() != "")
                             {
                                 Cargar_OTs();
                             }
@@ -12075,7 +12088,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     BtnPlaBlo.ToolTip = "Bloquear Plano";
                                 }
                             }
-                           
+
 
                             string scriptNoPermiso = "alert('El plano ha sido desbloqueado');";
                             ScriptManager.RegisterStartupScript(this, GetType(), "showNoPermiso", scriptNoPermiso, true);
@@ -13382,7 +13395,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void Boton_Ok1(object sender, EventArgs e)
         {
 
-            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO") 
+            if (Session["Departamento"].ToString().ToUpper() == "DISEÑO" || Session["Departamento"].ToString().ToUpper() == "DESARROLLO DE PRODUCTO")
             {
 
                 Session["Id_OT2"] = tbOT.Text;
@@ -13811,7 +13824,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", delayedScript, true);
                             return;
 
-                          
+
                         }
                     }
 
@@ -13961,7 +13974,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         // Validar si el dibujante debe recibir un correo ???? 
 
-                        destinatarios += CorreoDibujanteOT + ";" +  CorreoAsesorOT + ";" + correosExportarObra;
+                        destinatarios += CorreoDibujanteOT + ";" + CorreoAsesorOT + ";" + correosExportarObra;
 
                         // Se consulta el consolidado del despice para mostrar en el correo 
                         string resumenDespice = ObtenerResumenDespice(txtPlano.Text);
@@ -15796,7 +15809,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 foreach (DataRow row in AcaadosDefinitivos.Rows)
                 {
-                    acabados +=   row["OadDescripcionGrupoObjeto"].ToString() + " - " + row["oadDescripcion_Familia"].ToString() + " - " + row["oadDescripcionAcabado"].ToString() + " - " + row["oadCodInvDes"].ToString() + "\n\n";
+                    acabados += row["OadDescripcionGrupoObjeto"].ToString() + " - " + row["oadDescripcion_Familia"].ToString() + " - " + row["oadDescripcionAcabado"].ToString() + " - " + row["oadCodInvDes"].ToString() + "\n\n";
 
                 }
 
@@ -15948,7 +15961,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     command.CommandType = CommandType.StoredProcedure;
 
                     // Definir los parámetros del procedimiento almacenado
-                    command.Parameters.AddWithValue("@Destinatarios", destinatarios.Replace(";;",";"));
+                    command.Parameters.AddWithValue("@Destinatarios", destinatarios.Replace(";;", ";"));
                     command.Parameters.AddWithValue("@asunto", "Producir Pedido: " + dtacboTipoPedido.SelectedItem.Text + "  " + tbOT.Text + "-" + tbPed1.Text + tbObra.Text);
                     command.Parameters.AddWithValue("@cuerpo", cuerpo);
                     command.Parameters.AddWithValue("@adjuntos", "");
@@ -20426,7 +20439,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
 
 
-               
+
 
                 string consultaUsosVarios = "SELECT mail FROM tblUsosVarios WHERE ObjetivoMail = 'mailparapararpedido'";
                 string enviadoA = string.Empty;
@@ -20641,7 +20654,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string CodInv = row.Cells[1].Text;
             string Descripcion = row.Cells[2].Text;
 
-            bool Linea = Convert.ToBoolean(row.Cells[3].Text.Replace("Si","true").Replace("No","false"));
+            bool Linea = Convert.ToBoolean(row.Cells[3].Text.Replace("Si", "true").Replace("No", "false"));
             bool Estado = Convert.ToBoolean(row.Cells[4].Text.Replace("Si", "true").Replace("No", "false"));
             string ID_Acabado = row.Cells[9].Text;
 
@@ -20745,7 +20758,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 int linea = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "DeLinea"));
                 int Activo = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "Activo"));
-                
+
 
                 TableCell cell = e.Item.Cells[3];
                 cell.Text = (linea == 1) ? "Si" : "No";
@@ -20984,7 +20997,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
         }
 
-       
+
         protected void DropDownList1_TextChanged(object sender, EventArgs e)
         {
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -22857,7 +22870,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     BtnAdiRemEleBol.ToolTip = "Remover elementos de la Bolsa ";
                 }
 
-                CrearModificarBolsa(txtBolsa.Text,txtPlano.Text, Operacion);
+                CrearModificarBolsa(txtBolsa.Text, txtPlano.Text, Operacion);
 
             }
 
@@ -22891,7 +22904,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-        private void CrearModificarBolsa(string planoBolsa, string PlanoTXT,string operacion)
+        private void CrearModificarBolsa(string planoBolsa, string PlanoTXT, string operacion)
         {
             if (planoBolsa.ToUpper().Substring(0, 3) == "BSA" && planoBolsa.Contains("_") && planoBolsa.Length > 10)
             {
@@ -22948,7 +22961,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             else
                             {
                                 // Actualizar
-                                ActualizarOtBolsa2(planoBolsa, ID_Grupo, Cantidad, SubTotal,operacion);
+                                ActualizarOtBolsa2(planoBolsa, ID_Grupo, Cantidad, SubTotal, operacion);
                             }
                         }
 
@@ -22980,7 +22993,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-        private void ActualizarOtBolsa2(string PlanoBolsa, string ID_Grupo, string Cantidad, string Subtotal,string operacion)
+        private void ActualizarOtBolsa2(string PlanoBolsa, string ID_Grupo, string Cantidad, string Subtotal, string operacion)
         {
 
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -23581,7 +23594,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
-                if(tbOT.Text.Trim() != "")
+                if (tbOT.Text.Trim() != "")
                 {
                     // validar si el plano esta vinvulado a una ot que ya de dieron boton por parte de dibujo Revisar 
                     if (ValidarPlanoVinculado() && btnOk.Enabled == false)
@@ -23694,7 +23707,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void btnCambiarCantidad_NO_Click(object sender, EventArgs e)
         {
-           
+
         }
 
 
@@ -23707,7 +23720,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             using (SqlConnection connection = new SqlConnection(connectionString))
             using (SqlCommand command = new SqlCommand(query, connection))
             {
-               
+
                 command.Parameters.AddWithValue("@cantidad", txtCantidad.Text);
                 command.Parameters.AddWithValue("@Plano", txtPlano.Text);
                 command.Parameters.AddWithValue("@Idnumerico", Session["IdObjetoEliminarSession"].ToString());
@@ -23758,7 +23771,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-        public void ActualizarTerminadoVentas(string OT,string Ped)
+        public void ActualizarTerminadoVentas(string OT, string Ped)
         {
             string query = @"UPDATE tblOT  SET Terminado_Ventas = 1 WHERE Id_OT = @IdOT AND Consecutivo_Pedido = @Consecutivo";
 
@@ -23768,9 +23781,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             using (SqlCommand command = new SqlCommand(query, connection))
             {
 
-               
+
                 command.Parameters.AddWithValue("@IdOT", OT);
-                command.Parameters.AddWithValue("@Consecutivo",Ped);
+                command.Parameters.AddWithValue("@Consecutivo", Ped);
 
                 try
                 {
@@ -23779,7 +23792,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
                 catch (Exception ex)
                 {
-                   //
+                    //
                 }
             }
         }
@@ -23825,8 +23838,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
-                ValorlbDipLa2.Text =  "0 Cms";
-                ValorlbDipLa3.Text =  "0 Cms";
+                ValorlbDipLa2.Text = "0 Cms";
+                ValorlbDipLa3.Text = "0 Cms";
             }
 
 
@@ -23887,7 +23900,40 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        protected void btnActalizarObjetos_Click(object sender, EventArgs e)
+        {
+            string procedimientoAEjecutar = alternar
+                ? "sp_ActualizarProcedimientos_PruebaAnderson"
+                : "sp_ActualizarProcedimientos_PruebaAnderson_2";
 
+            // Alterna para la próxima vez
+            alternar = !alternar;
+
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection conexion = new SqlConnection(connectionString))
+            {
+                using (SqlCommand comando = new SqlCommand(procedimientoAEjecutar, conexion))
+                {
+                    comando.CommandType = CommandType.StoredProcedure;
+
+                    try
+                    {
+                        conexion.Open();
+                        comando.ExecuteNonQuery();
+                        Console.WriteLine($"✅ Procedimiento [{procedimientoAEjecutar}] ejecutado con éxito");
+                        // Error al actualizar la cantidad 
+                        string scriptActualizado = "alert('Actualizacion correcta.');";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showActualizado", scriptActualizado, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"❌ Error al ejecutar el procedimiento: {ex.Message}");
+                        throw;
+                    }
+                }
+            }
+        }
     }
 
 

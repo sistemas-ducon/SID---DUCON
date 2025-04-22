@@ -4513,6 +4513,10 @@
                                                  <i class="bi bi-file-arrow-down-fill"></i>
                                                 </asp:LinkButton>
 
+                                                <asp:LinkButton runat="server" title="Refrescar tabla Objetos" ID="btnActalizarObjetos" OnClick="btnActalizarObjetos_Click" style="padding-left: 1rem" >
+                                                    <i class="bi bi-arrow-clockwise"></i>
+                                                </asp:LinkButton>
+
                                                 <ul />
                                         </ul>
                                     </div>
