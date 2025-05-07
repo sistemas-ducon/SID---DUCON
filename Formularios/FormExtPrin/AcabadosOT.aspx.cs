@@ -994,5 +994,25 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                 }
             
         }
+
+        //Se Agrega Metodo para control de seleccion fila Anderson Betancur Mechor 
+        protected void DataGrid1_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            if (e.CommandName == "Select1")
+            {
+
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGrid1.Items[rowIndex];
+
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "row_" + rowIndex;
+
+                // Llamar a la función JavaScript para enfocar y desplazar la fila
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
+
+            }
+        }
+
+
     }
 }

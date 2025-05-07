@@ -161,7 +161,7 @@
                                                 <div class="col-12">
                                                     <div class="table-responsive mb-1 gap-2" style="max-height: 15rem; height: 15rem; overflow-x: auto;">
 
-                                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridAcabados1" runat="server" ShowHeaderWhenEmpty="true" AutoGenerateColumns="false" DataSourceID="AcabadosFinales" OnItemCommand="DataGridAcabados1_ItemCommand">
+                                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridAcabados1" runat="server" ShowHeaderWhenEmpty="true" AutoGenerateColumns="false" DataSourceID="AcabadosFinales" OnItemCommand="DataGridAcabados1_ItemCommand" OnItemDataBound="DataGridAcabados1_ItemDataBound">
                                                             <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                             <Columns>
                                                                 <asp:TemplateColumn HeaderText="...">

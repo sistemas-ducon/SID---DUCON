@@ -4703,7 +4703,7 @@
                                                                     </ItemTemplate>
                                                                 </asp:TemplateColumn>
 
-                                                                <asp:TemplateColumn ItemStyle-Width="30px" ItemStyle-CssClass="auto-width-column10 ampliarcolumna">
+                                                                <asp:TemplateColumn ItemStyle-Width="30px" ItemStyle-CssClass="auto-width-column10">
                                                                     <HeaderTemplate>
                                                                         <asp:Label ID="lblHeader" runat="server" Visible="true">Grupo </asp:Label>
                                                                     </HeaderTemplate>
@@ -4712,13 +4712,13 @@
                                                                     </ItemTemplate>
                                                                 </asp:TemplateColumn>
 
-                                                                <asp:BoundColumn DataField="ID" HeaderText="ID" ItemStyle-CssClass="auto-width-column ampliarcolumna" />
-                                                                <asp:BoundColumn DataField="Descripcion" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column ampliarcolumna1" />
-                                                                <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column ampliarcolumna" />
-                                                                <asp:BoundColumn DataField="Ancho" HeaderText="Ancho" ItemStyle-CssClass="auto-width-column ampliarcolumna" />
-                                                                <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column ampliarcolumna" />
-                                                                <asp:BoundColumn DataField="ValorUnd" HeaderText="Valor Und" ItemStyle-CssClass="auto-width-column ampliarcolumna" />
-                                                                <asp:BoundColumn DataField="SubTotal" HeaderText="Sub Total" ItemStyle-CssClass="auto-width-column ampliarcolumna" />
+                                                                <asp:BoundColumn DataField="ID" HeaderText="ID" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Descripcion" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Ancho" HeaderText="Ancho" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="ValorUnd" HeaderText="Valor Und" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="SubTotal" HeaderText="Sub Total" ItemStyle-CssClass="auto-width-column" />
                                                                 <asp:BoundColumn DataField="Id_Panel" HeaderText="" Visible="false" />
                                                                 <asp:BoundColumn DataField="RevisadoDibujo" HeaderText="" Visible="false" />
                                                                 <asp:BoundColumn DataField="ID_GrupoObjeto" HeaderText="" Visible="false" />

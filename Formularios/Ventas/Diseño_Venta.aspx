@@ -230,7 +230,7 @@
             <div class="tab-pane fade" id="Despiece-content">
                 <asp:UpdatePanel runat="server" ID="UpdatePanel4" UpdateMode="Conditional">
                     <ContentTemplate>
-                        <div class="container p-1 mt-3 border shadow">
+                        <div class="container-fluid p-1 mt-3 border shadow" style="width:95vw">
                             <div class="row">
                                 <!-- Primera columna -->
                                 <div class="col-lg-7 col-md-6 col-sm-12" id="primeraColumna">
@@ -249,7 +249,7 @@
                                                     </asp:TemplateColumn>
                                                     
                                                     <asp:BoundColumn DataField="Id_Numerico" HeaderText="ID" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                    <asp:TemplateColumn HeaderText="Descripcion" ItemStyle-CssClass="auto-width-column2">
+                                                    <asp:TemplateColumn HeaderText="Descripcion" ItemStyle-CssClass="auto-width-column">
                                                         <ItemTemplate>
                                                             <asp:Label ID="lblDescripcion" runat="server" Text='<%# Eval("Descripcion_Grupo") %>' Font-Bold='<%# Eval("IsGroupRow").ToString() == "True" ? true : false %>'></asp:Label>
                                                         </ItemTemplate>

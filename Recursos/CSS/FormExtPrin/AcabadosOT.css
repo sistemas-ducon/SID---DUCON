@@ -1,11 +1,12 @@
 ﻿.selected-row {
-    background-color: black; /* Cambia el color de fondo a negro o el que desees */
-    color: white;
+    background: radial-gradient(circle, #afb5b9, #23273be6); /* Radial gradient */
+    color: white !important;
 }
 
+
 .selected-roww {
-    background-color: dodgerblue; /* Cambia el color de fondo a negro o el que desees */
-    color: white;
+    background: radial-gradient(circle, #afb5b9, #23273be6); /* Radial gradient */
+    color: white !important;
 }
 
 .auto-width-column2 {

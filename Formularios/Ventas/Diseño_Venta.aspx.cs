@@ -223,6 +223,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 if (Session["Despiece"]?.ToString() == "1")
                 {
                     BindDataGrid(); // Llamar al método para llenar el DataGrid
+                    ActualizarSubTotalZona(); // Se  agrega para actualizar precio Anderson Betancur Melchor 
 
                     // Activar Tab Plano 
                     string script = "activarPestana('Despiece-tab', 'Despiece-content');";
@@ -1326,6 +1327,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             // Obtener la fecha programada de entrega desde el TextBox TextEntrega
             DateTime fechaActual = DateTime.Now;
+            fechaActual = AjustarHoraLaboral(fechaActual); //Ajuste de hora de Diseño Anderson Betancur Melchor
 
             // Obtener el valor del número de diseño desde el label
             string numeroDiseño = lblNumDise.Text;
@@ -5687,6 +5689,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (DateTime.TryParse(celdaFechaIngreso.Text, out fechaIngreso))
                 {
+
+                    fechaIngreso = AjustarHoraLaboral(fechaIngreso);
                     celdaFechaIngreso.Text = fechaIngreso.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
                 }
 
@@ -9169,6 +9173,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void DataGridDespiece_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
+
+            if (e.Item.ItemType == ListItemType.Header)
+            {
+                for (int i = 0; i < e.Item.Cells.Count; i++)
+                {
+                    if (i != 0)
+                    {
+                      e.Item.Cells[i].CssClass = "resizable-header";
+                    }
+
+                }
+            }
+
+
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
                 // Obtener el valor de RevisadoDibujo y ID_GrupoObjeto
@@ -9195,7 +9213,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
-
 
         protected void DataGridDespiece_ItemCommand(object source, DataGridCommandEventArgs e)
         {
@@ -9242,6 +9259,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         {
                             ValidarYActualizarDibujo(row);
                             BindDataGrid();
+
+
+                            //Actualiza el Datadrid de planos del Diseño
+                            // Se agrega para control de colores y precios Anderson Betancur Melchor 
+                            ActualizarSubTotalZona();
+                            ControlValoresPlanos();
+                            Datagrid5.DataBind();
 
                             int selectedRowIndex = Convert.ToInt32(Session["SelectedRowIndexDesPla"]);
                             ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", $"focusAndScrollToRow('row_{selectedRowIndex}');", true);
@@ -9530,7 +9554,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
                 // Refrescar la vista del DataGrid
+                ActualizarSubTotalZona();
+                ControlValoresPlanos();
+                Datagrid5.DataBind();
                 BindDataGrid();
+                
+           
             }
         }
 
@@ -11503,5 +11532,382 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
+
+
+        // Se agregan metodos para control campos de planos Diseño Anderson Betancur Melchor 
+        private DateTime AjustarHoraLaboral(DateTime fechaOriginal)
+        {
+            // Obtener solo la hora de la fecha
+            TimeSpan hora = fechaOriginal.TimeOfDay;
+
+            // Si es antes de las 7:00 AM, ajustar a las 7:00 AM del mismo día
+            if (hora < new TimeSpan(7, 0, 0))
+            {
+                return new DateTime(fechaOriginal.Year, fechaOriginal.Month, fechaOriginal.Day, 7, 0, 0);
+            }
+            // Si es después de las 5:00 PM, ajustar a las 7:00 AM del día siguiente
+            else if (hora > new TimeSpan(17, 0, 0))
+            {
+                DateTime siguienteDia = fechaOriginal.Date.AddDays(1);
+                return new DateTime(siguienteDia.Year, siguienteDia.Month, siguienteDia.Day, 7, 0, 0);
+            }
+
+            // Si está entre las 7:00 AM y 5:00 PM, no se ajusta
+            return fechaOriginal;
+        }
+
+        private void ControlValoresPlanos()
+        {
+            string numeroDiseño = lblNumDise.Text;
+
+
+            if (int.TryParse(numeroDiseño, out int numDise))
+            {
+                // Establecer el valor del parámetro en el SqlDataSource
+                SqldatasourceTxt.SelectParameters["NumeroDiseño"].DefaultValue = numDise.ToString();
+
+                // Ejecutar el SqlDataSource
+                SqldatasourceTxt.DataBind();
+
+                string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string tipoAccion = Session["Diseno"] as string;
+                    if (tipoAccion == "Ventas")
+                    {
+                        // Consulta SQL para verificar el campo ProgramadoVentas
+                        string consultaProgramadoVentas = "SELECT ProgramadoVentas FROM tbldiseño WHERE Numero_Diseño = @Numero_Diseño";
+
+
+                        using (SqlCommand commandProgramadoVentas = new SqlCommand(consultaProgramadoVentas, connection))
+                        {
+                            commandProgramadoVentas.Parameters.AddWithValue("@Numero_Diseño", numDise);
+
+                            bool programadoVentas = false; // Valor predeterminado
+
+                            using (SqlDataReader readerProgramadoVentas = commandProgramadoVentas.ExecuteReader())
+                            {
+                                if (readerProgramadoVentas.Read())
+                                {
+                                    programadoVentas = readerProgramadoVentas.GetBoolean(0);
+                                }
+                            }
+
+
+                            // Validar ProgramadoVentas
+                            if (programadoVentas)
+                            {
+                                // ProgramadoVentas es 1, deshabilitar los botones
+                                BtnProgramar.Enabled = false;
+                                BtnProgramar.CssClass = "btn btn-warning shadow btn-sm fw-bold";
+
+                            }
+                            else
+                            {
+                                // ProgramadoVentas es 0, habilitar los botones
+                                BtnProgramar.Enabled = true;
+                                BtnProgramar.CssClass = "btn btn-warning shadow btn-sm fw-bold";
+                            }
+
+
+
+
+
+
+                        }
+                    }
+
+                    if (tipoAccion == "Recepcion")
+                    {
+                        ValidarBotonTerminarRecep1();
+                    }
+                    else if (tipoAccion == "Diseño")
+                    {
+                        obtenerContenidoDeBtnOk1();
+                    }
+
+                    using (SqlCommand command = new SqlCommand("sp_FormularioDisBita", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@NumDise", numDise);
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                int idCiudadProyecto = reader.GetInt32(reader.GetOrdinal("id_CiudadProyecto"));
+
+                                // Asignar el valor de "id_CiudadProyecto" al DropDownList
+                                TextCiuPro.SelectedValue = idCiudadProyecto.ToString();
+
+                                // Asignar el valor de "Numero_Diseño" al lblNumDise
+                                int numeroDiseno;
+                                if (int.TryParse(reader["Numero_Diseño"].ToString(), out numeroDiseno))
+                                {
+                                    lblNumDise.Text = numeroDiseno.ToString();
+                                    Session["NumeroDisenoSession"] = numeroDiseno;
+                                    Session["EventoItemCommandEjecutado"] = true;
+                                }
+                                else
+                                {
+                                    lblNumDise.Text = "Valor no válido";
+                                    Session["EventoItemCommandEjecutado"] = false;
+                                }
+
+
+                                // Validar ProgramadoVentas
+                                bool programadoVentas = reader.GetBoolean(reader.GetOrdinal("ProgramadoVentas"));
+
+                                if (programadoVentas)
+                                {
+                                    TextIngDis.Text = reader.GetDateTime(reader.GetOrdinal("Fecha_Ingreso")).ToString("yyyy-MM-ddTHH:mm");
+                                    TextUltAc.Text = reader.GetDateTime(reader.GetOrdinal("UltimaActivacion")).ToString("yyyy-MM-ddTHH:mm");
+                                    TextEntrega.Text = reader.GetDateTime(reader.GetOrdinal("Fecha_Programada_Entrega")).ToString("yyyy-MM-ddTHH:mm");
+                                    TextFecOkDib.Text = reader.GetDateTime(reader.GetOrdinal("FechaDibujoOK")).ToString("yyyy-MM-ddTHH:mm");
+
+                                    TextFec.Text = reader.GetDateTime(reader.GetOrdinal("SC_Fecha")).ToString("yyyy-MM-dd");
+                                }
+                                else
+                                {
+                                    // Asignar las fechas cuando ProgramadoVentas es 0
+                                    DateTime now = DateTime.Now;
+                                    TextFec.Text = now.ToString("yyyy-MM-dd");
+                                    //TextFech.Text = now.ToString("HH:mm");
+                                    TextIngDis.Text = now.ToString("yyyy-MM-ddTHH:mm");
+                                    string fechaHoraActual = now.ToString("yyyy-MM-ddTHH:mm");
+                                    TextUltAc.Text = fechaHoraActual;
+                                    TextFecOkDib.Text = reader.GetDateTime(reader.GetOrdinal("FechaDibujoOK")).ToString("yyyy-MM-ddTHH:mm");
+                                    TextEntrega.Text = reader.GetDateTime(reader.GetOrdinal("Fecha_Programada_Entrega")).ToString("yyyy-MM-ddTHH:mm");
+                                }
+
+                                //TextFech.Text = reader.GetDateTime(reader.GetOrdinal("SC_Hora")).ToString("HH:mm");
+
+                                TextZona.Text = GetString(reader, "Zona");
+
+                                TextPre.Text = GetString(reader, "PresentacionCotizacion");
+
+                                // Obtener el valor del campo "Asesor"
+                                string asesor = GetString(reader, "Asesor");
+
+                                // Buscar el elemento en DropDownList1 que tenga el texto del asesor
+                                ListItem foundItem = DropDownList1.Items.FindByText(asesor);
+
+                                // Seleccionar el elemento encontrado si existe
+                                if (foundItem != null)
+                                {
+                                    DropDownList1.SelectedValue = foundItem.Value;
+                                }
+
+
+                                TextCliente.Text = GetString(reader, "Cliente");
+                                TextProyecto.Text = GetString(reader, "Nombre_Diseño");
+                                TextContacto.Text = GetString(reader, "Contacto");
+                                TextTel.Text = GetString(reader, "Telefono");
+                                TextCel.Text = GetString(reader, "Celular");
+                                TextMail.Text = GetString(reader, "Mail");
+                                TextDir.Text = GetString(reader, "Direccion");
+                                TextDes.Text = GetString(reader, "Descuento");
+                                TextPla.Text = GetString(reader, "PlanoBitacora");
+                                ChecUrgent.Checked = reader.GetBoolean(reader.GetOrdinal("Urgente"));
+                                ChecCot.Checked = reader.GetBoolean(reader.GetOrdinal("PasarACotizar"));
+                                ChecMailTer.Checked = reader.GetBoolean(reader.GetOrdinal("MailTerminado"));
+
+                                ChecCotVia.Checked = reader.GetBoolean(reader.GetOrdinal("CotizarViaticos"));
+
+                                CheckBox4.Checked = reader.GetBoolean(reader.GetOrdinal("Cotizartransporte"));
+
+                                CheckBox16.Checked = reader.GetBoolean(reader.GetOrdinal("BalanceSuperficies"));
+
+                                CheckBox18.Checked = reader.GetBoolean(reader.GetOrdinal("SC_Presentacionppt"));
+
+                                CheckBox19.Checked = reader.GetBoolean(reader.GetOrdinal("SC_Imagenes"));
+
+                                CheckBox20.Checked = reader.GetBoolean(reader.GetOrdinal("SC_Accesorios"));
+
+                                CheckBox21.Checked = reader.GetBoolean(reader.GetOrdinal("SC_Tiemporeal"));
+
+                                TexHTot.Text = GetString(reader, ("AlturaCielo"));
+
+                                TextUbi.Text = GetString(reader, ("SC_Ubicacion"));
+
+                                ChecPiso.Checked = reader.GetBoolean(reader.GetOrdinal("ConduccionCablesPiso"));
+                                ChecCie.Checked = reader.GetBoolean(reader.GetOrdinal("ConduccionCablesCielo"));
+                                ChecBteEle.Checked = reader.GetBoolean(reader.GetOrdinal("BajantesElectricos"));
+                                ChecBteSw.Checked = reader.GetBoolean(reader.GetOrdinal("Bajantesswitches"));
+                                ChecDiv.Checked = reader.GetBoolean(reader.GetOrdinal("ConduccionCablesDivision"));
+                                ChecCan.Checked = reader.GetBoolean(reader.GetOrdinal("ConduccionCablesCanaleta"));
+
+                                ChecAlCie.Checked = reader.GetBoolean(reader.GetOrdinal("SujecionCielo"));
+                                ChecPerRef.Checked = reader.GetBoolean(reader.GetOrdinal("PerfilRefuerzo"));
+                                ChecGuaEsc.Checked = reader.GetBoolean(reader.GetOrdinal("GuardaEscobas"));
+
+                                TextSup.Text = GetString(reader, ("AcabadoSuperficie"));
+                                TextPan.Text = GetString(reader, ("AcabadoPaneles"));
+                                TextTipVid.Text = GetString(reader, ("TipodeVidrio"));
+                                TextLin.Text = GetString(reader, ("Linea"));
+                                TextSop.Text = GetString(reader, ("TipoSoporte"));
+                                TextTapPie.Text = GetString(reader, ("TipoTapaPierna"));
+                                TextPant.Text = GetString(reader, ("TipodePantalla"));
+                                TextMos.Text = GetString(reader, ("TipoMostrador"));
+                                TextGav.Text = GetString(reader, ("TipoGaveta"));
+                                TextRep.Text = GetString(reader, ("TipoRepisa"));
+                                TextArch.Text = GetString(reader, ("TipoArchivador"));
+                                TextCoc.Text = GetString(reader, ("MuebleCoco"));
+                                TextEnt.Text = GetString(reader, ("MuebleEntrepano"));
+                                TextPuer.Text = GetString(reader, ("MueblePuertas"));
+                                if (!reader.IsDBNull(reader.GetOrdinal("Observaciones_Ventas")))
+                                {
+                                    TextObsVen.InnerText = reader.GetString(reader.GetOrdinal("Observaciones_Ventas"));
+                                }
+                                else
+                                {
+                                    // Si el valor es nulo, puedes manejarlo de alguna manera, por ejemplo, asignar un valor predeterminado a TextObsVen.InnerText
+                                    TextObsVen.InnerText = " ";
+                                }
+                                // Para TextObsDibDes
+                                if (!reader.IsDBNull(reader.GetOrdinal("Observaciones_Diseño")))
+                                {
+                                    TextObsDibDes.InnerText = reader.GetString(reader.GetOrdinal("Observaciones_Diseño"));
+                                }
+                                else
+                                {
+                                    // Manejo del valor nulo o vacío para TextObsDibDes
+                                    TextObsDibDes.InnerText = " ";
+                                }
+
+                                // Para TextSegPauDev
+                                if (!reader.IsDBNull(reader.GetOrdinal("SeguimientoPausa")))
+                                {
+                                    TextSegPauDev.InnerText = reader.GetString(reader.GetOrdinal("SeguimientoPausa"));
+                                }
+                                else
+                                {
+                                    // Manejo del valor nulo o vacío para TextSegPauDev
+                                    TextSegPauDev.InnerText = " ";
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Actualizar el panel de diseño de bitácora
+                UpdateDiseñoBitacora.Update();
+            }
+
+            
+        }
+
+        protected void obtenerContenidoDeBtnOk1()
+        {
+            // Consulta para obtener SC_Terminado y TerminadoDibujo
+            string numeroDiseño = lblNumDise.Text;
+            if (!string.IsNullOrEmpty(numeroDiseño))
+            {
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+                {
+                    conn.Open();
+                    string query = "SELECT SC_Terminado, TerminadoDibujo FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseño";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@NumeroDiseño", numeroDiseño);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            bool scTerminado = Convert.ToBoolean(reader["SC_Terminado"]);
+                            bool terminadoDibujo = Convert.ToBoolean(reader["TerminadoDibujo"]);
+
+                            if (!scTerminado && terminadoDibujo)
+                            {
+                                BtnProgramar.Text = "TERMINARSC";
+                                BtnProgramar.CssClass = "btn btn-warning shadow btn-sm fw-bold";
+                                BtnProgramar.Enabled = true;
+                            }
+                            else
+                            {
+                                BtnProgramar.Text = "TERMINAR";
+                                BtnProgramar.Enabled = false;
+                            }
+                            if (!terminadoDibujo)
+                            {
+                                BtnProgramar.Enabled = true;
+                                PausarDiseño.Enabled = true;
+                                PausarDiseño.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
+                                EliminarDiseño.Enabled = true;
+                                RegresarDiseño.Enabled = true;
+                                RegresarDiseño.CssClass = "btn btn-sm shadow button-enabled ColorAzulActivo";
+                            }
+                        }
+                    }
+                }
+            }
+
+            bool estaPausado;
+            string consultaPausado = "SELECT Pausado FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseño";
+
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(consultaPausado, conn))
+                {
+                    cmd.Parameters.AddWithValue("@NumeroDiseño", numeroDiseño);
+                    conn.Open();
+                    estaPausado = (bool)cmd.ExecuteScalar();
+                }
+            }
+
+            if (estaPausado == false)
+            {
+                PausarDiseño.Text = "<i class='bi bi-stop-circle-fill'></i>";
+            }
+            else
+            {
+                PausarDiseño.Text = "<i class='bi bi-play-circle-fill'></i>";
+            }
+        }
+
+        protected void ValidarBotonTerminarRecep1()
+        {
+           
+                string numeroDiseño = lblNumDise.Text;
+
+                // Consulta SQL para verificar si el diseño está terminado y la cotización no está OK
+                string consulta = "SELECT TerminadoDibujo, CotizaciónOK FROM tblDiseño WHERE Numero_Diseño = @NumeroDiseño AND TerminadoDibujo = 1 AND CotizaciónOK = 0";
+
+                // Establecer la conexión con la base de datos y ejecutar la consulta
+                using (SqlConnection conexion = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+                {
+                    using (SqlCommand comando = new SqlCommand(consulta, conexion))
+                    {
+                        // Agregar parámetro para evitar SQL injection
+                        comando.Parameters.AddWithValue("@NumeroDiseño", numeroDiseño);
+
+                        // Abrir conexión y ejecutar consulta
+                        conexion.Open();
+                        SqlDataReader reader = comando.ExecuteReader();
+
+                        // Verificar si la consulta arrojó resultados
+                        if (reader.HasRows)
+                        {
+                            // Si hay resultados, habilitar el botón BtnProgramar
+                            BtnProgramar.Enabled = true;
+                            BtnProgramar.CssClass = "btn btn-sm shadow btn-warning fw-bold";
+                        }
+                        else
+                        {
+                            // Si no hay resultados, deshabilitar el botón BtnProgramar
+                            BtnProgramar.Enabled = false;
+                            BtnProgramar.CssClass = "btn btn-sm shadow btn-warning fw-bold";
+                        }
+
+                        // Cerrar la conexión y liberar recursos
+                        reader.Close();
+                        conexion.Close();
+                    }
+                }
+            
+        }
+
     }
 }

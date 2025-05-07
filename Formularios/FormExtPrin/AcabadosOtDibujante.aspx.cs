@@ -130,6 +130,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                                     ScriptManager.RegisterStartupScript(this, GetType(), "mostrarTap", script2, true);
 
 
+                                    // Llamar a la función JavaScript para enfocar y desplazar la fila
+                                    ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
+
+
                                     // Reiniciar la variable de sesión "ClickCount" a 0 para la próxima interacción                        
                                     Session.Remove("ID_Acabado");
                                     Session.Remove("ClickCount3");
@@ -299,63 +303,71 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             bool Estado = Convert.ToBoolean(row.Cells[4].Text.Replace("Si", "true").Replace("No", "false"));
             string ID_Acabado = row.Cells[9].Text;
 
-            // Se utiliza para darle el color solo a la fila seleccionada 
+            // Remover estilos de todas las filas
             foreach (DataGridItem item in DataGridDefinirAcabado.Items)
             {
-                if (item != row)
-                {
-                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
-                }
+                item.CssClass = "";
             }
 
-            //se usa Para darle un color a la fila seleccionada  anderson
+            // Estilo a la fila seleccionada
             e.Item.CssClass = "fila-seleccionada";
 
-
-
-            if (row.Cells[9].Text == Session["ID_DeF_Acab"]?.ToString())
+            // Comparar si se hizo clic en la misma fila anterior
+            if (ID_Acabado == Session["ID_DeF_Acab"]?.ToString())
             {
-                // Incrementar la variable de sesión "ClickCount" en el servidor
-                int clickCount = Convert.ToInt32(Session["ClickCountDefAcab"]) + 1;
+                int clickCount = Convert.ToInt32(Session["ClickCountDefAcab"] ?? "0") + 1;
                 Session["ClickCountDefAcab"] = clickCount;
 
-                // se valida si es el segundo click en la misma fila 
                 if (clickCount == 2)
                 {
-
                     if (Estado)
                     {
-                        // Asigar Acabado
+                        // ✅ Guardar ID seleccionado para mantenerlo tras el DataBind
+                        Session["FilaSeleccionada_Acabados1"] = Session["ID_OtAcabDefSession"];
+
+                        // Asignar acabado
                         ActualizarDefinicionAcabadoPlano();
                         DataGridAcabados1.DataBind();
 
+                        // Mostrar tab
                         string script2 = @"mostrarTapAcabados();";
                         ScriptManager.RegisterStartupScript(this, GetType(), "mostrarTapAcabados", script2, true);
 
-                        DataGridAcabados1.DataBind();
+                        // Restaurar selección en DataGridAcabados1
+                        string idSeleccionado = Session["FilaSeleccionada_Acabados1"]?.ToString();
+                        if (!string.IsNullOrEmpty(idSeleccionado))
+                        {
+                            foreach (DataGridItem item in DataGridAcabados1.Items)
+                            {
+                                if (item.Cells[7].Text == idSeleccionado) // Ajusta si la columna del ID es distinta
+                                {
+                                    item.CssClass = "fila-seleccionada";
+                                    string rowId = "row_" + item.ItemIndex;
+                                    ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRowRestored", $"focusAndScrollToRow('{rowId}');", true);
+                                    break;
+                                }
+                            }
+                        }
 
-                        // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
+                        // Limpiar variables de sesión
                         Session.Remove("ClickCountDefAcab");
                         Session.Remove("ID_DeF_Acab");
-
                     }
                     else
                     {
-                        string scriptNoAcabados1 = $"alert('El acabado {tbDescripAcaba.Text} , se encuentra inactivo. No puede asignarlo');";
+                        string scriptNoAcabados1 = $"alert('El acabado {tbDescripAcaba.Text} se encuentra inactivo. No puede asignarlo');";
                         ScriptManager.RegisterStartupScript(this, GetType(), "showNoAgregado", scriptNoAcabados1, true);
 
-                        // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
                         Session["ClickCountDefAcab"] = 1;
-                        Session["ID_DeF_Acab"] = row.Cells[9].Text;
+                        Session["ID_DeF_Acab"] = ID_Acabado;
                     }
-
                 }
             }
             else
             {
-                // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
+                // Primer clic o clic diferente
                 Session["ClickCountDefAcab"] = 1;
-                Session["ID_DeF_Acab"] = row.Cells[9].Text;
+                Session["ID_DeF_Acab"] = ID_Acabado;
 
                 tbCodInventario.Text = CodInv;
                 tbDescripAcaba.Text = Descripcion;
@@ -371,16 +383,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
                 lb_ID_AcadoMod.Text = ID_Acabado;
 
-
-                // Asignar ID único a la fila
                 row.Attributes["id"] = "row_" + rowIndex;
-
-                // Llamar a la función JavaScript para enfocar y desplazar la fila
-                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('row_" + rowIndex + "');", true);
-
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", $"focusAndScrollToRow('row_{rowIndex}');", true);
             }
-
         }
+
 
         //8
         private void ActualizarDefinicionAcabadoPlano()
@@ -1282,6 +1289,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
         }
 
-
+        protected void DataGridAcabados1_ItemDataBound(object sender, DataGridItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                int rowIndex = e.Item.ItemIndex;
+                e.Item.Attributes["id"] = "row_" + rowIndex;
+            }
+        }
     }
 }

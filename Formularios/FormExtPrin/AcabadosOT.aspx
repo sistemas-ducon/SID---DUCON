@@ -44,13 +44,13 @@
 
                         <div class="table-responsive mb-2 gap-2" style="height: 15.1rem; overflow-x: auto;">
                             <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm"
-                                        ID="DataGrid1" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGrid1_ItemDataBound1" >
+                                        ID="DataGrid1" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGrid1_ItemDataBound1" OnItemCommand="DataGrid1_ItemCommand" >
 
                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                 <Columns>
                                     <asp:TemplateColumn>
                                         <ItemTemplate>
-                                            <asp:LinkButton ID="SelecOt" OnClick="DespieceAcabados_Click" runat="server" CommandName="Select" CommandArgument='<%# Container.ItemIndex %>'
+                                            <asp:LinkButton ID="SelecOt" OnClick="DespieceAcabados_Click" runat="server" CommandName="Select1" CommandArgument='<%# Container.ItemIndex %>'
                                                 Text="<i class='bi bi-pencil-square text-dark'></i>" />
                                         </ItemTemplate>
                                     </asp:TemplateColumn>

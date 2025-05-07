@@ -313,3 +313,13 @@
     color: #555;
 }
 
+.resizable-header {
+    resize: horizontal;
+    overflow: auto;
+    white-space: nowrap ;
+    min-width: 30px ; /* Ancho mínimo */
+    max-width: 200px ; /* Ancho máximo */
+    cursor: ew-resize ; /* Cursor de redimensionar */
+    border: 1px solid transparent ; /* Evita la línea diagonal */
+}
+
