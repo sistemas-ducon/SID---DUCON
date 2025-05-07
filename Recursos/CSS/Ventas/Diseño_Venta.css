@@ -50,6 +50,7 @@
     white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
     overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
     text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */ 
+
 }
 
 /* Estilo personalizado para el modal */

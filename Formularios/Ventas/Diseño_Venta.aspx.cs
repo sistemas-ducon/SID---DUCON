@@ -35,6 +35,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Text.RegularExpressions;
 using static SISTEMA_INTEGRAL_DUCON.Formularios.Diseño_Venta;
+using Label = System.Web.UI.WebControls.Label;
 
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
@@ -9180,15 +9181,29 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     if (i != 0)
                     {
-                      e.Item.Cells[i].CssClass = "resizable-header";
+                        if(i != 2)
+                        {
+                            e.Item.Cells[i].CssClass = "resizable-header";
+                        }
+
                     }
 
                 }
             }
 
-
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
+
+                // Obtener controles
+                Label lblDescripcion = (Label)e.Item.FindControl("lblDescripcion");
+
+                if (lblDescripcion != null)
+                {
+                    // Puedes usar el mismo texto del label, o cualquier otro valor de la fila
+                    string descripcion = DataBinder.Eval(e.Item.DataItem, "Descripcion_Grupo")?.ToString();
+                    lblDescripcion.Attributes["title"] = descripcion;
+                }
+
                 // Obtener el valor de RevisadoDibujo y ID_GrupoObjeto
                 string revisadoDibujo = DataBinder.Eval(e.Item.DataItem, "RevisadoDibujo").ToString();
                 string idGrupoObjeto = DataBinder.Eval(e.Item.DataItem, "ID_GrupoObjeto").ToString();
