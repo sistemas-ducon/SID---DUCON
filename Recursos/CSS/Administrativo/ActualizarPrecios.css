@@ -1,0 +1,91 @@
+﻿body {
+    background: radial-gradient(circle, #afb5b9, #23273be6);
+}
+
+table {
+    min-width: 600px;
+}
+
+.hr-negro-grueso {
+    height: 2px !important;
+    background-color: black;
+    border: none;
+    opacity: 1;
+    margin: 1rem 0;
+}
+
+body .container {
+    background: white;
+}
+
+.text-white-hover:hover {
+    color: white !important;
+}
+
+.step-title {
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+.section-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.disabled-button {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.custom-table {
+    background-color: #d3d3d3;
+    min-height: 200px;
+}
+
+.table-cell {
+    border: 1px solid #000;
+    height: 35px;
+    background-color: white;
+}
+
+.icon-placeholder {
+    width: 2rem;
+    height: 2rem;
+}
+
+.custom-icon {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    background-color: transparent; /* No necesitas fondo si usas una imagen de fondo */
+    background-image: url('https://i.ibb.co/86fR8JK/icons8-microsoft-excel-2019-48.png'); /* Ruta de la imagen */
+    background-size: cover; /* Ajusta el tamaño de la imagen */
+    color: white;
+    text-align: center;
+    border-radius: 50%; /* Hace que sea un círculo */
+    font-size: 16px;
+    line-height: 30px; /* Centrar verticalmente */
+}
+
+.fila-seleccionada {
+    background: radial-gradient(circle, #75787b, #23273be6); /* Radial gradient */
+    color: white !important;
+}
+
+.auto-width-column {
+    width: auto;
+    max-width: 150px;
+    white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
+    overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
+    text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
+}
+
+/* Estilo para el encabezado del DataGrid */
+.datagrid-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f2f2f2; /* Ajusta el color de fondo del encabezado según tus preferencias */
+    white-space: nowrap;
+}

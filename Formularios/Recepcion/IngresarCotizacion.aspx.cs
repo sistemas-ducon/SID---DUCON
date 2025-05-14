@@ -34,7 +34,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             {
                 if (!IsPostBack)
                 {
-                   
+
 
                     ddlCompeData.DataBind();
 
@@ -60,7 +60,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
 
                     TextFcot.Text = DateTime.Now.ToString("yyyy-MM-dd");
                     TextFrta.Text = DateTime.Now.ToString("yyyy-MM-dd");
-                                      
+
                     CargarClienteYContacto();
 
                     Session.Remove("Cotizacion");
@@ -69,12 +69,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                     {
                         llenarCampos();
                     }
-                    else 
-                    { 
-                        
+                    else
+                    {
+
                     }
-                        Session.Remove("Cotizacion2");
-                   
+                    Session.Remove("Cotizacion2");
+
                 }
             }
             else
@@ -82,7 +82,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                 Response.Redirect("/Formularios/Login.aspx");
             }
         }
- 
+
         private void CargarClienteYContacto()
         {
             if (!IsPostBack)
@@ -133,14 +133,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
                                     if (!reader.IsDBNull(reader.GetOrdinal("Asesor")))
                                     {
                                         ddlAsesor.SelectedValue = reader["Asesor"].ToString();
-                                    }                      
+                                    }
                                 }
                             }
                         }
                     }
 
                     CargarAsesorYzona();
-                    DropDownListEstado.SelectedValue = "1";             
+                    DropDownListEstado.SelectedValue = "1";
 
                     habilitarTextBoxes();
 
@@ -201,7 +201,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
         {
             foreach (TextBox textBox in textBoxes)
             {
-                if (textBox == textCotizacion || textBox == TextBox1 || textBox == TextBox2 || textBox == TextContacto || textBox == TextTelefono || textBox == TextMail || 
+                if (textBox == textCotizacion || textBox == TextBox1 || textBox == TextBox2 || textBox == TextContacto || textBox == TextTelefono || textBox == TextMail ||
                    textBox == TextFcot || textBox == TextFrta || textBox == TextPlano || textBox == TextObs || textBox == TextProyecto || textBox == TextBox3 || textBox == TextBox4 || textBox == TextBox5 || textBox == TextBox11 || textBox == TextBox6
                    || textBox == TextBox7 || textBox == TextBox8 || textBox == TextBox9 || textBox == TextBox10)
 
@@ -445,8 +445,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             SqlDataSource1.SelectCommand = consulta;
 
             // Vincula el DataGrid al SqlDataSource y actualiza su contenido
+            // Vincula el DataGrid al SqlDataSource y actualiza su contenido
             DataGrid1.DataSourceID = "SqlDataSource1";
             DataGrid1.DataBind();
+
+            if (DataGrid1.Items.Count == 0)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ErrorMCotizacion').modal('show');", true);
+            }
 
             listaTextBoxes = new List<TextBox>
                          {
@@ -502,10 +508,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             llenarCampos();
 
             if (!string.IsNullOrEmpty(Session["Cotizacion"] as string)
-    && !string.IsNullOrEmpty(Session["Id_OTCot"] as string)
-    && DropDownListEstado.SelectedValue == "2")
+      && !string.IsNullOrEmpty(Session["Id_OTCot"] as string)
+      && DropDownListEstado.SelectedValue == "2")
             {
-                llenarDatagrid2(); 
+                llenarDatagrid2();
             }
             else
             {
@@ -537,7 +543,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Ventas
             ModificarCot.CssClass = "btn btn-sm button-enabled shadow linkButtonClicked2 AzulGris";
             NuevaCot.Enabled = true;
             NuevaCot.CssClass = "btn btn-sm button-enabled shadow linkButtonClicked2 AzulClaro";
-       
+
         }
 
         protected void llenarCampos()
@@ -646,7 +652,7 @@ WHERE
                         reader.Close();
                         connection.Close();
 
-                        
+
                     }
                 }
             }
@@ -804,7 +810,7 @@ WHERE
 
         protected void NuevaCot_Clik(object sender, EventArgs e)
         {
-          
+
             Session["TipoAccion"] = "Insertar";
 
             DropDownListEstado.SelectedValue = "1";
@@ -815,15 +821,12 @@ WHERE
 
         protected void LimpiarTextBoxes()
         {
-            ddlAsesor.SelectedValue = "";
-            ddlZona.SelectedValue = "";
             DropDownListEstado.SelectedValue = "1";
             textCotizacion.Text = string.Empty;
-            TextBox1.Text = string.Empty;
             TextBox2.Text = string.Empty;
             TextContacto.Text = string.Empty;
             TextTelefono.Text = string.Empty;
-            TextMail.Text = string.Empty;      
+            TextMail.Text = string.Empty;
             TextPlano.Text = string.Empty;
             TextObs.Text = string.Empty;
             TextProyecto.Text = string.Empty;
@@ -883,6 +886,11 @@ WHERE
             }
         }
 
+        protected void btnSimularCotizacion_Click(object sender, EventArgs e)
+        {
+            txtCotizacion_TextChanged(sender, e); // o mueve la lógica completa aquí
+        }
+
         protected void txtCotizacion_TextChanged(object sender, EventArgs e)
         {
             // Realiza la validación de campos
@@ -924,7 +932,7 @@ WHERE
                     {
                         // Determinar el tipo de archivo Excel
                         if (Path.GetExtension(filePath).Equals(".xls"))
-                            {
+                        {
                             workbook = new HSSFWorkbook(fs); // Para archivos .xls (Excel 97-2003)
                         }
                         else if (Path.GetExtension(filePath).Equals(".xlsx"))
@@ -935,12 +943,14 @@ WHERE
                         // Buscar y obtener valores para 'vccd', 'vvsu', 'vcsd', 'vmo'
                         BuscarYObtenerValores(workbook, textosABuscar, out valorColumnaF_vccd, out valorColumnaF_vvsu, out valorColumnaF_vcsd, out valorColumnaF_vmo, out valorColumnaF_vtte, out valorColumnaF_viat, out valorColumnaF_vcsd_vccd);
                     }
-                
 
-                // Asignar los valores obtenidos a los TextBox
-                TextBox7.Text = SumarValoresSiNecesario(workbook, textosABuscar[0], valorColumnaF_vccd) ?? "0";
-                    TextBox3.Text = SumarValoresSiNecesario(workbook, textosABuscar[1], valorColumnaF_vvsu) ?? "0";
-                    TextBox4.Text = SumarValoresSiNecesario(workbook, textosABuscar[2], valorColumnaF_vcsd) ?? "0";
+
+                    // Asignar los valores obtenidos a los TextBox
+                    TextBox7.Text = SumarValoresSiNecesario(workbook, textosABuscar[0], valorColumnaF_vccd) ?? "0";
+                    TextBox3.Text = double.TryParse(SumarValoresSiNecesario(workbook, textosABuscar[1], valorColumnaF_vvsu), out double vvsu)
+                        ? vvsu.ToString("N0"): "0";
+                    TextBox4.Text = double.TryParse(SumarValoresSiNecesario(workbook, textosABuscar[2], valorColumnaF_vcsd), out double vcsd)
+                        ? vcsd.ToString("N0") : "0"; 
                     TextBox6.Text = SumarValoresSiNecesario(workbook, textosABuscar[3], valorColumnaF_vmo) ?? "0";
                     TextBox8.Text = SumarValoresSiNecesario(workbook, textosABuscar[4], valorColumnaF_vtte) ?? "0";
                     TextBox9.Text = SumarValoresSiNecesario(workbook, textosABuscar[5], valorColumnaF_viat) ?? "0";
@@ -1082,7 +1092,7 @@ WHERE
                         }
                     }
                     else
-                        {
+                    {
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal", "$('#ErrorMCotizacion').modal('show');", true);
                         return string.Empty;
                     }
@@ -1358,7 +1368,7 @@ WHERE
             }
             else
             {
-               
+
             }
         }
 
@@ -1423,7 +1433,7 @@ WHERE
                 {
                     updateCommand.Parameters.AddWithValue("@Asesor", asesor);
                     updateCommand.Parameters.AddWithValue("@IdCliente", idCliente);
-                     int rowsAffected =  updateCommand.ExecuteNonQuery();
+                    int rowsAffected =  updateCommand.ExecuteNonQuery();
 
 
                     if (rowsAffected > 0)
@@ -1432,11 +1442,11 @@ WHERE
                     }
                     else
                     {
-                      
+
 
                         Session.Remove("TipoAccion");
 
-                      
+
 
                         string mensajePersonalizado = "NO se pudo Actualizar el cliente";
                         string urlRedireccion = "/Formularios/Recepcion/IngresarCotizacion.aspx";
@@ -1447,11 +1457,11 @@ WHERE
         }
         protected void NOActualizarCliente_Click(object sender, EventArgs e)
         {
-            
+
 
             Session.Remove("TipoAccion");
 
-          
+
 
             string mensajePersonalizado = "NO se actualizo la cotizacion";
             string urlRedireccion = "/Formularios/Recepcion/IngresarCotizacion.aspx";
@@ -1592,12 +1602,12 @@ WHERE
                 int rowsAffected = insertCommand.ExecuteNonQuery();
 
                 if (rowsAffected > 0)
-                {                  
-                   
+                {
+
                 }
                 else
                 {
-                    
+
 
                     Session.Remove("TipoAccion");
 
@@ -1612,7 +1622,7 @@ WHERE
 
         private void MostrarMensajeCotizacionExistente()
         {
-           
+
 
             Session.Remove("TipoAccion");
 
@@ -1650,7 +1660,7 @@ WHERE
 
                 if (rowsAffected > 0)
                 {
-                   
+
 
                     Session.Remove("TipoAccion");
 
@@ -1662,7 +1672,7 @@ WHERE
                 }
                 else
                 {
-                  
+
 
                     Session.Remove("TipoAccion");
 
@@ -1699,7 +1709,7 @@ WHERE
                 }
                 else
                 {
-                   
+
 
                     Session.Remove("TipoAccion");
 
@@ -1721,7 +1731,7 @@ WHERE
 
                 if (rowsAffected > 0)
                 {
-                   
+
 
                     Session.Remove("TipoAccion");
 
@@ -1733,7 +1743,7 @@ WHERE
                 }
                 else
                 {
-                    
+
 
                     Session.Remove("TipoAccion");
 
@@ -1801,25 +1811,25 @@ WHERE
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-            
-                    // Actualizar la cotización según el estado
-                    switch (estado.ToUpper())
-                    {
-                        case "3": // RECHAZADA
-                            ActualizarCotizacionRechazada(connection, cotizacion, vSessionCotizacion, estado, asesor, idCliente, fechaCotizacion, fechaRespuesta, contactoCotizacion, telefonoCotizacion, correoCotizacion, diseño, zona, descuentoComision, descuentoFactura, valorClienteSinDescuento, valorClienteConDescuento, valorSugerido, valorTteVia, valorMO, nombreUsuario, valorViatico, obra, plano, observacion);
-                            break;
 
-                        case "2": // APROBADA
-                            ActualizarCotizacionAprobada(connection, cotizacion, vSessionCotizacion, estado, valorClienteSinDescuento, descuentoFactura, valorClienteConDescuento, descuentoComision, valorSugerido, valorTteVia, valorMO, nombreUsuario, valorViatico);
-                            break;
+                // Actualizar la cotización según el estado
+                switch (estado.ToUpper())
+                {
+                    case "3": // RECHAZADA
+                        ActualizarCotizacionRechazada(connection, cotizacion, vSessionCotizacion, estado, asesor, idCliente, fechaCotizacion, fechaRespuesta, contactoCotizacion, telefonoCotizacion, correoCotizacion, diseño, zona, descuentoComision, descuentoFactura, valorClienteSinDescuento, valorClienteConDescuento, valorSugerido, valorTteVia, valorMO, nombreUsuario, valorViatico, obra, plano, observacion);
+                        break;
 
-                        default: // Otros estados
-                            ActualizarCotizacionDefault(connection, cotizacion, vSessionCotizacion, estado, asesor, idCliente, fechaCotizacion, fechaRespuesta, contactoCotizacion, telefonoCotizacion, correoCotizacion, diseño, zona, descuentoComision, descuentoFactura, valorClienteSinDescuento, valorClienteConDescuento, valorSugerido, valorTteVia, valorMO, nombreUsuario, valorViatico, obra, plano, observacion);
-                            break;
-                    }              
+                    case "2": // APROBADA
+                        ActualizarCotizacionAprobada(connection, cotizacion, vSessionCotizacion, estado, valorClienteSinDescuento, descuentoFactura, valorClienteConDescuento, descuentoComision, valorSugerido, valorTteVia, valorMO, nombreUsuario, valorViatico);
+                        break;
+
+                    default: // Otros estados
+                        ActualizarCotizacionDefault(connection, cotizacion, vSessionCotizacion, estado, asesor, idCliente, fechaCotizacion, fechaRespuesta, contactoCotizacion, telefonoCotizacion, correoCotizacion, diseño, zona, descuentoComision, descuentoFactura, valorClienteSinDescuento, valorClienteConDescuento, valorSugerido, valorTteVia, valorMO, nombreUsuario, valorViatico, obra, plano, observacion);
+                        break;
+                }
             }
         }
-    
+
         // Método para actualizar la cotización en estado RECHAZADA
         private void ActualizarCotizacionRechazada(SqlConnection connection, string cotizacion, string vSessionCotizacion, string estado, string asesor, string idCliente, string fechaCotizacion, string fechaRespuesta, string contactoCotizacion, string telefonoCotizacion, string correoCotizacion, string diseño, string zona, string descuentoComision, int descuentoFactura, double valorClienteSinDescuento, double valorClienteConDescuento, double valorSugerido, double valorTteVia, double valorMO, string nombreUsuario, double valorViatico, string obra, string plano, string observacion)
         {
@@ -1829,7 +1839,7 @@ WHERE
             {
                 updateCommand.Parameters.AddWithValue("@estado", estado);
                 updateCommand.Parameters.AddWithValue("@cotizacionUpdate", cotizacion);
-                updateCommand.Parameters.AddWithValue("@cotizacion", vSessionCotizacion); 
+                updateCommand.Parameters.AddWithValue("@cotizacion", vSessionCotizacion);
                 updateCommand.Parameters.AddWithValue("@asesor", asesor);
                 updateCommand.Parameters.AddWithValue("@cliente", idCliente);
                 updateCommand.Parameters.AddWithValue("@valor", valorClienteSinDescuento);
@@ -1860,7 +1870,7 @@ WHERE
 
                 if (rowsAffected > 0)
                 {
-                   
+
 
                     Session.Remove("TipoAccion");
 
@@ -1872,7 +1882,7 @@ WHERE
                 }
                 else
                 {
-                    
+
 
                     Session.Remove("TipoAccion");
 
@@ -1892,7 +1902,7 @@ WHERE
 
             using (SqlCommand updateCommand = new SqlCommand(updateQuery, connection))
             {
-                updateCommand.Parameters.AddWithValue("@cotizacion", vSessionCotizacion); 
+                updateCommand.Parameters.AddWithValue("@cotizacion", vSessionCotizacion);
                 updateCommand.Parameters.AddWithValue("@cotizacionUpdate", cotizacion);
                 updateCommand.Parameters.AddWithValue("@valorClienteSinDescuento", valorClienteSinDescuento);
                 updateCommand.Parameters.AddWithValue("@descuentoFactura", descuentoFactura);
@@ -1909,7 +1919,7 @@ WHERE
 
                 if (rowsAffected > 0)
                 {
-                   
+
 
                     Session.Remove("TipoAccion");
 
@@ -1921,7 +1931,7 @@ WHERE
                 }
                 else
                 {
-                    
+
 
                     Session.Remove("TipoAccion");
 
@@ -1970,7 +1980,7 @@ WHERE
 
                 if (rowsAffected > 0)
                 {
-                   
+
                     Session.Remove("TipoAccion");
 
                     Session["Cotizacion2"] = cotizacion;
@@ -1981,7 +1991,7 @@ WHERE
                 }
                 else
                 {
-                   
+
 
                     Session.Remove("TipoAccion");
 
@@ -2033,11 +2043,11 @@ WHERE
             else if (string.IsNullOrEmpty(TextFrta.Text))
             {
                 campoFaltante = "Fecha Respuesta";
-            }              
+            }
             else if (string.IsNullOrEmpty(TextProyecto.Text))
             {
                 campoFaltante = "Proyecto";
-            }   
+            }
             else if (DropDownListEstado.SelectedItem == null)
             {
                 campoFaltante = "Estado";
@@ -2049,7 +2059,7 @@ WHERE
             else if (ddlZona.SelectedItem == null)
             {
                 campoFaltante = "Zona";
-            }    
+            }
             else if (string.IsNullOrEmpty(TextBox5.Text))
             {
                 campoFaltante = "D.Com";
@@ -2061,18 +2071,18 @@ WHERE
         {
             string campoFaltante = string.Empty;
 
-             if (ddlAsesor.SelectedValue == "")
-                {
-                    campoFaltante = "Asesor";
-                }
+            if (ddlAsesor.SelectedValue == "")
+            {
+                campoFaltante = "Asesor";
+            }
             return campoFaltante;
         }
 
         protected void ConfirmarEliminarCot_Click(object sender, EventArgs e)
         {
-           
+
             Session.Remove("TipoAccion");
-        
+
             string cotizacion = textCotizacion.Text.Trim();
             string contenidoModalOT = "Esta seguro que desea eliminar la cotizacion: " + cotizacion;
             ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ConfirmarEliminarCot').modal('show'); $('#ConfirmarEliminarCot2').text('" + contenidoModalOT + "');", true);
@@ -2146,7 +2156,7 @@ WHERE
                 Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
             }
 
-           
+
         }
 
         protected void BtnDiseno_Click(Object sender, EventArgs e)
@@ -2161,15 +2171,15 @@ WHERE
 
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
 
-           
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
 
-                    // Obtener información del diseño
-                    ObtenerInformacionDelDiseño(connection, diseñoNumero);
-                }
-           
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                // Obtener información del diseño
+                ObtenerInformacionDelDiseño(connection, diseñoNumero);
+            }
+
         }
 
         private void ObtenerInformacionDelDiseño(SqlConnection connection, string diseñoNumero)
@@ -2208,7 +2218,7 @@ WHERE
                     }
                 }
 
-               
+
             }
         }
 

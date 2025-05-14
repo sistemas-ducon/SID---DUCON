@@ -5,7 +5,7 @@
 
 .auto-width-column {
     width: auto;
-    max-width 150px;
+    max-width: 150px;
     white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
     overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
     text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */

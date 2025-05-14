@@ -47,6 +47,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Inicio
 
             switch (btn.CommandName)
             {
+                case "ActualizarPrecios":
+                    pageURL = "Administrativo/ActualizarPrecios.aspx";
+                    break;
                 case "PersonaCliente":
                     pageURL = "Ventas/Empleado.aspx";
                     break;

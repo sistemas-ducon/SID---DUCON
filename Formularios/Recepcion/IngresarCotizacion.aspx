@@ -102,7 +102,20 @@
                                                 <div class="input-group input-group-sm mb-2 gap-2">
                                                     <div class="input-group input-group-sm mb-2 gap-2">
                                                         <asp:Label class="form-label" Text="Cotizacion" runat="server" ID="lblCotizacion"></asp:Label>
-                                                        <asp:TextBox runat="server" ID="textCotizacion" CssClass="form-control form-control-sm" OnTextChanged="txtCotizacion_TextChanged" AutoPostBack="true"></asp:TextBox>
+<asp:TextBox 
+    runat="server" 
+    ID="textCotizacion" 
+    CssClass="form-control form-control-sm"
+    onkeydown="if (event.key === 'Enter' || event.key === 'Tab') { document.getElementById('<%= btnSimularCotizacion.ClientID %>').click(); event.preventDefault(); }">
+</asp:TextBox>
+
+
+            <!-- Botón oculto -->
+            <asp:Button 
+                runat="server" 
+                ID="btnSimularCotizacion" 
+                CssClass="d-none" 
+                OnClick="btnSimularCotizacion_Click" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -353,7 +366,7 @@
                                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label runat="server" CssClass="form-label" ID="Label11" Text="Cotización"></asp:Label>
-                                        <asp:TextBox runat="server" ID="TextBox12" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                             <asp:TextBox runat="server" ID="TextBox12" CssClass="form-control form-control-sm" onkeypress="return presionarEnter(event);"></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
@@ -567,5 +580,14 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+     <script type="text/javascript">
+         function presionarEnter(e) {
+             if (e.key === "Enter") {
+                 document.getElementById('<%= BtnPuntos.ClientID %>').click();
+                 return false;
+             }
+             return true;
+         }
+     </script> 
 </body>
 </html>
