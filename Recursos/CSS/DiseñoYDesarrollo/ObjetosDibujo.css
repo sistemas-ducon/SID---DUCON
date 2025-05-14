@@ -206,3 +206,17 @@
 .modal-pos-custom {
     transform: translate(-2cm, -3cm); /* Mueve el modal 2cm hacia la izquierda y 3cm hacia arriba */
 }
+
+.custom-icon {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    background-color: transparent; /* No necesitas fondo si usas una imagen de fondo */
+    background-image: url('https://i.ibb.co/86fR8JK/icons8-microsoft-excel-2019-48.png'); /* Ruta de la imagen */
+    background-size: cover; /* Ajusta el tamaño de la imagen */
+    color: white;
+    text-align: center;
+    border-radius: 50%; /* Hace que sea un círculo */
+    font-size: 16px;
+    line-height: 30px; /* Centrar verticalmente */
+}

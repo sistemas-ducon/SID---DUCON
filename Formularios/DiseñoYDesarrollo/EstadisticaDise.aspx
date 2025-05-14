@@ -4,596 +4,591 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
- <meta name="viewport" content="width=device-width, initial-scale=1" />
- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
 
- <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
 
- <link type="text/css" href="../../Recursos/CSS/DiseñoYDesarrollo/ObjetosDibujo.css" rel="stylesheet" />
+    <link type="text/css" href="../../Recursos/CSS/DiseñoYDesarrollo/ObjetosDibujo.css" rel="stylesheet" />
     <title>Estadisticas Diseño</title>
 
     <style>
-  .progress-bar {
-      font-weight: bold;
-      font-size: 1rem;
-      transition: width 0.3s ease-in-out;
-  }
+        .progress-bar {
+            font-weight: bold;
+            font-size: 1rem;
+            transition: width 0.3s ease-in-out;
+        }
 
-  .modal-content {
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-      border-radius: 10px;
-  }
+        .modal-content {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
 
-  .modal-header {
-      border-bottom: none;
-  }
+        .modal-header {
+            border-bottom: none;
+        }
 
-  .modal-body {
-      text-align: center;
-      font-size: 1.1rem;
-      color: #333;
-  }
-</style>
+        .modal-body {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #333;
+        }
+    </style>
 
 
- <script>
-     let progressInterval; // Variable global para manejar el intervalo
+    <script>
+        let progressInterval; // Variable global para manejar el intervalo
 
-     // Función para mostrar el modal con barra progresiva
-     function mostrarModalProgreso() {
-         // Asegúrate de limpiar intervalos anteriores si existen
-         clearInterval(progressInterval);
+        // Función para mostrar el modal con barra progresiva
+        function mostrarModalProgreso() {
+            // Asegúrate de limpiar intervalos anteriores si existen
+            clearInterval(progressInterval);
 
-         // Reiniciar la barra de progreso
-         $("#progressBar").css("width", "0%");
-         $("#progressBar").attr("aria-valuenow", 0);
-         $("#progressBar").text("0%");
+            // Reiniciar la barra de progreso
+            $("#progressBar").css("width", "0%");
+            $("#progressBar").attr("aria-valuenow", 0);
+            $("#progressBar").text("0%");
 
-         // Mostrar el modal instantáneamente
-         $('#progressModal').modal('show');
+            // Mostrar el modal instantáneamente
+            $('#progressModal').modal('show');
 
-         // Simular el progreso animado
-         let progreso = 0;
-         progressInterval = setInterval(function () {
-             progreso += 10; // Incremento progresivo
-             if (progreso <= 100) {
-                 $("#progressBar").css("width", progreso + "%");
-                 $("#progressBar").attr("aria-valuenow", progreso);
-                 $("#progressBar").text(progreso + "%");
-             }
-             if (progreso >= 100) {
-                 clearInterval(progressInterval); // Detener la simulación
-             }
-         }, 500);
+            // Simular el progreso animado
+            let progreso = 0;
+            progressInterval = setInterval(function () {
+                progreso += 10; // Incremento progresivo
+                if (progreso <= 100) {
+                    $("#progressBar").css("width", progreso + "%");
+                    $("#progressBar").attr("aria-valuenow", progreso);
+                    $("#progressBar").text(progreso + "%");
+                }
+                if (progreso >= 100) {
+                    clearInterval(progressInterval); // Detener la simulación
+                }
+            }, 500);
 
-         // Garantizar cierre automático después de 5 segundos
-         setTimeout(function () {
-             ocultarModalProgreso();
-         }, 5000);
-     }
+            // Garantizar cierre automático después de 5 segundos
+            setTimeout(function () {
+                ocultarModalProgreso();
+            }, 5000);
+        }
 
-     // Función para ocultar el modal de progreso
-     function ocultarModalProgreso() {
-         clearInterval(progressInterval); // Limpiar intervalos
-         $('#progressModal').modal('hide'); // Ocultar el modal
-     }
- </script>
+        // Función para ocultar el modal de progreso
+        function ocultarModalProgreso() {
+            clearInterval(progressInterval); // Limpiar intervalos
+            $('#progressModal').modal('hide'); // Ocultar el modal
+        }
+    </script>
 
 
 </head>
 <body>
-      <form id="form1" runat="server">
+    <form id="form1" runat="server">
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
-               <nav class="navbar navbar-light bg-light navbar-custom">
-         <div class="container d-flex justify-content-center">
-             <ul class="nav nav-tabs" id="myTabs">
+        <nav class="navbar navbar-light bg-light navbar-custom">
+            <div class="container d-flex justify-content-center">
+                <ul class="nav nav-tabs" id="myTabs">
 
-                 <li class="nav-item">
-                      <a class="nav-link text-white active" id="EstadisticaDibDes-tab" data-bs-toggle="tab" href="#EstadisticaDibDes-content">Estadisticas Dibujo y Despiece</a>
-                 </li>
-                 <li class="nav-item">
-                     <a class="nav-link text-white" id="CumplimientoRenders-tab" data-bs-toggle="tab" href="#CumplimientoRenders-content">Cumplimiento de Renders</a>
-                 </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white active" id="EstadisticaDibDes-tab" data-bs-toggle="tab" href="#EstadisticaDibDes-content">Estadisticas Dibujo y Despiece</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" id="CumplimientoRenders-tab" data-bs-toggle="tab" href="#CumplimientoRenders-content">Cumplimiento de Renders</a>
+                    </li>
 
-             </ul>
-         </div>
-     </nav>
+                </ul>
+            </div>
+        </nav>
 
-          <div class="tab-content" id="myTabContent">
-              <div class="tab-pane fade show active" id="EstadisticaDibDes-content">
-                  <asp:UpdatePanel runat="server" ID="UpdatePanel1" UpdateMode="Conditional">
-                      <ContentTemplate>
-                          <div class="container-fluid py-4">
-                              <div class="card shadow-sm">
-                                  <div class="card-header text-center text-dark">
-                                      <div class="row g-3">
-                                          <div class="col-md-3 col-sm-6">
-                                              <div class="input-group input-group-sm d-flex gap-2">
-                                                  <label for="txtPeriodoInicio" class="form-label">Periodo de Consulta del:</label>
-                                                  <asp:TextBox
-                                                      ID="txtPeriodoInicio"
-                                                      runat="server"
-                                                      CssClass="form-control form-control-sm"
-                                                      TextMode="Date">
-                                                  </asp:TextBox>
-                                              </div>
-                                          </div>
-                                          <div class="col-md-2 col-sm-6">
-                                              <div class="input-group input-group-sm d-flex gap-2">
-                                                  <label for="txtPeriodoFin" class="form-label">Al:</label>
-                                                  <asp:TextBox
-                                                      ID="txtPeriodoFin"
-                                                      runat="server"
-                                                      CssClass="form-control form-control-sm"
-                                                      TextMode="Date">
-                                                  </asp:TextBox>
-                                              </div>
-                                          </div>
-                                          <div class="col-md-3 col-sm-6">
-                                              <div class="input-group input-group-sm d-flex gap-2">
-                                                  <label for="ddlAsesor" class="form-label">Asesor:</label>
-                                                  <asp:DropDownList
-                                                      ID="ddlAsesor"
-                                                      runat="server"
-                                                      CssClass="form-select form-select-sm">
-                                                  </asp:DropDownList>
-                                              </div>
-                                          </div>
-                                          <div class="col-md-2 col-sm-6">
-                                              <div class="input-group input-group-sm d-flex gap-2">
-                                                  <label for="ddlZona" class="form-label ">Zona:</label>
-                                                  <asp:DropDownList
-                                                      ID="ddlZona"
-                                                      runat="server"
-                                                      CssClass="form-select form-select-sm">
-                                                      <asp:ListItem Value="%" Text="%" />
-                                                      <asp:ListItem Value="01" Text="01"></asp:ListItem>
-                                                      <asp:ListItem Value="02" Text="02"></asp:ListItem>
-                                                  </asp:DropDownList>
-                                              </div>
-                                          </div>
-                                          <div class="col-md-1 col-sm-6">
-                                              <div class="col text-start">
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="EstadisticaDibDes-content">
+                <asp:UpdatePanel runat="server" ID="UpdatePanel1" UpdateMode="Conditional">
+                    <ContentTemplate>
+                        <div class="container-fluid py-4">
+                            <div class="card shadow-sm">
+                                <div class="card-header text-center text-dark">
+                                    <div class="row g-3">
+                                        <div class="col-md-3 col-sm-6">
+                                            <div class="input-group input-group-sm d-flex gap-2">
+                                                <label for="txtPeriodoInicio" class="form-label">Periodo de Consulta del:</label>
+                                                <asp:TextBox
+                                                    ID="txtPeriodoInicio"
+                                                    runat="server"
+                                                    CssClass="form-control form-control-sm"
+                                                    TextMode="Date">
+                                                </asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-6">
+                                            <div class="input-group input-group-sm d-flex gap-2">
+                                                <label for="txtPeriodoFin" class="form-label">Al:</label>
+                                                <asp:TextBox
+                                                    ID="txtPeriodoFin"
+                                                    runat="server"
+                                                    CssClass="form-control form-control-sm"
+                                                    TextMode="Date">
+                                                </asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-sm-6">
+                                            <div class="input-group input-group-sm d-flex gap-2">
+                                                <label for="ddlAsesor" class="form-label">Asesor:</label>
+                                                <asp:DropDownList
+                                                    ID="ddlAsesor"
+                                                    runat="server"
+                                                    CssClass="form-select form-select-sm">
+                                                </asp:DropDownList>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-6">
+                                            <div class="input-group input-group-sm d-flex gap-2">
+                                                <label for="ddlZona" class="form-label ">Zona:</label>
+                                                <asp:DropDownList
+                                                    ID="ddlZona"
+                                                    runat="server"
+                                                    CssClass="form-select form-select-sm">
+                                                    <asp:ListItem Value="%" Text="%" />
+                                                    <asp:ListItem Value="01" Text="01"></asp:ListItem>
+                                                    <asp:ListItem Value="02" Text="02"></asp:ListItem>
+                                                </asp:DropDownList>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1 col-sm-6">
+                                            <div class="col text-start">
                                                 <asp:Button
-    ID="btnBuscar"
-    runat="server"
-    Text="Buscar"
-    CssClass="btn btn-primary btn-sm me-2 shadow-sm"
-    OnClick="btnBuscar_Click"
-    OnClientClick="mostrarModalProgreso();" />
+                                                    ID="btnBuscar"
+                                                    runat="server"
+                                                    Text="Buscar"
+                                                    CssClass="btn btn-primary btn-sm me-2 shadow-sm"
+                                                    OnClick="btnBuscar_Click"
+                                                    OnClientClick="mostrarModalProgreso();" />
 
 
-                                              </div>
-                                          </div>
-                                          <div class="col-md-1 col-sm-6">
-                                              <div class="col text-end">
-                                                  <asp:Button
-                                                      ID="btnCancelar"
-                                                      runat="server"
-                                                      Text="X"
-                                                      CssClass="btn btn-outline-secondary btn-sm shadow-sm" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1 col-sm-6">
+                                            <div class="col text-end">
+                                                <asp:LinkButton class="icong " runat="server" title="Exportar Excel" ID="ExportarExcel" OnClick="ExportarExcel_Click">
+                                                     <i class="custom-icon"></i>
+                                                </asp:LinkButton>
 
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div class="card-body">
-                                      <h5 class="text-center">PERIODO DE CONSULTA</h5>
-                                      <div class="row g-3 mt-2">
-                                          <div class="col-md-4 col-sm-12">
-                                              <div class="card shadow-sm" style="height: 20rem;">
-                                                  <div class="card-header text-center bg-light text-dark">
-                                                      RESUMEN ESTADÍSTICA POR PEDIDOS
-                                                  </div>
-                                                  <div class="card-body text-center">
-                                                      <div class="table-responsive table-responsive-sm border shadow-sm" style="height: 15rem; overflow-x: auto;">
-                                                          <asp:DataGrid CssClass="table table-bordered table-responsive table-sm table-hover form-control-sm bg-white shadow-sm"
-                                                              ID="DataGridResumenEstadisticaPorPedido" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridResumenEstadisticaPorPedido_ItemDataBound" OnItemCommand="DataGridResumenEstadisticaPorPedido_ItemCommand">
-                                                              <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm" />
-                                                              <Columns>
-                                                                  <asp:TemplateColumn HeaderText=". . .">
-                                                                      <ItemTemplate>
-                                                                          <asp:LinkButton ID="lnkView" runat="server" CommandName="DatagridEstadisticaPedido"
-                                                                              CommandArgument='<%# Container.ItemIndex %>'
-                                                                              Text="<i class='bi bi-pencil-square text-dark'></i>" />
-                                                                      </ItemTemplate>
-                                                                  </asp:TemplateColumn>
-                                                                  <asp:BoundColumn HeaderText="Nº" DataField="" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn DataField="RealizadoPor" HeaderText="Realizado Por" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn DataField="TotalPedidos" HeaderText="Ped" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn DataField="" HeaderText="%" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn DataField="PedidosCumplidos" HeaderText="Cum" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn DataField="PorcentajeCumplido" HeaderText="%"
-                                                                      ItemStyle-CssClass="auto-width-column"
-                                                                      DataFormatString="{0:#,0.0}%" />
-                                                                  <asp:BoundColumn DataField="PedidosNoCumplidos" HeaderText="NO.Cum" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn DataField="PorcentajeNoCumplido" HeaderText="%" ItemStyle-CssClass="auto-width-column" DataFormatString="{0:#,0.0}%" />
-                                                                  <asp:BoundColumn DataField="VentaNeta" HeaderText="Venta Neta"
-                                                                      ItemStyle-CssClass="auto-width-column"
-                                                                      DataFormatString="{0:N0}" />
-                                                                  <asp:BoundColumn DataField="" HeaderText="%" ItemStyle-CssClass="auto-width-column" />
-                                                              </Columns>
-                                                          </asp:DataGrid>
-                                                      </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="text-center">PERIODO DE CONSULTA</h5>
+                                    <div class="row g-3 mt-2">
+                                        <div class="col-md-4 col-sm-12">
+                                            <div class="card shadow-sm" style="height: 20rem;">
+                                                <div class="card-header text-center bg-light text-dark">
+                                                    RESUMEN ESTADÍSTICA POR PEDIDOS
+                                                </div>
+                                                <div class="card-body text-center">
+                                                    <div class="table-responsive table-responsive-sm border shadow-sm" style="height: 15rem; overflow-x: auto;">
+                                                        <asp:DataGrid CssClass="table table-bordered table-responsive table-sm table-hover form-control-sm bg-white shadow-sm"
+                                                            ID="DataGridResumenEstadisticaPorPedido" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridResumenEstadisticaPorPedido_ItemDataBound" OnItemCommand="DataGridResumenEstadisticaPorPedido_ItemCommand">
+                                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm" />
+                                                            <Columns>
+                                                                <asp:TemplateColumn HeaderText=". . .">
+                                                                    <ItemTemplate>
+                                                                        <asp:LinkButton ID="lnkView" runat="server" CommandName="DatagridEstadisticaPedido"
+                                                                            CommandArgument='<%# Container.ItemIndex %>'
+                                                                            Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateColumn>
+                                                                <asp:TemplateColumn HeaderText="N°" ItemStyle-CssClass="auto-width-column">
+                                                                    <ItemTemplate>
+                                                                        <%# Container.ItemIndex + 1 %>
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateColumn>
+                                                                <asp:BoundColumn DataField="RealizadoPor" HeaderText="Realizado Por" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="TotalPedidos" HeaderText="Ped" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="PorcentajePedidos" HeaderText="%" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="PedidosCumplidos" HeaderText="Cum" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="PorcentajeCumplido" HeaderText="%"
+                                                                    ItemStyle-CssClass="auto-width-column"
+                                                                    DataFormatString="{0:#,0.0}%" />
+                                                                <asp:BoundColumn DataField="PedidosNoCumplidos" HeaderText="NO.Cum" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="PorcentajeNoCumplido" HeaderText="%" ItemStyle-CssClass="auto-width-column" DataFormatString="{0:#,0.0}%" />
+                                                                <asp:BoundColumn DataField="VentaNeta" HeaderText="Venta Neta"
+                                                                    ItemStyle-CssClass="auto-width-column"
+                                                                    DataFormatString="{0:N0}" />
+                                                                <asp:BoundColumn DataField="PorcentajeParticipacion" HeaderText="%" ItemStyle-CssClass="auto-width-column" />
+                                                            </Columns>
+                                                        </asp:DataGrid>
+                                                    </div>
 
-                                                  </div>
-                                              </div>
-                                          </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                          <div class="col-md-8 col-sm-12">
-                                              <div class="card shadow-sm" style="height: 20rem;">
-                                                  <div class="card-header text-center bg-light text-dark">
-                                                  <asp:Label runat="server" ID="lblDetallePedidos"></asp:Label> 
-                                                  </div>
-                                                  <div class="card-body text-center">
-                                                      <div class="table-responsive table-responsive-sm border shadow-sm" style="height: 15rem; overflow-x: auto;">
-                                                          <asp:DataGrid CssClass="table table-bordered table-responsive table-sm table-hover form-control-sm bg-white shadow-sm"
-                                                              ID="DataGridDetalleEstadisiticaPorPedido" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridDetalleEstadisiticaPorPedido_ItemDataBound">
-                                                              <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm" />
-                                                              <Columns>
-                                                                  <asp:TemplateColumn HeaderText=". . .">
-                                                                      <ItemTemplate>
-                                                                          <asp:LinkButton ID="lnkView" runat="server" CommandName="DatagridTipoInsumo"
-                                                                              CommandArgument='<%# Container.ItemIndex %>'
-                                                                              Text="<i class='bi bi-pencil-square text-dark'></i>" />
-                                                                      </ItemTemplate>
-                                                                  </asp:TemplateColumn>
-                                                                  <asp:BoundColumn DataField="Id_OT" HeaderText="OT" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn DataField="Consecutivo_Pedido" HeaderText="Ped" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn DataField="Nombre_Obra" HeaderText="Nombre_Obra" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn DataField="Entrega" HeaderText="E" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn DataField="Fecha_Entrega_Dibujo_Despiece" HeaderText="F.Ingreso" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn DataField="Fecha_Entrega_Produccion" HeaderText="F.Ok" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn DataField="VentaNeta" HeaderText="V.Neta" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn DataField="Zona" HeaderText="Zona" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn DataField="Fecha_Despacho_Produccion" HeaderText="F.Despacho" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn DataField="Urgente" HeaderText="Urg" ItemStyle-CssClass="auto-width-column" />
-                                                              </Columns>
-                                                          </asp:DataGrid>
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                      <div class="row g-3 mt-2">
-                                          <div class="col-md-4 col-sm-12">
-                                              <div class="card shadow-sm" style="height: 20rem;">
-                                                  <div class="card-header text-center bg-light text-dark">
-                                                      ESTADISTICA POR DISEÑOS
-                                                  </div>
-                                                  <div class="card-body text-center">
-                                                        <div class="table-responsive table-responsive-sm border shadow-sm" style="height: 15rem; overflow-x: auto;">
-                                                      <asp:DataGrid CssClass="table table-bordered table-responsive table-sm table-hover form-control-sm bg-white shadow-sm"
-                                                          ID="DataGridEstadisticaPorDiseno" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridEstadisticaPorDiseno_ItemDataBound" OnItemCommand="DataGridEstadisticaPorDiseno_ItemCommand">
-                                                          <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm" />
-                                                          <Columns>
-                                                              <asp:TemplateColumn HeaderText=". . .">
-                                                                  <ItemTemplate>
-                                                                      <asp:LinkButton ID="lnkView" runat="server" CommandName="DatagridDiseño"
-                                                                          CommandArgument='<%# Container.ItemIndex %>'
-                                                                          Text="<i class='bi bi-pencil-square text-dark'></i>" />
-                                                                  </ItemTemplate>
-                                                              </asp:TemplateColumn>
-                                                              <asp:BoundColumn HeaderText="Nº" DataField="" ItemStyle-CssClass="auto-width-column" />
-                                                              <asp:BoundColumn HeaderText="Dibujante" DataField="Dibujante" ItemStyle-CssClass="auto-width-column" />
-                                                              <asp:BoundColumn HeaderText="Dis" DataField="Diseños" ItemStyle-CssClass="auto-width-column" />
-                                                              <asp:BoundColumn HeaderText="%" DataField="" ItemStyle-CssClass="auto-width-column" />
-                                                              <asp:BoundColumn HeaderText="Cum" DataField="Cumplidos" ItemStyle-CssClass="auto-width-column" />
-                                                              <asp:BoundColumn HeaderText="%" DataField="PorcentajeCumplidos" ItemStyle-CssClass="auto-width-column" />
-                                                              <asp:BoundColumn HeaderText="No Cum" DataField="NoCumplidos" ItemStyle-CssClass="auto-width-column" />
-                                                              <asp:BoundColumn HeaderText="%" DataField="PorcentajeNoCumplidos" ItemStyle-CssClass="auto-width-column" />
-                                                          </Columns>
-                                                      </asp:DataGrid>
-                                                            </div>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                          <div class="col-md-8 col-sm-12">
-                                              <div class="card shadow-sm" style="height: 20rem;">
-                                                  <div class="card-header text-center bg-light text-dark">
-                                                      DETALLE ESTADISTICA POR DISEÑOS
-                                                  </div>
-                                                  <div class="card-body text-center">
-                                                      <div class="table-responsive table-responsive-sm border shadow-sm" style="height: 15rem; overflow-x: auto;">
-                                                          <asp:DataGrid CssClass="table table-bordered table-responsive table-sm table-hover form-control-sm bg-white shadow-sm"
-                                                              ID="DataGridDetalleEstadisticaPorDiseno" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridDetalleEstadisticaPorDiseno_ItemDataBound">
-                                                              <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm" />
-                                                              <Columns>
-                                                                  <asp:TemplateColumn HeaderText=". . .">
-                                                                      <ItemTemplate>
-                                                                          <asp:LinkButton ID="lnkView" runat="server" CommandName=""
-                                                                              CommandArgument='<%# Container.ItemIndex %>'
-                                                                              Text="<i class='bi bi-pencil-square text-dark'></i>" />
-                                                                      </ItemTemplate>
-                                                                  </asp:TemplateColumn>
-                                                                  <asp:BoundColumn HeaderText="Nombre" DataField="ClienteYNombreDiseño" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn HeaderText="Diseño" DataField="Numero_Diseño" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn HeaderText="E" DataField="ENTREGA" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn HeaderText="F.Activación" DataField="UltimaActivacion" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn HeaderText="F.Entrega" DataField="Fecha_Programada_Entrega" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn HeaderText="F.Ok" DataField="FechaDibujoOK" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn HeaderText="Asesor" DataField="Asesor" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn HeaderText="Urg" DataField="Urgente" ItemStyle-CssClass="auto-width-column"/>
-                                                                  <asp:BoundColumn HeaderText="Pausas" DataField="SeguimientoPausa" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn HeaderText="F.Ingreso" DataField="Fecha_Ingreso" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn HeaderText="F.Ingreso" DataField="Fecha_Ingreso" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn HeaderText="Zona" DataField="Zona" />
-                                                              </Columns>
-                                                          </asp:DataGrid>
-                                                      </div>
+                                        <div class="col-md-8 col-sm-12">
+                                            <div class="card shadow-sm" style="height: 20rem;">
+                                                <div class="card-header text-center bg-light text-dark">
+                                                    <asp:Label runat="server" ID="lblDetallePedidos"></asp:Label>
+                                                </div>
+                                                <div class="card-body text-center">
+                                                    <div class="table-responsive table-responsive-sm border shadow-sm" style="height: 15rem; overflow-x: auto;">
+                                                        <asp:DataGrid CssClass="table table-bordered table-responsive table-sm table-hover form-control-sm bg-white shadow-sm"
+                                                            ID="DataGridDetalleEstadisiticaPorPedido" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridDetalleEstadisiticaPorPedido_ItemDataBound">
+                                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm" />
+                                                            <Columns>
+                                                                <asp:TemplateColumn HeaderText=". . .">
+                                                                    <ItemTemplate>
+                                                                        <asp:LinkButton ID="lnkView" runat="server" CommandName="DatagridTipoInsumo"
+                                                                            CommandArgument='<%# Container.ItemIndex %>'
+                                                                            Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateColumn>
+                                                                <asp:BoundColumn DataField="Id_OT" HeaderText="OT" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Consecutivo_Pedido" HeaderText="Ped" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Nombre_Obra" HeaderText="Nombre_Obra" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Entrega" HeaderText="E" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Fecha_Entrega_Dibujo_Despiece" HeaderText="F.Ingreso" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Fecha_Entrega_Produccion" HeaderText="F.Ok" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="VentaNeta" HeaderText="V.Neta" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Zona" HeaderText="Zona" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Fecha_Despacho_Produccion" HeaderText="F.Despacho" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Urgente" HeaderText="Urg" ItemStyle-CssClass="auto-width-column" />
+                                                            </Columns>
+                                                        </asp:DataGrid>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-3 mt-2">
+                                        <div class="col-md-4 col-sm-12">
+                                            <div class="card shadow-sm" style="height: 20rem;">
+                                                <div class="card-header text-center bg-light text-dark">
+                                                    ESTADISTICA POR DISEÑOS
+                                                </div>
+                                                <div class="card-body text-center">
+                                                    <div class="table-responsive table-responsive-sm border shadow-sm" style="height: 15rem; overflow-x: auto;">
+                                                        <asp:DataGrid CssClass="table table-bordered table-responsive table-sm table-hover form-control-sm bg-white shadow-sm"
+                                                            ID="DataGridEstadisticaPorDiseno" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridEstadisticaPorDiseno_ItemDataBound" OnItemCommand="DataGridEstadisticaPorDiseno_ItemCommand">
+                                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm" />
+                                                            <Columns>
+                                                                <asp:TemplateColumn HeaderText=". . .">
+                                                                    <ItemTemplate>
+                                                                        <asp:LinkButton ID="lnkView" runat="server" CommandName="DatagridDiseño"
+                                                                            CommandArgument='<%# Container.ItemIndex %>'
+                                                                            Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateColumn>
+                                                                <asp:BoundColumn HeaderText="Nº" DataField="" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn HeaderText="Dibujante" DataField="Dibujante" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn HeaderText="Dis" DataField="Diseños" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn HeaderText="%" DataField="PocentajeDiseños" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn HeaderText="Cum" DataField="Cumplidos" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn HeaderText="%" DataField="PorcentajeCumplidos" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn HeaderText="No Cum" DataField="NoCumplidos" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn HeaderText="%" DataField="PorcentajeNoCumplidos" ItemStyle-CssClass="auto-width-column" />
+                                                            </Columns>
+                                                        </asp:DataGrid>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8 col-sm-12">
+                                            <div class="card shadow-sm" style="height: 20rem;">
+                                                <div class="card-header text-center bg-light text-dark">
+                                                    DETALLE ESTADISTICA POR DISEÑOS
+                                                </div>
+                                                <div class="card-body text-center">
+                                                    <div class="table-responsive table-responsive-sm border shadow-sm" style="height: 15rem; overflow-x: auto;">
+                                                        <asp:DataGrid CssClass="table table-bordered table-responsive table-sm table-hover form-control-sm bg-white shadow-sm"
+                                                            ID="DataGridDetalleEstadisticaPorDiseno" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridDetalleEstadisticaPorDiseno_ItemDataBound">
+                                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm" />
+                                                            <Columns>
+                                                                <asp:TemplateColumn HeaderText=". . .">
+                                                                    <ItemTemplate>
+                                                                        <asp:LinkButton ID="lnkView" runat="server" CommandName=""
+                                                                            CommandArgument='<%# Container.ItemIndex %>'
+                                                                            Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateColumn>
+                                                                <asp:BoundColumn HeaderText="Nombre" DataField="ClienteYNombreDiseño" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn HeaderText="Diseño" DataField="Numero_Diseño" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn HeaderText="E" DataField="ENTREGA" ItemStyle-CssClass="auto-width-column" DataFormatString="{0:#,0.00}" />
+                                                                <asp:BoundColumn HeaderText="F.Activación" DataField="UltimaActivacion" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn HeaderText="F.Entrega" DataField="Fecha_Programada_Entrega" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn HeaderText="F.Ok" DataField="FechaDibujoOK" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn HeaderText="Asesor" DataField="Asesor" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn HeaderText="Urg" DataField="Urgente" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn HeaderText="Pausas" DataField="SeguimientoPausa" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn HeaderText="F.Ingreso" DataField="Fecha_Ingreso" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn HeaderText="F.Ingreso" DataField="Fecha_Ingreso" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn HeaderText="Zona" DataField="Zona" />
+                                                            </Columns>
+                                                        </asp:DataGrid>
+                                                    </div>
 
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                          </div>
+                        </div>
 
-                      </ContentTemplate>
-                  </asp:UpdatePanel>
-              </div>
+                    </ContentTemplate>
+                    <Triggers>
+                        <asp:PostBackTrigger ControlID="ExportarExcel" />
+                    </Triggers>
+                </asp:UpdatePanel>
+            </div>
 
-              <div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="progressModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title" id="progressModalLabel">Procesando...</h5>
-      </div>
-      <div class="modal-body">
-        <p class="text-center mb-3">Por favor, espere mientras procesamos su solicitud.</p>
-        <div class="progress" style="height: 25px;">
-          <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-success"
-               role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-          </div>
+            <div class="tab-pane fade" id="CumplimientoRenders-content">
+                <asp:UpdatePanel runat="server" ID="UpdatePanel2" UpdateMode="Conditional">
+                    <ContentTemplate>
+                        <div class="container-fluid py-4">
+                            <div class="card shadow-sm">
+                                <div class="card-header text-center text-dark">
+                                    <div class="row g-3">
+                                        <div class="col-md-3 col-sm-12">
+                                            <div class="input-group input-group-sm d-flex gap-2">
+                                                <label for="txtPeriodoInicio" class="form-label">Periodo de Consulta del:</label>
+                                                <asp:TextBox
+                                                    ID="TextBoxFechaInicioRenders"
+                                                    runat="server"
+                                                    CssClass="form-control form-control-sm"
+                                                    TextMode="Date">
+                                                </asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-sm-12">
+                                            <div class="input-group input-group-sm d-flex gap-2">
+                                                <label for="txtPeriodoFin" class="form-label">Al:</label>
+                                                <asp:TextBox
+                                                    ID="TextBoxFechaFinRenders"
+                                                    runat="server"
+                                                    CssClass="form-control form-control-sm"
+                                                    TextMode="Date">
+                                                </asp:TextBox>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3 col-sm-12">
+                                            <div class="input-group input-group-sm d-flex gap-2">
+                                                <label for="ddlZona" class="form-label ">Zona:</label>
+                                                <asp:DropDownList
+                                                    ID="DropDownList2"
+                                                    runat="server"
+                                                    CssClass="form-select form-select-sm">
+                                                    <asp:ListItem Value="%" Text="%" />
+                                                    <asp:ListItem Value="01" Text="01"></asp:ListItem>
+                                                    <asp:ListItem Value="02" Text="02"></asp:ListItem>
+                                                </asp:DropDownList>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-6">
+                                            <div class="col text-start">
+                                                <asp:Button
+                                                    ID="BtnConsultar"
+                                                    runat="server"
+                                                    Text="Consultar"
+                                                    CssClass="btn btn-primary btn-sm me-2 shadow-sm" OnClick="BtnConsultar_Click" />
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1 col-sm-6">
+                                            <div class="col text-end">
+                                                <asp:LinkButton class="icong " runat="server" title="Exportar Excel Render" ID="ExportarExcelRender" OnClick="ExportarExcelRender_Click">
+                                                    <i class="custom-icon"></i>
+                                                </asp:LinkButton>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="card-body">
+
+                                    <h5 class="text-center">PERIODO DE CONSULTA</h5>
+                                    <div class="row g-3 mt-2">
+                                        <div class="col-md-4 col-sm-12">
+                                            <div class="card shadow-sm" style="height: 20rem;">
+                                                <div class="card-header text-center bg-light text-dark">
+                                                    RESUMEN ESTADÍSTICA RENDERS
+                                                </div>
+                                                <div class="card-body text-center">
+                                                    <div class="table-responsive table-responsive-sm border shadow-sm" style="height: 15rem; overflow-x: auto;">
+                                                        <asp:DataGrid CssClass="table table-bordered table-responsive table-sm table-hover form-control-sm bg-white shadow-sm"
+                                                            ID="DataGridResumenEstadisticaRenders" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridResumenEstadisticaRenders_ItemDataBound" OnItemCommand="DataGridResumenEstadisticaRenders_ItemCommand">
+                                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm" />
+                                                            <Columns>
+                                                                <asp:TemplateColumn HeaderText=". . .">
+                                                                    <ItemTemplate>
+                                                                        <asp:LinkButton ID="lnkView" runat="server" CommandName="DatagridRender"
+                                                                            CommandArgument='<%# Container.ItemIndex %>'
+                                                                            Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateColumn>
+                                                                <asp:BoundColumn DataField="Numero" HeaderText="Nº" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                                <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                                <asp:BoundColumn DataField="Rend" HeaderText="Rend" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                                <asp:BoundColumn DataField="PorcentajeRend" HeaderText="%" DataFormatString="{0:F2}" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                                <asp:BoundColumn DataField="Cum" HeaderText="Cum" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                                <asp:BoundColumn DataField="PorcentajeCum" HeaderText="%" DataFormatString="{0:F2}" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                                <asp:BoundColumn DataField="NoCum" HeaderText="No Cum" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                                <asp:BoundColumn DataField="PorcentajeNoCum" HeaderText="%" DataFormatString="{0:F2}" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                            </Columns>
+                                                        </asp:DataGrid>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-8 col-sm-12">
+                                            <div class="card shadow-sm" style="height: 20rem;">
+                                                <div class="card-header text-center bg-light text-dark">
+                                                    DETALLE ESTADISTICA POR RENDERS
+                                                </div>
+                                                <div class="card-body text-center">
+                                                    <div class="table-responsive table-responsive-sm border shadow-sm" style="height: 15rem; overflow-x: auto;">
+                                                        <asp:DataGrid CssClass="table table-bordered table-responsive table-sm table-hover form-control-sm bg-white shadow-sm"
+                                                            ID="DataGridEstadisticaRenders" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridEstadisticaRenders_ItemDataBound">
+                                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm" />
+                                                            <Columns>
+                                                                <asp:TemplateColumn HeaderText=". . .">
+                                                                    <ItemTemplate>
+                                                                        <asp:LinkButton ID="lnkView" runat="server" CommandName=""
+                                                                            CommandArgument='<%# Container.ItemIndex %>'
+                                                                            Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateColumn>
+                                                                <asp:BoundColumn DataField="ClienteNombre" HeaderText="Nombre" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Id_Render" HeaderText="Render" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Entrega" HeaderText="E (Días)" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="UltimaActivacion" HeaderText="F.Activación" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Fecha_Programada_Entrega" HeaderText="F.Entrega" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="FechaRenderOk" HeaderText="F.Ok" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="SeguimientoPausa" HeaderText="Pausas" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Zona" HeaderText="Zona" ItemStyle-CssClass="auto-width-column" />
+                                                            </Columns>
+                                                        </asp:DataGrid>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row g-3 mt-2">
+                                        <div class="col-md-4 col-sm-12">
+                                            <div class="card shadow-sm" style="height:20rem;">
+                                                <div class="card-header text-center bg-light text-dark">
+                                                    ESTADISTICA POR DISEÑOS
+                                                </div>
+                                                <div class="card-body text-center">
+                                                    <div class="table-responsive table-responsive-sm border shadow-sm" style="height: 15rem; overflow-x: auto;">
+                                                        <asp:DataGrid
+                                                            ID="DataGridResumenEstadisticaShowCase"
+                                                            runat="server"
+                                                            AutoGenerateColumns="false"
+                                                            CssClass="table table-bordered table-responsive table-sm table-hover form-control-sm bg-white shadow-sm"
+                                                            OnItemDataBound="DataGridResumenEstadisticaShowCase_ItemDataBound" OnItemCommand="DataGridResumenEstadisticaShowCase_ItemCommand">
+                                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm" />
+                                                            <Columns>
+                                                                <asp:TemplateColumn HeaderText=". . .">
+                                                                    <ItemTemplate>
+                                                                        <asp:LinkButton ID="lnkView" runat="server" CommandName="DatagridSC"
+                                                                            CommandArgument='<%# Container.ItemIndex %>'
+                                                                            Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateColumn>
+                                                                <asp:BoundColumn
+                                                                    DataField="Nº"
+                                                                    HeaderText="Nº"
+                                                                    ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                                <asp:BoundColumn
+                                                                    DataField="Responsable"
+                                                                    HeaderText="Responsable"
+                                                                    ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                                <asp:BoundColumn
+                                                                    DataField="Visit"
+                                                                    HeaderText="Visit"
+                                                                    ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                                <asp:BoundColumn
+                                                                    DataField="%"
+                                                                    HeaderText="%"
+                                                                    DataFormatString="{0:F2}"
+                                                                    ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
+                                                            </Columns>
+                                                        </asp:DataGrid>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8 col-sm-12">
+                                            <div class="card shadow-sm" style="height:20rem;">
+                                                <div class="card-header text-center bg-light text-dark">
+                                                    DETALLE ESTADISTICA POR DISEÑOS
+                                                </div>
+                                                <div class="card-body text-center">
+                                                    <div class="table-responsive table-responsive-sm border shadow-sm" style="height: 15rem; overflow-x: auto;">
+                                                        <asp:DataGrid CssClass="table table-bordered table-responsive table-sm table-hover form-control-sm bg-white shadow-sm"
+                                                            ID="DataGrid1" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridEstadisticaSC_ItemDataBound">
+                                                            <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm" />
+                                                            <Columns>
+                                                                <asp:TemplateColumn HeaderText=". . .">
+                                                                    <ItemTemplate>
+                                                                        <asp:LinkButton ID="lnkView" runat="server" CommandName="DatagridTipoInsumo"
+                                                                            CommandArgument='<%# Container.ItemIndex %>'
+                                                                            Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateColumn>
+                                                                <asp:BoundColumn DataField="ClienteNombre" HeaderText="Nombre" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Numero_Diseño" HeaderText="N°Diseño" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="SC_FechaTerminado" HeaderText="F.Entrega" ItemStyle-CssClass="auto-width-column" />
+                                                                <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column" />
+                                                            </Columns>
+                                                        </asp:DataGrid>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ContentTemplate>
+                    <Triggers>
+                        <asp:PostBackTrigger ControlID="ExportarExcelRender" />
+                    </Triggers>
+
+                </asp:UpdatePanel>
+            </div>
+
+            <div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="progressModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title" id="progressModalLabel">Procesando...</h5>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-center mb-3">Por favor, espere mientras procesamos su solicitud.</p>
+                            <div class="progress" style="height: 25px;">
+                                <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                                    role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
-      </div>
-    </div>
-  </div>
-</div>
 
-              <div class="tab-pane fade" id="CumplimientoRenders-content">
-                  <asp:UpdatePanel runat="server" ID="UpdatePanel2" UpdateMode="Conditional">
-                      <ContentTemplate>
-                         <div class="container-fluid py-4">
-     <div class="card shadow-sm">
-         <div class="card-header text-center text-dark">
-             <div class="row g-3">
-                 <div class="col-md-3 col-sm-12">
-                     <div class="input-group input-group-sm d-flex gap-2">
-                         <label for="txtPeriodoInicio" class="form-label">Periodo de Consulta del:</label>
-                         <asp:TextBox
-                             ID="TextBoxFechaInicioRenders"
-                             runat="server"
-                             CssClass="form-control form-control-sm"
-                             TextMode="Date">
-                         </asp:TextBox>
-                     </div>
-                 </div>
-                 <div class="col-md-3 col-sm-12">
-                     <div class="input-group input-group-sm d-flex gap-2">
-                         <label for="txtPeriodoFin" class="form-label">Al:</label>
-                         <asp:TextBox
-                             ID="TextBoxFechaFinRenders"
-                             runat="server"
-                             CssClass="form-control form-control-sm"
-                             TextMode="Date">
-                         </asp:TextBox>
-                     </div>
-                 </div>
-
-                 <div class="col-md-3 col-sm-12">
-                     <div class="input-group input-group-sm d-flex gap-2">
-                         <label for="ddlZona" class="form-label ">Zona:</label>
-                         <asp:DropDownList
-                             ID="DropDownList2"
-                             runat="server"
-                             CssClass="form-select form-select-sm">
-                            <asp:ListItem Value="%" Text="%" />
-    <asp:ListItem Value="01" Text="01"></asp:ListItem>
-       <asp:ListItem Value="02" Text="02"></asp:ListItem>
-                         </asp:DropDownList>
-                     </div>
-                 </div>
-                 <div class="col-md-2 col-sm-6">
-                     <div class="col text-start">
-                           <asp:Button
-      ID="BtnConsultar"
-      runat="server"
-     Text="Consultar"
-      CssClass="btn btn-primary btn-sm me-2 shadow-sm" OnClick="BtnConsultar_Click"/>
-                        
-                     </div>
-                 </div>
-                 <div class="col-md-1 col-sm-6">
-                     <div class="col text-end">
-                          <asp:Button
-     ID="Button1"
-     runat="server"
-     Text="X"
-     CssClass="btn btn-outline-secondary btn-sm shadow-sm" />
-                     </div>
-                 </div>
-
-             </div>
-         </div>
-         <div class="card-body">
-
-             <h5 class="text-center">PERIODO DE CONSULTA</h5>
-             <div class="row g-3 mt-2">
-                 <div class="col-md-4 col-sm-12">
-                     <div class="card shadow-sm" style="height: 20rem;">
-                         <div class="card-header text-center bg-light text-dark">
-                             RESUMEN ESTADÍSTICA RENDERS
-                         </div>
-                         <div class="card-body text-center">
-                             <div class="table-responsive table-responsive-sm border shadow-sm" style="height: 15rem; overflow-x: auto;">
-                                 <asp:DataGrid CssClass="table table-bordered table-responsive table-sm table-hover form-control-sm bg-white shadow-sm"
-                                     ID="DataGridResumenEstadisticaRenders" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridResumenEstadisticaRenders_ItemDataBound" OnItemCommand="DataGridResumenEstadisticaRenders_ItemCommand">
-                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm" />
-                                     <Columns>
-                                         <asp:TemplateColumn HeaderText=". . .">
-                                             <ItemTemplate>
-                                                 <asp:LinkButton ID="lnkView" runat="server" CommandName="DatagridRender"
-                                                     CommandArgument='<%# Container.ItemIndex %>'
-                                                     Text="<i class='bi bi-pencil-square text-dark'></i>" />
-                                             </ItemTemplate>
-                                         </asp:TemplateColumn>
-                                         <asp:BoundColumn DataField="Numero" HeaderText="Nº"
-                                             ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                         <asp:BoundColumn DataField="Responsable" HeaderText="Responsable"
-                                             ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                         <asp:BoundColumn DataField="Rend" HeaderText="Rend"
-                                             ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                         <asp:BoundColumn DataField="PorcentajeRend" HeaderText="%"
-                                             DataFormatString="{0:F2}" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                         <asp:BoundColumn DataField="Cum" HeaderText="Cum"
-                                             ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                         <asp:BoundColumn DataField="PorcentajeCum" HeaderText="%"
-                                             DataFormatString="{0:F2}" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                         <asp:BoundColumn DataField="NoCum" HeaderText="No Cum"
-                                             ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                         <asp:BoundColumn DataField="PorcentajeNoCum" HeaderText="%"
-                                             DataFormatString="{0:F2}" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                     </Columns>
-                                 </asp:DataGrid>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-
-                 <div class="col-md-8 col-sm-12">
-                     <div class="card shadow-sm" style="height: 20rem;">
-                         <div class="card-header text-center bg-light text-dark">
-                             DETALLE ESTADISTICA POR RENDERS
-                         </div>
-                         <div class="card-body text-center">
-                             <div class="table-responsive table-responsive-sm border shadow-sm" style="height: 15rem; overflow-x: auto;">
-                                 <asp:DataGrid CssClass="table table-bordered table-responsive table-sm table-hover form-control-sm bg-white shadow-sm"
-                                     ID="DataGridEstadisticaRenders" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridEstadisticaRenders_ItemDataBound">
-                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm" />
-                                     <Columns>
-                                         <asp:TemplateColumn HeaderText=". . .">
-                                             <ItemTemplate>
-                                                 <asp:LinkButton ID="lnkView" runat="server" CommandName=""
-                                                     CommandArgument='<%# Container.ItemIndex %>'
-                                                     Text="<i class='bi bi-pencil-square text-dark'></i>" />
-                                             </ItemTemplate>
-                                         </asp:TemplateColumn>
-                                         <asp:BoundColumn DataField="ClienteNombre" HeaderText="Nombre" ItemStyle-CssClass="auto-width-column" />
-                                         <asp:BoundColumn DataField="Id_Render" HeaderText="Render" ItemStyle-CssClass="auto-width-column" />
-                                         <asp:BoundColumn DataField="Entrega" HeaderText="E (Días)" ItemStyle-CssClass="auto-width-column" />
-                                         <asp:BoundColumn DataField="UltimaActivacion" HeaderText="F.Activación" ItemStyle-CssClass="auto-width-column" />
-                                         <asp:BoundColumn DataField="Fecha_Programada_Entrega" HeaderText="F.Entrega" ItemStyle-CssClass="auto-width-column" />
-                                         <asp:BoundColumn DataField="FechaRenderOk" HeaderText="F.Ok" ItemStyle-CssClass="auto-width-column" />
-                                         <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column" />
-                                         <asp:BoundColumn DataField="SeguimientoPausa" HeaderText="Pausas" ItemStyle-CssClass="auto-width-column" />
-                                         <asp:BoundColumn DataField="Zona" HeaderText="Zona" ItemStyle-CssClass="auto-width-column" />
-                                     </Columns>
-                                 </asp:DataGrid>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-
-             </div>
-             <div class="row g-3 mt-2">
-                 <div class="col-md-4 col-sm-12">
-                     <div class="card shadow-sm" style="height:20rem;">
-                         <div class="card-header text-center bg-light text-dark">
-                             ESTADISTICA POR DISEÑOS
-                         </div>
-                         <div class="card-body text-center">
-                              <div class="table-responsive table-responsive-sm border shadow-sm" style="height: 15rem; overflow-x: auto;">
-    <asp:DataGrid 
-    ID="DataGridResumenEstadisticaShowCase" 
-    runat="server" 
-    AutoGenerateColumns="false" 
-    CssClass="table table-bordered table-responsive table-sm table-hover form-control-sm bg-white shadow-sm"
-    OnItemDataBound="DataGridResumenEstadisticaShowCase_ItemDataBound" OnItemCommand="DataGridResumenEstadisticaShowCase_ItemCommand">
-    <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm" />
-    <Columns>
-         <asp:TemplateColumn HeaderText=". . .">
-     <ItemTemplate>
-         <asp:LinkButton ID="lnkView" runat="server" CommandName="DatagridSC"
-             CommandArgument='<%# Container.ItemIndex %>'
-             Text="<i class='bi bi-pencil-square text-dark'></i>" />
-     </ItemTemplate>
- </asp:TemplateColumn>
-        <asp:BoundColumn 
-            DataField="Nº" 
-            HeaderText="Nº" 
-            ItemStyle-CssClass="auto-width-column">
-        </asp:BoundColumn>
-        <asp:BoundColumn 
-            DataField="Responsable" 
-            HeaderText="Responsable" 
-            ItemStyle-CssClass="auto-width-column">
-        </asp:BoundColumn>
-        <asp:BoundColumn 
-            DataField="Visit" 
-            HeaderText="Visit" 
-            ItemStyle-CssClass="auto-width-column">
-        </asp:BoundColumn>
-        <asp:BoundColumn 
-            DataField="%" 
-            HeaderText="%" 
-            DataFormatString="{0:F2}" 
-            ItemStyle-CssClass="auto-width-column">
-        </asp:BoundColumn>
-    </Columns>
-</asp:DataGrid>
-
- </div>
-                         </div>
-                     </div>
-                 </div>
-                 <div class="col-md-8 col-sm-12">
-                     <div class="card shadow-sm" style="height:20rem;">
-                         <div class="card-header text-center bg-light text-dark">
-                             DETALLE ESTADISTICA POR DISEÑOS
-                         </div>
-                         <div class="card-body text-center">
-                              <div class="table-responsive table-responsive-sm border shadow-sm" style="height: 15rem; overflow-x: auto;">
-     <asp:DataGrid CssClass="table table-bordered table-responsive table-sm table-hover form-control-sm bg-white shadow-sm"
-         ID="DataGrid1" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGridEstadisticaSC_ItemDataBound">
-         <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm" />
-         <Columns>
-             <asp:TemplateColumn HeaderText=". . .">
-                 <ItemTemplate>
-                     <asp:LinkButton ID="lnkView" runat="server" CommandName="DatagridTipoInsumo"
-                         CommandArgument='<%# Container.ItemIndex %>'
-                         Text="<i class='bi bi-pencil-square text-dark'></i>" />
-                 </ItemTemplate>
-             </asp:TemplateColumn>
-             <asp:BoundColumn DataField="ClienteNombre" HeaderText="Nombre" ItemStyle-CssClass="auto-width-column" />
-             <asp:BoundColumn DataField="Numero_Diseño" HeaderText="N°Diseño" ItemStyle-CssClass="auto-width-column" />
-             <asp:BoundColumn DataField="SC_FechaTerminado" HeaderText="F.Entrega" ItemStyle-CssClass="auto-width-column" />
-             <asp:BoundColumn DataField="Asesor" HeaderText="Asesor" ItemStyle-CssClass="auto-width-column" />
-         </Columns>
-     </asp:DataGrid>
- </div>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-         </div>
-     </div>
- </div>
-                      </ContentTemplate>
-                  </asp:UpdatePanel>
-              </div>
-
-          </div>
-
-      </form>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </form>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>

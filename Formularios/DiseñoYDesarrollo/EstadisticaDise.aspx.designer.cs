@@ -87,13 +87,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         protected global::System.Web.UI.WebControls.Button btnBuscar;
 
         /// <summary>
-        /// Control btnCancelar.
+        /// Control ExportarExcel.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCancelar;
+        protected global::System.Web.UI.WebControls.LinkButton ExportarExcel;
 
         /// <summary>
         /// Control DataGridResumenEstadisticaPorPedido.
@@ -186,13 +186,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         protected global::System.Web.UI.WebControls.Button BtnConsultar;
 
         /// <summary>
-        /// Control Button1.
+        /// Control ExportarExcelRender.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button1;
+        protected global::System.Web.UI.WebControls.LinkButton ExportarExcelRender;
 
         /// <summary>
         /// Control DataGridResumenEstadisticaRenders.

@@ -1,8 +1,11 @@
-﻿using System;
+﻿using OfficeOpenXml.Style;
+using OfficeOpenXml;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -45,8 +48,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         {
             return (value * 100).ToString("F1");
         }
-
-   
 
         private void LlenarDropDownListAsesores()
         {
@@ -91,8 +92,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         }
 
         protected void btnBuscar_Click(object sender, EventArgs e)
-        {
-            llenardatagriddetalle();
+        {          
+            llenardatagriddetalle();      
             llenarDatagridEstadisticaResumen();
             LlenarDataGridDetalleEstadistica();
             CargarEstadisticaPorDibujante();
@@ -175,6 +176,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     dataTable.Columns.Add("Zona");
                     dataTable.Columns.Add("Fecha_Despacho_Produccion");
                     dataTable.Columns.Add("Urgente");
+                    dataTable.Columns.Add("UltimaActivacion");
 
                     while (reader.Read())
                     {
@@ -191,7 +193,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                         // Calcular urgencia
                         DateTime fechaEntrega = Convert.ToDateTime(reader["Fecha_Entrega_Dibujo_Despiece"]);
+                        DateTime fechaEntregaF;
+
+                        DateTime fechaActivacion;
+                        CalcularFechaEntrega(fechaEntrega, out fechaActivacion, out fechaEntregaF, 2);
+
                         DateTime fechaDespacho = Convert.ToDateTime(reader["Fecha_Despacho_Produccion"]);
+                        DateTime fechaEntregaProd = Convert.ToDateTime(reader["Fecha_Entrega_Produccion"]);
                         int diasHabiles = CalcularDiasHabiles(fechaEntrega, fechaDespacho);
 
                         if (diasHabiles <= 2)
@@ -211,7 +219,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                         // Aquí es donde corregimos la lógica de "Cumplidos":
                         // Un pedido es "cumplido" si la fecha de entrega es posterior o igual a la fecha de producción.
-                        if (fechaEntrega >= Convert.ToDateTime(reader["Fecha_Entrega_Produccion"]))
+                        if (fechaEntregaF >= fechaEntregaProd)
                         {
                             totalCumplidos++;
                         }
@@ -225,7 +233,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     DataRow totalRow1 = dataTable.NewRow();
                     totalRow1["Id_OT"] = "T. Ped";
                     totalRow1["Consecutivo_Pedido"] = "";
-                    totalRow1["Nombre_Obra"] =  totalPedidos;
+                    totalRow1["Nombre_Obra"] =totalPedidos;
                     totalRow1["VentaNeta"] = "Externo a Dibujo";
                     totalRow1["Zona"] = totalPedidosNoDibujo;
                     totalRow1["Fecha_Despacho_Produccion"] = "Urgentes";
@@ -235,7 +243,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     DataRow totalRow2 = dataTable.NewRow();
                     totalRow2["Id_OT"] = "T. Cum";
                     totalRow2["Consecutivo_Pedido"] = "";
-                    totalRow2["Nombre_Obra"] = "";
+                    totalRow2["Nombre_Obra"] = totalCumplidos;
                     totalRow2["Entrega"] = $"{(totalCumplidos / totalPedidos * 100):0.0}%";
                     totalRow2["Zona"] = "";
                     totalRow2["Urgente"] = $"{(totalPedidosUrgentes / totalPedidosNoDibujo * 100):0.0}%";
@@ -266,7 +274,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             }
             return diasHabiles;
         }
-
 
         protected void llenardatagriddetalle()
         {
@@ -334,6 +341,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                             DateTime fechaEntregaProduccion = Convert.ToDateTime(reader["Fecha_Entrega_Produccion"]);
                             DateTime fechaEntregaDibujo = Convert.ToDateTime(reader["Fecha_Entrega_Dibujo_Despiece"]);
 
+                            // Determinar fecha de ingreso
+                            DateTime fechaIngreso = fechaEntregaDibujo; // Ajustar si es DateTime.Now o un valor de tu lógica
+
+                            // Determinar plazo de entrega (ejemplo: suma 2 días hábiles)
+                            float plazoEntrega = 2;
+
+                            // Calcular fechas
+                            DateTime fechaActivacion;
+                            CalcularFechaEntrega(fechaIngreso, out fechaActivacion, out fechaEntregaDibujo, plazoEntrega);
+
+
                             if (realizadoPor != currentDibujante)
                             {
                                 if (!string.IsNullOrEmpty(currentDibujante))
@@ -347,9 +365,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                                 {
                                     RealizadoPor = realizadoPor,
                                     TotalPedidos = 1,
-                                    PedidosCumplidos = (fechaEntregaProduccion >= fechaEntregaDibujo) ? 1 : 0,
-                                    PedidosNoCumplidos = (fechaEntregaProduccion < fechaEntregaDibujo) ? 1 : 0,
-                                    VentaNeta = ventaNeta
+                                    // aqui esta el error de calculos 
+                                    PedidosCumplidos = (fechaEntregaDibujo  >= fechaEntregaProduccion) ? 1 : 0,
+                                    PedidosNoCumplidos = (fechaEntregaDibujo < fechaEntregaProduccion ) ? 1 : 0,
+                                    VentaNeta = ventaNeta,
+                                    PorcentajeParticipacion = 0 // aqui seria  pocentaje final  VentaNeta /sumatotalVentaNeta * 100
                                 });
 
                                 currentDibujante = realizadoPor;
@@ -360,18 +380,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                                 resumen.TotalPedidos += 1;
                                 resumen.VentaNeta += ventaNeta;
 
-                                // Determinar fecha de ingreso
-                                DateTime fechaIngreso = fechaEntregaDibujo; // Ajustar si es DateTime.Now o un valor de tu lógica
-
-                                // Determinar plazo de entrega (ejemplo: suma 2 días hábiles)
-                                float plazoEntrega = 2;
-
-                                // Calcular fechas
-                                DateTime fechaActivacion;
-                                CalcularFechaEntrega(fechaIngreso, out fechaActivacion, out fechaEntregaDibujo, plazoEntrega);
+                                
 
                                 // Comparar con la fecha de entrega original
-                                if (fechaEntregaProduccion <= fechaEntregaDibujo)
+                                if (fechaEntregaDibujo >= fechaEntregaProduccion)
                                 {
                                     resumen.PedidosCumplidos++;
                                 }
@@ -381,6 +393,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                                 }
                             }
                         }
+
+                        // Calcular porcentaje de participación
+                        decimal totalVentaNeta = resumenList.Sum(r => r.VentaNeta);
+                        decimal totalpedidos = resumenList.Sum(r => r.TotalPedidos);
+
+                        foreach (var resumen in resumenList)
+                        {
+                            if (resumen.RealizadoPor != "TOTAL PEDIDOS" && totalVentaNeta > 0)
+                            {
+                                resumen.PorcentajeParticipacion = Math.Round((resumen.VentaNeta / totalVentaNeta) * 100, 1); // Redondeo a un decimal
+                                resumen.PorcentajePedidos = Math.Round((resumen.TotalPedidos / totalpedidos) * 100, 1); // Redondeo a un decimal
+                            }
+                        }
+
 
                         // Si hay resúmenes, calcular los porcentajes y agregar fila de totales
                         if (resumenList.Any())
@@ -398,7 +424,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                                 PedidosNoCumplidos = resumenList.Sum(r => r.PedidosNoCumplidos),
                                 VentaNeta = resumenList.Sum(r => r.VentaNeta),
                                 PorcentajeCumplido = (decimal)resumenList.Sum(r => r.PedidosCumplidos) / resumenList.Sum(r => r.TotalPedidos) * 100,
-                                PorcentajeNoCumplido = (decimal)resumenList.Sum(r => r.PedidosNoCumplidos) / resumenList.Sum(r => r.TotalPedidos) * 100
+                                PorcentajeNoCumplido = (decimal)resumenList.Sum(r => r.PedidosNoCumplidos) / resumenList.Sum(r => r.TotalPedidos) * 100,
+                               
                             });
                         }
 
@@ -409,9 +436,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 }
             }
 
-         
-        }
 
+        }
 
         public void CalcularFechaEntrega(DateTime fechaIngreso, out DateTime fechaActivacion, out DateTime fechaEntrega, float plazoEntrega)
         {
@@ -473,12 +499,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         {
             public string RealizadoPor { get; set; }
             public int TotalPedidos { get; set; }
+            public decimal PorcentajePedidos { get; set; }
             public int PedidosCumplidos { get; set; }
             public int PedidosNoCumplidos { get; set; }
             public decimal VentaNeta { get; set; }
             public decimal PorcentajeCumplido { get; set; }
             public decimal PorcentajeNoCumplido { get; set; }
             public decimal TotalVentaNeta { get; set; }
+            public decimal PorcentajeParticipacion { get; set; }
         }
         protected void LlenarDataGridDetalleEstadistica()
         {
@@ -525,7 +553,29 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                             // Cálculo de totales
                             int totalPedidos = dt.Rows.Count;
-                            int totalCumplidos = dt.AsEnumerable().Count(row => Convert.ToBoolean(row["Urgente"]));
+                            int sumaUrgentes = dt.AsEnumerable().Count(row => row.Field<bool?>("Urgente") == true);
+
+                            Session["SumaCumplido"] = sumaUrgentes.ToString();
+
+
+                            int cumplidos = 0;
+
+                            foreach (DataRow row in dt.Rows)
+                            {
+                                if (row["Fecha_Programada_Entrega"] != DBNull.Value && row["FechaDibujoOK"] != DBNull.Value)
+                                {
+                                    DateTime fechaEntregaProgramada = Convert.ToDateTime(row["Fecha_Programada_Entrega"]);
+                                    DateTime fechaDibujoOK = Convert.ToDateTime(row["FechaDibujoOK"]);
+
+                                    // Ejemplo: contar si se cumplió antes o el mismo día
+                                    if (fechaEntregaProgramada >= fechaDibujoOK)
+                                    {
+                                        cumplidos++;
+                                    }
+                                }
+                            }
+
+
 
                             // Agregar las filas de resumen
                             dt.Rows.Add();
@@ -537,11 +587,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                             dt.Rows[dt.Rows.Count - 1]["Asesor"] = DBNull.Value;
                             dt.Rows[dt.Rows.Count - 1]["RealizadoPor"] = DBNull.Value;
                             dt.Rows[dt.Rows.Count - 1]["SeguimientoPausa"] = DBNull.Value;
-                            dt.Rows[dt.Rows.Count - 1]["Urgente"] = totalCumplidos;
+                            dt.Rows[dt.Rows.Count - 1]["Urgente"] = sumaUrgentes;
                             dt.Rows[dt.Rows.Count - 1]["Fecha_Programada_Entrega"] = DBNull.Value;
                             dt.Rows[dt.Rows.Count - 1]["Zona"] = DBNull.Value;
 
-                           
+                            dt.Rows.Add();
+                            dt.Rows[dt.Rows.Count - 1]["ClienteYNombreDiseño"] = "CUMPLIDOS";
+                            dt.Rows[dt.Rows.Count - 1]["Numero_Diseño"] = cumplidos;
+                            dt.Rows[dt.Rows.Count - 1]["FechaDibujoOK"] = DBNull.Value;
+                            dt.Rows[dt.Rows.Count - 1]["Entrega"] = Math.Round((double)cumplidos / totalPedidos * 100, 2);
+                            dt.Rows[dt.Rows.Count - 1]["Puestos"] = DBNull.Value;
+                            dt.Rows[dt.Rows.Count - 1]["Asesor"] = DBNull.Value;
+                            dt.Rows[dt.Rows.Count - 1]["RealizadoPor"] = DBNull.Value;
+                            dt.Rows[dt.Rows.Count - 1]["SeguimientoPausa"] = DBNull.Value;
+                            dt.Rows[dt.Rows.Count - 1]["Urgente"] = sumaUrgentes;
+                            dt.Rows[dt.Rows.Count - 1]["Fecha_Programada_Entrega"] = DBNull.Value;
+                            dt.Rows[dt.Rows.Count - 1]["Zona"] = DBNull.Value;
+
+
 
 
 
@@ -557,22 +620,32 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             }
         }
 
-
         protected void DataGridDetalleEstadisticaPorDiseno_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-               
+                object urgenteObj = DataBinder.Eval(e.Item.DataItem, "Urgente");
 
-                if (e.Item.Cells[1].Text == "TOTAL DISEÑOS")
+                if (e.Item.Cells[1].Text == "TOTAL DISEÑOS" || e.Item.Cells[1].Text == "CUMPLIDOS")
                 {
                     e.Item.Cells[0].Text = string.Empty;
 
                     e.Item.Font.Bold = true;
+
+                    if(e.Item.Cells[1].Text == "TOTAL DISEÑOS")
+                    {
+                        e.Item.Cells[8].Text = Session["SumaCumplido"].ToString();
+                    }
+                    else
+                    {
+                        e.Item.Cells[8].Text = string.Empty;
+                    }
+                   
+
                 }
                 else
                 {
-                    object urgenteObj = DataBinder.Eval(e.Item.DataItem, "Urgente");
+                    
 
                     // Verificar si 'Urgente' es null o no es bool
                     if (urgenteObj == DBNull.Value || !(urgenteObj is bool))
@@ -582,6 +655,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     }
                     else
                     {
+                        
                         bool urgente = Convert.ToBoolean(urgenteObj);
 
                         // Asignar "SI" o "NO" según el valor booleano
@@ -591,8 +665,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
             }
         }
-
-
 
         protected void CargarEstadisticaPorDibujante()
         {
@@ -635,11 +707,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     // Agregar columnas para porcentajes
                     dt.Columns.Add("PorcentajeCumplidos", typeof(string));
                     dt.Columns.Add("PorcentajeNoCumplidos", typeof(string));
+                    dt.Columns.Add("PocentajeDiseños", typeof(string));
 
                     int totalDiseños = 0;
                     int totalCumplidos = 0;
                     int totalNoCumplidos = 0;
 
+                    // Primer recorrido: acumulamos totales y calculamos porcentajes individuales por fila
                     foreach (DataRow row in dt.Rows)
                     {
                         int totalDis = Convert.ToInt32(row["Diseños"]);
@@ -650,9 +724,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                         totalCumplidos += cumplidos;
                         totalNoCumplidos += noCumplidos;
 
-                        // Calcular porcentajes
+                        // Calcular porcentajes internos por dibujante
                         row["PorcentajeCumplidos"] = totalDis > 0 ? $"{(cumplidos * 100.0 / totalDis):F1}%" : "0%";
                         row["PorcentajeNoCumplidos"] = totalDis > 0 ? $"{(noCumplidos * 100.0 / totalDis):F1}%" : "0%";
+                    }
+
+                    // Segundo recorrido: ahora que ya tenemos el total global, calculamos porcentaje sobre total
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        int totalDis = Convert.ToInt32(row["Diseños"]);
+                        row["PocentajeDiseños"] = totalDiseños > 0 ? $"{(totalDis * 100.0 / totalDiseños):F1}%" : "0%";
                     }
 
                     // Agregar fila de totales
@@ -671,8 +752,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 }
             }
         }
-
-
 
         protected void DataGridEstadisticaPorDiseno_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
@@ -742,7 +821,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     foreach (DataRow row in dt.Rows)
                     {
                         totalRenders++; // Incrementar el total de renders
-                        if (row["Entrega"] != DBNull.Value && Convert.ToDecimal(row["Entrega"]) > 0) // Si hay cumplimiento
+                        if (Convert.ToDateTime(row["FechaRenderOk"]) < Convert.ToDateTime(row["Fecha_Programada_entrega"])) // Si hay cumplimiento
                         {
                             totalCumplidos++;
                         }
@@ -752,12 +831,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     DataRow totalRenderRow = dt.NewRow();
                     totalRenderRow["ClienteNombre"] = "TOTAL RENDERS"; // Texto "TOTAL RENDERS"
                     totalRenderRow["Entrega"] = totalRenders.ToString(); // Total de renders (en la columna 3)
+
+
                     dt.Rows.Add(totalRenderRow);
+
+                    // Calcular el porcentaje
+                    double porcentajeCumplidos = totalRenders > 0 ? ((double)totalCumplidos / totalRenders) * 100 : 0;
+                    string porcentajeTexto = porcentajeCumplidos.ToString("0.00") + " %";
 
                     // Agregar la fila de CUMPLIDOS
                     DataRow cumplidosRow = dt.NewRow();
                     cumplidosRow["ClienteNombre"] = "CUMPLIDOS"; // Texto "CUMPLIDOS"
                     cumplidosRow["Entrega"] = totalCumplidos.ToString(); // Total de cumplidos (en la columna 3)
+                    cumplidosRow["Asesor"] = porcentajeTexto;
+
+
                     dt.Rows.Add(cumplidosRow);
 
                     // Asignar el DataTable al DataGrid
@@ -774,25 +862,31 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             {
                 string clienteNombre = rowView["ClienteNombre"].ToString();
 
+
                 if (clienteNombre == "TOTAL RENDERS" || clienteNombre == "CUMPLIDOS")
                 {
                     // Poner en negrita todo el contenido de la fila de totales
                     e.Item.Font.Bold = true;
 
                     // Ocultar la columna con el botón (columna 0)
-                    e.Item.Cells[0].Visible = false;
+                    e.Item.Cells[0].Text = string.Empty;
 
-                    // Mover el texto "TOTAL RENDERS" y "CUMPLIDOS" a la columna 1
-                    e.Item.Cells[1].Text = clienteNombre; // Columna 1 tiene el texto "TOTAL RENDERS" o "CUMPLIDOS"
+                    // Mover el texto "TOTAL RENDERS" y "CUMPLIDOS" a la columna 2
+                    e.Item.Cells[2].Text = clienteNombre; // Columna 1 tiene el texto "TOTAL RENDERS" o "CUMPLIDOS"
 
                     // Mover los totales a la columna 3 (columna 'Entrega')
                     e.Item.Cells[3].Text = rowView["Entrega"].ToString(); // Total de renders o cumplidos
 
+                
                     // Vaciar las columnas que no necesitamos (columna 2 y columna 4 en adelante)
                     e.Item.Cells[2].Text = ""; // Vaciar columna 2 (Render)
                     for (int i = 4; i < e.Item.Cells.Count; i++)
                     {
-                        e.Item.Cells[i].Text = ""; // Vaciar columnas adicionales
+                        if(i != 7)
+                        {
+                            e.Item.Cells[i].Text = ""; // Vaciar columnas adicionales
+                        }
+                       
                     }
                 }
             }
@@ -1078,6 +1172,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 {
                     e.Item.Cells[0].Text = string.Empty;
                     e.Item.Cells[1].Text = string.Empty;
+                    e.Item.Cells[4].Text = string.Empty;
+                    e.Item.Cells[10].Text = string.Empty;
                     // Aplica formato en negrita a toda la fila
                     e.Item.Font.Bold = true;
                 }
@@ -1157,9 +1253,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                 int totalPedidos = dataTable.Rows.Count;
                 int totalCumplidos = 0;
+                int totalNoCumplidos = 0;
 
                 foreach (DataRow row in dataTable.Rows)
                 {
+
+
                     DateTime fechaEntregaDespiece = Convert.ToDateTime(row["Fecha_Entrega_Dibujo_Despiece"]);
                     DateTime fechaEntregaProduccion = Convert.ToDateTime(row["Fecha_Entrega_Produccion"]);
 
@@ -1171,18 +1270,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     }
                     else
                     {
-
+                        totalNoCumplidos++;
                     }
+
+                    totalNoCumplidos = totalCumplidos - totalNoCumplidos;
                 }
 
                 DataRow filaTPed = dataTable.NewRow();
                 filaTPed["Id_OT"] = "T. Ped";
-                filaTPed["Nombre_Obra"] = totalPedidos; 
+                filaTPed["Nombre_Obra"] = totalPedidos;
                 dataTable.Rows.Add(filaTPed);
 
                 DataRow filaTCum = dataTable.NewRow();
                 filaTCum["Id_OT"] = "T. Cum";
-                filaTCum["Nombre_Obra"] = "";
+                filaTCum["Nombre_Obra"] = totalCumplidos;
                 dataTable.Rows.Add(filaTCum);
 
 
@@ -1296,6 +1397,23 @@ ORDER BY RealizadoPor DESC, Numero_Diseño ASC";
 
             int CantTotalDiseño = dataTable.Rows.Count;
 
+            int cumplidos = 0;
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                if (row["Fecha_Programada_Entrega"] != DBNull.Value && row["FechaDibujoOK"] != DBNull.Value)
+                {
+                    DateTime fechaEntregaProgramada = Convert.ToDateTime(row["Fecha_Programada_Entrega"]);
+                    DateTime fechaDibujoOK = Convert.ToDateTime(row["FechaDibujoOK"]);
+
+                    // Ejemplo: contar si se cumplió antes o el mismo día
+                    if (fechaEntregaProgramada >= fechaDibujoOK)
+                    {
+                        cumplidos++;
+                    }
+                }
+            }
+
 
             // Procesar los resultados para añadir filas de TOTAL DISEÑOS y CUMPLIDOS
             DataRow rowTotal = dataTable.NewRow();
@@ -1303,6 +1421,13 @@ ORDER BY RealizadoPor DESC, Numero_Diseño ASC";
             rowTotal["ENTREGA"] = CantTotalDiseño;
             rowTotal["Fecha_Programada_Entrega"] = DBNull.Value;
             dataTable.Rows.Add(rowTotal);
+
+            // Procesar los resultados para añadir filas de TOTAL DISEÑOS y CUMPLIDOS
+            DataRow row1Total = dataTable.NewRow();
+            row1Total["ClienteYNombreDiseño"] = "CUMPLIDOS";
+            row1Total["ENTREGA"] = cumplidos;
+            row1Total["Fecha_Programada_Entrega"] = DBNull.Value;
+            dataTable.Rows.Add(row1Total);
 
 
             // Re-binder DataGrid para reflejar los nuevos datos
@@ -1428,5 +1553,596 @@ ORDER BY RealizadoPor DESC, Numero_Diseño ASC";
             }
         }
 
+        protected void ExportarExcel_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Creamos un paquete de Excel 
+                using (ExcelPackage excelPackage = new ExcelPackage())
+                {
+                    // Agregamos la hoja  1
+                    ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("CUMPLIMIENTO PEDIDOS ");
+
+                    worksheet.Row(1).Height = 60;
+                    worksheet.Column(3).Width = 30;
+                    worksheet.Column(10).Width = 15;
+
+                    // Establecer el título principal (Fila 1)
+                    worksheet.Cells["B1:K1"].Merge = true;
+                    worksheet.Cells["B1"].Value = "DUCON S.A.\nESTADISTICA DEPARTAMENTO DIBUJO Y DESPIECE";
+                    worksheet.Cells["B1"].Style.Font.Bold = true;
+                    worksheet.Cells["B1"].Style.Font.Size = 14;
+                    worksheet.Cells["B1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells["B1"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    worksheet.Cells["B1"].Style.WrapText = true;
+
+                    // Establecer rango de fechas (Fila 2)
+                    string fecha1 = txtPeriodoInicio.Text;
+                    string fecha2 = txtPeriodoFin.Text;
+                    worksheet.Cells["B2:K2"].Merge = true;
+                    worksheet.Cells["B2"].Value = $"Desde  {fecha1} hasta {fecha2}";
+                    worksheet.Cells["B2"].Style.Font.Italic = true;
+                    worksheet.Cells["B2"].Style.Font.Bold = true;
+                    worksheet.Cells["B2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells["B2"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                    // Establecer el título tabla
+                    worksheet.Cells["B4:K4"].Merge = true;
+                    worksheet.Cells["B4"].Value = "CUMPLIMIENTO DE PEDIDOS";
+                    worksheet.Cells["B4"].Style.Font.Bold = true;
+                    worksheet.Cells["B4"].Style.Font.Size = 14;
+                    worksheet.Cells["B4"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells["B4"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    worksheet.Cells["B4"].Style.WrapText = true;
+
+
+
+                    // Escribir el encabezado de la tabla
+                    int colIndex = 1;
+                    foreach (DataGridColumn column in DataGridResumenEstadisticaPorPedido.Columns)
+                    {
+                        if (colIndex != 1) // Excluir la primera columna (LinkButton)
+                        {
+                            worksheet.Cells[5, colIndex].Value = column.HeaderText;
+                            worksheet.Cells[5, colIndex].Style.Font.Bold = true;
+                            worksheet.Cells[5, colIndex].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            worksheet.Cells[5, colIndex].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                            worksheet.Cells[5, colIndex].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        }
+                        colIndex++;
+                    }
+
+                    // Escribir los datos de la tabla
+                    int rowIndex = 6;
+                    int numeroFila = 1;
+                    foreach (DataGridItem item in DataGridResumenEstadisticaPorPedido.Items)
+                    {
+                        colIndex = 1;
+                        foreach (TableCell cell in item.Cells)
+                        {
+
+                            if (colIndex != 1) // Excluir la primera columna (LinkButton)
+                            {
+                                string realizadoPor = item.Cells[2].Text; // Asegúrate que el índice coincide
+                                if (colIndex == 2 && realizadoPor != "TOTAL PEDIDOS")
+                                {
+                                    worksheet.Cells[rowIndex, colIndex].Value = numeroFila;
+                                }
+                                else if (colIndex != 2) // Si es la columna D (cuarta columna), ejemplo de conversión numérica
+                                {
+                                    if (double.TryParse(cell.Text, out double numericValue))
+                                    {
+                                        worksheet.Cells[rowIndex, colIndex].Value = numericValue;
+                                    }
+                                    else
+                                    {
+                                        worksheet.Cells[rowIndex, colIndex].Value = cell.Text;
+                                    }
+                                }
+                                else
+                                {
+                                    worksheet.Cells[rowIndex, colIndex].Value = cell.Text;
+                                }
+
+                                worksheet.Cells[rowIndex, colIndex].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                            }
+
+                            colIndex++;
+                        }
+
+                        numeroFila++;
+                        rowIndex++;
+                    }
+
+
+                    // ====== SEGUNDA HOJA ======
+                    ExcelWorksheet worksheet2 = excelPackage.Workbook.Worksheets.Add("DETALLE ESTADISTICA POR PEDIDOS");
+
+                    worksheet2.Row(1).Height = 60;
+                    worksheet2.Column(4).Width = 40;
+                    worksheet2.Column(6).Width = 30;
+                    worksheet2.Column(7).Width = 30;
+
+
+                    // Título principal (Fila 1)
+                    worksheet2.Cells["B1:I1"].Merge = true;
+                    worksheet2.Cells["B1"].Value = "DETALLE ESTADISTICA POR PEDIDOS";
+                    worksheet2.Cells["B1"].Style.Font.Bold = true;
+                    worksheet2.Cells["B1"].Style.Font.Size = 14;
+                    worksheet2.Cells["B1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet2.Cells["B1"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    worksheet2.Cells["B1"].Style.WrapText = true;
+                    
+
+                    // Rango de fechas (Fila 2)
+                    worksheet2.Cells["B2:I2"].Merge = true;
+                    worksheet2.Cells["B2"].Value = $"Desde {txtPeriodoInicio.Text} hasta {txtPeriodoFin.Text}";
+                    worksheet2.Cells["B2"].Style.Font.Italic = true;
+                    worksheet2.Cells["B2"].Style.Font.Bold = true;
+                    worksheet2.Cells["B2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet2.Cells["B2"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+
+                    // Establecer el título tabla
+                    worksheet2.Cells["B4:I4"].Merge = true;
+                    worksheet2.Cells["B4"].Value = "CUMPLIMIENTO DE PEDIDOS";
+                    worksheet2.Cells["B4"].Style.Font.Bold = true;
+                    worksheet2.Cells["B4"].Style.Font.Size = 14;
+                    worksheet2.Cells["B4"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet2.Cells["B4"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    worksheet2.Cells["B4"].Style.WrapText = true;
+
+
+                    // Escribir el encabezado de la tabla
+                    int colIndex2 = 1;
+                    foreach (DataGridColumn column in DataGridDetalleEstadisiticaPorPedido.Columns)
+                    {
+                        if (colIndex2 != 1) // Excluir la primera columna (LinkButton)
+                        {
+                            worksheet2.Cells[5, colIndex2].Value = column.HeaderText;
+                            worksheet2.Cells[5, colIndex2].Style.Font.Bold = true;
+                            worksheet2.Cells[5, colIndex2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            worksheet2.Cells[5, colIndex2].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                            worksheet2.Cells[5, colIndex2].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        }
+                        colIndex2++;
+                    }
+
+                    // Escribir los datos de la tabla
+                    int rowIndex2 = 6;
+                    int numeroFila2 = 1;
+                    foreach (DataGridItem item in DataGridDetalleEstadisiticaPorPedido.Items)
+                    {
+                        colIndex2 = 1;
+                        foreach (TableCell cell in item.Cells)
+                        {
+                            if (colIndex2 != 1) // Excluir la primera columna (LinkButton)
+                            {
+                                worksheet2.Cells[rowIndex2, colIndex2].Value = cell.Text.Replace("&nbsp;", "").Trim(); ;
+                                worksheet2.Cells[rowIndex2, colIndex2].Style.Border.BorderAround(ExcelBorderStyle.Thin); ;
+                            }                       
+                            colIndex2++;
+                        }
+
+                        numeroFila2++;
+                        rowIndex2++;
+                    }
+
+
+                    // ====== TERCERA HOJA ======
+                    ExcelWorksheet worksheet3 = excelPackage.Workbook.Worksheets.Add("ESTADISTICA POR DISEÑOS");
+
+                    worksheet3.Row(1).Height = 60;
+                    worksheet3.Column(3).Width = 40;
+  
+
+
+                    // Título principal (Fila 1)
+                    worksheet3.Cells["B1:I1"].Merge = true;
+                    worksheet3.Cells["B1"].Value = "DETALLE ESTADISTICA POR PEDIDOS";
+                    worksheet3.Cells["B1"].Style.Font.Bold = true;
+                    worksheet3.Cells["B1"].Style.Font.Size = 14;
+                    worksheet3.Cells["B1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet3.Cells["B1"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    worksheet3.Cells["B1"].Style.WrapText = true;
+
+
+                    // Rango de fechas (Fila 2)
+                    worksheet3.Cells["B2:I2"].Merge = true;
+                    worksheet3.Cells["B2"].Value = $"Desde {txtPeriodoInicio.Text} hasta {txtPeriodoFin.Text}";
+                    worksheet3.Cells["B2"].Style.Font.Italic = true;
+                    worksheet3.Cells["B2"].Style.Font.Bold = true;
+                    worksheet3.Cells["B2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet3.Cells["B2"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+
+                    // Establecer el título tabla
+                    worksheet3.Cells["B4:I4"].Merge = true;
+                    worksheet3.Cells["B4"].Value = "CUMPLIMIENTO DE DISEÑOS";
+                    worksheet3.Cells["B4"].Style.Font.Bold = true;
+                    worksheet3.Cells["B4"].Style.Font.Size = 14;
+                    worksheet3.Cells["B4"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet3.Cells["B4"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    worksheet3.Cells["B4"].Style.WrapText = true;
+
+
+                    // Escribir el encabezado de la tabla
+                    int colIndex3 = 1;
+                    foreach (DataGridColumn column in DataGridEstadisticaPorDiseno.Columns)
+                    {
+                        if (colIndex3 != 1) // Excluir la primera columna (LinkButton)
+                        {
+                            worksheet3.Cells[5, colIndex3].Value = column.HeaderText;
+                            worksheet3.Cells[5, colIndex3].Style.Font.Bold = true;
+                            worksheet3.Cells[5, colIndex3].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            worksheet3.Cells[5, colIndex3].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                            worksheet3.Cells[5, colIndex3].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        }
+                        colIndex3++;
+                    }
+
+                    // Escribir los datos de la tabla
+                    int rowIndex3 = 6;
+                    int numeroFila3 = 1;
+                    foreach (DataGridItem item in DataGridEstadisticaPorDiseno.Items)
+                    {
+                        colIndex3 = 1;
+                        foreach (TableCell cell in item.Cells)
+                        {
+
+
+                            if (colIndex3 != 1) // Excluir la primera columna (LinkButton)
+                            {
+                                worksheet3.Cells[rowIndex3, colIndex3].Value = cell.Text.Replace("&nbsp;", "").Trim(); ;
+                                worksheet3.Cells[rowIndex3, colIndex3].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                            }
+                            colIndex3++;
+                          
+                          
+                        }
+
+                        numeroFila3++;
+                        rowIndex3++;
+                    }
+
+
+                    // ====== CUARTA HOJA ======
+                    ExcelWorksheet worksheet4 = excelPackage.Workbook.Worksheets.Add("DETALLE ESTADISTICA POR DISEÑOS");
+
+                    worksheet4.Row(1).Height = 60;
+                    worksheet4.Column(2).Width = 40;
+                    worksheet4.Column(7).Width = 40;
+
+
+
+                    // Título principal (Fila 1)
+                    worksheet4.Cells["B1:I1"].Merge = true;
+                    worksheet4.Cells["B1"].Value = "DETALLE ESTADISTICA POR PEDIDOS";
+                    worksheet4.Cells["B1"].Style.Font.Bold = true;
+                    worksheet4.Cells["B1"].Style.Font.Size = 14;
+                    worksheet4.Cells["B1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet4.Cells["B1"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    worksheet4.Cells["B1"].Style.WrapText = true;
+
+
+                    // Rango de fechas (Fila 2)
+                    worksheet4.Cells["B2:I2"].Merge = true;
+                    worksheet4.Cells["B2"].Value = $"Desde {txtPeriodoInicio.Text} hasta {txtPeriodoFin.Text}";
+                    worksheet4.Cells["B2"].Style.Font.Italic = true;
+                    worksheet4.Cells["B2"].Style.Font.Bold = true;
+                    worksheet4.Cells["B2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet4.Cells["B2"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+
+                    // Establecer el título tabla
+                    worksheet4.Cells["B4:I4"].Merge = true;
+                    worksheet4.Cells["B4"].Value = "CUMPLIMIENTO DE DISEÑOS";
+                    worksheet4.Cells["B4"].Style.Font.Bold = true;
+                    worksheet4.Cells["B4"].Style.Font.Size = 14;
+                    worksheet4.Cells["B4"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet4.Cells["B4"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    worksheet4.Cells["B4"].Style.WrapText = true;
+
+
+                    // Escribir el encabezado de la tabla
+                    int colIndex4 = 1;
+                    foreach (DataGridColumn column in DataGridDetalleEstadisticaPorDiseno.Columns)
+                    {
+                        if (colIndex4 != 1) // Excluir la primera columna (LinkButton)
+                        {
+                            worksheet4.Cells[5, colIndex4].Value = column.HeaderText;
+                            worksheet4.Cells[5, colIndex4].Style.Font.Bold = true;
+                            worksheet4.Cells[5, colIndex4].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            worksheet4.Cells[5, colIndex4].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                            worksheet4.Cells[5, colIndex4].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        }
+                        colIndex4++;
+                    }
+
+                    // Escribir los datos de la tabla
+                    int rowIndex4 = 6;
+                    int numeroFila4 = 1;
+                    foreach (DataGridItem item in DataGridDetalleEstadisticaPorDiseno.Items)
+                    {
+                        colIndex4 = 1;
+                        foreach (TableCell cell in item.Cells)
+                        {
+
+                            if (colIndex4 != 1) // Excluir la primera columna (LinkButton)
+                            {
+                                worksheet4.Cells[rowIndex4, colIndex4].Value = cell.Text.Replace("&nbsp;", "").Trim(); ;
+                                worksheet4.Cells[rowIndex4, colIndex4].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                            }
+                            colIndex4++;
+
+
+                        }
+
+                        numeroFila4++;
+                        rowIndex4++;
+                    }
+
+
+
+                    // Guardamos el archivo de Excel
+                    string filePath = Path.GetTempFileName() + ".xlsx";
+                    FileInfo excelFile = new FileInfo(filePath);
+                    excelPackage.SaveAs(excelFile);
+
+                    // Descargamos el archivo de Excel
+                    Response.Clear();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("content-disposition", "attachment; filename=EstadisticasDibujoDespiece.xlsx");
+                    Response.TransmitFile(filePath);
+                    Response.End();
+                }
+            }
+            catch (Exception ex)
+            {
+                
+            }
+        }
+
+        private DateTime CalcularFechaEntrega(DateTime fechaIngreso, int plazoEntrega)
+        {
+            DateTime fechaActivacion = AjustarHoraInicio(fechaIngreso);
+            return ObtenerProximaFechaHabil(fechaActivacion, plazoEntrega);
+        }
+
+        private DateTime AjustarHoraInicio(DateTime fecha)
+        {
+            int hora = fecha.Hour;
+
+            // Si la hora es antes de las 7 AM, ajustar a las 7 AM
+            if (hora < 7)
+                fecha = fecha.Date.AddHours(7);
+
+            // Si la hora es después de las 5 PM, mover al siguiente día hábil a las 7 AM
+            if (hora >= 17)
+                fecha = ObtenerProximaFechaHabil(fecha.AddDays(1), 0).Date.AddHours(7);
+
+            return fecha;
+        }
+
+        private DateTime ObtenerProximaFechaHabil(DateTime fecha, int cantidadDias)
+        {
+            int diasHabilesAgregados = 0;
+
+            while (diasHabilesAgregados < cantidadDias)
+            {
+                // Sumar un día
+                fecha = fecha.AddDays(1);
+
+                // Verificar si el día actual no es sábado ni domingo
+                if (fecha.DayOfWeek != DayOfWeek.Saturday && fecha.DayOfWeek != DayOfWeek.Sunday)
+                {
+                    // Consultar si la fecha está en la tabla tblDiaNoLaboral
+                    bool esDiaNoLaboral = EsDiaNoLaboral(fecha);
+
+                    if (!esDiaNoLaboral)
+                    {
+                        // Si es un día hábil y no es un día no laboral, incrementar el contador de días hábiles agregados
+                        diasHabilesAgregados++;
+                    }
+
+                }
+            }
+
+            return fecha;
+        }
+
+        private bool EsDiaNoLaboral(DateTime fecha)
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+            {
+                connection.Open();
+
+                string consulta = "SELECT COUNT(*) FROM tblDiaNoLaboral WHERE dnlFecha = @Fecha";
+
+                using (SqlCommand command = new SqlCommand(consulta, connection))
+                {
+                    command.Parameters.AddWithValue("@Fecha", fecha.Date);
+                    int count = (int)command.ExecuteScalar();
+                    return count > 0;
+                }
+            }
+        }
+
+        protected void ExportarExcelRender_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Creamos un paquete de Excel 
+                using (ExcelPackage excelPackage = new ExcelPackage())
+                {
+                    // Agregamos la hoja  1
+                    ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("CUMPLIMIENTO RENDERS ");
+
+                    worksheet.Row(1).Height = 60;
+                    worksheet.Column(3).Width = 30;
+                    worksheet.Column(10).Width = 15;
+
+                    // Establecer el título principal (Fila 1)
+                    worksheet.Cells["B1:K1"].Merge = true;
+                    worksheet.Cells["B1"].Value = "DUCON S.A.\nESTADISTICA DEPARTAMENTO DIBUJO Y DESPIECE";
+                    worksheet.Cells["B1"].Style.Font.Bold = true;
+                    worksheet.Cells["B1"].Style.Font.Size = 14;
+                    worksheet.Cells["B1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells["B1"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    worksheet.Cells["B1"].Style.WrapText = true;
+
+                    // Establecer rango de fechas (Fila 2)
+                    string fecha1 = txtPeriodoInicio.Text;
+                    string fecha2 = txtPeriodoFin.Text;
+                    worksheet.Cells["B2:K2"].Merge = true;
+                    worksheet.Cells["B2"].Value = $"Desde  {fecha1} hasta {fecha2}";
+                    worksheet.Cells["B2"].Style.Font.Italic = true;
+                    worksheet.Cells["B2"].Style.Font.Bold = true;
+                    worksheet.Cells["B2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells["B2"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                    // Establecer el título tabla
+                    worksheet.Cells["B4:K4"].Merge = true;
+                    worksheet.Cells["B4"].Value = "CUMPLIMIENTO DE RENDERS";
+                    worksheet.Cells["B4"].Style.Font.Bold = true;
+                    worksheet.Cells["B4"].Style.Font.Size = 14;
+                    worksheet.Cells["B4"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells["B4"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    worksheet.Cells["B4"].Style.WrapText = true;
+
+
+
+                    // Escribir el encabezado de la tabla
+                    int colIndex = 1;
+                    foreach (DataGridColumn column in DataGridResumenEstadisticaRenders.Columns)
+                    {
+                        if (colIndex != 1) // Excluir la primera columna (LinkButton)
+                        {
+                            worksheet.Cells[5, colIndex].Value = column.HeaderText;
+                            worksheet.Cells[5, colIndex].Style.Font.Bold = true;
+                            worksheet.Cells[5, colIndex].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            worksheet.Cells[5, colIndex].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                            worksheet.Cells[5, colIndex].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        }
+                        colIndex++;
+                    }
+
+                    // Escribir los datos de la tabla
+                    int rowIndex = 6;
+                    int numeroFila = 1;
+                    foreach (DataGridItem item in DataGridResumenEstadisticaRenders.Items)
+                    {
+                        colIndex = 1;
+                        foreach (TableCell cell in item.Cells)
+                        {
+
+                            if (colIndex != 1) // Excluir la primera columna (LinkButton)
+                            {
+                               
+                                worksheet.Cells[rowIndex, colIndex].Value = cell.Text;
+                                worksheet.Cells[rowIndex, colIndex].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                            }
+
+                            colIndex++;
+                        }
+
+                        numeroFila++;
+                        rowIndex++;
+                    }
+
+
+                    // ====== SEGUNDA HOJA ======
+                    ExcelWorksheet worksheet2 = excelPackage.Workbook.Worksheets.Add("DETALLE ESTADISTICAS RENDERS");
+
+                    worksheet2.Row(1).Height = 60;
+                    worksheet2.Column(4).Width = 40;
+                    worksheet2.Column(6).Width = 30;
+                    worksheet2.Column(7).Width = 30;
+
+
+                    // Título principal (Fila 1)
+                    worksheet2.Cells["B1:I1"].Merge = true;
+                    worksheet2.Cells["B1"].Value = "DETALLE ESTADISTICA RENDERS";
+                    worksheet2.Cells["B1"].Style.Font.Bold = true;
+                    worksheet2.Cells["B1"].Style.Font.Size = 14;
+                    worksheet2.Cells["B1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet2.Cells["B1"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    worksheet2.Cells["B1"].Style.WrapText = true;
+
+
+                    // Rango de fechas (Fila 2)
+                    worksheet2.Cells["B2:I2"].Merge = true;
+                    worksheet2.Cells["B2"].Value = $"Desde {txtPeriodoInicio.Text} hasta {txtPeriodoFin.Text}";
+                    worksheet2.Cells["B2"].Style.Font.Italic = true;
+                    worksheet2.Cells["B2"].Style.Font.Bold = true;
+                    worksheet2.Cells["B2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet2.Cells["B2"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+
+                    // Establecer el título tabla
+                    worksheet2.Cells["B4:I4"].Merge = true;
+                    worksheet2.Cells["B4"].Value = "CUMPLIMIENTO DE RENDERS";
+                    worksheet2.Cells["B4"].Style.Font.Bold = true;
+                    worksheet2.Cells["B4"].Style.Font.Size = 14;
+                    worksheet2.Cells["B4"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet2.Cells["B4"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    worksheet2.Cells["B4"].Style.WrapText = true;
+
+
+                    // Escribir el encabezado de la tabla
+                    int colIndex2 = 1;
+                    foreach (DataGridColumn column in DataGridEstadisticaRenders.Columns)
+                    {
+                        if (colIndex2 != 1) // Excluir la primera columna (LinkButton)
+                        {
+                            worksheet2.Cells[5, colIndex2].Value = column.HeaderText;
+                            worksheet2.Cells[5, colIndex2].Style.Font.Bold = true;
+                            worksheet2.Cells[5, colIndex2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            worksheet2.Cells[5, colIndex2].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                            worksheet2.Cells[5, colIndex2].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        }
+                        colIndex2++;
+                    }
+
+                    // Escribir los datos de la tabla
+                    int rowIndex2 = 6;
+                    int numeroFila2 = 1;
+                    foreach (DataGridItem item in DataGridEstadisticaRenders.Items)
+                    {
+                        colIndex2 = 1;
+                        foreach (TableCell cell in item.Cells)
+                        {
+                            if (colIndex2 != 1) // Excluir la primera columna (LinkButton)
+                            {
+                                worksheet2.Cells[rowIndex2, colIndex2].Value = cell.Text.Replace("&nbsp;", "").Trim(); ;
+                                worksheet2.Cells[rowIndex2, colIndex2].Style.Border.BorderAround(ExcelBorderStyle.Thin); ;
+                            }
+                            colIndex2++;
+                        }
+
+                        numeroFila2++;
+                        rowIndex2++;
+                    }
+
+
+
+                    // Guardamos el archivo de Excel
+                    string filePath = Path.GetTempFileName() + ".xlsx";
+                    FileInfo excelFile = new FileInfo(filePath);
+                    excelPackage.SaveAs(excelFile);
+
+                    // Descargamos el archivo de Excel
+                    Response.Clear();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("content-disposition", "attachment; filename=EstadisticasDibujoDespiece.xlsx");
+                    Response.TransmitFile(filePath);
+                    Response.End();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
     }
 }
