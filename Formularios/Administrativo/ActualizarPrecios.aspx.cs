@@ -78,7 +78,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Administrativo
             string conexion = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
             using (SqlConnection conn = new SqlConnection(conexion))
             {
-                SqlDataAdapter da = new SqlDataAdapter("SELECT TOP 100 * FROM tblpanel", conn);
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblpanel", conn);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
                 datosPanel = dt;
