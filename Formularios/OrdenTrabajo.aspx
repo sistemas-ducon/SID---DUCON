@@ -3397,7 +3397,7 @@
                                             <button type="button" class="btn-close" style="color: white!important;" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
 
-                                        <div class="modal-body">
+                                        <div class="modal-body" style="padding:1.5rem; padding-bottom:0.2rem">
 
                                             <div class="row justify-content-center mb-3">
                                                 <div class="border rounded p-2">
@@ -3427,8 +3427,13 @@
 
                                         </div>
 
-                                        <div class="modal-footer">
+                                        <div class="modal-footer justify-content-end ">
+                                            <!-- Botón Refrescar a la izquierda -->
+                                             <asp:Button runat="server" ID="btnLimpiar" data-bs-dismiss="modal" Text="Limpiar"  CssClass="btn btn-outline-primary" OnClick="btnLimpiar_Click"/>
+
+
                                         </div>
+
 
                                     </div>
                                 </div>
@@ -4513,7 +4518,7 @@
                                                  <i class="bi bi-file-arrow-down-fill"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="Refrescar tabla Objetos" ID="btnActalizarObjetos" OnClick="btnActalizarObjetos_Click" style="padding-left: 1rem" >
+                                                <asp:LinkButton runat="server" title="Refrescar tabla Objetos" ID="btnActalizarObjetos" OnClick="btnActalizarObjetos_Click" Style="padding-left: 1rem">
                                                     <i class="bi bi-arrow-clockwise"></i>
                                                 </asp:LinkButton>
 

@@ -860,6 +860,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                                 // Si el módulo tiene al menos un panel asociado, mostrar modal de confirmación
                                 string contenidoModalOT = "El módulo: " + textModulo.Text + " conforma al menos un objeto. ¿Quiere modificar el módulo?";
                                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#ModalRotacionModulo').modal('show'); $('#ModalRotacionModulo2').text('" + contenidoModalOT + "');", true);
+                                return;
                             }
                         }
                     }
@@ -893,6 +894,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
             // Llamar al método
             ModificarModuloConfirmado(idModulo, descripcionModulo, tipoModulo, altura, idFamilia, nombreUsuario);
+
+            Session["IDModulo"] = idModulo;
+            LlenarControles();
+            BtnGrabarInf.Enabled = false;
+            BtnGrabarInf.CssClass = "btn btn-sm shadow button-disabled";
+
+            BtnCancelarInf.Enabled = false;
+            BtnCancelarInf.CssClass = "btn btn-sm shadow button-disabled";
+
+            // Si todas las actualizaciones son exitosas, mostrar mensaje de éxito
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "showSuccess", "alert('El módulo ha sido actualizado exitosamente.');", true);
         }
 
         protected void ModificarModuloConfirmado(string idModulo, string descripcionModulo, int tipoModulo, string altura, string idFamilia, string nombreUsuario)

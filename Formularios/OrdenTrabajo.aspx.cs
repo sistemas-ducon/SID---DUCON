@@ -289,7 +289,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
 
-
+                    // Control tap plano 
                     if (Session["controlTapPlano"]?.ToString() == "1")
                     {
                         //Activar Tap Plano 
@@ -300,7 +300,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     }
 
-
+                    // Control modal de objetos no existentes 
                     if (Session["CargarTxt"]?.ToString() == "TXT")
                     {
 
@@ -319,34 +319,34 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Se valida si hay que mostrar el modal de Objetos no existentes 
                         if (Session["ObjNoEx"].ToString() != "1")
                         {
-
-                            // Se carga el datagrid de objetos no existentes 
-                            DataTable DataObjNoExiste = (DataTable)Session["DatoObjNoExistentes"];
-
-                            // Eliminar filas duplicadas antes de enlazarlo al DataGrid
-                            string[] keyColumns = { "ID_Objeto", "Ancho" }; // Columnas clave para identificar duplicados
-                            DataTable uniqueDataTable = QuitarDuplicado(DataObjNoExiste, keyColumns);
-
-
-
-                            DataGridObjNoExiste.DataSource = DataObjNoExiste;
-                            DataGridObjNoExiste.DataBind();
-
-
-
                             // Esperar 1 segundo antes de abrir el modal
                             ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "setTimeout(function() { MostralModalObjetosNo(); }, 700);", true);
-
                         }
+
 
                         // Se eliminar variables de session de accion de Cargar TXT 
                         Session.Remove("CargarTxt");
-                        Session.Remove("DatoObjNoExistentes");
+                        /*Session.Remove("DatoObjNoExistentes"); */  // SE VALIDA SI SE DEJA LA VARIABLE ACTIVA QUE PASA 
                         Session.Remove("ObjNoEx");
                         Session.Remove("ValorUnd");
 
 
                     }
+
+                    // control de los valores de objetos no existentes 
+                    if (Session["DatoObjNoExistentes"] != null)
+                    {
+                        // Se carga el datagrid de objetos no existentes 
+                        DataTable DataObjNoExiste = (DataTable)Session["DatoObjNoExistentes"];
+
+                        // Eliminar filas duplicadas antes de enlazarlo al DataGrid
+                        string[] keyColumns = { "ID_Objeto", "Ancho" }; // Columnas clave para identificar duplicados
+                        DataTable uniqueDataTable = QuitarDuplicado(DataObjNoExiste, keyColumns);
+
+                        DataGridObjNoExiste.DataSource = DataObjNoExiste;
+                        DataGridObjNoExiste.DataBind();
+                    }
+
 
                 }
 
@@ -1875,6 +1875,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     }
 
                     ddlNumbers.SelectedValue = perdidoMaximo.ToString();
+
+                    // para controlar los objetos no existentes
+                    Session.Remove("DatoObjNoExistentes");
+                    DataGridObjNoExiste.DataBind();
 
                 }
             }
@@ -23956,6 +23960,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                     return 0;
             }
+        }
+
+        protected void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            Session.Remove("DatoObjNoExistentes");
+            DataGridObjNoExiste.DataBind();
+
         }
     }
 }
