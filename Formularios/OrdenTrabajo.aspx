@@ -1854,7 +1854,7 @@
                                     <div class="col-lg-7 col-md-6 col-sm-12 col-xs-12">
                                         <div class="input-group   mb-2 gap-2">
                                             <asp:Label class="form-label text-end" Text="Bolsa" runat="server" ID="lblBolsa"></asp:Label>
-                                            <asp:TextBox type="text" class="form-control text-end" runat="server" ID="tbBolsa" />
+                                            <asp:TextBox type="text" class="form-control text-end" runat="server" ID="tbBolsa" oninput="formatearMiles(this)"/>
                                         </div>
 
                                     </div>
@@ -6308,6 +6308,23 @@
 
         function CerrarModalDevolver() {
             $('#ConfirmarRegresoDelDiseno').modal('hide');
+        }
+    </script>
+    <script>
+        function formatearMiles(input) {
+            // Quitar todo lo que no sea número o coma/punto
+            let valorOriginal = input.value.replace(/[^\d.]/g, '');
+
+            // Separar parte entera y decimal
+            let partes = valorOriginal.split('.');
+            let parteEntera = partes[0];
+            let parteDecimal = partes.length > 1 ? '.' + partes[1] : '';
+
+            // Insertar comas en la parte entera
+            parteEntera = parteEntera.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+            // Volver a juntar
+            input.value = parteEntera + parteDecimal;
         }
     </script>
 

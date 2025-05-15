@@ -2346,13 +2346,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             txtOrdenCompra.Text = leer["OrdendeCompra"].ToString();
             txtAsesor.Text = leer["Codigo_Asesor"].ToString();
             TextTNegociacion.Value = leer["Forma_Pago"].ToString();
-            tbBolsa.Text = leer["ValorBolsa"].ToString();
+            tbBolsa.Text = Convert.ToDouble(leer["ValorBolsa"].ToString()).ToString("N0");
             ddlAsesor.SelectedValue = leer["Codigo_Asesor"].ToString();
             txtDcto.Text = leer["Descuento"].ToString();
-            txtVtte.Text = leer["ValorTteVia"].ToString();
-            txtVvia.Text = leer["ValorViatico"].ToString();
-            txtVenta.Text = leer["Precio_Venta"].ToString();
-            tbValorPedido.Text = leer["ValorPedido"].ToString();
+            txtVtte.Text = Convert.ToDouble(leer["ValorTteVia"].ToString()).ToString("N0");
+            txtVvia.Text = Convert.ToDouble(leer["ValorViatico"].ToString()).ToString("N0");
+            txtVenta.Text = Convert.ToDouble(leer["Precio_Venta"].ToString()).ToString("N0");
+            tbValorPedido.Text = Convert.ToDouble(leer["ValorPedido"].ToString()).ToString("N0");
             tbHTotal.Text = leer["AlturaPT"].ToString();
 
             btnCotizacion.Enabled = true;
@@ -2464,12 +2464,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     if (drcot.Read())
 
                     {
-                        txtValorSugerido.Text = drcot["ValorSugerido"].ToString();
-                        txtVcsd.Text = drcot["Valor"].ToString();
-                        txtVccd.Text = drcot["VCCD"].ToString();
-                        txtComision.Text = drcot["DescuentoComision"].ToString();
+                        txtValorSugerido.Text = Convert.ToDouble(drcot["ValorSugerido"].ToString()).ToString("N0");
+                        txtVcsd.Text = Convert.ToDouble(drcot["Valor"].ToString()).ToString("N0");
+                        txtVccd.Text = Convert.ToDouble(drcot["VCCD"].ToString()).ToString("N0");
+                        txtComision.Text = Convert.ToDouble(drcot["DescuentoComision"].ToString()).ToString("N0");
                         txtDiseño.Text = drcot["Diseño"].ToString();
-                        txtSaldo.Text = drcot["Saldo"].ToString();
+                        txtSaldo.Text = Convert.ToDouble(drcot["Saldo"].ToString()).ToString("N0");
 
                     }
                     else if (cotizacion.ToUpper() == "NO TIENE" || string.IsNullOrEmpty(cotizacion))
@@ -3478,14 +3478,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     if (leer.Read())
                     {
                         // Llenar los TextBox con los valores obtenidos
-                        txtValorSugerido.Text = leer["ValorSugerido"].ToString();
-                        txtVccd.Text = leer["VCCD"].ToString();
-                        txtVcsd.Text = leer["Valor"].ToString();
-                        txtSaldo.Text = leer["Saldo"].ToString();
+                        txtValorSugerido.Text = Convert.ToDouble(leer["ValorSugerido"].ToString()).ToString("N0");
+                        txtVccd.Text = Convert.ToDouble(leer["VCCD"].ToString()).ToString("N0");
+                        txtVcsd.Text = Convert.ToDouble(leer["Valor"].ToString()).ToString("N0");
+                        txtSaldo.Text = Convert.ToDouble(leer["Saldo"].ToString()).ToString("N0");
                         txtDiseño.Text = leer["Diseño"].ToString();
 
 
-                        txtVenta.Text = leer["Saldo"].ToString();
+                        txtVenta.Text = Convert.ToDouble(leer["Saldo"].ToString()).ToString("N0");
 
                         txtDcto.Text = leer["Descuento"].ToString();
                         txtComision.Text = leer["DescuentoComision"].ToString();
@@ -3495,8 +3495,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         if (leer["Saldo"].ToString() == leer["Valor"].ToString())
                         {
-                            txtVtte.Text = leer["ValorTteVia"].ToString(); ;
-                            txtVvia.Text = leer["ValorViatico"].ToString();
+                            txtVtte.Text = Convert.ToDouble(leer["ValorTteVia"].ToString()).ToString("N0");
+                            txtVvia.Text = Convert.ToDouble(leer["ValorViatico"].ToString()).ToString("N0");
                         }
 
 
@@ -3513,8 +3513,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         double Descuento = Convert.ToDouble(txtDcto.Text);
                         double ValorDescuento = Valorventa * Descuento / 100;
 
-                        txtDctoValor.Text = Convert.ToString(ValorDescuento);
-                        txtGtotal.Text = (Valorventa - ValorDescuento + Convert.ToDouble(txtVtte.Text) + Convert.ToDouble(txtVvia.Text)).ToString();
+                        txtDctoValor.Text = Convert.ToDouble(Convert.ToString(ValorDescuento)).ToString("N0");
+                        txtGtotal.Text = Convert.ToDouble((Valorventa - ValorDescuento + Convert.ToDouble(txtVtte.Text) + Convert.ToDouble(txtVvia.Text)).ToString()).ToString("N0");
 
 
                         if (Convert.ToInt32(leer["Saldo"].ToString()) == 0)
@@ -4385,7 +4385,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 datosFiltradosList.Add(new DatosFiltrados { Tipo = "Total", Titulo = "<b>Totales</b>", Cantidad = "<b>" + Cantidad.ToString() + "</b>", SubTotal = "<b>" + totalGeneral.ToString() + "</b>" });
 
                 lblCantidad1.Text = Cantidad.ToString();
-                lblValorDespiece1.Text = totalGeneral.ToString();
+                lblValorDespiece1.Text = Convert.ToDouble(totalGeneral.ToString()).ToString("N0");
 
 
                 DataGridDespiecePlano.DataSource = datosFiltradosList;
@@ -6686,7 +6686,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@Codigo_Asesor", txtAsesor.Text);
                         command.Parameters.AddWithValue("@Zona", ddlZona.Text);
                         command.Parameters.AddWithValue("@Descuento", txtDcto.Text);
-                        command.Parameters.AddWithValue("@Precio_Venta", txtVenta.Text);
+                        command.Parameters.AddWithValue("@Precio_Venta", ConvertirTextoAFloat(txtVenta.Text));
                         command.Parameters.AddWithValue("@Forma_Pago", TextTNegociacion.Value);
                         command.Parameters.AddWithValue("@Cotizacion", txtCotizacion.Text.Trim());
                         command.Parameters.AddWithValue("@Observaciones_Contables", ObservacionCont.Value);
@@ -6703,14 +6703,14 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@Observacion_Dibujo", txObs2.Value);
                         command.Parameters.AddWithValue("@AbiertoPor", txtAsesor.Text);
                         command.Parameters.AddWithValue("@DescuentoparaComision", txtComision.Text);
-                        command.Parameters.AddWithValue("@ValorTteVia", txtVtte.Text);
+                        command.Parameters.AddWithValue("@ValorTteVia", ConvertirTextoAFloat(txtVtte.Text));
 
 
 
                         command.Parameters.AddWithValue("@PedidoBase", pedidoBaseValue);
 
 
-                        command.Parameters.AddWithValue("@ValorViatico", txtVvia.Text);
+                        command.Parameters.AddWithValue("@ValorViatico", ConvertirTextoAFloat(txtVvia.Text));
                         command.Parameters.AddWithValue("@Fecha_Empaque", dtpEmpaque.Text);
                         command.Parameters.AddWithValue("@Fecha_Real_Empaque", dtpEmpaque.Text);
                         command.Parameters.AddWithValue("@OrdendeCompra", txtOrdenCompra.Text);
@@ -6920,7 +6920,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 command.Parameters.AddWithValue("@Codigo_Asesor", txtAsesor.Text);
                                 command.Parameters.AddWithValue("@Zona", ddlZona.Text);
                                 command.Parameters.AddWithValue("@Descuento", txtDcto.Text);
-                                command.Parameters.AddWithValue("@Precio_Venta", txtVenta.Text);
+                                command.Parameters.AddWithValue("@Precio_Venta", ConvertirTextoAFloat((txtVenta.Text)));
                                 command.Parameters.AddWithValue("@Forma_Pago", TextTNegociacion.Value);
                                 command.Parameters.AddWithValue("@Cotizacion", txtCotizacion.Text.Trim());
                                 command.Parameters.AddWithValue("@Observaciones_Contables", ObservacionCont.Value);
@@ -6937,11 +6937,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                 command.Parameters.AddWithValue("@Observacion_Dibujo", txObs2.Value);
                                 command.Parameters.AddWithValue("@AbiertoPor", txtAsesor.Text);
                                 command.Parameters.AddWithValue("@DescuentoparaComision", txtComision.Text);
-                                command.Parameters.AddWithValue("@ValorTteVia", txtVtte.Text);
+                                command.Parameters.AddWithValue("@ValorTteVia", ConvertirTextoAFloat(txtVtte.Text));
 
                                 command.Parameters.AddWithValue("@PedidoBase", pedidoBaseValue);
 
-                                command.Parameters.AddWithValue("@ValorViatico", txtVvia.Text);
+                                command.Parameters.AddWithValue("@ValorViatico", ConvertirTextoAFloat(txtVvia.Text));
                                 command.Parameters.AddWithValue("@Fecha_Empaque", dtpEmpaque.Text);
                                 command.Parameters.AddWithValue("@Fecha_Real_Empaque", dtpEmpaque.Text);
                                 command.Parameters.AddWithValue("@OrdendeCompra", txtOrdenCompra.Text);
@@ -7349,7 +7349,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@IDContacto_Cliente", IDCLienteConstactoSession);
                         command.Parameters.AddWithValue("@Codigo_Asesor", txtAsesor.Text);
                         command.Parameters.AddWithValue("@Descuento", txtDcto.Text);
-                        command.Parameters.AddWithValue("@Precio_Venta", txtVenta.Text);
+                        command.Parameters.AddWithValue("@Precio_Venta", ConvertirTextoAFloat(txtVenta.Text));
                         command.Parameters.AddWithValue("@Forma_Pago", TextTNegociacion.Value);
                         command.Parameters.AddWithValue("@Cotizacion", txtCotizacion.Text.Trim());
                         command.Parameters.AddWithValue("@Observaciones_Contables", ObservacionCont.Value);
@@ -7361,8 +7361,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@InstaladaPor", ddlInstala.SelectedValue);
                         command.Parameters.AddWithValue("@Observacion_Dibujo", txObs2.Value);
                         command.Parameters.AddWithValue("@DescuentoparaComision", txtComision.Text);
-                        command.Parameters.AddWithValue("@ValorTteVia", txtVtte.Text);
-                        command.Parameters.AddWithValue("@ValorViatico", txtVvia.Text);
+                        command.Parameters.AddWithValue("@ValorTteVia", ConvertirTextoAFloat(txtVtte.Text));
+                        command.Parameters.AddWithValue("@ValorViatico", ConvertirTextoAFloat(txtVvia.Text));
                         command.Parameters.AddWithValue("@Fecha_Empaque", dtpEmpaque.Text);
                         command.Parameters.AddWithValue("@Fecha_Real_Empaque", dtpEmpaque.Text);
                         command.Parameters.AddWithValue("@OrdendeCompra", txtOrdenCompra.Text);
@@ -7370,8 +7370,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
                         // Validar tbBolsa y tbValorPedido antes de asignar
-                        string valorBolsa = string.IsNullOrEmpty(tbBolsa.Text) ? "0" : tbBolsa.Text;
-                        string valorPedido = string.IsNullOrEmpty(tbValorPedido.Text) ? "0" : tbValorPedido.Text;
+                        string valorBolsa = string.IsNullOrEmpty(tbBolsa.Text) ? "0" : tbBolsa.Text.Replace(",", "").Trim();
+                        string valorPedido = string.IsNullOrEmpty(tbValorPedido.Text) ? "0" : tbValorPedido.Text.Replace(",", "").Trim();
 
                         command.Parameters.AddWithValue("@ValorBolsa", valorBolsa);
                         command.Parameters.AddWithValue("@ValorPedido", valorPedido);
@@ -16404,7 +16404,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     connection.Open();
                     cmd.Parameters.AddWithValue("@FechaConfirVenta", dtpFechaEntregaDibujoDespiece.Text);
-                    cmd.Parameters.AddWithValue("@PrecioVenta", txtVenta.Text);
+                    cmd.Parameters.AddWithValue("@PrecioVenta", ConvertirTextoAFloat(txtVenta.Text));
                     cmd.Parameters.AddWithValue("@IdOT", tbOT.Text);
                     cmd.Parameters.AddWithValue("@pedido", ddlNumbers.SelectedItem.Text);
                     cmd.Parameters.AddWithValue("@cotizacion", txtCotizacion.Text);
@@ -19651,8 +19651,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     if (pedidoB == consecutivoPedido)
                     {
                         e.Item.Cells[6].Text = sumaValorPedido.ToString();
-                        e.Item.Cells[7].Text = (Convert.ToInt32(e.Item.Cells[3].Text) - Convert.ToInt32(e.Item.Cells[6].Text)).ToString();
 
+                        int valor3 = 0;
+                        int valor6 = 0;
+
+                        // Intentar convertir los textos a int, y si falla usa 0
+                        int.TryParse(e.Item.Cells[3].Text.Replace(",", "").Trim(), out valor3);
+                        int.TryParse(e.Item.Cells[6].Text.Replace(",", "").Trim(), out valor6);
+
+                        // Realizar la resta
+                        e.Item.Cells[7].Text = (valor3 - valor6).ToString();
                     }
                 }
             }
@@ -20083,7 +20091,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string sqlUpdateCotizacion = "UPDATE tblCotización SET Estado = 1, Saldo = Saldo + @PrecioVenta, Id_OT = '0', Pedido = 0 WHERE Cotización = @Cotizacion";
                 using (SqlCommand cmdUpdateCotizacion = new SqlCommand(sqlUpdateCotizacion, connSID))
                 {
-                    cmdUpdateCotizacion.Parameters.AddWithValue("@PrecioVenta", txtVenta.Text);
+                    cmdUpdateCotizacion.Parameters.AddWithValue("@PrecioVenta", ConvertirTextoAFloat(txtVenta.Text));
                     cmdUpdateCotizacion.Parameters.AddWithValue("@Cotizacion", txtCotizacion.Text);
                     cmdUpdateCotizacion.ExecuteNonQuery();
                 }
@@ -20575,7 +20583,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             if (tbOT.Text != null)
             {
-                tbValorPedido.Text = lblValorDespiece1.Text;
+                tbValorPedido.Text = ConvertirTextoAFloat(lblValorDespiece1.Text).ToString("N0");
             }
         }
 
@@ -23934,17 +23942,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
         }
+        public float ConvertirTextoAFloat(string texto)
+        {
+            // Elimina separadores de miles (comas)
+            string limpio = texto.Replace(",", "").Trim();
+
+            // Intenta convertir usando cultura invariante
+            if (float.TryParse(limpio, NumberStyles.Float, CultureInfo.InvariantCulture, out float resultado))
+            {
+                return resultado;
+            }
+            else
+            {
+                    return 0;
+            }
+        }
     }
-
-
 }
-
-
-
-
-
-
-
-
-
-
