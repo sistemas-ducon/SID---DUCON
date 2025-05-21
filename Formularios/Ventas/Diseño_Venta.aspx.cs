@@ -6336,7 +6336,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         // Agregar el valor del subtotal en la columna D con los estilos combinados
                         ICell subtotalCell = zonaRow2.CreateCell(4);
-                        double subtotalActualZona = Convert.ToDouble(fila["SubTotalActualZona"]);
+                        double subtotalActualZona = Convert.ToDouble(fila["SubTotalZona"]);
                         subtotalCell.SetCellValue(subtotalActualZona);
                         subtotalCell.CellStyle = estiloSubtotal;
 
@@ -8151,6 +8151,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             DropAsesor.SelectedValue = DropDownList1.SelectedItem.Text;
             TextContactoPlano.Text = TextContacto.Text;
 
+            DropBib.SelectedValue = Session["usuariologueado"].ToString();
+
             TextClienteDise.Text = TextCliente.Text;
 
             TextPlano.Text = string.Empty;
@@ -8300,11 +8302,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 campoFaltante = "Plano";
             }
-            else if (DropBib.SelectedValue == null)
+            else if (DropBib.SelectedValue == "" || DropBib.SelectedItem == null)
             {
                 campoFaltante = "Dibujante";
             }
-            else if (DropAsesor.SelectedItem == null)
+            else if (DropAsesor.SelectedItem == null || DropAsesor.SelectedValue == "")
             {
                 campoFaltante = "Asesor";
             }
