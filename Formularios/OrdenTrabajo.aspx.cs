@@ -1877,8 +1877,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     ddlNumbers.SelectedValue = perdidoMaximo.ToString();
 
                     // para controlar los objetos no existentes
-                    Session.Remove("DatoObjNoExistentes");
-                    DataGridObjNoExiste.DataBind();
+                    //Session.Remove("DatoObjNoExistentes");
+                    //DataGridObjNoExiste.DataBind();
 
                 }
             }
@@ -10019,6 +10019,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         case ".txt":
 
                             BorrarPenelesDelPlano1();
+                            // LIMPIAR OBJETOS NO EXISTENTES 
+                            Session.Remove("DatoObjNoExistentes");
+                            DataGridObjNoExiste.DataBind();
 
                             using (StreamReader reader = new StreamReader(LeerAcad_XY.PostedFile.InputStream, Encoding.GetEncoding("ISO-8859-1")))
                             {
@@ -13404,6 +13407,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 Session["Id_OT2"] = tbOT.Text;
                 Session["pedido2"] = ddlNumbers.SelectedItem.Text;
+
+
+                // Validacion de tabla de objetos no existentes 
+
+                int CantidadExistentes = DataGridObjNoExiste.Items.Count;
+
+                if(CantidadExistentes > 0)
+                {
+                    string script = @"CerrarCargarOK();";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", script, true);
+                    string scriptNoAcabados = "alert('No se puede pasar el pedido, faltan bloques por cargar');";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showFacturable", scriptNoAcabados, true);
+                    return;
+                }
+
 
                 // SE CONSULTA SI EL PEDIDO TIENE ACABADOS DEFINIDOS POR EL ASESOR 
                 if (ConsultarAcabadosPorAsesor())
@@ -23962,11 +23980,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-        protected void btnLimpiar_Click(object sender, EventArgs e)
-        {
-            Session.Remove("DatoObjNoExistentes");
-            DataGridObjNoExiste.DataBind();
 
-        }
+        //protected void btnLimpiar_Click(object sender, EventArgs e)
+        //{
+        //    Session.Remove("DatoObjNoExistentes");
+        //    DataGridObjNoExiste.DataBind();
+
+        //}
     }
 }

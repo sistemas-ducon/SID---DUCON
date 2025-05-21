@@ -3408,6 +3408,7 @@
                                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" ID="DataGridObjNoExiste" runat="server" AutoGenerateColumns="false" ShowHeaderWhenEmpty="true" OnItemDataBound="DataGridObjNoExiste_ItemDataBound">
                                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                                     <Columns>
+                                                                     
                                                                         <asp:BoundColumn DataField="" HeaderText="Item" ItemStyle-CssClass="auto-width-column" />
                                                                         <asp:BoundColumn DataField="ID_Objeto" HeaderText="Objeto" ItemStyle-CssClass="auto-width-column" />
                                                                         <asp:BoundColumn DataField="Ancho" HeaderText="Ancho" ItemStyle-CssClass="auto-width-column" />
@@ -3429,8 +3430,8 @@
 
                                         <div class="modal-footer justify-content-end ">
                                             <!-- Botón Refrescar a la izquierda -->
-                                             <asp:Button runat="server" ID="btnLimpiar" data-bs-dismiss="modal" Text="Limpiar"  CssClass="btn btn-outline-primary" OnClick="btnLimpiar_Click"/>
-
+                                            <%-- <asp:Button runat="server" ID="btnLimpiar" data-bs-dismiss="modal" Text="Limpiar"  CssClass="btn btn-outline-primary" OnClick="btnLimpiar_Click"/>--%>
+                                            
 
                                         </div>
 
