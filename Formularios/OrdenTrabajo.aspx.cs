@@ -4901,6 +4901,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
+                e.Item.Cells[6].Text = Convert.ToDouble(e.Item.Cells[6].Text).ToString("N0");
 
                 int OK = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "Chequeado"));
                 int Activo = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "Activo"));
@@ -5497,9 +5498,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
+                //Formato de comas
+                e.Item.Cells[9].Text = double.TryParse(e.Item.Cells[9].Text, out var val9) ? val9.ToString("N0") : "";
+                e.Item.Cells[10].Text = double.TryParse(e.Item.Cells[10].Text, out var val10) ? val10.ToString("N2") : "";;
+
                 DataRowView rowView = (DataRowView)e.Item.DataItem;
                 string piezaValue = rowView["Pieza"].ToString();
-
+                                                             
                 if (piezaValue == "Total Insumos" || piezaValue == "Por Imprevistos" || piezaValue == "MO Ducon" || piezaValue == "Valor Venta")
                 {
                     e.Item.Font.Bold = true;
