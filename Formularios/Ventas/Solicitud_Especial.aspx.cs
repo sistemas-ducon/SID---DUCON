@@ -4104,7 +4104,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 {
                     // Ajusta los valores según los nombres de columnas reales en tu DataRow
                     cmd.Parameters.AddWithValue("@ObsDibujo", txObsDesarrollo.InnerText);
-                    cmd.Parameters.AddWithValue("@costo", tbCostoD.Text);
+                    cmd.Parameters.AddWithValue("@costo", Convert.ToInt32(tbCostoD.Text.Replace(",", "")));
                     cmd.Parameters.AddWithValue("@factor", tbFactorD.Text); // Aquí faltaba ".Text"
                     cmd.Parameters.AddWithValue("@precioSugerido",Convert.ToInt32(tbPrecioSugerido.Text.Replace(",","")));
                     cmd.Parameters.AddWithValue("@Id_Detalle", lbIdDetalle.Text);

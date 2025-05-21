@@ -8963,6 +8963,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                 string idPlano = e.Item.Cells[2].Text; // Columna 2 contiene el Id_Plano
 
+                e.Item.Cells[4].Text = Convert.ToDouble(e.Item.Cells[4].Text).ToString("N0");
+
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();

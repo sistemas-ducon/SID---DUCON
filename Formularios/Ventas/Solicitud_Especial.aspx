@@ -702,7 +702,7 @@
                                             <div class="col-6">
                                                 <div class="input-group-sm gap-1">
                                                     <asp:Label ID="lbCostoD" runat="server" Text="Costo"></asp:Label>
-                                                    <asp:TextBox CssClass="form-control form-control-sm" ID="tbCostoD" type="number" min="0" runat="server" disabled="disabled" oninput="calcularPrecioSugerido()" Enabled="true"></asp:TextBox>
+                                                    <asp:TextBox CssClass="form-control form-control-sm input-numerico" ID="tbCostoD" type="text" min="0" runat="server" disabled="disabled" oninput="formatearMiles(this); calcularPrecioSugerido();" Enabled="true"></asp:TextBox>
                                                 </div>
                                             </div>
 
@@ -3080,8 +3080,10 @@
 
                 }
 
-
-
+                var textBoxes2 = document.querySelectorAll("input.input-numerico");
+                for (var i = 0; i < textBoxes2.length; i++) {
+                     textBoxes2[i].disabled = false;
+                }
             }
 
 
@@ -3482,15 +3484,40 @@
             var tbFactorD = document.getElementById('<%= tbFactorD.ClientID %>');
             var tbPrecioSugerido = document.getElementById('<%= tbPrecioSugerido.ClientID %>');
 
-            var Costo = parseFloat(tbCostoD.value);
+            var Costo = parseFloat(tbCostoD.value.replace(/,/g, ''));
             var factor = parseFloat(tbFactorD.value);
 
             if (!isNaN(Costo) && !isNaN(factor) && factor != 100) {
                 var PrecioSugerido = Costo / (1 - factor / 100);
-                tbPrecioSugerido.value = Math.round(PrecioSugerido); // Redondear a entero
+                tbPrecioSugerido.value = Math.round(PrecioSugerido).toLocaleString('en-US'); // Redondear a entero
             } else {
                 tbPrecioSugerido.value = "";
             }
+        }
+    </script>
+    <script>
+        function formatearMiles(input) {
+            const selectionStart = input.selectionStart;
+            const selectionEnd = input.selectionEnd;
+
+            // Obtener solo números
+            let valor = input.value.replace(/,/g, '');
+
+            // Evitar formateo si está vacío o no es número
+            if (valor === '' || isNaN(valor)) return;
+
+            // Parsear a número y formatear
+            let numero = parseFloat(valor);
+            let valorFormateado = numero.toLocaleString('en-US');
+
+            // Calcular diferencia en longitud para mover el cursor
+            let diff = valorFormateado.length - valor.length;
+
+            // Asignar el valor formateado
+            input.value = valorFormateado;
+
+            // Restaurar posición del cursor
+            input.setSelectionRange(selectionStart + diff, selectionEnd + diff);
         }
     </script>
 
