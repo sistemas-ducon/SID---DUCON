@@ -1410,7 +1410,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     }
                     else
                     {
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('El Objeto " + TextObjeto.Text.Trim() + " no es escalable automaticamente, requiere de proceso(s) manual(es), de lo contrario puede contener errores en el despiece.');", true);
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('La familia del objeto " + TextObjeto.Text.Trim() + " ya existe.');", true);
                         return;
                     }
 

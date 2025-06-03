@@ -23228,19 +23228,25 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void BtnNuevoInsumo_Click(object sender, EventArgs e)
         {
             Session["FrmInsumo"] = "Nuevo";
-            Response.Redirect("~/Formularios/DiseñoYDesarrollo/frmInsumos.aspx");
+            string url = "~/Formularios/DiseñoYDesarrollo/frmInsumos.aspx";
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
         }
 
         protected void BtnModificarInsumo_Click(object sender, EventArgs e)
         {
             Session["FrmInsumo"] = "Modificar";
-            Response.Redirect("~/Formularios/DiseñoYDesarrollo/frmInsumos.aspx");
+            string url = "~/Formularios/DiseñoYDesarrollo/frmInsumos.aspx";
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
         }
 
         protected void BtnCopiarInsumo_Click(object sender, EventArgs e)
         {
             Session["FrmInsumo"] = "Copiar";
-            Response.Redirect("~/Formularios/DiseñoYDesarrollo/frmInsumos.aspx");
+            string url = "~/Formularios/DiseñoYDesarrollo/frmInsumos.aspx";
+            string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
         }
 
         protected void BtnEliminarInsumo_Click(object sender, EventArgs e)

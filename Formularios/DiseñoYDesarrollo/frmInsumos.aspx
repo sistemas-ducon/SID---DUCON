@@ -193,7 +193,7 @@
                                     <div class="card-footer d-flex justify-content-end gap-3 bg-white">
                                         <asp:Button runat="server" ID="BtnGrabar" class="btn linkButtonClicked2  shadow-sm text-dark btn-sm" Text="GRABAR" OnClick="BtnGrabar_Click"/>
                                         <asp:Button runat="server" ID="BtnCancelar" class="btn linkButtonClicked2 shadow-sm text-dark btn-sm" Text="CANCELAR" />
-                                        <asp:Button runat="server" ID="BtnCerrar" class="btn linkButtonClicked2 shadow-sm text-dark btn-sm" Text="CERRAR" />
+                                        <asp:Button runat="server" ID="BtnCerrar" class="btn linkButtonClicked2 shadow-sm text-dark btn-sm" Text="CERRAR" OnClick="BtnCerrar_Click" />
                                     </div>
                                 </div>
                             </div>

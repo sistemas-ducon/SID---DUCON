@@ -1304,8 +1304,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             ScriptManager.RegisterStartupScript(this, GetType(), "alert", script, true);
         }
 
-
-
+        protected void BtnCerrar_Click(object sender, EventArgs e)
+        {
+            string script = "window.close();";
+            ScriptManager.RegisterStartupScript(this, GetType(), "closeWindow", script, true);
+        }
     }
 
     // Clase modelo para Insumo
