@@ -5091,7 +5091,12 @@
                                                                     <asp:BoundColumn DataField="Num_Fila" HeaderText="Item" ItemStyle-CssClass="auto-width-column" />
                                                                     <asp:BoundColumn DataField="Id_Modulo" HeaderText="Módulo" ItemStyle-CssClass="auto-width-column" />
                                                                     <asp:BoundColumn DataField="Descripcion_TipoModulo" HeaderText="Tipo Módulo" ItemStyle-CssClass="auto-width-column" />
-                                                                    <asp:BoundColumn DataField="Descripcion_Modulo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:TemplateColumn HeaderText="Descripción">
+                                                                        <ItemTemplate>
+                                                                            <%# Eval("Descripcion_Modulo").ToString().Replace("  ", "&nbsp;&nbsp;") %>
+                                                                        </ItemTemplate>
+                                                                    </asp:TemplateColumn>
+
                                                                     <asp:BoundColumn DataField="Chequeado" HeaderText="OK" ItemStyle-CssClass="auto-width-column" />
                                                                     <asp:BoundColumn DataField="Ubicacion_Modulo" HeaderText="Pos" ItemStyle-CssClass="auto-width-column" />
                                                                     <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column" />

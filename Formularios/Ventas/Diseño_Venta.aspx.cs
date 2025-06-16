@@ -224,7 +224,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 if (Session["Despiece"]?.ToString() == "1")
                 {
                     BindDataGrid(); // Llamar al método para llenar el DataGrid
-                    ActualizarSubTotalZona(); // Se  agrega para actualizar precio Anderson Betancur Melchor 
+
+                    // Se  agrega para actualizar precio Anderson Betancur Melchor 
+                    ActualizarSubTotalZona();
+
+                    // Se  agrega para actualizar precio Anderson Betancur Melchor para mantener el nombre 
+                    PlanoDiseArea.Text = Session["NombrePlano"]?.ToString();
+
+                    // Se cierra la variable de sesion para evitar consumo de recursos Anderson Betancur Melchor
+                    Session.Remove("NombrePlano");
 
                     // Activar Tab Plano 
                     string script = "activarPestana('Despiece-tab', 'Despiece-content');";
@@ -8930,6 +8938,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     PlanoDiseArea.Text = "<b>" + "Despiece: " + planoDise + " - " + planoDiseAreaV + "</b>";
 
+                    // Se Agrega para conservar el nombre del plano Anderson Betancur Melchor 
+                    Session["NombrePlano"] = "<b>" + "Despiece: " + planoDise + " - " + planoDiseAreaV + "</b>";
+
                     string tipoAccionCrud = Session["CrudVentas"] as string;
                     if (tipoAccionCrud == "Actualizar")
                     {
@@ -9701,6 +9712,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             double TotalDespiece = 0;
             string numeroDiseño = lblNumDise.Text;
             string Plano = Session["Numero_Plano"].ToString();
+            Session["NombrePlano"] = PlanoDiseArea.Text; // Se toma el nombre del plano para volver a dejarlo igual Anderson Betancur Melchor
 
             if (FileUpload2.HasFile)
             {
@@ -9954,8 +9966,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     decimal anchoCalculado = Ancho * 10;
                     string anchoInt = (anchoCalculado % 10 == 0) ?
-      Math.Floor(anchoCalculado / 10).ToString("0") :  
-      (anchoCalculado / 10).ToString("0.0");           
+                    Math.Floor(anchoCalculado / 10).ToString("0") :  
+                    (anchoCalculado / 10).ToString("0.00");           
 
 
 
@@ -10104,7 +10116,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 decimal anchoCalculado = Ancho * 10;
                 string anchoInt = (anchoCalculado % 10 == 0) ?
     Math.Floor(anchoCalculado / 10).ToString("0") :
-    (anchoCalculado / 10).ToString("0.0");
+    (anchoCalculado / 10).ToString("0.00");
 
                 var objetosNoExistentes = Session["ObjetosNoExistentes"] as List<ObjetoNoExistente> ?? new List<ObjetoNoExistente>();
                 bool objetoExistenteActualizado = false;
@@ -10592,6 +10604,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             Session["NumeroDiseño2"] = lblNumDise.Text;
             Session["Despiece"] = "1";
+            Session["NombrePlano"] = PlanoDiseArea.Text; // Se toma el nombre del plano para volver a dejarlo igual Anderson Betancur Melchor
 
             var objetosNoExistentes = Session["ObjetosNoExistentes"] as List<ObjetoNoExistente> ?? new List<ObjetoNoExistente>();
             // Limpiar la lista de objetos no existentes
