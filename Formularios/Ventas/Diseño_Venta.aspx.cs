@@ -4286,8 +4286,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Obtener la fecha y hora del TextBox con type="datetime-local"
                         DateTime fechaHora = DateTime.ParseExact(TextUltAc.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
 
-                        // Utilizar el valor formateado en el comando SQL
-                        command.Parameters.AddWithValue("@UltimaActivacion", fechaHora);
+
+                        // Se Ajusta la hora de Inicio Anderson Betancur Melchor
+                        command.Parameters.AddWithValue("@UltimaActivacion", AjustarHoraInicio(fechaHora));
 
                         DateTime fechaIngreso = DateTime.ParseExact(TextIngDis.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
 
@@ -4492,8 +4493,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     // Obtener la fecha y hora del TextBox con type="datetime-local"
                     DateTime fechaHora = DateTime.ParseExact(TextUltAc.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
 
-                    // Utilizar el valor formateado en el comando SQL
-                    command.Parameters.AddWithValue("@UltimaActivacion", fechaHora);
+
+
+                    //  Se Ajusta la hora de Inicio Anderson Betancur Melchor
+                    command.Parameters.AddWithValue("@UltimaActivacion", AjustarHoraInicio(fechaHora));
 
                     DateTime fechaIngreso = DateTime.ParseExact(TextIngDis.Text, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
 
@@ -10207,7 +10210,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
                 else
                 {
-                    ManejarInsercionOActualizacion(connection, plano, idNumerico, cantidad, precioVenta, Existentes, objetoPrefix);
+                    // Se agrega validacion que no sea desmonte Anderson Betancur Melchor
+                    if(objetoPrefix != "DSM")
+                    {
+                        ManejarInsercionOActualizacion(connection, plano, idNumerico, cantidad, precioVenta, Existentes, objetoPrefix);
+                    }
+                   
                 }
 
                 if (objetoPrefix == "DSM" && reinstalacion)

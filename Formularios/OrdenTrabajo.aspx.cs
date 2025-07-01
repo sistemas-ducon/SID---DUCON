@@ -1363,7 +1363,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             lbProduce.InnerText = ddlFabrica1.SelectedItem.Text;
 
-            pObservaciones.InnerText = txObs1.InnerText;
+            pObservaciones.InnerHtml = txObs2.InnerText.Replace("\n","<br/>");
 
             lbDir.InnerText = tbDir.Text + " " + ddlCiudad.SelectedItem.Text.Replace(" - ", "/") + "/" + tbPais.Text;
 
@@ -3375,6 +3375,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     // Verificar si el archivo existe
                     if (File.Exists(rutaArchivo))
                     {
+
+                        if (ArchivoEstaBloqueado(rutaArchivo))
+                        {
+                            Session["Id_OT2"] = tbOT.Text;
+                            Session["pedido2"] = ddlNumbers.SelectedItem.Text;
+
+                            string mensajePersonalizado = "El archivo está abierto por otro usuario. Por favor, cierre el archivo o intente más tarde.";
+                            string urlRedireccion = "OrdenTrabajo.aspx";
+                            Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                            return;
+                        }
+
                         // Establecer las cabeceras para la descarga del archivo
                         Response.Clear();
                         Response.ContentType = "application/octet-stream";
@@ -3403,6 +3415,25 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             }
         }
+
+        private bool ArchivoEstaBloqueado(string filePath)
+        {
+            try
+            {
+                using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    // Si llegamos aquí, el archivo no está bloqueado
+                    stream.Close();
+                }
+                return false;
+            }
+            catch (IOException)
+            {
+                // El archivo está bloqueado
+                return true;
+            }
+        }
+
 
         public string ObtenerNombreMesAbreviado(DateTime fecha)
         {

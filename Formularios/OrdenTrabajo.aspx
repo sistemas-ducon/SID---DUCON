@@ -539,7 +539,7 @@
                                                         <div class="row justify-content-center">
                                                             <div class="border rounded p-2">
                                                                 <div class="table-responsive">
-                                                                    <h5 class="datagrid-header text-center fw-bold">Ducuon S.A.S</h5>
+                                                                    <h5 class="datagrid-header text-center fw-bold">DUCON S.A.S</h5>
                                                                     <table class="table table-hover table-bordered table-sm border">
 
                                                                         <tbody>
@@ -1915,7 +1915,7 @@
 
                                     <div class="col-lg-5 col-md-6 col-sm-12 col-xs-12">
                                         <div class="input-group  mb-1 gap-2">
-                                            <asp:TextBox ID="tbValorPedido" CssClass="form-control text-end" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="tbValorPedido" CssClass="form-control text-end" runat="server"  oninput="formatearMiles(this)"></asp:TextBox>
                                         </div>
                                     </div>
 
