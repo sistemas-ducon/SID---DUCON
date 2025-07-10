@@ -2597,12 +2597,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         // Rutas de los archivos de adjuntos 
                         string adjuntos = ControlPE + ";" + ArchivosSPE;
+                        string adjuntosFallo = ControlPE;
+                        long pesoTotal = ObtenerPesoTotalArchivos(adjuntos);
 
 
                         if (destinatario != "")
                         {
-                            // Se realiza el envio del correo electronico
-                            EnviarCorreoConAdjuntosTerminadoDibujo(destinatario, cuerpo, adjuntos.Trim(';'));
+                            if (pesoTotal > 15728640)
+                            {
+                                 EnviarCorreoConAdjuntosTerminadoDibujo(destinatario, cuerpo, adjuntosFallo.Trim(';'));
+
+                                string mensajePersonalizado1 = "La solicitud ha sido terminada, pero no ha sido posible adjuntar los documentos adjuntos a la solicitud.";
+                                string urlRedireccion1 = "Ventas/Solicitud_Especial.aspx";
+                                Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado1)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion1)}");
+                                return;
+                            }
+                            else
+                            {
+                                // Se realiza el envio del correo electronico
+                                EnviarCorreoConAdjuntosTerminadoDibujo(destinatario, cuerpo, adjuntos.Trim(';'));
+                            }
+
                         }
                         else
                         {
@@ -2642,6 +2657,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
 
+        }
+
+        public long ObtenerPesoTotalArchivos(string rutas)
+        {
+            string[] archivos = rutas.Split(';');
+            long totalBytes = 0;
+
+            foreach (var ruta in archivos)
+            {
+                if (File.Exists(ruta))
+                {
+                    FileInfo fileInfo = new FileInfo(ruta);
+                    totalBytes += fileInfo.Length;
+                }
+                else
+                {
+                    Console.WriteLine($"Archivo no encontrado: {ruta}");
+                }
+            }
+
+            return totalBytes;
         }
 
 
@@ -2698,16 +2734,36 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         connection.Open();
                         command.ExecuteNonQuery();
-                        return true;
+
                     }
                 }
+
+                return true;
             }
+
             catch (SqlException ex)
             {
-                // Manejar la excepción (opcional)
-                // Loggear la excepción o hacer algo con ella
+               
+                if (ex.Number == 22051)
+                {
+                    return false;
+                }
+                else if (ex.Number == 15281)
+                {
+                    // xp_cmdshell bloqueada, pero probablemente el correo se envió
+                    return true;
+                }
+
                 return false;
             }
+            catch (Exception ex)
+            {
+                // Errores generales
+                return false;
+            }
+
+
+
         }
         private void CreacionArchivoControlSolicitudEspecial(string ID_Solicitud)
         {

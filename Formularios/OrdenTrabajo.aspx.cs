@@ -54,6 +54,7 @@ using TableCell = System.Web.UI.WebControls.TableCell;
 using System.Windows.Input;
 using System.Web.Services.Description;
 using System.Globalization;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
@@ -15619,60 +15620,85 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Verificar si el archivo existe
             if (File.Exists(ArchivoEspecial))
             {
+
+                if (ArchivoEstaBloqueado(ArchivoEspecial))
+                {
+                   
+                    Session["Id_OT2"] = tbOT.Text;
+                    Session["pedido2"] = ddlNumbers.SelectedItem.Text;
+
+                    string mensajePersonalizado = "Existe un archivo de solicitud especial abierto. Por favor, cierre el archivo o intente más tarde.";
+                    string urlRedireccion = "OrdenTrabajo.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                    return;
+                }
+
                 // Crear la conexión con la base de datos
                 string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
 
-                    // Leer el contenido del archivo Excel usando NPOI
-                    using (FileStream fs = new FileStream(ArchivoEspecial, FileMode.Open, FileAccess.Read))
+                    try
                     {
-                        IWorkbook workbook = null;
-
-                        string extension = Path.GetExtension(ArchivoEspecial);
-                        if (extension.Equals(".xls"))
+                        // Leer el contenido del archivo Excel usando NPOI
+                        using (FileStream fs = new FileStream(ArchivoEspecial, FileMode.Open, FileAccess.Read))
                         {
-                            workbook = new HSSFWorkbook(fs); // Para archivos .xls (Excel 97-2003)
-                        }
-                        else if (extension.Equals(".xlsx"))
-                        {
-                            workbook = new XSSFWorkbook(fs); // Para archivos .xlsx (Excel 2007+)
-                        }
+                            IWorkbook workbook = null;
 
-                        // Obtener la primera hoja del archivo
-                        ISheet sheet = workbook.GetSheetAt(0);
-                        int filaexcel = 1; // Inicia en la fila 2 
-
-                        // Iterar sobre las filas hasta que la celda en la primera columna esté vacía
-                        while (sheet.GetRow(filaexcel) != null && sheet.GetRow(filaexcel).GetCell(0) != null && !string.IsNullOrWhiteSpace(sheet.GetRow(filaexcel).GetCell(0).ToString()))
-                        {
-                            // Convertir el contenido de la columna 5 (E) a mayúsculas y buscar "INSTA"
-                            string columnaE = sheet.GetRow(filaexcel).GetCell(4).ToString().ToUpper();
-                            if (columnaE.Contains("INSTA"))
+                            string extension = Path.GetExtension(ArchivoEspecial);
+                            if (extension.Equals(".xls"))
                             {
-                                // Insertar en la base de datos
-                                string sSql = "Insert Into tblEmpaque(Id_OT,Pedido,Plano,Objeto,Ancho,altura,profundidad,Descripción_Objeto,Cantidad_Solicitada,Procedencia,Descripcion_Grupo,UndXPaquete)" +
-                                              " Values(@Id_OT, @Pedido, @Plano, @Objeto, 0, 0, 1, @DescripcionObjeto, @CantidadSolicitada, 'DESARROLLO', 'MUEBLE ESPECIAL', 1)";
-
-                                using (SqlCommand command = new SqlCommand(sSql, connection))
-                                {
-                                    command.Parameters.AddWithValue("@Id_OT", tbOT.Text);
-                                    command.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
-                                    command.Parameters.AddWithValue("@Plano", txtPlano.Text);
-                                    string objeto = "D-PartNo." + sheet.GetRow(filaexcel).GetCell(0).ToString() + " - " + sheet.GetRow(filaexcel).GetCell(1).ToString();
-                                    command.Parameters.AddWithValue("@Objeto", objeto != null && objeto.Length > 100 ? objeto.Substring(0, 100) : objeto);
-                                    command.Parameters.AddWithValue("@DescripcionObjeto", objeto);
-                                    command.Parameters.AddWithValue("@CantidadSolicitada", Convert.ToInt32(sheet.GetRow(filaexcel).GetCell(2).ToString()));
-
-                                    // Ejecutar la inserción
-                                    command.ExecuteNonQuery();
-                                }
+                                workbook = new HSSFWorkbook(fs); // Para archivos .xls (Excel 97-2003)
+                            }
+                            else if (extension.Equals(".xlsx"))
+                            {
+                                workbook = new XSSFWorkbook(fs); // Para archivos .xlsx (Excel 2007+)
                             }
 
-                            filaexcel++; // Mover a la siguiente fila
+                            // Obtener la primera hoja del archivo
+                            ISheet sheet = workbook.GetSheetAt(0);
+                            int filaexcel = 1; // Inicia en la fila 2 
+
+                            // Iterar sobre las filas hasta que la celda en la primera columna esté vacía
+                            while (sheet.GetRow(filaexcel) != null && sheet.GetRow(filaexcel).GetCell(0) != null && !string.IsNullOrWhiteSpace(sheet.GetRow(filaexcel).GetCell(0).ToString()))
+                            {
+                                // Convertir el contenido de la columna 5 (E) a mayúsculas y buscar "INSTA"
+                                string columnaE = sheet.GetRow(filaexcel).GetCell(4).ToString().ToUpper();
+                                if (columnaE.Contains("INSTA"))
+                                {
+                                    // Insertar en la base de datos
+                                    string sSql = "Insert Into tblEmpaque(Id_OT,Pedido,Plano,Objeto,Ancho,altura,profundidad,Descripción_Objeto,Cantidad_Solicitada,Procedencia,Descripcion_Grupo,UndXPaquete)" +
+                                                  " Values(@Id_OT, @Pedido, @Plano, @Objeto, 0, 0, 1, @DescripcionObjeto, @CantidadSolicitada, 'DESARROLLO', 'MUEBLE ESPECIAL', 1)";
+
+                                    using (SqlCommand command = new SqlCommand(sSql, connection))
+                                    {
+                                        command.Parameters.AddWithValue("@Id_OT", tbOT.Text);
+                                        command.Parameters.AddWithValue("@Pedido", ddlNumbers.SelectedItem.Text);
+                                        command.Parameters.AddWithValue("@Plano", txtPlano.Text);
+                                        string objeto = "D-PartNo." + sheet.GetRow(filaexcel).GetCell(0).ToString() + " - " + sheet.GetRow(filaexcel).GetCell(1).ToString();
+                                        command.Parameters.AddWithValue("@Objeto", objeto != null && objeto.Length > 100 ? objeto.Substring(0, 100) : objeto);
+                                        command.Parameters.AddWithValue("@DescripcionObjeto", objeto);
+                                        command.Parameters.AddWithValue("@CantidadSolicitada", Convert.ToInt32(sheet.GetRow(filaexcel).GetCell(2).ToString()));
+
+                                        // Ejecutar la inserción
+                                        command.ExecuteNonQuery();
+                                    }
+                                }
+
+                                filaexcel++; // Mover a la siguiente fila
+                            }
                         }
                     }
+                    catch
+                    {
+                        string mensajePersonalizado = "Error al procesar el archivo especial, por favor verifique los archivos adjuntos a la OT  ";
+                        string urlRedireccion = "OrdenTrabajo.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                        return;
+                    }
+
+                   
                 }
             }
             else
