@@ -4938,7 +4938,7 @@
                                             <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
                                                 <div class="input-group-sm">
                                                     <asp:Label class="form-label" Text="Buscar Objeto/Descripción" runat="server" ID="lbCriterio"></asp:Label>
-                                                    <asp:TextBox ID="tbCriterio" runat="server" CssClass="form-control"></asp:TextBox>
+                                                    <asp:TextBox ID="tbCriterio" onblur="this.value = this.value.trim();" runat="server" CssClass="form-control"></asp:TextBox>
                                                 </div>
                                             </div>
 
@@ -5562,7 +5562,7 @@
                                         <div class="col-lg-2 col-md-6 mb-1">
                                             <div class="d-flex align-items-center">
                                                 <asp:Label ID="Label24" runat="server" CssClass="me-2 col-form-label-sm" Text="Criterio"></asp:Label>
-                                                <asp:TextBox ID="TextCriterioModulo" runat="server" CssClass="form-control form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterioModulo_TextChanged"></asp:TextBox>
+                                                <asp:TextBox ID="TextCriterioModulo" onblur="this.value = this.value.trim();"  runat="server" CssClass="form-control form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterioModulo_TextChanged"></asp:TextBox>
                                             </div>
                                         </div>
 

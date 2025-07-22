@@ -3032,7 +3032,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
         private void QuitarModulo(string ID_Numerico, string idModulo, string Ubicacion, string Lado)
         {
-            if (CheckEstable.Checked)
+            if (!CheckEstable.Checked)
             {
                 //Eliminar 
                 if (EliminarPanelModulo(ID_Numerico, idModulo, Ubicacion, Lado))

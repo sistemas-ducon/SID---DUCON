@@ -483,7 +483,7 @@
                                         <div class="p-1 m-2">
                                             <div class="input-group input-group-sm gap-2">
                                                 <asp:Label runat="server" ID="Label18" CssClass="form-label" Text="Criterio: "></asp:Label>
-                                                <asp:TextBox runat="server" ID="TextCriterio" CssClass="form-control form-control-sm"></asp:TextBox>
+                                                <asp:TextBox runat="server" ID="TextCriterio" onblur="this.value = this.value.trim();"  CssClass="form-control form-control-sm"></asp:TextBox>
                                                 <asp:LinkButton runat="server" title="Buscar" ID="Buscar" Style="border: solid 1px #938f8fa1; border-radius: 0.2rem;" OnClick="ButtonBuscar_Click">
                                                    <i class="bi bi-search"></i>
                                                 </asp:LinkButton>
