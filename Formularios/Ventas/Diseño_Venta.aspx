@@ -1443,6 +1443,8 @@
                                                         </div>
                                                         <div class="col-md-5 col-4 mt-1">
                                                             <asp:Button runat="server" ID="BtnProgramar" CssClass="btn-outline-dark btn btn-sm btn-white fw-bold" Text="PROGRAMAR" OnClick="BtnProgramar_Click" Enabled="false" />
+                                                            <asp:Button ID="btnConfirmTerminar" runat="server" OnClick="btnConfirmTerminarSC_Click" style="display:none;" />
+
                                                         </div>
                                                     </div>
                                                 </div>

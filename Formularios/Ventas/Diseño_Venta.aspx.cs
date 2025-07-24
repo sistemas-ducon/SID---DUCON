@@ -892,7 +892,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     string script = "if(confirm('" + mensaje + "')) { " +
                                     "__doPostBack('btnConfirmTerminar', ''); }";
 
-                    ClientScript.RegisterStartupScript(this.GetType(), "ConfirmTerminar", script, true);
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "ConfirmTerminar", script, true);
+
                 }
                 else
                 {
@@ -1320,6 +1321,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     connection.Open();
                     command.ExecuteNonQuery();
                     BtnProgramar.Enabled = false;
+                    CargarDatagridDise();
+
                 }
                 catch (Exception ex)
                 {
