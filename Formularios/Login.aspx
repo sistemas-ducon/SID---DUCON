@@ -53,7 +53,7 @@
                        
                     
                 <div class="input-group">
-                    <asp:Button ID="btbIngresar" runat="server" Text="Ingresar" OnClick="btbIngresar_Click" CssClass="btn btn-dark w-100"></asp:Button>
+                            <asp:Button ID="btbIngresar" runat="server" Text="Ingresar" OnClick="btbIngresar_Click" style="background-color:#083557" CssClass="btn text-white  w-100"></asp:Button>
                  </div>   
                
 

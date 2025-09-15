@@ -1110,7 +1110,7 @@ WHERE
             Dictionary<string, int> meses = new Dictionary<string, int>
     {
         {"Ene", 1}, {"Feb", 2}, {"Mar", 3}, {"Abr", 4}, {"May", 5}, {"Jun", 6},
-        {"Jul", 7}, {"Ago", 8}, {"Sept", 9}, {"Oct", 10}, {"Nov", 11}, {"Dic", 12}
+        {"Jul", 7}, {"Ago", 8}, {"Sept", 9},{"Sep", 9}, {"Oct", 10}, {"Nov", 11}, {"Dic", 12}
     };
 
             // Intentar obtener el número de mes del diccionario
