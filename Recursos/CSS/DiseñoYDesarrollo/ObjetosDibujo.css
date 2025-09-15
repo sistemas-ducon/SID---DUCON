@@ -33,7 +33,7 @@
 }
 
 .fila-seleccionada1 {
-    background: repeating-linear-gradient(45deg, #848588, #909295 80px);
+    background: repeating-linear-gradient(45deg, #083557, #1C1C1C 80px);
     color: white !important;
 }
 
@@ -165,7 +165,7 @@
 }
 
 .navbar-custom {
-    background: radial-gradient(circle, #afb5b9, #23273be6); /* Radial gradient */
+    background: radial-gradient(circle, #083557, #1C1C1C); /* Radial gradient */
     border-bottom: 2px solid #ffffff; /* White border */
 }
 

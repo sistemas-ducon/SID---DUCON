@@ -25,7 +25,7 @@
 }
 
 .navbar-custom {
-    background: radial-gradient(circle, #b5bbc1, #23273be6); /* Radial gradient */
+    background: radial-gradient(circle, #083557,#1C1C1C ); /* Radial gradient */
     border-bottom: 2px solid #ffffff; /* White border */
 }
 
@@ -45,7 +45,7 @@
 
 
 .fila-seleccionada {
-    background: radial-gradient(circle, #afb5b9, #23273be6); /* Radial gradient */
+    background: radial-gradient(circle, #083557, #1C1C1C); /* Radial gradient */
     color: white !important;
 }
 

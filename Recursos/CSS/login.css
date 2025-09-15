@@ -24,7 +24,7 @@ body {
     padding: 20px;
     border-radius: 12px;
     background: #ffffff;
-    box-shadow: 7px 13px 37px #000000;
+    box-shadow: 7px 13px 37px #083557;
 }
 
 .login h1{
@@ -32,11 +32,13 @@ body {
     margin-bottom: 25px;
 }
 
-.login form .input-group{
-    margin-bottom: 12px;
-}
+    .login form .input-group {
+        margin-bottom: 12px;
+    }
+
+
 .todo {
-   /* background-image: url("https://cdn.pixabay.com/photo/2014/02/13/07/28/security-265130_1280.jpg");*/
+    /* background-image: url("https://cdn.pixabay.com/photo/2014/02/13/07/28/security-265130_1280.jpg");*/
     position: absolute;
     background-repeat: no-repeat;
     background-size: cover;
@@ -143,3 +145,4 @@ body {
     }
 
 */
+

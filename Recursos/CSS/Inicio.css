@@ -44,7 +44,7 @@ body {
 
 
 .dropdown-menu .dropdown-item:hover {
-    background: linear-gradient(to bottom, #b5bbc1, #23273be6);
+    background: linear-gradient(to bottom, #083557, #083557);
     color: white !important;
 }
 
@@ -52,7 +52,7 @@ body {
 
 .dropend .nav-link:hover,
 .dropend .nav-link:focus {
-    background: linear-gradient(to bottom, #b5bbc1, #23273be6);
+    background: linear-gradient(to bottom, #083557, #083557);
     color: white !important;
 }
 
@@ -73,7 +73,7 @@ body {
     }
 }*/
 .navbar-custom {
-    background: radial-gradient(circle, #b5bbc1, #23273be6); /* Radial gradient */
+    background: radial-gradient(circle, #083557,#1C1C1C); /* Radial gradient */
     border-bottom: 2px solid #ffffff; /* White border */
 }
 
@@ -92,11 +92,11 @@ body {
     }
 
     .nav-tabs .nav-link:hover {
-        color: #f8f9fa; /* Light text on hover */
+        color: #083557; /* Light text on hover */
     }
 
     .nav-tabs .nav-link:focus {
-        color: #f8f9fa; /* Light text on focus */
+        color: #083557; /* Light text on focus */
         outline: none;
     }
 

@@ -161,8 +161,7 @@
     color: white !important;*/
 
 
-    background: radial-gradient(circle, #94a8bc, #3e4559e6); /* Radial gradient */
-   
+    background: radial-gradient(circle, #083557, #1C1C1C); /* Radial gradient */
 }
 
 .linkButtonNormal {
@@ -220,7 +219,7 @@
 }
 
 .navbar-custom {
-    background: radial-gradient(circle, #b5bbc1, #23273be6); /* Radial gradient */
+    background: radial-gradient(circle, #083557,#1C1C1C ); /* Radial gradient */
     border-bottom: 2px solid #ffffff; /* White border */
 }
 
@@ -239,11 +238,11 @@
     }
 
     .nav-tabs .nav-link:hover {
-        color: #f8f9fa; /* Light text on hover */
+        color: #083557,; /* Light text on hover */
     }
 
     .nav-tabs .nav-link:focus {
-        color: #f8f9fa; /* Light text on focus */
+        color: #083557,; /* Light text on focus */
         outline: none;
     }
 

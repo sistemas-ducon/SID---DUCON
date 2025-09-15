@@ -45,7 +45,7 @@
     color:white;
 }
 .fila-seleccionada {
-    background: radial-gradient(circle, #afb5b9, #23273be6); /* Radial gradient */
+    background: radial-gradient(circle, #083557, #1C1C1C); /* Radial gradient */
     color: white !important;
 }
 

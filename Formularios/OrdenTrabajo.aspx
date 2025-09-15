@@ -1498,7 +1498,10 @@
                                 <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                                     <div class="input-group input-group-sm mb-2 gap-2">
                                         <asp:Label class="form-label" Text="OT" runat="server" ID="lblOT"></asp:Label>
-                                        <asp:TextBox ID="tbOT" runat="server" CssClass="form-control" OnTextChanged="ObtenerInfoOt" AutoPostBack="true" placeholder="Escriba número de OT"></asp:TextBox>
+                                       <%-- <asp:TextBox ID="tbOT" runat="server" CssClass="form-control" OnTextChanged="ObtenerInfoOt" AutoPostBack="true" placeholder="Escriba número de OT"></asp:TextBox>--%> <%--original--%>
+                                            <asp:TextBox ID="tbOT" runat="server" CssClass="form-control" OnTextChanged="ObtenerInfoOt" AutoPostBack="true" placeholder="Escriba número de OT" style="font-weight:bold;">
+</asp:TextBox>
+
                                         <%--Activa el textbox de las OT cuando carga el formulario listo para escribir caracteres--%>
                                         <script type="text/javascript">
                                             window.onload = function () {
