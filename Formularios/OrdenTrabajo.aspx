@@ -1732,10 +1732,8 @@
                                         </div>
 
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 d-flex gap-3">
-                                            <!-- Label OT Cerrada -->
+                                            <!-- Label OT Cerrada Harley -->
                                             <asp:Label ID="LabelOTCerrada" ClientIDMode="Static" runat="server" Text="OT cerrada" class="rounded p-2" BackColor="#DD0000" Style="height: 2rem; width: 15rem;" ForeColor="white" Visible="false"></asp:Label>
-
-
                                         </div>
 
                                     </div>
@@ -1843,6 +1841,11 @@
                                         <!-- Label Parar Cartera -->
                                         <asp:Label ID="lblPararCartera" runat="server" Text="OT parada por cartera" class="rounded p-2" BackColor="#DD0000" Style="height: 2rem; width: 12rem;" ForeColor="white" Visible="false"></asp:Label>
                                     </div>
+
+                                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 d-flex">
+                                          <!-- Label Cerrada por Cartera -->
+                                       <asp:Label ID="lblCerradaPorCartera" runat="server" Text="OT Cerrada por cartera" class="rounded p-2" BackColor="#DD0000" Style="height: 2rem; width: 12rem;" ForeColor="white" Visible="false"></asp:Label>
+                                      </div>
 
                                 </div>
 

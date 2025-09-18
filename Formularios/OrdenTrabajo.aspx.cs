@@ -2136,6 +2136,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 lblPararCartera.Visible = false;
             }
+            //Harley Cerrada por Cartera
+            if (EsCerradaPorCartera(id, pedido))
+            {
+                LabelOTCerrada.Text = "OT Cerrada por cartera";
+
+                LabelOTCerrada.CssClass = "rounded p-2";
+
+                LabelOTCerrada.Visible = true;
+            }
+            else
+            {
+                LabelOTCerrada.Visible = false;
+            }
 
             if (EsAnulada(id, pedido))
             {
@@ -2193,6 +2206,30 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             return parada;
         }
+
+        //Harley Cerrada por Cartera
+        private bool EsCerradaPorCartera(string idOT, string consecutivoPedido)
+        {
+            bool cerrada = false;
+
+            using (SqlConnection sqlconectar = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionISID].ConnectionString))
+            {
+                sqlconectar.Open();
+                string query = "SELECT 1 FROM tblReporteOT WHERE Id_OT = @IdOT AND Consecutivo_Pedido = @Pedido AND Cerrada = 1";
+
+                using (SqlCommand cmd = new SqlCommand(query, sqlconectar))
+                {
+                    cmd.Parameters.AddWithValue("@IdOT", idOT);
+                    cmd.Parameters.AddWithValue("@Pedido", consecutivoPedido);
+
+                    object result = cmd.ExecuteScalar();
+                    cerrada = result != null;
+                }
+            }
+            return cerrada;
+        }
+
+
 
         private bool EsAnulada(string idOT, string pedido)
         {
@@ -3802,6 +3839,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             else
             {
                 lblPararCartera.Visible = false;
+            }
+            if (EsCerradaPorCartera(id, pedido))
+            {
+                lblCerradaPorCartera.Text = "OT Cerrada por cartera";
+                lblCerradaPorCartera.CssClass = "rounded p-2";
+
+                lblCerradaPorCartera.Visible = true;
+            }
+            else
+            {
+                lblCerradaPorCartera.Visible = false;
             }
 
             if (EsAnulada(id, pedido))
