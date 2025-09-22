@@ -157,10 +157,7 @@
 }
 
 .fila-seleccionada1 {
-    /* background-color: #243451 !important;
-    color: white !important;*/
-
-
+    color: white !important;
     background: radial-gradient(circle, #083557, #1C1C1C); /* Radial gradient */
 }
 
