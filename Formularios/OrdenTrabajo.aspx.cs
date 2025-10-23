@@ -11477,7 +11477,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private int Consultar_Id_Numerico_X(string objeto, double ancho)
         {
             string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-            string sSql = "SELECT Id_Numerico FROM tblPanel WHERE Id_Panel = @Id_Panel AND Ancho = @Ancho";
+            string sSql = "SELECT Id_Numerico FROM tblPanel WHERE Id_Panel = @Id_Panel AND Ancho = @Ancho ORDER BY Id_Numerico";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
