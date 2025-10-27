@@ -1,60 +1,62 @@
 ﻿using AjaxControlToolkit;
+using AjaxControlToolkit.HtmlEditor.ToolbarButtons;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.Math;
 using DocumentFormat.OpenXml.Office.Word;
+using DocumentFormat.OpenXml.Office2010.CustomUI;
 using DocumentFormat.OpenXml.Office2010.Drawing;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Office2013.Drawing.Chart;
+using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.Office.Interop.Excel;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.Formula.Functions;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using Org.BouncyCastle.Utilities;
+using SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Data.Entity.Core.Objects;
 using System.Data.SqlClient;
+using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.ServiceModel.Channels;
 using System.Text;
 using System.Web;
 using System.Web.Services;
+using System.Web.Services.Description;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Windows.Forms;
+using System.Windows.Input;
 using System.Windows.Media.TextFormatting;
+using static NPOI.SS.Format.CellNumberFormatter;
+using static SISTEMA_INTEGRAL_DUCON.Formularios.OrdenTrabajo;
 using static SISTEMA_INTEGRAL_DUCON.Formularios.Ventas.Clientes;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 using DataTable = System.Data.DataTable;
 using ListItem = System.Web.UI.WebControls.ListItem;
-using System.Runtime.InteropServices;
-using static SISTEMA_INTEGRAL_DUCON.Formularios.OrdenTrabajo;
-using System.Web.UI.WebControls.WebParts;
-using DocumentFormat.OpenXml.Bibliography;
-using System.Drawing;
-using OfficeOpenXml.Style;
-using OfficeOpenXml;
-using NPOI.SS.Formula.Functions;
-using AjaxControlToolkit.HtmlEditor.ToolbarButtons;
-using System.Windows.Forms;
-using TextBox = System.Web.UI.WebControls.TextBox;
-using SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin;
-using Microsoft.Office.Interop.Excel;
-using System.Security.Cryptography;
-using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
-using System.Web.UI.HtmlControls;
-using Org.BouncyCastle.Utilities;
-using static NPOI.SS.Format.CellNumberFormatter;
-using DocumentFormat.OpenXml.Office2010.CustomUI;
-using NPOI.HSSF.UserModel;
-using NPOI.SS.UserModel;
-using NPOI.XSSF.UserModel;
-using DocumentFormat.OpenXml.Drawing;
 using Path = System.IO.Path;
 using TableCell = System.Web.UI.WebControls.TableCell;
-using System.Windows.Input;
-using System.Web.Services.Description;
-using System.Globalization;
-using DocumentFormat.OpenXml.Wordprocessing;
+using TextBox = System.Web.UI.WebControls.TextBox;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
@@ -4996,6 +4998,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 TableCell cell2 = e.Item.Cells[18];
                 cell2.Text = (Esc == 1) ? "Si" : "No";
 
+                TableCell IdObjeto = e.Item.Cells[1];
+                IdObjeto.ToolTip = IdObjeto.Text;
+
+                TableCell DescricopmObjeto = e.Item.Cells[2];
+                DescricopmObjeto.ToolTip = DescricopmObjeto.Text;
 
 
 
@@ -5580,11 +5587,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 //Formato de comas
                 e.Item.Cells[9].Text = double.TryParse(e.Item.Cells[9].Text, out var val9) ? val9.ToString("N0") : "";
-                e.Item.Cells[10].Text = double.TryParse(e.Item.Cells[10].Text, out var val10) ? val10.ToString("N2") : "";;
+                e.Item.Cells[10].Text = double.TryParse(e.Item.Cells[10].Text, out var val10) ? val10.ToString("N2") : ""; ;
 
                 DataRowView rowView = (DataRowView)e.Item.DataItem;
                 string piezaValue = rowView["Pieza"].ToString();
-                                                             
+
                 if (piezaValue == "Total Insumos" || piezaValue == "Por Imprevistos" || piezaValue == "MO Ducon" || piezaValue == "Valor Venta")
                 {
                     e.Item.Font.Bold = true;
@@ -13498,7 +13505,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 int CantidadExistentes = DataGridObjNoExiste.Items.Count;
 
-                if(CantidadExistentes > 0)
+                if (CantidadExistentes > 0)
                 {
                     string script = @"CerrarCargarOK();";
                     ScriptManager.RegisterStartupScript(this, GetType(), "CerrarCargarOK", script, true);
@@ -15671,7 +15678,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 if (ArchivoEstaBloqueado(ArchivoEspecial))
                 {
-                   
+
                     Session["Id_OT2"] = tbOT.Text;
                     Session["pedido2"] = ddlNumbers.SelectedItem.Text;
 
@@ -15746,7 +15753,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         return;
                     }
 
-                   
+
                 }
             }
             else
@@ -23325,7 +23332,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
                 catch (Exception ex)
                 {
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showSuccess", "alert('Ocurrió un error al cargar los módulos.');", true);
+                    //ScriptManager.RegisterStartupScript(this, this.GetType(), "showSuccess", "alert('Ocurrió un error al cargar los módulos.');", true);
                 }
             }
         }
@@ -24092,7 +24099,92 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
             else
             {
-                    return 0;
+                return 0;
+            }
+        }
+
+        protected void DataGridModuloObjetos_ItemDataBound(object sender, DataGridItemEventArgs e)
+        {
+
+            if (e.Item.ItemType == ListItemType.Header)
+            {
+                for (int i = 0; i < e.Item.Cells.Count; i++)
+                {
+                    if (i != 0)
+                    {                      
+                       e.Item.Cells[i].CssClass = "resizable-header";
+                    }
+
+                }
+            }
+
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                string descripcion = DataBinder.Eval(e.Item.DataItem, "Descripcion_Modulo")?.ToString();
+
+                // Columna 4 según tu ejemplo
+                TableCell descripcionCell = e.Item.Cells[4];
+
+                //  Asignar tooltip con el valor original
+                descripcionCell.Attributes["title"] = descripcion;
+
+                bool Chequeado = Convert.ToBoolean(DataBinder.Eval(e.Item.DataItem, "Chequeado"));
+                e.Item.Cells[5].Text = Chequeado ? "Sí" : "No";
+
+           
+            }
+
+        }
+
+        protected void DataGridModuloObjetos_ItemCommand(object source, DataGridCommandEventArgs e)
+        {
+            if (e.CommandName == "VerModulo")
+            {
+              
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                DataGridItem row = DataGridModuloObjetos.Items[rowIndex];
+
+                int index = e.Item.ItemIndex;
+                string descripcionModulo = DataGridModuloObjetos.DataKeys[index].ToString();
+
+                TextDescripcionFamilia.Text = descripcionModulo;
+
+                foreach (DataGridItem item in DataGridModuloObjetos.Items)
+                {
+                    if (item != row)
+                    {
+                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+                    }
+                }
+
+                //se usa Para darle un color a la fila seleccionada  
+                e.Item.CssClass = "fila-seleccionada";
+            }
+        }
+
+        protected void DatagridModulo1_ItemDataBound(object sender, DataGridItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Header)
+            {
+                for (int i = 0; i < e.Item.Cells.Count; i++)
+                {
+                    if (i != 0)
+                    {
+                        e.Item.Cells[i].CssClass = "resizable-header";
+                    }
+
+                }
+            }
+
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                string descripcion = DataBinder.Eval(e.Item.DataItem, "Descripcion_Modulo")?.ToString();
+
+                // Columna 4 según tu ejemplo
+                TableCell descripcionCell = e.Item.Cells[3];
+
+                //  Asignar tooltip con el valor original
+                descripcionCell.Attributes["title"] = descripcion;
             }
         }
 

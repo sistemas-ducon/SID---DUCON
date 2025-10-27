@@ -56,7 +56,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Login
             }
             else
             {
-                lblError.Text = "Ingrese sus credenciales";
+                lblError.Text = "Credenciales inválidas";
             }
 
             cmd.Connection.Close();

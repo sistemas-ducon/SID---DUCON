@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.SqlClient;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using static SISTEMA_INTEGRAL_DUCON.Formularios.Diseño_Venta;
+using static SISTEMA_INTEGRAL_DUCON.Formularios.OrdenTrabajo;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 {
@@ -31,6 +32,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     CargarSiempre();
 
                     string tipoAccion = Session["Modulo"] as string;
+
+                    //Validar nombre de la pagina segun accion 
+                    if (Session["Modulo"] != null)
+                    {
+                        string accion = Session["Modulo"].ToString();
+                        this.Page.Title = $"{accion} Módulo";
+                    }
+
+
                     if (tipoAccion == "Nuevo")
                     {
                         string scriptDisableTabs = @"
@@ -1361,7 +1371,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 }
 
                 // Asignar valores de la fila a los controles correspondientes
-                CheckCostearCon.Checked = Convert.ToBoolean(row.Cells[13].Text);
+                CheckCostearCon.Checked = row.Cells[13].Text.Trim().Equals("Sí", StringComparison.OrdinalIgnoreCase);
                 TextCantidadCon.Text = row.Cells[5].Text;
                 TextDctoAltura.Text = row.Cells[9].Text;
                 TextDctoAncho.Text = row.Cells[8].Text;
@@ -1369,7 +1379,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
                 TextAncho.Text = row.Cells[10].Text;
                 TextAlto.Text = row.Cells[11].Text;
-                CheckPieEsCon.Checked = Convert.ToBoolean(row.Cells[7].Text);
+                CheckPieEsCon.Checked = row.Cells[7].Text.Trim().Equals("Sí", StringComparison.OrdinalIgnoreCase);
                 TextDivisionesCon.Text = row.Cells[12].Text;
 
                 DropDownList3.Enabled = false;
@@ -2653,6 +2663,38 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
         protected void TextBuscarFamiliaModulo_TextChanged(object sender, EventArgs e)
         {
             llenarDatagridFamiliaFiltro();
+        }
+
+        protected void DataGrid3_ItemDataBound(object sender, DataGridItemEventArgs e)
+        {
+
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                string InsumoPieza = DataBinder.Eval(e.Item.DataItem, "Pieza")?.ToString();
+                TableCell InsumoPiezaCell = e.Item.Cells[3];
+                InsumoPiezaCell.Attributes["title"] = InsumoPieza;
+
+                // PiezaEscalable está en la columna 7 (contando desde 0)
+                bool escalable = Convert.ToBoolean(DataBinder.Eval(e.Item.DataItem, "PiezaEscalable"));
+                e.Item.Cells[7].Text = escalable ? "Sí" : "No";
+
+                // Costear está en la columna 13
+                bool costear = Convert.ToBoolean(DataBinder.Eval(e.Item.DataItem, "Costear"));
+                e.Item.Cells[13].Text = costear ? "Sí" : "No";
+            }
+        }
+
+        protected void DataGrid2_ItemDataBound(object sender, DataGridItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+  
+                // PiezaEscalable está en la columna 7 (contando desde 0)
+                bool despachado = Convert.ToBoolean(DataBinder.Eval(e.Item.DataItem, "Reportar_Despacho"));
+                e.Item.Cells[7].Text = despachado ? "Sí" : "No";
+
+
+            }
         }
     }
 }

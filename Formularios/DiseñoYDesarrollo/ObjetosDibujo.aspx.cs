@@ -69,6 +69,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     btnAgregarInsumo.Enabled = false;
                     btnAgregarInsumo.CssClass = "btn btn-sm btn-outline-secondary";
 
+                    //Validar nombre de la pagina segun accion 
+                    if (Session["CrudObjetosDibujo"] != null)
+                    {
+                        string accion = Session["CrudObjetosDibujo"].ToString();
+                        this.Page.Title = $"{accion} Objeto";
+                    }
+
                     // Manejar  el evento de Anadir un modulo a un Objeto y/o Eliminar 
 
                     if (Session["ControlTapConfigurar"]?.ToString() == "1")

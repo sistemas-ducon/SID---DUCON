@@ -12,6 +12,37 @@
     <link href="../../Recursos/CSS/login.css" rel="stylesheet" />
     <title>Login</title>
 </head>
+
+    <script>
+    $(document).ready(function () {
+
+        // Enter en usuario → focus en password
+        $('#<%= tbUsuario.ClientID %>').on('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                $('#<%= tbPassword.ClientID %>').focus();
+            }
+        });
+
+        // Enter en password → click al botón si todo está lleno
+        $('#<%= tbPassword.ClientID %>').on('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+
+                const usuario = $('#<%= tbUsuario.ClientID %>').val().trim();
+                const password = $('#<%= tbPassword.ClientID %>').val().trim();
+
+                if (usuario !== "" && password !== "") {
+                    $('#<%= btbIngresar.ClientID %>').click();
+                } else {
+                    if (usuario === "") $('#<%= tbUsuario.ClientID %>').focus();
+                }
+            }
+        });
+
+    });
+    </script>
+
     
 <body>
     
@@ -48,7 +79,7 @@
                     </div>
                 
                    <div class="row">
-                    <asp:Label runat="server" ID="lblError" CssClass="lblError"></asp:Label>
+                    <asp:Label runat="server" ID="lblError" style="color:red" CssClass="lblError"></asp:Label>
                     </div>   
                        
                     

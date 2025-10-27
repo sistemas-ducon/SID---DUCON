@@ -233,6 +233,15 @@
     text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
 }
 
+.auto-width-column1 {
+    width: auto;
+    max-width: 350px; /* Puedes ajustar este valor según el ancho máximo deseado */
+    white-space: nowrap; /* Esto asegura que el texto no se rompa en múltiples líneas */
+    overflow: hidden; /* Oculta el contenido que desborda del ancho máximo */
+    text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
+    height: 1em;
+}
+
 
 
 
@@ -539,12 +548,11 @@
     }
 
 .fila-seleccionada1 {
-    /* background-color: #243451 !important;
-    color: white !important;*/
-
-
     background: radial-gradient(circle, #083557, #1C1C1C ); /* Radial gradient */
+    color: white !important;
 }
+
+
 
 .RojoEfecto {
     background: repeating-linear-gradient(45deg, #953232, #752929 100px);
@@ -591,3 +599,13 @@
     .overlay-label:hover {
         transform: translate(-50%, -200%); /* Baja más para ver lo que hay detrás */
     }
+
+.upper-text {
+    text-transform: uppercase;
+}
+
+
+.header-grid {
+    font-weight: bold;
+}
+

@@ -16,7 +16,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
 
     <link type="text/css" href="../../Recursos/CSS/DiseñoYDesarrollo/ObjetosDibujo.css" rel="stylesheet" />
-    <title>Modulo</title>
+    <title></title>
 
 <style>
     .modal-pos-custom {
@@ -162,14 +162,14 @@
                                             </div>
                                             <div class="card-body p-1" style="height: 34rem; max-width: 100%; overflow-x: auto;">
                                                 <asp:DataGrid CssClass="table table-bordered table-responsive table-sm table-hover form-control-sm bg-white shadow-sm"
-                                                    ID="DataGrid2" runat="server" AutoGenerateColumns="false">
+                                                    ID="DataGrid2" runat="server" AutoGenerateColumns="false" OnItemDataBound="DataGrid2_ItemDataBound">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm" />
                                                     <Columns>
                                                         <asp:TemplateColumn HeaderText=". . .">
                                                             <ItemTemplate>
                                                                 <asp:LinkButton ID="lnkView" runat="server" CommandName="DatagridTipoInsumo"
                                                                     CommandArgument='<%# Container.ItemIndex %>'
-                                                                    Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                    Text="<i class='bi bi-pencil-square bi-4x'></i>" />
                                                             </ItemTemplate>
                                                         </asp:TemplateColumn>
                                                         <asp:BoundColumn DataField="Id_Panel" HeaderText="Panel" ItemStyle-CssClass="auto-width-column" />
@@ -268,7 +268,7 @@
                                             <div class="col-12 col-sm-6 col-md-4">
                                                 <div class="input-group input-group-sm d-flex gap-2">
                                                     <asp:Label runat="server" class="col-form-label-sm">Criterio</asp:Label>
-                                                    <asp:TextBox runat="server" ID="TextCriterio" class="form-control form-control-sm" OnTextChanged="DropDownList1_TextChanged" AutoPostBack="true" />
+                                                    <asp:TextBox runat="server" ID="TextCriterio" class="form-control form-control-sm upper-text" OnTextChanged="DropDownList1_TextChanged" AutoPostBack="true" />
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-6 col-md-2">
@@ -292,7 +292,7 @@
                                                                     <ItemTemplate>
                                                                         <asp:LinkButton ID="lnkView" runat="server" CommandName="DatagridInsumo"
                                                                             CommandArgument='<%# Container.ItemIndex %>'
-                                                                            Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                            Text="<i class='bi bi-pencil-square bi-4x'></i>" />
                                                                     </ItemTemplate>
                                                                 </asp:TemplateColumn>
                                                                 <asp:BoundColumn DataField="Id_Insumo" HeaderText="Insumo" ItemStyle-CssClass="auto-width-column" />
@@ -396,7 +396,7 @@
                                                                 <div class="col-md-6">
                                                                     <div class="mb-1">
                                                                         <asp:Label runat="server" class="col-form-label-sm text-danger">Descripción pieza/Uso</asp:Label>
-                                                                        <textarea class="form-control form-control-sm mt-2" rows="2" id="txObs1" runat="server"></textarea>
+                                                                        <textarea class="form-control form-control-sm upper-text mt-2" rows="2" id="txObs1" runat="server"></textarea>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -493,28 +493,28 @@
                                 <div class="card border shadow-sm">
                                     <div class="card-body bg-light">
                                           <div class="card-body p-1" style="height: 14rem; max-width: 100%; overflow-x: auto;">
-                                                          <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid3" runat="server" AutoGenerateColumns="false" OnItemCommand="DataGrid3_ItemCommand">
+                                                          <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid3" runat="server" AutoGenerateColumns="false" OnItemCommand="DataGrid3_ItemCommand" OnItemDataBound ="DataGrid3_ItemDataBound">
                                                               <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                               <Columns>
                                                                   <asp:TemplateColumn>
                                                                       <ItemTemplate>
-                                                                          <asp:LinkButton ID="SelectInsumoID" runat="server" CommandName="ModuloIns" CommandArgument='<%# Container.ItemIndex %>'
-                                                                              Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                          <asp:LinkButton ID="SelectInsumoID" runat="server" CssClass="Tam" CommandName="ModuloIns" CommandArgument='<%# Container.ItemIndex %>'
+                                                                              Text="<i class='bi bi-pencil-square bi-4x'></i>" />
                                                                       </ItemTemplate>
                                                                   </asp:TemplateColumn>
                                                                   <asp:BoundColumn HeaderText="Item" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
                                                                   <asp:BoundColumn DataField="ID_Inventario" HeaderText="Cod.Inv" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn DataField="Pieza" HeaderText="Insumo - Pieza" ItemStyle-CssClass="auto-width-column" />
+                                                                  <asp:BoundColumn DataField="Pieza" HeaderText="Insumo - Pieza" ItemStyle-CssClass="auto-width-column2" />
                                                                   <asp:BoundColumn DataField="Sentido" HeaderText="Sentido" ItemStyle-CssClass="auto-width-column" />
                                                                   <asp:BoundColumn DataField="Cantidad" HeaderText="Cant" ItemStyle-CssClass="auto-width-column" />
                                                                   <asp:BoundColumn DataField="Abreviado" HeaderText="UND" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn DataField="PiezaEscalable" HeaderText="Esc" ItemStyle-CssClass="auto-width-column" />
+                                                                  <asp:BoundColumn DataField="PiezaEscalable" HeaderText="Esc" ItemStyle-CssClass="auto-width-column"  DataFormatString="{0:Si;No}" />
                                                                   <asp:BoundColumn DataField="DescuentoAncho" HeaderText="Dcto A" ItemStyle-CssClass="auto-width-column" />
                                                                   <asp:BoundColumn DataField="DescuentoAltura" HeaderText="Dcto H" ItemStyle-CssClass="auto-width-column" />
                                                                    <asp:BoundColumn DataField="AnchoFijo" HeaderText="A.Fijo" ItemStyle-CssClass="auto-width-column" />
                                                                   <asp:BoundColumn DataField="AltoFijo" HeaderText="H.Fijo" ItemStyle-CssClass="auto-width-column" />
                                                                   <asp:BoundColumn DataField="Divisiones" HeaderText="Div" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn DataField="Costear" HeaderText="Cost" ItemStyle-CssClass="auto-width-column" />
+                                                                  <asp:BoundColumn DataField="Costear" HeaderText="Cost" ItemStyle-CssClass="auto-width-column"  DataFormatString="{0:Si;No}" />
                                                                   <asp:BoundColumn DataField="FechaSuceso" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column" />
                                                                   <asp:BoundColumn DataField="Id_Insumo" HeaderText="Insumo" ItemStyle-CssClass="auto-width-column" />
                                                                   <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
@@ -621,7 +621,7 @@
                         <div class="col-md-5">
                             <div class="input-group input-group-sm gap-5">
                                 <asp:Label runat="server" ID="Label8" CssClass="col-form-label-sm" Text="Buscar"></asp:Label>
-                                <asp:TextBox runat="server" ID="TextBuscarFamiliaModulo" CssClass="form-control form-control-sm" OnTextChanged="TextBuscarFamiliaModulo_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="TextBuscarFamiliaModulo" CssClass="form-control form-control-sm upper-text" OnTextChanged="TextBuscarFamiliaModulo_TextChanged" AutoPostBack="true"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -637,14 +637,14 @@
                                 <div class="card-body p-1" style="height: 19rem;" max-width: 100%; overflow-x: auto;>
                                        <div class="table-responsive table-responsive-sm border shadow-sm" style="height: 18.5rem; overflow-x: auto;">
                                                 <asp:DataGrid CssClass="table table-bordered table-responsive table-sm table-hover form-control-sm bg-white shadow-sm"
-                                                    ID="IDDatagridFamilia" runat="server" AutoGenerateColumns="false" OnItemCommand="IDDatagridFamilia_ItemCommand">
+                                                    ID="IDDatagridFamilia" runat="server" AutoGenerateColumns="false" OnItemCommand="IDDatagridFamilia_ItemCommand" >
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header shadow-sm"/>
                                                     <Columns>
                                                         <asp:TemplateColumn HeaderText=". . .">
                                                             <ItemTemplate>
                                                                 <asp:LinkButton ID="lnkView" runat="server" CommandName="DatagridFamilia"
                                                                     CommandArgument='<%# Container.ItemIndex %>'
-                                                                    Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                    Text="<i class='bi bi-pencil-square bi-4x'></i>" />
                                                             </ItemTemplate>
                                                         </asp:TemplateColumn>
                                                         <asp:BoundColumn DataField="ID_Familia" HeaderText="Id" ItemStyle-CssClass="auto-width-column" />
@@ -674,7 +674,7 @@
                                                             <ItemTemplate>
                                                                 <asp:LinkButton ID="lnkView" runat="server" CommandName="ProcesoProductivo"
                                                                     CommandArgument='<%# Container.ItemIndex %>'
-                                                                    Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                    Text="<i class='bi bi-pencil-square bi-4x'></i>" />
                                                             </ItemTemplate>
                                                         </asp:TemplateColumn>
                                                         <asp:BoundColumn DataField="Id_Area" HeaderText="Id" ItemStyle-CssClass="auto-width-column" />

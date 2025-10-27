@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
     <link type="text/css" href="../../Recursos/CSS/DiseñoYDesarrollo/ObjetosDibujo.css" rel="stylesheet" />
-    <title>Objetos</title>
+    <title></title>
 
     <script>
         function DesactivarTapConfigurar() {
@@ -483,7 +483,7 @@
                                         <div class="p-1 m-2">
                                             <div class="input-group input-group-sm gap-2">
                                                 <asp:Label runat="server" ID="Label18" CssClass="form-label" Text="Criterio: "></asp:Label>
-                                                <asp:TextBox runat="server" ID="TextCriterio" onblur="this.value = this.value.trim();"  CssClass="form-control form-control-sm"></asp:TextBox>
+                                                <asp:TextBox runat="server" ID="TextCriterio" onblur="this.value = this.value.trim();"  CssClass="form-control form-control-sm upper-text "></asp:TextBox>
                                                 <asp:LinkButton runat="server" title="Buscar" ID="Buscar" Style="border: solid 1px #938f8fa1; border-radius: 0.2rem;" OnClick="ButtonBuscar_Click">
                                                    <i class="bi bi-search"></i>
                                                 </asp:LinkButton>

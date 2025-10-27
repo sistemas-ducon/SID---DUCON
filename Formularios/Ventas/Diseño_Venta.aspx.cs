@@ -9605,6 +9605,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
             ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
 
+            Session.Remove("Id_NumericoDise");
             Session["CrudObjetosDibujo"] = "Nuevo";
         }
 
@@ -9614,7 +9615,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
             ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
 
-            Session["CrudObjetosDibujo"] = "Modificar";
+            Session["CrudObjetosDibujo"] = "Copiar";
         }
 
         protected void BtnConObjDes_Click(object sender, EventArgs e)
@@ -9623,7 +9624,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string script = "window.open('" + ResolveUrl(url) + "', '_blank');";
             ScriptManager.RegisterStartupScript(this, GetType(), "openNewTab", script, true);
 
-            Session["CrudObjetosDibujo"] = "Copiar";
+            Session["CrudObjetosDibujo"] = "Modificar";
         }
 
         protected void LinkButton7_Click(object sender, EventArgs e)

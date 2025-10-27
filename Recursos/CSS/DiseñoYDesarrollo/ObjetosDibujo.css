@@ -6,6 +6,7 @@
     text-overflow: ellipsis; /* Muestra puntos suspensivos (...) cuando el texto se recorta */
     height: 1em;
 }
+
 .auto-width-column2 {
     width: auto;
     max-width: 600px; /* Puedes ajustar este valor según el ancho máximo deseado */
@@ -219,4 +220,18 @@
     border-radius: 50%; /* Hace que sea un círculo */
     font-size: 16px;
     line-height: 30px; /* Centrar verticalmente */
+}
+
+.upper-text {
+    text-transform: uppercase;
+}
+
+.resizable-header {
+    resize: horizontal;
+    overflow: auto;
+    white-space: nowrap;
+    min-width: 50px; /* Ancho mínimo */
+    max-width: 600px; /* Ancho máximo */
+    cursor: ew-resize; /* Cursor de redimensionar */
+    border: 1px solid transparent; /* Evita la línea diagonal */
 }

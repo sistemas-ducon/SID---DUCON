@@ -368,7 +368,7 @@
         });
     </script>
 
-
+  
 </head>
 
 <body translate="no">
@@ -4944,7 +4944,7 @@
                                             <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
                                                 <div class="input-group-sm">
                                                     <asp:Label class="form-label" Text="Buscar Objeto/Descripción" runat="server" ID="lbCriterio"></asp:Label>
-                                                    <asp:TextBox ID="tbCriterio" onblur="this.value = this.value.trim();" runat="server" CssClass="form-control"></asp:TextBox>
+                                                    <asp:TextBox ID="tbCriterio" onblur="this.value = this.value.trim();" runat="server" CssClass="form-control upper-text"></asp:TextBox>
                                                 </div>
                                             </div>
 
@@ -4995,8 +4995,8 @@
 
 
 
-                                                                    <asp:BoundColumn DataField="Id_Panel" HeaderText="Id Objeto" ItemStyle-CssClass="auto-width-column" />
-                                                                    <asp:BoundColumn DataField="Descripcion_Panel" HeaderText="Descripcion" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Id_Panel" HeaderText="Id Objeto" ItemStyle-CssClass="auto-width-column1" />
+                                                                    <asp:BoundColumn DataField="Descripcion_Panel" HeaderText="Descripcion" ItemStyle-CssClass="auto-width-column1" />
                                                                     <asp:BoundColumn DataField="Ancho" HeaderText="Ancho" ItemStyle-CssClass="auto-width-column" />
                                                                     <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column" />
                                                                     <asp:BoundColumn DataField="Profundidad" HeaderText="Profundidad" ItemStyle-CssClass="auto-width-column" />
@@ -5031,6 +5031,8 @@
 
 
                                                         </div>
+
+
 
                                                     </div>
                                                 </div>
@@ -5085,7 +5087,8 @@
                                                     <div class="col-12">
                                                         <div class="table-responsive mb-1" style="max-height: 9rem; height: 9rem; overflow-x: auto;">
                                                             <h5 class="datagrid-header text-center">Módulos del Objeto</h5>
-                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridModuloObjetos" runat="server">
+                                                            <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" AllowSorting="true" AutoGenerateColumns="false" ID="DataGridModuloObjetos" runat="server" OnItemDataBound="DataGridModuloObjetos_ItemDataBound" OnItemCommand="DataGridModuloObjetos_ItemCommand"
+                                                                DataKeyField="Descripcion_Modulo">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                                 <Columns>
@@ -5102,8 +5105,7 @@
                                                                             <%# Eval("Descripcion_Modulo").ToString().Replace("  ", "&nbsp;&nbsp;") %>
                                                                         </ItemTemplate>
                                                                     </asp:TemplateColumn>
-
-                                                                    <asp:BoundColumn DataField="Chequeado" HeaderText="OK" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:BoundColumn DataField="Chequeado" HeaderText="OK" ItemStyle-CssClass="auto-width-column"  DataFormatString="{0:Si;No}"/>
                                                                     <asp:BoundColumn DataField="Ubicacion_Modulo" HeaderText="Pos" ItemStyle-CssClass="auto-width-column" />
                                                                     <asp:BoundColumn DataField="Altura" HeaderText="Altura" ItemStyle-CssClass="auto-width-column" />
                                                                     <asp:BoundColumn DataField="Cantidad" HeaderText="Cantidad" ItemStyle-CssClass="auto-width-column" />
@@ -5144,19 +5146,19 @@
                                             <ul class="nav nav-tabs gap-3" id="miPestañas23">
                                                 <li class="nav-item">
                                                     <a class="nav-link text-white active" id="InfObjetos-tab" data-bs-toggle="tab" href="#InfObjetos-Content">
-                                                        <i class="bi bi-info-circle"></i>Información Objetos
+                                                        <i class="bi bi-info-circle"></i> Información Objetos
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link text-white" id="DespiecePrecio-tab" data-bs-toggle="tab" href="#DespiecePrecio-Content">
-                                                        <i class="bi bi-tools"></i>Despiece y Precio del Objeto
+                                                    <a class="nav-link text-white" id="DespiecePrecio-tab" title="Volver Objetos" data-bs-toggle="tab" href="#DespiecePrecio-Content">
+                                                        <i class="bi bi-tools"></i> Despiece y Precio del Objeto
                                                     </a>
                                                 </li>
                                             </ul>
 
                                         </div>
 
-                                        <asp:LinkButton ID="LinkButton1" data-bs-dismiss="modal" runat="server" aria-label="Close" Style="color: white !important; margin-right: 1.5rem; font-size: 1.8rem; text-decoration: none;">
+                                        <asp:LinkButton ID="LinkButton1" data-bs-dismiss="modal" runat="server" aria-label="Close" Style="color: white !important; margin-right: 1.5rem; font-size: 1.8rem; text-decoration: none;" ToolTip="Cerrar Despiece">
                                             <i class="bi bi-x-circle"></i>
                                         </asp:LinkButton>
                                     </nav>
@@ -5504,31 +5506,31 @@
                                             <div class="contenedor-icono">
 
 
-                                                <asp:LinkButton runat="server" title="" ID="BtnNuevoModulo" OnClick="BtnNuevoModulo_Click">
+                                                <asp:LinkButton runat="server" title="" ID="BtnNuevoModulo" OnClick="BtnNuevoModulo_Click" ToolTip="Nuevo Modulo">
                                                     <i class="bi bi-file-earmark-fill"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="" ID="BtnGuardarModulo">
+                                                <asp:LinkButton runat="server" title="" ID="BtnGuardarModulo"  ToolTip="Guardar Modulo">
                                                   <i class="bi bi-floppy-fill"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="" ID="BtnModificarModulo" OnClick="BtnModificarModulo_Click">
+                                                <asp:LinkButton runat="server" title="" ID="BtnModificarModulo" OnClick="BtnModificarModulo_Click"  ToolTip="Modificar Modulo">
                                                    <i class="bi bi-wrench-adjustable"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="" ID="BtnConsultarModulo" OnClick="BtnConsultarModulo_Click">
+                                                <asp:LinkButton runat="server" title="" ID="BtnConsultarModulo" OnClick="BtnConsultarModulo_Click"  ToolTip="Consultar Modulo">
                                                  <i class="bi bi-search"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="" ID="BtnEliminarModulo" OnClick="BtnEliminarModulo_Click">
+                                                <asp:LinkButton runat="server" title="" ID="BtnEliminarModulo" OnClick="BtnEliminarModulo_Click"  ToolTip="Eliminar Modulo">
                                                <i class="bi bi-trash-fill"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="" ID="BtnCopiarModuloAtributos" OnClick="BtnCopiarModuloAtributos_Click">
+                                                <asp:LinkButton runat="server" title="" ID="BtnCopiarModuloAtributos" OnClick="BtnCopiarModuloAtributos_Click"  ToolTip="Copiar Modulo">
                                                     <i class="bi bi-stickies-fill"></i>
                                                 </asp:LinkButton>
 
-                                                <asp:LinkButton runat="server" title="" ID="BtnChequear" OnClick="BtnChequear_Click">
+                                                <asp:LinkButton runat="server" title="" ID="BtnChequear" OnClick="BtnChequear_Click"  ToolTip="Chequear Modulo">
                                                 <i class="bi bi-check-square-fill"></i>
                                                 </asp:LinkButton>
 
@@ -5568,13 +5570,13 @@
                                         <div class="col-lg-2 col-md-6 mb-1">
                                             <div class="d-flex align-items-center">
                                                 <asp:Label ID="Label24" runat="server" CssClass="me-2 col-form-label-sm" Text="Criterio"></asp:Label>
-                                                <asp:TextBox ID="TextCriterioModulo" onblur="this.value = this.value.trim();"  runat="server" CssClass="form-control form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterioModulo_TextChanged"></asp:TextBox>
+                                                <asp:TextBox ID="TextCriterioModulo" placeholder="Id Módulo" onblur="this.value = this.value.trim();"  runat="server" CssClass="form-control form-control-sm upper-text " AutoPostBack="true" OnTextChanged="TextCriterioModulo_TextChanged"></asp:TextBox>
                                             </div>
                                         </div>
 
                                         <!-- Otro campo -->
                                         <div class="col-lg-3 col-md-6 mb-1">
-                                            <asp:TextBox ID="TextDescripcionFamilia" runat="server" CssClass="form-control form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterioModulo_TextChanged"></asp:TextBox>
+                                            <asp:TextBox ID="TextDescripcionFamilia" runat="server" placeholder="Descripción Módulo" CssClass="form-control form-control-sm upper-text" AutoPostBack="true" OnTextChanged="TextCriterioModulo_TextChanged"></asp:TextBox>
                                         </div>
 
                                         <!-- Altura -->
@@ -5594,16 +5596,16 @@
                                 </div>
 
                                 <div class="card-body">
-                                    <div class="row">
+                                    <div class="row pb-2">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <div class="table-responsive table-responsive-sm gap-2 border shadow-sm" style="height: 18.9rem; overflow-x: auto;">
-                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DatagridModulo1" runat="server" AutoGenerateColumns="false" OnItemCommand="DatagridModulo1_ItemCommand">
+                                            <div class="table-responsive table-responsive-sm gap-2 border shadow-sm" style="height: 40vh; overflow-x: auto;">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DatagridModulo1" runat="server" AutoGenerateColumns="false" OnItemCommand="DatagridModulo1_ItemCommand" OnItemDataBound="DatagridModulo1_ItemDataBound">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                     <Columns>
                                                         <asp:TemplateColumn>
                                                             <ItemTemplate>
-                                                                <asp:LinkButton ID="SelectInsumoID" runat="server" CommandName="Modulo" CommandArgument='<%# Container.ItemIndex %>'
-                                                                    Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                <asp:LinkButton ID="SelectInsumoID" runat="server" CssClass="Tam" CommandName="Modulo" CommandArgument='<%# Container.ItemIndex %>'
+                                                                    Text="<i class='bi bi-pencil-square bi-4x'></i>" />
                                                             </ItemTemplate>
                                                         </asp:TemplateColumn>
                                                         <asp:BoundColumn DataField="Id_Modulo" HeaderText="Modulo" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
@@ -5625,16 +5627,16 @@
                                         </div>
                                     </div>
 
-                                    <div class="row mt-2">
+                                    <div class="row pt-2">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <div class="table-responsive table-responsive-sm gap-2 border shadow-sm" style="height: 20rem; overflow-x: auto;">
+                                            <div class="table-responsive table-responsive-sm gap-2 border shadow-sm" style="height: 40vh; overflow-x: auto;">
                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid3" runat="server" AutoGenerateColumns="false" OnItemCommand="DataGrid3_ItemCommand">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                     <Columns>
                                                         <asp:TemplateColumn>
                                                             <ItemTemplate>
-                                                                <asp:LinkButton ID="SelectInsumoID" runat="server" CommandName="ModuloIns" CommandArgument='<%# Container.ItemIndex %>'
-                                                                    Text="<i class='bi bi-pencil-square text-dark'></i>" />
+                                                                <asp:LinkButton ID="SelectInsumoID" runat="server" CssClass="Tam" CommandName="ModuloIns" CommandArgument='<%# Container.ItemIndex %>'
+                                                                    Text="<i class='bi bi-pencil-square bi-4x'></i>" />
                                                             </ItemTemplate>
                                                         </asp:TemplateColumn>
                                                         <asp:BoundColumn HeaderText="Item" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
@@ -5799,12 +5801,12 @@
                                         </div>
 
                                         <div class="d-flex align-items-center me-2 col-5">
-                                            <asp:Label ID="LblCriterio" runat="server" CssClass="me-2 col-form-label-sm" Text="Criterio"></asp:Label>
-                                            <asp:TextBox ID="TextCriterio" runat="server" CssClass="form-control form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterio_TextChanged"></asp:TextBox>
+                                            <asp:Label ID="LblCriterio" runat="server" CssClass="me-2 col-form-label-sm" Text="Descripción Insumo"></asp:Label>
+                                            <asp:TextBox ID="TextCriterio" runat="server" CssClass="form-control form-control-sm upper-text" AutoPostBack="true" OnTextChanged="TextCriterio_TextChanged"></asp:TextBox>
                                         </div>
 
                                         <div class="d-flex align-items-center col-3">
-                                            <asp:Label ID="LblInv" runat="server" CssClass="me-2 col-form-label-sm" Text="Inv"></asp:Label>
+                                            <asp:Label ID="LblInv" runat="server" CssClass="me-2 col-form-label-sm" Text="Codigo Inv"></asp:Label>
                                             <asp:TextBox ID="TextInv" runat="server" CssClass="form-control form-control-sm" AutoPostBack="true" OnTextChanged="TextCriterio_TextChanged"></asp:TextBox>
                                         </div>
                                     </div>
@@ -6344,6 +6346,8 @@
             input.value = parteEntera + parteDecimal;
         }
     </script>
+
+   
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
