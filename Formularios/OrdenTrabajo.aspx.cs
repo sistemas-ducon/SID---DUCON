@@ -15547,7 +15547,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     string rutaCarpeta = Path.Combine(rutaBase, tbOT.Text);
                     string rutaCompleta = Path.Combine(rutaCarpeta, archivo);
 
-                    LeerExcelYInsertar(rutaCompleta);
+                    // Convertir el campo 'Cantidad' a entero
+                    int cantidad = Convert.ToInt32(row["Cantidad"]);
+
+                    LeerExcelYInsertar(rutaCompleta, cantidad);
 
                 }
             }
@@ -15670,7 +15673,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             return dataTable;
         }
 
-        public void LeerExcelYInsertar(string ArchivoEspecial)
+        public void LeerExcelYInsertar(string ArchivoEspecial, int cantidad)
         {
             // Verificar si el archivo existe
             if (File.Exists(ArchivoEspecial))
@@ -15726,6 +15729,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     string sSql = "Insert Into tblEmpaque(Id_OT,Pedido,Plano,Objeto,Ancho,altura,profundidad,Descripción_Objeto,Cantidad_Solicitada,Procedencia,Descripcion_Grupo,UndXPaquete)" +
                                                   " Values(@Id_OT, @Pedido, @Plano, @Objeto, 0, 0, 1, @DescripcionObjeto, @CantidadSolicitada, 'DESARROLLO', 'MUEBLE ESPECIAL', 1)";
 
+                                    int cantidExel = Convert.ToInt32(sheet.GetRow(filaexcel).GetCell(2).ToString());
+
+
                                     using (SqlCommand command = new SqlCommand(sSql, connection))
                                     {
                                         command.Parameters.AddWithValue("@Id_OT", tbOT.Text);
@@ -15734,7 +15740,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                         string objeto = "D-PartNo." + sheet.GetRow(filaexcel).GetCell(0).ToString() + " - " + sheet.GetRow(filaexcel).GetCell(1).ToString();
                                         command.Parameters.AddWithValue("@Objeto", objeto != null && objeto.Length > 100 ? objeto.Substring(0, 100) : objeto);
                                         command.Parameters.AddWithValue("@DescripcionObjeto", objeto);
-                                        command.Parameters.AddWithValue("@CantidadSolicitada", Convert.ToInt32(sheet.GetRow(filaexcel).GetCell(2).ToString()));
+                                        command.Parameters.AddWithValue("@CantidadSolicitada", cantidExel * cantidad);
 
                                         // Ejecutar la inserción
                                         command.ExecuteNonQuery();
