@@ -16322,7 +16322,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
                 connectionISID.Open();
 
-                string sSql = "SELECT SUM (tblOT.ValorPedido) FROM tblTipoPedido INNER JOIN tblOT ON tblTipoPedido.Id_TipoPedido = tblOT.Id_TipoPedido " +
+                string sSql = "SELECT AfectaBolsa FROM tblTipoPedido INNER JOIN tblOT ON tblTipoPedido.Id_TipoPedido = tblOT.Id_TipoPedido " +
                               "WHERE (((tblOT.Id_OT)= @OT)) and Consecutivo_Pedido= @pedido";
 
                 using (SqlCommand cmd = new SqlCommand(sSql, connectionISID))
