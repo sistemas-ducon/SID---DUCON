@@ -3610,9 +3610,18 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             {
 
                 DeshabilitarDivYContenido(miDiv);
+                HabilitarCamposShowCase(); // Agrega Anderson Betancur Melchor
                 TextObsDibDes.Attributes.Remove("readonly");
             }
          }
+
+        private void HabilitarCamposShowCase()
+        {
+            CheckBox18.Enabled = true;
+            CheckBox19.Enabled = true;
+            CheckBox20.Enabled = true;
+            CheckBox21.Enabled = true;
+        }
 
         private void DeshabilitarDivYContenidoMitad(System.Web.UI.Control container)
         {
@@ -4187,12 +4196,24 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             fechaTextBox = fechaTextBox.Date;
             fechaEntrega = fechaEntrega.Date;
 
+            DateTime fechaHoy = DateTime.Now;
+
             if (fechaTextBox < fechaEntrega)
             {
                 DateTime now = DateTime.Now;
                 TextFec.Text = now.ToString("yyyy-MM-dd");
 
                 string contenidoModalOT = "La programación del Show Case no puede ser menor a la fecha de entrega del diseño " + TextEntrega.Text;
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#FechaSC').modal('show'); $('#FechaSC2').text('" + contenidoModalOT + "');", true);
+            }
+
+
+            if (fechaTextBox < fechaHoy)
+            {
+                DateTime now = DateTime.Now;
+                TextFec.Text = now.ToString("yyyy-MM-dd");
+
+                string contenidoModalOT = "La programación del Show Case no puede ser menor a la fecha actual " + fechaHoy.ToString().ToString();
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#FechaSC').modal('show'); $('#FechaSC2').text('" + contenidoModalOT + "');", true);
             }
         }
@@ -5602,7 +5623,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 if (DateTime.TryParse(scFecha, out fechaSC))
                 {
                     // Verificar si la fecha es igual o menor a la fecha actual
-                    if (fechaSC <= DateTime.Now)
+                    if (fechaSC < DateTime.Now.Date)
                     {
                         e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#c86868"); // Rojo
                         e.Item.ForeColor = System.Drawing.Color.White;
