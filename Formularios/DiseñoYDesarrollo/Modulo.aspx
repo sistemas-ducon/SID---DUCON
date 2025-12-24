@@ -517,7 +517,7 @@
                                                                   <asp:BoundColumn DataField="Costear" HeaderText="Cost" ItemStyle-CssClass="auto-width-column"  DataFormatString="{0:Si;No}" />
                                                                   <asp:BoundColumn DataField="FechaSuceso" HeaderText="Fecha" ItemStyle-CssClass="auto-width-column" />
                                                                   <asp:BoundColumn DataField="Id_Insumo" HeaderText="Insumo" ItemStyle-CssClass="auto-width-column" />
-                                                                  <asp:BoundColumn DataField="Responsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
+                                                                  <asp:BoundColumn DataField="miResponsable" HeaderText="Responsable" ItemStyle-CssClass="auto-width-column" />
                                                                   <asp:BoundColumn DataField="Id_ModuloInsumo" HeaderText="ID" ItemStyle-CssClass="auto-width-column" />
                                                                   <asp:BoundColumn DataField="DescripcionPieza" HeaderText="" ItemStyle-CssClass="auto-width-column" Visible="false"/>
                                                               </Columns>
