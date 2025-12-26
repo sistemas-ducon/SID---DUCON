@@ -5601,6 +5601,22 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#b4d4ff");
                     }
                 }
+
+                //Poner de color verde la fila si le dan doble click desde diseño
+                // Validar sesión
+                if (Session["Departamento"] != null &&
+                    Session["Departamento"].ToString().ToUpper() == "DISEÑO")
+                {
+                    // ID_Inventario está en la columna 1 (ajusta si cambia)
+                    string idInventario = e.Item.Cells[1].Text.Trim();
+
+                    if (!string.IsNullOrEmpty(idInventario) && idInventario != "&nbsp;")
+                    {
+                        // Solo si tiene ID
+                        e.Item.Attributes["ondblclick"] = "filaDobleClick(this);";
+                        e.Item.Style["cursor"] = "pointer";
+                    }
+                }
             }
         }
 

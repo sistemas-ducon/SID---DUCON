@@ -6346,7 +6346,20 @@
             input.value = parteEntera + parteDecimal;
         }
     </script>
+    <script>
+        function filaDobleClick(row) {
+            const colorSeleccion = "rgb(124, 252, 152)"; // #7CFC98
 
+            // Si ya está pintada → despintar
+            if (row.style.backgroundColor === colorSeleccion) {
+                row.style.backgroundColor = "";
+                return;
+            }
+
+            // Pintar la fila actual
+            row.style.backgroundColor = "#7CFC98";
+        }
+    </script>
    
 
 
