@@ -157,17 +157,17 @@
 
                                             <div class="col-lg-2  col-md-6 col-md-6 col-xs-6 p-2">
                                                 <asp:Label runat="server" ID="Label2" CssClass="form-label col-form-label-sm" Text="P(Cms)"></asp:Label>
-                                                <asp:TextBox runat="server" ID="TextProfundidad" CssClass="form-control form-control-sm text-center" type="number" OnTextChanged="TextProfundidad_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                                <asp:TextBox runat="server" ID="TextProfundidad" CssClass="form-control form-control-sm text-center" type="text" OnTextChanged="TextProfundidad_TextChanged" AutoPostBack="true"></asp:TextBox>
                                             </div>
 
                                             <div class="col-lg-2  col-md-6 col-md-6 col-xs-6 p-2">
                                                 <asp:Label runat="server" ID="Label3" CssClass="form-label col-form-label-sm" Text="H(Cms)"></asp:Label>
-                                                <asp:TextBox runat="server" ID="TextAltura" type="number" CssClass="form-control form-control-sm text-center"></asp:TextBox>
+                                                <asp:TextBox runat="server" ID="TextAltura" type="text" CssClass="form-control form-control-sm text-center"></asp:TextBox>
                                             </div>
 
                                             <div class="col-lg-2  col-md-6 col-md-6 col-xs-6 p-2">
                                                 <asp:Label runat="server" ID="Label4" CssClass="form-label col-form-label-sm" Text="M3"></asp:Label>
-                                                <asp:TextBox runat="server" ID="TextCubicaje" type="number" CssClass="form-control form-control-sm text-center" OnTextChanged="TextCubicaje_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                                <asp:TextBox runat="server" ID="TextCubicaje" type="text" CssClass="form-control form-control-sm text-center" OnTextChanged="TextCubicaje_TextChanged" AutoPostBack="true"></asp:TextBox>
                                             </div>
 
                                         </div>
