@@ -5816,7 +5816,7 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <div class="table-responsive table-responsive-sm gap-2 border" style="height: 41rem; overflow-x: auto;">
+                                            <div class="table-responsive table-responsive-sm gap-2 border" style="height: 32rem; overflow-x: auto;">
                                                 <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGridInsumo" runat="server" AutoGenerateColumns="false" OnItemCommand="DataGridInsumo_ItemCommand">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                     <Columns>
@@ -5826,14 +5826,28 @@
                                                                     Text="<i class='bi bi-pencil-square text-dark'></i>" />
                                                             </ItemTemplate>
                                                         </asp:TemplateColumn>
-                                                        <asp:BoundColumn DataField="Id_Insumo" HeaderText="Insumo" ItemStyle-CssClass="auto-width-column"></asp:BoundColumn>
-                                                        <asp:BoundColumn DataField="ID_Inventario" HeaderText="Cod.Inv" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Id_Insumo" HeaderText="Insumo" ItemStyle-CssClass="auto-width-column text-end"></asp:BoundColumn>
+                                                        <asp:BoundColumn DataField="ID_Inventario" HeaderText="Cod.Inv" ItemStyle-CssClass="auto-width-column text-end" />
                                                         <asp:BoundColumn DataField="Descripcion_Insumo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="Descripcion" HeaderText="Tipo Insumo" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Valor_Unitario" HeaderText="Valor Unitario" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="Valor_Unitario" HeaderText="Valor Unitario" ItemStyle-CssClass="auto-width-column text-end"  DataFormatString="{0:$#,##0}"/>
                                                         <asp:BoundColumn DataField="Abreviado" HeaderText="Causa Observación" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Factor_Ganancia" HeaderText="F.G" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Factor_Desperdicio" HeaderText="F.D" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:TemplateColumn HeaderText="F.G" ItemStyle-CssClass="auto-width-column text-end">
+                                                            <ItemTemplate>
+                                                                <%# 
+                                                                    decimal.Parse(Eval("Factor_Ganancia").ToString())
+                                                                            .ToString("#,##0.##") 
+                                                                %>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateColumn>
+                                                        <asp:TemplateColumn HeaderText="F.D" ItemStyle-CssClass="auto-width-column text-end">
+                                                        <ItemTemplate>
+                                                            <%# 
+                                                                decimal.Parse(Eval("Factor_Desperdicio").ToString())
+                                                                .ToString("#,##0.##") 
+                                                            %>
+                                                        </ItemTemplate>
+                                                        </asp:TemplateColumn>
                                                         <asp:BoundColumn DataField="AplicacionAcabado" HeaderText="A.A" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="FechaCreacion" HeaderText="Creación" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="FechaActualizacion" HeaderText="U.Actualización" ItemStyle-CssClass="auto-width-column" />
