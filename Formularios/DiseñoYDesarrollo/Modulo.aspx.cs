@@ -2667,7 +2667,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
         protected void DataGrid3_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
-
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
                 string InsumoPieza = DataBinder.Eval(e.Item.DataItem, "Pieza")?.ToString();

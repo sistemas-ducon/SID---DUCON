@@ -24210,6 +24210,32 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
+        protected void DataGrid3_ItemDataBound(object sender, DataGridItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Header)
+            {
+                for (int i = 0; i < e.Item.Cells.Count; i++)
+                {
+                    if (i != 0)
+                    {
+                        e.Item.Cells[i].CssClass = "resizable-header";
+                    }
+
+                }
+            }
+
+
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                string descripcion = DataBinder.Eval(e.Item.DataItem, "Pieza")?.ToString();
+
+                // Columna 4 según tu ejemplo
+                TableCell descripcionCell = e.Item.Cells[3];
+
+                //  Asignar tooltip con el valor original
+                descripcionCell.Attributes["title"] = descripcion;
+            }
+        }
 
         //protected void btnLimpiar_Click(object sender, EventArgs e)
         //{

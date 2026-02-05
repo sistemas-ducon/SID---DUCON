@@ -5630,7 +5630,7 @@
                                     <div class="row pt-2">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <div class="table-responsive table-responsive-sm gap-2 border shadow-sm" style="height: 40vh; overflow-x: auto;">
-                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid3" runat="server" AutoGenerateColumns="false" OnItemCommand="DataGrid3_ItemCommand">
+                                                <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid3" runat="server" AutoGenerateColumns="false" OnItemCommand="DataGrid3_ItemCommand" OnItemDataBound="DataGrid3_ItemDataBound">
                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
                                                     <Columns>
                                                         <asp:TemplateColumn>
