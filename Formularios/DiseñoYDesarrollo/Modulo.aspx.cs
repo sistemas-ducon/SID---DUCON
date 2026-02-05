@@ -1916,7 +1916,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 command.Parameters.AddWithValue("@IdModulo", idModulo);
                 command.Parameters.AddWithValue("@IdInsumo", idInsumo);
                 command.Parameters.AddWithValue("@Cantidad", Convert.ToDouble(TextCantidadCon.Text));
-                command.Parameters.AddWithValue("@DescripcionPieza", txObs1.Value);
+                command.Parameters.AddWithValue("@DescripcionPieza", txObs1.Value.ToUpper());
                 command.Parameters.AddWithValue("@Responsable", NombreUsuario);
                 command.Parameters.AddWithValue("@DescuentoAltura", Convert.ToDouble(TextDctoAltura.Text));
                 command.Parameters.AddWithValue("@DescuentoAncho", Convert.ToDouble(TextDctoAncho.Text));
@@ -1995,7 +1995,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 // Asignar los parámetros de forma segura
                 command.Parameters.AddWithValue("@Costear", CheckCostearCon.Checked ? 1 : 0);
                 command.Parameters.AddWithValue("@Cantidad", Convert.ToDouble(TextCantidadCon.Text));
-                command.Parameters.AddWithValue("@DescripcionPieza", txObs1.Value);
+                command.Parameters.AddWithValue("@DescripcionPieza", txObs1.Value.ToUpper());
                 command.Parameters.AddWithValue("@Responsable", NombreUsuario);
                 command.Parameters.AddWithValue("@FechaSuceso", DateTime.Now);
                 command.Parameters.AddWithValue("@DescuentoAltura", Convert.ToDouble(TextDctoAltura.Text));
