@@ -5646,7 +5646,8 @@
                                                         <asp:BoundColumn DataField="Abreviado" HeaderText="UND" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="DescuentoAncho" HeaderText="Dcto A" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="DescuentoAltura" HeaderText="Dcto H" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="AltoFijo" HeaderText="A.Fijo" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="AnchoFijo" HeaderText="A.Fijo" ItemStyle-CssClass="auto-width-column" />
+                                                        <asp:BoundColumn DataField="AltoFijo" HeaderText="H.Fijo" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="Divisiones" HeaderText="Div" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="Sentido" HeaderText="Sentido" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="miResponsable" HeaderText="Resposable" ItemStyle-CssClass="auto-width-column" />
