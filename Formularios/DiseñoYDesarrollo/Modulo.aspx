@@ -456,27 +456,22 @@
                                                         <div class="container mt-2">
                                                             <div class="row mt-3 p-2 shadow-sm">
                                                                 <div class="col-md-10">
-                                                                    <div class="row">
-                                                                        <div class="col-md-12">
-                                                                            <div class="input-group input-group-sm gap-1">
-                                                                                <asp:LinkButton runat="server" title="Adicionar" ID="BtnAdicionarConfiguracion" OnClick="BtnAdicionarConfiguracion_Click">               
-                                                                                       <i class="bi bi-plus-square-fill"></i>
-                                                                                </asp:LinkButton>
-                                                                                <asp:LinkButton runat="server" title="Modificar" ID="BtnModificarConfiguracion" OnClick="BtnModificarConfiguracion_Click">               
-                                                                                        <i class="bi bi-wrench-adjustable"></i>
-                                                                                </asp:LinkButton>
-                                                                                <asp:LinkButton runat="server" title="Grabar" ID="BtnGrabarConfiguracion" OnClick="BtnGrabarConfiguracion_Click">               
-                                                                                         <i class="bi bi-floppy-fill"></i>
-                                                                                </asp:LinkButton>
-                                                                            </div>
-                                                                        </div>
+                                                                    <div class="input-group input-group-sm gap-2">
+                                                                        <asp:LinkButton runat="server" title="Adicionar" ID="BtnAdicionarConfiguracion" OnClick="BtnAdicionarConfiguracion_Click">               
+                                                                                <i class="bi bi-plus-square-fill" style="font-size: 1rem"></i>
+                                                                        </asp:LinkButton>
+                                                                        <asp:LinkButton runat="server" title="Modificar" ID="BtnModificarConfiguracion" OnClick="BtnModificarConfiguracion_Click">               
+                                                                                <i class="bi bi-wrench-adjustable" style="font-size: 1rem"></i>
+                                                                        </asp:LinkButton>
+                                                                        <asp:LinkButton runat="server" title="Grabar" ID="BtnGrabarConfiguracion" OnClick="BtnGrabarConfiguracion_Click">               
+                                                                                    <i class="bi bi-floppy-fill" style="font-size: 1rem"></i>
+                                                                        </asp:LinkButton>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-2 d-flex align-items-center">
                                                                     <div class="mb-1">
-
                                                                         <asp:LinkButton runat="server" title="Eliminar" ID="BtnX" OnClick="BtnX_Click">               
-                                                                            <i class="bi bi-x-circle-fill"></i>
+                                                                            <i class="bi bi-x-circle-fill" style="font-size: 1rem"></i>
                                                                         </asp:LinkButton>
                                                                     </div>
                                                                 </div>
