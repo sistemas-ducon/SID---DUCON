@@ -5586,7 +5586,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
                 //Formato de comas
-                e.Item.Cells[9].Text = double.TryParse(e.Item.Cells[9].Text, out var val9) ? val9.ToString("N0") : "";
                 e.Item.Cells[10].Text = double.TryParse(e.Item.Cells[10].Text, out var val10) ? val10.ToString("N2") : ""; ;
 
                 DataRowView rowView = (DataRowView)e.Item.DataItem;

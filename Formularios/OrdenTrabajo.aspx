@@ -5368,19 +5368,52 @@
                                                                                     <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                                                                     <Columns>
-                                                                                        <asp:BoundColumn DataField="Item" HeaderText="Item" ItemStyle-CssClass="auto-width-column" />
-                                                                                        <asp:BoundColumn DataField="ID_Inventario" HeaderText="Cod. PSL" ItemStyle-CssClass="auto-width-column" />
-                                                                                        <asp:BoundColumn DataField="Pieza" HeaderText="Insumo" ItemStyle-CssClass="auto-width-column" />
-                                                                                        <asp:BoundColumn DataField="LongitudInsumo" HeaderText="A/P" ItemStyle-CssClass="auto-width-column" />
-                                                                                        <asp:BoundColumn DataField="AlturaInsumo" HeaderText="L/H" ItemStyle-CssClass="auto-width-column" />
-                                                                                        <asp:BoundColumn DataField="Cantidad" HeaderText="Cant" ItemStyle-CssClass="auto-width-column" />
-                                                                                        <asp:BoundColumn DataField="Factor_Desperdicio" HeaderText="Desp" ItemStyle-CssClass="auto-width-column" />
-                                                                                        <asp:BoundColumn DataField="ValorUndVenta" HeaderText="V. Unit" ItemStyle-CssClass="auto-width-column" />
+                                                                                        <asp:BoundColumn DataField="Item" HeaderText="Item" ItemStyle-CssClass="auto-width-column text-end" />
+                                                                                        <asp:BoundColumn DataField="ID_Inventario" HeaderText="Cod. PSL" ItemStyle-CssClass="auto-width-column text-end" />
+                                                                                        <asp:BoundColumn DataField="Pieza" HeaderText="Insumo" ItemStyle-CssClass="auto-width-column" />                                                                                        
+                                                                                        <asp:TemplateColumn HeaderText="A/P" ItemStyle-CssClass="auto-width-column text-end">
+                                                                                            <ItemTemplate>
+                                                                                                <%# 
+                                                                                                Eval("LongitudInsumo") != DBNull.Value 
+                                                                                                ? string.Format("{0:#,##0.##}", Eval("LongitudInsumo")) 
+                                                                                                : ""
+                                                                                            %>
+                                                                                            </ItemTemplate>
+                                                                                        </asp:TemplateColumn>
+                                                                                        <asp:TemplateColumn HeaderText="L/H" ItemStyle-CssClass="auto-width-column text-end">
+                                                                                            <ItemTemplate>
+                                                                                                <%# Eval("AlturaInsumo") != DBNull.Value 
+                                                                                                    ? string.Format("{0:#,##0.##}", Eval("AlturaInsumo")) 
+                                                                                                    : "" %>
+                                                                                            </ItemTemplate>
+                                                                                        </asp:TemplateColumn>
+                                                                                        <asp:TemplateColumn HeaderText="Cant" ItemStyle-CssClass="auto-width-column text-end">
+                                                                                            <ItemTemplate>
+                                                                                                <%# Eval("Cantidad") != DBNull.Value 
+                                                                                                    ? string.Format("{0:#,##0.##}", Eval("Cantidad")) 
+                                                                                                    : "" %>
+                                                                                            </ItemTemplate>
+                                                                                        </asp:TemplateColumn>
+                                                                                        <asp:TemplateColumn HeaderText="Desp" ItemStyle-CssClass="auto-width-column text-end">
+                                                                                            <ItemTemplate>
+                                                                                                <%# Eval("Factor_Desperdicio") != DBNull.Value 
+                                                                                                    ? string.Format("{0:#,##0.##}", Eval("Factor_Desperdicio")) 
+                                                                                                    : "" %>
+                                                                                            </ItemTemplate>
+                                                                                        </asp:TemplateColumn>
+                                                                                        <asp:TemplateColumn HeaderText="V. Unit" ItemStyle-CssClass="auto-width-column text-end">
+                                                                                            <ItemTemplate>
+                                                                                                <%# Eval("ValorUndVenta") != DBNull.Value 
+                                                                                                    ? string.Format("{0:#,##0.##}", Eval("ValorUndVenta")) 
+                                                                                                    : "" %>
+                                                                                            </ItemTemplate>
+                                                                                        </asp:TemplateColumn>
                                                                                         <asp:BoundColumn DataField="Abreviado" HeaderText="Und" ItemStyle-CssClass="auto-width-column" />
-                                                                                        <asp:BoundColumn DataField="SubTotal" HeaderText="Sub Total" ItemStyle-CssClass="auto-width-column" />
-                                                                                        <asp:BoundColumn DataField="Valor_Costo" HeaderText="Costo" ItemStyle-CssClass="auto-width-column" />
-
-
+                                                                                             <asp:BoundColumn DataField="SubTotal"
+                                                                                                HeaderText="Sub Total"
+                                                                                                ItemStyle-CssClass="auto-width-column text-end"
+                                                                                                DataFormatString="{0:$#,##0}" />
+                                                                                        <asp:BoundColumn DataField="Valor_Costo" HeaderText="Costo" ItemStyle-CssClass="auto-width-column text-end"/>
                                                                                     </Columns>
                                                                                 </asp:DataGrid>
 
@@ -5399,14 +5432,14 @@
                                                                         <div class="col-lg-4 col-md-6 col-sm-6 justify-content-lg-start mb-auto">
                                                                             <div class=" mb-2 gap-1">
                                                                                 <asp:Label class="form-label" Text="Valor Venta" runat="server" ID="lbValorVenta" Style="font-size: 1.5rem; font-family: futura"></asp:Label>
-                                                                                <asp:TextBox ID="tbValorVenta" runat="server" CssClass="form-control justify-content-center " Style="font-size: 1.5rem; font-family: cursive"></asp:TextBox>
+                                                                                <asp:TextBox ID="tbValorVenta" runat="server" CssClass="form-control justify-content-center text-end" Style="font-size: 1.5rem; font-family: cursive"></asp:TextBox>
                                                                             </div>
                                                                         </div>
 
                                                                         <div class="col-lg-4 col-md-6 col-sm-6 justify-content-lg-start mb-auto">
                                                                             <div class=" mb-2 gap-1">
                                                                                 <asp:Label class="form-label" Text="Valor Costo" runat="server" ID="lbValorCosto" Style="font-size: 1.5rem; font-family: futura"></asp:Label>
-                                                                                <asp:TextBox ID="tbValorCosto" runat="server" CssClass="form-control justify-content-center" Style="font-size: 1.5rem; font-family: cursive"></asp:TextBox>
+                                                                                <asp:TextBox ID="tbValorCosto" runat="server" CssClass="form-control justify-content-center text-end" Style="font-size: 1.5rem; font-family: cursive"></asp:TextBox>
                                                                             </div>
                                                                         </div>
 
