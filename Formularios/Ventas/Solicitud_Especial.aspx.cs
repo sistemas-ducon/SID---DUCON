@@ -3491,10 +3491,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             DateTime UltimaActivacionSolicitud = FechaIngreso;
             DateTime FechaEntrega = DateTime.Now;
 
-            // 👉 Validar si se ingresó después de las 5:00 PM
-            if (UltimaActivacionSolicitud.TimeOfDay > new TimeSpan(17, 0, 0))
+            // 👉 Validar si se ingresó después de las 4:30 PM
+            if (UltimaActivacionSolicitud.TimeOfDay > new TimeSpan(16, 30, 0))
             {
-                UltimaActivacionSolicitud = UltimaActivacionSolicitud.AddDays(1).Date.AddHours(7); // siguiente día a las 7:00 AM
+                UltimaActivacionSolicitud = SumarDiaLaboral(UltimaActivacionSolicitud, 1).Date.AddHours(7); // siguiente día a las 7:00 AM
             }
             else
             {
@@ -5078,7 +5078,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         private void ActivarComplejo(string ID, bool Complejo)
         {
             DateTime FechaIngresoActual = Convert.ToDateTime(tbFechaIngreso.Text);
-            DateTime FechaEntregaActualizda20Dias = CalcularFechaEntregaComplejo(FechaIngresoActual);
+            DateTime FechaEntregaActualizada = CalcularFechaEntregaComplejo(FechaIngresoActual);
 
             // el calculo de la fecha esta Ok solo falta hacer el update 
 
@@ -5094,7 +5094,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     // Aquí ajusta los valores según los nombres de columnas reales en tu DataRow
                     cmd.Parameters.AddWithValue("@ID_Solicitud", ID);
                     cmd.Parameters.AddWithValue("@Complejo", Complejo);
-                    cmd.Parameters.AddWithValue("@FechaEntrega", FechaEntregaActualizda20Dias);
+                    cmd.Parameters.AddWithValue("@FechaEntrega", FechaEntregaActualizada);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -5169,7 +5169,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 UltimaActivacionSolicitud = new DateTime(UltimaActivacionSolicitud.Year, UltimaActivacionSolicitud.Month, UltimaActivacionSolicitud.Day, 8, 0, 0);
             }
 
-            DateTime  FechaEntrega = SumarDiaLaboral(UltimaActivacionSolicitud, 20);
+            DateTime  FechaEntrega = SumarDiaLaboral(UltimaActivacionSolicitud, 12);
 
             return FechaEntrega;
         }

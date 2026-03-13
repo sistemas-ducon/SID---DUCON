@@ -1336,10 +1336,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void ProgramarVentas_Click(object sender, EventArgs e)
         {
 
-
             // Obtener la fecha programada de entrega desde el TextBox TextEntrega
             DateTime fechaActual = DateTime.Now;
-            fechaActual = AjustarHoraLaboral(fechaActual); //Ajuste de hora de Diseño Anderson Betancur Melchor
+
+            DateTime fechaBase = AjustarHoraLaboral(fechaActual);//Ajuste de hora de Diseño Anderson Betancur Melchor
 
             // Obtener el valor del número de diseño desde el label
             string numeroDiseño = lblNumDise.Text;
@@ -1351,9 +1351,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Obtener la fecha de activación desde el TextBox TextUltAc
                 DateTime fechaActivacion = DateTime.Parse(TextUltAc.Text);
 
-
                 // Sumar 3 días hábiles a partir de la fecha actual
-                DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaActual, 3);
+                DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaBase, 3);
 
                 // Asignar la fecha programada de entrega al TextBox
                 TextEntrega.Text = fechaProgramadaEntrega.ToString("yyyy-MM-ddTHH:mm");
@@ -1520,7 +1519,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Si es un día hábil y no es un día no laboral, incrementar el contador de días hábiles agregados
                         diasHabilesAgregados++;
                     }
-
                 }
             }
 
@@ -11605,19 +11603,20 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             // Obtener solo la hora de la fecha
             TimeSpan hora = fechaOriginal.TimeOfDay;
 
-            // Si es antes de las 7:00 AM, ajustar a las 7:00 AM del mismo día
-            if (hora < new TimeSpan(7, 0, 0))
+            // Si es antes de las 6:30 AM, ajustar a las 7:00 AM del mismo día
+            if (hora < new TimeSpan(6, 30, 0))
             {
                 return new DateTime(fechaOriginal.Year, fechaOriginal.Month, fechaOriginal.Day, 7, 0, 0);
             }
-            // Si es después de las 5:00 PM, ajustar a las 7:00 AM del día siguiente
-            else if (hora > new TimeSpan(17, 0, 0))
+
+            // Si es después de las 4:30 PM, ajustar a las 7:00 AM del día siguiente habil
+            else if (hora >= new TimeSpan(16, 30, 0))
             {
-                DateTime siguienteDia = fechaOriginal.Date.AddDays(1);
+                DateTime siguienteDia = ObtenerProximaFechaHabil(fechaOriginal, 1);
                 return new DateTime(siguienteDia.Year, siguienteDia.Month, siguienteDia.Day, 7, 0, 0);
             }
 
-            // Si está entre las 7:00 AM y 5:00 PM, no se ajusta
+            // Si está entre las 6:30 AM y 4:30 PM, no se ajusta
             return fechaOriginal;
         }
 
