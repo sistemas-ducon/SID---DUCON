@@ -5864,7 +5864,7 @@
                                                         <asp:BoundColumn DataField="ID_Inventario" HeaderText="Cod.Inv" ItemStyle-CssClass="auto-width-column text-end" />
                                                         <asp:BoundColumn DataField="Descripcion_Insumo" HeaderText="Descripción" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:BoundColumn DataField="Descripcion" HeaderText="Tipo Insumo" ItemStyle-CssClass="auto-width-column" />
-                                                        <asp:BoundColumn DataField="Valor_Unitario" HeaderText="Valor Unitario" ItemStyle-CssClass="auto-width-column text-end"  DataFormatString="{0:$#,##0}"/>
+                                                        <asp:BoundColumn DataField="Valor_Unitario" HeaderText="Valor Unitario" ItemStyle-CssClass="auto-width-column text-end"  DataFormatString="{0:$#,##0.####}"/>
                                                         <asp:BoundColumn DataField="Abreviado" HeaderText="Causa Observación" ItemStyle-CssClass="auto-width-column" />
                                                         <asp:TemplateColumn HeaderText="F.G" ItemStyle-CssClass="auto-width-column text-end">
                                                             <ItemTemplate>
