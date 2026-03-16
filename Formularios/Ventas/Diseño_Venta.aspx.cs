@@ -1349,7 +1349,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 DateTime fechaIngresoDiseño = DateTime.Parse(TextIngDis.Text);
 
                 // Obtener la fecha de activación desde el TextBox TextUltAc
-                DateTime fechaActivacion = DateTime.Parse(TextUltAc.Text);
+                // DateTime fechaActivacion = DateTime.Parse(TextUltAc.Text);
 
                 // Sumar 3 días hábiles a partir de la fecha actual
                 DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaBase, 3);
@@ -1357,14 +1357,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 // Asignar la fecha programada de entrega al TextBox
                 TextEntrega.Text = fechaProgramadaEntrega.ToString("yyyy-MM-ddTHH:mm");
 
+                //Comentado porque no esta haciendo nada util, Anjhell Reyes 
                 // Comparación y actualización de la fecha de SC
-                DateTime dtpFechaSC = DateTime.Parse(TextFec.Text);
+                //DateTime dtpFechaSC = DateTime.Parse(TextFec.Text);
 
-                if (fechaProgramadaEntrega > dtpFechaSC)
-                {
-                    dtpFechaSC = fechaProgramadaEntrega.Date;
-                    // Aquí puedes decidir si también deseas actualizar dtpHoraSC
-                }
+                //if (fechaProgramadaEntrega > dtpFechaSC)
+                //{
+                //    dtpFechaSC = fechaProgramadaEntrega.Date;
+                //    // Aquí puedes decidir si también deseas actualizar dtpHoraSC
+                //}
 
                 // Realizar la actualización en la base de datos
                 string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
@@ -1380,7 +1381,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         cmd.Parameters.AddWithValue("@NumeroDiseño", numeroDiseño);
                         cmd.Parameters.AddWithValue("@FechaIngreso", fechaIngresoDiseño);
                         cmd.Parameters.AddWithValue("@FechaProgramadaEntrega", fechaProgramadaEntrega);
-                        cmd.Parameters.AddWithValue("@UltimaActivacion", fechaActivacion);
+                        cmd.Parameters.AddWithValue("@UltimaActivacion", fechaBase);
                         cmd.Parameters.AddWithValue("@PactodeEntrega", fechaProgramadaEntrega);
 
                         int rowsAffected = cmd.ExecuteNonQuery();
@@ -11600,24 +11601,27 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         // Se agregan metodos para control campos de planos Diseño Anderson Betancur Melchor 
         private DateTime AjustarHoraLaboral(DateTime fechaOriginal)
         {
-            // Obtener solo la hora de la fecha
             TimeSpan hora = fechaOriginal.TimeOfDay;
 
-            // Si es antes de las 6:30 AM, ajustar a las 7:00 AM del mismo día
+            DateTime fechaBase = fechaOriginal;
+
             if (hora < new TimeSpan(6, 30, 0))
             {
-                return new DateTime(fechaOriginal.Year, fechaOriginal.Month, fechaOriginal.Day, 7, 0, 0);
+                fechaBase = new DateTime(fechaOriginal.Year, fechaOriginal.Month, fechaOriginal.Day, 7, 0, 0);
             }
-
-            // Si es después de las 4:30 PM, ajustar a las 7:00 AM del día siguiente habil
-            else if (hora >= new TimeSpan(16, 30, 0))
+            else if (hora > new TimeSpan(16, 30, 0))
             {
-                DateTime siguienteDia = ObtenerProximaFechaHabil(fechaOriginal, 1);
-                return new DateTime(siguienteDia.Year, siguienteDia.Month, siguienteDia.Day, 7, 0, 0);
+                fechaBase = ObtenerProximaFechaHabil(fechaOriginal, 1);
+                fechaBase = new DateTime(fechaBase.Year, fechaBase.Month, fechaBase.Day, 7, 0, 0);
             }
 
-            // Si está entre las 6:30 AM y 4:30 PM, no se ajusta
-            return fechaOriginal;
+            // Si cae en sábado o domingo mover al siguiente día hábil
+            if (fechaBase.DayOfWeek == DayOfWeek.Saturday || fechaBase.DayOfWeek == DayOfWeek.Sunday || EsDiaNoLaboral(fechaBase))
+            {
+                fechaBase = ObtenerProximaFechaHabil(fechaBase, 1);
+            }
+
+            return fechaBase;
         }
 
         private void ControlValoresPlanos()
