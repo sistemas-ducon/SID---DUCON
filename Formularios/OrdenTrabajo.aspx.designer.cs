@@ -5172,6 +5172,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected global::System.Web.UI.UpdatePanel PanelInsumo;
 
         /// <summary>
+        /// Control BtnRefreshGrid.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnRefreshGrid;
+
+        /// <summary>
         /// Control BtnNuevoInsumo.
         /// </summary>
         /// <remarks>

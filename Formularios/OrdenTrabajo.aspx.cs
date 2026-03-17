@@ -124,8 +124,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         Page_LoadDiseño(sender, e);
                     }
                 }
-
-
             }
             else
             {
@@ -401,6 +399,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 DataGridInsumo.DataSource = dt;
                 DataGridInsumo.DataBind();
+                RestaurarFilaSeleccionada();
             }
         }
 
@@ -1366,7 +1365,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             lbProduce.InnerText = ddlFabrica1.SelectedItem.Text;
 
-            pObservaciones.InnerHtml = txObs2.InnerText.Replace("\n","<br/>");
+            pObservaciones.InnerHtml = txObs2.InnerText.Replace("\n", "<br/>");
 
             lbDir.InnerText = tbDir.Text + " " + ddlCiudad.SelectedItem.Text.Replace(" - ", "/") + "/" + tbPais.Text;
 
@@ -21165,40 +21164,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             ScriptManager.RegisterStartupScript(this, GetType(), "mostrarDefinirAcabado", script2, true);
         }
 
-
-        protected void DropDownList1_TextChanged(object sender, EventArgs e)
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                string query = @"
-            SELECT TOP 200 tblInsumo.*, tblTipoInsumo.Descripcion, tblUnidad_Medida.Abreviado
-            FROM tblInsumo
-            INNER JOIN tblTipoInsumo ON tblTipoInsumo.ID_TipoInsumo = tblInsumo.Id_TipoInsumo
-            INNER JOIN tblUnidad_Medida ON tblUnidad_Medida.Id_UnidadMedida = tblInsumo.Id_UnidadMedida
-            WHERE tblInsumo.Descripcion_Insumo LIKE '%' + @TextCriterio + '%'
-            AND tblInsumo.ID_Inventario LIKE '%' + @TextInv + '%'
-            AND tblTipoInsumo.Descripcion LIKE @TipoInsumo
-            ORDER BY tblInsumo.Descripcion_Insumo";
-
-                SqlCommand cmd = new SqlCommand(query, con);
-                cmd.Parameters.AddWithValue("@TextCriterio", TextCriterio.Text);
-                cmd.Parameters.AddWithValue("@TextInv", TextInv.Text);
-                cmd.Parameters.AddWithValue("@TipoInsumo", DropDownList1.SelectedItem.Text + "%");
-
-                SqlDataAdapter sda = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                sda.Fill(dt);
-
-                DataGridInsumo.DataSource = dt;
-                DataGridInsumo.DataBind();
-                PanelInsumo.Update();
-
-                BotonesPorDefectoInsumos(sender, e);
-
-            }
-        }
-
         //35 SE CAMBIÓ PARA OTRO FORMUALRIO PENDIENTE ELIMINAR
         protected void btnRefrescar_Click(object sender, EventArgs e)
         {
@@ -21341,37 +21306,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void TextCriterio_TextChanged(object sender, EventArgs e)
         {
-
-            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                // Consulta SQL ajustada
-                string query = @"
-            SELECT TOP 200 tblInsumo.*, tblTipoInsumo.Descripcion, tblUnidad_Medida.Abreviado
-            FROM tblInsumo, tblTipoInsumo, tblUnidad_Medida
-            WHERE tblInsumo.Descripcion_Insumo LIKE '%' + @TextCriterio + '%'
-            AND tblInsumo.ID_Inventario LIKE '%' + @TextInv + '%'
-            AND tblTipoInsumo.ID_TipoInsumo = tblInsumo.Id_TipoInsumo
-            AND tblUnidad_Medida.Id_UnidadMedida = tblInsumo.Id_UnidadMedida
-            AND tblTipoInsumo.Descripcion LIKE '%' + @TipoInsumo + '%'
-            ORDER BY tblInsumo.Descripcion_Insumo";
-
-                SqlCommand cmd = new SqlCommand(query, con);
-                cmd.Parameters.AddWithValue("@TextCriterio", TextCriterio.Text);
-                cmd.Parameters.AddWithValue("@TextInv", TextInv.Text);
-                cmd.Parameters.AddWithValue("@TipoInsumo", DropDownList1.SelectedItem.Text);
-
-                SqlDataAdapter sda = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                sda.Fill(dt);
-
-                DataGridInsumo.DataSource = dt;
-                DataGridInsumo.DataBind();
-                PanelInsumo.Update();
-
-                BotonesPorDefectoInsumos(sender, e);
-            }
-
+            EjecutarFiltros();
         }
 
         protected void DataGridInsumo_ItemCommand(object source, DataGridCommandEventArgs e)
@@ -21381,18 +21316,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGridInsumo.Items[rowIndex];
 
+                Session["Id_Insumo"] = row.Cells[1].Text;
+
                 // capturamos los campos de la fila del datagrid 
                 foreach (DataGridItem item in DataGridInsumo.Items)
                 {
-                    if (item != row)
-                    {
-                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
-                    }
+                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
                 }
 
                 e.Item.CssClass = "fila-seleccionada1";
-
-                Session["Id_Insumo"] = row.Cells[1].Text;
 
                 DateTime? primerClicTime = Session["PrimerClicTime5"] as DateTime?;
                 if (primerClicTime != null && (DateTime.Now - primerClicTime.Value).TotalSeconds <= 1)
@@ -21403,8 +21335,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Incrementar la variable de sesión "ClickCount" en el servidor
                         int clickCount = Convert.ToInt32(Session["ClickCount5"]) + 1;
                         Session["ClickCount5"] = clickCount;
-
-                        e.Item.CssClass = "fila-seleccionada1";
 
                         // Se valida si es el segundo click en la misma fila 
                         if (clickCount == 2)
@@ -21418,13 +21348,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                     // Limpia las variables de sesión
                     Session.Remove("PrimerClicTime5");
-
-                    // Store the selected row index in the DataGrid attribute
-                    DataGridInsumo.Attributes["SelectedRowIndex7"] = rowIndex.ToString();
-
-                    // Asignar ID único a la fila
-                    row.Attributes["id"] = "DataGridInsumo_row_" + rowIndex;
-                    ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DataGridInsumo_row_" + rowIndex + "');", true);
                 }
                 else
                 {  // Validar permisos
@@ -21442,23 +21365,16 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         BtnCopiarInsumo.CssClass = "btn btn-sm shadow button-enabled AzulClaro";
                     }
 
-                    e.Item.CssClass = "fila-seleccionada1";
                     // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
                     Session["ClickCount5"] = 1;
                     Session["Id_OTdise5"] = row.Cells[1].Text;
                     Session["PrimerClicTime5"] = DateTime.Now; // Establecer el tiempo del primer clic
 
-                    // Store the selected row index in the DataGrid attribute
-                    DataGridInsumo.Attributes["SelectedRowIndex7"] = rowIndex.ToString();
-
-                    // Asignar ID único a la fila
-                    row.Attributes["id"] = "DataGridInsumo_row_" + rowIndex;
-                    ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DataGridInsumo_row_" + rowIndex + "');", true);
-
                 }
 
-
-
+                // Asignar ID único a la fila
+                row.Attributes["id"] = "DataGridInsumo_row_" + rowIndex;
+                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DataGridInsumo_row_" + rowIndex + "');", true);
             }
         }
 
@@ -24132,8 +24048,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 for (int i = 0; i < e.Item.Cells.Count; i++)
                 {
                     if (i != 0)
-                    {                      
-                       e.Item.Cells[i].CssClass = "resizable-header";
+                    {
+                        e.Item.Cells[i].CssClass = "resizable-header";
                     }
 
                 }
@@ -24152,7 +24068,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 bool Chequeado = Convert.ToBoolean(DataBinder.Eval(e.Item.DataItem, "Chequeado"));
                 e.Item.Cells[5].Text = Chequeado ? "Sí" : "No";
 
-           
+
             }
 
         }
@@ -24161,7 +24077,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             if (e.CommandName == "VerModulo")
             {
-              
+
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGridModuloObjetos.Items[rowIndex];
 
@@ -24236,11 +24152,78 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-        //protected void btnLimpiar_Click(object sender, EventArgs e)
-        //{
-        //    Session.Remove("DatoObjNoExistentes");
-        //    DataGridObjNoExiste.DataBind();
+        protected void BtnRefreshGrid_Click(object sender, EventArgs e)
+        {
+            EjecutarFiltros(); // usa lo que ya hicimos antes
+        }
 
-        //}
+        private void EjecutarFiltros()
+        {
+            bool hayFiltros =
+                !string.IsNullOrEmpty(TextCriterio.Text) ||
+                !string.IsNullOrEmpty(TextInv.Text) ||
+                DropDownList1.SelectedIndex > 0;
+
+            if (hayFiltros)
+            {
+                FiltrarDatos();
+            }
+            else
+            {
+                CargarDatosInsumos();
+            }
+        }
+
+        private void FiltrarDatos()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                string query = @"
+        SELECT TOP 200 tblInsumo.*, tblTipoInsumo.Descripcion, tblUnidad_Medida.Abreviado
+        FROM tblInsumo
+        INNER JOIN tblTipoInsumo ON tblTipoInsumo.ID_TipoInsumo = tblInsumo.Id_TipoInsumo
+        INNER JOIN tblUnidad_Medida ON tblUnidad_Medida.Id_UnidadMedida = tblInsumo.Id_UnidadMedida
+        WHERE tblInsumo.Descripcion_Insumo LIKE '%' + @TextCriterio + '%'
+        AND tblInsumo.ID_Inventario LIKE '%' + @TextInv + '%'
+        AND tblTipoInsumo.Descripcion LIKE '%' + @TipoInsumo + '%'
+        ORDER BY tblInsumo.Descripcion_Insumo";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@TextCriterio", TextCriterio.Text);
+                cmd.Parameters.AddWithValue("@TextInv", TextInv.Text);
+                cmd.Parameters.AddWithValue("@TipoInsumo", DropDownList1.SelectedItem.Text);
+
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                sda.Fill(dt);
+
+                DataGridInsumo.DataSource = dt;
+                DataGridInsumo.DataBind();
+                RestaurarFilaSeleccionada();
+
+                PanelInsumo.Update();
+
+                BotonesPorDefectoInsumos(null, null);
+            }
+        }
+
+        private void RestaurarFilaSeleccionada()
+        {
+            if (Session["Id_Insumo"] != null)
+            {
+                string id = Session["Id_Insumo"].ToString();
+
+                foreach (DataGridItem item in DataGridInsumo.Items)
+                {
+                    if (item.Cells[1].Text == id)
+                    {
+                        item.CssClass = "fila-seleccionada1";
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

@@ -5777,6 +5777,9 @@
                 <asp:UpdatePanel ID="PanelInsumo" runat="server" UpdateMode="Conditional">
                     <ContentTemplate>
                         <div class="container-fluid">
+                            <asp:Button ID="BtnRefreshGrid" runat="server" 
+                                OnClick="BtnRefreshGrid_Click" 
+                                style="display:none;" />
 
                             <!--Nav icons Insumos-->
                             <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3 gap-2">
@@ -5831,7 +5834,7 @@
 
                                         <div class="d-flex align-items-center me-2 col-4">
                                             <asp:Label ID="LblTipoInsumo" runat="server" CssClass="me-2 col-form-label-sm" Text="Tipo Insumo"></asp:Label>
-                                            <asp:DropDownList ID="DropDownList1" runat="server" CssClass="form-control form-control-sm" OnTextChanged="DropDownList1_TextChanged" AutoPostBack="true" DataTextField="Descripcion_Insumo" DataValueField="Id_Insumo" />
+                                            <asp:DropDownList ID="DropDownList1" runat="server" CssClass="form-control form-control-sm" OnTextChanged="TextCriterio_TextChanged" AutoPostBack="true" DataTextField="Descripcion_Insumo" DataValueField="Id_Insumo" />
                                         </div>
 
                                         <div class="d-flex align-items-center me-2 col-5">
@@ -6407,6 +6410,13 @@
             // Pintar la fila actual
             row.style.backgroundColor = "#7CFC98";
         }
+    </script>
+    <script>
+        document.addEventListener("visibilitychange", function () {
+            if (!document.hidden) {
+                document.getElementById('<%= BtnRefreshGrid.ClientID %>').click();
+            }
+        });
     </script>
    
 
