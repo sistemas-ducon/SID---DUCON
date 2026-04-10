@@ -7307,8 +7307,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void ValidarUsuario()
         {
-
-
             // Obtener la cédula del usuario logueado de la variable de sesión
             string cedulaLogueada = Session["CedulaLogeada"]?.ToString();
 
@@ -7316,7 +7314,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string cedulaOT = ObtenerCodigoAsesor();
 
             // Verificar si las cédulas son iguales
-            if (cedulaLogueada == cedulaOT)
+            if (cedulaLogueada == cedulaOT || ValidarCompartido(cedulaLogueada))
             {
 
                 ActualizarDatos();
@@ -7327,6 +7325,64 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 ValidarPermiso();
 
             }
+        }
+
+        private bool ValidarCompartido(string cedulaLogueada)
+        {
+            string nitCliente = txtNit.Text;
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                // 1. Obtener string de compartidos
+                string queryCompartidos = "SELECT CompartidoCon FROM tblClienteObra WHERE Nit = @Nit";
+
+                using (SqlCommand cmd = new SqlCommand(queryCompartidos, connection))
+                {
+                    cmd.Parameters.AddWithValue("@Nit", nitCliente);
+
+                    var result = cmd.ExecuteScalar();
+
+                    if (result == null) return false;
+
+                    var listaCompartidos = result.ToString()
+                        .Split(';')
+                        .Select(x => x.Trim())
+                        .Where(x => !string.IsNullOrEmpty(x))
+                        .ToList();
+
+                    if (!listaCompartidos.Any()) return false;
+
+                    // 2. Query para buscar cédulas
+                    string queryCedula = @"
+                SELECT Cedula 
+                FROM tblEmpleado 
+                WHERE Nombre + ' ' + Apellidos = @Nombre";
+
+                    using (SqlCommand cmd2 = new SqlCommand(queryCedula, connection))
+                    {
+                        foreach (var asesor in listaCompartidos)
+                        {
+                            cmd2.Parameters.Clear();
+                            cmd2.Parameters.AddWithValue("@Nombre", asesor);
+
+                            var result2 = cmd2.ExecuteScalar();
+
+                            if (result2 != null)
+                            {
+                                string cedula = result2.ToString();
+
+                                if (cedula == cedulaLogueada)
+                                    return true; // 🔥 sale de todo (correcto)
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         private string ObtenerCodigoAsesor()
