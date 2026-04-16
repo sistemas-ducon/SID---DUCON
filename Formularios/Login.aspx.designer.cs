@@ -42,24 +42,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Login
         protected global::System.Web.UI.WebControls.TextBox tbPassword;
 
         /// <summary>
-        /// Control tbcheckbox.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tbcheckbox;
-
-        /// <summary>
-        /// Control lblcheckbox.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblcheckbox;
-
-        /// <summary>
         /// Control lblError.
         /// </summary>
         /// <remarks>

@@ -72,18 +72,12 @@
                        <div class="invalid-feedback"> Escriba correctamente la contraseña</div>
                     </div>
                 
-                 <div class="form-group form-check mb-2">
-                       
-                        <asp:TextBox ID="tbcheckbox" type="checkbox" runat="server" CssClass="form-check-input"></asp:TextBox>
-                     <asp:Label ID="lblcheckbox" runat="server" Text="Recordar contraseña" CssClass="form-check-label"></asp:Label>
-                    </div>
-                
                    <div class="row">
                     <asp:Label runat="server" ID="lblError" style="color:red" CssClass="lblError"></asp:Label>
                     </div>   
                        
                     
-                <div class="input-group">
+                <div class="input-group mt-3">
                             <asp:Button ID="btbIngresar" runat="server" Text="Ingresar" OnClick="btbIngresar_Click" style="background-color:#083557" CssClass="btn text-white  w-100"></asp:Button>
                  </div>   
                

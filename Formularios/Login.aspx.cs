@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Configuration.Provider;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Windows.Forms;
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios.Login
 {
@@ -44,10 +37,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Login
 
                 if (!string.IsNullOrEmpty(nombreEmpleado))
                 {
-                    // Establecer la variable de sesión 'usuariologueado' con el Nombre del empleado obtenido
-                    Session["usuariologueado"] = nombreEmpleado;
-                    CedulaUsuarioLogeado();
-                    Response.Redirect("Inicio.aspx");
+                    bool cambiarPass = ValidarCambiarPass(login, password);
+
+                    if (cambiarPass) {
+                        lblError.Text = "Comunicate con sitemas para cambio de contraseña";
+                        lblError.ToolTip = "Cristian Escudero, Anjhell Reyes o Sebastian Zapata";
+                    }
+                    else
+                    {
+                        // Establecer la variable de sesión 'usuariologueado' con el Nombre del empleado obtenido
+                        Session["usuariologueado"] = nombreEmpleado;
+                        CedulaUsuarioLogeado();
+                        Response.Redirect("Inicio.aspx");
+                    }
                 }
                 else
                 {
@@ -60,6 +62,28 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.Login
             }
 
             cmd.Connection.Close();
+        }
+
+        private bool ValidarCambiarPass(string login, string password)
+        {
+            string nombreCargo = string.Empty;
+
+            string cn = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+            using (SqlConnection sqlconectar = new SqlConnection(cn))
+            {
+                SqlCommand cmd = new SqlCommand("SELECT Cargo FROM tblEmpleado WHERE Login = @Login AND PasswordConfirmation = @Password", sqlconectar);
+                cmd.Parameters.Add("@Login", SqlDbType.VarChar, 30).Value = login;
+                cmd.Parameters.Add("@Password", SqlDbType.VarChar, 30).Value = password;
+
+                sqlconectar.Open();
+                object result = cmd.ExecuteScalar();
+                if (result != null)
+                {
+                    nombreCargo = result.ToString().ToUpper();
+                }
+            }
+
+            return nombreCargo == "VENTAS";
         }
 
         public string ObtenerNombreEmpleado(string login, string password)
