@@ -247,7 +247,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
             if (departamento == "Compra")
             {
                 // Aquí se pueden agregar validaciones adicionales específicas para el departamento "Compra"
-                BtnGrabar.Enabled = cambiosDetectados && camposValidos;
+                //BtnGrabar.Enabled = cambiosDetectados && camposValidos;
                 BtnCancelar.Enabled = cambiosDetectados;
             }
             else
@@ -260,7 +260,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                     decimal.TryParse(TextUndXPaq.Text, out _) &&
                     decimal.Parse(TextFacDesInsumo.Text) >= 1; // Validamos que FactorDesperdicio >= 1
 
-                BtnGrabar.Enabled = cambiosDetectados && camposDepartamentoValidos;
+                //BtnGrabar.Enabled = cambiosDetectados && camposDepartamentoValidos;
                 BtnCancelar.Enabled = cambiosDetectados;
             }
         }
@@ -274,8 +274,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
 
         private void InicializarBotones()
         {
-            BtnGrabar.Enabled = false;
-            BtnGrabar.CssClass = "btn linkButtonClicked2 shadow-sm text-dark btn-sm";
+            //BtnGrabar.Enabled = true;
+            //BtnGrabar.CssClass = "btn linkButtonClicked2 shadow-sm text-dark btn-sm";
             BtnCancelar.Enabled = false;
             BtnCancelar.CssClass = "btn linkButtonClicked2 shadow-sm text-dark btn-sm";
 
@@ -376,7 +376,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.DiseñoYDesarrollo
                 if (control is Button btn)
                 {
                     // Dejar habilitado únicamente el botón 'BtnCerrar'
-                    if (btn.ID == "BtnCerrar")
+                    if (btn.ID == "BtnCerrar" || btn.ID == "BtnGrabar")
                     {
                         btn.Enabled = true;
                         btn.CssClass = "btn linkButtonClicked2  shadow-sm text-dark btn-sm";
