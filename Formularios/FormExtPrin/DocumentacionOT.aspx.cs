@@ -80,7 +80,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
 
 
-                        bntElimnar.Enabled = false;
+                    bntElimnar.Enabled = false;
                     bntElimnar.CssClass = "btn btn-outline-danger";
 
                     btnSubirAdjuntar.Enabled = false;
@@ -214,45 +214,45 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         {
 
             if (DoctOT.HasFile)
-            {            
-                    // Obtener el tamaño máximo permitido en bytes(por ejemplo, 30 MB)
-                    int maxSizeBytes = 80 * 1024 * 1024; // 80 MB
+            {
+                // Obtener el tamaño máximo permitido en bytes(por ejemplo, 30 MB)
+                int maxSizeBytes = 80 * 1024 * 1024; // 80 MB
 
-                    // Verificar si el tamaño del archivo excede el límite permitido
-                    if (DoctOT.PostedFile.ContentLength > maxSizeBytes)
+                // Verificar si el tamaño del archivo excede el límite permitido
+                if (DoctOT.PostedFile.ContentLength > maxSizeBytes)
+                {
+                    string mensajePersonalizado = "El tamaño del archivo excede el límite permitido de 10 MB.";
+                    string urlRedireccion = "FormExtPrin/DocumentacionOT.aspx";
+                    Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+
+                }
+
+                string carpetaNombre = Session["Id_OT2"].ToString();
+                string Consecutivo = Session["pedido2"].ToString();
+                String rutaBase = @"\\Srvfs\s_i_ducon$\Documentacion de Obras";
+                //string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion"; // Reemplaza con tu ruta base
+
+                string rutaCompleta = Path.Combine(rutaBase, carpetaNombre);
+
+                // Verificamos si la carpeta existe
+                if (!Directory.Exists(rutaCompleta))
+                {
+                    try
                     {
-                        string mensajePersonalizado = "El tamaño del archivo excede el límite permitido de 10 MB.";
-                        string urlRedireccion = "FormExtPrin/DocumentacionOT.aspx";
-                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
-
+                        // Si no existe, se crea  la carpeta
+                        Directory.CreateDirectory(rutaCompleta);
                     }
-
-                    string carpetaNombre = Session["Id_OT2"].ToString();
-                    string Consecutivo = Session["pedido2"].ToString();
-                    String rutaBase = @"\\Srvfs\s_i_ducon$\Documentacion de Obras";
-                    //string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion"; // Reemplaza con tu ruta base
-
-                    string rutaCompleta = Path.Combine(rutaBase, carpetaNombre);
-
-                    // Verificamos si la carpeta existe
-                    if (!Directory.Exists(rutaCompleta))
+                    catch (Exception ex)
                     {
-                        try
-                        {
-                            // Si no existe, se crea  la carpeta
-                            Directory.CreateDirectory(rutaCompleta);
-                        }
-                        catch (Exception ex)
-                        {
-                            ErrorValidacionDoc.InnerText = "Se ha producido un error al intentar crear la carpeta. " + ex.Message;
-                            return;
-                        }
+                        ErrorValidacionDoc.InnerText = "Se ha producido un error al intentar crear la carpeta. " + ex.Message;
+                        return;
                     }
+                }
 
-                    string nombreArchivo = carpetaNombre + "-" + Consecutivo + " " + DoctOT.FileName; // Reemplaza con el nombre que quieras
+                string nombreArchivo = carpetaNombre + "-" + Consecutivo + " " + DoctOT.FileName; // Reemplaza con el nombre que quieras
 
-                    // Ruta completa para guardar el archivo
-                    string rutaArchivo = Path.Combine(rutaCompleta, nombreArchivo);
+                // Ruta completa para guardar el archivo
+                string rutaArchivo = Path.Combine(rutaCompleta, nombreArchivo);
 
                 try
                 {
@@ -388,7 +388,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     string scriptNoSeleccionado = "alert('Se ha producido un error al intentar guardar el archivo.');";
                     ScriptManager.RegisterStartupScript(this, GetType(), "showNoSeleccionado", scriptNoSeleccionado, true);
                 }
-                
+
 
             }
             else
@@ -405,7 +405,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             string idDocumento = Session["Id_DocumentoOT"].ToString();
             string NombreArchivo = Session["NombreArchivoOT"].ToString();
             string NombreCarpeta = Session["NombreCarpetaOT"].ToString();
-            string nombreUsuario = Session["usuariologueado"].ToString(); 
+            string nombreUsuario = Session["usuariologueado"].ToString();
             string pedidoSeleccionado = Session["pedido2"].ToString();
 
             // Validar permisos y condiciones antes de proceder con la eliminación
@@ -413,7 +413,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             {
                 connection.Open();
 
-                string query = "SELECT Usuario, Pedido FROM tblDocumentacion WHERE ID_Documento = @idDocumento";
+                string query = "SELECT Usuario, Id_OT, Pedido FROM tblDocumentacion WHERE ID_Documento = @idDocumento";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -425,8 +425,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         {
                             string usuarioDocumento = reader["Usuario"].ToString();
                             string pedidoDocumento = reader["Pedido"].ToString();
+                            string idOTDocumento = reader["Id_OT"].ToString();
 
-                            if ((ValidarPermisoArea()|| usuarioDocumento == nombreUsuario) && pedidoSeleccionado == pedidoDocumento)
+                            if ((ValidarPermisoArea() 
+                                || usuarioDocumento == nombreUsuario 
+                                || ValidarCompartido(Session["CedulaLogeada"]?.ToString(), idOTDocumento, pedidoDocumento)) 
+                                && pedidoSeleccionado == pedidoDocumento)
                             {
                                 // Si se validan los permisos, continúa con la eliminación
                                 EliminarDocumento(idDocumento, NombreArchivo, NombreCarpeta);
@@ -444,9 +448,81 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             }
         }
 
+        private bool ValidarCompartido(string cedulaLogueada, string idOTDocumento, string pedidoDocumento)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string queryNitCLiente = "select cocNIT from tblClienteObraContacto coc inner join tblReporteOT rot on coc.IdContacto = rot.IDContacto_Cliente where Id_OT = @idOT  and Consecutivo_Pedido = @Pedido";
+
+                using (SqlCommand cmd = new SqlCommand(queryNitCLiente, connection))
+                {
+                    cmd.Parameters.AddWithValue("@idOT", idOTDocumento);
+                    cmd.Parameters.AddWithValue("@Pedido", pedidoDocumento);
+
+                    var result = cmd.ExecuteScalar();
+
+                    if (result == null) return false;
+
+                    string nitCliente = result.ToString();
+
+                    // 1. Obtener string de compartidos
+                    string queryCompartidos = "SELECT CompartidoCon FROM tblClienteObra WHERE Nit = @Nit";
+
+                    using (SqlCommand cmd2 = new SqlCommand(queryCompartidos, connection))
+                    {
+                        cmd2.Parameters.AddWithValue("@Nit", nitCliente);
+
+                        var result2 = cmd2.ExecuteScalar();
+
+                        if (result2 == null) return false;
+
+                        var listaCompartidos = result2.ToString()
+                            .Split(';')
+                            .Select(x => x.Trim())
+                            .Where(x => !string.IsNullOrEmpty(x))
+                            .ToList();
+
+                        if (!listaCompartidos.Any()) return false;
+
+                        // 2. Query para buscar cédulas
+                        string queryCedula = @"
+        SELECT Cedula 
+        FROM tblEmpleado 
+        WHERE Nombre + ' ' + Apellidos = @Nombre";
+
+                        using (SqlCommand cmd3 = new SqlCommand(queryCedula, connection))
+                        {
+                            foreach (var asesor in listaCompartidos)
+                            {
+                                cmd3.Parameters.Clear();
+                                cmd3.Parameters.AddWithValue("@Nombre", asesor);
+
+                                var result3 = cmd3.ExecuteScalar();
+
+                                if (result3 != null)
+                                {
+                                    string cedula = result3.ToString();
+
+                                    if (cedula == cedulaLogueada)
+                                        return true; // 🔥 sale de todo (correcto)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+
         private void EliminarDocumento(string idDocumento, string NombreArchivo, string NombreCarpeta)
         {
-        
+
             // Eliminamos el documento de la carpeta
             string rutaBase = @"\\Srvfs\s_i_ducon$\Documentacion de Obras\" + NombreCarpeta;
             // string rutaBase = @"P:\SISTEMAS\PruebaDocumentacion\" + NombreCarpeta;
@@ -546,7 +622,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
 
             if (e.CommandName == "VerDocumento")
             {
-             
+
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 DataGridItem row = DataGridDoc.Items[rowIndex];
 
@@ -757,7 +833,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                         tbCantidad.Enabled = true;
 
                     }
-                   
+
                 }
                 else
                 {
@@ -848,7 +924,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                                 command.Parameters.AddWithValue("@MuebleEspecial", chxMespecial.Checked);
                                 command.Parameters.AddWithValue("@Cantidad", tbCantidad.Text);
                                 command.Parameters.AddWithValue("@Categoria", tbCategoria.Text);
-                                
+
                                 int rowsAffected = command.ExecuteNonQuery();
                                 if (rowsAffected > 0)
                                 {
@@ -930,7 +1006,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     // Verificar si el contenido es el esperado
                     if (CeldaA1 == "DESPIECE PRODUCTO ESPECIAL" && CeldaA2 == "N.º" && CeldaB2 == "PARTE" && CeldaC2 == "CANT." && CeldaD2 == "COD. INV." && CeldaE2 == "AREA")
                     {
-                        
+
 
                         Session["Observacion"] = tbObservacion.Text;
                         Session["Categoría"] = CeldaA4;
@@ -943,7 +1019,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                     }
                     else
                     {
-                       
+
                         string mensajePersonalizado = "El archivo ha sido modificado. o no es un desarrollo especial.";
                         string urlRedireccion = "FormExtPrin/DocumentacionOT.aspx";
                         Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
@@ -968,7 +1044,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             {
 
                 int MuebleEspecial = Convert.ToInt32(DataBinder.Eval(e.Item.DataItem, "MuebleEspecial"));
-               
+
 
                 TableCell cell = e.Item.Cells[6];
                 cell.Text = (MuebleEspecial == 1) ? "Si" : "No";
