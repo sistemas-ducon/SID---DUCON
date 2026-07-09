@@ -1121,7 +1121,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private string GuardarArchivoAdicional(HttpPostedFile archivo)
         {
-            string ruta = @"\\172.16.30.3\s_I_ducon$\TemporalAdjunto\";
+            string ruta = @"\\SRVFS\s_I_ducon$\TemporalAdjunto\";
             string nombreArchivo = Path.GetFileName(archivo.FileName);
             string rutaCompleta = Path.Combine(ruta, nombreArchivo);
 
@@ -1232,7 +1232,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             CreateCotizacionSheet(workbook.CreateSheet("Cotizacion Detallada"));
 
             // Definir la ruta y el nombre del archivo
-            string ruta = @"\\172.16.30.3\s_I_ducon$\TemporalAdjunto\";
+            string ruta = @"\\SRVFS\s_I_ducon$\TemporalAdjunto\";
             string nombreArchivo = $"Diseño N.{numeroDiseno}.xls";
             string rutaCompleta = Path.Combine(ruta, nombreArchivo);
 

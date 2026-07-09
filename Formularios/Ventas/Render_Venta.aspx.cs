@@ -1741,7 +1741,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         protected void btnAdjuntarYTerminarRender_Click(object sender, EventArgs e)
         {
             // Ruta de destino en el servidor apuntar a la ruta de temporales en el servidor 3
-            string serverPath = @"\\SRVDBAPPS\S_I_Ducon$\TemporalAdjunto";
+            string serverPath = @"\\SRVFS\S_I_Ducon$\TemporalAdjunto";
 
             // Numero de render para guardar los archivos con numero de render 
             string NumRender = NumeroRender.Text;

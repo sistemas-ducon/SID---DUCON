@@ -878,7 +878,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             string ArchivoRutServidor = Session["ArchivoRutSession"].ToString();
 
             // Ruta completa del archivo que deseas abrir
-            string rutaArchivo = @"\\172.16.30.6\s_i_ducon$\RUT\" + ArchivoRutServidor;
+            string rutaArchivo = @"\\SRVFS\s_i_ducon$\RUT\" + ArchivoRutServidor;
 
             //string rutaArchivo = @"P:\SISTEMAS\PruebaDocumentacion\RUT\" + ArchivoRutServidor;
 
@@ -930,7 +930,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             string ArchivoRegistroServidor ="R" + Session["ArchivoRegSession"].ToString(); ;
 
             // Ruta completa del archivo que deseas abrir
-            string rutaArchivo = @"\\172.16.30.6\s_i_ducon$\Registro Clientes\" + ArchivoRegistroServidor;
+            string rutaArchivo = @"\\SRVFS\s_i_ducon$\Registro Clientes\" + ArchivoRegistroServidor;
 
             try
             {
@@ -1116,7 +1116,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         {
             try
             {
-                string rutaBase = @"\\172.16.30.6\s_i_ducon$";
+                string rutaBase = @"\\SRVFS\s_i_ducon$";
                 string rutaCompletaCarpeta = Path.Combine(rutaBase, carpeta);
                 if(carpeta.ToUpper() == "REGISTRO CLIENTES")
                 {
@@ -1241,10 +1241,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             if (InsertarClienteEnBaseDeDatos())
                             {
                                 // Se invoca el Metodo para guardar archivos en el servidor 
-                                GuardarArchivosEnCarpetaServidor("RUT", @"\\172.16.30.6\s_i_ducon$", btnActRut);
+                                GuardarArchivosEnCarpetaServidor("RUT", @"\\SRVFS\s_i_ducon$", btnActRut);
                                 //GuardarArchivosEnCarpetaServidor("RUT", @"P:\SISTEMAS\PruebaDocumentacion", btnActRut);
 
-                                GuardarArchivosEnCarpetaServidor("Registro Clientes", @"\\172.16.30.6\s_i_ducon$", btnActRegCli);
+                                GuardarArchivosEnCarpetaServidor("Registro Clientes", @"\\SRVFS\s_i_ducon$", btnActRegCli);
                                 //GuardarArchivosEnCarpetaServidor("RegistroClientes", @"P:\SISTEMAS\PruebaDocumentacion", btnActRegCli);
 
                                 Session["ClienteSaveOrUpdate"] = "1";
@@ -1292,8 +1292,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
                             {
 
                                 // Se invoca el Metodo para guardar archivos en el servidor 
-                                GuardarArchivosEnCarpetaServidor("RUT", @"\\172.16.30.6\s_i_ducon$", btnActRut);
-                                GuardarArchivosEnCarpetaServidor("Registro Clientes", @"\\172.16.30.6\s_i_ducon$", btnActRegCli);
+                                GuardarArchivosEnCarpetaServidor("RUT", @"\\SRVFS\s_i_ducon$", btnActRut);
+                                GuardarArchivosEnCarpetaServidor("Registro Clientes", @"\\SRVFS\s_i_ducon$", btnActRegCli);
 
                                 Session["ClienteSaveOrUpdate"] = "1";
                                 Session["NitSaveOrUpdate"] = tbNumero.Text;

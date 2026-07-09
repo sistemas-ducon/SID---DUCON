@@ -2590,7 +2590,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
                         // Se consultan el archivo de control PE 
-                        string ControlPE = "\\\\SRVDBAPPS\\S_I_Ducon$\\TemporalAdjunto\\Solicitud_N" + lbNumeroSolicitud.Text + ".xlsx";
+                        string ControlPE = "\\\\SRVFS\\S_I_Ducon$\\TemporalAdjunto\\Solicitud_N" + lbNumeroSolicitud.Text + ".xlsx";
 
                         // Se consultan los archivos de la solicitud  que no sean bosquejos
                         string ArchivosSPE = ConsultarRutasDocumentosSPE(lbNumeroSolicitud.Text);
@@ -3388,7 +3388,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
 
                     // Definimos la ruta y el archivo 
-                    string networkPath = @"\\SRVDBAPPS\S_I_Ducon$\TemporalAdjunto";
+                    string networkPath = @"\\SRVFS\S_I_Ducon$\TemporalAdjunto";
                     string fileName = $"Solicitud_N{ID_Solicitud}.xlsx";
                     string fullPath = Path.Combine(networkPath, fileName);
 

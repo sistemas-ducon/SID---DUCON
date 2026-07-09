@@ -905,7 +905,7 @@ WHERE
                 string nombreArchivo = textCotizacion.Text;
 
                 // Construir la nueva ruta del archivo de Excel
-                string rutaBase = @"\\172.16.30.6\Recepcion\Cotizaciones Excel\";
+                string rutaBase = @"\\SRVFS\Recepcion\Cotizaciones Excel\";
 
                 // Buscar recursivamente el archivo en la zona seleccionada
                 string filePath = BuscarArchivoEnZona(rutaBase, zonaSeleccionada, nombreArchivo + ".xls");

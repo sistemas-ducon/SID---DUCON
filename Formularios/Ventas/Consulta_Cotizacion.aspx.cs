@@ -1010,7 +1010,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string mesAbreviado = mesesAbreviados[fechaCot.Month]; // Obtener el nombre abreviado del mes
 
                 // Construir la ruta completa al archivo
-                string rutaArchivo = @"\\172.16.30.6\Recepcion\Cotizaciones Excel\" + zonaLogeada + @"\" + year + @"\" + mesAbreviado + @"\" + nombreArchivo + ".xls";
+                string rutaArchivo = @"\\SRVFS\Recepcion\Cotizaciones Excel\" + zonaLogeada + @"\" + year + @"\" + mesAbreviado + @"\" + nombreArchivo + ".xls";
 
 
                 if (File.Exists(rutaArchivo))
@@ -1077,7 +1077,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string mesAbreviado = mesesAbreviados[fechaCot.Month]; // Obtener el nombre abreviado del mes
 
                 // Construir la ruta completa al archivo
-                string rutaArchivo = @"\\172.16.30.6\Recepcion\Arcexcel\" + zonaLogeada + @"\" + year + @"\" + mesAbreviado + @"\" + nombreArchivo + ".pdf";
+                string rutaArchivo = @"\\SRVFS\Recepcion\Arcexcel\" + zonaLogeada + @"\" + year + @"\" + mesAbreviado + @"\" + nombreArchivo + ".pdf";
 
 
                 if (File.Exists(rutaArchivo))

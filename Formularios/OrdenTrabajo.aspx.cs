@@ -12673,7 +12673,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         else
                         {
                             // Validar si existe una imagen en la ruta especificada
-                            string imagePath = Path.Combine(@"\\172.16.30.6\Dibujo\DUCON\ONLINE\Dropbox\BLOQUES\IMAGENES", $"{datosFiltrados.Id_Panel}.jpg");
+                            string imagePath = Path.Combine(@"\\SRVFS\Dibujo\DUCON\ONLINE\Dropbox\BLOQUES\IMAGENES", $"{datosFiltrados.Id_Panel}.jpg");
 
                             if (File.Exists(imagePath))
                             {
