@@ -2603,7 +2603,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                         if (destinatario != "")
                         {
-                            if (pesoTotal > 15728640)
+                            if (pesoTotal > 25728640)
                             {
                                  EnviarCorreoConAdjuntosTerminadoDibujo(destinatario, cuerpo, adjuntosFallo.Trim(';'));
 
