@@ -397,7 +397,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 adapter.Fill(dataTable);
             }
-            DataGridDiseños.DataSource = dataTable;
+            //DataGridDiseños.DataSource = dataTable;
         }
 
         protected void DataGridRenderDise()
@@ -419,7 +419,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 adapter.Fill(dataTable);
             }
-            DataGridRender.DataSource = dataTable;
+            //DataGridRender.DataSource = dataTable;
         }
 
         protected void ResumenDibujanteDibujo()
@@ -535,7 +535,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 adapter.Fill(dataTable);
             }
-            DataGridRender.DataSource = dataTable;
+            //DataGridRender.DataSource = dataTable;
 
         }
 
@@ -593,8 +593,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 adapter.Fill(dataTable);
             }
-            DataGridDiseños.DataSource = dataTable;
-            DataGridDiseños.DataBind();
+            //DataGridDiseños.DataSource = dataTable;
+            //DataGridDiseños.DataBind();
 
         }
 
@@ -813,17 +813,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             BtnDesDis.Enabled = false;
             BtnDesDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-            BtnTrabShoCas.Enabled = false;
-            BtnTrabShoCas.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+            //BtnTrabShoCas.Enabled = false;
+            //BtnTrabShoCas.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-            BtnDesSC.Enabled = false;
-            BtnDesSC.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+            //BtnDesSC.Enabled = false;
+            //BtnDesSC.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-            BtnTrabRen.Enabled = false;
-            BtnTrabRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+            //BtnTrabRen.Enabled = false;
+            //BtnTrabRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-            BtnDesRen.Enabled = false;
-            BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+            //BtnDesRen.Enabled = false;
+            //BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
 
         }
@@ -2066,17 +2066,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
 
 
-            BtnDesRen.Enabled = false;
-            BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+            //BtnDesRen.Enabled = false;
+            //BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-            BtnTrabRen.Enabled = false;
-            BtnTrabRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+            //BtnTrabRen.Enabled = false;
+            //BtnTrabRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-            BtnDesSC.Enabled = false;
-            BtnDesSC.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+            //BtnDesSC.Enabled = false;
+            //BtnDesSC.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-            BtnTrabShoCas.Enabled = false;
-            BtnTrabShoCas.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+            //BtnTrabShoCas.Enabled = false;
+            //BtnTrabShoCas.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
             BtnDesDis.Enabled = false;
             BtnDesDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
@@ -3377,19 +3377,19 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             int rowIndex = Convert.ToInt32(lnkSelectRow.CommandArgument);
 
             // Accede a la fila seleccionada en el DataGrid
-            DataGridItem selectedRow = DataGridDiseños.Items[rowIndex];
+            //DataGridItem selectedRow = DataGridDiseños.Items[rowIndex];
 
             // Almacena el nombre del archivo en la variable de sesión
-            Session["NumeroDiseño"] = selectedRow.Cells[2].Text;
+            //Session["NumeroDiseño"] = selectedRow.Cells[2].Text;
 
             // Deselecciona todas las filas previamente seleccionadas
-            foreach (DataGridItem item in DataGridDiseños.Items)
+            /*foreach (DataGridItem item in DataGridDiseños.Items)
             {
                 if (item != selectedRow)
                 {
                     item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
                 }
-            }
+            } */
 
             Session["lnkClieeClicked"] = true;
 
@@ -3626,17 +3626,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             TextPla.Enabled = false;
             TextPla.CssClass = "form-control form-control-sm";
-            BtnDesRen.Enabled = false;
-            BtnDesRen.CssClass = "btn-outline-dark btn btn-white btn-sm btn full-width-btn";
+            //BtnDesRen.Enabled = false;
+            //BtnDesRen.CssClass = "btn-outline-dark btn btn-white btn-sm btn full-width-btn";
 
-            BtnTrabRen.Enabled = false;
-            BtnTrabRen.CssClass = "btn-outline-dark btn btn-white btn-sm btn full-width-btn";
+            //BtnTrabRen.Enabled = false;
+            //BtnTrabRen.CssClass = "btn-outline-dark btn btn-white btn-sm btn full-width-btn";
 
-            BtnDesSC.Enabled = false;
-            BtnDesSC.CssClass = "btn-outline-dark btn btn-white btn-sm btn full-width-btn";
+            //BtnDesSC.Enabled = false;
+            //BtnDesSC.CssClass = "btn-outline-dark btn btn-white btn-sm btn full-width-btn";
 
-            BtnTrabShoCas.Enabled = false;
-            BtnTrabShoCas.CssClass = "btn-outline-dark btn btn-white btn-sm btn full-width-btn";
+            //BtnTrabShoCas.Enabled = false;
+            //BtnTrabShoCas.CssClass = "btn-outline-dark btn btn-white btn-sm btn full-width-btn";
 
             BtnDesDis.Enabled = false;
             BtnDesDis.CssClass = "btn-outline-dark btn btn-white btn-sm btn full-width-btn";
@@ -4754,17 +4754,17 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         BtnDesDis.Enabled = true;
                         BtnDesDis.CssClass = "btn btn-sm button-enabled linkButtonClicked2 shadow-sm full-width-btn";
 
-                        BtnTrabShoCas.Enabled = false;
-                        BtnTrabShoCas.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+                        //BtnTrabShoCas.Enabled = false;
+                        //BtnTrabShoCas.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-                        BtnDesSC.Enabled = false;
-                        BtnDesSC.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+                        //BtnDesSC.Enabled = false;
+                        //BtnDesSC.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-                        BtnTrabRen.Enabled = false;
-                        BtnTrabRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+                        //BtnTrabRen.Enabled = false;
+                        //BtnTrabRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-                        BtnDesRen.Enabled = false;
-                        BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+                        //BtnDesRen.Enabled = false;
+                        //BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
                         // Store the selected row index in the DataGrid attribute
                         DataGrid2.Attributes["SelectedRowIndex2"] = rowIndex.ToString();
@@ -5398,106 +5398,106 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             Session.Remove("NumeroDiseño2");
         }
 
-        protected void DataGridSC_ItemCommand(object source, DataGridCommandEventArgs e)
-        {
-            string tipoAccion = Session["Diseno"] as string;
-            if (tipoAccion == "Diseño")
-            {
+        //protected void DataGridSC_ItemCommand(object source, DataGridCommandEventArgs e)
+        //{
+        //    string tipoAccion = Session["Diseno"] as string;
+        //    if (tipoAccion == "Diseño")
+        //    {
 
-                if (e.CommandName == "Numero_Diseño")
-                {
-                    int rowIndex = Convert.ToInt32(e.CommandArgument);
-                    DataGridItem row = DataGridDiseños.Items[rowIndex];
+        //        if (e.CommandName == "Numero_Diseño")
+        //        {
+        //            int rowIndex = Convert.ToInt32(e.CommandArgument);
+        //            /*DataGridItem row = DataGridDiseños.Items[rowIndex];
 
-                    // capturamos los campos de la fila del datagrid 
-                    foreach (DataGridItem item in DataGridDiseños.Items)
-                    {
-                        if (item != row)
-                        {
-                            item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
-                        }
-                    }
+        //            // capturamos los campos de la fila del datagrid 
+        //            foreach (DataGridItem item in DataGridDiseños.Items)
+        //            {
+        //                if (item != row)
+        //                {
+        //                    item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+        //                }
+        //            }
+        //            */
+        //            e.Item.CssClass = "fila-seleccionada1";
 
-                    e.Item.CssClass = "fila-seleccionada1";
+        //            AccionesAlCargarDiseño();
+        //            DateTime? primerClicTime = Session["PrimerClicTime"] as DateTime?;
+        //            if (primerClicTime != null && (DateTime.Now - primerClicTime.Value).TotalSeconds <= 1)
+        //            {
 
-                    AccionesAlCargarDiseño();
-                    DateTime? primerClicTime = Session["PrimerClicTime"] as DateTime?;
-                    if (primerClicTime != null && (DateTime.Now - primerClicTime.Value).TotalSeconds <= 1)
-                    {
+        //                // Se compara si el click es en la misma fila
+        //                if (row.Cells[2].Text == Session["NumSC"]?.ToString())
+        //                {
+        //                    // Incrementar la variable de sesión "ClickCount" en el servidor
+        //                    int clickCount = Convert.ToInt32(Session["ClickCount"]) + 1;
+        //                    Session["ClickCount"] = clickCount;
 
-                        // Se compara si el click es en la misma fila
-                        if (row.Cells[2].Text == Session["NumSC"]?.ToString())
-                        {
-                            // Incrementar la variable de sesión "ClickCount" en el servidor
-                            int clickCount = Convert.ToInt32(Session["ClickCount"]) + 1;
-                            Session["ClickCount"] = clickCount;
+        //                    // se valida si es el segundo click en la misma fila 
+        //                    if (clickCount == 2)
+        //                    {
 
-                            // se valida si es el segundo click en la misma fila 
-                            if (clickCount == 2)
-                            {
+        //                        ProcesarNumeroDiseño(e);
+        //                        ScriptManager.RegisterStartupScript(this, GetType(), "ActivarTabScript", "activarTab('BitacoraDesarrollo-content');", true);
 
-                                ProcesarNumeroDiseño(e);
-                                ScriptManager.RegisterStartupScript(this, GetType(), "ActivarTabScript", "activarTab('BitacoraDesarrollo-content');", true);
+        //                        Session.Remove("ClickCount");
+        //                        Session.Remove("NumSC");
+        //                    }
 
-                                Session.Remove("ClickCount");
-                                Session.Remove("NumSC");
-                            }
+        //                }
+        //            }
+        //            else
+        //            {
+        //                // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
+        //                Session["ClickCount"] = 1;
+        //                Session["NumSC"] = row.Cells[2].Text;
 
-                        }
-                    }
-                    else
-                    {
-                        // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
-                        Session["ClickCount"] = 1;
-                        Session["NumSC"] = row.Cells[2].Text;
+        //                Session["PrimerClicTime"] = DateTime.Now;
 
-                        Session["PrimerClicTime"] = DateTime.Now;
+        //                BtnTrabPed.Enabled = false;
+        //                BtnTrabPed.CssClass = "btn btn-sm button-disabled linkButtonClicked shadow-sm full-width-btn";
 
-                        BtnTrabPed.Enabled = false;
-                        BtnTrabPed.CssClass = "btn btn-sm button-disabled linkButtonClicked shadow-sm full-width-btn";
+        //                BtnDesPed.Enabled = false;
+        //                BtnDesPed.CssClass = "btn btn-sm button-disabled linkButtonClicked shadow-sm full-width-btn";
 
-                        BtnDesPed.Enabled = false;
-                        BtnDesPed.CssClass = "btn btn-sm button-disabled linkButtonClicked shadow-sm full-width-btn";
+        //                BtnTrabDis.Enabled = false;
+        //                BtnTrabDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-                        BtnTrabDis.Enabled = false;
-                        BtnTrabDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+        //                BtnDesDis.Enabled = false;
+        //                BtnDesDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-                        BtnDesDis.Enabled = false;
-                        BtnDesDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+        //                BtnTrabShoCas.Enabled = true;
+        //                BtnTrabShoCas.CssClass = "btn btn-sm button-enabled linkButtonClicked2 full-width-btn";
 
-                        BtnTrabShoCas.Enabled = true;
-                        BtnTrabShoCas.CssClass = "btn btn-sm button-enabled linkButtonClicked2 full-width-btn";
+        //                BtnDesSC.Enabled = true;
+        //                BtnDesSC.CssClass = "btn btn-sm button-enabled linkButtonClicked2 full-width-btn";
 
-                        BtnDesSC.Enabled = true;
-                        BtnDesSC.CssClass = "btn btn-sm button-enabled linkButtonClicked2 full-width-btn";
+        //                BtnTrabRen.Enabled = false;
+        //                BtnTrabRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-                        BtnTrabRen.Enabled = false;
-                        BtnTrabRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+        //                BtnDesRen.Enabled = false;
+        //                BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-                        BtnDesRen.Enabled = false;
-                        BtnDesRen.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+        //                // Store the selected row index in the DataGrid attribute
+        //                //DataGridDiseños.Attributes["SelectedRowIndex3"] = rowIndex.ToString();
 
-                        // Store the selected row index in the DataGrid attribute
-                        DataGridDiseños.Attributes["SelectedRowIndex3"] = rowIndex.ToString();
+        //                row.Attributes["id"] = "DataGridDiseños_row_" + rowIndex;
+        //                ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DataGridDiseños_row_" + rowIndex + "');", true);
 
-                        row.Attributes["id"] = "DataGridDiseños_row_" + rowIndex;
-                        ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DataGridDiseños_row_" + rowIndex + "');", true);
+        //            }
+        //        }
+        //    }
+        //    if (tipoAccion == "Ventas")
+        //    {
+        //        if (e.CommandName == "Numero_Diseño")
+        //        {
+        //            ProcesarNumeroDiseño(e);
+        //            ScriptManager.RegisterStartupScript(this, GetType(), "ActivarTabScript", "activarTab('BitacoraDesarrollo-content');", true);
+        //        }
 
-                    }
-                }
-            }
-            if (tipoAccion == "Ventas")
-            {
-                if (e.CommandName == "Numero_Diseño")
-                {
-                    ProcesarNumeroDiseño(e);
-                    ScriptManager.RegisterStartupScript(this, GetType(), "ActivarTabScript", "activarTab('BitacoraDesarrollo-content');", true);
-                }
-
-            }
+        //    }
 
 
-        }
+        //}
 
    
 
@@ -5510,67 +5510,67 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-        protected void DatagridRender_ItemCommand(object source, DataGridCommandEventArgs e)
-        {
+        //protected void DatagridRender_ItemCommand(object source, DataGridCommandEventArgs e)
+        //{
 
-            if (e.CommandName == "Id_Render")
-            {
-                int rowIndex = Convert.ToInt32(e.CommandArgument);
-                DataGridItem row = DataGridRender.Items[rowIndex];
+        //    if (e.CommandName == "Id_Render")
+        //    {
+        //        int rowIndex = Convert.ToInt32(e.CommandArgument);
+        //        DataGridItem row = DataGridRender.Items[rowIndex];
 
-                // capturamos los campos de la fila del datagrid 
-                foreach (DataGridItem item in DataGridRender.Items)
-                {
-                    if (item != row)
-                    {
-                        item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
-                    }
-                }
+        //        // capturamos los campos de la fila del datagrid 
+        //        foreach (DataGridItem item in DataGridRender.Items)
+        //        {
+        //            if (item != row)
+        //            {
+        //                item.CssClass = ""; // Elimina la clase CSS de las filas no seleccionadas
+        //            }
+        //        }
 
-                e.Item.CssClass = "fila-seleccionada1";
+        //        e.Item.CssClass = "fila-seleccionada1";
 
-                Session["Id_Render"] = row.Cells[2].Text;
+        //        Session["Id_Render"] = row.Cells[2].Text;
 
-                string tipoAccion = Session["Diseno"] as string;
-                if (tipoAccion == "Diseño")
-                {
-                    BtnTrabPed.Enabled = false;
-                    BtnTrabPed.CssClass = "btn btn-sm button-disabled linkButtonClicked shadow-sm full-width-btn";
+        //        string tipoAccion = Session["Diseno"] as string;
+        //        if (tipoAccion == "Diseño")
+        //        {
+        //            BtnTrabPed.Enabled = false;
+        //            BtnTrabPed.CssClass = "btn btn-sm button-disabled linkButtonClicked shadow-sm full-width-btn";
 
-                    BtnDesPed.Enabled = false;
-                    BtnDesPed.CssClass = "btn btn-sm button-disabled linkButtonClicked shadow-sm full-width-btn";
+        //            BtnDesPed.Enabled = false;
+        //            BtnDesPed.CssClass = "btn btn-sm button-disabled linkButtonClicked shadow-sm full-width-btn";
 
-                    BtnTrabDis.Enabled = false;
-                    BtnTrabDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+        //            BtnTrabDis.Enabled = false;
+        //            BtnTrabDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-                    BtnDesDis.Enabled = false;
-                    BtnDesDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+        //            BtnDesDis.Enabled = false;
+        //            BtnDesDis.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-                    BtnTrabShoCas.Enabled = false;
-                    BtnTrabShoCas.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+        //            BtnTrabShoCas.Enabled = false;
+        //            BtnTrabShoCas.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-                    BtnDesSC.Enabled = false;
-                    BtnDesSC.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
+        //            BtnDesSC.Enabled = false;
+        //            BtnDesSC.CssClass = "btn btn-sm button-disabled linkButtonClicked full-width-btn";
 
-                    BtnTrabRen.Enabled = true;
-                    BtnTrabRen.CssClass = "btn btn-sm button-enabled linkButtonClicked2 full-width-btn";
+        //            BtnTrabRen.Enabled = true;
+        //            BtnTrabRen.CssClass = "btn btn-sm button-enabled linkButtonClicked2 full-width-btn";
 
-                    BtnDesRen.Enabled = true;
-                    BtnDesRen.CssClass = "btn btn-sm button-enabled linkButtonClicked2 full-width-btn";
+        //            BtnDesRen.Enabled = true;
+        //            BtnDesRen.CssClass = "btn btn-sm button-enabled linkButtonClicked2 full-width-btn";
 
-                    DataGridRender.Attributes["SelectedRowIndex4"] = rowIndex.ToString();
+        //            DataGridRender.Attributes["SelectedRowIndex4"] = rowIndex.ToString();
 
-                    row.Attributes["id"] = "DatagridRender_row_" + rowIndex;
-                    ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DatagridRender_row_" + rowIndex + "');", true);
+        //            row.Attributes["id"] = "DatagridRender_row_" + rowIndex;
+        //            ScriptManager.RegisterStartupScript(this, GetType(), "scrollToRow", "focusAndScrollToRow('DatagridRender_row_" + rowIndex + "');", true);
 
 
-                }
-                if (tipoAccion == "Ventas")
-                {
+        //        }
+        //        if (tipoAccion == "Ventas")
+        //        {
 
-                }
-            }
-        }
+        //        }
+        //    }
+        //}
 
     
 
@@ -5588,8 +5588,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             DataGrid1.DataBind();
             DataGrid2.DataBind();
             DataGrid3.DataBind();
-            DataGridDiseños.DataBind();
-            DataGridRender.DataBind();
+            //DataGridDiseños.DataBind();
+            //DataGridRender.DataBind();
             UpdatePanel1.Update();
         }
 
@@ -5613,8 +5613,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-                e.Item.Attributes["id"] = "DataGridDiseños_row_" + e.Item.ItemIndex;
-                e.Item.Attributes["data-datagridid"] = "DataGridDiseños";
+                //e.Item.Attributes["id"] = "DataGridDiseños_row_" + e.Item.ItemIndex;
+                //e.Item.Attributes["data-datagridid"] = "DataGridDiseños";
                 string scFecha = DataBinder.Eval(e.Item.DataItem, "SC_Fecha").ToString();
                 DateTime fechaSC;
 
@@ -7970,7 +7970,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         CargarDatagridDise();
 
                         // Recuperar el índice de la fila seleccionada desde el atributo del DataGrid
-                        if (DataGridDiseños.Attributes["SelectedRowIndex3"] != null)
+                        /* if (DataGridDiseños.Attributes["SelectedRowIndex3"] != null)
                         {
                             int selectedRowIndex = Convert.ToInt32(DataGridDiseños.Attributes["SelectedRowIndex3"]);
                             string rowId = "DataGridDiseños_row_" + selectedRowIndex;
@@ -7984,7 +7984,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                             // Utilizar JavaScript para enfocar y desplazar la vista a la fila seleccionada
                             ScriptManager.RegisterStartupScript(this, GetType(), "focusRow", $"focusAndScrollToRow('{rowId}');", true);
-                        }
+                        } */
                     }
                     else
                     {
@@ -8013,21 +8013,21 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         CargarDatagridDise();
 
                         // Recuperar el índice de la fila seleccionada desde el atributo del DataGrid
-                        if (DataGridDiseños.Attributes["SelectedRowIndex3"] != null)
-                        {
-                            int selectedRowIndex = Convert.ToInt32(DataGridDiseños.Attributes["SelectedRowIndex3"]);
-                            string rowId = "DataGridDiseños_row_" + selectedRowIndex;
+                        //if (DataGridDiseños.Attributes["SelectedRowIndex3"] != null)
+                        //{
+                        //    int selectedRowIndex = Convert.ToInt32(DataGridDiseños.Attributes["SelectedRowIndex3"]);
+                        //    string rowId = "DataGridDiseños_row_" + selectedRowIndex;
 
-                            // Reaplicar la clase CSS para la fila seleccionada
-                            foreach (DataGridItem item in DataGridDiseños.Items)
-                            {
-                                item.CssClass = "";
-                            }
-                            DataGridDiseños.Items[selectedRowIndex].CssClass = "fila-seleccionada1";
+                        //    // Reaplicar la clase CSS para la fila seleccionada
+                        //    foreach (DataGridItem item in DataGridDiseños.Items)
+                        //    {
+                        //        item.CssClass = "";
+                        //    }
+                        //    DataGridDiseños.Items[selectedRowIndex].CssClass = "fila-seleccionada1";
 
-                            // Utilizar JavaScript para enfocar y desplazar la vista a la fila seleccionada
-                            ScriptManager.RegisterStartupScript(this, GetType(), "focusRow", $"focusAndScrollToRow('{rowId}');", true);
-                        }
+                        //    // Utilizar JavaScript para enfocar y desplazar la vista a la fila seleccionada
+                        //    ScriptManager.RegisterStartupScript(this, GetType(), "focusRow", $"focusAndScrollToRow('{rowId}');", true);
+                        //}
                     }
                     else
                     {
@@ -8037,53 +8037,53 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             }
         }
 
-        protected void BtnTrabRender_Click(object sender, EventArgs e)
-        {
-            string nombreUsuario = Session["usuariologueado"].ToString();
+        //protected void BtnTrabRender_Click(object sender, EventArgs e)
+        //{
+        //    string nombreUsuario = Session["usuariologueado"].ToString();
 
-            string idRender = Session["Id_Render"].ToString();
+        //    string idRender = Session["Id_Render"].ToString();
 
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
-            {
-                connection.Open();
+        //    using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+        //    {
+        //        connection.Open();
 
-                string update = "UPDATE tblRender SET RealizadoPor = @NombreUsuario WHERE Id_Render = @Id_Render";
+        //        string update = "UPDATE tblRender SET RealizadoPor = @NombreUsuario WHERE Id_Render = @Id_Render";
 
-                using (SqlCommand command = new SqlCommand(update, connection))
-                {
-                    command.Parameters.AddWithValue("@NombreUsuario", nombreUsuario);
-                    command.Parameters.AddWithValue("@Id_Render", idRender);
+        //        using (SqlCommand command = new SqlCommand(update, connection))
+        //        {
+        //            command.Parameters.AddWithValue("@NombreUsuario", nombreUsuario);
+        //            command.Parameters.AddWithValue("@Id_Render", idRender);
 
-                    int rowsAffected = command.ExecuteNonQuery();
+        //            int rowsAffected = command.ExecuteNonQuery();
 
-                    if (rowsAffected > 0)
-                    {
-                        CargarDatagridDise();
+        //            if (rowsAffected > 0)
+        //            {
+        //                CargarDatagridDise();
 
-                        // Recuperar el índice de la fila seleccionada desde el atributo del DataGrid
-                        if (DataGridRender.Attributes["SelectedRowIndex4"] != null)
-                        {
-                            int selectedRowIndex = Convert.ToInt32(DataGridRender.Attributes["SelectedRowIndex4"]);
-                            string rowId = "DataGridRender_row_" + selectedRowIndex;
+        //                // Recuperar el índice de la fila seleccionada desde el atributo del DataGrid
+        //                if (DataGridRender.Attributes["SelectedRowIndex4"] != null)
+        //                {
+        //                    int selectedRowIndex = Convert.ToInt32(DataGridRender.Attributes["SelectedRowIndex4"]);
+        //                    string rowId = "DataGridRender_row_" + selectedRowIndex;
 
-                            // Reaplicar la clase CSS para la fila seleccionada
-                            foreach (DataGridItem item in DataGridRender.Items)
-                            {
-                                item.CssClass = "";
-                            }
-                            DataGridRender.Items[selectedRowIndex].CssClass = "fila-seleccionada1";
+        //                    // Reaplicar la clase CSS para la fila seleccionada
+        //                    foreach (DataGridItem item in DataGridRender.Items)
+        //                    {
+        //                        item.CssClass = "";
+        //                    }
+        //                    DataGridRender.Items[selectedRowIndex].CssClass = "fila-seleccionada1";
 
-                            // Utilizar JavaScript para enfocar y desplazar la vista a la fila seleccionada
-                            ScriptManager.RegisterStartupScript(this, GetType(), "focusRow", $"focusAndScrollToRow('{rowId}');", true);
-                        }
-                    }
-                    else
-                    {
-                        // Maneja el caso en el que no se actualizaron filas, si es necesario
-                    }
-                }
-            }
-        }
+        //                    // Utilizar JavaScript para enfocar y desplazar la vista a la fila seleccionada
+        //                    ScriptManager.RegisterStartupScript(this, GetType(), "focusRow", $"focusAndScrollToRow('{rowId}');", true);
+        //                }
+        //            }
+        //            else
+        //            {
+        //                // Maneja el caso en el que no se actualizaron filas, si es necesario
+        //            }
+        //        }
+        //    }
+        //}
 
         protected void BtnBuscarPlano_Click(object sender, EventArgs e)
         {

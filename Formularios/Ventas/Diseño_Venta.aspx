@@ -2103,9 +2103,9 @@
                                         <div class="col-lg-10 col-md-9 col-sm-9 col-xs-12">
                                             <div class="container-fluid m-1">
                                                 <div class="row justify-content-center">
-                                                    <div class="border rounded p-1 special-border shadow-sm" style="height: auto; min-height: 212px;">
+                                                    <div class="border rounded p-1 special-border shadow-sm" style="height: 43vh;">
                                                         <%-- DATAGRID--%>
-                                                        <div class="table-responsive mb-2 gap-2" style="max-height: 212px; overflow-x: auto;">
+                                                        <div class="table-responsive mb-2 gap-2" style="height: 100%; overflow-x: auto;">
                                                             <asp:DataGrid CssClass="table table-bordered table-hover table-sm form-control-sm" ID="DataGrid1" runat="server"
                                                                 AutoGenerateColumns="false" OnItemDataBound="DataGrid1_ItemDataBound" OnItemCommand="DataGrid1_ItemCommand" ShowHeaderWhenEmpty="true" PageSize="5"
                                                                 AllowSorting="true">
@@ -2275,13 +2275,15 @@
 
                                         </div>
                                     </div>
+                                    
+                                    
                                     <div class="row">
                                         <div class="col-lg-10 col-md-9 col-sm-9 col-xs-12">
                                             <div class="container-fluid m-1">
                                                 <div class="row justify-content-center">
-                                                    <div class="border rounded p-1 special-border shadow-sm" style="height: auto; min-height: 212px;">
+                                                    <div class="border rounded p-1 special-border shadow-sm" style="height: 43vh;">
                                                         <%-- DATAGRID--%>
-                                                        <div class="table-responsive mb-2 gap-2" style="max-height: 212px; overflow-x: auto;">
+                                                        <div class="table-responsive mb-2 gap-2" style="height: 100%; overflow-x: auto;">
                                                             <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGrid2" runat="server" AutoGenerateColumns="false"
                                                                 OnItemDataBound="DataGrid2_ItemDataBound" OnItemCommand="DataGridDise_ItemCommand">
                                                                 <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
@@ -2354,12 +2356,14 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
+                                    <%--
+
                                     <div class="row">
                                         <div class="col-lg-10 col-md-9 col-sm-9 col-xs-12">
                                             <div class="container-fluid m-1">
                                                 <div class="row justify-content-center">
                                                     <div class="border rounded p-1 special-border shadow-sm" style="height: auto; min-height: 212px;">
-                                                        <%-- DATAGRID--%>
                                                         <div class="table-responsive mb-2 gap-2" style="max-height: 212px; overflow-x: auto;">
                                                             <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" ID="DataGridDiseños" runat="server"
                                                                 AutoGenerateColumns="false" OnItemDataBound="DataGrid3_ItemDataBound" OnItemCommand="DataGridSC_ItemCommand">
@@ -2424,7 +2428,6 @@
                                             <div class="container-fluid m-1">
                                                 <div class="row justify-content-center">
                                                     <div class="border rounded p-1 special-border shadow-sm" style="height: auto; min-height: 212px;">
-                                                        <%-- DATAGRID--%>
                                                         <div class="table-responsive mb-2 gap-2" style="max-height: 212px; overflow-x: auto;">
                                                             <asp:DataGrid CssClass="table table-bordered table-hover table-sm form-control-sm" ID="DataGridRender" runat="server"
                                                                 AutoGenerateColumns="false" OnItemDataBound="DataGrid4_ItemDataBound" OnItemCommand="DatagridRender_ItemCommand">
@@ -2479,6 +2482,7 @@
                                             </div>
                                         </div>
                                     </div>
+                        --%>
                                 </div>
                             </div>
                         </div>
