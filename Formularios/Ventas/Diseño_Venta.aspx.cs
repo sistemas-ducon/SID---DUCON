@@ -11605,11 +11605,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             DateTime fechaBase = fechaOriginal;
 
-            if (hora < new TimeSpan(6, 30, 0))
+            if (hora < new TimeSpan(7, 00, 0))
             {
                 fechaBase = new DateTime(fechaOriginal.Year, fechaOriginal.Month, fechaOriginal.Day, 7, 0, 0);
             }
-            else if (hora > new TimeSpan(16, 30, 0))
+            else if (hora > new TimeSpan(16, 15, 0))
             {
                 fechaBase = ObtenerProximaFechaHabil(fechaOriginal, 1);
                 fechaBase = new DateTime(fechaBase.Year, fechaBase.Month, fechaBase.Day, 7, 0, 0);
