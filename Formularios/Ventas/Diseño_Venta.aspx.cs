@@ -1048,6 +1048,8 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     ViewState["DescripcionMail"] = DescripcionMail;
                     ViewState["NombreUsuario"] = NombreUsuario;
                     ViewState["RutaArchivo"] = rutaArchivo;
+                    ViewState["RutasAdjuntos"] = rutaArchivo;
+                    ViewState["PesoArchivoInicial"] = CalcularPesoRutasAdjuntos(rutaArchivo);
 
                     scripTabDise();
 
@@ -1092,32 +1094,35 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         }
 
 
-        protected void AdjuntarOtroArchivo_Click(object sender, EventArgs e)
-        {
-            string rutaArchivoOriginal = ViewState["RutaArchivo"].ToString();
-            string rutaCompleta = rutaArchivoOriginal;
+        private const long LimitePesoAdjuntosEnBytes = 25L * 1024 * 1024;
 
-            if (FileUpload1.HasFiles)
+        private string ObtenerRutasAdjuntos()
+        {
+            object rutasAdjuntos = ViewState["RutasAdjuntos"] ?? ViewState["RutaArchivo"];
+            return rutasAdjuntos == null ? string.Empty : rutasAdjuntos.ToString();
+        }
+
+        private long ObtenerPesoArchivoInicial()
+        {
+            object pesoArchivoInicial = ViewState["PesoArchivoInicial"];
+            return pesoArchivoInicial == null
+                ? CalcularPesoRutasAdjuntos(ViewState["RutaArchivo"] == null ? string.Empty : ViewState["RutaArchivo"].ToString())
+                : Convert.ToInt64(pesoArchivoInicial);
+        }
+
+        private long CalcularPesoRutasAdjuntos(string rutasAdjuntos)
+        {
+            long pesoTotal = 0;
+            foreach (string rutaArchivo in rutasAdjuntos.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                foreach (HttpPostedFile archivo in FileUpload1.PostedFiles)
+                if (File.Exists(rutaArchivo))
                 {
-                    string rutaArchivoAdicional = GuardarArchivoAdicional(archivo);
-                    rutaCompleta += ";" + rutaArchivoAdicional;
+                    pesoTotal += new FileInfo(rutaArchivo).Length;
                 }
             }
 
-            bool correoEnviado = EnviarCorreoTerminadoDise(
-                ViewState["Receptormail"].ToString(),
-                ViewState["AsuntoMail"].ToString(),
-                ViewState["DescripcionMail"].ToString(),
-                ViewState["NombreUsuario"].ToString(),
-                rutaCompleta
-            );
-            Session["Numero_Diseño2"] = lblNumDise.Text;
-
-            Response.Redirect("/Formularios/Ventas/Diseño_Venta.aspx");
+            return pesoTotal;
         }
-
 
         private string GuardarArchivoAdicional(HttpPostedFile archivo)
         {
@@ -1179,13 +1184,41 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         protected void EnviarCorreoTerminado_Click(object sender, EventArgs e)
         {
+            long pesoArchivosSeleccionados = 0;
+            foreach (HttpPostedFile archivo in FileUpload1.PostedFiles)
+            {
+                pesoArchivosSeleccionados += archivo.ContentLength;
+            }
+
+            if (ObtenerPesoArchivoInicial() + pesoArchivosSeleccionados > LimitePesoAdjuntosEnBytes)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "LimiteAdjuntos", "alert('El peso total de los archivos adjuntos no puede superar los 25 MB.');", true);
+                return;
+            }
+
+            string rutasAdjuntos = ObtenerRutasAdjuntos();
+            foreach (HttpPostedFile archivo in FileUpload1.PostedFiles)
+            {
+                string rutaArchivoAdicional = GuardarArchivoAdicional(archivo);
+                rutasAdjuntos = string.IsNullOrEmpty(rutasAdjuntos)
+                    ? rutaArchivoAdicional
+                    : rutasAdjuntos + ";" + rutaArchivoAdicional;
+            }
+
             bool correoEnviado = EnviarCorreoTerminadoDise(
                 ViewState["Receptormail"].ToString(),
                 ViewState["AsuntoMail"].ToString(),
                 ViewState["DescripcionMail"].ToString(),
                 ViewState["NombreUsuario"].ToString(),
-                ViewState["RutaArchivo"].ToString()
+                rutasAdjuntos
             );
+            Session["Numero_Diseño2"] = lblNumDise.Text;
+            ScriptManager.RegisterStartupScript(this, GetType(), "CorreoEnviado", @"
+                $('#CargandoEnvioCorreo').modal('hide');
+                $('#CorreoEnviadoExito').modal('show');
+                setTimeout(function() {
+                    window.location.href = '/Formularios/Ventas/Diseño_Venta.aspx';
+                }, 1800);", true);
         }
 
         private bool ValidarCadenaMail(string cadenaMail)

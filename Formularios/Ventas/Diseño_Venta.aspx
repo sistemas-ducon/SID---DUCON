@@ -59,16 +59,116 @@
 
 
     <script>
+        var archivosAdjuntos = [];
+        var limitePesoAdjuntos = 25 * 1024 * 1024;
+        // El servidor valida el peso total incluyendo el archivo inicial al enviar.
+        // Se evita depender del code-behind para que este script pueda cargar solo.
+        var pesoArchivoInicial = 0;
+
+        function getFileUploadAdjuntos() {
+            return document.getElementById('<%= FileUpload1.ClientID %>');
+        }
+
         function triggerFileUpload2() {
-            document.getElementById('<%= FileUpload1.ClientID %>').click();
+            getFileUploadAdjuntos().click();
         }
 
         function showFileName2() {
-            var fileUpload = document.getElementById('<%= FileUpload1.ClientID %>');
-        var textBox = document.getElementById('<%= TextBox1.ClientID %>');
-        if (fileUpload.files.length > 0) {
-            textBox.value = fileUpload.files[0].name;
+            var fileUpload = getFileUploadAdjuntos();
+            var archivosNuevos = Array.prototype.slice.call(fileUpload.files);
+            var pesoActual = archivosAdjuntos.reduce(function (total, archivo) { return total + archivo.size; }, pesoArchivoInicial);
+            var pesoNuevos = archivosNuevos.reduce(function (total, archivo) { return total + archivo.size; }, 0);
+
+            if (pesoActual + pesoNuevos > limitePesoAdjuntos) {
+                fileUpload.value = '';
+                mostrarResumenAdjuntos('El peso total supera los 25 MB. Elimine uno o más archivos antes de continuar.');
+                return;
+            }
+
+            archivosAdjuntos = archivosAdjuntos.concat(archivosNuevos);
+            sincronizarArchivosParaEnvio();
+            $('#AdjuntarOtroArchivo').modal('hide');
+            $('#ConfirmarOtroArchivo').modal('show');
         }
+
+        function sincronizarArchivosParaEnvio() {
+            var transferencia = new DataTransfer();
+            archivosAdjuntos.forEach(function (archivo) { transferencia.items.add(archivo); });
+            getFileUploadAdjuntos().files = transferencia.files;
+        }
+
+        function adjuntarOtroArchivo() {
+            $('#ConfirmarOtroArchivo').modal('hide');
+            setTimeout(triggerFileUpload2, 300);
+        }
+
+        function mostrarResumenAdjuntos(mensaje) {
+            var lista = document.getElementById('listaArchivosAdjuntos');
+            var mensajeResumen = document.getElementById('mensajeResumenAdjuntos');
+            lista.innerHTML = '';
+            mensajeResumen.textContent = mensaje || '';
+            mensajeResumen.classList.toggle('d-none', !mensaje);
+
+            if (archivosAdjuntos.length === 0) {
+                lista.innerHTML = '<li class="list-group-item text-muted text-center">No se agregaron archivos adicionales.</li>';
+            } else {
+                archivosAdjuntos.forEach(function (archivo, indice) {
+                    var elemento = document.createElement('li');
+                    elemento.className = 'list-group-item d-flex justify-content-between align-items-center gap-2';
+                    var descripcion = document.createElement('span');
+                    descripcion.className = 'text-truncate';
+                    descripcion.textContent = archivo.name + ' (' + formatearPesoArchivo(archivo.size) + ')';
+                    var eliminar = document.createElement('button');
+                    eliminar.type = 'button';
+                    eliminar.className = 'btn btn-sm btn-outline-danger';
+                    eliminar.innerHTML = '<i class="bi bi-trash"></i>';
+                    eliminar.setAttribute('aria-label', 'Eliminar ' + archivo.name);
+                    eliminar.onclick = function () { eliminarArchivoAdjunto(indice); };
+                    elemento.appendChild(descripcion);
+                    elemento.appendChild(eliminar);
+                    lista.appendChild(elemento);
+                });
+            }
+
+            $('#ConfirmarOtroArchivo').modal('hide');
+            $('#ResumenAdjuntos').modal('show');
+        }
+
+        function eliminarArchivoAdjunto(indice) {
+            archivosAdjuntos.splice(indice, 1);
+            sincronizarArchivosParaEnvio();
+            var mensaje = obtenerPesoAdjuntosActual() > limitePesoAdjuntos
+                ? 'El peso total supera los 25 MB. Elimine uno o más archivos antes de continuar.'
+                : '';
+            mostrarResumenAdjuntos(mensaje);
+        }
+
+        function obtenerPesoAdjuntosActual() {
+            return archivosAdjuntos.reduce(function (total, archivo) { return total + archivo.size; }, pesoArchivoInicial);
+        }
+
+        function formatearPesoArchivo(bytes) {
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+
+        function mostrarErrorAdjuntos(mensaje) {
+            var mensajeError = document.getElementById('mensajeAdjuntarOtroArchivo');
+            mensajeError.textContent = mensaje;
+            mensajeError.classList.toggle('d-none', !mensaje);
+            $('#AdjuntarOtroArchivo').modal('show');
+        }
+
+        function seguirAdjuntandoDesdeResumen() {
+            $('#ResumenAdjuntos').modal('hide');
+            setTimeout(triggerFileUpload2, 300);
+        }
+
+        function enviarArchivosSeleccionados() {
+            $('#ResumenAdjuntos').modal('hide');
+            $('#CargandoEnvioCorreo').modal('show');
+            setTimeout(function () {
+                __doPostBack('BtnFinalizarAdjuntos', '');
+            }, 100);
         }
 
     </script>
@@ -131,11 +231,6 @@
                 progressBar2.css('width', '100%').attr('aria-valuenow', 100); // Completar la barra de progreso
             });
 
-            // Detener la animación cuando el progreso se complete o se termine la operación
-            $('#<%= BtnNoAdjuntarOtro.ClientID %>').on('click', function () {
-                clearInterval(interval2);
-                progressBar2.css('width', '100%').attr('aria-valuenow', 100); // Completar la barra de progreso
-            });
         }
     </script>
 
@@ -2881,10 +2976,72 @@
                 </div>
                     </div>
                 </div>
-              <div class="modal-footer d-flex align-items-center justify-content-center">
-                   <asp:Button runat="server" type="button" ID="BtnAdjuntarOtro" class="btn btn-sm btn-outline-success text-dark fw-bold linkButtonClicked2" Text="ADJUNTAR" OnClick="AdjuntarOtroArchivo_Click" OnClientClick="showLoadingAnimation3();"></asp:Button>
-              <asp:Button runat="server" type="button" ID="BtnNoAdjuntarOtro" class="btn btn-sm btn-outline-danger text-dark fw-bold linkButtonClicked2" Text="NO" OnClick="EnviarCorreoTerminado_Click" OnClientClick="showLoadingAnimation3();"></asp:Button>
+             <div class="modal-footer d-flex align-items-center justify-content-center">
+                   <asp:Button runat="server" type="button" ID="BtnAdjuntarOtro" class="btn btn-sm btn-outline-success text-dark fw-bold linkButtonClicked2" Text="ADJUNTAR" OnClientClick="triggerFileUpload2(); return false;"></asp:Button>
+              <div id="mensajeAdjuntarOtroArchivo" class="alert alert-danger d-none w-100 mt-3 mb-0" role="alert"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="modal fade" id="CargandoEnvioCorreo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border-0 shadow-lg text-center">
+            <div class="modal-body py-5">
+                <div class="spinner-border text-primary mb-3" role="status"><span class="visually-hidden">Enviando...</span></div>
+                <h5 class="mb-2">Enviando correo</h5>
+                <p class="text-muted mb-0">Guardando adjuntos y preparando el correo…</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="CorreoEnviadoExito" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border-0 shadow-lg text-center">
+            <div class="modal-body py-5">
+                <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 56px; height: 56px;"><i class="bi bi-check-lg fs-2"></i></div>
+                <h5 class="mb-2">Correo enviado</h5>
+                <p class="text-muted mb-0">Los archivos fueron adjuntados correctamente.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ConfirmarOtroArchivo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ConfirmarOtroArchivoTitulo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary text-white border-0">
+                <h5 class="modal-title" id="ConfirmarOtroArchivoTitulo"><i class="bi bi-paperclip me-2"></i>Archivo adjuntado</h5>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="rounded-circle bg-light text-primary d-inline-flex align-items-center justify-content-center mb-3" style="width: 56px; height: 56px;">
+                    <i class="bi bi-check2-circle fs-2"></i>
+                </div>
+                <p class="mb-0 fw-semibold">¿Desea adjuntar otro archivo?</p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center pt-0">
+                <button type="button" class="btn btn-outline-primary px-4" onclick="adjuntarOtroArchivo();">Sí, adjuntar otro</button>
+                <button type="button" class="btn btn-primary px-4" onclick="mostrarResumenAdjuntos();">No, revisar y enviar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ResumenAdjuntos" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ResumenAdjuntosTitulo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary text-white border-0">
+                <h5 class="modal-title" id="ResumenAdjuntosTitulo"><i class="bi bi-files me-2"></i>Revisar archivos adjuntos</h5>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted small">Estos son los archivos adicionales. Puede eliminar los que no desea enviar.</p>
+                <div id="mensajeResumenAdjuntos" class="alert alert-warning d-none" role="alert"></div>
+                <ul id="listaArchivosAdjuntos" class="list-group"></ul>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-primary" onclick="seguirAdjuntandoDesdeResumen();">Seguir adjuntando</button>
+                <asp:Button runat="server" type="button" ID="BtnFinalizarAdjuntos" CssClass="btn btn-primary" Text="Enviar correo" OnClick="EnviarCorreoTerminado_Click" OnClientClick="enviarArchivosSeleccionados(); return false;" />
             </div>
         </div>
     </div>
