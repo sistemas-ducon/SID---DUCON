@@ -963,7 +963,13 @@
                                                                     <%-- Turno[1]--%>
                                                                     <asp:BoundColumn DataField="Id_Render" HeaderText="ID" ItemStyle-CssClass="auto-width-column" />
                                                                     <%-- [2]--%>
-                                                                    <asp:BoundColumn DataField="Nombre" HeaderText="Nombre-Render" ItemStyle-CssClass="auto-width-column" />
+                                                                    <asp:TemplateColumn HeaderText="Nombre-Render">
+                                                                        <ItemTemplate>
+                                                                            <span title='<%# Eval("Nombre") %>'>
+                                                                                <%# Eval("Nombre") %>
+                                                                            </span>
+                                                                        </ItemTemplate>
+                                                                    </asp:TemplateColumn>
                                                                     <%-- [3]--%>
                                                                     <asp:BoundColumn DataField="UltimaActivacion" HeaderText="Activado" ItemStyle-CssClass="auto-width-column" />
                                                                     <%-- [4]--%>

@@ -437,7 +437,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#77a765"); //Verde
                     e.Item.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ffffff");
                 }
-                else if (pausado == 1 && programadoVentas == 1)
+                else if (pausado == 1)
                 {
                     e.Item.BackColor = System.Drawing.ColorTranslator.FromHtml("#70ede4"); // Aqua
                 }
@@ -529,6 +529,9 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string Animacion = row.Cells[39].Text;
                 string TerminadoVentas = row.Cells[40].Text;
                 string pausado = row.Cells[41].Text;
+
+                Session["Pausado"] = pausado;
+
                 string TerminadoDibujo = row.Cells[42].Text;
 
                 NumeroRender.Text = IdRender;
@@ -746,7 +749,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         // Si el clic no es en la misma fila, reiniciar la variable de sesión "ClickCount" a 1
                         Session["ClickCountRender"] = 1;
                         Session["ID_Render1"] = row.Cells[2].Text;
-
                     }
 
                 }
@@ -1446,6 +1448,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 string Animacion = row.Cells[39].Text;
                 string TerminadoVentas = row.Cells[40].Text;
                 string pausado = row.Cells[41].Text;
+                Session["Pausado"] = pausado;
                 string TerminadoDibujo = row.Cells[42].Text;
 
                 NumeroRender.Text = IdRender;
@@ -1656,6 +1659,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             switch (Session["Departamento"].ToString().ToUpper())
             {
                 case "VENTAS":
+
+                    if (Session["Pausado"]?.ToString() == "True")
+                    {
+                        string mensajePersonalizado = "Este render esta pausado no se puede programar.";
+                        string urlRedireccion = "Ventas/Render_Venta.aspx";
+                        Response.Redirect($"~/Formularios/SuccessMessage.aspx?message={HttpUtility.UrlEncode(mensajePersonalizado)}&redirectUrl={HttpUtility.UrlEncode(urlRedireccion)}");
+                        
+                        return;
+                    }
 
                     DateTime FechaIngresoRender = DateTime.Now;
                     DateTime UltimaActivacionRender = FechaIngresoRender;

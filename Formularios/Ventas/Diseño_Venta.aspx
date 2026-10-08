@@ -1782,44 +1782,36 @@
                                     <div class="border rounded p-1 shadow-sm bg-light m-2">
                                         <div class="row">
                                             <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
-                                                <div class="border rounded p-1" style="height: 250px">
-                                                    <h6>ShowCase</h6>
-                                                    <div class="col-md-10 col-12">
-                                                        <div class="input-group input-group-sm gap-2">
-                                                            <asp:CheckBox ID="CheckBox18" runat="server" />
-                                                            <asp:Label ID="lblPrePpt" runat="server" class="col-form-label-sm">Presentación PPT</asp:Label>
-                                                        </div>
-                                                    </div>
+                                                <div class="border rounded p-1 d-flex flex-column" style="height: 250px">
+                                                    <h6>Imagen de Menor Cuantia</h6>
                                                     <div class="col-md-10 col-12">
                                                         <div class="input-group input-group-sm gap-2">
                                                             <asp:CheckBox ID="CheckBox19" runat="server" />
-                                                            <asp:Label ID="lblIma" runat="server" class="col-form-label-sm">Imágenes</asp:Label>
+                                                            <asp:Label ID="lblIma" runat="server" class="col-form-label-sm">Imágen</asp:Label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-10 col-12">
-                                                        <div class="input-group input-group-sm gap-2">
-                                                            <asp:CheckBox ID="CheckBox20" runat="server" />
-                                                            <asp:Label ID="lblAcc" runat="server" class="col-form-label-sm">Accesorios</asp:Label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-10 col-12">
-                                                        <div class="input-group input-group-sm gap-2">
-                                                            <asp:CheckBox ID="CheckBox21" runat="server" AutoPostBack="true" OnCheckedChanged="CheckBox21_CheckedChanged" />
-                                                            <asp:Label ID="lblTieRea" runat="server" class="col-form-label-sm">Tiempo Real</asp:Label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-md-10 col-12">
-                                                        <div class="input-group input-group-sm gap-2">
-                                                            <asp:TextBox ID="TextFec" runat="server" CssClass="form-control-sm form-control" type="date" OnTextChanged="ValidarFecha" AutoPostBack="true"></asp:TextBox>
-                                                            <asp:TextBox ID="TextFech" runat="server" CssClass="form-control-sm form-control" type="datetime"></asp:TextBox>
-
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-10 col-12">
+                                                    <div class="col-md-10 col-12 mt-auto">
                                                         <asp:Label ID="lblUbi" runat="server" class="col-form-label-sm">Ubicación</asp:Label>
                                                         <asp:TextBox ID="TextUbi" runat="server" CssClass="form-control-sm form-control"></asp:TextBox>
                                                     </div>
+                                                    <div class="col-md-10 col-12 mt-2">
+                                                    <asp:LinkButton runat="server" ID="LinkButton1" CssClass="btn btn-sm" Style="background-color: #ff6a00"> 
+           <i class="bi bi-currency-dollar"></i>
+</asp:LinkButton>
+<asp:LinkButton runat="server" ID="BtnDespiece" CssClass="btn btn-sm" OnClick="BtnDespiece_Click"> 
+          <i class="bi bi-pencil-square"></i>
+</asp:LinkButton>
+<asp:LinkButton runat="server" ID="BtnPlano" CssClass="btn btn-sm" OnClick="BtnPlano_Click"> 
+        <img src="https://i.ibb.co/BCtb1QS/icons8-archivo-dxf-autocad-windows-11-color-310.png" alt="Plano" style="width: 23px; height: 23px;" />
+</asp:LinkButton>
+<asp:LinkButton runat="server" ID="BtnEliminarPlanoDise" CssClass="btn btn-sm" OnClick="BtnEliminarPlanoDise_Click"> 
+         <i class="bi bi-menu-app"></i>
+</asp:LinkButton>
+<asp:LinkButton runat="server" ID="BtnVisCotPreAct" CssClass="btn btn-sm" Style="background-color: #00ff21" OnClick="VisualizarCotPrecioActual_Click">  
+           <i class="bi bi-currency-dollar"></i>
+</asp:LinkButton>
+                                                    </div>
+                                                    
                                                 </div>
                                             </div>
                                             <div class="col-lg-10 col-md-6 col-sm-6 col-xs-12">
@@ -1868,21 +1860,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <asp:LinkButton runat="server" ID="LinkButton1" CssClass="btn btn-sm" Style="background-color: #ff6a00"> 
-                                                   <i class="bi bi-currency-dollar"></i>
-                                        </asp:LinkButton>
-                                        <asp:LinkButton runat="server" ID="BtnDespiece" CssClass="btn btn-sm" OnClick="BtnDespiece_Click"> 
-                                                  <i class="bi bi-pencil-square"></i>
-                                        </asp:LinkButton>
-                                        <asp:LinkButton runat="server" ID="BtnPlano" CssClass="btn btn-sm" OnClick="BtnPlano_Click"> 
-                                                <img src="https://i.ibb.co/BCtb1QS/icons8-archivo-dxf-autocad-windows-11-color-310.png" alt="Plano" style="width: 23px; height: 23px;" />
-                                        </asp:LinkButton>
-                                        <asp:LinkButton runat="server" ID="BtnEliminarPlanoDise" CssClass="btn btn-sm" OnClick="BtnEliminarPlanoDise_Click"> 
-                                                 <i class="bi bi-menu-app"></i>
-                                        </asp:LinkButton>
-                                        <asp:LinkButton runat="server" ID="BtnVisCotPreAct" CssClass="btn btn-sm" Style="background-color: #00ff21" OnClick="VisualizarCotPrecioActual_Click">  
-                                                   <i class="bi bi-currency-dollar"></i>
-                                        </asp:LinkButton>
                                     </div>
                                 </div>
                           

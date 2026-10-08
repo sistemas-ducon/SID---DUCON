@@ -1,42 +1,20 @@
-﻿ using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Web;
 using System.Web.UI;
-using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
-using System.Windows.Forms;
-using System.Web.Services;
 using System.IO;
-using Button = System.Web.UI.WebControls.Button;
-using System.Diagnostics;
-using DocumentFormat.OpenXml.Office2010.Drawing;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
-using System.Windows.Media.TextFormatting;
 using System.Globalization;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
-using System.Xml;
-using OfficeOpenXml.Style;
-using OfficeOpenXml;
-using System.Reflection.Emit;
-using System.Drawing;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
-using NPOI.SS.Util;
 using System.Text;
 using NPOI.XSSF.UserModel;
-using DocumentFormat.OpenXml.Vml.Presentation;
 using Excel = Microsoft.Office.Interop.Excel;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System.Text.RegularExpressions;
-using static SISTEMA_INTEGRAL_DUCON.Formularios.Diseño_Venta;
 using Label = System.Web.UI.WebControls.Label;
-
 
 namespace SISTEMA_INTEGRAL_DUCON.Formularios
 {
@@ -975,6 +953,41 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 }
             }
 
+            //PROGRAMAR IMAGEN DE MENOR CUANTIA
+            if (CheckBox19.Checked)
+            {
+                DateTime fechaIngresoDiseño = DateTime.Parse(TextIngDis.Text);
+
+                DateTime fechaActual = DateTime.Now;
+
+                DateTime fechaBase = AjustarHoraLaboral(fechaActual);
+
+                // Sumar 3 días hábiles a partir de la fecha actual
+                DateTime fechaProgramadaEntrega = ObtenerProximaFechaHabil(fechaBase, 3);
+
+                sSql = @"UPDATE tblRender 
+         SET ProgramadoVentas = 1,
+             Pausado = 0,
+             Fecha_Ingreso = @FechaIngreso,
+             UltimaActivacion = @UltimaActivacion,
+             Fecha_Programada_Entrega = @FechaProgramadaEntrega
+         WHERE Numero_Diseño = @Diseno";
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[CadenaConexionSID].ConnectionString))
+                {
+                    connection.Open();
+                    using (SqlCommand cmd = new SqlCommand(sSql, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@Diseno", numeroDiseno);
+                        cmd.Parameters.AddWithValue("@FechaIngreso", fechaIngresoDiseño);
+                        cmd.Parameters.AddWithValue("@FechaProgramadaEntrega", fechaProgramadaEntrega);
+                        cmd.Parameters.AddWithValue("@UltimaActivacion", fechaBase);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+
+
             // Deshabilitar el botón de terminar diseño
             BtnProgramar.Enabled = false;
             BtnProgramar.BackColor = System.Drawing.Color.Gray;
@@ -1130,9 +1143,15 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             string nombreArchivo = Path.GetFileName(archivo.FileName);
             string rutaCompleta = Path.Combine(ruta, nombreArchivo);
 
+            if (!string.IsNullOrEmpty(nombreArchivo))
+            {
             archivo.SaveAs(rutaCompleta);
-
             return rutaCompleta;
+
+            }else
+            {
+                return "";
+            }
         }
 
 
@@ -1657,12 +1676,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             BtnProgramar.Enabled = false;
             BtnProgramar.CssClass = "form-control form-control-sm fw-bold";
 
-            TextFec.Enabled = false;
-            TextFec.CssClass = "form-control form-control-sm";
-
-            TextFech.Enabled = false;
-            TextFech.CssClass = "form-control form-control-sm";
-
             // Deshabilitar el botón "NuevoDisBit"
             NuevoDisBit.Enabled = false;
             NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
@@ -1752,12 +1765,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                 BtnProgramar.Enabled = false;
                 BtnProgramar.CssClass = "form-control form-control-sm fw-bold";
 
-                TextFec.Enabled = false;
-                TextFec.CssClass = "form-control form-control-sm";
-
-                TextFech.Enabled = false;
-                TextFech.CssClass = "form-control form-control-sm";
-
+                
                 // Deshabilitar el botón "NuevoDisBit"
                 NuevoDisBit.Enabled = false;
                 NuevoDisBit.CssClass = "btn btn-sm shadow button-disabled";
@@ -1835,12 +1843,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                 BtnProgramar.Enabled = false;
                 BtnProgramar.CssClass = "form-control form-control-sm fw-bold";
-
-                TextFec.Enabled = false;
-                TextFec.CssClass = "form-control form-control-sm";
-
-                TextFech.Enabled = false;
-                TextFech.CssClass = "form-control form-control-sm";
 
                 // Deshabilitar el botón "NuevoDisBit"
                 NuevoDisBit.Enabled = false;
@@ -1967,13 +1969,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
         {
             // Obtener la fecha y hora actual
             DateTime now = DateTime.Now;
-
-            // Asignar la fecha al TextBox de fecha
-            TextFec.Text = now.ToString("yyyy-MM-dd");
-
-            // Asignar la hora al TextBox de hora
-            TextFech.Text = now.ToString("HH:mm");
-
+      
             TextIngDis.Text = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
 
             string fechaHoraActual = now.ToString("yyyy-MM-ddTHH:mm");
@@ -2411,36 +2407,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             TextPuer.Enabled = false;
             TextPuer.CssClass = "form-control form-control-sm linkButtonClicked";
 
-            CheckBox18.Enabled = false;
-
-            lblPrePpt.Enabled = false;
-            lblPrePpt.CssClass = "col-form-label-sm";
-
             CheckBox19.Enabled = false;
 
             lblIma.Enabled = false;
             lblIma.CssClass = "col-form-label-sm";
 
-            CheckBox20.Enabled = false;
-
-            lblAcc.Enabled = false;
-            lblAcc.CssClass = "col-form-label-sm";
-
-            CheckBox21.Enabled = false;
-
-            lblTieRea.Enabled = false;
-            lblTieRea.CssClass = "col-form-label-sm";
-
-            TextFec.Enabled = false;
-            TextFec.CssClass = "form-control form-control-sm linkButtonClicked";
-
-            TextFech.Enabled = false;
-            TextFech.CssClass = "form-control form-control-sm linkButtonClicked";
-
             lblUbi.Enabled = false;
             TextUbi.CssClass = "col-form-label-sm";
-
-
         }
 
         //BUSCAR DISE
@@ -2725,9 +2698,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
             Cancelar.Enabled = true;
             // Deshabilita los TextBox
-            TextFec.Enabled = false;
-            TextFech.Enabled = false;
-
+            
             lblNumDise.Text = "Por Definir";
 
             TextCliente.Enabled = false;
@@ -2762,23 +2733,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             else
             {
                 //NO SE ENCONTRO LA VIABLE DE SESSION ZONALOGEADA
-            }
-        }
-
-        protected void CheckBox21_CheckedChanged(object sender, EventArgs e)
-        {
-            // Verifica el estado del CheckBox
-            if (CheckBox21.Checked)
-            {
-                // Habilita los TextBox
-                TextFec.Enabled = true;
-                TextFech.Enabled = true;
-            }
-            else
-            {
-                // Deshabilita los TextBox
-                TextFec.Enabled = false;
-                TextFech.Enabled = false;
             }
         }
 
@@ -3035,12 +2989,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                             {
                                 // Obtener la fecha y hora actual
                                 DateTime now = DateTime.Now;
-
-                                // Asignar la fecha al TextBox de fecha
-                                TextFec.Text = now.ToString("yyyy-MM-dd");
-
-                                // Asignar la hora al TextBox de hora
-                                TextFech.Text = now.ToString("HH:mm");
 
                                 TextIngDis.Text = now.ToString("yyyy-MM-ddTHH:mm");
 
@@ -3649,10 +3597,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         private void HabilitarCamposShowCase()
         {
-            CheckBox18.Enabled = true;
             CheckBox19.Enabled = true;
-            CheckBox20.Enabled = true;
-            CheckBox21.Enabled = true;
         }
 
         private void DeshabilitarDivYContenidoMitad(System.Web.UI.Control container)
@@ -3971,36 +3916,13 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             TextPuer.Enabled = true;
             TextPuer.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
 
-            CheckBox18.Enabled = true;
-
-            lblPrePpt.Enabled = true;
-            lblPrePpt.CssClass = "col-form-label-sm";
-
             CheckBox19.Enabled = true;
 
             lblIma.Enabled = true;
             lblIma.CssClass = "col-form-label-sm";
 
-            CheckBox20.Enabled = true;
-
-            lblAcc.Enabled = true;
-            lblAcc.CssClass = "col-form-label-sm";
-
-            CheckBox21.Enabled = true;
-
-            lblTieRea.Enabled = true;
-            lblTieRea.CssClass = "col-form-label-sm";
-
-            TextFec.Enabled = true;
-            TextFec.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
-
-            TextFech.Enabled = true;
-            TextFech.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
-
             lblUbi.Enabled = true;
             TextUbi.CssClass = "form-control form-control-sm linkButtonClicked2 shadow-sm";
-
-
         }
 
         private string ValidarCampos()
@@ -4208,48 +4130,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
         }
 
-        protected void ValidarFecha(object sender, EventArgs e)
-        {
-            DateTime fechaTextBox;
-            if (!DateTime.TryParse(TextFec.Text, out fechaTextBox))
-            {
-                // Manejo de error si el valor en TextFec no es una fecha válida
-                return;
-            }
-
-            DateTime fechaEntrega;
-            if (!DateTime.TryParse(TextEntrega.Text, out fechaEntrega))
-            {
-                // Manejo de error si el valor en TextEntrega no es una fecha válida
-                return;
-            }
-
-            // Obtener solo la parte de la fecha (sin la parte de la hora)
-            fechaTextBox = fechaTextBox.Date;
-            fechaEntrega = fechaEntrega.Date;
-
-            DateTime fechaHoy = DateTime.Now;
-
-            if (fechaTextBox < fechaEntrega)
-            {
-                DateTime now = DateTime.Now;
-                TextFec.Text = now.ToString("yyyy-MM-dd");
-
-                string contenidoModalOT = "La programación del Show Case no puede ser menor a la fecha de entrega del diseño " + TextEntrega.Text;
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#FechaSC').modal('show'); $('#FechaSC2').text('" + contenidoModalOT + "');", true);
-            }
-
-
-            if (fechaTextBox < fechaHoy)
-            {
-                DateTime now = DateTime.Now;
-                TextFec.Text = now.ToString("yyyy-MM-dd");
-
-                string contenidoModalOT = "La programación del Show Case no puede ser menor a la fecha actual " + fechaHoy.ToString().ToString();
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "showModal1", "$('#FechaSC').modal('show'); $('#FechaSC2').text('" + contenidoModalOT + "');", true);
-            }
-        }
-
 
         private int ObtenerMaximoNumeroDiseño(SqlConnection connection)
         {
@@ -4288,11 +4168,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             bool valorChecGuaEsc = ChecGuaEsc.Checked;
             bool valorChecCotVia = ChecCotVia.Checked;
             bool valorChecCotTte = CheckBox4.Checked;
-            bool valorCheckBox18 = CheckBox18.Checked;
+            bool valorCheckBox18 = false;
             bool valorCheckBox19 = CheckBox19.Checked;
-            bool valorCheckBox20 = CheckBox20.Checked;
-            bool valorCheckBox21 = CheckBox21.Checked;
-            bool valorCheckBox22 = ChecMailTer.Checked;
+            bool valorCheckBox20 = false;
+            bool valorCheckBox21 = false;
+            bool valorCheckBox22 = false;
             bool valorCheckBox23 = ChecCot.Checked;
             bool valorCheckBox24 = ChecUrgent.Checked;
             bool valorCheckBox25 = CheckBox16.Checked;
@@ -4392,8 +4272,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                         command.Parameters.AddWithValue("@SC_Imagenes", valorCheckBox19);
                         command.Parameters.AddWithValue("@SC_Accesorios", valorCheckBox20);
                         command.Parameters.AddWithValue("@SC_Tiemporeal", valorCheckBox21);
-                        command.Parameters.AddWithValue("@SC_Fecha", TextFec.Text);
-                        command.Parameters.AddWithValue("@SC_Hora", TextFech.Text);
                         command.Parameters.AddWithValue("@SC_Ubicacion", TextUbi.Text);
 
                         command.Parameters.AddWithValue("@Numero_Diseño", numerodiseño);
@@ -4441,10 +4319,10 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
             bool valorChecGuaEsc = ChecGuaEsc.Checked;
             bool valorChecCotVia = ChecCotVia.Checked;
             bool valorChecCotTte = CheckBox4.Checked;
-            bool valorCheckBox18 = CheckBox18.Checked;
+            bool valorCheckBox18 = false;
             bool valorCheckBox19 = CheckBox19.Checked;
-            bool valorCheckBox20 = CheckBox20.Checked;
-            bool valorCheckBox21 = CheckBox21.Checked;
+            bool valorCheckBox20 = false;
+            bool valorCheckBox21 = false;
             bool valorCheckBox22 = ChecMailTer.Checked;
             bool valorCheckBox23 = ChecCot.Checked;
             bool valorCheckBox24 = ChecUrgent.Checked;
@@ -4596,9 +4474,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     command.Parameters.AddWithValue("@SC_Imagenes", valorCheckBox19);
                     command.Parameters.AddWithValue("@SC_Accesorios", valorCheckBox20);
                     command.Parameters.AddWithValue("@SC_Tiemporeal", valorCheckBox21);
-                    command.Parameters.AddWithValue("@SC_Fecha", TextFec.Text);
-                    command.Parameters.AddWithValue("@SC_Hora", TextFech.Text);
-                    command.Parameters.AddWithValue("@SC_Ubicacion", TextUbi.Text);
+
                     // Ejecutar el procedimiento almacenado
                     int rowsAffected = command.ExecuteNonQuery();
 
@@ -4926,14 +4802,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     TextUltAc.Text = reader.GetDateTime(reader.GetOrdinal("UltimaActivacion")).ToString("yyyy-MM-ddTHH:mm");
                                     TextEntrega.Text = reader.GetDateTime(reader.GetOrdinal("Fecha_Programada_Entrega")).ToString("yyyy-MM-ddTHH:mm");
                                     TextFecOkDib.Text = reader.GetDateTime(reader.GetOrdinal("FechaDibujoOK")).ToString("yyyy-MM-ddTHH:mm");
-
-                                    TextFec.Text = reader.GetDateTime(reader.GetOrdinal("SC_Fecha")).ToString("yyyy-MM-dd");
                                 }
                                 else
                                 {
                                     // Asignar las fechas cuando ProgramadoVentas es 0
                                     DateTime now = DateTime.Now;
-                                    TextFec.Text = now.ToString("yyyy-MM-dd");
                                     //TextFech.Text = now.ToString("HH:mm");
                                     TextIngDis.Text = now.ToString("yyyy-MM-ddTHH:mm");
                                     string fechaHoraActual = now.ToString("yyyy-MM-ddTHH:mm");
@@ -4980,13 +4853,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                                 CheckBox16.Checked = reader.GetBoolean(reader.GetOrdinal("BalanceSuperficies"));
 
-                                CheckBox18.Checked = reader.GetBoolean(reader.GetOrdinal("SC_Presentacionppt"));
-
                                 CheckBox19.Checked = reader.GetBoolean(reader.GetOrdinal("SC_Imagenes"));
-
-                                CheckBox20.Checked = reader.GetBoolean(reader.GetOrdinal("SC_Accesorios"));
-
-                                CheckBox21.Checked = reader.GetBoolean(reader.GetOrdinal("SC_Tiemporeal"));
 
                                 TexHTot.Text = GetString(reader, ("AlturaCielo"));
 
@@ -5297,14 +5164,11 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     TextUltAc.Text = reader.GetDateTime(reader.GetOrdinal("UltimaActivacion")).ToString("yyyy-MM-ddTHH:mm");
                                     TextEntrega.Text = reader.GetDateTime(reader.GetOrdinal("Fecha_Programada_Entrega")).ToString("yyyy-MM-ddTHH:mm");
                                     TextFecOkDib.Text = reader.GetDateTime(reader.GetOrdinal("FechaDibujoOK")).ToString("yyyy-MM-ddTHH:mm");
-
-                                    TextFec.Text = reader.GetDateTime(reader.GetOrdinal("SC_Fecha")).ToString("yyyy-MM-dd");
                                 }
                                 else
                                 {
                                     // Asignar las fechas cuando ProgramadoVentas es 0
                                     DateTime now = DateTime.Now;
-                                    TextFec.Text = now.ToString("yyyy-MM-dd");
                                     //TextFech.Text = now.ToString("HH:mm");
                                     TextIngDis.Text = now.ToString("yyyy-MM-ddTHH:mm");
                                     string fechaHoraActual = now.ToString("yyyy-MM-ddTHH:mm");
@@ -5352,13 +5216,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                                 CheckBox16.Checked = reader.GetBoolean(reader.GetOrdinal("BalanceSuperficies"));
 
-                                CheckBox18.Checked = reader.GetBoolean(reader.GetOrdinal("SC_Presentacionppt"));
-
                                 CheckBox19.Checked = reader.GetBoolean(reader.GetOrdinal("SC_Imagenes"));
-
-                                CheckBox20.Checked = reader.GetBoolean(reader.GetOrdinal("SC_Accesorios"));
-
-                                CheckBox21.Checked = reader.GetBoolean(reader.GetOrdinal("SC_Tiemporeal"));
 
                                 TexHTot.Text = GetString(reader, ("AlturaCielo"));
 
@@ -11766,15 +11624,12 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                                     TextIngDis.Text = reader.GetDateTime(reader.GetOrdinal("Fecha_Ingreso")).ToString("yyyy-MM-ddTHH:mm");
                                     TextUltAc.Text = reader.GetDateTime(reader.GetOrdinal("UltimaActivacion")).ToString("yyyy-MM-ddTHH:mm");
                                     TextEntrega.Text = reader.GetDateTime(reader.GetOrdinal("Fecha_Programada_Entrega")).ToString("yyyy-MM-ddTHH:mm");
-                                    TextFecOkDib.Text = reader.GetDateTime(reader.GetOrdinal("FechaDibujoOK")).ToString("yyyy-MM-ddTHH:mm");
-
-                                    TextFec.Text = reader.GetDateTime(reader.GetOrdinal("SC_Fecha")).ToString("yyyy-MM-dd");
+                                    TextFecOkDib.Text = reader.GetDateTime(reader.GetOrdinal("FechaDibujoOK")).ToString("yyyy-MM-ddTHH:mm");                                    
                                 }
                                 else
                                 {
                                     // Asignar las fechas cuando ProgramadoVentas es 0
                                     DateTime now = DateTime.Now;
-                                    TextFec.Text = now.ToString("yyyy-MM-dd");
                                     //TextFech.Text = now.ToString("HH:mm");
                                     TextIngDis.Text = now.ToString("yyyy-MM-ddTHH:mm");
                                     string fechaHoraActual = now.ToString("yyyy-MM-ddTHH:mm");
@@ -11821,13 +11676,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
 
                                 CheckBox16.Checked = reader.GetBoolean(reader.GetOrdinal("BalanceSuperficies"));
 
-                                CheckBox18.Checked = reader.GetBoolean(reader.GetOrdinal("SC_Presentacionppt"));
-
                                 CheckBox19.Checked = reader.GetBoolean(reader.GetOrdinal("SC_Imagenes"));
-
-                                CheckBox20.Checked = reader.GetBoolean(reader.GetOrdinal("SC_Accesorios"));
-
-                                CheckBox21.Checked = reader.GetBoolean(reader.GetOrdinal("SC_Tiemporeal"));
 
                                 TexHTot.Text = GetString(reader, ("AlturaCielo"));
 
