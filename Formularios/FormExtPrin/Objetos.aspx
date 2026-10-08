@@ -92,7 +92,7 @@
                         <div class="col-lg-2 col-sm-4 col-sm-4 col-xs-6">
                             <div class="input-group-sm">
                                 <asp:Label class="form-label" Text="Grupo" runat="server" ID="lbGrupo"></asp:Label>
-                                <asp:DropDownList class="form-control" ID="ddlGrupo" runat="server" DataTextField="Descripcion" DataValueField="Descripcion" OnDataBound="ddlGrupoObjeto_DataBound" DataSourceID="GrupoObjetos" AutoPostBack="true"></asp:DropDownList>
+                                <asp:DropDownList class="form-control" ID="ddlGrupo" runat="server" DataTextField="Descripcion" DataValueField="Descripcion" OnDataBound="ddlGrupoObjeto_DataBound" DataSourceID="GrupoObjetos" AutoPostBack="false"></asp:DropDownList>
                                 <asp:SqlDataSource runat="server" ID="GrupoObjetos" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="select  ID_GrupoObjeto AS Valor,Descripcion_Grupo AS Descripcion from tblGrupoObjeto  order by Descripcion_Grupo "></asp:SqlDataSource>
 
                             </div>
@@ -144,7 +144,7 @@
                                 <div class="card-body p-0">
                                     <div class="table-responsive" style="max-height: 31.5rem; height: 31.5rem; overflow-x: auto;">
                                     
-                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" ID="DataGridObjetos" AutoGenerateColumns="false" runat="server" DataSourceID="ObtenerDatosObjetos" OnItemCommand="DataGridObtenerDatosObjetos_LinkButton">
+                                        <asp:DataGrid CssClass="table table-bordered table-sm table-hover form-control-sm" PageSize="5" ID="DataGridObjetos" AutoGenerateColumns="false" runat="server" Visible="false" OnItemCommand="DataGridObtenerDatosObjetos_LinkButton">
                                             <HeaderStyle Font-Bold="true" CssClass="datagrid-header" />
 
                                             <Columns>
@@ -163,7 +163,7 @@
                                                 <asp:BoundColumn DataField="Precio_Venta" Visible="false" />
                                             </Columns>
                                         </asp:DataGrid>
-                                        <asp:SqlDataSource ID="ObtenerDatosObjetos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="sp_ObtenerDatosObjetoActivo" SelectCommandType="StoredProcedure">
+                                        <asp:SqlDataSource ID="ObtenerDatosObjetos" runat="server" ConnectionString="<%$ ConnectionStrings:BD_SIDSQL %>" SelectCommand="sp_ObtenerDatosObjetoActivo" SelectCommandType="StoredProcedure" OnSelecting="ObtenerDatosObjetos_Selecting">
                                             <SelectParameters>
                                                 <asp:ControlParameter ControlID="tbCriterio" PropertyName="Text" DefaultValue="%" Name="Criterio" Type="String"></asp:ControlParameter>
                                                 <asp:ControlParameter ControlID="tbAltura" PropertyName="Text" DefaultValue="%" Name="Altura" Type="String"></asp:ControlParameter>

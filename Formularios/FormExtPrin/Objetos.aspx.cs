@@ -18,6 +18,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         private string CadenaConexionSID = "BD_SIDSQL";
 
         private List<TextBox> listaTextBoxes;
+        private bool ejecutarBusquedaObjetos;
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -105,21 +106,6 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
         }
         protected void BuscarObjeto(object sender, EventArgs e)
         {
-
-            if (rbObjeto.SelectedValue == "Objeto")
-            {
-                ObtenerDatosObjetos.SelectCommand = "sp_ObtenerDatosObjetoActivo";
-                ObtenerDatosObjetos.DataBind();
-                DataGridObjetos.DataBind();
-
-            }
-            else if (rbObjeto.SelectedValue == "Descripcion")
-            {
-                ObtenerDatosObjetos.SelectCommand = "sp_ObtenerDatosDescripActivo";
-                ObtenerDatosObjetos.DataBind();
-                DataGridObjetos.DataBind();
-            }
-
             BotonesIniciales();
 
             BtnNuePan.Enabled = true;
@@ -131,6 +117,59 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios.FormExtPrin
             spanAnchoEliminar.InnerText = "";
             spanAlturaEliminar.InnerText = "";
 
+            Id_Objeto_Hid.Value = "";
+            Nombre_Objeto_Hid.Value = "";
+            Ancho_Objeto_Hid.Value = "";
+            Adicionar.Enabled = false;
+            Adicionar.CssClass = "bi bf btn btn-lg btn-outline-secondary";
+
+            tbCriterio.Text = tbCriterio.Text.Trim();
+            tbAltura.Text = tbAltura.Text.Trim();
+            tbAncho.Text = tbAncho.Text.Trim();
+
+            if (!TieneFiltroObjeto(tbCriterio.Text) && !TieneFiltroObjeto(tbAltura.Text)
+                && !TieneFiltroObjeto(tbAncho.Text) && !TieneFiltroObjeto(ddlGrupo.SelectedValue))
+            {
+                DataGridObjetos.Visible = false;
+                ScriptManager.RegisterStartupScript(this, GetType(), "filtroObjetoRequerido",
+                    "alert('Ingrese un criterio, altura, ancho o seleccione un grupo antes de buscar.');", true);
+                return;
+            }
+
+            ObtenerDatosObjetos.SelectCommand = rbObjeto.SelectedValue == "Descripcion"
+                ? "sp_ObtenerDatosDescripActivo"
+                : "sp_ObtenerDatosObjetoActivo";
+
+            // Permitir la consulta solamente durante una búsqueda explícita.
+            ejecutarBusquedaObjetos = true;
+            try
+            {
+                // Leer los filtros actuales y enlazar los resultados una sola vez.
+                // Sin DataSourceID, los cambios de ControlParameter al final del
+                // postback no vuelven a enlazar la grilla con una consulta cancelada.
+                DataGridObjetos.DataSource = ObtenerDatosObjetos.Select(DataSourceSelectArguments.Empty);
+                DataGridObjetos.Visible = true;
+                DataGridObjetos.DataBind();
+            }
+            finally
+            {
+                DataGridObjetos.DataSource = null;
+                ejecutarBusquedaObjetos = false;
+            }
+
+        }
+
+        private static bool TieneFiltroObjeto(string valor)
+        {
+            return !string.IsNullOrWhiteSpace(valor)
+                && valor.Any(c => !char.IsWhiteSpace(c) && c != '%' && c != '_'
+                    && c != '[' && c != ']');
+        }
+
+        protected void ObtenerDatosObjetos_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
+        {
+            // Evitar consultas automáticas al abrir la página o en otros postbacks.
+            e.Cancel = !ejecutarBusquedaObjetos;
         }
 
         protected void DataGridObtenerDatosObjetos_LinkButton(object source, DataGridCommandEventArgs e)
