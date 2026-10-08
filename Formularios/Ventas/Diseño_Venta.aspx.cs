@@ -1224,6 +1224,7 @@ namespace SISTEMA_INTEGRAL_DUCON.Formularios
                     : rutasAdjuntos + ";" + rutaArchivoAdicional;
             }
 
+            rutasAdjuntos = rutasAdjuntos.TrimEnd(';');
             bool correoEnviado = EnviarCorreoTerminadoDise(
                 ViewState["Receptormail"].ToString(),
                 ViewState["AsuntoMail"].ToString(),
